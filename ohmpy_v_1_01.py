@@ -2,9 +2,9 @@
 23/08/2019
 OHMPY_code is a program to control the low-cost and open source resistivity meter
 OHMPY, it has been developed by Rémi CLEMENT, Nicolas FORQUET (IRSTEA) and Yannick FARGIER (IFSTTAR).
-Version 1.00 23/08/2019 modified by Remi CLEMENT
+Version 1.01 23/08/2019 modified by Remi CLEMENT
 multiplexer development for electrode selection for each quadripole
-from the quadripole file ABMN.txt
+from the quadripole file ABMN4.txt
 """
 
 #!/usr/bin/python
