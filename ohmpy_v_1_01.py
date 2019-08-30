@@ -28,7 +28,7 @@ GPIO.setwarnings(False)
 """
 Initialization of multiplexer channels
 """
-pinList = [12,16,20,21,26,18,23,24,25,19,2,3,4,17,27,22,10,9,11,5] # List of GPIOs enabled for relay cards (electrodes)
+pinList = [12,16,20,21,26,18,23,24,25,19,6,13,4,17,27,22,10,9,11,5] # List of GPIOs enabled for relay cards (electrodes)
 for i in pinList: 
     GPIO.setup(i, GPIO.OUT) 
     GPIO.output(i, GPIO.HIGH)
@@ -61,7 +61,7 @@ for g in range(0,nbr_meas): # for time-lapse monitoring
                 elif j==1: # electrode B
                     n1=18; n2=23; n3=24; n4=25; n5=19 # à modifier
                 elif j==2: # electrode M
-                    n1=2; n2=3; n3=4; n4=17; n5=27 # à modifier
+                    n1=6; n2=13; n3=4; n4=17; n5=27 # à modifier
                 elif j==3: # electrode N
                     n1=22; n2=10; n3=9; n4=11; n5=5 # à modifier
 
@@ -135,14 +135,17 @@ for g in range(0,nbr_meas): # for time-lapse monitoring
         n1=22; n2=10; n3=9; n4=11; n5=5 # à modifier
         GPIO.output(12, GPIO.HIGH); GPIO.output(16, GPIO.HIGH); GPIO.output(20, GPIO.HIGH); GPIO.output(21, GPIO.HIGH); GPIO.output(26, GPIO.HIGH)              
         GPIO.output(18, GPIO.HIGH); GPIO.output(23, GPIO.HIGH); GPIO.output(24, GPIO.HIGH); GPIO.output(25, GPIO.HIGH); GPIO.output(19, GPIO.HIGH) 
-        GPIO.output(2, GPIO.HIGH); GPIO.output(3, GPIO.HIGH); GPIO.output(4, GPIO.HIGH); GPIO.output(17, GPIO.HIGH); GPIO.output(27, GPIO.HIGH)
+        GPIO.output(6, GPIO.HIGH); GPIO.output(13, GPIO.HIGH); GPIO.output(4, GPIO.HIGH); GPIO.output(17, GPIO.HIGH); GPIO.output(27, GPIO.HIGH)
         GPIO.output(22, GPIO.HIGH); GPIO.output(10, GPIO.HIGH); GPIO.output(9, GPIO.HIGH); GPIO.output(11, GPIO.HIGH); GPIO.output(5, GPIO.HIGH)
     
-    time.sleep(sequence_delay);
-
 '''
 Showing results
 '''
+
+
+    time.sleep(sequence_delay);#waiting next measurement
+
+
 
 
 '''
