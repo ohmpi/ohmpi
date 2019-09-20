@@ -55,7 +55,7 @@ for g in range(0,nbr_meas): # for time-lapse monitoring
     """
     for i in range(0,len(listM)): # boucle sur les quadripôles, qui tient compte du nombre de quadripole dans le fichier ABMN
 
-        for j in range(0,4):
+        for j in range(0,3):
                 if j == 0: # electrode A
                     n1=12; n2=16; n3=20; n4=21; n5=26
                 elif j==1: # electrode B
@@ -132,7 +132,6 @@ for g in range(0,nbr_meas): # for time-lapse monitoring
                     GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.LOW);    
         
         time.sleep(injection_time);  
-        n1=22; n2=10; n3=9; n4=11; n5=5 # à modifier
         GPIO.output(12, GPIO.HIGH); GPIO.output(16, GPIO.HIGH); GPIO.output(20, GPIO.HIGH); GPIO.output(21, GPIO.HIGH); GPIO.output(26, GPIO.HIGH)              
         GPIO.output(18, GPIO.HIGH); GPIO.output(23, GPIO.HIGH); GPIO.output(24, GPIO.HIGH); GPIO.output(25, GPIO.HIGH); GPIO.output(19, GPIO.HIGH) 
         GPIO.output(6, GPIO.HIGH); GPIO.output(13, GPIO.HIGH); GPIO.output(4, GPIO.HIGH); GPIO.output(17, GPIO.HIGH); GPIO.output(27, GPIO.HIGH)
