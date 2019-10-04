@@ -41,19 +41,16 @@ sequence_delay= 30 # Delay in Second between 2 sequences
 stack= 1 # repetition of the current injection for each quadrupole
 
 """
-Reading the quadrupole file
+Reading the quadripole file
 """
 N=numpy.loadtxt("ABMN4.txt", delimiter=" ",dtype=int) # load quadripole file
-M=open("ABMN4.txt",'r') # open quadripole file
-listM=list(M) # Transform M as a list
-M.close() # Close M
 
 for g in range(0,nbr_meas): # for time-lapse monitoring
   
     """
     Selection electrode activées pour chaque quadripole
     """
-    for i in range(0,len(listM)): # boucle sur les quadripôles, qui tient compte du nombre de quadripole dans le fichier ABMN
+    for i in range(0,N.shape[0]): # boucle sur les quadripôles, qui tient compte du nombre de quadripole dans le fichier ABMN
 
         for j in range(0,3):
                 if j == 0: # electrode A
