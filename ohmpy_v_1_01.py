@@ -18,6 +18,18 @@ import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
 print('Import library')
 
+"""
+functions
+"""
+# function swtich_mux select the right channels for the multiplexer cascade for electrodes A, B, M and N.
+def switch_mux(quadripole):
+    path2elec = numpy.loadtxt("path2elec.txt", delimiter=" ", dtype=bool)
+    quadmux = numpy.loadtxt("quadmux.txt", delimiter=" ", dtype=int)
+    for i in range(0,4):
+        for j in range(0,5) :
+            GPIO.output(quadmux[i,j], path2elec[quadripole[i],j])
+
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
  
@@ -51,82 +63,8 @@ for g in range(0,nbr_meas): # for time-lapse monitoring
     Selection electrode activées pour chaque quadripole
     """
     for i in range(0,N.shape[0]): # boucle sur les quadripôles, qui tient compte du nombre de quadripole dans le fichier ABMN
-
-        for j in range(0,3):
-                if j == 0: # electrode A
-                    n1=12; n2=16; n3=20; n4=21; n5=26
-                elif j==1: # electrode B
-                    n1=18; n2=23; n3=24; n4=25; n5=19 # à modifier
-                elif j==2: # electrode M
-                    n1=6; n2=13; n3=4; n4=17; n5=27 # à modifier
-                elif j==3: # electrode N
-                    n1=22; n2=10; n3=9; n4=11; n5=5 # à modifier
-
-
-                if N[i][j]==1:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.LOW); GPIO.output(n5, GPIO.LOW);   
-                elif N[i][j]==2:            
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.LOW); GPIO.output(n5, GPIO.HIGH);       
-                elif N[i][j]==3:            
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.LOW);    
-                elif N[i][j]==4:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==5:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.LOW);GPIO.output(n5, GPIO.LOW);    
-                elif N[i][j]==6:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.LOW);GPIO.output(n5, GPIO.HIGH);
-                elif N[i][j]==7:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.LOW);
-                elif N[i][j]==8:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==9:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.LOW);GPIO.output(n5, GPIO.LOW);    
-                elif N[i][j]==10:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.LOW);GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==11:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.LOW);    
-                elif N[i][j]==12:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==13:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.LOW);GPIO.output(n5, GPIO.LOW);   
-                elif N[i][j]==14:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.LOW);GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==15:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.LOW);    
-                elif N[i][j]==16:
-                    GPIO.output(n1, GPIO.HIGH);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==17:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.LOW); GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==18:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.LOW); GPIO.output(n5, GPIO.LOW);    
-                elif N[i][j]==19:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==20:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.LOW);    
-                elif N[i][j]==21:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.LOW);GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==22:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.LOW);GPIO.output(n5, GPIO.LOW);    
-                elif N[i][j]==23:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==24:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.HIGH);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.LOW);    
-                elif N[i][j]==25:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.LOW);GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==26:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.LOW);GPIO.output(n5, GPIO.LOW);    
-                elif N[i][j]==27:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==28:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.HIGH); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.LOW);    
-                elif N[i][j]==29:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.LOW);GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==30:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.LOW);GPIO.output(n5, GPIO.LOW);   
-                elif N[i][j]==31:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.HIGH);    
-                elif N[i][j]==32:
-                    GPIO.output(n1, GPIO.LOW);GPIO.output(n2, GPIO.LOW);GPIO.output(n3, GPIO.LOW); GPIO.output(n4, GPIO.HIGH);GPIO.output(n5, GPIO.LOW);    
+        # call switch_mux function
+        switch_mux(N[i,])
         
         time.sleep(injection_time);  
         GPIO.output(12, GPIO.HIGH); GPIO.output(16, GPIO.HIGH); GPIO.output(20, GPIO.HIGH); GPIO.output(21, GPIO.HIGH); GPIO.output(26, GPIO.HIGH)              
