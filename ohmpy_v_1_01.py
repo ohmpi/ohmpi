@@ -55,7 +55,7 @@ stack= 1 # repetition of the current injection for each quadrupole
 """
 Reading the quadripole file
 """
-N=numpy.loadtxt("ABMN4.txt", delimiter=" ",dtype=int) # load quadripole file
+N=numpy.loadtxt("ABMN.txt", delimiter=" ",dtype=int) # load quadripole file
 
 for g in range(0,nbr_meas): # for time-lapse monitoring
 
