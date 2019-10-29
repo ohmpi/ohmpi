@@ -27,7 +27,7 @@ def switch_mux(quadripole):
     quadmux = numpy.loadtxt("quadmux.txt", delimiter=" ", dtype=int)
     for i in range(0,4):
         for j in range(0,5) :
-            GPIO.output(int(quadmux[i,j]), bool(path2elec[quadripole[i],j]))
+            GPIO.output(int(quadmux[i,j]), bool(path2elec[quadripole[i]-1,j]))
 
 
 GPIO.setmode(GPIO.BCM)
