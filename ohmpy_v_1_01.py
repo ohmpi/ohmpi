@@ -1,22 +1,22 @@
 """
 29/10/2019
 OHMPY_code is a program to control the low-cost and open source resistivity meter
-OHMPY, it has been developed by Rémi CLEMENT, Nicolas FORQUET (IRSTEA) and Yannick FARGIER (IFSTTAR).
-Version 1.01 23/08/2019 modified by Remi CLEMENT
-multiplexer development for electrode selection for each quadripole
-from the quadripole file ABMN4.txt
+OHMPY, it has been developed by Rémi CLEMENT,Vivien DUBOIS, Nicolas FORQUET (IRSTEA) and Yannick FARGIER (IFSTTAR).
 """
+print 'OHMPI start' 
+print MyDateTime.isoformat()
+print 'Import library'
 
 #!/usr/bin/python
 import RPi.GPIO as GPIO
 import time
+import datetime
 import board
 import busio
 import numpy
 import os
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
-print('Import library')
 
 """
 functions
