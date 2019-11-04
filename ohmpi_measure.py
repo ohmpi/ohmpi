@@ -12,7 +12,7 @@ Rref=50 # valeur de la resistance de référence
 som_I=0
 som_Vmn=0
 som_Ps=0
-coeff_p0=2.02
+coeff_p0=2.02 # coefficient à vérifier + offset
 coeff_p1=2.02
 i2c = busio.I2C(board.SCL, board.SDA) # definition du protocole I2C
 ads = ADS.ADS1115(i2c, gain=2/3) # activation de la connection I2C
@@ -40,11 +40,16 @@ for n in range(0,3+2*nbr_stack-1) :
     I1= (Ia1 - Ib1)/Rref;
     som_I=som_I+I1;
     Vmn1= (Vm1 - Vn1);
-    print(Vmn1)
-    som_Vmn=som_Vmn+(abs(Vmn1));
-    som_Ps=som_Ps-Vmn1;
+    
+    if (n % 2) == 0:
+        som_Vmn=som_Vmn-Vmn1;
+        som_Ps=som_Ps+Vmn1;
+    else:
+        som_Vmn=som_Vmn+Vmn1;
+        som_Ps=som_Ps+Vmn1;
+
 #valeur à renvoyer
-    n=3+2*nbr_stack-1
+    
     Vmn= som_Vmn/(3+2*nbr_stack-1)
     I=som_I/(3+2*nbr_stack-1)
     R=Vmn/I
