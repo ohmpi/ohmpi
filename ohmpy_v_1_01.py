@@ -1,22 +1,29 @@
 """
 29/10/2019
 OHMPY_code is a program to control the low-cost and open source resistivity meter
-OHMPY, it has been developed by Rémi CLEMENT, Nicolas FORQUET (IRSTEA) and Yannick FARGIER (IFSTTAR).
-Version 1.01 23/08/2019 modified by Remi CLEMENT
-multiplexer development for electrode selection for each quadripole
-from the quadripole file ABMN4.txt
+OHMPY, it has been developed by Rémi CLEMENT,Vivien DUBOIS, Nicolas FORQUET (IRSTEA) and Yannick FARGIER (IFSTTAR).
 """
+print 'OHMPI start' 
+print MyDateTime.isoformat()
+print 'Import library'
 
 #!/usr/bin/python
 import RPi.GPIO as GPIO
 import time
+import datetime
 import board
 import busio
 import numpy
 import os
+import sys
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
-print('Import library')
+
+"""
+parameters
+"""
+nb_eletrodes = 32 # maximum number of electrodes on the resistivity meter
+
 
 """
 functions
@@ -28,6 +35,20 @@ def switch_mux(quadripole):
     for i in range(0,4):
         for j in range(0,5) :
             GPIO.output(int(quadmux[i,j]), bool(path2elec[quadripole[i]-1,j]))
+
+
+def read_quad(filename, nb_elec):
+    output = numpy.loadtxt(filename, delimiter=" ",dtype=int) # load quadripole file
+    # locate lines where the electrode index exceeds the maximum number of electrodes
+    test_index_elec = numpy.array(numpy.where(output > 32))
+    # rajouter un test pour le deuxième cas du ticket #2
+    # if statement with exit cases (rajouter un else if pour le deuxième cas du ticket #2)
+    if test_index_elec.size != 0:
+        for i in range(len(test_index_elec[0,:])):
+            print("An electrode index at line "+ str(test_index_elec[0,i]+1)+" exceeds the maximum number of electrodes")
+        sys.exit(1)
+    else:
+        return output             
 
 
 GPIO.setmode(GPIO.BCM)
@@ -55,7 +76,7 @@ stack= 1 # repetition of the current injection for each quadrupole
 """
 Reading the quadripole file
 """
-N=numpy.loadtxt("ABMN.txt", delimiter=" ",dtype=int) # load quadripole file
+N=read_quad("ABMN.txt",nb_electrodes) # load quadripole file
 
 for g in range(0,nbr_meas): # for time-lapse monitoring
 
