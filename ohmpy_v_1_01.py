@@ -22,7 +22,7 @@ from adafruit_ads1x15.analog_in import AnalogIn
 """
 parameters
 """
-nb_eletrodes = 32 # maximum number of electrodes on the resistivity meter
+nb_electrodes = 32 # maximum number of electrodes on the resistivity meter
 
 
 """
@@ -36,19 +36,35 @@ def switch_mux(quadripole):
         for j in range(0,5) :
             GPIO.output(int(quadmux[i,j]), bool(path2elec[quadripole[i]-1,j]))
 
+# function to find rows with identical values in different columns
+def find_identical_in_line(array_object):
+    output = []
+    for i in range(len(array_object[:,1])):
+        temp = numpy.zeros(len(array_object[1,:]))
+        for j in range(len(array_object[1,:])):
+            temp[j] = numpy.count_nonzero(array_object[i,:] == array_object[i,j])
+        if any(temp > 1):
+            output.append(i)
+    return output
 
+# read quadripole file and apply tests
 def read_quad(filename, nb_elec):
     output = numpy.loadtxt(filename, delimiter=" ",dtype=int) # load quadripole file
     # locate lines where the electrode index exceeds the maximum number of electrodes
     test_index_elec = numpy.array(numpy.where(output > 32))
-    # rajouter un test pour le deuxième cas du ticket #2
+    # locate lines where an electrode is referred twice
+    test_same_elec = find_identical_in_line(output)
     # if statement with exit cases (rajouter un else if pour le deuxième cas du ticket #2)
     if test_index_elec.size != 0:
         for i in range(len(test_index_elec[0,:])):
-            print("An electrode index at line "+ str(test_index_elec[0,i]+1)+" exceeds the maximum number of electrodes")
+            print("Error: An electrode index at line "+ str(test_index_elec[0,i]+1)+" exceeds the maximum number of electrodes")
+        sys.exit(1)
+    elif len(test_same_elec) != 0:
+        for i in range(len(test_same_elec)):
+            print("Error: An electrode index is used twice at line " + str(test_same_elec[i]+1))
         sys.exit(1)
     else:
-        return output             
+        return output            
 
 
 GPIO.setmode(GPIO.BCM)
