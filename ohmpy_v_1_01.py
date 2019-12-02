@@ -4,7 +4,7 @@ OHMPY_code is a program to control the low-cost and open source resistivity mete
 OHMPY, it has been developed by Rémi CLEMENT,Vivien DUBOIS, Nicolas FORQUET (IRSTEA) and Yannick FARGIER (IFSTTAR).
 """
 print('OHMPI start' )
-print()'Import library')
+print('Import library')
 
 #!/usr/bin/python
 import RPi.GPIO as GPIO
@@ -17,6 +17,7 @@ import os
 import sys
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
+import pandas as pd
 
 """
 display start time
@@ -28,10 +29,13 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 parameters
 """
 nb_electrodes = 32 # maximum number of electrodes on the resistivity meter
-injection_time = 5 # Current injection time in second
+injection_duration = 5 # Current injection duration in second
 nbr_meas= 900 # Number of times the quadripole sequence is repeated
 sequence_delay= 30 # Delay in seconds between 2 sequences
 stack= 1 # repetition of the current injection for each quadripole
+R_ref = 50 # reference resistance value in ohm
+coef_p0 = 2.02 # slope for current conversion for ADS.P0, measurement in ???
+coef_p1 = 2.02 # slope for current conversion for ADS.P1, measurement in ???
 
 """
 functions
@@ -72,8 +76,58 @@ def read_quad(filename, nb_elec):
             print("Error: An electrode index is used twice at line " + str(test_same_elec[i]+1))
         sys.exit(1)
     else:
-        return output            
+        return output
 
+# perform a measurement
+def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1):
+    i2c = busio.I2C(board.SCL, board.SDA) # I2C protocol setup
+    ads = ADS.ADS1115(i2c, gain=2/3) # I2C communication setup
+    # inner variable initialization
+    sum_I=0
+    sum_Vmn=0
+    sum_Ps=0
+    # GPIO initialization
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
+    GPIO.setup(7, GPIO.OUT)
+    GPIO.setup(8, GPIO.OUT)
+    # resistance measurement
+    for n in range(0,3+2*nbr_stack-1) :
+        print("stack "+ str(n+1))
+        if (n % 2) == 0:
+            GPIO.output(7, GPIO.HIGH) # polarité n°1
+            print('positif')
+        else:
+            GPIO.output(7, GPIO.LOW) # polarité n°1 également ?
+            print('negatif')
+        GPIO.output(8, GPIO.HIGH) # current injection
+        time.sleep(injection_deltat) # delay depending on current injection duration
+        Ia1 = AnalogIn(ads,ADS.P0).voltage * coeffp0 # reading current value on ADS channel A0
+        Ib1 = AnalogIn(ads,ADS.P1).voltage * coeffp1 # reading current value on ADS channel A1
+        Vm1 = AnalogIn(ads,ADS.P2).voltage # reading voltage value on ADS channel A2
+        Vn1 = AnalogIn(ads,ADS.P3).voltage # reading voltage value on ADS channel A3
+        GPIO.output(8, GPIO.LOW)# stop current injection
+        I1= (Ia1 - Ib1)/Rref;
+        sum_I=sum_I+I1;
+        Vmn1= (Vm1 - Vn1);    
+        if (n % 2) == 0:
+            sum_Vmn=sum_Vmn-Vmn1;
+            sum_Ps=sum_Ps+Vmn1;
+        else:
+            sum_Vmn=sum_Vmn+Vmn1;
+            sum_Ps=sum_Ps+Vmn1;
+    # return averaged values
+    output = pd.DataFrame({
+        "Vmn":sum_Vmn/(3+2*nb_stack-1),
+        "I":sum_I/(3+2*nb_stack-1),
+        "R":Vmn/I,
+        "Ps":sum_Ps/(3+2*nb_stack-1)
+    })
+    return output
+
+"""
+Initialization of GPIO channels
+"""                    
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
@@ -86,32 +140,29 @@ for i in pinList:
     GPIO.output(i, GPIO.HIGH)
 
 """
-Reading the quadripole file
+Main loop
 """
 N=read_quad("ABMN.txt",nb_electrodes) # load quadripole file
 
 for g in range(0,nbr_meas): # for time-lapse monitoring
 
-    """
-    Selection electrode activées pour chaque quadripole
-    """
-    for i in range(0,N.shape[0]): # boucle sur les quadripôles, qui tient compte du nombre de quadripole dans le fichier ABMN
-        # call switch_mux function
+    for i in range(0,N.shape[0]): # loop over quadripoles
+        # call the switch_mux function to switch to the right electrodes
         switch_mux(N[i,])
 
-        time.sleep(injection_time)
+        # run a measurement
+        run_measurement(stack, injection_duration, R_ref, coef_p0, coef_p1)
+
+        # save data and print in a text file
+        append_data
+
+        # reset multiplexer channels
         GPIO.output(12, GPIO.HIGH); GPIO.output(16, GPIO.HIGH); GPIO.output(20, GPIO.HIGH); GPIO.output(21, GPIO.HIGH); GPIO.output(26, GPIO.HIGH)
         GPIO.output(18, GPIO.HIGH); GPIO.output(23, GPIO.HIGH); GPIO.output(24, GPIO.HIGH); GPIO.output(25, GPIO.HIGH); GPIO.output(19, GPIO.HIGH)
         GPIO.output(6, GPIO.HIGH); GPIO.output(13, GPIO.HIGH); GPIO.output(4, GPIO.HIGH); GPIO.output(17, GPIO.HIGH); GPIO.output(27, GPIO.HIGH)
         GPIO.output(22, GPIO.HIGH); GPIO.output(10, GPIO.HIGH); GPIO.output(9, GPIO.HIGH); GPIO.output(11, GPIO.HIGH); GPIO.output(5, GPIO.HIGH)
 
-
-    time.sleep(sequence_delay);#waiting next measurement
-
+    time.sleep(sequence_delay); #waiting next measurement (time-lapse)
 
 
-
-'''
-Save result in txt file
-'''
 
