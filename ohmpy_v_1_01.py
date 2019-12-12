@@ -18,7 +18,7 @@ import sys
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
 import pandas as pd
-from pathlib import Path
+import os.path
 
 """
 display start time
@@ -30,14 +30,14 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 parameters
 """
 nb_electrodes = 32 # maximum number of electrodes on the resistivity meter
-injection_duration = 5 # Current injection duration in second
-nbr_meas= 900 # Number of times the quadripole sequence is repeated
+injection_duration = 0.5 # Current injection duration in second
+nbr_meas= 1 # Number of times the quadripole sequence is repeated
 sequence_delay= 30 # Delay in seconds between 2 sequences
 stack= 1 # repetition of the current injection for each quadripole
 R_ref = 50 # reference resistance value in ohm
 coef_p0 = 2.02 # slope for current conversion for ADS.P0, measurement in ???
 coef_p1 = 2.02 # slope for current conversion for ADS.P1, measurement in ???
-export_path = "/home/..."
+export_path = "/home/pi/Desktop/ohmpy-develop/measurement.csv"
 
 """
 functions
@@ -94,7 +94,7 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1):
     GPIO.setup(7, GPIO.OUT)
     GPIO.setup(8, GPIO.OUT)
     # resistance measurement
-    for n in range(0,3+2*nbr_stack-1) :
+    for n in range(0,3+2*nb_stack-1) :
         print("stack "+ str(n+1))
         if (n % 2) == 0:
             GPIO.output(7, GPIO.HIGH) # polarité n°1
@@ -104,8 +104,8 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1):
             print('negatif')
         GPIO.output(8, GPIO.HIGH) # current injection
         time.sleep(injection_deltat) # delay depending on current injection duration
-        Ia1 = AnalogIn(ads,ADS.P0).voltage * coeffp0 # reading current value on ADS channel A0
-        Ib1 = AnalogIn(ads,ADS.P1).voltage * coeffp1 # reading current value on ADS channel A1
+        Ia1 = AnalogIn(ads,ADS.P0).voltage * coefp0 # reading current value on ADS channel A0
+        Ib1 = AnalogIn(ads,ADS.P1).voltage * coefp1 # reading current value on ADS channel A1
         Vm1 = AnalogIn(ads,ADS.P2).voltage # reading voltage value on ADS channel A2
         Vn1 = AnalogIn(ads,ADS.P3).voltage # reading voltage value on ADS channel A3
         GPIO.output(8, GPIO.LOW)# stop current injection
@@ -120,19 +120,19 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1):
             sum_Ps=sum_Ps+Vmn1
     # return averaged values
     output = pd.DataFrame({
-        "time":datetime.now()
-        "Vmn":sum_Vmn/(3+2*nb_stack-1),
-        "I":sum_I/(3+2*nb_stack-1),
-        "R":Vmn/I,
-        "Ps":sum_Ps/(3+2*nb_stack-1)
-        "nbStack":nb_stack
+        "time":[datetime.now()],
+        "Vmn":[sum_Vmn/(3+2*nb_stack-1)],
+        "I":[sum_I/(3+2*nb_stack-1)],
+        "R":[sum_Vmn/(3+2*nb_stack-1)/(sum_I/(3+2*nb_stack-1))],
+        "Ps":[sum_Ps/(3+2*nb_stack-1)],
+        "nbStack":[nb_stack]
     })
     return output
 
 # save data
 def append_and_save(path, last_measurement):
     
-    if path.is_file():
+    if os.path.isfile(path):
         # Load data file and append data to it
         with open(path, 'a') as f:
              last_measurement.to_csv(f, header=False)
@@ -179,4 +179,3 @@ for g in range(0,nbr_meas): # for time-lapse monitoring
         GPIO.output(22, GPIO.HIGH); GPIO.output(10, GPIO.HIGH); GPIO.output(9, GPIO.HIGH); GPIO.output(11, GPIO.HIGH); GPIO.output(5, GPIO.HIGH)
 
     time.sleep(sequence_delay) #waiting next measurement (time-lapse)
-    
