@@ -18,7 +18,6 @@ import sys
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
 import pandas as pd
-import feather
 from pathlib import Path
 
 """
@@ -135,12 +134,12 @@ def append_and_save(path, last_measurement):
     
     if path.is_file():
         # Load data file and append data to it
-        df = feather.read_dataframe(path)
-        df.append(last_measurement)
-        feather.write_dataframe(df, path)
+        with open(path, 'a') as f:
+             last_measurement.to_csv(f, header=False)
     else:
-        # create data file
-        feather.write_dataframe(last_measurement, path)
+        # create data file and add headers
+        with open(path, 'a') as f:
+             last_measurement.to_csv(f, header=True)
 
 """
 Initialization of GPIO channels
