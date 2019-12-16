@@ -53,12 +53,19 @@ def switch_mux(quadripole):
 # function to find rows with identical values in different columns
 def find_identical_in_line(array_object):
     output = []
-    for i in range(len(array_object[:,1])):
-        temp = numpy.zeros(len(array_object[1,:]))
-        for j in range(len(array_object[1,:])):
-            temp[j] = numpy.count_nonzero(array_object[i,:] == array_object[i,j])
+    if array_object.ndim == 1:
+        temp = numpy.zeros(4)
+        for i in range(len(array_object)):
+            temp[i] = numpy.count_nonzero(array_object == array_object[i])
         if any(temp > 1):
-            output.append(i)
+            output.append(0)
+    else:
+        for i in range(len(array_object[:,1])):
+            temp = numpy.zeros(len(array_object[1,:]))
+            for j in range(len(array_object[1,:])):
+                temp[j] = numpy.count_nonzero(array_object[i,:] == array_object[i,j])
+            if any(temp > 1):
+                output.append(i)
     return output
 
 # read quadripole file and apply tests
