@@ -94,14 +94,11 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1):
     GPIO.setup(7, GPIO.OUT)
     GPIO.setup(8, GPIO.OUT)
     # resistance measurement
-    for n in range(0,3+2*nb_stack-1) :
-        print("stack "+ str(n+1))
+    for n in range(0,3+2*nb_stack-1) :        
         if (n % 2) == 0:
-            GPIO.output(7, GPIO.HIGH) # polarité n°1
-            print('positif')
+            GPIO.output(7, GPIO.HIGH) # polarité n°1        
         else:
-            GPIO.output(7, GPIO.LOW) # polarité n°1 également ?
-            print('negatif')
+            GPIO.output(7, GPIO.LOW) # polarité n°1 également ?        
         GPIO.output(8, GPIO.HIGH) # current injection
         time.sleep(injection_deltat) # delay depending on current injection duration
         Ia1 = AnalogIn(ads,ADS.P0).voltage * coefp0 # reading current value on ADS channel A0
@@ -121,12 +118,14 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1):
     # return averaged values
     output = pd.DataFrame({
         "time":[datetime.now()],
+        # rajouter les ABMN
         "Vmn":[sum_Vmn/(3+2*nb_stack-1)],
         "I":[sum_I/(3+2*nb_stack-1)],
         "R":[sum_Vmn/(3+2*nb_stack-1)/(sum_I/(3+2*nb_stack-1))],
         "Ps":[sum_Ps/(3+2*nb_stack-1)],
         "nbStack":[nb_stack]
     })
+    print(output.to_string())
     return output
 
 # save data
