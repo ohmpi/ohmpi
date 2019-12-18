@@ -3,23 +3,13 @@
 OHMPY_code is a program to control the low-cost and open source resistivity meter
 OHMPY, it has been developed by Rémi CLEMENT,Vivien DUBOIS, Nicolas FORQUET (IRSTEA) and Yannick FARGIER (IFSTTAR).
 """
-<<<<<<< HEAD
-print 'OHMPI start' 
-print MyDateTime.isoformat()
-print 'Import library'
-=======
 print('OHMPI start' )
 print('Import library')
->>>>>>> develop
 
 #!/usr/bin/python
 import RPi.GPIO as GPIO
 import time
-<<<<<<< HEAD
-import datetime
-=======
 from datetime import datetime
->>>>>>> develop
 import board
 import busio
 import numpy
