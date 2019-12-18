@@ -1,0 +1,10 @@
+sudo apt-get install python3-venv (déjà installé)
+sudo apt-get install libatlas-base-dev
+mkdir python-virtual-environments
+cd python-virtual-environments
+python3 -m venv ohmpi
+source ohmpi/bin/activate
+pip install RPi.GPIO
+pip install adafruit-blinka
+pip install numpy
+pip install adafruit-circuitpython-ads1x15
