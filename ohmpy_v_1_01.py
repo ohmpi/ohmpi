@@ -3,17 +3,23 @@
 OHMPY_code is a program to control the low-cost and open source resistivity meter
 OHMPY, it has been developed by Rémi CLEMENT,Vivien DUBOIS, Nicolas FORQUET (IRSTEA) and Yannick FARGIER (IFSTTAR).
 """
+<<<<<<< HEAD
 print 'OHMPI start' 
 print MyDateTime.isoformat()
 print 'Import library'
+=======
 print('OHMPI start' )
 print('Import library')
+>>>>>>> develop
 
 #!/usr/bin/python
 import RPi.GPIO as GPIO
 import time
+<<<<<<< HEAD
 import datetime
+=======
 from datetime import datetime
+>>>>>>> develop
 import board
 import busio
 import numpy
@@ -157,10 +163,6 @@ Initialization of GPIO channels
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-#i2c = busio.I2C(board.SCL, board.SDA)
-# Create the ADC object using the I2C bus
-#ads = ADS.ADS1115(i2c)
-#chan = AnalogIn(ads, ADS.P0)
 """
 Initialization of multiplexer channels
 """
@@ -168,13 +170,6 @@ pinList = [12,16,20,21,26,18,23,24,25,19,6,13,4,17,27,22,10,9,11,5] # List of GP
 for i in pinList:
     GPIO.setup(i, GPIO.OUT)
     GPIO.output(i, GPIO.HIGH)
-"""
-Measurement settings
-"""
-injection_time = 5 # Current injection time in second
-nbr_meas= 900 # Number of times the quadrupole sequence is repeated
-sequence_delay= 30 # Delay in Second between 2 sequences
-stack= 1 # repetition of the current injection for each quadrupole
 
 """
 Main loop
