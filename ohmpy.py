@@ -88,7 +88,7 @@ def read_quad(filename, nb_elec):
         return output
 
 # perform a measurement
-def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1):
+def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, elec_array):
     i2c = busio.I2C(board.SCL, board.SDA) # I2C protocol setup
     ads = ADS.ADS1115(i2c, gain=2/3) # I2C communication setup
     # inner variable initialization
@@ -125,7 +125,10 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1):
     # return averaged values
     output = pd.DataFrame({
         "time":[datetime.now()],
-        # rajouter les ABMN
+        "A":elec_array[0],
+        "B":elec_array[1],
+        "M":elec_array[2],
+        "N":elec_array[3],
         "Vmn":[sum_Vmn/(3+2*nb_stack-1)],
         "I":[sum_I/(3+2*nb_stack-1)],
         "R":[sum_Vmn/(3+2*nb_stack-1)/(sum_I/(3+2*nb_stack-1))],
@@ -173,7 +176,7 @@ for g in range(0,nbr_meas): # for time-lapse monitoring
         switch_mux(N[i,])
 
         # run a measurement
-        current_measurement = run_measurement(stack, injection_duration, R_ref, coef_p0, coef_p1)
+        current_measurement = run_measurement(stack, injection_duration, R_ref, coef_p0, coef_p1, N[i,])
 
         # save data and print in a text file
         append_and_save(export_path, current_measurement)
