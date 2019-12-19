@@ -27,16 +27,22 @@ current_time = datetime.now()
 print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 
 """
-parameters
+measurement parameters
 """
 nb_electrodes = 32 # maximum number of electrodes on the resistivity meter
 injection_duration = 0.5 # Current injection duration in second
 nbr_meas= 1 # Number of times the quadripole sequence is repeated
 sequence_delay= 30 # Delay in seconds between 2 sequences
 stack= 1 # repetition of the current injection for each quadripole
+
+"""
+hardware parameters
+"""
 R_ref = 50 # reference resistance value in ohm
-coef_p0 = 2.02 # slope for current conversion for ADS.P0, measurement in ???
-coef_p1 = 2.02 # slope for current conversion for ADS.P1, measurement in ???
+coef_p0 = 2.02 # slope for current conversion for ADS.P0, measurement in V/V
+coef_p1 = 2.02 # slope for current conversion for ADS.P1, measurement in V/V
+coef_p2 = 1 # slope for current conversion for ADS.P2, measurement in V/V
+coef_p3 = 1 # slope for current conversion for ADS.P3, measurement in V/V
 export_path = "/home/pi/Desktop/ohmpy-develop/measurement.csv"
 
 """
@@ -88,7 +94,7 @@ def read_quad(filename, nb_elec):
         return output
 
 # perform a measurement
-def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, elec_array):
+def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, coefp3, elec_array):
     i2c = busio.I2C(board.SCL, board.SDA) # I2C protocol setup
     ads = ADS.ADS1115(i2c, gain=2/3) # I2C communication setup
     # inner variable initialization
@@ -110,8 +116,8 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, elec_array
         time.sleep(injection_deltat) # delay depending on current injection duration
         Ia1 = AnalogIn(ads,ADS.P0).voltage * coefp0 # reading current value on ADS channel A0
         Ib1 = AnalogIn(ads,ADS.P1).voltage * coefp1 # reading current value on ADS channel A1
-        Vm1 = AnalogIn(ads,ADS.P2).voltage # reading voltage value on ADS channel A2
-        Vn1 = AnalogIn(ads,ADS.P3).voltage # reading voltage value on ADS channel A3
+        Vm1 = AnalogIn(ads,ADS.P2).voltage * coefp2# reading voltage value on ADS channel A2
+        Vn1 = AnalogIn(ads,ADS.P3).voltage * coefp3# reading voltage value on ADS channel A3
         GPIO.output(8, GPIO.LOW)# stop current injection
         I1= (Ia1 - Ib1)/Rref
         sum_I=sum_I+I1
