@@ -1,12 +1,10 @@
 """
-29/10/2019
-OHMPY_code is a program to control the low-cost and open source resistivity meter
-OHMPY, it has been developed by Rémi CLEMENT,Vivien DUBOIS, Nicolas FORQUET (IRSTEA) and Yannick FARGIER (IFSTTAR).
+January 6, 2020
+ohmpi.py is a program to control a low-cost and open source resistivity meter OhmPi that has been developed by Rémi CLEMENT,Vivien DUBOIS, Nicolas FORQUET (INRAE), and Yannick FARGIER (IFSTTAR).
 """
 print('OHMPI start' )
 print('Import library')
 
-#!/usr/bin/python
 import RPi.GPIO as GPIO
 import time
 from datetime import datetime
@@ -43,7 +41,7 @@ coef_p0 = 2.02 # slope for current conversion for ADS.P0, measurement in V/V
 coef_p1 = 2.02 # slope for current conversion for ADS.P1, measurement in V/V
 coef_p2 = 1 # slope for current conversion for ADS.P2, measurement in V/V
 coef_p3 = 1 # slope for current conversion for ADS.P3, measurement in V/V
-export_path = "/home/pi/Desktop/ohmpy-develop/measurement.csv"
+export_path = "~/measurement.csv"
 
 """
 functions
