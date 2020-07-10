@@ -3,8 +3,11 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Bienvenue sur cette documentation 
-================================= 
+OHMPI: Open source and open hardware resitivity-meter 
+===================================================== 
+
+.. image:: logo_ohmpi.JPG
+   :align: center
 
 Contents: 
 
