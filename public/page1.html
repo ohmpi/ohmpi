@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Seconde page &mdash; Ohmpi: open hardware resistivity-meter documentation</title>
+  <title>OhmPi V 1.01 &mdash; Ohmpi: open hardware resistivity-meter documentation</title>
   
 
   
@@ -30,14 +30,13 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Image" href="page0.html" /> 
+    <link rel="prev" title="Introduction to OhmPi" href="page0.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,12 +82,10 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="page0.html">Image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="page0.html#introduction-to-ohmpi">Introduction to OhmPi</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Seconde page</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#formule">Formule</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#image">Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#texte">Texte</a></li>
+<li class="toctree-l1"><a class="reference internal" href="page0.html"><strong>Introduction to OhmPi</strong></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OhmPi V 1.01</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#os-installation-on-a-raspberry-pi">OS installation on a Raspberry Pi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#construction-of-the-measurement-board-and-connection-to-the-raspberry">Construction of the measurement board and connection to the Raspberry</a></li>
 </ul>
 </li>
 </ul>
@@ -137,7 +134,7 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Seconde page</li>
+      <li>OhmPi V 1.01</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -156,24 +153,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="seconde-page">
-<h1>Seconde page<a class="headerlink" href="#seconde-page" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="formule">
-<h2>Formule<a class="headerlink" href="#formule" title="Permalink to this headline">¶</a></h2>
-<div class="math notranslate nohighlight">
-\[\sum_{a}^{b} x_n = c_1 + c_2^3 + \cos(\pi)\]</div>
+  <div class="section" id="ohmpi-v-1-01">
+<h1>OhmPi V 1.01<a class="headerlink" href="#ohmpi-v-1-01" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="os-installation-on-a-raspberry-pi">
+<h2>OS installation on a Raspberry Pi<a class="headerlink" href="#os-installation-on-a-raspberry-pi" title="Permalink to this headline">¶</a></h2>
+<p>The first step is to start up the Raspberry Pi board, including installation of an OS (operating system).
+For this step, the installation instructions are well described on the Raspberry website
+<a class="reference external" href="https://www.raspberrypi.org/help/noobs-setup/2/">https://www.raspberrypi.org/help/noobs-setup/2/</a>). The authors recommend installing the latest
+stable and complete version of Raspbian by using NOOBS (a simple-to-use operating system installer).
+Once the OS has been installed, the 1-wire option and GPIO remote option must be deactivated via the
+Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.</p>
 </div>
-<div class="section" id="image">
-<h2>Image<a class="headerlink" href="#image" title="Permalink to this headline">¶</a></h2>
-<img alt="_images/logo_ohmpi.JPG" class="align-center" src="_images/logo_ohmpi.JPG" />
-</div>
-<div class="section" id="texte">
-<h2>Texte<a class="headerlink" href="#texte" title="Permalink to this headline">¶</a></h2>
-<p>Voici un second texte pour notre Démo.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>J’espère que cela vous parle un peu plus que la présentation présente.</p>
-</div>
+<div class="section" id="construction-of-the-measurement-board-and-connection-to-the-raspberry">
+<h2>Construction of the measurement board and connection to the Raspberry<a class="headerlink" href="#construction-of-the-measurement-board-and-connection-to-the-raspberry" title="Permalink to this headline">¶</a></h2>
+<p>The measurement board must be printed using the PCB file (Source file repository), with components soldered onto it by following the steps described below and illustrated in the following figure :</p>
+<ul class="simple">
+<li><p>Step no. 1: installation of the 1-Kohm resistors with an accuracy of ± 1%.</p></li>
+<li><p>Step no. 2: installation of the 1.5-Kohm resistors with an accuracy of ± 1%.</p></li>
+<li><p>Step no. 3: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks</p></li>
+<li><p>Step no. 4: installation of the 50-Ohm reference resistor ± 0.1%</p></li>
+<li><p>Step no. 5: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the direction).</p></li>
+</ul>
+<p>1-Kohm and 1.5-Kohm resistors apply to the divider bridge. If, for example, you prefer using a weaker or stronger power supply, it would be possible to adjust the divider bridge value by simply modifying these resistors. Once all the components have been soldered together, the measurement board can be connected to the Raspberry Pi and the battery terminal, according to Figure 9. Between the battery and the TX+ terminal of the measurement board, remember to place a fuse holder with a 1.5-A fuse for safety purposes.</p>
 </div>
 </div>
 
@@ -186,7 +187,7 @@
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="page0.html" class="btn btn-neutral float-left" title="Image" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="page0.html" class="btn btn-neutral float-left" title="Introduction to OhmPi" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

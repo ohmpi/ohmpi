@@ -8,7 +8,7 @@ OHMPI: Open source and open hardware resitivity-meter
 
 .. image:: logo_ohmpi.JPG
    :width: 200px
-   :height: 200px
+   :height: 150px
    :align: center
 
 Contents: 
