@@ -1,12 +1,16 @@
-************ 
-Seconde page 
-************ 
+**************
+OhmPi V 1.01 
+************** 
 
-Formule 
-******* 
+OS installation on a Raspberry Pi 
+****************************************** 
 
-.. math:: 
-   \sum_{a}^{b} x_n = c_1 + c_2^3 + \cos(\pi) 
+The first step is to start up the Raspberry Pi board, including installation of an OS (operating system). 
+For this step, the installation instructions are well described on the Raspberry website 
+https://www.raspberrypi.org/help/noobs-setup/2/). The authors recommend installing the latest 
+stable and complete version of Raspbian by using NOOBS (a simple-to-use operating system installer). 
+Once the OS has been installed, the 1-wire option and GPIO remote option must be deactivated via the
+Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.
 
 Image 
 ***** 
@@ -19,5 +23,3 @@ Texte
 
 Voici un second texte pour notre Démo. 
 
-.. note:: 
-   J'espère que cela vous parle un peu plus que la présentation présente.
