@@ -84,8 +84,10 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="page0.html"><strong>Introduction to OhmPi</strong></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">OhmPi V 1.01</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#os-installation-on-a-raspberry-pi">OS installation on a Raspberry Pi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#construction-of-the-measurement-board-and-connection-to-the-raspberry">Construction of the measurement board and connection to the Raspberry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#current-injection">Current injection</a></li>
 </ul>
 </li>
 </ul>
@@ -155,6 +157,10 @@
             
   <div class="section" id="ohmpi-v-1-01">
 <h1>OhmPi V 1.01<a class="headerlink" href="#ohmpi-v-1-01" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-philosophy-of-ohmpi">
+<h2>The philosophy of Ohmpi<a class="headerlink" href="#the-philosophy-of-ohmpi" title="Permalink to this headline">¶</a></h2>
+<p>The philosophy of Ohmpi V1.01 is to offer a multi electrode resistivity meter, from a set of commercially available electronic cards it is a resistivity meter limited to 32 electrodes only. It is limited to low-current injection, but suitable for small laboratory experiments and small field time monitoring</p>
+</div>
 <div class="section" id="os-installation-on-a-raspberry-pi">
 <h2>OS installation on a Raspberry Pi<a class="headerlink" href="#os-installation-on-a-raspberry-pi" title="Permalink to this headline">¶</a></h2>
 <p>The first step is to start up the Raspberry Pi board, including installation of an OS (operating system).
@@ -175,6 +181,17 @@ Raspbian GUI settings menu. Failure to carry out this task may cause damage to t
 <li><p>Step no. 5: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the direction).</p></li>
 </ul>
 <p>1-Kohm and 1.5-Kohm resistors apply to the divider bridge. If, for example, you prefer using a weaker or stronger power supply, it would be possible to adjust the divider bridge value by simply modifying these resistors. Once all the components have been soldered together, the measurement board can be connected to the Raspberry Pi and the battery terminal, according to Figure 9. Between the battery and the TX+ terminal of the measurement board, remember to place a fuse holder with a 1.5-A fuse for safety purposes.</p>
+<div class="align-center figure" id="id1">
+<a class="reference internal image-reference" href="_images/measurement_board.jpg"><img alt="alternate text" src="_images/measurement_board.jpg" style="width: 800px; height: 400px;" /></a>
+<p class="caption"><span class="caption-text">Measurement circuit board assembly: a) printed circuit board, b) adding the 1-Kohm resistors ± 1%, c)adding the 1.5-Kohm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="align-center figure" id="id2">
+<a class="reference internal image-reference" href="_images/measurement_board-2.jpg"><img alt="alternate text" src="_images/measurement_board-2.jpg" style="width: 800px; height: 700px;" /></a>
+<p class="caption"><span class="caption-text">Measurement board installation with Raspberry Pi</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="current-injection">
+<h2>Current injection<a class="headerlink" href="#current-injection" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

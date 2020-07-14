@@ -2,8 +2,6 @@
 Premiere page 
 ************* 
 
-
-
  
 
 .. image:: logo_ohmpi.JPG
