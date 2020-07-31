@@ -1,6 +1,6 @@
-**************
-OhmPi V 1.01 
-************** 
+*****************************************
+OhmPi V 1.01 (limited to 32 electrodes)
+***************************************** 
 
 The philosophy of Ohmpi 
 ****************************************** 
@@ -52,3 +52,24 @@ The measurement board must be printed using the PCB file (Source file repository
    
 Current injection 
 ******************
+
+To carry out the electrical resistivity measurement, the first step consists of injecting current into the ground.
+In our case, a simple 12-V lead-acid battery is used to create an electrical potential difference that results 
+in current circulating into the ground. The current is injected through electrodes A and B (see Fig. 2). This 
+injection is controlled via a 4-channel relay module board connected to the Raspberry Pi. The mechanical relay
+module board is shown in Figure 4. Relays 1 and 2 serve to switch on the current source. The common contacts 
+of relays 1 and 2 are connected to the positive and negative battery poles, respectively. The normally open 
+contacts of both relays are connected to the common contacts of relays 3 and 4. Relays 1 and 2 are connected 
+to the GPIO 7 on the Raspberry Pi and therefore activate simultaneously. The role of relays 3 and 4 is to reverse 
+the polarity at electrodes A and B. Thus, when relays 3 and 4 are energized by the GPIO 8 in the open position, 
+the positive battery pole is connected to electrode A and the negative pole to electrode B. When not energized, 
+they remain in the normally closed position. This set-up offers a simple and robust solution to inject current.
+
+.. figure:: current_board.jpg
+   :width: 800px
+   :align: center
+   :height: 400px
+   :alt: alternate text
+   :figclass: align-center
+   
+   Wiring of the 4-channel relay module board for current injection management
