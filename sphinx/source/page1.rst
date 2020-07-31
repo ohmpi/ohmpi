@@ -85,3 +85,12 @@ To measure the current intensity between A and B, the electrical potential diffe
 To measure the potential difference needed to measure current intensity, the ADS 1115 is connected to the ground of the circuit. In our case, the ground reference is electrode B. The analog inputs A1 and A0 of the ADS1115 are connected to each pole of the reference resistor (R9). In order to increase input impedance and adapt the signal gain, tracking amplifiers have been included and completed by a divider bridge (R5, R8, R6 and R7) located between the two amplifiers. The resistance of the divider bridge ensures that the signal remains between 0 and 5 V, in accordance with the ADS1115 signal gain. To measure the potential difference, the M and N electrodes are connected to analog inputs A2 and A3 of the ADS 1115. Between the ADC and the electrodes, two tracking amplifiers and a divider bridge have been positioned so as to obtain a potential lying within the 0-5 V range at the analog input of the ADS 1115.
 Let's note that the potential difference value would equal the potential measured with ADS1115 multiplied by the voltage reduction value of the divider bridge (see Section 5.2). Despite the use of high-resolution resistance (i.e. accurate to within 1%), it is still necessary to calibrate the divider bridge using a precision voltmeter. For this purpose, the input and output potentials of the divider bridge must be measured using an equivalent circuit for various electrical potential values. These values serve to calculate the gain. With this electronic board, it is possible to measure the potential and intensity without disturbing the electric field in the ground, with the total input impedance value being estimated at 36 mega-ohms.
 A shortcut between Electrodes A and B will generate excessive currents, whose intensities depend on the type of battery used. A lithium ion battery or automobile-type lead-acid battery can deliver a strong enough current to damage the board and, as such, constitutes a potential hazard. We therefore recommend adding a 1.5-A fuse between the battery and resistor R9.
+
+.. figure:: schema_measurement_board.jpg
+   :width: 800px
+   :align: center
+   :height: 400px
+   :alt: alternate text
+   :figclass: align-center
+   
+   Measurement board
