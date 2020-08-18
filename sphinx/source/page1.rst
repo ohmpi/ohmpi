@@ -94,3 +94,16 @@ A shortcut between Electrodes A and B will generate excessive currents, whose in
    :figclass: align-center
    
    Measurement board
+   
+Multiplexer implentation
+*************************
+The resistivity measurement is conducted on four terminals (A, B, M and N). The user could perform each measurement 
+by manually plugging four electrodes into the four channel terminals. In practice, ERT requires several tens or thousands 
+of measurements conducted on different electrode arrays. A multiplexer is therefore used to connect each channel to one of 
+the 32 electrodes stuck into the ground, all of which are connected to the data logger.
+
+
+We will describe below how to assemble the four multiplexers (MUX), one per terminal. 
+A multiplexer consists of 2 relay modules with 16 channels each. On the first board, on each MUX, 15 relays out of the 16 available will be used. Please note that the suggested configuration enables making smaller multiplexers (8 or 16 electrodes only). On the other hand, if you prefer upping to 64 electrodes, which is entirely possible, a GPIO channel multiplier will have to be used. To prepare the multiplexer, the channels of the two relay boards must be connected according to the wiring diagram shown in Figure 11. For this purpose, 0.5-mm² cables with end caps are used and their length adjusted for each connection in order to produce a clean assembly. The length was adjusted so that the distance between the two points to be connected could be directly measured on the board once they had been assembled one above the other, in adding an extra 3 cm. The wires at the ends need to be stripped and the end caps added. As a final step, connect the cables to the correct connectors. This operation must be repeated in order to carry out all the wiring shown in Figure 11.
+
+ 
