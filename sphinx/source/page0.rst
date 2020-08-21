@@ -29,7 +29,9 @@ and flexible tool for small-scale experiments. Called OhmPi, this basic resistiv
 features current injection and measurement functions associated with a multiplexer \
 that allows performing automatic measurements with up to 32 electrodes.\ 
 OhmPi's philosophy is to provide a fully open source and open hardware tool /
-to the near surface scientific community. 
+to the near surface scientific community.
+
+ 
 
 .. note:: 
    Everyone willing to get involved is  welcome in ohmPi Project!.
