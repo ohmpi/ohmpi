@@ -26,7 +26,6 @@ Parteners:
    +-------------------------------+-----------------------------------+-------------------------------+-----------------------------------+
    |   .. image:: logo_inrae.jpg   |  .. image:: logo_univ_gustave.png |   .. image:: logo-iris.jpg    |  .. image:: ige.png               | 
    +-------------------------------+-----------------------------------+-------------------------------+-----------------------------------+
-   
 
 
 Creation date : Juillet 2020.
@@ -37,8 +36,7 @@ Status of document: In progress.
 
    
 **Introduction to OhmPi** 
-************************* 
-
+=========================
 
 This documentation presents the development of a low-cost, open hardware \ 
 resistivity meter to provide the scientific community with a robust \
@@ -47,7 +45,6 @@ features current injection and measurement functions associated with a multiplex
 that allows performing automatic measurements with up to 32 electrodes.\ 
 OhmPi's philosophy is to provide a fully open source and open hardware tool /
 to the near surface scientific community.
-
  
 
 .. note:: 

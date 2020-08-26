@@ -212,5 +212,19 @@ The next step consists of connecting the relay card inputs to the Raspberry Pi a
 
 
 
++-------------------------------+-------------------------------------------+---------------------+
+|                               |Relay shield n°1                           |Relay Shield n°2     |                      
+|                               +----------+----------+----------+----------+---------------------+
+|                               |Pin1      |Pin 2-3   |Pin 4-7   |Pin 8-16  |Pin 1- 16            |
++-------------------------------+----------+----------+----------+----------+---------------------+
+    
+	Connection of the GPIOs to each multiplexer
+
+
+Operating instruction
+*************************
+
+Preliminary procedure (Only for the initial operation)
+======================================================
 
  
