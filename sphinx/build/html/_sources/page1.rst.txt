@@ -211,20 +211,85 @@ This same operation must be repeated for the other three multiplexers as well.
 The next step consists of connecting the relay card inputs to the Raspberry Pi according to Table 5 for all four multiplexers.
 
 
-
 +-------------------------------+-------------------------------------------+---------------------+
 |                               |Relay shield n°1                           |Relay Shield n°2     |                      
 |                               +----------+----------+----------+----------+---------------------+
-|                               |Pin1      |Pin 2-3   |Pin 4-7   |Pin 8-16  |Pin 1- 16            |
+|                               |Pin 1     |Pin 2-3   |Pin 4-7   |Pin 8-16  |Pin 1- 16            |
++-------------------------------+----------+----------+----------+----------+---------------------+
+| Multiplexer A                 |12        |16        |20        |21        |26                   |
++-------------------------------+----------+----------+----------+----------+---------------------+
+| Multiplexer B                 |18        |23        |24        |25        |19                   |
++-------------------------------+----------+----------+----------+----------+---------------------+
+| Multiplexer M                 |06        |13        |04        |17        |27                   |
++-------------------------------+----------+----------+----------+----------+---------------------+
+| Multiplexer N                 |22        |10        |09        |11        |05                   |
 +-------------------------------+----------+----------+----------+----------+---------------------+
     
 	Connection of the GPIOs to each multiplexer
 
+
+Electrode connection
+*************************
+At this point, all that remains is to connect the electrodes of each multiplexer to a terminal block (Fig. 13). In our set-up, screw terminals assembled on a din rail were used. 
+According to the chosen multiplexer configuration, all the relays of each multiplexer will be connected to an electrode and, consequently, each electrode will have four incoming 
+connections. Instead of having four cables connecting an electrode terminal to each multiplexer, we recommend using the cable assembly shown in the following Figure.
+
+.. figure:: cable.jpg
+   :width: 800px
+   :align: center
+   :height: 300px
+   :alt: alternate text
+   :figclass: align-center
+
+the next figure provides an example of multiplexer relay connections for electrode no. 1: this electrode of multiplexer MUX A must be connected to electrode no. 1 of MUX B. Moreover, electrode no. 1 of MUX B 
+must be connected to electrode no. 1 of MUX N, which in turn must be connected to electrode no. 1 of MUX M. Lastly, electrode no. 1 of MUX M is connected to the terminal block. 
+This operation must be repeated for all 32 electrodes.
+
+.. figure:: electrode_cable.jpg
+   :width: 800px
+   :align: center
+   :height: 800px
+   :alt: alternate text
+   :figclass: align-center
 
 Operating instruction
 *************************
 
 Preliminary procedure (Only for the initial operation)
 ======================================================
-
+The open source code must be downloaded at the Open Science Framework source file repository for this manuscript (https://osf.io/dzwb4/) 
+or at the following Gitlab repository address: https://gitlab.irstea.fr/reversaal/OhmPi. The code must be then unzipped into a selected folder (e.g. OhmPi-master). A “readme” file 
+is proposed in the directory to assist with installation of the software and required python packages. It is strongly recommended to create a python virtual environment for installing 
+the required packages and running the code.
  
+ 
+Startup procedure
+==================
+As an initial operating instruction, the 12-V battery must be disconnected before any hardware handling. Ensure that the battery is charged at full capacity. Plug all the electrodes (32 or fewer)
+into the screw terminals. The Raspberry Pi must be plugged into a computer screen, with a mouse and keyboard accessed remotely. The Raspberry Pi must then be plugged into the power supply 
+(for laboratory measurements) or a power bank (5V - 2A for field measurements). At this point, you'll need to access the Raspbian operating system. Inside the previously created folder “ohmPi”, 
+the protocol file “ABMN.txt” must be created or modified; this file contains all quadrupole ABMN numeration (an example is proposed with the source code). Some input parameters of the main “ohmpi.py” 
+function may be adjusted/optimized depending on the measurement attributes. For example, both the current injection duration and number of stacks can be adjusted. At this point, the 12-V battery can be 
+plugged into the hardware; the "ohmpi.py" source code must be run within a python3 environment (or a virtual environment if one has been created) either in the terminal or using Thonny. You should now 
+hear the characteristic sound of a relay switching as a result of electrode permutation. After each quadrupole measurement, the potential difference as well as the current intensity and resistance 
+are displayed on the screen. A measurement file is automatically created and named "measure.csv"; it will be placed in the same folder.
+
+Electrical resistivity measurement parameters description
+==========================================================
+
+.. code-block:: python
+	:linenos:
+	:lineno-start: 27
+
+	 """
+	 measurement parameters
+	 """
+	 nb_electrodes = 32 # maximum number of electrodes on the resistivity meter
+	 injection_duration = 0.5 # Current injection duration in second
+	 nbr_meas= 1 # Number of times the quadripole sequence is repeated
+	 sequence_delay= 30 # Delay in seconds between 2 sequences
+	 stack= 1 # repetition of the current injection for each quadripole
+
+The measurement parameters can be adjusted in lines 27 to 30 of the ohmpi.py code.
+
+
