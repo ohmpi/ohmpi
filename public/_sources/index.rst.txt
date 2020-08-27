@@ -6,6 +6,20 @@
 OHMPI: Open source and open hardware resitivity-meter 
 ===================================================== 
 
+.. sidebar:: Summary
+
+    :Release: |release|
+    :Date: |today|
+    :Authors: **Rémi CLEMENT, Nicolas FORQUET, Julien GANCE, Yannick FARGIER, Vivien DUBOIS, Hélène GUYARD**
+    :Target: users, researchers and developers 
+    :status: some mature, some in progress
+
+.. topic:: OhmPi Document Center
+
+    * OhmPi offcial documents
+    * Release guidelines
+    * General tutorials
+
 .. image:: logo_ohmpi.JPG
    :width: 200px
    :height: 150px
@@ -19,9 +33,5 @@ Contents:
    page0 
    page1
 
-Indices and tables
-==================
 
-* :ref:`genindex`
-* :ref:`modindex`
 
