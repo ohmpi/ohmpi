@@ -1,0 +1,13 @@
+{
+    "nb_electrodes": 32,
+    "injection_duration": 0.5,
+    "nbr_meas": 1,
+    "sequence_delay": 30,
+    "stack": 1,
+    "R_ref": 50,
+    "coef_p0": 2.02,
+    "coef_p1": 2.02,
+    "coef_p2": 1,
+    "coef_p3": 1,
+    "export_path": "~/measurement.csv" 
+}
