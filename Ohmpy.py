@@ -117,6 +117,7 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, co
         Vm1 = AnalogIn(ads,ADS.P2).voltage * coefp2# reading voltage value on ADS channel A2
         Vn1 = AnalogIn(ads,ADS.P3).voltage * coefp3# reading voltage value on ADS channel A3
         GPIO.output(8, GPIO.LOW)# stop current injection
+        time.sleep(injection_deltat) # Dead time equivalent to the duration of the current injection pulse
         I1= (Ia1 - Ib1)/Rref
         sum_I=sum_I+I1
         Vmn1= (Vm1 - Vn1)    
