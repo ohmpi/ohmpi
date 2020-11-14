@@ -37,10 +37,10 @@ stack= 1 # repetition of the current injection for each quadripole
 hardware parameters
 """
 R_ref = 50 # reference resistance value in ohm
-coef_p0 = 2.02 # slope for current conversion for ADS.P0, measurement in V/V
-coef_p1 = 2.02 # slope for current conversion for ADS.P1, measurement in V/V
-coef_p2 = 1 # slope for current conversion for ADS.P2, measurement in V/V
-coef_p3 = 1 # slope for current conversion for ADS.P3, measurement in V/V
+coef_p0 = 2.5 # slope for current conversion for ADS.P0, measurement in V/V
+coef_p1 = 2.5 # slope for current conversion for ADS.P1, measurement in V/V
+coef_p2 = 2.5 # slope for current conversion for ADS.P2, measurement in V/V
+coef_p3 = 2.5 # slope for current conversion for ADS.P3, measurement in V/V
 export_path = "~/measurement.csv"
 
 """
