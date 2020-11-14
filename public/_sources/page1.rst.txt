@@ -46,6 +46,66 @@ stable and complete version of Raspbian by using NOOBS (a simple-to-use operatin
 Once the OS has been installed, the 1-wire option and GPIO remote option must be deactivated via the
 Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.
 
+.. note:: 
+	 All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:
+	 
+	 .. figure:: raspbian_version.jpg
+	   :width: 800px
+	   :align: center
+	   :height: 400px
+	   :alt: alternate text
+	   :figclass: align-center
+
+Virtual Environnement and packages
+***********************************************
+
+All dependencies are specified in requirements.txt
+
+.. note:: 
+	 all instructions below should be typed in the terminal
+
+It is first necessary to ensure that the libatlas-base-dev library is installed:
+
+.. code-block:: python
+	
+	 sudo apt-get install libatlas-base-dev
+
+We strongly recommend users to create a virtual environment to run the code and installed all required dependencies. It can be done either in a directory gathering all virtual environments used on the computer or within the ohmpy directory.
+
+create the virtual environment:
+
+.. code-block:: python
+	 
+	 python3 -m venv ohmpy
+
+activate it using the following command:
+
+.. code-block:: python
+	 
+	 source ohmpy/bin/activate
+
+install packages within the virtual environment. Installing the following package should be sufficient to meet dependencies:
+
+.. code-block:: python
+	 
+	 pip install RPi.GPIO adafruit-blinka numpy adafruit-circuitpython-ads1x15 pandas
+
+check that requirements are met using 
+
+.. code-block:: python
+	 
+	 pip list
+
+you should run you code within the virtual environment
+to leave the virtual environment simply type:
+
+.. code-block:: python
+	  
+	 deactivate
+
+
+Running thonny on Rapberry Pi 
+**************************************************************************
 
 
 
