@@ -46,8 +46,8 @@ stable and complete version of Raspbian by using NOOBS (a simple-to-use operatin
 Once the OS has been installed, the 1-wire option and GPIO remote option must be deactivated via the
 Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.
 
-
-
+Environnement installation
+****************************************** 
 
 Construction of the measurement board and connection to the Raspberry 
 ************************************************************************** 
