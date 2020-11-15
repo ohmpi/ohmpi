@@ -164,11 +164,14 @@ If you decided to use a virtual environment, it is necessary to setup Thonny Pyt
 9- Close thonny to save modifications
 
  
-Measurement and Injection board developpement
-************************************************************************** 
+Assembly of the measuring/current injection cards, and connection with the Raspberry Pi
+***************************************************************************************** 
 
-Electrical resistivity measurements
-===================================
+Electrical resistivity measurements board
+==========================================
+
+a) Description
+-----------------------------
 
 To measure electrical resistivity with Raspberry Pi, an ADS1115 was introduced, as proposed by Florsch [7]. The ADS1115
 is a 16-bit ADC (Analog-to-Digital Converter), with an adaptable gain. Its value has been set at 2/3 in this study. The 
@@ -210,19 +213,21 @@ constitutes a potential hazard. We therefore recommend adding a 1.5-A fuse betwe
    :figclass: align-center
    
    Measurement board
-
-Implementation
-==============
-
+   
+b) Implementation
+--------------------------------
 The measurement board must be printed using the PCB file (Source file repository), with components soldered onto 
 it by following the steps described below and illustrated in the following figure :
 
-
 * Step no. 1: installation of the 1-Kohm resistors with an accuracy of ± 1%. 
 * Step no. 2: installation of the 1.5-Kohm resistors with an accuracy of ± 1%. 
-* Step no. 3: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks 
-* Step no. 4: installation of the 50-Ohm reference resistor ± 0.1% 
-* Step no. 5: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the direction).
+* Step no. 3: test divider bridge
+
+				UNDERconstruction
+
+* Step no. 4: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks 
+* Step no. 5: installation of the 50-Ohm reference resistor ± 0.1% 
+* Step no. 6: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the direction).
 
 1-Kohm and 1.5-Kohm resistors apply to the divider bridge. If, for example, you prefer using a weaker 
 or stronger power supply, it would be possible to adjust the divider bridge value by simply modifying these resistors. 
@@ -248,8 +253,8 @@ place a fuse holder with a 1.5-A fuse for safety purposes.
    
    Measurement board installation with Raspberry Pi
    
-Current injection 
-=================
+Current injection board
+=======================
 
 To carry out the electrical resistivity measurement, the first step consists of injecting current into the ground.
 In our case, a simple 12-V lead-acid battery is used to create an electrical potential difference that results 
