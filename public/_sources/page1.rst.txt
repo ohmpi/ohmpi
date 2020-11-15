@@ -106,8 +106,8 @@ to leave the virtual environment simply type:
 	 deactivate
 
 
-Activate virtual environnement on Thonny(Python IDE)  (on Rapberry Pi) 
-======================================================================
+Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi) 
+========================================================================
 
 If you decided to use a virtual environment, it is necessary to setup Thonny Python IDE the first time you use it.
 
@@ -158,14 +158,14 @@ If you decided to use a virtual environment, it is necessary to setup Thonny Pyt
 9- Close thonny to save modifications
 
  
-Measurement and Injection board and connection to the Raspberry 
+Measurement and Injection board developpement
 ************************************************************************** 
 
 Electrical resistivity measurements
 ===================================
 
 To measure electrical resistivity with Raspberry Pi, an ADS1115 was introduced, as proposed by Florsch [7]. The ADS1115
-is a 16-bit ADC (Analog-to-Digital Converter), with an adaptable gain. Its value has been set at 1 in this study. The 
+is a 16-bit ADC (Analog-to-Digital Converter), with an adaptable gain. Its value has been set at 2/3 in this study. The 
 input signal value could lie between - to + 6.114 V. The ADS1115 is mounted on a board adapted from an in-house design. 
 Figure 5 shows the general diagram for the electronic measurement board developed. This figure also displays the test 
 circuit used to test the board in the laboratory, which mimics the behavior of a soil subjected to current injection. 
