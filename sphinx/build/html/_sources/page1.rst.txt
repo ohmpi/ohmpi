@@ -36,8 +36,10 @@ Technical data
 |Resolution                     |O.O1                |ohm        |
 +-------------------------------+--------------------+-----------+
 
-OS installation on a Raspberry Pi 
+Raspberry Pi  configuration
 ****************************************** 
+OS installation  
+================
 
 The first step is to start up the Raspberry Pi board, including installation of an OS (operating system). 
 For this step, the installation instructions are well described on the Raspberry website 
@@ -57,7 +59,7 @@ Raspbian GUI settings menu. Failure to carry out this task may cause damage to t
 	   :figclass: align-center
 
 Virtual Environnement and packages
-***********************************************
+==================================
 
 All dependencies are specified in requirements.txt
 
@@ -104,12 +106,13 @@ to leave the virtual environment simply type:
 	 deactivate
 
 
-Running thonny on Rapberry Pi 
-**************************************************************************
+Activate virtual environnement on Thonny(Python IDE)  (on Rapberry Pi) 
+======================================================================
+
+Under developpement
 
 
-
-Construction of the measurement board and connection to the Raspberry 
+Measurement and Injection board and connection to the Raspberry 
 ************************************************************************** 
 
 Electrical resistivity measurements
@@ -194,7 +197,7 @@ place a fuse holder with a 1.5-A fuse for safety purposes.
    Measurement board installation with Raspberry Pi
    
 Current injection 
-******************
+=================
 
 To carry out the electrical resistivity measurement, the first step consists of injecting current into the ground.
 In our case, a simple 12-V lead-acid battery is used to create an electrical potential difference that results 
@@ -217,6 +220,13 @@ they remain in the normally closed position. This set-up offers a simple and rob
    
    Wiring of the 4-channel relay module board for current injection management
    
+
+Frist four electrodes resistivity mesurement 
+============================================
+
+
+Under construction describe the way vlide the first part of the instruction.
+Electrical resistivity measurement on test circuit
 
    
 Multiplexer implentation
