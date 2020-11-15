@@ -86,15 +86,19 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">OhmPi V 1.01 (limited to 32 electrodes)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#technical-data">Technical data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#os-installation-on-a-raspberry-pi">OS installation on a Raspberry Pi</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#virtual-environnement-and-packages">Virtual Environnement and packages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#running-thonny-on-rapberry-pi">Running thonny on Rapberry Pi</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#construction-of-the-measurement-board-and-connection-to-the-raspberry">Construction of the measurement board and connection to the Raspberry</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#electrical-resistivity-measurements">Electrical resistivity measurements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#raspberry-pi-configuration">Raspberry Pi  configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#os-installation">OS installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#virtual-environnement-and-packages">Virtual Environnement and packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">Activate virtual environnement on Thonny(Python IDE)  (on Rapberry Pi)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#current-injection">Current injection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#measurement-and-injection-board-and-connection-to-the-raspberry">Measurement and Injection board and connection to the Raspberry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#electrical-resistivity-measurements">Electrical resistivity measurements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#current-injection">Current injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#frist-four-electrodes-resistivity-mesurement">Frist four electrodes resistivity mesurement</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#multiplexer-implentation">Multiplexer implentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#electrode-connection">Electrode connection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#operating-instruction">Operating instruction</a><ul>
@@ -235,8 +239,10 @@ control system</p></td>
 </tbody>
 </table>
 </div>
-<div class="section" id="os-installation-on-a-raspberry-pi">
-<h2>OS installation on a Raspberry Pi<a class="headerlink" href="#os-installation-on-a-raspberry-pi" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="raspberry-pi-configuration">
+<h2>Raspberry Pi  configuration<a class="headerlink" href="#raspberry-pi-configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="os-installation">
+<h3>OS installation<a class="headerlink" href="#os-installation" title="Permalink to this headline">¶</a></h3>
 <p>The first step is to start up the Raspberry Pi board, including installation of an OS (operating system).
 For this step, the installation instructions are well described on the Raspberry website
 <a class="reference external" href="https://www.raspberrypi.org/help/noobs-setup/2/">https://www.raspberrypi.org/help/noobs-setup/2/</a>). The authors recommend installing the latest
@@ -252,7 +258,7 @@ Raspbian GUI settings menu. Failure to carry out this task may cause damage to t
 </div>
 </div>
 <div class="section" id="virtual-environnement-and-packages">
-<h2>Virtual Environnement and packages<a class="headerlink" href="#virtual-environnement-and-packages" title="Permalink to this headline">¶</a></h2>
+<h3>Virtual Environnement and packages<a class="headerlink" href="#virtual-environnement-and-packages" title="Permalink to this headline">¶</a></h3>
 <p>All dependencies are specified in requirements.txt</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -285,11 +291,34 @@ to leave the virtual environment simply type:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="running-thonny-on-rapberry-pi">
-<h2>Running thonny on Rapberry Pi<a class="headerlink" href="#running-thonny-on-rapberry-pi" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">
+<h3>Activate virtual environnement on Thonny(Python IDE)  (on Rapberry Pi)<a class="headerlink" href="#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi" title="Permalink to this headline">¶</a></h3>
+<p>If you decided to use a virtual environment, it is necessary to setup Thonny Python IDE the first time you use it.</p>
+<p>1- Run the Thonny Python IDE software, Click on raspebrry acces <strong>menu &gt; programming&gt; Thonny pythonIDE</strong></p>
+<p>2- Thonny’s interface opens, Python runs on the Root (Python 3.7.3 (/usr/bin/python3))</p>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="_images/thonny_first_interface.jpg"><img alt="alternate text" src="_images/thonny_first_interface.jpg" style="width: 600px; height: 450px;" /></a>
 </div>
-<div class="section" id="construction-of-the-measurement-board-and-connection-to-the-raspberry">
-<h2>Construction of the measurement board and connection to the Raspberry<a class="headerlink" href="#construction-of-the-measurement-board-and-connection-to-the-raspberry" title="Permalink to this headline">¶</a></h2>
+<p>3-Click on <strong>Run&gt;select interpreter</strong>, a new window opens click on interpret</p>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="_images/thonny_option.jpg"><img alt="alternate text" src="_images/thonny_option.jpg" style="width: 600px; height: 450px;" /></a>
+</div>
+<p>4-On the new open windows select <strong>alternative Pyhton3 or virtual environnement</strong></p>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="_images/thonny_interpreter.jpg"><img alt="alternate text" src="_images/thonny_interpreter.jpg" style="width: 600px; height: 450px;" /></a>
+</div>
+<p>5- New buttons appeared, selected <strong>“locate another python executable “</strong></p>
+<p>6- A new window opens, find the folder where there is the python 3 file in the virtual environment folder previously created <strong>/home/pi/ohmpi/bin/python3</strong>.</p>
+<p>7- In the <strong>known interpreter</strong> tab the path of the virtual environnementshould appear</p>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="_images/thonny_interpreter_folder.jpg"><img alt="alternate text" src="_images/thonny_interpreter_folder.jpg" style="width: 600px; height: 450px;" /></a>
+</div>
+<p>8- Close the window by clicking on <strong>ok</strong>.
+9- Close thonny to save modifications</p>
+</div>
+</div>
+<div class="section" id="measurement-and-injection-board-and-connection-to-the-raspberry">
+<h2>Measurement and Injection board and connection to the Raspberry<a class="headerlink" href="#measurement-and-injection-board-and-connection-to-the-raspberry" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="electrical-resistivity-measurements">
 <h3>Electrical resistivity measurements<a class="headerlink" href="#electrical-resistivity-measurements" title="Permalink to this headline">¶</a></h3>
 <p>To measure electrical resistivity with Raspberry Pi, an ADS1115 was introduced, as proposed by Florsch [7]. The ADS1115
@@ -353,9 +382,8 @@ place a fuse holder with a 1.5-A fuse for safety purposes.</p>
 <p class="caption"><span class="caption-text">Measurement board installation with Raspberry Pi</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 </div>
-</div>
 <div class="section" id="current-injection">
-<h2>Current injection<a class="headerlink" href="#current-injection" title="Permalink to this headline">¶</a></h2>
+<h3>Current injection<a class="headerlink" href="#current-injection" title="Permalink to this headline">¶</a></h3>
 <p>To carry out the electrical resistivity measurement, the first step consists of injecting current into the ground.
 In our case, a simple 12-V lead-acid battery is used to create an electrical potential difference that results
 in current circulating into the ground. The current is injected through electrodes A and B (see Fig. 2). This
@@ -370,6 +398,12 @@ they remain in the normally closed position. This set-up offers a simple and rob
 <div class="align-center figure" id="id4">
 <a class="reference internal image-reference" href="_images/current_board.jpg"><img alt="alternate text" src="_images/current_board.jpg" style="width: 800px; height: 400px;" /></a>
 <p class="caption"><span class="caption-text">Wiring of the 4-channel relay module board for current injection management</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="frist-four-electrodes-resistivity-mesurement">
+<h3>Frist four electrodes resistivity mesurement<a class="headerlink" href="#frist-four-electrodes-resistivity-mesurement" title="Permalink to this headline">¶</a></h3>
+<p>Under construction describe the way vlide the first part of the instruction.
+Electrical resistivity measurement on test circuit</p>
 </div>
 </div>
 <div class="section" id="multiplexer-implentation">

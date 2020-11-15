@@ -36,8 +36,10 @@ Technical data
 |Resolution                     |O.O1                |ohm        |
 +-------------------------------+--------------------+-----------+
 
-OS installation on a Raspberry Pi 
+Raspberry Pi  configuration
 ****************************************** 
+OS installation  
+================
 
 The first step is to start up the Raspberry Pi board, including installation of an OS (operating system). 
 For this step, the installation instructions are well described on the Raspberry website 
@@ -57,7 +59,7 @@ Raspbian GUI settings menu. Failure to carry out this task may cause damage to t
 	   :figclass: align-center
 
 Virtual Environnement and packages
-***********************************************
+==================================
 
 All dependencies are specified in requirements.txt
 
@@ -104,12 +106,58 @@ to leave the virtual environment simply type:
 	 deactivate
 
 
-Running thonny on Rapberry Pi 
-**************************************************************************
+Activate virtual environnement on Thonny(Python IDE)  (on Rapberry Pi) 
+======================================================================
 
+If you decided to use a virtual environment, it is necessary to setup Thonny Python IDE the first time you use it.
 
+1- Run the Thonny Python IDE software, Click on raspebrry acces **menu > programming> Thonny pythonIDE**
 
-Construction of the measurement board and connection to the Raspberry 
+2- Thonny's interface opens, Python runs on the Root (Python 3.7.3 (/usr/bin/python3))
+
+.. figure:: thonny_first_interface.jpg
+	   :width: 600px
+	   :align: center
+	   :height: 450px
+	   :alt: alternate text
+	   :figclass: align-center
+
+3-Click on **Run>select interpreter**, a new window opens click on interpret
+
+.. figure:: thonny_option.jpg
+	   :width: 600px
+	   :align: center
+	   :height: 450px
+	   :alt: alternate text
+	   :figclass: align-center
+
+4-On the new open windows select **alternative Pyhton3 or virtual environnement**
+
+.. figure:: thonny_interpreter.jpg
+	   :width: 600px
+	   :align: center
+	   :height: 450px
+	   :alt: alternate text
+	   :figclass: align-center
+	   
+5- New buttons appeared, selected **"locate another python executable "**
+
+6- A new window opens, find the folder where there is the python 3 file in the virtual environment folder previously created **/home/pi/ohmpi/bin/python3**.
+
+7- In the **known interpreter** tab the path of the virtual environnementshould appear
+
+.. figure:: thonny_interpreter_folder.jpg
+	   :width: 600px
+	   :align: center
+	   :height: 450px
+	   :alt: alternate text
+	   :figclass: align-center 
+
+8- Close the window by clicking on **ok**.
+9- Close thonny to save modifications
+
+ 
+Measurement and Injection board and connection to the Raspberry 
 ************************************************************************** 
 
 Electrical resistivity measurements
@@ -194,7 +242,7 @@ place a fuse holder with a 1.5-A fuse for safety purposes.
    Measurement board installation with Raspberry Pi
    
 Current injection 
-******************
+=================
 
 To carry out the electrical resistivity measurement, the first step consists of injecting current into the ground.
 In our case, a simple 12-V lead-acid battery is used to create an electrical potential difference that results 
@@ -217,6 +265,13 @@ they remain in the normally closed position. This set-up offers a simple and rob
    
    Wiring of the 4-channel relay module board for current injection management
    
+
+Frist four electrodes resistivity mesurement 
+============================================
+
+
+Under construction describe the way vlide the first part of the instruction.
+Electrical resistivity measurement on test circuit
 
    
 Multiplexer implentation

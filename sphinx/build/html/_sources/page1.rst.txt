@@ -109,9 +109,54 @@ to leave the virtual environment simply type:
 Activate virtual environnement on Thonny(Python IDE)  (on Rapberry Pi) 
 ======================================================================
 
-Under developpement
+If you decided to use a virtual environment, it is necessary to setup Thonny Python IDE the first time you use it.
 
+1- Run the Thonny Python IDE software, Click on raspebrry acces **menu > programming> Thonny pythonIDE**
 
+2- Thonny's interface opens, Python runs on the Root (Python 3.7.3 (/usr/bin/python3))
+
+.. figure:: thonny_first_interface.jpg
+	   :width: 600px
+	   :align: center
+	   :height: 450px
+	   :alt: alternate text
+	   :figclass: align-center
+
+3-Click on **Run>select interpreter**, a new window opens click on interpret
+
+.. figure:: thonny_option.jpg
+	   :width: 600px
+	   :align: center
+	   :height: 450px
+	   :alt: alternate text
+	   :figclass: align-center
+
+4-On the new open windows select **alternative Pyhton3 or virtual environnement**
+
+.. figure:: thonny_interpreter.jpg
+	   :width: 600px
+	   :align: center
+	   :height: 450px
+	   :alt: alternate text
+	   :figclass: align-center
+	   
+5- New buttons appeared, selected **"locate another python executable "**
+
+6- A new window opens, find the folder where there is the python 3 file in the virtual environment folder previously created **/home/pi/ohmpi/bin/python3**.
+
+7- In the **known interpreter** tab the path of the virtual environnementshould appear
+
+.. figure:: thonny_interpreter_folder.jpg
+	   :width: 600px
+	   :align: center
+	   :height: 450px
+	   :alt: alternate text
+	   :figclass: align-center 
+
+8- Close the window by clicking on **ok**.
+9- Close thonny to save modifications
+
+ 
 Measurement and Injection board and connection to the Raspberry 
 ************************************************************************** 
 
