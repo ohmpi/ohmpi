@@ -74,31 +74,31 @@ It is first necessary to ensure that the libatlas-base-dev library is installed:
 
 We strongly recommend users to create a virtual environment to run the code and installed all required dependencies. It can be done either in a directory gathering all virtual environments used on the computer or within the ohmpy directory.
 
-create the virtual environment:
+Create the virtual environment:
 
 .. code-block:: python
 	 
 	 python3 -m venv ohmpy
 
-activate it using the following command:
+Activate it using the following command:
 
 .. code-block:: python
 	 
 	 source ohmpy/bin/activate
 
-install packages within the virtual environment. Installing the following package should be sufficient to meet dependencies:
+Install packages within the virtual environment. Installing the following package should be sufficient to meet dependencies:
 
 .. code-block:: python
 	 
 	 pip install RPi.GPIO adafruit-blinka numpy adafruit-circuitpython-ads1x15 pandas
 
-check that requirements are met using 
+Check that requirements are met using 
 
 .. code-block:: python
 	 
 	 pip list
 
-you should run you code within the virtual environment
+You should run you code within the virtual environment
 to leave the virtual environment simply type:
 
 .. code-block:: python
@@ -154,6 +154,7 @@ If you decided to use a virtual environment, it is necessary to setup Thonny Pyt
 	   :figclass: align-center 
 
 8- Close the window by clicking on **ok**.
+
 9- Close thonny to save modifications
 
  
