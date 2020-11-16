@@ -41,7 +41,7 @@ coef_p0 = 2.5 # slope for current conversion for ADS.P0, measurement in V/V
 coef_p1 = 2.5 # slope for current conversion for ADS.P1, measurement in V/V
 coef_p2 = 2.5 # slope for current conversion for ADS.P2, measurement in V/V
 coef_p3 = 2.5 # slope for current conversion for ADS.P3, measurement in V/V
-export_path = "~/measurement.csv"
+export_path = "/home/pi/Desktop/measurement.csv"
 
 """
 functions
