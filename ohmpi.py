@@ -158,6 +158,15 @@ for i in pinList:
     GPIO.output(i, GPIO.HIGH)
 
 """
+Hardware parameters
+"""
+R_ref = 50 # reference resistance value in ohm
+coef_p0 = 2.5 # slope for the current conversion for ADS.P0, measurement in V/V
+coef_p1 = 2.5 # slope for the current conversion for ADS.P1, measurement in V/V
+coef_p2 = 2.5 # slope for the current conversion for ADS.P2, measurement in V/V
+coef_p3 = 2.5 # slope for the current conversion for ADS.P3, measurement in V/V
+
+"""
 Main loop
 """
 N=read_quad("ABMN.txt",pardict.get("nb_electrodes")) # load quadripole file
@@ -169,7 +178,7 @@ for g in range(0,pardict.get("nbr_meas")): # for time-lapse monitoring
         switch_mux(N[i,])
 
         # run a measurement
-        current_measurement = run_measurement(pardict.get("stack"), pardict.get("injection_duration"), pardict.get("R_ref"), pardict.get("coef_p0"), pardict.get("coef_p1"), pardict.get("coef_p2"), pardict.get("coef_p3"), N[i,])
+        current_measurement = run_measurement(pardict.get("stack"), pardict.get("injection_duration"), R_ref, coef_p0, coef_p1, coef_p2, coef_p3, N[i,])
 
         # save data and print in a text file
         append_and_save(pardict.get("export_path"), current_measurement)
