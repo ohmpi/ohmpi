@@ -218,13 +218,17 @@ b) Implementation
 --------------------------------
 The measurement board must be printed using the PCB file (Source file repository), with components soldered onto 
 it by following the steps described below and illustrated in the following figure :
+* Step no. 1: test divider bridge
+Pour chacune des voies de mesure, nous avons installé un pont diviseur il est necéssaire de tester la valeur des résistance 
+pour corriger les coefficients (coeff_p0, coeff_p1, coeff p2, coeff_p3) dans le code Ohmpi.py.
 
-* Step no. 1: installation of the 1-Kohm resistors with an accuracy of ± 1%. 
-* Step no. 2: installation of the 1.5-Kohm resistors with an accuracy of ± 1%. 
-* Step no. 3: test divider bridge
+.. math::
 
-				UNDERconstruction
+    n_{\mathrm{offset}} = \sum_{k=0}^{N-1} s_k n_k
 
+
+* Step no. 2: installation of the 1-Kohm resistors with an accuracy of ± 1%. 
+* Step no. 3: installation of the 1.5-Kohm resistors with an accuracy of ± 1%. 
 * Step no. 4: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks 
 * Step no. 5: installation of the 50-Ohm reference resistor ± 0.1% 
 * Step no. 6: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the direction).
