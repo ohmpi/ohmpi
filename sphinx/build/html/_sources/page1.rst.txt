@@ -219,14 +219,41 @@ b) Implementation
 The measurement board must be printed using the PCB file (Source file repository), with components soldered onto 
 it by following the steps described below and illustrated in the following figure :
 
-* Step no. 1: installation of the 1-Kohm resistors with an accuracy of ± 1%. 
-* Step no. 2: installation of the 1.5-Kohm resistors with an accuracy of ± 1%. 
-* Step no. 3: test divider bridge
+* Step no. 1: test divider bridge
+     For each measurement channel, we have installed a bridge divider, it is necessary to test with ohmmeter the value of the resistances, to adjust  each coefficients (coef_p0, coef_p1, coef_p2, coef_p3) in the Ohmpi.py code..
 
-				UNDERconstruction
+	.. math::
+		coeff po = (R1 + R2) / R1
+		
+	.. math::	
+		coeff p1 = (R3 + R4) / R3
+		
+	.. math::	
+		coeff p2 = (R7 + R6) / R7
+		
+	.. math::
+		coeff p3 = (R9 + R8) / R9
+		
+	.. code-block:: python
+		:linenos:
+		:lineno-start: 36
 
+		 """
+		 hardware parameters
+		 """
+		 R_ref = 50 # reference resistance value in ohm
+		 coef_p0 = 2.5 # slope for current conversion for ADS.P0, measurement in V/V
+		 coef_p1 = 2.5 # slope for current conversion for ADS.P1, measurement in V/V
+		 coef_p2 = 2.5 # slope for current conversion for ADS.P2, measurement in V/V
+		 coef_p3 = 2.5 # slope for current conversion for ADS.P3, measurement in V/V
+
+	The coefficient parameters can be adjusted in lines 40 to 43 of the ohmpi.py code.	
+
+
+* Step no. 2: installation of the 1-Kohm resistors with an accuracy of ± 1%. 
+* Step no. 3: installation of the 1.5-Kohm resistors with an accuracy of ± 1%. 
 * Step no. 4: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks 
-* Step no. 5: installation of the 50-Ohm reference resistor ± 0.1% 
+* Step no. 5: installation of the 50-Ohm reference resistor ± 0.1%, please check the value and correct the line 39 in ohmpi.py code
 * Step no. 6: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the direction).
 
 1-Kohm and 1.5-Kohm resistors apply to the divider bridge. If, for example, you prefer using a weaker 
