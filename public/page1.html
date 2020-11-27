@@ -30,6 +30,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -369,15 +370,43 @@ constitutes a potential hazard. We therefore recommend adding a 1.5-A fuse betwe
 <p>The measurement board must be printed using the PCB file (Source file repository), with components soldered onto
 it by following the steps described below and illustrated in the following figure :</p>
 <ul>
-<li><p>Step no. 1: installation of the 1-Kohm resistors with an accuracy of ± 1%.</p></li>
-<li><p>Step no. 2: installation of the 1.5-Kohm resistors with an accuracy of ± 1%.</p></li>
-<li><p>Step no. 3: test divider bridge</p>
+<li><dl>
+<dt>Step no. 1: test divider bridge</dt><dd><p>For each measurement channel, we have installed a bridge divider, it is necessary to test with ohmmeter the value of the resistances, to adjust  each coefficients (coef_p0, coef_p1, coef_p2, coef_p3) in the Ohmpi.py code..</p>
 <blockquote>
-<div><p>UNDERconstruction</p>
+<div><div class="math notranslate nohighlight">
+\[coeff po = (R1 + R2) / R1\]</div>
+<div class="math notranslate nohighlight">
+\[coeff p1 = (R3 + R4) / R3\]</div>
+<div class="math notranslate nohighlight">
+\[coeff p2 = (R7 + R6) / R7\]</div>
+<div class="math notranslate nohighlight">
+\[coeff p3 = (R9 + R8) / R9\]</div>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>36
+37
+38
+39
+40
+41
+42
+43</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"> hardware parameters</span>
+<span class="sd"> &quot;&quot;&quot;</span>
+ <span class="n">R_ref</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># reference resistance value in ohm</span>
+ <span class="n">coef_p0</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P0, measurement in V/V</span>
+ <span class="n">coef_p1</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P1, measurement in V/V</span>
+ <span class="n">coef_p2</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P2, measurement in V/V</span>
+ <span class="n">coef_p3</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P3, measurement in V/V</span>
+</pre></div>
+</td></tr></table></div>
+<p>The coefficient parameters can be adjusted in lines 40 to 43 of the ohmpi.py code.</p>
 </div></blockquote>
+</dd>
+</dl>
 </li>
+<li><p>Step no. 2: installation of the 1-Kohm resistors with an accuracy of ± 1%.</p></li>
+<li><p>Step no. 3: installation of the 1.5-Kohm resistors with an accuracy of ± 1%.</p></li>
 <li><p>Step no. 4: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks</p></li>
-<li><p>Step no. 5: installation of the 50-Ohm reference resistor ± 0.1%</p></li>
+<li><p>Step no. 5: installation of the 50-Ohm reference resistor ± 0.1%, please check the value and correct the line 39 in ohmpi.py code</p></li>
 <li><p>Step no. 6: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the direction).</p></li>
 </ul>
 <p>1-Kohm and 1.5-Kohm resistors apply to the divider bridge. If, for example, you prefer using a weaker
