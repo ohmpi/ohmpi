@@ -17,21 +17,13 @@ import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
 import pandas as pd
 import os.path
+import json
 
 """
 display start time
 """
 current_time = datetime.now()
 print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
-
-"""
-measurement parameters
-"""
-nb_electrodes = 32 # maximum number of electrodes on the resistivity meter
-injection_duration = 0.5 # Current injection duration in second
-nbr_meas= 1 # Number of times the quadripole sequence is repeated
-sequence_delay= 30 # Delay in seconds between 2 sequences
-stack= 1 # repetition of the current injection for each quadripole
 
 """
 hardware parameters
@@ -42,6 +34,12 @@ coef_p1 = 2.5 # slope for current conversion for ADS.P1, measurement in V/V
 coef_p2 = 2.5 # slope for current conversion for ADS.P2, measurement in V/V
 coef_p3 = 2.5 # slope for current conversion for ADS.P3, measurement in V/V
 export_path = "/home/pi/Desktop/measurement.csv"
+
+"""
+import parameters
+"""
+with open('ohmpi_param.json') as json_file:
+    pardict = json.load(json_file)
 
 """
 functions
@@ -170,21 +168,30 @@ for i in pinList:
     GPIO.output(i, GPIO.HIGH)
 
 """
+Hardware parameters
+"""
+R_ref = 50 # reference resistance value in ohm
+coef_p0 = 2.5 # slope for the current conversion for ADS.P0, measurement in V/V
+coef_p1 = 2.5 # slope for the current conversion for ADS.P1, measurement in V/V
+coef_p2 = 2.5 # slope for the current conversion for ADS.P2, measurement in V/V
+coef_p3 = 2.5 # slope for the current conversion for ADS.P3, measurement in V/V
+
+"""
 Main loop
 """
-N=read_quad("ABMN.txt",nb_electrodes) # load quadripole file
+N=read_quad("ABMN.txt",pardict.get("nb_electrodes")) # load quadripole file
 
-for g in range(0,nbr_meas): # for time-lapse monitoring
+for g in range(0,pardict.get("nbr_meas")): # for time-lapse monitoring
 
     for i in range(0,N.shape[0]): # loop over quadripoles
         # call the switch_mux function to switch to the right electrodes
         switch_mux(N[i,])
 
         # run a measurement
-        current_measurement = run_measurement(stack, injection_duration, R_ref, coef_p0, coef_p1, N[i,])
+        current_measurement = run_measurement(pardict.get("stack"), pardict.get("injection_duration"), R_ref, coef_p0, coef_p1, coef_p2, coef_p3, N[i,])
 
         # save data and print in a text file
-        append_and_save(export_path, current_measurement)
+        append_and_save(pardict.get("export_path"), current_measurement)
 
         # reset multiplexer channels
         GPIO.output(12, GPIO.HIGH); GPIO.output(16, GPIO.HIGH); GPIO.output(20, GPIO.HIGH); GPIO.output(21, GPIO.HIGH); GPIO.output(26, GPIO.HIGH)
@@ -192,4 +199,4 @@ for g in range(0,nbr_meas): # for time-lapse monitoring
         GPIO.output(6, GPIO.HIGH); GPIO.output(13, GPIO.HIGH); GPIO.output(4, GPIO.HIGH); GPIO.output(17, GPIO.HIGH); GPIO.output(27, GPIO.HIGH)
         GPIO.output(22, GPIO.HIGH); GPIO.output(10, GPIO.HIGH); GPIO.output(9, GPIO.HIGH); GPIO.output(11, GPIO.HIGH); GPIO.output(5, GPIO.HIGH)
 
-    time.sleep(sequence_delay) #waiting next measurement (time-lapse)
+    time.sleep(pardict.get("sequence_delay")) #waiting next measurement (time-lapse)
