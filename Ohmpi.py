@@ -89,6 +89,19 @@ def read_quad(filename, nb_elec):
     else:
         return output
 
+def gain_auto(channel):
+    gain=2/3
+    if ((abs(channel.voltage)<2.040) and (abs(channel.voltage)>=1.023)):
+        gain=2
+    elif ((abs(channel.voltage)<1.023) and (abs(channel.voltage)>=0.508)):
+        gain=4
+    elif ((abs(channel.voltage)<0.508) and (abs(channel.voltage)>=0.250)):
+        gain=8
+    elif abs(channel.voltage)<0.256:
+        gain=16
+    #print(gain)
+    return gain        
+
 # perform a measurement
 def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, coefp3, elec_array):
     i2c = busio.I2C(board.SCL, board.SDA) # I2C protocol setup
