@@ -61,7 +61,7 @@ For this step, the installation instructions are well described on the Raspberry
 
 
 .. warning::
-	 Once the OS has been installed, the 1-wire option and GPIO remote option must be deactivated via the Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.
+	 Once the OS has been installed,  **1-wire, spi and GPIO remote option** must be deactivated via the Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.
 
 
 Virtual Environnement and packages
