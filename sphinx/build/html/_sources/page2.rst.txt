@@ -308,13 +308,13 @@ place a fuse holder with a 1.5-A fuse for safety purposes.
 .. figure:: measurement_board1-02.jpg
    :width: 800px
    :align: center
-   :height: 600px
+   :height: 700px
    :alt: alternate text
    :figclass: align-center
 
    Measurement circuit board assembly: a) printed circuit board, b) adding the 1-Kohm resistors ± 1%, c)adding the 1.5-Kohm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers
    
-.. figure:: measurement_board-2.jpg
+.. figure:: measurement_board-2-V1-02.jpg
    :width: 800px
    :align: center
    :height: 700px
@@ -476,18 +476,15 @@ Electrical resistivity measurement parameters description
 
 .. code-block:: python
 	:linenos:
-	:lineno-start: 27
-
-	 """
-	 measurement parameters
-	 """
+	:lineno-start: 2
+	
 	 nb_electrodes = 32 # maximum number of electrodes on the resistivity meter
 	 injection_duration = 0.5 # Current injection duration in second
 	 nbr_meas= 1 # Number of times the quadripole sequence is repeated
 	 sequence_delay= 30 # Delay in seconds between 2 sequences
 	 stack= 1 # repetition of the current injection for each quadripole
 
-The measurement parameters can be adjusted in lines 27 to 30 of the ohmpi.py code.
+The measurement parameters can be adjusted in lines 2 to 7 of the ohmpi_param.json file.
 
 complete list of componements
 ==========================================================

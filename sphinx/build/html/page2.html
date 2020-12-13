@@ -459,11 +459,11 @@ Once all the components have been soldered together, the measurement board can b
 battery terminal, according to Figure 9. Between the battery and the TX+ terminal of the measurement board, remember to
 place a fuse holder with a 1.5-A fuse for safety purposes.</p>
 <div class="align-center figure" id="id2">
-<a class="reference internal image-reference" href="_images/measurement_board1-02.jpg"><img alt="alternate text" src="_images/measurement_board1-02.jpg" style="width: 800px; height: 600px;" /></a>
+<a class="reference internal image-reference" href="_images/measurement_board1-02.jpg"><img alt="alternate text" src="_images/measurement_board1-02.jpg" style="width: 800px; height: 700px;" /></a>
 <p class="caption"><span class="caption-text">Measurement circuit board assembly: a) printed circuit board, b) adding the 1-Kohm resistors ± 1%, c)adding the 1.5-Kohm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 <div class="align-center figure" id="id3">
-<a class="reference internal image-reference" href="_images/measurement_board-2.jpg"><img alt="alternate text" src="_images/measurement_board-2.jpg" style="width: 800px; height: 700px;" /></a>
+<a class="reference internal image-reference" href="_images/measurement_board-2-V1-02.jpg"><img alt="alternate text" src="_images/measurement_board-2-V1-02.jpg" style="width: 800px; height: 700px;" /></a>
 <p class="caption"><span class="caption-text">Measurement board installation with Raspberry Pi</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 </div>
@@ -618,24 +618,18 @@ are displayed on the screen. A measurement file is automatically created and nam
 </div>
 <div class="section" id="electrical-resistivity-measurement-parameters-description">
 <h3>Electrical resistivity measurement parameters description<a class="headerlink" href="#electrical-resistivity-measurement-parameters-description" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>27
-28
-29
-30
-31
-32
-33
-34</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd"> measurement parameters</span>
-<span class="sd"> &quot;&quot;&quot;</span>
- <span class="n">nb_electrodes</span> <span class="o">=</span> <span class="mi">32</span> <span class="c1"># maximum number of electrodes on the resistivity meter</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">nb_electrodes</span> <span class="o">=</span> <span class="mi">32</span> <span class="c1"># maximum number of electrodes on the resistivity meter</span>
  <span class="n">injection_duration</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Current injection duration in second</span>
  <span class="n">nbr_meas</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># Number of times the quadripole sequence is repeated</span>
  <span class="n">sequence_delay</span><span class="o">=</span> <span class="mi">30</span> <span class="c1"># Delay in seconds between 2 sequences</span>
  <span class="n">stack</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># repetition of the current injection for each quadripole</span>
 </pre></div>
 </td></tr></table></div>
-<p>The measurement parameters can be adjusted in lines 27 to 30 of the ohmpi.py code.</p>
+<p>The measurement parameters can be adjusted in lines 2 to 7 of the ohmpi_param.json file.</p>
 </div>
 <div class="section" id="complete-list-of-componements">
 <h3>complete list of componements<a class="headerlink" href="#complete-list-of-componements" title="Permalink to this headline">¶</a></h3>

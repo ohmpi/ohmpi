@@ -1,6 +1,7 @@
 *****************************************
 OhmPi V 1.01 (limited to 32 electrodes)
 ***************************************** 
+
 .. warning::
 	This version corresponds to the version published in the Hardware X journal.
 	However, we have corrected the bugs that existed on this version and explained the missing mounting points in detail below
@@ -107,7 +108,7 @@ Virtual Environnement and packages
 All dependencies are specified in requirements.txt
 
 .. note:: 
-	 all instructions below should be typed in the terminal
+	 All instructions below should be typed in the terminal
 
 It is first necessary to ensure that the libatlas-base-dev library is installed:
 
@@ -482,3 +483,20 @@ Electrical resistivity measurement parameters description
 	 stack= 1 # repetition of the current injection for each quadripole
 
 The measurement parameters can be adjusted in lines 27 to 30 of the ohmpi.py code.
+
+Complete list of components
+*******************************
+
+.. list-table::
+   :widths: 20 80 80
+   :header-rows: 1
+
+   * - Shapes
+     - Description
+     - Description	 
+   * - Square
+     - Four sides of equal length, 90 degree angles
+     - Description
+   * - Rectangle
+     - Four sides, 90 degree angles
+     - Description
