@@ -180,6 +180,12 @@
             
   <div class="section" id="ohmpi-v-1-01-limited-to-32-electrodes">
 <h1>OhmPi V 1.01 (limited to 32 electrodes)<a class="headerlink" href="#ohmpi-v-1-01-limited-to-32-electrodes" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This version corresponds to the version published in the Hardware X journal.
+However, we have corrected the bugs that existed on this version and explained the missing mounting points in detail below
+We invite you to refer to this document to assemble Ohmpi.</p>
+</div>
 <div class="section" id="the-philosophy-of-ohmpi">
 <h2>The philosophy of Ohmpi<a class="headerlink" href="#the-philosophy-of-ohmpi" title="Permalink to this headline">¶</a></h2>
 <p>The philosophy of Ohmpi V1.01 is to offer a multi electrode resistivity meter, from a set of commercially available
@@ -249,8 +255,10 @@ control system</p></td>
 <h3>OS installation<a class="headerlink" href="#os-installation" title="Permalink to this headline">¶</a></h3>
 <p>The first step is to start up the Raspberry Pi board, including installation of an OS (operating system).
 For this step, the installation instructions are well described on the Raspberry website</p>
-<p>1- Watch the vidéo “how to set up your raspberry Pi” (<a class="reference external" href="https://www.youtube.com/watch?v=wjWZhV1v3Pk">https://www.youtube.com/watch?v=wjWZhV1v3Pk</a>)</p>
-<p>2- The authors recommend installing the latest stable and complete version of Raspbian by using NOOBS (a simple-to-use operating system installer).</p>
+<ol class="arabic simple">
+<li><p>Watch the vidéo “how to set up your raspberry Pi” (<a class="reference external" href="https://www.youtube.com/watch?v=wjWZhV1v3Pk">https://www.youtube.com/watch?v=wjWZhV1v3Pk</a>)</p></li>
+<li><p>The authors recommend installing the latest stable and complete version of Raspbian by using NOOBS (a simple-to-use operating system installer).</p></li>
+</ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:</p>
@@ -260,8 +268,38 @@ For this step, the installation instructions are well described on the Raspberry
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Once the OS has been installed, the 1-wire option and GPIO remote option must be deactivated via the Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.</p>
+<p>Once the OS has been installed,  <strong>1-wire, spi and GPIO remote option</strong> must be deactivated via the Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.</p>
 </div>
+<p>3. When the relays are connected to the GPIO, make sure that all the GPIOs are in the low position when the raspberry starts up. If not, the relays will activate unexpectedly.
+To ensure that the GPIOs are in Low position, you will need to modify the /boot/config.txt file.</p>
+<blockquote>
+<div><p>Run the terminal, and write</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li><p>Open config.txt with GNU nano editor</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="n">config</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><p>At the end of the file write :</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gpio</span><span class="o">=</span><span class="mi">8</span><span class="o">=</span><span class="n">op</span><span class="p">,</span><span class="n">dl</span>
+<span class="n">gpio</span><span class="o">=</span><span class="mi">7</span><span class="o">=</span><span class="n">op</span><span class="p">,</span><span class="n">dl</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="6">
+<li><p>Press Ctrl +O to save the modifications and press enter</p></li>
+<li><p>Press Ctrl +x to escap and return to the terminal</p></li>
+<li><p>Close the terminal</p></li>
+</ol>
 </div>
 <div class="section" id="virtual-environnement-and-packages">
 <h3>Virtual Environnement and packages<a class="headerlink" href="#virtual-environnement-and-packages" title="Permalink to this headline">¶</a></h3>
@@ -427,7 +465,7 @@ place a fuse holder with a 1.5-A fuse for safety purposes.</p>
 <div class="section" id="current-injection-board">
 <h3>Current injection board<a class="headerlink" href="#current-injection-board" title="Permalink to this headline">¶</a></h3>
 <p>To carry out the electrical resistivity measurement, the first step consists of injecting current into the ground.
-In our case, a simple 12-V lead-acid battery is used to create an electrical potential difference that results
+In our case, a simple 9-V lead-acid battery is used to create an electrical potential difference that results
 in current circulating into the ground. The current is injected through electrodes A and B (see Fig. 2). This
 injection is controlled via a 4-channel relay module board connected to the Raspberry Pi. The mechanical relay
 module board is shown in Figure 4. Relays 1 and 2 serve to switch on the current source. The common contacts
@@ -563,11 +601,11 @@ the required packages and running the code.</p>
 </div>
 <div class="section" id="startup-procedure">
 <h3>Startup procedure<a class="headerlink" href="#startup-procedure" title="Permalink to this headline">¶</a></h3>
-<p>As an initial operating instruction, the 12-V battery must be disconnected before any hardware handling. Ensure that the battery is charged at full capacity. Plug all the electrodes (32 or fewer)
+<p>As an initial operating instruction, all batteries must be disconnected before any hardware handling. Ensure that the battery is charged at full capacity. Plug all the electrodes (32 or fewer)
 into the screw terminals. The Raspberry Pi must be plugged into a computer screen, with a mouse and keyboard accessed remotely. The Raspberry Pi must then be plugged into the power supply
 (for laboratory measurements) or a power bank (5V - 2A for field measurements). At this point, you’ll need to access the Raspbian operating system. Inside the previously created folder “ohmPi”,
 the protocol file “ABMN.txt” must be created or modified; this file contains all quadrupole ABMN numeration (an example is proposed with the source code). Some input parameters of the main “ohmpi.py”
-function may be adjusted/optimized depending on the measurement attributes. For example, both the current injection duration and number of stacks can be adjusted. At this point, the 12-V battery can be
+function may be adjusted/optimized depending on the measurement attributes. For example, both the current injection duration and number of stacks can be adjusted. At this point, the9 V and 12-V battery can be
 plugged into the hardware; the “ohmpi.py” source code must be run within a python3 environment (or a virtual environment if one has been created) either in the terminal or using Thonny. You should now
 hear the characteristic sound of a relay switching as a result of electrode permutation. After each quadrupole measurement, the potential difference as well as the current intensity and resistance
 are displayed on the screen. A measurement file is automatically created and named “measure.csv”; it will be placed in the same folder.</p>

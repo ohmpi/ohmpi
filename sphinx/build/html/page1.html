@@ -180,6 +180,12 @@
             
   <div class="section" id="ohmpi-v-1-01-limited-to-32-electrodes">
 <h1>OhmPi V 1.01 (limited to 32 electrodes)<a class="headerlink" href="#ohmpi-v-1-01-limited-to-32-electrodes" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This version corresponds to the version published in the Hardware X journal.
+However, we have corrected the bugs that existed on this version and explained the missing mounting points in detail below
+We invite you to refer to this document to assemble Ohmpi.</p>
+</div>
 <div class="section" id="the-philosophy-of-ohmpi">
 <h2>The philosophy of Ohmpi<a class="headerlink" href="#the-philosophy-of-ohmpi" title="Permalink to this headline">¶</a></h2>
 <p>The philosophy of Ohmpi V1.01 is to offer a multi electrode resistivity meter, from a set of commercially available
@@ -459,7 +465,7 @@ place a fuse holder with a 1.5-A fuse for safety purposes.</p>
 <div class="section" id="current-injection-board">
 <h3>Current injection board<a class="headerlink" href="#current-injection-board" title="Permalink to this headline">¶</a></h3>
 <p>To carry out the electrical resistivity measurement, the first step consists of injecting current into the ground.
-In our case, a simple 12-V lead-acid battery is used to create an electrical potential difference that results
+In our case, a simple 9-V lead-acid battery is used to create an electrical potential difference that results
 in current circulating into the ground. The current is injected through electrodes A and B (see Fig. 2). This
 injection is controlled via a 4-channel relay module board connected to the Raspberry Pi. The mechanical relay
 module board is shown in Figure 4. Relays 1 and 2 serve to switch on the current source. The common contacts
@@ -595,11 +601,11 @@ the required packages and running the code.</p>
 </div>
 <div class="section" id="startup-procedure">
 <h3>Startup procedure<a class="headerlink" href="#startup-procedure" title="Permalink to this headline">¶</a></h3>
-<p>As an initial operating instruction, the 12-V battery must be disconnected before any hardware handling. Ensure that the battery is charged at full capacity. Plug all the electrodes (32 or fewer)
+<p>As an initial operating instruction, all batteries must be disconnected before any hardware handling. Ensure that the battery is charged at full capacity. Plug all the electrodes (32 or fewer)
 into the screw terminals. The Raspberry Pi must be plugged into a computer screen, with a mouse and keyboard accessed remotely. The Raspberry Pi must then be plugged into the power supply
 (for laboratory measurements) or a power bank (5V - 2A for field measurements). At this point, you’ll need to access the Raspbian operating system. Inside the previously created folder “ohmPi”,
 the protocol file “ABMN.txt” must be created or modified; this file contains all quadrupole ABMN numeration (an example is proposed with the source code). Some input parameters of the main “ohmpi.py”
-function may be adjusted/optimized depending on the measurement attributes. For example, both the current injection duration and number of stacks can be adjusted. At this point, the 12-V battery can be
+function may be adjusted/optimized depending on the measurement attributes. For example, both the current injection duration and number of stacks can be adjusted. At this point, the9 V and 12-V battery can be
 plugged into the hardware; the “ohmpi.py” source code must be run within a python3 environment (or a virtual environment if one has been created) either in the terminal or using Thonny. You should now
 hear the characteristic sound of a relay switching as a result of electrode permutation. After each quadrupole measurement, the potential difference as well as the current intensity and resistance
 are displayed on the screen. A measurement file is automatically created and named “measure.csv”; it will be placed in the same folder.</p>
