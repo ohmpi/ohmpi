@@ -44,9 +44,9 @@ OS installation
 The first step is to start up the Raspberry Pi board, including installation of an OS (operating system). 
 For this step, the installation instructions are well described on the Raspberry website 
 
-1- Watch the vidéo "how to set up your raspberry Pi" (https://www.youtube.com/watch?v=wjWZhV1v3Pk)
+1. Watch the vidéo "how to set up your raspberry Pi" (https://www.youtube.com/watch?v=wjWZhV1v3Pk)
 
-2- The authors recommend installing the latest stable and complete version of Raspbian by using NOOBS (a simple-to-use operating system installer). 
+2. The authors recommend installing the latest stable and complete version of Raspbian by using NOOBS (a simple-to-use operating system installer). 
 
 .. note:: 
 	 All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:
@@ -62,6 +62,36 @@ For this step, the installation instructions are well described on the Raspberry
 
 .. warning::
 	 Once the OS has been installed,  **1-wire, spi and GPIO remote option** must be deactivated via the Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.
+
+
+
+
+3. When the relays are connected to the GPIO, make sure that all the GPIOs are in the low position when the raspberry starts up. If not, the relays will activate unexpectedly. 
+To ensure that the GPIOs are in Low position, you will need to modify the /boot/config.txt file.
+
+ Run the terminal, and write
+
+ .. code-block:: python
+
+	 cd /boot/
+
+4. Open config.txt with GNU nano editor
+
+ .. code-block:: python
+
+	 sudo nano config.txt
+
+5. At the end of the file write : 
+
+ .. code-block:: python
+	 
+	 gpio=8=op,dl
+	 gpio=7=op,dl
+
+6. Press Ctrl +O to save the modifications and press enter
+7. Press Ctrl +x to escap and return to the terminal
+8. Close the terminal
+
 
 
 Virtual Environnement and packages
