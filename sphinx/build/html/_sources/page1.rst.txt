@@ -369,7 +369,7 @@ Frist four electrodes resistivity mesurement
 
 Under construction !
 
-Describe the way thevalide the first part of the instruction.
+Describe the way to valide the first part of the instruction.
 Electrical resistivity measurement on test circuit
 
    
