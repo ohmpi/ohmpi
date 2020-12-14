@@ -517,7 +517,7 @@ The measurement parameters can be adjusted in lines 27 to 30 of the ohmpi.py cod
 Complete list of components
 *******************************
 .. warning::
-   The list to evolve a little after the publication of the article, it is necessary to refer to this list  
+   The list evolve a little bit after the publication of the article, it is necessary to refer to this list, the article is out of date  
 
 
 .. csv-table:: Table Title
