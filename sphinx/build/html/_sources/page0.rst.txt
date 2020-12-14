@@ -1,6 +1,7 @@
-************ 
+*************** 
 Premiere page 
-************* 
+***************
+ 
 **OhmPi project** 
 ************************* 
  
@@ -34,6 +35,11 @@ Update : 21 août 2020.
 
 Status of document: In progress.
 
+**Citing OhmPi** 
+=========================
+*Rémi Clement, Yannick Fargier, Vivien Dubois, Julien Gance, Emile Gros, et al.. OhmPi: An open*
+*source data logger for dedicated applications of electrical resistivity imaging at the small and laboratory*
+*scale. HardwareX, Elsevier, 2020, 8, 24 p. ff10.1016/j.ohx.2020.e00122ff.*
    
 **Introduction to OhmPi** 
 =========================

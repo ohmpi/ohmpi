@@ -10,6 +10,7 @@ OHMPI: Open source and open hardware resitivity-meter
 
     :Release: |release|
     :Date: |today|
+    :Date start: July 2016	
     :Authors: **Rémi CLEMENT, Nicolas FORQUET, Julien GANCE, Yannick FARGIER, Vivien DUBOIS, Hélène GUYARD**
     :Target: users, researchers and developers 
     :status: some mature, some in progress
@@ -32,7 +33,7 @@ Contents:
 
    page0 
    page1
-   page2
+
   
 
 
