@@ -1,6 +1,7 @@
 *****************************************
 OhmPi V 1.01 (limited to 32 electrodes)
 ***************************************** 
+
 .. warning::
 	This version corresponds to the version published in the Hardware X journal.
 	However, we have corrected the bugs that existed on this version and explained the missing mounting points in detail below
@@ -28,7 +29,7 @@ Technical data
 |Power consumption of CPU and   |18.5                |W          |             
 |control system                 |                    |           |
 +-------------------------------+--------------------+-----------+
-|Voltage injection              |12                  |V          |
+|Voltage injection              |9                   |V          |
 +-------------------------------+--------------------+-----------+
 |Battery                        |12                  |V          |
 +-------------------------------+--------------------+-----------+
@@ -107,7 +108,7 @@ Virtual Environnement and packages
 All dependencies are specified in requirements.txt
 
 .. note:: 
-	 all instructions below should be typed in the terminal
+	 All instructions below should be typed in the terminal
 
 It is first necessary to ensure that the libatlas-base-dev library is installed:
 
@@ -302,7 +303,7 @@ place a fuse holder with a 1.5-A fuse for safety purposes.
 .. figure:: measurement_board.jpg
    :width: 800px
    :align: center
-   :height: 400px
+   :height: 500px
    :alt: alternate text
    :figclass: align-center
 
@@ -340,13 +341,35 @@ they remain in the normally closed position. This set-up offers a simple and rob
    :figclass: align-center
    
    Wiring of the 4-channel relay module board for current injection management
+
+The next step consists of featuring the 4-channel relay module used for current injection and its assembly. The wiring
+between the relays must be carried out in strict accordance with Fig. 10. This card must then be connected to the Raspberry
+Pi and the measurement card. On the Raspberry Pi, it is necessary to connect inputs In1 and In2 to the same GPIO. For this
+purpose, it is necessary to solder together the two pins on the 4-channel relay shield module and connect them to the Raspberry Pi GPIO-7 (Fig. 10). The same must be performed for inputs In3 and In4 with GPIO-8. Connect the GND and 5Vdc pins of
+the relay card’s 4 channels respectively to the GND pin and 5Vcc of the Raspberry Pi. Now connect relays 1, 2, 3 and 4, as
+shown in the diagram, using 1-mm2 cables (red and black in Fig. 10). Lastly, connect the inputs of relay 1 and 2 respectively
+to terminals B and A of the measurement board.   
+
+.. figure:: installation_current_board.jpg
+   :width: 800px
+   :align: center
+   :height: 700px
+   :alt: alternate text
+   :figclass: align-center
    
+   Current injection board installation with Raspberry Pi
+   
+   
+Congratulations, you have build a 4 electrodes resistivity-meter.
+
 
 Frist four electrodes resistivity mesurement 
 ============================================
 
 
-Under construction describe the way vlide the first part of the instruction.
+Under construction !
+
+Describe the way thevalide the first part of the instruction.
 Electrical resistivity measurement on test circuit
 
    
@@ -367,7 +390,7 @@ To prepare the multiplexer, the channels of the two relay boards must be connect
 .. figure:: multiplexer_implementation.jpg
    :width: 800px
    :align: center
-   :height: 400px
+   :height: 500px
    :alt: alternate text
    :figclass: align-center
    
@@ -482,3 +505,16 @@ Electrical resistivity measurement parameters description
 	 stack= 1 # repetition of the current injection for each quadripole
 
 The measurement parameters can be adjusted in lines 27 to 30 of the ohmpi.py code.
+
+Complete list of components
+*******************************
+.. warning::
+   The list to evolve a little after the publication of the article, it is necessary to refer to this list  
+
+
+.. csv-table:: Table Title
+   :file: C:\Users\remi.clement\Documents\28_ohmpi_all_git\sphinx\source\list.csv
+   :widths: 30, 70, 70, 70, 70,70
+   :header-rows: 1
+
+

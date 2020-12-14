@@ -37,7 +37,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="OhmPi project" href="page0.html" /> 
+    <link rel="prev" title="Premiere page" href="page0.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,7 +83,7 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="page0.html"><strong>OhmPi project</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="page0.html">Premiere page</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">OhmPi V 1.01 (limited to 32 electrodes)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#technical-data">Technical data</a></li>
@@ -111,6 +111,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#electrical-resistivity-measurement-parameters-description">Electrical resistivity measurement parameters description</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#complete-list-of-components">Complete list of components</a></li>
 </ul>
 </li>
 </ul>
@@ -219,7 +220,7 @@ control system</p></td>
 <td><p>W</p></td>
 </tr>
 <tr class="row-odd"><td><p>Voltage injection</p></td>
-<td><p>12</p></td>
+<td><p>9</p></td>
 <td><p>V</p></td>
 </tr>
 <tr class="row-even"><td><p>Battery</p></td>
@@ -306,7 +307,7 @@ To ensure that the GPIOs are in Low position, you will need to modify the /boot/
 <p>All dependencies are specified in requirements.txt</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>all instructions below should be typed in the terminal</p>
+<p>All instructions below should be typed in the terminal</p>
 </div>
 <p>It is first necessary to ensure that the libatlas-base-dev library is installed:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libatlas</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">dev</span>
@@ -453,7 +454,7 @@ Once all the components have been soldered together, the measurement board can b
 battery terminal, according to Figure 9. Between the battery and the TX+ terminal of the measurement board, remember to
 place a fuse holder with a 1.5-A fuse for safety purposes.</p>
 <div class="align-center figure" id="id2">
-<a class="reference internal image-reference" href="_images/measurement_board.jpg"><img alt="alternate text" src="_images/measurement_board.jpg" style="width: 800px; height: 400px;" /></a>
+<a class="reference internal image-reference" href="_images/measurement_board.jpg"><img alt="alternate text" src="_images/measurement_board.jpg" style="width: 800px; height: 500px;" /></a>
 <p class="caption"><span class="caption-text">Measurement circuit board assembly: a) printed circuit board, b) adding the 1-Kohm resistors ± 1%, c)adding the 1.5-Kohm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 <div class="align-center figure" id="id3">
@@ -479,10 +480,23 @@ they remain in the normally closed position. This set-up offers a simple and rob
 <a class="reference internal image-reference" href="_images/current_board.jpg"><img alt="alternate text" src="_images/current_board.jpg" style="width: 800px; height: 400px;" /></a>
 <p class="caption"><span class="caption-text">Wiring of the 4-channel relay module board for current injection management</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
+<p>The next step consists of featuring the 4-channel relay module used for current injection and its assembly. The wiring
+between the relays must be carried out in strict accordance with Fig. 10. This card must then be connected to the Raspberry
+Pi and the measurement card. On the Raspberry Pi, it is necessary to connect inputs In1 and In2 to the same GPIO. For this
+purpose, it is necessary to solder together the two pins on the 4-channel relay shield module and connect them to the Raspberry Pi GPIO-7 (Fig. 10). The same must be performed for inputs In3 and In4 with GPIO-8. Connect the GND and 5Vdc pins of
+the relay card’s 4 channels respectively to the GND pin and 5Vcc of the Raspberry Pi. Now connect relays 1, 2, 3 and 4, as
+shown in the diagram, using 1-mm2 cables (red and black in Fig. 10). Lastly, connect the inputs of relay 1 and 2 respectively
+to terminals B and A of the measurement board.</p>
+<div class="align-center figure" id="id5">
+<a class="reference internal image-reference" href="_images/installation_current_board.jpg"><img alt="alternate text" src="_images/installation_current_board.jpg" style="width: 800px; height: 700px;" /></a>
+<p class="caption"><span class="caption-text">Current injection board installation with Raspberry Pi</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<p>Congratulations, you have build a 4 electrodes resistivity-meter.</p>
 </div>
 <div class="section" id="frist-four-electrodes-resistivity-mesurement">
 <h3>Frist four electrodes resistivity mesurement<a class="headerlink" href="#frist-four-electrodes-resistivity-mesurement" title="Permalink to this headline">¶</a></h3>
-<p>Under construction describe the way vlide the first part of the instruction.
+<p>Under construction !</p>
+<p>Describe the way thevalide the first part of the instruction.
 Electrical resistivity measurement on test circuit</p>
 </div>
 </div>
@@ -497,9 +511,9 @@ modules with 16 channels each. On the first board, on each MUX, 15 relays out of
 configuration enables making smaller multiplexers (8 or 16 electrodes only). On the other hand, if you prefer upping to 64 electrodes,
 which is entirely possible, a GPIO channel multiplier will have to be used.
 To prepare the multiplexer, the channels of the two relay boards must be connected according to the wiring diagram shown below.</p>
-<div class="align-center figure" id="id5">
-<a class="reference internal image-reference" href="_images/multiplexer_implementation.jpg"><img alt="alternate text" src="_images/multiplexer_implementation.jpg" style="width: 800px; height: 400px;" /></a>
-<p class="caption"><span class="caption-text">Schematic diagram of the wiring of two 16-channel relay shields</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+<div class="align-center figure" id="id6">
+<a class="reference internal image-reference" href="_images/multiplexer_implementation.jpg"><img alt="alternate text" src="_images/multiplexer_implementation.jpg" style="width: 800px; height: 500px;" /></a>
+<p class="caption"><span class="caption-text">Schematic diagram of the wiring of two 16-channel relay shields</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
 <p>For this purpose, 0.5-mm² cables with end caps are used and their length adjusted for each connection in order to produce a clean assembly.
 The length was adjusted so that the distance between the two points to be connected could be directly measured on the board once they had
@@ -509,9 +523,9 @@ As a final step, connect the cables to the correct connectors. This operation mu
 for activating each relay (Fig. 12). However, we will be activating several relays with a single GPIO (to limit the number of GPIOs used on Raspberry Pi,
 see Section 2.4). To execute this step, it will be necessary to follow the protocol presented in Figure.</p>
 <blockquote>
-<div><div class="align-center figure" id="id6">
+<div><div class="align-center figure" id="id7">
 <a class="reference internal image-reference" href="_images/connection.jpg"><img alt="alternate text" src="_images/connection.jpg" style="width: 800px; height: 400px;" /></a>
-<p class="caption"><span class="caption-text">Connection to the 16-channel relay shield</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Connection to the 16-channel relay shield</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
 </div>
 </div></blockquote>
 <p>For the 16-channel relay shield no. 1, these steps must be followed:
@@ -632,6 +646,175 @@ are displayed on the screen. A measurement file is automatically created and nam
 <p>The measurement parameters can be adjusted in lines 27 to 30 of the ohmpi.py code.</p>
 </div>
 </div>
+<div class="section" id="complete-list-of-components">
+<h2>Complete list of components<a class="headerlink" href="#complete-list-of-components" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The list to evolve a little after the publication of the article, it is necessary to refer to this list</p>
+</div>
+<table class="colwidths-given docutils align-default" id="id8">
+<caption><span class="caption-text">Table Title</span><a class="headerlink" href="#id8" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Number</p></th>
+<th class="head"><p>Cost per unit</p></th>
+<th class="head"><p>Total cost</p></th>
+<th class="head"><p>Manufacturer</p></th>
+<th class="head"><p>Manufacturer s reference</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Raspberry Pi 3 Model B+</p></td>
+<td><p>1</p></td>
+<td><p>37</p></td>
+<td><p>37</p></td>
+<td><p>Raspberry</p></td>
+<td><p>Raspberry Pi 3 Model B</p></td>
+</tr>
+<tr class="row-odd"><td><p>Raspberry Pi 1 2 and 3 Power Supply</p></td>
+<td><p>1</p></td>
+<td><p>8.37</p></td>
+<td><p>8.37</p></td>
+<td><p>Raspberry</p></td>
+<td><p>Raspberry Pi 1 2 and 3 Power Supply</p></td>
+</tr>
+<tr class="row-even"><td><p>SainSmart 16-Channel Canal 12V Relay Relais Module pour Arduino DSP AVR PIC ARM</p></td>
+<td><p>8</p></td>
+<td><p>24.99</p></td>
+<td><p>199.92</p></td>
+<td><p>Sain Smart</p></td>
+<td><p>101-70-103</p></td>
+</tr>
+<tr class="row-odd"><td><p>4-Channel 5V Relay Module</p></td>
+<td><p>1</p></td>
+<td><p>7.99</p></td>
+<td><p>7.99</p></td>
+<td><p>Sain Smart</p></td>
+<td><p>20-018-101-CMS</p></td>
+</tr>
+<tr class="row-even"><td><p>cable 1X1 mm2 (50 m)</p></td>
+<td><p>1</p></td>
+<td><p>19.66</p></td>
+<td><p>19.66</p></td>
+<td><p>TRU COMPONENTS</p></td>
+<td><p>1568649</p></td>
+</tr>
+<tr class="row-odd"><td><p>cable 1X0.5 mm2 (100 m)</p></td>
+<td><p>1</p></td>
+<td><p>29.71</p></td>
+<td><p>29.71</p></td>
+<td><p>TRU COMPONENTS</p></td>
+<td><p>1565235</p></td>
+</tr>
+<tr class="row-even"><td><p>Printed circuit board (packaging quantity x 3)</p></td>
+<td><p>1</p></td>
+<td><p>12</p></td>
+<td><p>12</p></td>
+<td><p>Asler</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Header sets 1x10</p></td>
+<td><p>1</p></td>
+<td><p>2.68</p></td>
+<td><p>2.68</p></td>
+<td><p>Samtec</p></td>
+<td><p>SSW-110-02-G-S</p></td>
+</tr>
+<tr class="row-even"><td><p>Dual screw terminal (3.5-mm pitch)</p></td>
+<td><p>7</p></td>
+<td><p>0.648</p></td>
+<td><p>4.55</p></td>
+<td><p>RS PRO</p></td>
+<td><p>897-1332</p></td>
+</tr>
+<tr class="row-odd"><td><p>Resistor 1 Kohm 0.5W +- 0.1%</p></td>
+<td><p>4</p></td>
+<td><p>0.858</p></td>
+<td><p>3.44</p></td>
+<td><p>TE Connectivity</p></td>
+<td><p>H81K0BYA</p></td>
+</tr>
+<tr class="row-even"><td><p>Resistor 1.5 Kohms +- 0.1%</p></td>
+<td><p>4</p></td>
+<td><p>0.627</p></td>
+<td><p>2.52</p></td>
+<td><p>TE Connectivity</p></td>
+<td><p>H81K5BYA</p></td>
+</tr>
+<tr class="row-odd"><td><p>Resistor 50 +- 0.1%</p></td>
+<td><p>1</p></td>
+<td><p>8.7</p></td>
+<td><p>8.7</p></td>
+<td><p>TE Connectivity</p></td>
+<td><p>UPW50B50RV</p></td>
+</tr>
+<tr class="row-even"><td><p>LM358N AMP-o</p></td>
+<td><p>4</p></td>
+<td><p>0.8</p></td>
+<td><p>2.4</p></td>
+<td><p>Texas Instruments</p></td>
+<td><p>LM358AN/NOPB</p></td>
+</tr>
+<tr class="row-odd"><td><p>ADS1115</p></td>
+<td><p>1</p></td>
+<td><p>11.9</p></td>
+<td><p>11.9</p></td>
+<td><p>Adafruit</p></td>
+<td><p>1083</p></td>
+</tr>
+<tr class="row-even"><td><p>12V battery 7ah</p></td>
+<td><p>1</p></td>
+<td><p>19.58</p></td>
+<td><p>19.58</p></td>
+<td><p>RS PRO</p></td>
+<td><p>537-5488</p></td>
+</tr>
+<tr class="row-odd"><td><p>Battery Holder Type D LR20 (9V)</p></td>
+<td><p>1</p></td>
+<td><p>3.43</p></td>
+<td><p>3.43</p></td>
+<td><p>RS PRO</p></td>
+<td><p>185-4686</p></td>
+</tr>
+<tr class="row-even"><td><p>Ferrule Crimp Terminal (1 mm2) (500 pieces)</p></td>
+<td><p>1</p></td>
+<td><p>30.48</p></td>
+<td><p>30.48</p></td>
+<td><p>WEIDMULLER</p></td>
+<td><p>9004330000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Electrical Crimp Terminal (0.5 mm2) (100 piece)</p></td>
+<td><p>1</p></td>
+<td><p>6.38</p></td>
+<td><p>6.38</p></td>
+<td><p>AMP - TE CONNECTIVITY</p></td>
+<td><p>966067-1</p></td>
+</tr>
+<tr class="row-even"><td><p>Car Fuse 1.0 A</p></td>
+<td><p>1</p></td>
+<td><p>0.2</p></td>
+<td></td>
+<td><p>LITTELFUSE</p></td>
+<td><p>LITTELFUSE</p></td>
+</tr>
+<tr class="row-odd"><td><p>Fuse holder (576-FHAC0002ZXJ)</p></td>
+<td><p>1</p></td>
+<td><p>4.96</p></td>
+<td><p>4.96</p></td>
+<td><p>LITTELFUSE</p></td>
+<td><p>FHAC0002ZXJ</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 
 
@@ -643,7 +826,7 @@ are displayed on the screen. A measurement file is automatically created and nam
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="page0.html" class="btn btn-neutral float-left" title="OhmPi project" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="page0.html" class="btn btn-neutral float-left" title="Premiere page" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
