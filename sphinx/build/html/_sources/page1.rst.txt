@@ -454,6 +454,8 @@ connections. Instead of having four cables connecting an electrode terminal to e
    :height: 300px
    :alt: alternate text
    :figclass: align-center
+   
+   Wire cabling for multiplexer and terminal screw connection
 
 the next figure provides an example of multiplexer relay connections for electrode no. 1: this electrode of multiplexer MUX A must be connected to electrode no. 1 of MUX B. Moreover, electrode no. 1 of MUX B 
 must be connected to electrode no. 1 of MUX N, which in turn must be connected to electrode no. 1 of MUX M. Lastly, electrode no. 1 of MUX M is connected to the terminal block. 
@@ -465,6 +467,12 @@ This operation must be repeated for all 32 electrodes.
    :height: 800px
    :alt: alternate text
    :figclass: align-center
+   
+   Example of a multiplexer connection to the screw terminal for electrode no. 1.
+ 
+.. warning::
+	The 16 channel relay cards exist in 5-V and 12-V , in the bottom figure we have 12-V cards that we will directly connect to the battery.
+	In case you bought 16 channel relay 5-V cards, you will need to add a DC/DC 12-V/5-V converter. You can use a STEP DOWN MODULE DC-DC (Velleman WPM404) and set the voltage to 5V with the potentiometer.
 
 Operating instruction
 *************************
