@@ -194,6 +194,9 @@ Main loop
 """
 N=read_quad("ABMN.txt",pardict.get("nb_electrodes")) # load quadripole file
 
+if N.ndim == 1:
+    N = N.reshape(1, 4)
+
 for g in range(0,pardict.get("nbr_meas")): # for time-lapse monitoring
 
     for i in range(0,N.shape[0]): # loop over quadripoles
