@@ -1,0 +1,64 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=card_measure_raspberry_v3.04
+*Date=21:47:16
+*CreatedBy=Fritzing 0.9.4.2019-12-01.CD-498-0-a1ffcea
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;;dip08;37.6566;-46.0127;90;Bottom;LM358-1
+2;;THT;64.9137;-51.1885;0;Bottom;J6
+3;1k;THT;29.0867;-50.9226;90;Bottom;R3
+4;;;31.6324;-76.3844;0;Bottom;TXT3
+5;;;72.2988;-45.686;0;Bottom;TXT2
+6;50;THT;54.2835;-45.8426;-90;Bottom;R5
+7;;;3.68675;-5.20256;0;Bottom;Hole4
+8;100nF;100 mil [THT, multilayer];23.9666;-16.5079;-90;Bottom;C3
+9;1.5k;THT;29.0867;-38.2226;90;Bottom;R4
+10;10M;THT;48.3867;-30.7827;0;Bottom;R11
+11;;;3.68675;-81.4026;0;Bottom;Hole3
+12;;;72.2988;-31.6258;0;Bottom;TXT2
+13;100nF;100 mil [THT, multilayer];21.4667;-34.0573;0;Bottom;C4
+14;100nF;100 mil [THT, multilayer];39.692;-52.7827;0;Bottom;C2
+15;;;72.2668;-81.4026;0;Bottom;Hole2
+16;1k;THT;8.96676;-30.8626;90;Bottom;R7
+17;1k;THT;47.4667;-53.3627;90;Bottom;R1
+18;;;72.2986;-49.4567;0;Bottom;TXT2
+19;;;72.2988;-42.2225;0;Bottom;TXT2
+20;;;72.2987;-28.0842;0;Bottom;TXT2
+21;;;56.4267;-37.2826;0;Bottom;Fuse1
+22;;;14.7992;-54.4326;-90;Bottom;Composant1
+23;1.5k;THT;8.96676;-18.3627;90;Bottom;R6
+24;;dip08;37.2768;-59.5126;90;Bottom;LM358-2
+25;;;72.2668;-5.20256;0;Bottom;Hole1
+26;;;47.0689;-6.2461;0;Bottom;TRN3-1215
+27;1k;THT;29.0867;-25.5226;90;Bottom;R9
+28;;;60.2127;-12.9351;0;Bottom;TXT3
+29;;;72.2987;-63.1096;0;Bottom;TXT2
+30;;;51.2658;-40.8438;0;Bottom;TXT6
+31;;;72.2986;-56.1372;0;Bottom;TXT2
+32;;;72.2987;-66.3947;0;Bottom;TXT2
+33;;;11.0396;-53.884;0;Bottom;TXT4
+34;;;72.2987;-35.6898;0;Bottom;TXT2
+35;;;72.2986;-52.4952;0;Bottom;TXT2
+36;100nF;100 mil [THT, multilayer];38.6921;-66.7827;0;Bottom;C1
+37;;;72.2986;-39.0222;0;Bottom;TXT2
+38;10M;THT;4.96655;-18.3627;90;Bottom;R12
+39;;dip08;20.1967;-9.01264;90;Bottom;LM358-3
+40;;;72.2987;-59.6624;0;Bottom;TXT2
+41;1.5k;THT;29.0867;-12.8226;90;Bottom;R8
+42;1.5k;THT;46.8667;-40.7626;90;Bottom;R2
+43;;;72.2987;-70.299;0;Bottom;TXT2
+44;10M;THT;33.9666;-13.8626;90;Bottom;R13
+45;;;51.9042;-52.5271;0;Bottom;TXT5
+46;;;72.2985;-73.8911;0;Bottom;TXT2
+47;10M;THT;57.9668;-47.3626;90;Bottom;R10
+48;;dip08;20.1967;-26.7926;90;Bottom;LM358-4
+49;;;47.0692;-19.7527;0;Bottom;TRN3-1215
