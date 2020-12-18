@@ -188,14 +188,6 @@ for i in pinList:
     GPIO.setup(i, GPIO.OUT)
     GPIO.output(i, GPIO.HIGH)
 
-"""
-Hardware parameters
-"""
-R_ref = 50 # reference resistance value in ohm
-coef_p0 = 2.5 # slope for the current conversion for ADS.P0, measurement in V/V
-coef_p1 = 2.5 # slope for the current conversion for ADS.P1, measurement in V/V
-coef_p2 = 2.5 # slope for the current conversion for ADS.P2, measurement in V/V
-coef_p3 = 2.5 # slope for the current conversion for ADS.P3, measurement in V/V
 
 """
 Main loop
