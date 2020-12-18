@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>OhmPi V 1.01 (limited to 32 electrodes) &mdash; Ohmpi: open hardware resistivity-meter documentation</title>
+  <title>OhmPi V 1.02 (limited to 32 electrodes) &mdash; Ohmpi: open hardware resistivity-meter documentation</title>
   
 
   
@@ -37,8 +37,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="OhmPi V 1.02 (limited to 32 electrodes)" href="page2.html" />
-    <link rel="prev" title="Premiere page" href="page0.html" /> 
+    <link rel="prev" title="OhmPi V 1.01 (limited to 32 electrodes)" href="page1.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,7 +84,8 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="page0.html">Premiere page</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">OhmPi V 1.01 (limited to 32 electrodes)</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="page1.html">OhmPi V 1.01 (limited to 32 electrodes)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OhmPi V 1.02 (limited to 32 electrodes)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#technical-data">Technical data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#raspberry-pi-configuration">Raspberry Pi  configuration</a><ul>
@@ -115,7 +115,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#complete-list-of-components">Complete list of components</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="page2.html">OhmPi V 1.02 (limited to 32 electrodes)</a></li>
 </ul>
 
             
@@ -162,13 +161,13 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>OhmPi V 1.01 (limited to 32 electrodes)</li>
+      <li>OhmPi V 1.02 (limited to 32 electrodes)</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/page1.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/page2.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -181,13 +180,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="ohmpi-v-1-01-limited-to-32-electrodes">
-<h1>OhmPi V 1.01 (limited to 32 electrodes)<a class="headerlink" href="#ohmpi-v-1-01-limited-to-32-electrodes" title="Permalink to this headline">¶</a></h1>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This version corresponds to the version published in the Hardware X journal.
-However, we have corrected the bugs that existed on this version and explained the missing mounting points in detail below.
-We invite you to refer to this document to assemble Ohmpi.</p>
+  <div class="section" id="ohmpi-v-1-02-limited-to-32-electrodes">
+<h1>OhmPi V 1.02 (limited to 32 electrodes)<a class="headerlink" href="#ohmpi-v-1-02-limited-to-32-electrodes" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this version, we have improved the electronic measurement board. To upgrade from version 1.01 to 1.02, you just have to replace the measurement board by the new one proposed here.</p>
 </div>
 <div class="section" id="the-philosophy-of-ohmpi">
 <h2>The philosophy of Ohmpi<a class="headerlink" href="#the-philosophy-of-ohmpi" title="Permalink to this headline">¶</a></h2>
@@ -400,10 +397,19 @@ to calculate the gain. With this electronic board, it is possible to measure the
 electric field in the ground, with the total input impedance value being estimated at 36 mega-ohms.
 A shortcut between Electrodes A and B will generate excessive currents, whose intensities depend on the type of battery used.
 A lithium ion battery or automobile-type lead-acid battery can deliver a strong enough current to damage the board and, as such,
-constitutes a potential hazard. We therefore recommend adding a 1.5-A fuse between the battery and resistor R9.</p>
+constitutes a potential hazard. We therefore recommend adding a 1.5-A fuse between the battery and resistor R9.
+In version 1.02, we have improved the electronic board of measurement. we have added a DC/DC converter to supply the operational amplifiers
+(2 Traco power DC/DCconverter TRN3-1215). These converters allow to limit the suppression of the signal when the injected voltage is higher than 10V.
+We also added 4 capacitors on the +12v inputs of the fast operational amplifiers. These are decoupling capacitors (typically 100nF ceramic)
+between each power supply terminal and ground. The last point, we have added a four very high resistances of 10 MOhm, between the ground and
+the signal input on the operational amplifiers. This prevents the operational amplifiers from overheating.</p>
 <div class="align-center figure" id="id1">
-<a class="reference internal image-reference" href="_images/schema_measurement_board.jpg"><img alt="alternate text" src="_images/schema_measurement_board.jpg" style="width: 800px; height: 400px;" /></a>
-<p class="caption"><span class="caption-text">Measurement board</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<a class="reference internal image-reference" href="_images/schema_measurement_board1_02.png"><img alt="alternate text" src="_images/schema_measurement_board1_02.png" style="width: 800px; height: 400px;" /></a>
+<p class="caption"><span class="caption-text">Measurement board (Ohmpi version 1.02)</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want to have very accurate measurements you can replace the resistors with a tolerance of 1% by resistors with a tolerance of 0.01% which will improve the measurement, but the cost will be higher.</p>
 </div>
 </div>
 <div class="section" id="b-implementation">
@@ -444,23 +450,25 @@ it by following the steps described below and illustrated in the following figur
 </dd>
 </dl>
 </li>
-<li><p>Step no. 2: installation of the 1-Kohm resistors with an accuracy of ± 1%.</p></li>
-<li><p>Step no. 3: installation of the 1.5-Kohm resistors with an accuracy of ± 1%.</p></li>
-<li><p>Step no. 4: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks</p></li>
-<li><p>Step no. 5: installation of the 50-Ohm reference resistor ± 0.1%, please check the value and correct the line 39 in ohmpi.py code</p></li>
-<li><p>Step no. 6: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the direction).</p></li>
+<li><p>Step no. 2: installation of the 1-Kohm resistors with an accuracy of ± 1% (b-in the figure).</p></li>
+<li><p>Step no. 3: installation of the 1.5-Kohm resistors with an accuracy of ± 1%(C-in the figure).</p></li>
+<li><p>Step no. 4: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks (c-in the figure)</p></li>
+<li><p>Step no. 5: installation of the 50-Ohm reference resistor ± 0.1%, please check the value and correct the line 39 in ohmpi.py code (d-in the figure)</p></li>
+<li><p>Step no. 6: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the orientation) (e-in the figure).</p></li>
+<li><p>Step no. 7: installation of the 10-Mohm resistors with an accuracy of ± 5% (f-in the figure).</p></li>
+<li><p>Step no. 8: installation of the two DC/DC converter TRN3-1215 (h-in the figure).</p></li>
+<li><p>Setp no. 9: installation of the four capacitor on 100-nF/50vDC and the fuse of 10-A (h-in the figure).</p></li>
 </ul>
-<p>1-Kohm and 1.5-Kohm resistors apply to the divider bridge. If, for example, you prefer using a weaker
-or stronger power supply, it would be possible to adjust the divider bridge value by simply modifying these resistors.
+<p>1-Kohm and 1.5-Kohm resistors apply to the divider bridge. If, for example, you prefer using a stronger power supply, it would be possible to adjust the divider bridge value by simply modifying these resistors.
 Once all the components have been soldered together, the measurement board can be connected to the Raspberry Pi and the
 battery terminal, according to Figure 9. Between the battery and the TX+ terminal of the measurement board, remember to
 place a fuse holder with a 1.5-A fuse for safety purposes.</p>
 <div class="align-center figure" id="id2">
-<a class="reference internal image-reference" href="_images/measurement_board.jpg"><img alt="alternate text" src="_images/measurement_board.jpg" style="width: 800px; height: 500px;" /></a>
+<a class="reference internal image-reference" href="_images/measurement_board1-02.jpg"><img alt="alternate text" src="_images/measurement_board1-02.jpg" style="width: 800px; height: 700px;" /></a>
 <p class="caption"><span class="caption-text">Measurement circuit board assembly: a) printed circuit board, b) adding the 1-Kohm resistors ± 1%, c)adding the 1.5-Kohm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 <div class="align-center figure" id="id3">
-<a class="reference internal image-reference" href="_images/measurement_board-2.jpg"><img alt="alternate text" src="_images/measurement_board-2.jpg" style="width: 800px; height: 700px;" /></a>
+<a class="reference internal image-reference" href="_images/measurement_board-2-V1-02.jpg"><img alt="alternate text" src="_images/measurement_board-2-V1-02.jpg" style="width: 800px; height: 700px;" /></a>
 <p class="caption"><span class="caption-text">Measurement board installation with Raspberry Pi</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 </div>
@@ -490,7 +498,7 @@ the relay card’s 4 channels respectively to the GND pin and 5Vcc of the Raspbe
 shown in the diagram, using 1-mm2 cables (red and black in Fig. 10). Lastly, connect the inputs of relay 1 and 2 respectively
 to terminals B and A of the measurement board.</p>
 <div class="align-center figure" id="id5">
-<a class="reference internal image-reference" href="_images/installation_current_board.jpg"><img alt="alternate text" src="_images/installation_current_board.jpg" style="width: 800px; height: 700px;" /></a>
+<a class="reference internal image-reference" href="_images/installation_current_board_1_02.jpg"><img alt="alternate text" src="_images/installation_current_board_1_02.jpg" style="width: 800px; height: 700px;" /></a>
 <p class="caption"><span class="caption-text">Current injection board installation with Raspberry Pi</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 <p>Congratulations, you have build a 4 electrodes resistivity-meter.</p>
@@ -635,24 +643,20 @@ are displayed on the screen. A measurement file is automatically created and nam
 </div>
 <div class="section" id="electrical-resistivity-measurement-parameters-description">
 <h3>Electrical resistivity measurement parameters description<a class="headerlink" href="#electrical-resistivity-measurement-parameters-description" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>27
-28
-29
-30
-31
-32
-33
-34</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd"> measurement parameters</span>
-<span class="sd"> &quot;&quot;&quot;</span>
- <span class="n">nb_electrodes</span> <span class="o">=</span> <span class="mi">32</span> <span class="c1"># maximum number of electrodes on the resistivity meter</span>
+<p>In the version 1.02, the measurement parameters are in the Jason file (ohmpi_param.json).</p>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">nb_electrodes</span> <span class="o">=</span> <span class="mi">32</span> <span class="c1"># maximum number of electrodes on the resistivity meter</span>
  <span class="n">injection_duration</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Current injection duration in second</span>
  <span class="n">nbr_meas</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># Number of times the quadripole sequence is repeated</span>
  <span class="n">sequence_delay</span><span class="o">=</span> <span class="mi">30</span> <span class="c1"># Delay in seconds between 2 sequences</span>
  <span class="n">stack</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># repetition of the current injection for each quadripole</span>
+ <span class="n">export_path</span><span class="o">=</span> <span class="s2">&quot;home/pi/Desktop/measurement.csv&quot;</span>
 </pre></div>
 </td></tr></table></div>
-<p>The measurement parameters can be adjusted in lines 27 to 30 of the ohmpi.py code.</p>
 </div>
 </div>
 <div class="section" id="complete-list-of-components">
@@ -662,7 +666,7 @@ are displayed on the screen. A measurement file is automatically created and nam
 <p>The list evolve a little bit after the publication of the article, it is necessary to refer to this list, the article is out of date</p>
 </div>
 <table class="colwidths-given docutils align-default" id="id10">
-<caption><span class="caption-text">Table Title</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 8%" />
 <col style="width: 18%" />
@@ -695,7 +699,7 @@ are displayed on the screen. A measurement file is automatically created and nam
 <td><p>Raspberry</p></td>
 <td><p>Raspberry Pi 1 2 and 3 Power Supply</p></td>
 </tr>
-<tr class="row-even"><td><p>SainSmart 16-Channel Canal 12V Relay Relais Module pour Arduino DSP AVR PIC ARM</p></td>
+<tr class="row-even"><td><p>SainSmart 16-Channel 12V Relay</p></td>
 <td><p>8</p></td>
 <td><p>24.99</p></td>
 <td><p>199.92</p></td>
@@ -821,6 +825,20 @@ are displayed on the screen. A measurement file is automatically created and nam
 <td><p>LITTELFUSE</p></td>
 <td><p>FHAC0002ZXJ</p></td>
 </tr>
+<tr class="row-even"><td><p>Capacitor 100nF 50Vdc 10% Ceramic</p></td>
+<td><p>4</p></td>
+<td><p>0.2</p></td>
+<td><p>0.8</p></td>
+<td><p>KEMET</p></td>
+<td><p>C320C104K1</p></td>
+</tr>
+<tr class="row-odd"><td><p>DC/DC converter 12 to 24V</p></td>
+<td><p>2</p></td>
+<td><p>26.72</p></td>
+<td><p>53.44</p></td>
+<td><p>TracoPower</p></td>
+<td><p>TRN 3-1215</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -834,10 +852,8 @@ are displayed on the screen. A measurement file is automatically created and nam
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="page2.html" class="btn btn-neutral float-right" title="OhmPi V 1.02 (limited to 32 electrodes)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="page0.html" class="btn btn-neutral float-left" title="Premiere page" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="page1.html" class="btn btn-neutral float-left" title="OhmPi V 1.01 (limited to 32 electrodes)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -4,7 +4,7 @@ OhmPi V 1.01 (limited to 32 electrodes)
 
 .. warning::
 	This version corresponds to the version published in the Hardware X journal.
-	However, we have corrected the bugs that existed on this version and explained the missing mounting points in detail below
+	However, we have corrected the bugs that existed on this version and explained the missing mounting points in detail below.
 	We invite you to refer to this document to assemble Ohmpi.
 	
 	

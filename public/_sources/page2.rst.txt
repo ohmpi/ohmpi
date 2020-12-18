@@ -2,6 +2,13 @@
 OhmPi V 1.02 (limited to 32 electrodes)
 ***************************************** 
 
+.. note::
+	 
+	 In this version, we have improved the electronic measurement board. To upgrade from version 1.01 to 1.02, you just have to replace the measurement board by the new one proposed here.
+	 
+
+
+
 The philosophy of Ohmpi 
 **************************
 The philosophy of Ohmpi V1.01 is to offer a multi electrode resistivity meter, from a set of commercially available 
@@ -21,7 +28,7 @@ Technical data
 |Power consumption of CPU and   |18.5                |W          |             
 |control system                 |                    |           |
 +-------------------------------+--------------------+-----------+
-|Voltage injection              |12                  |V          |
+|Voltage injection              |9                   |V          |
 +-------------------------------+--------------------+-----------+
 |Battery                        |12                  |V          |
 +-------------------------------+--------------------+-----------+
@@ -100,7 +107,7 @@ Virtual Environnement and packages
 All dependencies are specified in requirements.txt
 
 .. note:: 
-	 all instructions below should be typed in the terminal
+	 All instructions below should be typed in the terminal
 
 It is first necessary to ensure that the libatlas-base-dev library is installed:
 
@@ -234,16 +241,11 @@ electric field in the ground, with the total input impedance value being estimat
 A shortcut between Electrodes A and B will generate excessive currents, whose intensities depend on the type of battery used. 
 A lithium ion battery or automobile-type lead-acid battery can deliver a strong enough current to damage the board and, as such, 
 constitutes a potential hazard. We therefore recommend adding a 1.5-A fuse between the battery and resistor R9.
-
-.. note::
-	 Last update:
-
-	 1- The board has been slightly modified, we have added a decoupling capacitor at the input of the Operational Amplifiers (AOP) channels, to ensure a good performance of the AOPs (100nF/ 50VDC).
-	 
-	 2- On each input of the AOP signals, we have also added a 10 MOhms resistor, so that the inputs take the value of the ground when the system does not measure and thus limit the overheating of the AOP.
-	 
-	 3- To make sure that the signal is not skimmed, we have added a power supply of 24V on the AOPs, these are the TRN3-1211 components. 
-
+In version 1.02, we have improved the electronic board of measurement. we have added a DC/DC converter to supply the operational amplifiers 
+(2 Traco power DC/DCconverter TRN3-1215). These converters allow to limit the suppression of the signal when the injected voltage is higher than 10V.
+We also added 4 capacitors on the +12v inputs of the fast operational amplifiers. These are decoupling capacitors (typically 100nF ceramic) 
+between each power supply terminal and ground. The last point, we have added a four very high resistances of 10 MOhm, between the ground and 
+the signal input on the operational amplifiers. This prevents the operational amplifiers from overheating.
 
 .. figure:: schema_measurement_board1_02.png
    :width: 800px
@@ -252,7 +254,12 @@ constitutes a potential hazard. We therefore recommend adding a 1.5-A fuse betwe
    :alt: alternate text
    :figclass: align-center
    
-   Measurement board updated from the version 1.01 presented in clement et al 2020
+   Measurement board (Ohmpi version 1.02)
+   
+.. note::
+	 If you want to have very accurate measurements you can replace the resistors with a tolerance of 1% by resistors with a tolerance of 0.01% which will improve the measurement, but the cost will be higher.
+   
+   
    
 b) Implementation
 --------------------------------
@@ -276,7 +283,7 @@ it by following the steps described below and illustrated in the following figur
 		
 	.. code-block:: python
 		:linenos:
-		:lineno-start: 31
+		:lineno-start: 36
 
 		 """
 		 hardware parameters
@@ -287,20 +294,19 @@ it by following the steps described below and illustrated in the following figur
 		 coef_p2 = 2.5 # slope for current conversion for ADS.P2, measurement in V/V
 		 coef_p3 = 2.5 # slope for current conversion for ADS.P3, measurement in V/V
 
-	The coefficient parameters can be adjusted in lines 31 to 35 of the ohmpi.py code.	
+	The coefficient parameters can be adjusted in lines 40 to 43 of the ohmpi.py code.	
 
 
-* Step no. 2: installation of the 1-Kohm resistors with an accuracy of ± 0.1% (following figure-b). 
-* Step no. 3: installation of the 1.5-Kohm resistors with an accuracy of ± 0.1% (following figure-c). 
-* Step no. 4: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks (following figure-d) 
-* Step no. 5: installation of the 50-Ohm reference resistor ± 0.1%, please check the value with ohmmeter and correct in the jason file (ohmpi_param.json),(following figure-e).
-* Step no. 6: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the direction) (following figure-f).
-* Step no. 7: installation of the 10-Mohm resistors
-* Step no. 8: addition of the DC/DC converter (TRN3-1211)
-* Step no. 9: adding 10nF capacitor and fuse (1.5A-littlefuse ref: 0253001.V)
-
-1-Kohm and 1.5-Kohm resistors apply to the divider bridge. If, for example, you prefer using a weaker 
-or stronger power supply, it would be possible to adjust the divider bridge value by simply modifying these resistors. 
+* Step no. 2: installation of the 1-Kohm resistors with an accuracy of ± 1% (b-in the figure). 
+* Step no. 3: installation of the 1.5-Kohm resistors with an accuracy of ± 1%(C-in the figure). 
+* Step no. 4: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks (c-in the figure)
+* Step no. 5: installation of the 50-Ohm reference resistor ± 0.1%, please check the value and correct the line 39 in ohmpi.py code (d-in the figure)
+* Step no. 6: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the orientation) (e-in the figure).
+* Step no. 7: installation of the 10-Mohm resistors with an accuracy of ± 5% (f-in the figure). 
+* Step no. 8: installation of the two DC/DC converter TRN3-1215 (h-in the figure).
+* Setp no. 9: installation of the four capacitor on 100-nF/50vDC and the fuse of 10-A (h-in the figure).
+ 
+1-Kohm and 1.5-Kohm resistors apply to the divider bridge. If, for example, you prefer using a stronger power supply, it would be possible to adjust the divider bridge value by simply modifying these resistors. 
 Once all the components have been soldered together, the measurement board can be connected to the Raspberry Pi and the 
 battery terminal, according to Figure 9. Between the battery and the TX+ terminal of the measurement board, remember to 
 place a fuse holder with a 1.5-A fuse for safety purposes.
@@ -327,7 +333,7 @@ Current injection board
 =======================
 
 To carry out the electrical resistivity measurement, the first step consists of injecting current into the ground.
-In our case, a simple 12-V lead-acid battery is used to create an electrical potential difference that results 
+In our case, a simple 9-V lead-acid battery is used to create an electrical potential difference that results 
 in current circulating into the ground. The current is injected through electrodes A and B (see Fig. 2). This 
 injection is controlled via a 4-channel relay module board connected to the Raspberry Pi. The mechanical relay
 module board is shown in Figure 4. Relays 1 and 2 serve to switch on the current source. The common contacts 
@@ -346,13 +352,35 @@ they remain in the normally closed position. This set-up offers a simple and rob
    :figclass: align-center
    
    Wiring of the 4-channel relay module board for current injection management
+
+The next step consists of featuring the 4-channel relay module used for current injection and its assembly. The wiring
+between the relays must be carried out in strict accordance with Fig. 10. This card must then be connected to the Raspberry
+Pi and the measurement card. On the Raspberry Pi, it is necessary to connect inputs In1 and In2 to the same GPIO. For this
+purpose, it is necessary to solder together the two pins on the 4-channel relay shield module and connect them to the Raspberry Pi GPIO-7 (Fig. 10). The same must be performed for inputs In3 and In4 with GPIO-8. Connect the GND and 5Vdc pins of
+the relay card’s 4 channels respectively to the GND pin and 5Vcc of the Raspberry Pi. Now connect relays 1, 2, 3 and 4, as
+shown in the diagram, using 1-mm2 cables (red and black in Fig. 10). Lastly, connect the inputs of relay 1 and 2 respectively
+to terminals B and A of the measurement board.   
+
+.. figure:: installation_current_board_1_02.jpg
+   :width: 800px
+   :align: center
+   :height: 700px
+   :alt: alternate text
+   :figclass: align-center
    
+   Current injection board installation with Raspberry Pi
+   
+   
+Congratulations, you have build a 4 electrodes resistivity-meter.
+
 
 Frist four electrodes resistivity mesurement 
 ============================================
 
 
-Under construction describe the way vlide the first part of the instruction.
+Under construction !
+
+Describe the way to valide the first part of the instruction.
 Electrical resistivity measurement on test circuit
 
    
@@ -373,7 +401,7 @@ To prepare the multiplexer, the channels of the two relay boards must be connect
 .. figure:: multiplexer_implementation.jpg
    :width: 800px
    :align: center
-   :height: 400px
+   :height: 500px
    :alt: alternate text
    :figclass: align-center
    
@@ -437,6 +465,8 @@ connections. Instead of having four cables connecting an electrode terminal to e
    :height: 300px
    :alt: alternate text
    :figclass: align-center
+   
+   Wire cabling for multiplexer and terminal screw connection
 
 the next figure provides an example of multiplexer relay connections for electrode no. 1: this electrode of multiplexer MUX A must be connected to electrode no. 1 of MUX B. Moreover, electrode no. 1 of MUX B 
 must be connected to electrode no. 1 of MUX N, which in turn must be connected to electrode no. 1 of MUX M. Lastly, electrode no. 1 of MUX M is connected to the terminal block. 
@@ -448,6 +478,12 @@ This operation must be repeated for all 32 electrodes.
    :height: 800px
    :alt: alternate text
    :figclass: align-center
+   
+   Example of a multiplexer connection to the screw terminal for electrode no. 1.
+ 
+.. warning::
+	The 16 channel relay cards exist in 5-V and 12-V , in the bottom figure we have 12-V cards that we will directly connect to the battery.
+	In case you bought 16 channel relay 5-V cards, you will need to add a DC/DC 12-V/5-V converter. You can use a STEP DOWN MODULE DC-DC (Velleman WPM404) and set the voltage to 5V with the potentiometer.
 
 Operating instruction
 *************************
@@ -462,11 +498,11 @@ the required packages and running the code.
  
 Startup procedure
 ==================
-As an initial operating instruction, the 12-V battery must be disconnected before any hardware handling. Ensure that the battery is charged at full capacity. Plug all the electrodes (32 or fewer)
+As an initial operating instruction, all batteries must be disconnected before any hardware handling. Ensure that the battery is charged at full capacity. Plug all the electrodes (32 or fewer)
 into the screw terminals. The Raspberry Pi must be plugged into a computer screen, with a mouse and keyboard accessed remotely. The Raspberry Pi must then be plugged into the power supply 
 (for laboratory measurements) or a power bank (5V - 2A for field measurements). At this point, you'll need to access the Raspbian operating system. Inside the previously created folder “ohmPi”, 
 the protocol file “ABMN.txt” must be created or modified; this file contains all quadrupole ABMN numeration (an example is proposed with the source code). Some input parameters of the main “ohmpi.py” 
-function may be adjusted/optimized depending on the measurement attributes. For example, both the current injection duration and number of stacks can be adjusted. At this point, the 12-V battery can be 
+function may be adjusted/optimized depending on the measurement attributes. For example, both the current injection duration and number of stacks can be adjusted. At this point, the9 V and 12-V battery can be 
 plugged into the hardware; the "ohmpi.py" source code must be run within a python3 environment (or a virtual environment if one has been created) either in the terminal or using Thonny. You should now 
 hear the characteristic sound of a relay switching as a result of electrode permutation. After each quadrupole measurement, the potential difference as well as the current intensity and resistance 
 are displayed on the screen. A measurement file is automatically created and named "measure.csv"; it will be placed in the same folder.
@@ -474,19 +510,31 @@ are displayed on the screen. A measurement file is automatically created and nam
 Electrical resistivity measurement parameters description
 ==========================================================
 
+In the version 1.02, the measurement parameters are in the Jason file (ohmpi_param.json).
+
 .. code-block:: python
 	:linenos:
-	:lineno-start: 2
+	:lineno-start: 1
+
 	
 	 nb_electrodes = 32 # maximum number of electrodes on the resistivity meter
 	 injection_duration = 0.5 # Current injection duration in second
 	 nbr_meas= 1 # Number of times the quadripole sequence is repeated
 	 sequence_delay= 30 # Delay in seconds between 2 sequences
 	 stack= 1 # repetition of the current injection for each quadripole
+	 export_path= "home/pi/Desktop/measurement.csv" 
 
-The measurement parameters can be adjusted in lines 2 to 7 of the ohmpi_param.json file.
 
-complete list of componements
-==========================================================
+
+Complete list of components
+*******************************
+.. warning::
+   The list evolve a little bit after the publication of the article, it is necessary to refer to this list, the article is out of date  
+
+
+.. csv-table:: List of components
+   :file: C:\Users\remi.clement\Documents\28_ohmpi_all_git\sphinx\source\list - 1_02.csv
+   :widths: 30, 70, 70, 70, 70,70
+   :header-rows: 1
 
 

@@ -1,0 +1,23 @@
+Component,Number,Cost per unit ,Total cost,Manufacturer,Manufacturer s reference
+Raspberry Pi 3 Model B+,1,37,37,Raspberry,Raspberry Pi 3 Model B
+Raspberry Pi 1 2 and 3 Power Supply,1,8.37,8.37,Raspberry,Raspberry Pi 1 2 and 3 Power Supply
+SainSmart 16-Channel 12V Relay,8,24.99,199.92,Sain Smart,101-70-103
+4-Channel 5V Relay Module,1,7.99,7.99,Sain Smart,20-018-101-CMS
+cable 1X1 mm2 (50 m),1,19.66,19.66,TRU COMPONENTS,1568649
+cable 1X0.5 mm2 (100 m),1,29.71,29.71,TRU COMPONENTS,1565235
+Printed circuit board (packaging quantity x 3),1,12,12,Asler,0
+Header sets 1x10,1,2.68,2.68,Samtec,SSW-110-02-G-S
+Dual screw terminal (3.5-mm pitch),7,0.648,4.55,RS PRO,897-1332
+Resistor 1 Kohm 0.5W +- 0.1%,4,0.858,3.44,TE Connectivity,H81K0BYA
+Resistor 1.5 Kohms +- 0.1%,4,0.627,2.52,TE Connectivity,H81K5BYA
+Resistor 50 +- 0.1%,1,8.7,8.7,TE Connectivity,UPW50B50RV
+LM358N AMP-o,4,0.8,2.4,Texas Instruments,LM358AN/NOPB
+ADS1115,1,11.9,11.9,Adafruit,1083
+12V battery 7ah,1,19.58,19.58,RS PRO,537-5488
+Battery Holder Type D LR20 (9V),1,3.43,3.43,RS PRO,185-4686
+Ferrule Crimp Terminal (1 mm2) (500 pieces),1,30.48,30.48,WEIDMULLER,9004330000
+Electrical Crimp Terminal (0.5 mm2) (100 piece),1,6.38,6.38,AMP - TE CONNECTIVITY,966067-1
+Car Fuse 1.0 A,1,0.2,,LITTELFUSE,LITTELFUSE
+Fuse holder (576-FHAC0002ZXJ),1,4.96,4.96,LITTELFUSE,FHAC0002ZXJ
+Capacitor 100nF 50Vdc 10% Ceramic,4,0.2,0.8,KEMET, C320C104K1
+DC/DC converter 12 to 24V,2,26.72,53.44,TracoPower,TRN 3-1215
