@@ -123,9 +123,17 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, co
             GPIO.output(7, GPIO.LOW) # polarity n°2        
         GPIO.output(8, GPIO.HIGH) # current injection
         time.sleep(injection_deltat) # delay depending on current injection duration
+        ads = ADS.ADS1115(i2c, gain=2/3,data_rate=860)# select gain
+        ads = ADS.ADS1115(i2c, gain=gain_auto(AnalogIn(ads,ADS.P0)),data_rate=860)
         Ia1 = AnalogIn(ads,ADS.P0).voltage * coefp0 # reading current value on ADS channel A0
+        ads = ADS.ADS1115(i2c, gain=2/3,data_rate=860)# select gain
+        ads = ADS.ADS1115(i2c, gain=gain_auto(AnalogIn(ads,ADS.P1)),data_rate=860)
         Ib1 = AnalogIn(ads,ADS.P1).voltage * coefp1 # reading current value on ADS channel A1
+        ads = ADS.ADS1115(i2c, gain=2/3,data_rate=860)# select gain
+        ads = ADS.ADS1115(i2c, gain=gain_auto(AnalogIn(ads,ADS.P2)),data_rate=860)
         Vm1 = AnalogIn(ads,ADS.P2).voltage * coefp2# reading voltage value on ADS channel A2
+        ads = ADS.ADS1115(i2c, gain=2/3,data_rate=860)# select gain
+        ads = ADS.ADS1115(i2c, gain=gain_auto(AnalogIn(ads,ADS.P3)),data_rate=860)
         Vn1 = AnalogIn(ads,ADS.P3).voltage * coefp3# reading voltage value on ADS channel A3
         GPIO.output(8, GPIO.LOW)# stop current injection
         time.sleep(injection_deltat) # Dead time equivalent to the duration of the current injection pulse
