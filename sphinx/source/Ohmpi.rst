@@ -1,8 +1,8 @@
 *************** 
-Premiere page 
+OhmPi project 
 ***************
  
-**OhmPi project** 
+**Partenaires**
 ************************* 
  
 .. image:: logo_ohmpi.JPG
