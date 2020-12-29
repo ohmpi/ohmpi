@@ -3,7 +3,13 @@ created on January 6, 2020
 Update December 2021
 Ohmpi.py is a program to control a low-cost and open hardward resistivity meter OhmPi that has been developed by Rémi CLEMENT(INRAE),Vivien DUBOIS(INRAE),Hélène GUYARD(IGE), Nicolas FORQUET (INRAE), and Yannick FARGIER (IFSTTAR).
 """
+print('|  _  | | | ||  \/  || ___ \_   _|')
+print('| | | | |_| || .  . || |_/ / | |' ) 
+print('| | | |  _  || |\/| ||  __/  | |')  
+print('\ \_/ / | | || |  | || |    _| |_') 
+print(' \___/\_| |_/\_|  |_/\_|    \___/ ')
 print('OHMPI start' )
+print('Vers: 1.50')
 print('Import library')
 
 import RPi.GPIO as GPIO
@@ -29,11 +35,11 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 """
 hardware parameters
 """
-R_ref = 50 # reference resistance value in ohm
-coef_p0 = 2.5 # slope for current conversion for ADS.P0, measurement in V/V
-coef_p1 = 2.5 # slope for current conversion for ADS.P1, measurement in V/V
-coef_p2 = 2.5 # slope for current conversion for ADS.P2, measurement in V/V
-coef_p3 = 2.5 # slope for current conversion for ADS.P3, measurement in V/V
+R_ref = 47.4 # reference resistance value in ohm
+coef_p0 = 2.5009 # slope for current conversion for ADS.P0, measurement in V/V
+coef_p1 = 2.4947 # slope for current conversion for ADS.P1, measurement in V/V
+coef_p2 = 2.4985 # slope for current conversion for ADS.P2, measurement in V/V
+coef_p3 = 2.4994 # slope for current conversion for ADS.P3, measurement in V/V
 export_path = "/home/pi/Desktop/measurement.csv"
 
 """
@@ -51,7 +57,7 @@ def switch_mux(quadripole):
     quadmux = numpy.loadtxt("quadmux.txt", delimiter=" ", dtype=int)
     for i in range(0,4):
         for j in range(0,5) :
-            GPIO.output(int(quadmux[i,j]), bool(path2elec[quadripole[i]-1,j]))
+             GPIO.output(int(quadmux[i,j]), bool(path2elec[quadripole[i]-1,j]))
 
 # function to find rows with identical values in different columns
 def find_identical_in_line(array_object):
@@ -106,7 +112,7 @@ def gain_auto(channel):
 # perform a measurement
 def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, coefp3, elec_array):
     i2c = busio.I2C(board.SCL, board.SDA) # I2C protocol setup
-    ads = ADS.ADS1115(i2c, gain=2/3) # I2C communication setup
+    ads = ADS.ADS1115(i2c, gain=2/3,data_rate=64) # I2C communication setup
     # inner variable initialization
     sum_I=0
     sum_Vmn=0
@@ -117,24 +123,19 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, co
     GPIO.setup(7, GPIO.OUT)
     GPIO.setup(8, GPIO.OUT)
     # resistance measurement
+    
     for n in range(0,3+2*nb_stack-1) :        
         if (n % 2) == 0:
             GPIO.output(7, GPIO.HIGH) # polarity n°1        
         else:
             GPIO.output(7, GPIO.LOW) # polarity n°2        
         GPIO.output(8, GPIO.HIGH) # current injection
+       
         time.sleep(injection_deltat) # delay depending on current injection duration
-        ads = ADS.ADS1115(i2c, gain=2/3,data_rate=860)# select gain
-        ads = ADS.ADS1115(i2c, gain=gain_auto(AnalogIn(ads,ADS.P0)),data_rate=860)
+        
         Ia1 = AnalogIn(ads,ADS.P0).voltage * coefp0 # reading current value on ADS channel A0
-        ads = ADS.ADS1115(i2c, gain=2/3,data_rate=860)# select gain
-        ads = ADS.ADS1115(i2c, gain=gain_auto(AnalogIn(ads,ADS.P1)),data_rate=860)
         Ib1 = AnalogIn(ads,ADS.P1).voltage * coefp1 # reading current value on ADS channel A1
-        ads = ADS.ADS1115(i2c, gain=2/3,data_rate=860)# select gain
-        ads = ADS.ADS1115(i2c, gain=gain_auto(AnalogIn(ads,ADS.P2)),data_rate=860)
         Vm1 = AnalogIn(ads,ADS.P2).voltage * coefp2# reading voltage value on ADS channel A2
-        ads = ADS.ADS1115(i2c, gain=2/3,data_rate=860)# select gain
-        ads = ADS.ADS1115(i2c, gain=gain_auto(AnalogIn(ads,ADS.P3)),data_rate=860)
         Vn1 = AnalogIn(ads,ADS.P3).voltage * coefp3# reading voltage value on ADS channel A3
         GPIO.output(8, GPIO.LOW)# stop current injection
         time.sleep(injection_deltat) # Dead time equivalent to the duration of the current injection pulse
@@ -154,12 +155,15 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, co
         "B":elec_array[1],
         "M":elec_array[2],
         "N":elec_array[3],
-        "Vmn":[sum_Vmn/(3+2*nb_stack-1)],
-        "I":[sum_I/(3+2*nb_stack-1)],
-        "R":[sum_Vmn/(3+2*nb_stack-1)/(sum_I/(3+2*nb_stack-1))],
-        "Ps":[sum_Ps/(3+2*nb_stack-1)],
+        "Vmn[mV]":[(sum_Vmn/(3+2*nb_stack-1))*1000],
+        "Rab":[Ib1/(sum_I/(3+2*nb_stack-1))],
+        "Tx":[Ia1],
+        "I[mA]":[(sum_I/(3+2*nb_stack-1))*1000],
+        "R":[( (sum_Vmn/(3+2*nb_stack-1)/(sum_I/(3+2*nb_stack-1))))],
+        "Ps[mV]":[(sum_Ps/(3+2*nb_stack-1))*1000],
         "nbStack":[nb_stack]
     })
+    output=output.round(2)
     print(output.to_string())
     return output
 
