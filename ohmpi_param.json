@@ -3,6 +3,6 @@
     "injection_duration": 0.250,
     "nbr_meas": 10000,
     "sequence_delay": 10,
-    "stack": 10,
+    "stack": 30,
     "export_path": "/home/pi/myohmpi/ohmpi1_5/measurement.csv" 
 }

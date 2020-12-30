@@ -3,11 +3,14 @@ created on January 6, 2020
 Update December 2021
 Ohmpi.py is a program to control a low-cost and open hardward resistivity meter OhmPi that has been developed by Rémi CLEMENT(INRAE),Vivien DUBOIS(INRAE),Hélène GUYARD(IGE), Nicolas FORQUET (INRAE), and Yannick FARGIER (IFSTTAR).
 """
+
+print('\033[1m'+'\033[31m'+' ________________________________')
 print('|  _  | | | ||  \/  || ___ \_   _|')
 print('| | | | |_| || .  . || |_/ / | |' ) 
 print('| | | |  _  || |\/| ||  __/  | |')  
 print('\ \_/ / | | || |  | || |    _| |_') 
 print(' \___/\_| |_/\_|  |_/\_|    \___/ ')
+print('\033[0m')
 print('OHMPI start' )
 print('Vers: 1.50')
 print('Import library')
@@ -25,7 +28,7 @@ from adafruit_ads1x15.analog_in import AnalogIn
 import pandas as pd
 import os.path
 import json
-
+from gpiozero import CPUTemperature
 """
 display start time
 """
@@ -35,7 +38,7 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 """
 hardware parameters
 """
-R_ref = 47.4 # reference resistance value in ohm
+R_ref = 50.0# reference resistance value in ohm
 coef_p0 = 2.5009 # slope for current conversion for ADS.P0, measurement in V/V
 coef_p1 = 2.4947 # slope for current conversion for ADS.P1, measurement in V/V
 coef_p2 = 2.4985 # slope for current conversion for ADS.P2, measurement in V/V
@@ -95,19 +98,7 @@ def read_quad(filename, nb_elec):
         sys.exit(1)
     else:
         return output
-
-def gain_auto(channel):
-    gain=2/3
-    if ((abs(channel.voltage)<2.040) and (abs(channel.voltage)>=1.023)):
-        gain=2
-    elif ((abs(channel.voltage)<1.023) and (abs(channel.voltage)>=0.508)):
-        gain=4
-    elif ((abs(channel.voltage)<0.508) and (abs(channel.voltage)>=0.250)):
-        gain=8
-    elif abs(channel.voltage)<0.256:
-        gain=16
-    #print(gain)
-    return gain        
+       
 
 # perform a measurement
 def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, coefp3, elec_array):
@@ -149,6 +140,7 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, co
             sum_Vmn=sum_Vmn+Vmn1
             sum_Ps=sum_Ps+Vmn1
     # return averaged values
+    cpu= CPUTemperature()
     output = pd.DataFrame({
         "time":[datetime.now()],
         "A":elec_array[0],
@@ -161,7 +153,8 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, co
         "I[mA]":[(sum_I/(3+2*nb_stack-1))*1000],
         "R":[( (sum_Vmn/(3+2*nb_stack-1)/(sum_I/(3+2*nb_stack-1))))],
         "Ps[mV]":[(sum_Ps/(3+2*nb_stack-1))*1000],
-        "nbStack":[nb_stack]
+        "nbStack":[nb_stack],
+        "CPU temp [°C]":[cpu.temperature]
     })
     output=output.round(2)
     print(output.to_string())
@@ -188,10 +181,10 @@ GPIO.setwarnings(False)
 """
 Initialization of multiplexer channels
 """
-pinList = [12,16,20,21,26,18,23,24,25,19,6,13,4,17,27,22,10,9,11,5] # List of GPIOs enabled for relay cards (electrodes)
-for i in pinList:
-    GPIO.setup(i, GPIO.OUT)
-    GPIO.output(i, GPIO.HIGH)
+# pinList = [12,16,20,21,26,18,23,24,25,19,6,13,4,17,27,22,10,9,11,5] # List of GPIOs enabled for relay cards (electrodes)
+# for i in pinList:
+#     GPIO.setup(i, GPIO.OUT)
+#     GPIO.output(i, GPIO.HIGH)
 
 
 """
@@ -206,7 +199,7 @@ for g in range(0,pardict.get("nbr_meas")): # for time-lapse monitoring
 
     for i in range(0,N.shape[0]): # loop over quadripoles
         # call the switch_mux function to switch to the right electrodes
-        switch_mux(N[i,])
+#         switch_mux(N[i,])
 
         # run a measurement
         current_measurement = run_measurement(pardict.get("stack"), pardict.get("injection_duration"), R_ref, coef_p0, coef_p1, coef_p2, coef_p3, N[i,])
@@ -215,9 +208,9 @@ for g in range(0,pardict.get("nbr_meas")): # for time-lapse monitoring
         append_and_save(pardict.get("export_path"), current_measurement)
 
         # reset multiplexer channels
-        GPIO.output(12, GPIO.HIGH); GPIO.output(16, GPIO.HIGH); GPIO.output(20, GPIO.HIGH); GPIO.output(21, GPIO.HIGH); GPIO.output(26, GPIO.HIGH)
-        GPIO.output(18, GPIO.HIGH); GPIO.output(23, GPIO.HIGH); GPIO.output(24, GPIO.HIGH); GPIO.output(25, GPIO.HIGH); GPIO.output(19, GPIO.HIGH)
-        GPIO.output(6, GPIO.HIGH); GPIO.output(13, GPIO.HIGH); GPIO.output(4, GPIO.HIGH); GPIO.output(17, GPIO.HIGH); GPIO.output(27, GPIO.HIGH)
-        GPIO.output(22, GPIO.HIGH); GPIO.output(10, GPIO.HIGH); GPIO.output(9, GPIO.HIGH); GPIO.output(11, GPIO.HIGH); GPIO.output(5, GPIO.HIGH)
+#         GPIO.output(12, GPIO.HIGH); GPIO.output(16, GPIO.HIGH); GPIO.output(20, GPIO.HIGH); GPIO.output(21, GPIO.HIGH); GPIO.output(26, GPIO.HIGH)
+#         GPIO.output(18, GPIO.HIGH); GPIO.output(23, GPIO.HIGH); GPIO.output(24, GPIO.HIGH); GPIO.output(25, GPIO.HIGH); GPIO.output(19, GPIO.HIGH)
+#         GPIO.output(6, GPIO.HIGH); GPIO.output(13, GPIO.HIGH); GPIO.output(4, GPIO.HIGH); GPIO.output(17, GPIO.HIGH); GPIO.output(27, GPIO.HIGH)
+#         GPIO.output(22, GPIO.HIGH); GPIO.output(10, GPIO.HIGH); GPIO.output(9, GPIO.HIGH); GPIO.output(11, GPIO.HIGH); GPIO.output(5, GPIO.HIGH)
 
     time.sleep(pardict.get("sequence_delay")) #waiting next measurement (time-lapse)
