@@ -1,3 +1,2 @@
-from gpiozero import CPUTemperature
-cpu= CPUTemperature()
-print(cpu.temperature)
+import psutil
+print(psutil.virtual_memory())

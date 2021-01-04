@@ -16,18 +16,12 @@ print('Vers: 1.50')
 print('Import library')
 
 import RPi.GPIO as GPIO
-import time
+import time , board, busio, numpy, os, sys, json, glob, statistics
 from datetime import datetime
-import board
-import busio
-import numpy
-import os
-import sys
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
 import pandas as pd
 import os.path
-import json
 from gpiozero import CPUTemperature
 """
 display start time
@@ -38,18 +32,35 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 """
 hardware parameters
 """
-R_ref = 50.0# reference resistance value in ohm
+R_ref = 47.2# reference resistance value in ohm
 coef_p0 = 2.5009 # slope for current conversion for ADS.P0, measurement in V/V
 coef_p1 = 2.4947 # slope for current conversion for ADS.P1, measurement in V/V
 coef_p2 = 2.4985 # slope for current conversion for ADS.P2, measurement in V/V
 coef_p3 = 2.4994 # slope for current conversion for ADS.P3, measurement in V/V
 export_path = "/home/pi/Desktop/measurement.csv"
+base_dir = '/sys/bus/w1/devices/'
+device_folder = glob.glob(base_dir + '28*')[0]
+device_file = device_folder + '/w1_slave'
+
+# GPIO initialization
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(7, GPIO.OUT)
+GPIO.setup(8, GPIO.OUT)
+
+integer=5
+meas=numpy.zeros((4,integer))
 
 """
 import parameters
 """
 with open('ohmpi_param.json') as json_file:
     pardict = json.load(json_file)
+
+
+
+i2c = busio.I2C(board.SCL, board.SDA) # I2C protocol setup
+ads = ADS.ADS1115(i2c, gain=16,data_rate=860) # I2C communication setup
 
 """
 functions
@@ -80,6 +91,20 @@ def find_identical_in_line(array_object):
                 output.append(i)
     return output
 
+def gain_auto(channel):
+    gain=2/3
+    if ((abs(channel.voltage)<2.040) and (abs(channel.voltage)>=1.023)):
+        gain=2
+    elif ((abs(channel.voltage)<1.023) and (abs(channel.voltage)>=0.508)):
+        gain=4
+    elif ((abs(channel.voltage)<0.508) and (abs(channel.voltage)>=0.250)):
+        gain=8
+    elif abs(channel.voltage)<0.256:
+        gain=16
+    #print(gain)
+    return gain 
+
+
 # read quadripole file and apply tests
 def read_quad(filename, nb_elec):
     output = numpy.loadtxt(filename, delimiter=" ",dtype=int) # load quadripole file
@@ -99,46 +124,65 @@ def read_quad(filename, nb_elec):
     else:
         return output
        
-
+def read_temp():
+    f = open(device_file, 'r')
+    lines = f.readlines()
+    f.close()
+    while lines[0].strip()[-3:] != 'YES':
+        time.sleep(0.2)
+        lines = read_temp_raw()
+    equals_pos = lines[1].find('t=')
+    if equals_pos != -1:
+        temp_string = lines[1][equals_pos+2:]
+        temp_c = float(temp_string) / 1000.0
+        
+        return temp_c
 # perform a measurement
 def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, coefp3, elec_array):
-    i2c = busio.I2C(board.SCL, board.SDA) # I2C protocol setup
-    ads = ADS.ADS1115(i2c, gain=2/3,data_rate=64) # I2C communication setup
+    start_time = time.time()
     # inner variable initialization
     sum_I=0
     sum_Vmn=0
     sum_Ps=0
-    # GPIO initialization
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setwarnings(False)
-    GPIO.setup(7, GPIO.OUT)
-    GPIO.setup(8, GPIO.OUT)
-    # resistance measurement
-    
+    # injection courant and measure
+    t_gain=[0,0]
     for n in range(0,3+2*nb_stack-1) :        
+        # current injection
+        
         if (n % 2) == 0:
             GPIO.output(7, GPIO.HIGH) # polarity n°1        
         else:
-            GPIO.output(7, GPIO.LOW) # polarity n°2        
+            GPIO.output(7, GPIO.LOW) # polarity n°2
         GPIO.output(8, GPIO.HIGH) # current injection
-       
         time.sleep(injection_deltat) # delay depending on current injection duration
-        
-        Ia1 = AnalogIn(ads,ADS.P0).voltage * coefp0 # reading current value on ADS channel A0
-        Ib1 = AnalogIn(ads,ADS.P1).voltage * coefp1 # reading current value on ADS channel A1
-        Vm1 = AnalogIn(ads,ADS.P2).voltage * coefp2# reading voltage value on ADS channel A2
-        Vn1 = AnalogIn(ads,ADS.P3).voltage * coefp3# reading voltage value on ADS channel A3
+        if n==0:
+            ads = ADS.ADS1115(i2c, gain=2/3,data_rate=860)
+            Tx=AnalogIn(ads,ADS.P0).voltage
+            Tab=AnalogIn(ads,ADS.P1).voltage
+            t_gain=[gain_auto(AnalogIn(ads,ADS.P0,ADS.P1)),gain_auto(AnalogIn(ads,ADS.P2,ADS.P3))]
+            t_gain=numpy.sort(t_gain)       
+            ads = ADS.ADS1115(i2c, gain=t_gain[1],data_rate=860)
+           
+        for k in range(0,integer):
+            meas[0,k] = AnalogIn(ads,ADS.P0,ADS.P1).voltage# reading current value on ADS channel A0
+            meas[2,k] = AnalogIn(ads,ADS.P2,ADS.P3).voltage # reading voltage value on ADS channel A2
         GPIO.output(8, GPIO.LOW)# stop current injection
-        time.sleep(injection_deltat) # Dead time equivalent to the duration of the current injection pulse
-        I1= (Ia1 - Ib1)/Rref
-        sum_I=sum_I+I1
-        Vmn1= (Vm1 - Vn1)    
+        startdelay=time.time()
+   
+
+        
+                 
+        
+        
+        sum_I=sum_I+numpy.mean(meas[0,:]) * ((coefp0+coefp1)/2)/Rref
+        Vmn1= numpy.mean(meas[2,:]) * ((coefp2+coefp3)/2)
         if (n % 2) == 0:
             sum_Vmn=sum_Vmn-Vmn1
             sum_Ps=sum_Ps+Vmn1
         else:
             sum_Vmn=sum_Vmn+Vmn1
             sum_Ps=sum_Ps+Vmn1
+        time.sleep(injection_deltat - ((time.time() - startdelay) % injection_deltat))
     # return averaged values
     cpu= CPUTemperature()
     output = pd.DataFrame({
@@ -147,14 +191,19 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, co
         "B":elec_array[1],
         "M":elec_array[2],
         "N":elec_array[3],
-        "Vmn[mV]":[(sum_Vmn/(3+2*nb_stack-1))*1000],
-        "Rab":[Ib1/(sum_I/(3+2*nb_stack-1))],
-        "Tx":[Ia1],
-        "I[mA]":[(sum_I/(3+2*nb_stack-1))*1000],
-        "R":[( (sum_Vmn/(3+2*nb_stack-1)/(sum_I/(3+2*nb_stack-1))))],
-        "Ps[mV]":[(sum_Ps/(3+2*nb_stack-1))*1000],
+        "Vmn [mV]":[(sum_Vmn/(3+2*nb_stack-1))*1000],
+        "I [mA]":[(sum_I/(3+2*nb_stack-1))*1000],
+        "R [ohm]":[( (sum_Vmn/(3+2*nb_stack-1)/(sum_I/(3+2*nb_stack-1))))],
+        "Rab [Ohm]":[(Tab*coefp1)/(sum_I/(3+2*nb_stack-1))],
+        "Tx [V]":[Tx*coefp0],              
+        "Ps [mV]":[(sum_Ps/(3+2*nb_stack-1))*1000],
         "nbStack":[nb_stack],
-        "CPU temp [°C]":[cpu.temperature]
+        "CPU temp [°C]":[cpu.temperature],
+        "Hardware temp [°C]":[read_temp()],
+        "Time [S]":[(-start_time+time.time())]
+     
+     
+      # Dead time equivalent to the duration of the current injection pulse   
     })
     output=output.round(2)
     print(output.to_string())
