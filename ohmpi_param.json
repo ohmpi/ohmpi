@@ -1,6 +1,6 @@
 {
     "nb_electrodes": 32,
-    "injection_duration": 0.500,
+    "injection_duration": 0.5,
     "nbr_meas": 10000,
     "sequence_delay": 1,
     "stack": 1,

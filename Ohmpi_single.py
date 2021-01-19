@@ -32,11 +32,15 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 """
 hardware parameters
 """
-R_ref = 50.20# reference resistance value in ohm
-coef_p0 = 2.47 # slope for current conversion for ADS.P0, measurement in V/V
-coef_p1 = 2.47# slope for current conversion for ADS.P1, measurement in V/V
-coef_p2 = 2.4748 # slope for current conversion for ADS.P2, measurement in V/V
-coef_p3 = 2.4748 # slope for current conversion for ADS.P3, measurement in V/V
+R_ref = 50.0# reference resistance value in ohm
+coef_p0 = 2.46524 # slope for current conversion for ADS.P0, measurement in V/V
+coef_p1 = 2.46610# slope for current conversion for ADS.P1, measurement in V/V
+coef_p2 = 2.46526 # slope for current conversion for ADS.P2, measurement in V/V
+coef_p3 = 2.46542 # slope for current conversion for ADS.P3, measurement in V/V
+offset_p0=-0.00078559
+offset_p1= 0.00655417
+offset_p2= 0.00729835
+offset_p3= 0.00102393
 export_path = "/home/pi/Desktop/measurement.csv"
 base_dir = '/sys/bus/w1/devices/'
 device_folder = glob.glob(base_dir + '28*')[0]
@@ -58,7 +62,7 @@ with open('ohmpi_param.json') as json_file:
     pardict = json.load(json_file)
 
 i2c = busio.I2C(board.SCL, board.SDA) # I2C protocol setup
-ads = ADS.ADS1115(i2c, gain=2/3,data_rate=860) # I2C communication setup
+ads = ADS.ADS1115(i2c, gain=2/3,data_rate=475) # I2C communication setup
 
 """
 functions
@@ -89,18 +93,18 @@ def find_identical_in_line(array_object):
                 output.append(i)
     return output
 
-def gain_auto(channel):
-    gain=2/3
-    if ((abs(channel.voltage)<2.040) and (abs(channel.voltage)>=1.023)):
-        gain=2
-    elif ((abs(channel.voltage)<1.023) and (abs(channel.voltage)>=0.508)):
-        gain=4
-    elif ((abs(channel.voltage)<0.508) and (abs(channel.voltage)>=0.250)):
-        gain=8
-    elif abs(channel.voltage)<0.250:
-        gain=16
-    #print(gain)
-    return gain 
+# def gain_auto(channel):
+#     gain=2/3
+#     if ((abs(channel.voltage)<2.040) and (abs(channel.voltage)>=1.023)):
+#         gain=2
+#     elif ((abs(channel.voltage)<1.023) and (abs(channel.voltage)>=0.508)):
+#         gain=4
+#     elif ((abs(channel.voltage)<0.508) and (abs(channel.voltage)>=0.250)):
+#         gain=8
+#     elif abs(channel.voltage)<0.250:
+#         gain=16
+#     #print(gain)
+#     return gain 
 
 
 # read quadripole file and apply tests
@@ -135,6 +139,7 @@ def read_temp():
         temp_c = float(temp_string) / 1000.0
         
         return temp_c
+
 # perform a measurement
 def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, coefp3, elec_array):
     
@@ -149,7 +154,7 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, co
     sum_Vmn=0
     sum_Ps=0
     # injection courant and measure
-    t_gain=[0,0]
+    
     for n in range(0,3+2*nb_stack-1) :        
         # current injection
         
@@ -160,32 +165,28 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, co
         GPIO.output(8, GPIO.HIGH) # current injection
         time.sleep(injection_deltat) # delay depending on current injection duration
         if n==0:
-            ads = ADS.ADS1115(i2c, gain=2/3,data_rate=860)
+            
             Tx=AnalogIn(ads,ADS.P0).voltage
             Tab=AnalogIn(ads,ADS.P1).voltage
-            t_gain=[gain_auto(AnalogIn(ads,ADS.P0,ADS.P1)),gain_auto(AnalogIn(ads,ADS.P2,ADS.P3))]
             
-            print(t_gain)
-            ads = ADS.ADS1115(i2c, gain=t_gain[0],data_rate=860)
+            
+
            
         for k in range(0,integer):
-            ads = ADS.ADS1115(i2c, gain=t_gain[0],data_rate=860)
-            #ads = ADS.ADS1115(i2c, gain=2/3,data_rate=860)
-            meas[0,k] = AnalogIn(ads,ADS.P0,ADS.P1).voltage# reading current value on ADS channel A0
-            ads = ADS.ADS1115(i2c, gain=t_gain[1],data_rate=860)
-            #ads = ADS.ADS1115(i2c, gain=2/3,data_rate=860)
-            meas[2,k] = AnalogIn(ads,ADS.P2,ADS.P3).voltage # reading voltage value on ADS channel A2
+            meas[0,k] = AnalogIn(ads,ADS.P0).voltage# reading current value on ADS channel A0
+            meas[1,k] = AnalogIn(ads,ADS.P1).voltage
+            meas[2,k] = AnalogIn(ads,ADS.P2).voltage # reading voltage value on ADS channel A2
+            meas[3,k] = AnalogIn(ads,ADS.P3).voltage
         GPIO.output(8, GPIO.LOW)# stop current injection
         startdelay=time.time()
    
        
-#         std=statistics.stdev(meas[0,:])
-#         mean=statistics.mean(meas[0,:])
-#         print( mean, std)
+        std=statistics.stdev(meas[0,:])
+        mean=statistics.mean(meas[0,:])
+        #print( mean, std)
 
-        sum_I=sum_I+numpy.mean(meas[0,:]) * ((coefp0+coefp1)/2)/Rref
-        print(sum_I*Rref)
-        Vmn1= numpy.mean(meas[2,:]) * ((coefp2+coefp3)/2)
+        sum_I=sum_I+(((numpy.mean(meas[0,:])*coefp0)+offset_p0)-(((numpy.mean(meas[1,:])*coefp1)+offset_p1)))/Rref
+        Vmn1= ((numpy.mean(meas[2,:])*(coefp2))+ offset_p2)-((numpy.mean(meas[3,:])*(coefp3))+offset_p3)
         if (n % 2) == 0:
             sum_Vmn=sum_Vmn-Vmn1
             sum_Ps=sum_Ps+Vmn1
@@ -218,8 +219,9 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, co
      
       # Dead time equivalent to the duration of the current injection pulse   
     })
-    output=output.round(2)
+    output=output.round(1)
     print(output.to_string())
+    time.sleep(1)
     return output
 
 # save data
