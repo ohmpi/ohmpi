@@ -23,7 +23,7 @@ for i in range(0,100) :
     GPIO.output(8, GPIO.HIGH) # current injection
     time.sleep(4)
     for i in range(0,integer) :
-     meas[0,i] = AnalogIn(ads,ADS.P0).voltage
+     meas[0,i] = AnalogIn(ads,ADS.P3).voltage
     
     GPIO.output(8, GPIO.LOW)
     std=statistics.stdev(meas[0,:])
