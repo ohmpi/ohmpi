@@ -53,7 +53,7 @@ GPIO.setwarnings(False)
 GPIO.setup(7, GPIO.OUT)
 GPIO.setup(8, GPIO.OUT)
 
-integer=30 # if noise increase
+integer=100# if noise increase
 meas=numpy.zeros((4,integer))
 
 """
@@ -146,9 +146,9 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, co
         GPIO.output(8, GPIO.HIGH) # current injection
         start_delay=time.time()
         time.sleep(injection_deltat) # delay depending on current injection duration
-#         if n==0:
-        Tx=AnalogIn(ads,ADS.P0).voltage
-        Tab=AnalogIn(ads,ADS.P1).voltage    
+        if n==0:
+            Tx=AnalogIn(ads,ADS.P0).voltage
+            Tab=AnalogIn(ads,ADS.P1).voltage    
       
            
         for k in range(0,integer):
@@ -156,7 +156,9 @@ def run_measurement(nb_stack, injection_deltat, Rref, coefp0, coefp1, coefp2, co
             meas[1,k] = AnalogIn(ads,ADS.P1).voltage
             meas[2,k] = AnalogIn(ads,ADS.P2).voltage # reading voltage value on ADS channel A2
             meas[3,k] = AnalogIn(ads,ADS.P3).voltage
-            
+#             print(AnalogIn(ads,ADS.P0,ADS.P1).voltage)
+#             time.sleep(1)
+        
         GPIO.output(8, GPIO.LOW)# stop current injection
         end_delay=time.time()
               
