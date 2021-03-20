@@ -39,8 +39,6 @@ offset_p3= 0
 integer=10
 meas=numpy.zeros((3,integer))
 
-
-
 """
 import parameters
 """
@@ -74,7 +72,7 @@ Elec_N= adafruit_tca9548a.TCA9548A(i2c, 0X70)
 functions
 """
 # function swtich_mux select the right channels for the multiplexer cascade for electrodes A, B, M and N.
-def switch_mux(quadripole):
+def switch_mux_on(quadripole):
     elec_adress=[0x76,0X71,0x74,0x70]
       
     for i in range(0,4):
@@ -93,10 +91,33 @@ def switch_mux(quadripole):
             nb_i2C=4
             a=quadripole[i]-48
               
-        mcp = MCP23017(tca[nb_i2C])     
-        mcp.get_pin(a-1).direction=digitalio.Direction.OUTPUT
-        mcp.get_pin(a-1).value=True
-        print(quadripole[i])
+        mcp2 = MCP23017(tca[nb_i2C])     
+        mcp2.get_pin(a-1).direction=digitalio.Direction.OUTPUT
+        mcp2.get_pin(a-1).value=True
+ 
+def switch_mux_off(quadripole):
+    elec_adress=[0x76,0X71,0x74,0x70]
+      
+    for i in range(0,4):
+        tca= adafruit_tca9548a.TCA9548A(i2c, elec_adress[i]) #choose MUX A B M or N
+        
+        if quadripole[i] < 17:
+            nb_i2C=7
+            a=quadripole[i]
+        elif quadripole[i] > 16 and quadripole[i] < 33:    
+            nb_i2C=6
+            a=quadripole[i]-16
+        elif quadripole[i] > 32 and quadripole[i] < 49:    
+            nb_i2C=5
+            a=quadripole[i]-32
+        elif quadripole[i] > 48 and quadripole[i] < 65:    
+            nb_i2C=4
+            a=quadripole[i]-48
+              
+        mcp2 = MCP23017(tca[nb_i2C])     
+        mcp2.get_pin(a-1).direction=digitalio.Direction.OUTPUT
+        mcp2.get_pin(a-1).value=False
+       
 
 #function to switch  off mux
 def ZERO_mux(nb_elec):
@@ -118,9 +139,9 @@ def ZERO_mux(nb_elec):
                 nb_i2C=4
                 a=qd-48
                   
-            mcp = MCP23017(tca[nb_i2C])     
-            mcp.get_pin(a-1).direction=digitalio.Direction.OUTPUT
-            mcp.get_pin(a-1).value= False
+            mcp2 = MCP23017(tca[nb_i2C])     
+            mcp2.get_pin(a-1).direction=digitalio.Direction.OUTPUT
+            mcp2.get_pin(a-1).value= False
 
 # function to find rows with identical values in different columns
 def find_identical_in_line(array_object):
@@ -144,7 +165,7 @@ def find_identical_in_line(array_object):
 def read_quad(filename, nb_elec):
     output = numpy.loadtxt(filename, delimiter=" ",dtype=int) # load quadripole file
     # locate lines where the electrode index exceeds the maximum number of electrodes
-    test_index_elec = numpy.array(numpy.where(output > 32))
+    test_index_elec = numpy.array(numpy.where(output > nb_elec))
     # locate lines where an electrode is referred twice
     test_same_elec = find_identical_in_line(output)
     # if statement with exit cases (rajouter un else if pour le deuxième cas du ticket #2)
@@ -165,14 +186,19 @@ def run_measurement(nb_stack, injection_deltat, R_shunt, coefp2, coefp3, elec_ar
     sum_I=0
     sum_Vmn=0
     sum_Ps=0
+    # injection courant and measure
+    mcp = MCP23008(i2c, address=0x20)
+    pin0 = mcp.get_pin(0)
+    pin0.direction = Direction.OUTPUT
+    pin1 = mcp.get_pin(1)
+    pin1.direction = Direction.OUTPUT
     pin0.value = False
     pin1.value = False
-    # injection courant and measure
-    
     for n in range(0,3+2*nb_stack-1) :        
         # current injection
         
         if (n % 2) == 0:
+            
             pin1.value = True
             pin0.value = False # current injection polarity n°1        
         else:
@@ -256,10 +282,10 @@ for g in range(0,pardict.get("nbr_meas")): # for time-lapse monitoring
         # call the switch_mux function to switch to the right electrodes
 
         
-        switch_mux(N[i,])
+        switch_mux_on(N[i,])
         # run a measurement
         current_measurement = run_measurement(pardict.get("stack"), pardict.get("injection_duration"), R_shunt, coef_p2, coef_p3, N[i,])
-        ZERO_mux(pardict.get("nb_electrodes"))
+        switch_mux_off(N[i,])
         #save data and print in a text file
         append_and_save(pardict.get("export_path"), current_measurement)
 
