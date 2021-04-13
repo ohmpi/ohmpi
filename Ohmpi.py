@@ -1,6 +1,6 @@
 """
 created on January 6, 2020
-Update mars 2021
+Update april 2021
 Ohmpi.py is a program to control a low-cost and open hardward resistivity meter OhmPi that has been developed by Rémi CLEMENT(INRAE),Vivien DUBOIS(INRAE),Hélène GUYARD(IGE), Nicolas FORQUET (INRAE), and Yannick FARGIER (IFSTTAR).
 """
 
@@ -26,6 +26,7 @@ from adafruit_mcp230xx.mcp23008 import MCP23008
 from adafruit_mcp230xx.mcp23017 import MCP23017
 import digitalio
 from digitalio import Direction
+from gpiozero import CPUTemperature
 current_time = datetime.now()
 print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 """
@@ -223,7 +224,7 @@ def run_measurement(nb_stack, injection_deltat, R_shunt, coefp2, coefp3, elec_ar
               sum_Vmn=sum_Vmn+Vmn1
               sum_Ps=sum_Ps+Vmn1
         end_calc=time.time()
-        
+        cpu = CPUTemperature()
         time.sleep((end_delay-start_delay)-(end_calc-end_delay)) 
     # return averaged values
 #     cpu= CPUTemperature()
@@ -240,7 +241,7 @@ def run_measurement(nb_stack, injection_deltat, R_shunt, coefp2, coefp3, elec_ar
 #         "Tx [V]":[Tx*2.47],              
         "Ps [mV]":[(sum_Ps/(3+2*nb_stack-1))],
         "nbStack":[nb_stack],
-#         "CPU temp [°C]":[cpu.temperature],
+        "CPU temp [°C]":[cpu.temperature],
 #         "Hardware temp [°C]":[read_temp()-8],
         "Time [S]":[(-start_time+time.time())]
 #         "Rcontact[ohm]":[Rc],
@@ -271,7 +272,7 @@ def append_and_save(path, last_measurement):
 """
 Main loop
 """
-N=read_quad("ABMN.txt",pardict.get("nb_electrodes")) # load quadripole file
+N=read_quad("dd.txt",pardict.get("nb_electrodes")) # load quadripole file
 
 if N.ndim == 1:
     N = N.reshape(1, 4)
@@ -288,6 +289,7 @@ for g in range(0,pardict.get("nbr_meas")): # for time-lapse monitoring
         switch_mux_off(N[i,])
         #save data and print in a text file
         append_and_save(pardict.get("export_path"), current_measurement)
-
+        print(i+1,'/',N.shape[0])
+    print('end of sequence')
     ZERO_mux(pardict.get("nb_electrodes"))
     time.sleep(pardict.get("sequence_delay")) #waiting next measurement (time-lapse)
