@@ -1,8 +1,8 @@
 {
-    "nb_electrodes": 32,
+    "nb_electrodes": 64,
     "injection_duration": 0.5,
     "nbr_meas": 1,
-    "sequence_delay": 30,
+    "sequence_delay": 10,
     "stack": 1,
-    "export_path": "home/pi/Desktop/measurement.csv" 
+    "export_path": "/home/pi/ohmpi1_5/measurement.csv" 
 }
