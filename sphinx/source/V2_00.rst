@@ -1,13 +1,15 @@
 *****************************************
-OhmPi V 1.02 (limited to 32 electrodes)
+OhmPi V 2.00 (64 or 128 électrodes)
 ***************************************** 
+
+
+
+
 
 .. note::
 	 
-	 In this version, we have improved the electronic measurement board. To upgrade from version 1.01 to 1.02, you just have to replace the measurement board by the new one proposed here.
-	 
-
-
+	 In this version, we have improved the electronic measurement board. To upgrade from version 1.01 to 1.02, 
+	 you just have to replace the measurement board by the new one proposed here.
 
 The philosophy of Ohmpi 
 **************************

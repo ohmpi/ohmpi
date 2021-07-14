@@ -1,14 +1,15 @@
 *****************************************
-OhmPi V 1.01 (limited to 32 electrodes)
+OhmPi V 2.00 (64 or 128 électrodes)
 ***************************************** 
 
-.. warning::
-	This version corresponds to the version published in the Hardware X journal.
-	However, we have corrected the bugs that existed on this version and explained the missing mounting points in detail below.
-	We invite you to refer to this document to assemble Ohmpi V1.01.
-	
-	
 
+
+
+
+.. note::
+	 
+	 In this version, we have improved the electronic measurement board. To upgrade from version 1.01 to 1.02, 
+	 you just have to replace the measurement board by the new one proposed here.
 
 The philosophy of Ohmpi 
 **************************
@@ -242,15 +243,25 @@ electric field in the ground, with the total input impedance value being estimat
 A shortcut between Electrodes A and B will generate excessive currents, whose intensities depend on the type of battery used. 
 A lithium ion battery or automobile-type lead-acid battery can deliver a strong enough current to damage the board and, as such, 
 constitutes a potential hazard. We therefore recommend adding a 1.5-A fuse between the battery and resistor R9.
+In version 1.02, we have improved the electronic board of measurement. we have added a DC/DC converter to supply the operational amplifiers 
+(2 Traco power DC/DCconverter TRN3-1215). These converters allow to limit the suppression of the signal when the injected voltage is higher than 10V.
+We also added 4 capacitors on the +12v inputs of the fast operational amplifiers. These are decoupling capacitors (typically 100nF ceramic) 
+between each power supply terminal and ground. The last point, we have added a four very high resistances of 10 MOhm, between the ground and 
+the signal input on the operational amplifiers. This prevents the operational amplifiers from overheating.
 
-.. figure:: schema_measurement_board.jpg
+.. figure:: schema_measurement_board1_02.png
    :width: 800px
    :align: center
    :height: 400px
    :alt: alternate text
    :figclass: align-center
    
-   Measurement board
+   Measurement board (Ohmpi version 1.02)
+   
+.. note::
+	 If you want to have very accurate measurements you can replace the resistors with a tolerance of 1% by resistors with a tolerance of 0.01% which will improve the measurement, but the cost will be higher.
+   
+   
    
 b) Implementation
 --------------------------------
@@ -288,28 +299,30 @@ it by following the steps described below and illustrated in the following figur
 	The coefficient parameters can be adjusted in lines 40 to 43 of the ohmpi.py code.	
 
 
-* Step no. 2: installation of the 1-Kohm resistors with an accuracy of ± 1%. 
-* Step no. 3: installation of the 1.5-Kohm resistors with an accuracy of ± 1%. 
-* Step no. 4: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks 
-* Step no. 5: installation of the 50-Ohm reference resistor ± 0.1%, please check the value and correct the line 39 in ohmpi.py code
-* Step no. 6: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the direction).
-
-1-Kohm and 1.5-Kohm resistors apply to the divider bridge. If, for example, you prefer using a weaker 
-or stronger power supply, it would be possible to adjust the divider bridge value by simply modifying these resistors. 
+* Step no. 2: installation of the 1-Kohm resistors with an accuracy of ± 1% (b-in the figure). 
+* Step no. 3: installation of the 1.5-Kohm resistors with an accuracy of ± 1%(C-in the figure). 
+* Step no. 4: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks (c-in the figure)
+* Step no. 5: installation of the 50-Ohm reference resistor ± 0.1%, please check the value and correct the line 39 in ohmpi.py code (d-in the figure)
+* Step no. 6: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the orientation) (e-in the figure).
+* Step no. 7: installation of the 10-Mohm resistors with an accuracy of ± 5% (f-in the figure). 
+* Step no. 8: installation of the two DC/DC converter TRN3-1215 (h-in the figure).
+* Setp no. 9: installation of the four capacitor on 100-nF/50vDC and the fuse of 10-A (h-in the figure).
+ 
+1-Kohm and 1.5-Kohm resistors apply to the divider bridge. If, for example, you prefer using a stronger power supply, it would be possible to adjust the divider bridge value by simply modifying these resistors. 
 Once all the components have been soldered together, the measurement board can be connected to the Raspberry Pi and the 
 battery terminal, according to Figure 9. Between the battery and the TX+ terminal of the measurement board, remember to 
 place a fuse holder with a 1.5-A fuse for safety purposes.
 
-.. figure:: measurement_board.jpg
+.. figure:: measurement_board1-02.jpg
    :width: 800px
    :align: center
-   :height: 500px
+   :height: 700px
    :alt: alternate text
    :figclass: align-center
 
    Measurement circuit board assembly: a) printed circuit board, b) adding the 1-Kohm resistors ± 1%, c)adding the 1.5-Kohm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers
    
-.. figure:: measurement_board-2.jpg
+.. figure:: measurement_board-2-V1-02.jpg
    :width: 800px
    :align: center
    :height: 700px
@@ -350,7 +363,7 @@ the relay card’s 4 channels respectively to the GND pin and 5Vcc of the Raspbe
 shown in the diagram, using 1-mm2 cables (red and black in Fig. 10). Lastly, connect the inputs of relay 1 and 2 respectively
 to terminals B and A of the measurement board.   
 
-.. figure:: installation_current_board.jpg
+.. figure:: installation_current_board_1_02.jpg
    :width: 800px
    :align: center
    :height: 700px
@@ -499,20 +512,21 @@ are displayed on the screen. A measurement file is automatically created and nam
 Electrical resistivity measurement parameters description
 ==========================================================
 
+In the version 1.02, the measurement parameters are in the Jason file (ohmpi_param.json).
+
 .. code-block:: python
 	:linenos:
-	:lineno-start: 27
+	:lineno-start: 1
 
-	 """
-	 measurement parameters
-	 """
+	
 	 nb_electrodes = 32 # maximum number of electrodes on the resistivity meter
 	 injection_duration = 0.5 # Current injection duration in second
 	 nbr_meas= 1 # Number of times the quadripole sequence is repeated
 	 sequence_delay= 30 # Delay in seconds between 2 sequences
 	 stack= 1 # repetition of the current injection for each quadripole
+	 export_path= "home/pi/Desktop/measurement.csv" 
 
-The measurement parameters can be adjusted in lines 27 to 30 of the ohmpi.py code.
+
 
 Complete list of components
 *******************************
@@ -520,8 +534,8 @@ Complete list of components
    The list evolve a little bit after the publication of the article, it is necessary to refer to this list, the article is out of date  
 
 
-.. csv-table:: Table Title
-   :file: C:\Users\remi.clement\Documents\28_ohmpi_all_git\sphinx\source\list.csv
+.. csv-table:: List of components
+   :file: C:\Users\remi.clement\Documents\28_ohmpi_all_git\sphinx\source\list - 1_02.csv
    :widths: 30, 70, 70, 70, 70,70
    :header-rows: 1
 
