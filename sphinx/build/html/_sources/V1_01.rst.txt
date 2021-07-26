@@ -521,7 +521,7 @@ Complete list of components
 
 
 .. csv-table:: Table Title
-   :file: C:\Users\remi.clement\Documents\28_ohmpi_all_git\sphinx\source\list.csv
+   :file: C:\Users\remi.clement\Documents\28_ohmpi_all_git\master\sphinx\source\list.csv
    :widths: 30, 70, 70, 70, 70,70
    :header-rows: 1
 

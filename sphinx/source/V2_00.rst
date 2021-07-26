@@ -2,60 +2,95 @@
 OhmPi V 2.00 (64 or 128 électrodes)
 ***************************************** 
 
+.. figure:: Under-Construction.png
+	   :width: 500px
+	   :align: center
+	   :height: 250px
+	   :alt: Ohmpi 2
+	   :figclass: align-center
 
-
-
+.. figure:: image_ohmpi_2.jpg
+	   :width: 800px
+	   :align: center
+	   :height: 600px
+	   :alt: Ohmpi 2
+	   :figclass: align-center
 
 .. note::
+	 In this version, we have developed two new board types that allow the assembly of Ohmpi v2.00, a measurement board and a multiplexer board.
+	 This new version is made up of: 
 	 
-	 In this version, we have improved the electronic measurement board. To upgrade from version 1.01 to 1.02, 
-	 you just have to replace the measurement board by the new one proposed here.
+	 1. A measurement board for four-point measurement
+	 
+	 2. 4 multiplexer cards
+	 
+	 3. A box 
 
 The philosophy of Ohmpi 
 **************************
-The philosophy of Ohmpi V1.01 is to offer a multi electrode resistivity meter, from a set of commercially available 
-electronic cards it is a resistivity meter limited to 32 electrodes only. It is limited to low-current injection, 
-but suitable for small laboratory experiments and small field time monitoring
-
+The philosophy of Ohmpi V2.00 is to offer a new DIY multielectrode resistivity meter. It is a resistivity meter with 64 electrodes , which can be upgraded to 128 electrodes. 
+It is limited to low-current injection,but suitable for small laboratory experiments and small field time-lapse monitoring.
+Ohmpi, is developed by a team that seeks to share all its experience and wishes to improve and offer a more and more robust tool to the community.Ohmpi V2.00 is a completely different version from the previous one. 
+We will stop the development on the previous version, to dedicate our efforts on this new version. 
 
 Technical data
 ***************
-+-------------------------------+--------------------+-----------+
-| **Parameter**                 | **Specifications** | Units     |
-+-------------------------------+--------------------+-----------+
-|Electrodes                     |32                  |           |
-+-------------------------------+--------------------+-----------+
-|Operating temperature          |0 to 50             |°c         |
-+-------------------------------+--------------------+-----------+
-|Power consumption of CPU and   |18.5                |W          |             
-|control system                 |                    |           |
-+-------------------------------+--------------------+-----------+
-|Voltage injection              |9                   |V          |
-+-------------------------------+--------------------+-----------+
-|Battery                        |12                  |V          |
-+-------------------------------+--------------------+-----------+
-|Current                        |0 to 50             |mA         |
-+-------------------------------+--------------------+-----------+
-|Min pulse duration             |150                 |mS         |
-+-------------------------------+--------------------+-----------+
-|Input impedance                |36                  |Mohm       |
-+-------------------------------+--------------------+-----------+
-|Data storage                   |micro SD card       |           |
-+-------------------------------+--------------------+-----------+
-|Resolution                     |O.O1                |ohm        |
-+-------------------------------+--------------------+-----------+
 
-Raspberry Pi  configuration
-****************************************** 
++-------------------------------+--------------------+-----------+--------------------+-----------+
+| **Parameter**                 | **Specifications** | Units     | **Specifications** | Units     |
+|                               |       **V1**       |           |       **V2**       |           |
++-------------------------------+--------------------+-----------+--------------------+-----------+
+|Electrodes                     |32                  |           |64 to 128           |           |
++-------------------------------+--------------------+-----------+--------------------+-----------+
+|Operating temperature          |-0 to 50            |°c         |-25 to 50           |°c         |
++-------------------------------+--------------------+-----------+--------------------+-----------+
+|Power consumption of CPU and   |18.5                |W          |18.5                |W          |              
+|control system                 |                    |           |                    |           |
++-------------------------------+--------------------+-----------+--------------------+-----------+
+|Voltage injection              |12                  |V          |12                  |V          |
++-------------------------------+--------------------+-----------+--------------------+-----------+
+|Battery                        |9                   |V          |12                  |V          |
++-------------------------------+--------------------+-----------+--------------------+-----------+
+|Current                        |0 to 40             |mA         |0 to 40             |mA         |
++-------------------------------+--------------------+-----------+--------------------+-----------+
+|Min pulse duration             |150                 |mS         |150                 |mS         |
++-------------------------------+--------------------+-----------+--------------------+-----------+
+|Input impedance                |80                  |Mohm       |80                  |Mohm       |
++-------------------------------+--------------------+-----------+--------------------+-----------+
+|Data storage                   |micro SD card       |           |micro SD card       |           |
++-------------------------------+--------------------+-----------+--------------------+-----------+
+|Resolution                     |O.O1                |ohm        |O.O1                |ohm        |
++-------------------------------+--------------------+-----------+--------------------+-----------+
+
+**STEP n°1** : Raspberry Pi  configuration
+*******************************************
+
+
 OS installation  
 ================
+
++----------------------------------------------------+---------------+
+| **Required components**                            | **Quantity**  | 
++----------------------------------------------------+---------------+
+|Raspberry Pi 4 Model B                              |              1|
++----------------------------------------------------+---------------+
+|Micro SD 32 Go                                      |              1|
++----------------------------------------------------+---------------+
+|HDMI Cable                                          |              1|
++----------------------------------------------------+---------------+
+|Computer mouse                                      |              1|
++----------------------------------------------------+---------------+
+|Computer Keyboard                                   |              1|
++----------------------------------------------------+---------------+
 
 The first step is to start up the Raspberry Pi board, including installation of an OS (operating system). 
 For this step, the installation instructions are well described on the Raspberry website 
 
 1. Watch the vidéo "how to set up your raspberry Pi" (https://www.youtube.com/watch?v=wjWZhV1v3Pk)
 
-2. The authors recommend installing the latest stable and complete version of Raspbian by using NOOBS (a simple-to-use operating system installer). 
+2. The authors recommend installing the latest stable and complete version of Raspbian by using NOOBS (a simple-to-use operating system installer).
+
+3. or you can visit this website : (https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up)  
 
 .. note:: 
 	 All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:
@@ -71,9 +106,6 @@ For this step, the installation instructions are well described on the Raspberry
 
 .. warning::
 	 Once the OS has been installed,  **1-wire, spi and GPIO remote option** must be deactivated via the Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.
-
-
-
 
 3. When the relays are connected to the GPIO, make sure that all the GPIOs are in the low position when the raspberry starts up. If not, the relays will activate unexpectedly. 
 To ensure that the GPIOs are in Low position, you will need to modify the /boot/config.txt file.
@@ -102,9 +134,11 @@ To ensure that the GPIOs are in Low position, you will need to modify the /boot/
 8. Close the terminal
 
 
-
 Virtual Environnement and packages
 ==================================
+
+A virtual environment is a way to have multiple, parallel instances of the Python interpreter, each with different package sets and different configurations. 
+Each virtual environment contains a discrete copy of the Python interpreter, including copies of its support utilities. It also protects your system in case of problems with the packages.
 
 All dependencies are specified in requirements.txt
 
@@ -535,7 +569,7 @@ Complete list of components
 
 
 .. csv-table:: List of components
-   :file: C:\Users\remi.clement\Documents\28_ohmpi_all_git\sphinx\source\list - 1_02.csv
+   :file: C:\Users\remi.clement\Documents\28_ohmpi_all_git\master\sphinx\source\list - 1_02.csv
    :widths: 30, 70, 70, 70, 70,70
    :header-rows: 1
 

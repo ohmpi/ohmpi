@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,6 +14,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -27,11 +29,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -433,23 +435,16 @@ it by following the steps described below and illustrated in the following figur
 \[coeff p2 = (R7 + R6) / R7\]</div>
 <div class="math notranslate nohighlight">
 \[coeff p3 = (R9 + R8) / R9\]</div>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd"> hardware parameters</span>
-<span class="sd"> &quot;&quot;&quot;</span>
- <span class="n">R_ref</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># reference resistance value in ohm</span>
- <span class="n">coef_p0</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P0, measurement in V/V</span>
- <span class="n">coef_p1</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P1, measurement in V/V</span>
- <span class="n">coef_p2</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P2, measurement in V/V</span>
- <span class="n">coef_p3</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P3, measurement in V/V</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">36</span> <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">37</span><span class="sd"> hardware parameters</span>
+<span class="linenos">38</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="linenos">39</span> <span class="n">R_ref</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># reference resistance value in ohm</span>
+<span class="linenos">40</span> <span class="n">coef_p0</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P0, measurement in V/V</span>
+<span class="linenos">41</span> <span class="n">coef_p1</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P1, measurement in V/V</span>
+<span class="linenos">42</span> <span class="n">coef_p2</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P2, measurement in V/V</span>
+<span class="linenos">43</span> <span class="n">coef_p3</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P3, measurement in V/V</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>The coefficient parameters can be adjusted in lines 40 to 43 of the ohmpi.py code.</p>
 </div></blockquote>
 </dd>
@@ -665,19 +660,14 @@ are displayed on the screen. A measurement file is automatically created and nam
 <section id="electrical-resistivity-measurement-parameters-description">
 <h3>Electrical resistivity measurement parameters description<a class="headerlink" href="#electrical-resistivity-measurement-parameters-description" title="Permalink to this headline">¶</a></h3>
 <p>In the version 1.02, the measurement parameters are in the Jason file (ohmpi_param.json).</p>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">nb_electrodes</span> <span class="o">=</span> <span class="mi">32</span> <span class="c1"># maximum number of electrodes on the resistivity meter</span>
- <span class="n">injection_duration</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Current injection duration in second</span>
- <span class="n">nbr_meas</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># Number of times the quadripole sequence is repeated</span>
- <span class="n">sequence_delay</span><span class="o">=</span> <span class="mi">30</span> <span class="c1"># Delay in seconds between 2 sequences</span>
- <span class="n">stack</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># repetition of the current injection for each quadripole</span>
- <span class="n">export_path</span><span class="o">=</span> <span class="s2">&quot;home/pi/Desktop/measurement.csv&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span> <span class="n">nb_electrodes</span> <span class="o">=</span> <span class="mi">32</span> <span class="c1"># maximum number of electrodes on the resistivity meter</span>
+<span class="linenos">2</span> <span class="n">injection_duration</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Current injection duration in second</span>
+<span class="linenos">3</span> <span class="n">nbr_meas</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># Number of times the quadripole sequence is repeated</span>
+<span class="linenos">4</span> <span class="n">sequence_delay</span><span class="o">=</span> <span class="mi">30</span> <span class="c1"># Delay in seconds between 2 sequences</span>
+<span class="linenos">5</span> <span class="n">stack</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># repetition of the current injection for each quadripole</span>
+<span class="linenos">6</span> <span class="n">export_path</span><span class="o">=</span> <span class="s2">&quot;home/pi/Desktop/measurement.csv&quot;</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 </section>
 </section>
 <section id="complete-list-of-components">
@@ -686,6 +676,175 @@ are displayed on the screen. A measurement file is automatically created and nam
 <p class="admonition-title">Warning</p>
 <p>The list evolve a little bit after the publication of the article, it is necessary to refer to this list, the article is out of date</p>
 </div>
+<table class="colwidths-given docutils align-default" id="id10">
+<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Number</p></th>
+<th class="head"><p>Cost per unit</p></th>
+<th class="head"><p>Total cost</p></th>
+<th class="head"><p>Manufacturer</p></th>
+<th class="head"><p>Manufacturer s reference</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Raspberry Pi 3 Model B+</p></td>
+<td><p>1</p></td>
+<td><p>37</p></td>
+<td><p>37</p></td>
+<td><p>Raspberry</p></td>
+<td><p>Raspberry Pi 3 Model B</p></td>
+</tr>
+<tr class="row-odd"><td><p>Raspberry Pi 1 2 and 3 Power Supply</p></td>
+<td><p>1</p></td>
+<td><p>8.37</p></td>
+<td><p>8.37</p></td>
+<td><p>Raspberry</p></td>
+<td><p>Raspberry Pi 1 2 and 3 Power Supply</p></td>
+</tr>
+<tr class="row-even"><td><p>SainSmart 16-Channel 12V Relay</p></td>
+<td><p>8</p></td>
+<td><p>24.99</p></td>
+<td><p>199.92</p></td>
+<td><p>Sain Smart</p></td>
+<td><p>101-70-103</p></td>
+</tr>
+<tr class="row-odd"><td><p>4-Channel 5V Relay Module</p></td>
+<td><p>1</p></td>
+<td><p>7.99</p></td>
+<td><p>7.99</p></td>
+<td><p>Sain Smart</p></td>
+<td><p>20-018-101-CMS</p></td>
+</tr>
+<tr class="row-even"><td><p>cable 1X1 mm2 (50 m)</p></td>
+<td><p>1</p></td>
+<td><p>19.66</p></td>
+<td><p>19.66</p></td>
+<td><p>TRU COMPONENTS</p></td>
+<td><p>1568649</p></td>
+</tr>
+<tr class="row-odd"><td><p>cable 1X0.5 mm2 (100 m)</p></td>
+<td><p>1</p></td>
+<td><p>29.71</p></td>
+<td><p>29.71</p></td>
+<td><p>TRU COMPONENTS</p></td>
+<td><p>1565235</p></td>
+</tr>
+<tr class="row-even"><td><p>Printed circuit board (packaging quantity x 3)</p></td>
+<td><p>1</p></td>
+<td><p>12</p></td>
+<td><p>12</p></td>
+<td><p>Asler</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Header sets 1x10</p></td>
+<td><p>1</p></td>
+<td><p>2.68</p></td>
+<td><p>2.68</p></td>
+<td><p>Samtec</p></td>
+<td><p>SSW-110-02-G-S</p></td>
+</tr>
+<tr class="row-even"><td><p>Dual screw terminal (3.5-mm pitch)</p></td>
+<td><p>7</p></td>
+<td><p>0.648</p></td>
+<td><p>4.55</p></td>
+<td><p>RS PRO</p></td>
+<td><p>897-1332</p></td>
+</tr>
+<tr class="row-odd"><td><p>Resistor 1 Kohm 0.5W +- 0.1%</p></td>
+<td><p>4</p></td>
+<td><p>0.858</p></td>
+<td><p>3.44</p></td>
+<td><p>TE Connectivity</p></td>
+<td><p>H81K0BYA</p></td>
+</tr>
+<tr class="row-even"><td><p>Resistor 1.5 Kohms +- 0.1%</p></td>
+<td><p>4</p></td>
+<td><p>0.627</p></td>
+<td><p>2.52</p></td>
+<td><p>TE Connectivity</p></td>
+<td><p>H81K5BYA</p></td>
+</tr>
+<tr class="row-odd"><td><p>Resistor 50 +- 0.1%</p></td>
+<td><p>1</p></td>
+<td><p>8.7</p></td>
+<td><p>8.7</p></td>
+<td><p>TE Connectivity</p></td>
+<td><p>UPW50B50RV</p></td>
+</tr>
+<tr class="row-even"><td><p>LM358N AMP-o</p></td>
+<td><p>4</p></td>
+<td><p>0.8</p></td>
+<td><p>2.4</p></td>
+<td><p>Texas Instruments</p></td>
+<td><p>LM358AN/NOPB</p></td>
+</tr>
+<tr class="row-odd"><td><p>ADS1115</p></td>
+<td><p>1</p></td>
+<td><p>11.9</p></td>
+<td><p>11.9</p></td>
+<td><p>Adafruit</p></td>
+<td><p>1083</p></td>
+</tr>
+<tr class="row-even"><td><p>12V battery 7ah</p></td>
+<td><p>1</p></td>
+<td><p>19.58</p></td>
+<td><p>19.58</p></td>
+<td><p>RS PRO</p></td>
+<td><p>537-5488</p></td>
+</tr>
+<tr class="row-odd"><td><p>Battery Holder Type D LR20 (9V)</p></td>
+<td><p>1</p></td>
+<td><p>3.43</p></td>
+<td><p>3.43</p></td>
+<td><p>RS PRO</p></td>
+<td><p>185-4686</p></td>
+</tr>
+<tr class="row-even"><td><p>Ferrule Crimp Terminal (1 mm2) (500 pieces)</p></td>
+<td><p>1</p></td>
+<td><p>30.48</p></td>
+<td><p>30.48</p></td>
+<td><p>WEIDMULLER</p></td>
+<td><p>9004330000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Electrical Crimp Terminal (0.5 mm2) (100 piece)</p></td>
+<td><p>1</p></td>
+<td><p>6.38</p></td>
+<td><p>6.38</p></td>
+<td><p>AMP - TE CONNECTIVITY</p></td>
+<td><p>966067-1</p></td>
+</tr>
+<tr class="row-even"><td><p>Fuse 1.0 A</p></td>
+<td><p>1</p></td>
+<td><p>0.2</p></td>
+<td></td>
+<td><p>LITTELFUSE</p></td>
+<td><p>0251001.PAT1L</p></td>
+</tr>
+<tr class="row-odd"><td><p>Capacitor 100nF 50Vdc 10% Ceramic</p></td>
+<td><p>4</p></td>
+<td><p>0.2</p></td>
+<td><p>0.8</p></td>
+<td><p>KEMET</p></td>
+<td><p>C320C104K1</p></td>
+</tr>
+<tr class="row-even"><td><p>DC/DC converter 12 to 24V</p></td>
+<td><p>2</p></td>
+<td><p>26.72</p></td>
+<td><p>53.44</p></td>
+<td><p>TracoPower</p></td>
+<td><p>TRN 3-1215</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 
