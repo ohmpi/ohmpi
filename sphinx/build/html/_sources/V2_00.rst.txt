@@ -337,7 +337,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +--------+------------------------------------------------------------+
    |        |   .. image:: mesure/07_mes_board.jpg                       |
    |Step n°7+------------------------------------------------------------+
-   |        | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |        | 1)Installation of female header, 1 by 10  pins, for ADS1115| 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
    
