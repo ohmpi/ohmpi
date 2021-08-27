@@ -1,5 +1,5 @@
 *****************************************
-OhmPi V 2.00 (64 or 128 électrodes)
+OhmPi V 2.xx (64 or 128 électrodes)
 ***************************************** 
 
 .. figure:: Under-Construction.png
@@ -327,7 +327,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +--------+------------------------------------------------------------+
    |        |   .. image:: mesure/06_mes_board.jpg                       |
    |Step n°6+------------------------------------------------------------+
-   |        | Alimentation traco Power 12V à 24V                         | 
+   |        | Traco Power Supply 12V to 5V, TDH15 - 1211N                | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+  
 
@@ -337,7 +337,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +--------+------------------------------------------------------------+
    |        |   .. image:: mesure/07_mes_board.jpg                       |
    |Step n°7+------------------------------------------------------------+
-   |        | 1)Installation of female header, 1 by 10  pins, for ADS1115| 
+   |        | Four screw terminals for 12V inpout et 5V outpout          | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
    
@@ -347,7 +347,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +--------+------------------------------------------------------------+
    |        |   .. image:: mesure/08_mes_board.jpg                       |
    |Step n°8+------------------------------------------------------------+
-   |        | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |        | Traco Power Supply 12V to 24V, TRN-1215                    | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+    
 
@@ -357,7 +357,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +--------+------------------------------------------------------------+
    |        |   .. image:: mesure/09_mes_board.jpg                       |
    |Step n°9+------------------------------------------------------------+
-   |        | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |        | Two screw terminals Electrodes M and N                     | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
    
@@ -367,8 +367,8 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/10_mes_board.jpg                       |
    |Step n°10+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
-   |         |                                                            |                                                                       
+   |         | Four screw treminal, for 12V power supply and for          | 
+   |         | Electrodes A and B                                         |                                                                       
    +---------+------------------------------------------------------------+
 
 .. table::
@@ -377,7 +377,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/11_mes_board.jpg                       |
    |Step n°11+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |         |  Soldering three capacitors (100nF)                        | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
    
@@ -387,7 +387,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/12_mes_board.jpg                       |
    |Step n°12+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |         | 2 ohms shunt resistor pre-adjustment                       | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
 .. table::
@@ -396,7 +396,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/13_mes_board.jpg                       |
    |Step n°13+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |         | Soldering 2 ohms shunt resistor                            | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
    
@@ -406,7 +406,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/14_mes_board.jpg                       |
    |Step n°14+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |         | 1 Mohms Resistors                                          | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+  
    
@@ -416,7 +416,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/15_mes_board.jpg                       |
    |Step n°15+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |         | Soldering tow 1Kohms resistors                             | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
    
@@ -426,7 +426,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/16_mes_board.jpg                       |
    |Step n°16+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |         | Soldering tow 1.5Kohms resistors                           | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
 .. table::
@@ -435,7 +435,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/17_mes_board.jpg                       |
    |Step n°17+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |         | Soldering tow 1.5Kohms resistors                           | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
    
@@ -445,7 +445,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/18_mes_board.jpg                       |
    |Step n°18+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |         | Female header 2 by 20 pins for Raspberry Pi connection     | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
 
@@ -455,8 +455,8 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/19_mes_board.jpg                       |
    |Step n°19+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
-   |         |                                                            |                                                                       
+   |         | View of the Female  header 2 by 20 pins installation       | 
+   |         | for Raspberry Pi connection                                |                                                                       
    +---------+------------------------------------------------------------+
    
 .. table::
