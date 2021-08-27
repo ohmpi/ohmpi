@@ -18,6 +18,7 @@ Authors:
 | Yannick FARGIER, GERS-RRO, Univ Gustave Eiffel, IFSTTAR, Univ Lyon, F-69675 Lyon, France.
 | Julien GANCE, IRIS Instruments, 45100 Orléans, France.
 | Hélène GUYARD, IGE Grenoble, Université Grenoble Alpes, Grenoble.
+| Olivier Kaufmann, Université de Mons · Department of Geology and Applied Geology 
 
 Parteners:
 
@@ -31,7 +32,7 @@ Parteners:
 
 Creation date : Juillet 2020.
 
-Update : 21 août 2020.
+Update : 04 août 2021.
 
 Status of document: In progress.
 

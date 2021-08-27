@@ -442,295 +442,347 @@ to leave the virtual environment simply type:</p>
 <figure class="align-center">
 <a class="reference internal image-reference" href="_images/schema_measurement_board.jpg"><img alt="alternate text" src="_images/schema_measurement_board.jpg" style="width: 600px; height: 450px;" /></a>
 </figure>
-<p>Figure  shows the general diagram for the electronic measurement board developed.
-We have developed a complete measurement board. To measure electrical resistivity with Raspberry Pi, two ADS1115 were used,one for the voltage measurement one for the current measurement, as proposed by Florsch [7]. The ADS1115
+<p>Figure  shows the general schematics for the electronic measurement board developed.
+We have developed a complete “plug and play” measurement board. To measure electrical resistivity with Raspberry Pi.
+two ADS1115 were used,one for the voltage measurement one for the current measurement, as proposed by Florsch [7]. The ADS1115
 is a 16-bit ADC (Analog-to-Digital Converter), with an adaptable gain. The advantage of ADS1115 is that the
-input signal value could lie between - to + 6.114 V. For the current measurement we have directly integrated the ina282 component, which allows to realize precise current measurement around a shunt resistor</p>
+input signal value could lie between - to + 6.114 V. For the current measurement we have directly integrated the INA282 component,
+which allows to realize precise current measurement around a shunt resistor. Les étapes de montage son décrite dans les étapes suivantes:</p>
 <table class="docutils align-center">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 12%" />
+<col style="width: 88%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><img alt="_images/01_mes_board.jpg" src="_images/01_mes_board.jpg" />
+<tr class="row-odd"><td rowspan="2"><p>Step n°1</p></td>
+<td><img alt="_images/01_mes_board.jpg" src="_images/01_mes_board.jpg" />
 </td>
-<td></td>
+</tr>
+<tr class="row-even"><td><p>Installation of female header, 1 by10  pins, for ADS1115</p></td>
 </tr>
 </tbody>
 </table>
 <table class="docutils align-center">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 12%" />
+<col style="width: 88%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td></td>
+<tr class="row-odd"><td rowspan="2"><p>Step n°2</p></td>
 <td><img alt="_images/02_mes_board.jpg" src="_images/02_mes_board.jpg" />
 </td>
 </tr>
-</tbody>
-</table>
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><img alt="_images/03_mes_board.jpg" src="_images/03_mes_board.jpg" />
-</td>
-<td></td>
+<tr class="row-even"><td><p>Soldering of 4 Dual-in-line- socket (2 by 2 pins) for
+optical relay, AQY211EH.</p></td>
 </tr>
 </tbody>
 </table>
 <table class="docutils align-center">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 12%" />
+<col style="width: 88%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td></td>
+<tr class="row-odd"><td rowspan="2"><p>Step n°3</p></td>
+<td><img alt="_images/03_mes_board.jpg" src="_images/03_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Soldering of 1 Dual-in-line- socket (2 by 9 pins)
+for INA282.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>Step n°4</p></td>
 <td><img alt="_images/04_mes_board.jpg" src="_images/04_mes_board.jpg" />
 </td>
 </tr>
-</tbody>
-</table>
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><img alt="_images/05_mes_board.jpg" src="_images/05_mes_board.jpg" />
-</td>
-<td></td>
+<tr class="row-even"><td><p>Soldering of 1 Dual-in-line- socket (2 by 4 pins)</p></td>
 </tr>
 </tbody>
 </table>
 <table class="docutils align-center">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 12%" />
+<col style="width: 88%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td></td>
+<tr class="row-odd"><td rowspan="2"><p>Step n°5</p></td>
+<td><img alt="_images/05_mes_board.jpg" src="_images/05_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Soldering of 2 Dual-in-line- socket (2 by 4 pins)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>Step n°6</p></td>
 <td><img alt="_images/06_mes_board.jpg" src="_images/06_mes_board.jpg" />
 </td>
 </tr>
-</tbody>
-</table>
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><img alt="_images/07_mes_board.jpg" src="_images/07_mes_board.jpg" />
-</td>
-<td></td>
+<tr class="row-even"><td><p>Alimentation traco Power 12V à 24V</p></td>
 </tr>
 </tbody>
 </table>
 <table class="docutils align-center">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 12%" />
+<col style="width: 88%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td></td>
+<tr class="row-odd"><td rowspan="2"><p>Step n°7</p></td>
+<td><img alt="_images/07_mes_board.jpg" src="_images/07_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>Step n°8</p></td>
 <td><img alt="_images/08_mes_board.jpg" src="_images/08_mes_board.jpg" />
 </td>
 </tr>
-</tbody>
-</table>
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><img alt="_images/09_mes_board.jpg" src="_images/09_mes_board.jpg" />
-</td>
-<td></td>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
 </tr>
 </tbody>
 </table>
 <table class="docutils align-center">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 12%" />
+<col style="width: 88%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td></td>
+<tr class="row-odd"><td rowspan="2"><p>Step n°9</p></td>
+<td><img alt="_images/09_mes_board.jpg" src="_images/09_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>Step n°10</p></td>
 <td><img alt="_images/10_mes_board.jpg" src="_images/10_mes_board.jpg" />
 </td>
 </tr>
-</tbody>
-</table>
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><img alt="_images/11_mes_board.jpg" src="_images/11_mes_board.jpg" />
-</td>
-<td></td>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
 </tr>
 </tbody>
 </table>
 <table class="docutils align-center">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 13%" />
+<col style="width: 87%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td></td>
+<tr class="row-odd"><td rowspan="2"><p>Step n°11</p></td>
+<td><img alt="_images/11_mes_board.jpg" src="_images/11_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>Step n°12</p></td>
 <td><img alt="_images/12_mes_board.jpg" src="_images/12_mes_board.jpg" />
 </td>
 </tr>
-</tbody>
-</table>
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><img alt="_images/13_mes_board.jpg" src="_images/13_mes_board.jpg" />
-</td>
-<td></td>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
 </tr>
 </tbody>
 </table>
 <table class="docutils align-center">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 13%" />
+<col style="width: 87%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td></td>
+<tr class="row-odd"><td rowspan="2"><p>Step n°13</p></td>
+<td><img alt="_images/13_mes_board.jpg" src="_images/13_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>Step n°14</p></td>
 <td><img alt="_images/14_mes_board.jpg" src="_images/14_mes_board.jpg" />
 </td>
 </tr>
-</tbody>
-</table>
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><img alt="_images/15_mes_board.jpg" src="_images/15_mes_board.jpg" />
-</td>
-<td></td>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
 </tr>
 </tbody>
 </table>
 <table class="docutils align-center">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 13%" />
+<col style="width: 87%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td></td>
+<tr class="row-odd"><td rowspan="2"><p>Step n°15</p></td>
+<td><img alt="_images/15_mes_board.jpg" src="_images/15_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>Step n°16</p></td>
 <td><img alt="_images/16_mes_board.jpg" src="_images/16_mes_board.jpg" />
 </td>
 </tr>
-</tbody>
-</table>
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><img alt="_images/17_mes_board.jpg" src="_images/17_mes_board.jpg" />
-</td>
-<td></td>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
 </tr>
 </tbody>
 </table>
 <table class="docutils align-center">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 13%" />
+<col style="width: 87%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td></td>
+<tr class="row-odd"><td rowspan="2"><p>Step n°17</p></td>
+<td><img alt="_images/17_mes_board.jpg" src="_images/17_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>Step n°18</p></td>
 <td><img alt="_images/18_mes_board.jpg" src="_images/18_mes_board.jpg" />
 </td>
 </tr>
-</tbody>
-</table>
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><img alt="_images/19_mes_board.jpg" src="_images/19_mes_board.jpg" />
-</td>
-<td></td>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
 </tr>
 </tbody>
 </table>
 <table class="docutils align-center">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 13%" />
+<col style="width: 87%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td></td>
+<tr class="row-odd"><td rowspan="2"><p>Step n°19</p></td>
+<td><img alt="_images/19_mes_board.jpg" src="_images/19_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>Step n°20</p></td>
 <td><img alt="_images/20_mes_board.jpg" src="_images/20_mes_board.jpg" />
 </td>
 </tr>
-</tbody>
-</table>
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><img alt="_images/21_mes_board.jpg" src="_images/21_mes_board.jpg" />
-</td>
-<td></td>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
 </tr>
 </tbody>
 </table>
 <table class="docutils align-center">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 13%" />
+<col style="width: 87%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td></td>
+<tr class="row-odd"><td rowspan="2"><p>Step n°21</p></td>
+<td><img alt="_images/21_mes_board.jpg" src="_images/21_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>Step n°22</p></td>
 <td><img alt="_images/22_mes_board.jpg" src="_images/22_mes_board.jpg" />
 </td>
 </tr>
-</tbody>
-</table>
-<table class="docutils align-center">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><img alt="_images/23_mes_board.jpg" src="_images/23_mes_board.jpg" />
-</td>
-<td></td>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
 </tr>
 </tbody>
 </table>
 <table class="docutils align-center">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 13%" />
+<col style="width: 87%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td></td>
+<tr class="row-odd"><td rowspan="2"><p>Step n°23</p></td>
+<td><img alt="_images/23_mes_board.jpg" src="_images/23_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>Step n°24</p></td>
 <td><img alt="_images/24_mes_board.jpg" src="_images/24_mes_board.jpg" />
 </td>
+</tr>
+<tr class="row-even"><td><p>1)Installation of female header, 1 by10  pins, for ADS1115</p></td>
 </tr>
 </tbody>
 </table>
