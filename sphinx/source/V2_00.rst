@@ -465,7 +465,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/20_mes_board.jpg                       |
    |Step n°20+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |         | Fixing MCP23008 component                                  | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
    
@@ -475,7 +475,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/21_mes_board.jpg                       |
    |Step n°21+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |         |mounting optical relay, AQY211EH                            | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
    
@@ -485,7 +485,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/22_mes_board.jpg                       |
    |Step n°22+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |         | Mounting LM158 operational amplificator                    | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
 
@@ -495,7 +495,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/23_mes_board.jpg                       |
    |Step n°23+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |         |  Mounting ADS115 board                                     | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
    
@@ -505,7 +505,10 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/24_mes_board.jpg                       |
    |Step n°24+------------------------------------------------------------+
-   |         | 1)Installation of female header, 1 by10  pins, for ADS1115 | 
+   |         | Fixing the INA282                                          | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
   
+
+**STEP n°3**: Measurement board validation
+****************************************************
