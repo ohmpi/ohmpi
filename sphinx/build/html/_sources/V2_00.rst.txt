@@ -1,5 +1,5 @@
 *****************************************
-OhmPi V 2.xx (64 or 128 électrodes)
+OhmPi V 2.xx (64 or 128 electrodes)
 ***************************************** 
 
 .. figure:: Under-Construction.png
@@ -268,7 +268,7 @@ We have developed a complete "plug and play" measurement board. To measure elect
 two ADS1115 were used,one for the voltage measurement one for the current measurement, as proposed by Florsch [7]. The ADS1115
 is a 16-bit ADC (Analog-to-Digital Converter), with an adaptable gain. The advantage of ADS1115 is that the 
 input signal value could lie between - to + 6.114 V. For the current measurement we have directly integrated the INA282 component, 
-which allows to realize precise current measurement around a shunt resistor. Les étapes de montage son décrite dans les étapes suivantes:
+which allows to realize precise current measurement around a shunt resistor. The assembly steps are described in the following steps:
 
 
 
@@ -288,7 +288,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +--------+------------------------------------------------------------+
    |        |   .. image:: mesure/02_mes_board.jpg                       |
    |Step n°2+------------------------------------------------------------+
-   |        | Soldering of 4 Dual-in-line- socket (2 by 2 pins) for      | 
+   |        | Soldering of 4 dual-in-line- socket (2 by 2 pins) for      | 
    |        | optical relay, AQY211EH.                                   |                                                                       
    +--------+------------------------------------------------------------+
    
@@ -298,7 +298,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +--------+------------------------------------------------------------+
    |        |   .. image:: mesure/03_mes_board.jpg                       |
    |Step n°3+------------------------------------------------------------+
-   |        | Soldering of 1 Dual-in-line- socket (2 by 9 pins)          | 
+   |        | Soldering of 1 dual-in-line- socket (2 by 9 pins)          | 
    |        | for INA282.                                                |                                                                       
    +--------+------------------------------------------------------------+
    
@@ -308,7 +308,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +--------+------------------------------------------------------------+
    |        |   .. image:: mesure/04_mes_board.jpg                       |
    |Step n°4+------------------------------------------------------------+
-   |        | Soldering of 1 Dual-in-line- socket (2 by 4 pins)          | 
+   |        | Soldering of 1 dual-in-line- socket (2 by 4 pins)          | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+ 
 .. table::
@@ -317,7 +317,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +--------+------------------------------------------------------------+
    |        |   .. image:: mesure/05_mes_board.jpg                       |
    |Step n°5+------------------------------------------------------------+
-   |        | Soldering of 2 Dual-in-line- socket (2 by 4 pins)          | 
+   |        | Soldering of 2 dual-in-line- socket (2 by 4 pins)          | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
    
@@ -347,7 +347,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +--------+------------------------------------------------------------+
    |        |   .. image:: mesure/08_mes_board.jpg                       |
    |Step n°8+------------------------------------------------------------+
-   |        | Traco Power Supply 12V to 24V, TRN-1215                    | 
+   |        | Traco power Supply 12V to 24V, TRN-1215                    | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+    
 
@@ -357,7 +357,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +--------+------------------------------------------------------------+
    |        |   .. image:: mesure/09_mes_board.jpg                       |
    |Step n°9+------------------------------------------------------------+
-   |        | Two screw terminals Electrodes M and N                     | 
+   |        | Two screw terminals electrodes M and N                     | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
    
@@ -367,8 +367,8 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/10_mes_board.jpg                       |
    |Step n°10+------------------------------------------------------------+
-   |         | Four screw treminal, for 12V power supply and for          | 
-   |         | Electrodes A and B                                         |                                                                       
+   |         | Four screw terminals, for 12V power supply and for         | 
+   |         | electrodes A and B                                         |                                                                       
    +---------+------------------------------------------------------------+
 
 .. table::
@@ -406,7 +406,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/14_mes_board.jpg                       |
    |Step n°14+------------------------------------------------------------+
-   |         | 1 Mohms Resistors                                          | 
+   |         | 1 Mohms resistors                                          | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+  
    
@@ -416,7 +416,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/15_mes_board.jpg                       |
    |Step n°15+------------------------------------------------------------+
-   |         | Soldering tow 1Kohms resistors                             | 
+   |         | Soldering tow 1 Kohms resistors                            | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
    
@@ -455,7 +455,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/19_mes_board.jpg                       |
    |Step n°19+------------------------------------------------------------+
-   |         | View of the Female  header 2 by 20 pins installation       | 
+   |         | View of the female  header 2 by 20 pins installation       | 
    |         | for Raspberry Pi connection                                |                                                                       
    +---------+------------------------------------------------------------+
    
@@ -475,7 +475,7 @@ which allows to realize precise current measurement around a shunt resistor. Les
    +---------+------------------------------------------------------------+
    |         |   .. image:: mesure/21_mes_board.jpg                       |
    |Step n°21+------------------------------------------------------------+
-   |         |mounting optical relay, AQY211EH                            | 
+   |         |Mounting optical relay, AQY211EH                            | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
    
