@@ -1,7 +1,7 @@
 """
-created on september , 202
-Update april 2021
-Ohmpi.py is a program to control a low-cost and open hardward resistivity meter OhmPi that has been developed by Rémi CLEMENT(INRAE),Vivien DUBOIS(INRAE),Hélène GUYARD(IGE), Nicolas FORQUET (INRAE), Oliver KAUFMANN (UMONS) and Yannick FARGIER (IFSTTAR).
+created on september , 2021
+Update september 2021
+Ohmpi_4elec.py is a program to control a low-cost and open hardward resistivity meter OhmPi that has been developed by Rémi CLEMENT(INRAE),Vivien DUBOIS(INRAE),Hélène GUYARD(IGE), Nicolas FORQUET (INRAE), Oliver KAUFMANN (UMONS) and Yannick FARGIER (IFSTTAR).
 """
 
 print('\033[1m'+'\033[31m'+' ________________________________')
@@ -32,12 +32,12 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 """
 hardware parameters
 """
-R_shunt = 0.2# reference resistance value in ohm
+R_shunt = 2# reference resistance value in ohm
 coef_p2 = 2.50# slope for current conversion for ADS.P2, measurement in V/V
 coef_p3 = 2.50 # slope for current conversion for ADS.P3, measurement in V/V
 offset_p2= 0
 offset_p3= 0
-integer=1
+integer=2 #Max value 10
 meas=numpy.zeros((3,integer))
 
 """
@@ -59,11 +59,6 @@ pin1 = mcp.get_pin(1)
 pin1.direction = Direction.OUTPUT
 pin0.value = False
 pin1.value = False
-
-
-  
-
-
 """
 functions
 """
@@ -176,6 +171,7 @@ def read_quad(filename, nb_elec):
     else:
         return output
 
+
 def run_measurement(nb_stack, injection_deltat, R_shunt, coefp2, coefp3):
     start_time=time.time()
     # inner variable initialization
@@ -200,10 +196,10 @@ def run_measurement(nb_stack, injection_deltat, R_shunt, coefp2, coefp3):
         else:
             pin0.value = True
             pin1.value = False# injection de courant polarity n°2
-        start_delay=time.time()
+        start_delay=time.time()#stating measurement time
         time.sleep(injection_deltat) # delay depending on current injection duration
-
-       
+        
+# mesureament of i and u       
         for k in range(0,integer):
           meas[0,k] = ((AnalogIn(ads_current,ADS.P0).voltage/50)/R_shunt)*1000 # reading current value on ADS channel A0
           meas[1,k] = AnalogIn(ads_voltage,ADS.P0).voltage * coefp2*1000
@@ -218,9 +214,16 @@ def run_measurement(nb_stack, injection_deltat, R_shunt, coefp2, coefp3):
         else:
               sum_Vmn=sum_Vmn+Vmn1
               sum_Ps=sum_Ps+Vmn1
-        end_calc=time.time()
+        
         cpu = CPUTemperature()
-        time.sleep((end_delay-start_delay)-(end_calc-end_delay)) 
+        
+        end_calc=time.time()
+        time.sleep(2*(end_delay-start_delay)-(end_calc-start_delay))
+        #end_sleep2=time.time()
+        #print(['sleep=',((end_sleep2-start_delay))])
+
+        #print(['true delta=',((end_delay-start_delay)-injection_deltat)])
+        #print(['time stop=',((2*(end_delay-start_delay)-(end_calc-start_delay)))])
     # return averaged values
 #     cpu= CPUTemperature()
     output = DataFrame({
@@ -229,15 +232,15 @@ def run_measurement(nb_stack, injection_deltat, R_shunt, coefp2, coefp3):
         "B":[(2)],
         "M":[(3)],
         "N":[(4)],
+        "inj time [ms]" : (end_delay-start_delay)*1000,
         "Vmn [mV]":[(sum_Vmn/(3+2*nb_stack-1))],
         "I [mA]":[(sum_I/(3+2*nb_stack-1))],
         "R [ohm]":[( (sum_Vmn/(3+2*nb_stack-1)/(sum_I/(3+2*nb_stack-1))))],
-              
         "Ps [mV]":[(sum_Ps/(3+2*nb_stack-1))],
         "nbStack":[nb_stack],
         "CPU temp [°C]":[cpu.temperature],
-
-        "Time [S]":[(-start_time+time.time())]
+        "Time [S]":[(-start_time+time.time())],
+        "Integer [-]": [integer]
 
      
      
