@@ -30,7 +30,7 @@ from gpiozero import CPUTemperature
 current_time = datetime.now()
 print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 """
-hardware parameters
+Hardware parameters
 """
 R_shunt = 0.2# reference resistance value in ohm
 coef_p2 = 2.50# slope for current conversion for ADS.P2, measurement in V/V
@@ -41,7 +41,7 @@ integer=10
 meas=numpy.zeros((3,integer))
 
 """
-import parameters
+Import parameters
 """
 
 with open('ohmpi_param.json') as json_file:
