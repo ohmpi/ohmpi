@@ -283,7 +283,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/01_mes_board.jpg                     |
-   |Step n°1+------------------------------------------------------------+
+   |      1 +------------------------------------------------------------+
    |        | Installation of female header, 1 by10  pins, for ADS1115   | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
@@ -293,7 +293,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/02_mes_board.jpg                     |
-   |Step n°2+------------------------------------------------------------+
+   |2       +------------------------------------------------------------+
    |        | Soldering of 4 dual-in-line- socket (2 by 2 pins) for      | 
    |        | optical relay, AQY211EH.                                   |                                                                       
    +--------+------------------------------------------------------------+
@@ -303,7 +303,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/03_mes_board.jpg                     |
-   |Step n°3+------------------------------------------------------------+
+   |3       +------------------------------------------------------------+
    |        | Soldering of 1 dual-in-line- socket (2 by 9 pins)          | 
    |        | for INA282.                                                |                                                                       
    +--------+------------------------------------------------------------+
@@ -313,7 +313,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/04_mes_board.jpg                     |
-   |Step n°4+------------------------------------------------------------+
+   | 4      +------------------------------------------------------------+
    |        | Soldering of 1 dual-in-line- socket (2 by 4 pins)          | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+ 
@@ -322,7 +322,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/05_mes_board.jpg                     |
-   |Step n°5+------------------------------------------------------------+
+   |5       +------------------------------------------------------------+
    |        | Soldering of 2 dual-in-line- socket (2 by 4 pins)          | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
@@ -332,7 +332,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/06_mes_board.jpg                     |
-   |Step n°6+------------------------------------------------------------+
+   | 6      +------------------------------------------------------------+
    |        | Traco Power Supply 12V to 5V, TDH15 - 1211N                | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+  
@@ -342,7 +342,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/07_mes_board.jpg                     |
-   |Step n°7+------------------------------------------------------------+
+   |7       +------------------------------------------------------------+
    |        | Four screw terminals for 12V inpout et 5V outpout          | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
@@ -352,7 +352,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/08_mes_board.jpg                     |
-   |Step n°8+------------------------------------------------------------+
+   |8       +------------------------------------------------------------+
    |        | Traco power Supply 12V to 24V, TRN-1215                    | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+    
@@ -362,7 +362,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/09_mes_board.jpg                     |
-   |Step n°9+------------------------------------------------------------+
+   |9       +------------------------------------------------------------+
    |        | Two screw terminals electrodes M and N                     | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
@@ -372,7 +372,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/10_mes_board.jpg                     |
-   |Step n°10+------------------------------------------------------------+
+   |10       +------------------------------------------------------------+
    |         | Four screw terminals, for 12V power supply and for         | 
    |         | electrodes A and B                                         |                                                                       
    +---------+------------------------------------------------------------+
@@ -382,7 +382,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/11_mes_board.jpg                     |
-   |Step n°11+------------------------------------------------------------+
+   |11       +------------------------------------------------------------+
    |         |  Soldering three capacitors (100nF)                        | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
@@ -392,7 +392,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/12_mes_board.jpg                     |
-   |Step n°12+------------------------------------------------------------+
+   | 12      +------------------------------------------------------------+
    |         | 2 ohms shunt resistor pre-adjustment                       | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
@@ -401,7 +401,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/13_mes_board.jpg                     |
-   |Step n°13+------------------------------------------------------------+
+   |13       +------------------------------------------------------------+
    |         | Soldering 2 ohms shunt resistor                            | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
@@ -411,7 +411,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/14_mes_board.jpg                     |
-   |Step n°14+------------------------------------------------------------+
+   |14       +------------------------------------------------------------+
    |         | 1 Mohms resistors                                          | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+  
@@ -421,7 +421,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/15_mes_board.jpg                     |
-   |Step n°15+------------------------------------------------------------+
+   |15       +------------------------------------------------------------+
    |         | Soldering tow 1 Kohms resistors                            | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
@@ -431,7 +431,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/16_mes_board.jpg                     |
-   |Step n°16+------------------------------------------------------------+
+   |16       +------------------------------------------------------------+
    |         | Soldering tow 1.5Kohms resistors                           | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
@@ -440,7 +440,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/17_mes_board.jpg                     |
-   |Step n°17+------------------------------------------------------------+
+   |17       +------------------------------------------------------------+
    |         | Soldering tow 1.5Kohms resistors                           | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
@@ -450,7 +450,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/18_mes_board.jpg                     |
-   |Step n°18+------------------------------------------------------------+
+   |18       +------------------------------------------------------------+
    |         | Female header 2 by 20 pins for Raspberry Pi connection     | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
@@ -460,7 +460,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/19_mes_board.jpg                     |
-   |Step n°19+------------------------------------------------------------+
+   |19       +------------------------------------------------------------+
    |         | View of the female  header 2 by 20 pins installation       | 
    |         | for Raspberry Pi connection                                |                                                                       
    +---------+------------------------------------------------------------+
@@ -470,7 +470,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/20_mes_board.jpg                     |
-   |Step n°20+------------------------------------------------------------+
+   |20       +------------------------------------------------------------+
    |         | Fixing MCP23008 component                                  | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
@@ -480,7 +480,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/21_mes_board.jpg                     |
-   |Step n°21+------------------------------------------------------------+
+   |21       +------------------------------------------------------------+
    |         |Mounting optical relay, AQY211EH                            | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
@@ -490,7 +490,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/22_mes_board.jpg                     |
-   |Step n°22+------------------------------------------------------------+
+   |22       +------------------------------------------------------------+
    |         | Mounting LM158 operational amplificator                    | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
@@ -500,7 +500,7 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/23_mes_board.jpg                     |
-   |Step n°23+------------------------------------------------------------+
+   |23       +------------------------------------------------------------+
    |         |  Mounting ADS115 board                                     | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
@@ -510,10 +510,11 @@ which allows to realize precise current measurement around a shunt resistor. The
   
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/24_mes_board.jpg                     |
-   |Step n°24+------------------------------------------------------------+
+   |24       +------------------------------------------------------------+
    |         | Fixing the INA282                                          | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
+  
   
 
 **STEP n°3**: Start-up of the measurement board.
@@ -523,11 +524,16 @@ which allows to realize precise current measurement around a shunt resistor. The
 | **Required components**                                                | 
 +------------------------------------------------------------------------+
 
+.. csv-table:: List of components
+   :file: C:\Users\remi.clement\Documents\28_ohmpi_all_git\master2\sphinx\source\step_n_3\test_2_xx.csv
+   :widths: 30, 70, 70, 70, 70, 35, 35
+   :header-rows: 1
+
 .. table::
    :align: center
    
    +--------+------------------------------------------------------------+
-   |        |   .. image:: step_n_3/01_mes_board.jpg                     |
+   |        |   .. image:: step_n_3/001.jpg                              |
    |Step n°1+------------------------------------------------------------+
    |        | Shutdown the raspberry Pi and unplug the power supply      | 
    |        |                                                            |                                                                       
@@ -537,7 +543,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    :align: center
    
    +--------+--------------------------------------------------------------------------+
-   |        |   .. image:: step_n_3/01_mes_board.jpg                                   |
+   |        |   .. image:: step_n_3/001.jpg                                            |
    |Step n°2+--------------------------------------------------------------------------+
    |        | Mounting the bottom spacers on the Raspberry Pi (male/female, 11mm, M3)  | 
    |        |                                                                          |                                                                       
@@ -547,7 +553,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    :align: center
    
    +--------+--------------------------------------------------------------------------+
-   |        |   .. image:: step_n_3/01_mes_board.jpg                                   |
+   |        |   .. image:: step_n_3/002.jpg                                            |
    |Step n°3+--------------------------------------------------------------------------+
    |        | Mounting the upper spacers on the Raspberry Pi (female/female, 11mm, M3) | 
    |        |                                                                          |                                                                       
@@ -557,7 +563,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    :align: center
    
    +--------+------------------------------------------------------------+
-   |        |   .. image:: step_n_3/01_mes_board.jpg                     |
+   |        |   .. image:: step_n_3/003.jpg                              |
    |Step n°4+------------------------------------------------------------+
    |        | Mounting the Ohmpi's measurement board on the Raspberry Pi | 
    |        |                                                            |                                                                       
@@ -567,7 +573,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    :align: center
    
    +--------+------------------------------------------------------------+
-   |        |   .. image:: step_n_3/01_mes_board.jpg                     |
+   |        |   .. image:: step_n_3/004.jpg                              |
    |Step n°4+------------------------------------------------------------+
    |        | Mounting the Ohmpi's measurement board on the Raspberry Pi | 
    |        |                                                            |
@@ -577,7 +583,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    :align: center
    
    +--------+------------------------------------------------------------+
-   |        |   .. image:: step_n_3/01_mes_board.jpg                     |
+   |        |   .. image:: step_n_3/005.jpg                              |
    |Step n°5+------------------------------------------------------------+
    |        | Plug the power supply into a socket and connect it to your | 
    |        | Raspberry Pi's power port.                                 |
@@ -598,7 +604,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    :align: center
    
    +--------+------------------------------------------------------------+
-   |        |   .. image:: step_n_3/01_mes_board.jpg                     |
+   |        |   .. image:: step_n_3/005.jpg                              |
    |Step n°3+------------------------------------------------------------+
    |        | Montage des écarteurs supérieurs sur la carte Raspberry    | 
    |        |                                                            |                                                                       
