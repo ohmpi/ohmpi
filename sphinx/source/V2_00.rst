@@ -603,7 +603,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    :align: center
    
    +--------+------------------------------------------------------------+
-   |        |   .. image:: step_n_4/i2cdetect.jpg                        |
+   |        |   .. image:: step_n_4/i2cdetect.png                        |
    |Step n°3+------------------------------------------------------------+
    |        |If everything is working, three I2C addresses should appear | 
    |        |on the disp.                                                |                                                                       
@@ -611,6 +611,4 @@ which allows to realize precise current measurement around a shunt resistor. The
 
 Run the Thonny IDE and load the code Ohmpy4elec.pi
 
- .. code-block:: python
-
-	 i2cdetect -y 1
+ 

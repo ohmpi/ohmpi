@@ -599,14 +599,16 @@ which allows to realize precise current measurement around a shunt resistor. The
 
 	 i2cdetect -y 1
 
-
 .. table::
    :align: center
    
    +--------+------------------------------------------------------------+
-   |        |   .. image:: step_n_3/005.jpg                              |
+   |        |   .. image:: step_n_4/i2cdetect.png                        |
    |Step n°3+------------------------------------------------------------+
-   |        | Montage des écarteurs supérieurs sur la carte Raspberry    | 
-   |        |                                                            |                                                                       
+   |        |If everything is working, three I2C addresses should appear | 
+   |        |on the disp.                                                |                                                                       
    +--------+------------------------------------------------------------+
 
+Run the Thonny IDE and load the code Ohmpy4elec.pi
+
+ 
