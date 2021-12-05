@@ -1,0 +1,796 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xml:lang="" lang="" version="-//W3C//DTD XHTML 1.1//EN" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <title>STEP n°2: Assembly of the measurement board &mdash; Ohmpi: open hardware resistivity-meter documentation</title>
+  
+
+  
+
+  
+
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" href="../_static/css/pdj.css" type="text/css" />
+
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Ohmpi: open hardware resistivity-meter documentation" href="../index.html"/>
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="cache-control" content="public" />
+    <meta name="robots" content="follow, all" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Add jQuery library -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+  </head>
+
+  <body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../index.html" class="fa fa-home"> Ohmpi: </a>
+        <div role="search">
+	  <form id ="rtd-search-form" class="wy-form"
+		action="../search.html" method="get">
+	    <input type="text" name="q" placeholder="Search docs" />
+	    <input type="hidden" name="check_keywords" value="yes" />
+	    <input type="hidden" name="area" value="default" />
+	  </form>
+	</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../Ohmpi.html">OhmPi project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Ohmpi.html#partenaires"><strong>Partenaires</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../V1_01.html#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_01.html#technical-data">Technical data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_01.html#raspberry-pi-configuration">Raspberry Pi  configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_01.html#assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi">Assembly of the measuring/current injection cards, and connection with the Raspberry Pi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_01.html#multiplexer-implentation">Multiplexer implentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_01.html#electrode-connection">Electrode connection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_01.html#operating-instruction">Operating instruction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_01.html#complete-list-of-components">Complete list of components</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../V1_02.html">OhmPi V 1.02 (limited to 32 electrodes)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../V1_02.html#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_02.html#technical-data">Technical data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_02.html#raspberry-pi-configuration">Raspberry Pi  configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_02.html#assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi">Assembly of the measuring/current injection cards, and connection with the Raspberry Pi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_02.html#multiplexer-implentation">Multiplexer implentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_02.html#electrode-connection">Electrode connection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_02.html#operating-instruction">Operating instruction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V1_02.html#complete-list-of-components">Complete list of components</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../V2_00.html#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V2_00.html#technical-data">Technical data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V2_00.html#ohmpi-2-step-by-step">Ohmpi 2 step by step</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+
+      </div>
+      &nbsp;
+    </nav>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      <nav class="wy-nav-top" id="barra-mobile" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="#">Porão do Juca</a>
+      </nav>
+
+      <div class="wy-nav-content">
+	<div class="fundo-claro">
+	</div>
+	<div class="fundo-escuro">
+	</div>
+
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+	    
+	    <!-- <ul class="wy-breadcrumbs"> -->
+	    <!--   <li><a href="#">Docs</a> &raquo;</li> -->
+
+	    <!--   <li>Features</li> -->
+	    <!--   <li class="wy-breadcrumbs-aside"> -->
+
+	    <!-- 	<a href="_sources/index.txt" rel="nofollow"> View page source</a> -->
+
+	    <!--   </li> -->
+	    <!-- </ul> -->
+	    <!-- <hr/> -->
+	  </div>
+
+          <div role="main" class="">
+
+	    <div id="content" class="hfeed entry-container hentry">
+  <div class="section" id="step-n2-assembly-of-the-measurement-board">
+<h1><strong>STEP n°2</strong>: Assembly of the measurement board<a class="headerlink" href="#step-n2-assembly-of-the-measurement-board" title="Permalink to this headline">¶</a></h1>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Required components</strong></p></td>
+</tr>
+</tbody>
+</table>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="Ohmpi_V2_00\step_n_2/00_mes_board_components.jpg"><img alt="alternate text" src="Ohmpi_V2_00\step_n_2/00_mes_board_components.jpg" style="width: 600px; height: 450px;" /></a>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="Ohmpi_V2_00\schema_measurement_board.jpg"><img alt="alternate text" src="Ohmpi_V2_00\schema_measurement_board.jpg" style="width: 600px; height: 450px;" /></a>
+</div>
+<p>Figure  shows the general schematics for the electronic measurement board developed.
+We have developed a complete “plug and play” measurement board. To measure electrical resistivity with Raspberry Pi.
+two ADS1115 were used,one for the voltage measurement one for the current measurement, as proposed by Florsch [7]. The ADS1115
+is a 16-bit ADC (Analog-to-Digital Converter), with an adaptable gain. The advantage of ADS1115 is that the
+input signal value could lie between - to + 6.114 V. For the current measurement we have directly integrated the INA282 component,
+which allows to realize precise current measurement around a shunt resistor. The assembly steps are described in the following steps:</p>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>1</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/01_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/01_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Installation of female header, 1 by10  pins, for ADS1115</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>2</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/02_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/02_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Soldering of 4 dual-in-line- socket (2 by 2 pins) for
+optical relay, AQY211EH.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>3</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/03_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/03_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Soldering of 1 dual-in-line- socket (2 by 9 pins)
+for INA282.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>4</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/04_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/04_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Soldering of 1 dual-in-line- socket (2 by 4 pins)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>5</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/05_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/05_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Soldering of 2 dual-in-line- socket (2 by 4 pins)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>6</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/06_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/06_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Traco Power Supply 12V to 5V, TDH15 - 1211N</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>7</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/07_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/07_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Four screw terminals for 12V inpout et 5V outpout</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>8</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/08_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/08_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Traco power Supply 12V to 24V, TRN-1215</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>9</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/09_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/09_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Two screw terminals electrodes M and N</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>10</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/10_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/10_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Four screw terminals, for 12V power supply and for
+electrodes A and B</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>11</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/11_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/11_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Soldering three capacitors (100nF)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>12</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/12_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/12_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>2 ohms shunt resistor pre-adjustment</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>13</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/13_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/13_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Soldering 2 ohms shunt resistor</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>14</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/14_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/14_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>1 Mohms resistors</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>15</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/15_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/15_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Soldering tow 1 Kohms resistors</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>16</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/16_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/16_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Soldering tow 1.5Kohms resistors</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>17</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/17_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/17_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Soldering tow 1.5Kohms resistors</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>18</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/18_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/18_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Female header 2 by 20 pins for Raspberry Pi connection</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>19</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/19_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/19_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>View of the female  header 2 by 20 pins installation
+for Raspberry Pi connection</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>20</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/20_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/20_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Fixing MCP23008 component</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>21</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/21_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/21_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Mounting optical relay, AQY211EH</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>22</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/22_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/22_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Mounting LM158 operational amplificator</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>23</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/23_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/23_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Mounting ADS115 board</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>24</p></td>
+<td><img alt="Ohmpi_V2_00\step_n_2/24_mes_board.jpg" src="Ohmpi_V2_00\step_n_2/24_mes_board.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Fixing the INA282</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="step-n3-start-up-of-the-measurement-board">
+<h1><strong>STEP n°3</strong>: Start-up of the measurement board.<a class="headerlink" href="#step-n3-start-up-of-the-measurement-board" title="Permalink to this headline">¶</a></h1>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Required components</strong></p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>1</p></td>
+<td><img alt="../_images/001.jpg" src="../_images/001.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Shutdown the raspberry Pi and unplug the power supply</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>2</p></td>
+<td><img alt="../_images/001.jpg" src="../_images/001.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Mounting the bottom spacers on the Raspberry Pi (male/female, 11mm, M3)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>3</p></td>
+<td><img alt="../_images/002.jpg" src="../_images/002.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Mounting the upper spacers on the Raspberry Pi (female/female, 11mm, M3)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>4</p></td>
+<td><img alt="../_images/003.jpg" src="../_images/003.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Mounting the Ohmpi’s measurement board on the Raspberry Pi</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>5</p></td>
+<td><img alt="../_images/004.jpg" src="../_images/004.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Mounting the Ohmpi’s measurement board on the Raspberry Pi</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>6</p></td>
+<td><img alt="../_images/005.jpg" src="../_images/005.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Plug the power supply into a socket and connect it to your
+Raspberry Pi’s power port.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="step-n4-measurement-board-validation">
+<h1><strong>STEP n°4</strong>: Measurement board validation<a class="headerlink" href="#step-n4-measurement-board-validation" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>Run the terminal, and write</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">i2cdetect</span> <span class="o">-</span><span class="n">y</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div></blockquote>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>1</p></td>
+<td><img alt="../_images/i2cdetect.png" src="../_images/i2cdetect.png" />
+</td>
+</tr>
+<tr class="row-even"><td><p>If everything is working, three I2C addresses should appear
+on the screen.</p></td>
+</tr>
+</tbody>
+</table>
+<dl>
+<dt>Setting up an equivalent electronic circuit, for this you will need:</dt><dd><ul class="simple">
+<li><p>4 1kohm resistor (R2)</p></li>
+<li><p>1 220 ohm resistor (R1)</p></li>
+<li><p>1 small padboard</p></li>
+<li><p>Spool of solder</p></li>
+</ul>
+<table class="docutils align-left">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>2</p></td>
+<td><img alt="../_images/ref_circuit.png" src="../_images/ref_circuit.png" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Schematic of equivalent electronic circuit test</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>3</p></td>
+<td><img alt="../_images/20210905_122820.jpg" src="../_images/20210905_122820.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Préparer le circuit équivalent</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>4</p></td>
+<td><img alt="../_images/20210905_123034.jpg" src="../_images/20210905_123034.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Préparer les cables de connexion aux batterie et les cosses</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>5</p></td>
+<td><img alt="../_images/20210905_132856.jpg" src="../_images/20210905_132856.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Souder les câbles et les cosses</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>6</p></td>
+<td><img alt="../_images/20210905_210045.jpg" src="../_images/20210905_210045.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Installer les cables rouges sur la borne +12V et cable noir
+sur la borne ground.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>7</p></td>
+<td><img alt="../_images/20210905_210045.jpg" src="../_images/20210905_210045.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Installer le circuit de référence</p></td>
+</tr>
+</tbody>
+</table>
+<p>Run the Thonny IDE and load the code Ohmpy4elec.pi</p>
+</div>
+<div class="section" id="step-n5-assembly-of-the-mux-board">
+<h1><strong>STEP n°5</strong>: Assembly of the MUX board<a class="headerlink" href="#step-n5-assembly-of-the-mux-board" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="step-n6-check-mux-board">
+<h1><strong>STEP n°6</strong>: Check Mux Board<a class="headerlink" href="#step-n6-check-mux-board" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="step-n7-assemble-ohmpi">
+<h1><strong>STEP n°7</strong>: Assemble Ohmpi<a class="headerlink" href="#step-n7-assemble-ohmpi" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="step-n8-boxing-ohmpi">
+<h1><strong>STEP n°8</strong>: Boxing Ohmpi<a class="headerlink" href="#step-n8-boxing-ohmpi" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="step-n9-field-measurement">
+<h1><strong>STEP n°9</strong>: Field measurement<a class="headerlink" href="#step-n9-field-measurement" title="Permalink to this headline">¶</a></h1>
+</div>
+
+
+	    </div>
+            <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, INRAE, Rémi CLEMENT.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/jucacrispim/sphinx_pdj_theme">theme</a> provided by <a href="http://poraodojuca.net">Porão do Juca</a>.
+
+</footer>
+	</div>
+	</div>
+	  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'open hardware resistivity-meter',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js">
+
+    </script>
+    <script type="text/javascript" src="../_static/underscore.js">
+
+    </script>
+    <script type="text/javascript" src="../_static/doctools.js">
+
+    </script>
+    <script type="text/javascript" src="../_static/language_data.js">
+
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML">
+
+    </script>
+
+  
+
+   <script type="text/javascript"
+           src="../_static/js/theme.js"></script>
+
+   <script type="text/javascript"
+           src="../_static/js/pdj.js"></script>
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+  </body>
+</html>
