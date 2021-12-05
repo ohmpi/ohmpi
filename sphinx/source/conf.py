@@ -14,6 +14,7 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 import sphinx_rtd_theme
+import sphinx_pdj_theme
 from shutil import copyfile
 # -- Project information -----------------------------------------------------
 
@@ -32,6 +33,7 @@ release = 'open hardware resistivity-meter'
 # ones.
 extensions = ['sphinx_rtd_theme',]
 extensions = ['recommonmark']
+extensions = ['sphinx_pdj_theme',]
 	
 
 # Add any paths that contain templates here, relative to this directory.
