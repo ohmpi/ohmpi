@@ -356,7 +356,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +--------+------------------------------------------------------------+  
 
 
-**PART B** Check the measurement board
+**PART C** Check the measurement board
 ====================================================== 
 
  Run the terminal, and write
