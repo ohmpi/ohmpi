@@ -398,7 +398,7 @@ Setting up an equivalent electronic circuit, for this you will need:
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/c/20210905_122820.jpg                |
    |3       +------------------------------------------------------------+
-   |        | Préparer le circuit équivalent                             |                                                                       
+   |        | Prepare the equivalent electronic circuit test             |                                                                       
    +--------+------------------------------------------------------------+ 
 
   
@@ -408,7 +408,7 @@ Setting up an equivalent electronic circuit, for this you will need:
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/c/20210905_123034.jpg                |
    |4       +------------------------------------------------------------+
-   |        | Préparer les cables de connexion aux batterie et les cosses|                                                                       
+   |        |  Prepare the battery connections and the terminals.        |                                                                       
    +--------+------------------------------------------------------------+ 
 
 
@@ -418,7 +418,7 @@ Setting up an equivalent electronic circuit, for this you will need:
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/c/20210905_132856.jpg                |
    |5       +------------------------------------------------------------+
-   |        | Souder les câbles et les cosses                            |                                                                       
+   |        | Soldering cables and terminals                             |                                                                       
    +--------+------------------------------------------------------------+ 
 
 
@@ -426,24 +426,40 @@ Setting up an equivalent electronic circuit, for this you will need:
    :align: center
  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: step_n_2/c/20210905_210045.jpg                |
+   |        |   .. image:: step_n_2/c/Inked20211206_150522_LI.jpg        |
    |6       +------------------------------------------------------------+
-   |        | Installer les cables rouges sur la borne +12V et cable noir|                                                                       
-   |        | sur la borne ground.                                       |
+   |        |Install the red cables on the +12V terminal and black cable |                                                                       
+   |        |on the ground terminal.                                     |
    +--------+------------------------------------------------------------+ 
 
 .. table::
    :align: center
  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: step_n_2/c/20210905_210045.jpg                |
+   |        |   .. image:: step_n_2/c/Inked20211206_150522_LI2.jpg       |
    |7       +------------------------------------------------------------+
-   |        | Installer le circuit de référence                          |                                                                       
+   |        | Connect the equivalent electronic circuit test             |                                                                       
    |        |                                                            |
    +--------+------------------------------------------------------------+
-
-
-Run the Thonny IDE and load the code Ohmpy4elec.pi
-
-
+   
+   
+.. table::
+   :align: center
  
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: step_n_2/c/thonny_first_interface.jpg         |
+   |7       +------------------------------------------------------------+
+   |        | Run Tonny Interpreter                                      |                    
+   |        |                                                            |
+   +--------+------------------------------------------------------------+   
+
+
+.. table::
+   :align: center
+ 
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: step_n_2/c/20211206_144334.jpg                |
+   |7       +------------------------------------------------------------+
+   |        | Run Ohmpi_4elec.py, if everything works you should         |                    
+   |        | get the following result                                   |
+   +--------+------------------------------------------------------------+ 

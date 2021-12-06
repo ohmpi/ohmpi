@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="STEP n°2: Measurement board" href="V2_00_step_02.html" />
-    <link rel="prev" title="OhmPi V 2.xx (64 or 128 electrodes)" href="../V2_00.html" /> 
+    <link rel="prev" title="OhmPi V 2.xx (64 or 128 electrodes and 12V)" href="../V2_00.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,17 +40,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../Ohmpi.html">OhmPi project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../V1_02.html">OhmPi V 1.02 (limited to 32 electrodes)</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes)</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes and 12V)</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../V2_00.html#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../V2_00.html#technical-data">Technical data</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../V2_00.html#ohmpi-2-step-by-step">Ohmpi 2 step by step</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#"><strong>STEP n°1</strong> : Raspberry Pi  configuration</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#os-installation">OS installation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#virtual-environnement-and-packages">Virtual Environnement and packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#part-a-os-installation"><strong>PART A</strong> OS installation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#part-b-virtual-environnement-and-packages"><strong>PART B</strong> Virtual Environnement and packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#part-c-activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi"><strong>PART C</strong> Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="V2_00_step_02.html"><strong>STEP n°2</strong>: Measurement board</a></li>
+<li class="toctree-l3"><a class="reference internal" href="V2_00_step_03.html"><strong>STEP n°3</strong>: MUX board</a></li>
 </ul>
 </li>
 </ul>
@@ -71,7 +72,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes)</a> &raquo;</li>
+          <li><a href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes and 12V)</a> &raquo;</li>
       <li><strong>STEP n°1</strong> : Raspberry Pi  configuration</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/Ohmpi_V2_00/V2_00_step_01.rst.txt" rel="nofollow"> View page source</a>
@@ -84,8 +85,8 @@
              
   <div class="section" id="step-n1-raspberry-pi-configuration">
 <h1><strong>STEP n°1</strong> : Raspberry Pi  configuration<a class="headerlink" href="#step-n1-raspberry-pi-configuration" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="os-installation">
-<h2>OS installation<a class="headerlink" href="#os-installation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="part-a-os-installation">
+<h2><strong>PART A</strong> OS installation<a class="headerlink" href="#part-a-os-installation" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 78%" />
@@ -123,7 +124,7 @@ For this step, the installation instructions are well described on the Raspberry
 <p class="admonition-title">Note</p>
 <p>All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="../_images/raspbian_version1.jpg"><img alt="alternate text" src="../_images/raspbian_version1.jpg" style="width: 800px; height: 400px;" /></a>
+<a class="reference internal image-reference" href="../_images/raspbian_version.jpg"><img alt="alternate text" src="../_images/raspbian_version.jpg" style="width: 800px; height: 400px;" /></a>
 </div>
 </div>
 <div class="admonition warning">
@@ -161,8 +162,8 @@ To ensure that the GPIOs are in Low position, you will need to modify the /boot/
 <li><p>Close the terminal</p></li>
 </ol>
 </div>
-<div class="section" id="virtual-environnement-and-packages">
-<h2>Virtual Environnement and packages<a class="headerlink" href="#virtual-environnement-and-packages" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="part-b-virtual-environnement-and-packages">
+<h2><strong>PART B</strong> Virtual Environnement and packages<a class="headerlink" href="#part-b-virtual-environnement-and-packages" title="Permalink to this headline">¶</a></h2>
 <p>A virtual environment is a way to have multiple, parallel instances of the Python interpreter, each with different package sets and different configurations.
 Each virtual environment contains a discrete copy of the Python interpreter, including copies of its support utilities. It also protects your system in case of problems with the packages.</p>
 <p>All dependencies are specified in requirements.txt</p>
@@ -197,27 +198,27 @@ to leave the virtual environment simply type:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">
-<h2>Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)<a class="headerlink" href="#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="part-c-activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">
+<h2><strong>PART C</strong> Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)<a class="headerlink" href="#part-c-activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi" title="Permalink to this headline">¶</a></h2>
 <p>If you decided to use a virtual environment, it is necessary to setup Thonny Python IDE the first time you use it.</p>
 <p>1- Run the Thonny Python IDE software, Click on raspebrry acces <strong>menu &gt; programming&gt; Thonny pythonIDE</strong></p>
 <p>2- Thonny’s interface opens, Python runs on the Root (Python 3.7.3 (/usr/bin/python3))</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="../_images/thonny_first_interface1.jpg"><img alt="alternate text" src="../_images/thonny_first_interface1.jpg" style="width: 600px; height: 450px;" /></a>
+<a class="reference internal image-reference" href="../_images/thonny_first_interface.jpg"><img alt="alternate text" src="../_images/thonny_first_interface.jpg" style="width: 600px; height: 450px;" /></a>
 </div>
 <p>3-Click on <strong>Run&gt;select interpreter</strong>, a new window opens click on interpret</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="../_images/thonny_option1.jpg"><img alt="alternate text" src="../_images/thonny_option1.jpg" style="width: 600px; height: 450px;" /></a>
+<a class="reference internal image-reference" href="../_images/thonny_option.jpg"><img alt="alternate text" src="../_images/thonny_option.jpg" style="width: 600px; height: 450px;" /></a>
 </div>
 <p>4-On the new open windows select <strong>alternative Pyhton3 or virtual environnement</strong></p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="../_images/thonny_interpreter1.jpg"><img alt="alternate text" src="../_images/thonny_interpreter1.jpg" style="width: 600px; height: 450px;" /></a>
+<a class="reference internal image-reference" href="../_images/thonny_interpreter.jpg"><img alt="alternate text" src="../_images/thonny_interpreter.jpg" style="width: 600px; height: 450px;" /></a>
 </div>
 <p>5- New buttons appeared, selected <strong>“locate another python executable “</strong></p>
 <p>6- A new window opens, find the folder where there is the python 3 file in the virtual environment folder previously created <strong>/home/pi/ohmpi/bin/python3</strong>.</p>
 <p>7- In the <strong>known interpreter</strong> tab the path of the virtual environnementshould appear</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="../_images/thonny_interpreter_folder1.jpg"><img alt="alternate text" src="../_images/thonny_interpreter_folder1.jpg" style="width: 600px; height: 450px;" /></a>
+<a class="reference internal image-reference" href="../_images/thonny_interpreter_folder.jpg"><img alt="alternate text" src="../_images/thonny_interpreter_folder.jpg" style="width: 600px; height: 450px;" /></a>
 </div>
 <p>8- Close the window by clicking on <strong>ok</strong>.</p>
 <p>9- Close thonny to save modifications</p>
@@ -228,7 +229,7 @@ to leave the virtual environment simply type:</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../V2_00.html" class="btn btn-neutral float-left" title="OhmPi V 2.xx (64 or 128 electrodes)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../V2_00.html" class="btn btn-neutral float-left" title="OhmPi V 2.xx (64 or 128 electrodes and 12V)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="V2_00_step_02.html" class="btn btn-neutral float-right" title="STEP n°2: Measurement board" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

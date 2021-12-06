@@ -1,6 +1,6 @@
-*****************************************
-OhmPi V 2.xx (64 or 128 electrodes)
-***************************************** 
+********************************************
+OhmPi V 2.xx (64 or 128 electrodes and 12V)
+******************************************** 
 
 .. figure:: Under-Construction.png
 	   :width: 500px
@@ -70,6 +70,7 @@ Ohmpi 2 step by step
 
    Ohmpi_V2_00/V2_00_step_01
    Ohmpi_V2_00/V2_00_step_02
+   Ohmpi_V2_00/V2_00_step_03
 
 
 

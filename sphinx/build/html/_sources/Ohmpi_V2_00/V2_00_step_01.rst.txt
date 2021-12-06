@@ -2,8 +2,8 @@
 *******************************************
 
 
-OS installation  
-================
+**PART A** OS installation  
+==========================
 
 +----------------------------------------------------+---------------+
 | **Required components**                            | **Quantity**  | 
@@ -70,8 +70,8 @@ To ensure that the GPIOs are in Low position, you will need to modify the /boot/
 8. Close the terminal
 
 
-Virtual Environnement and packages
-==================================
+**PART B** Virtual Environnement and packages
+=============================================
 
 A virtual environment is a way to have multiple, parallel instances of the Python interpreter, each with different package sets and different configurations. 
 Each virtual environment contains a discrete copy of the Python interpreter, including copies of its support utilities. It also protects your system in case of problems with the packages.
@@ -121,8 +121,8 @@ to leave the virtual environment simply type:
 	 deactivate
 
 
-Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi) 
-========================================================================
+**PART C** Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi) 
+==================================================================================
 
 If you decided to use a virtual environment, it is necessary to setup Thonny Python IDE the first time you use it.
 

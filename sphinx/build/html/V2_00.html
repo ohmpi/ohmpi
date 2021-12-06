@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OhmPi V 2.xx (64 or 128 electrodes) &mdash; Ohmpi: open hardware resistivity-meter documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>OhmPi V 2.xx (64 or 128 electrodes and 12V) &mdash; Ohmpi: open hardware resistivity-meter documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
@@ -40,12 +40,13 @@
 <li class="toctree-l1"><a class="reference internal" href="Ohmpi.html">OhmPi project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="V1_02.html">OhmPi V 1.02 (limited to 32 electrodes)</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">OhmPi V 2.xx (64 or 128 electrodes)</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OhmPi V 2.xx (64 or 128 electrodes and 12V)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#technical-data">Technical data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ohmpi-2-step-by-step">Ohmpi 2 step by step</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_01.html"><strong>STEP n°1</strong> : Raspberry Pi  configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_02.html"><strong>STEP n°2</strong>: Measurement board</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_03.html"><strong>STEP n°3</strong>: MUX board</a></li>
 </ul>
 </li>
 </ul>
@@ -66,7 +67,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>OhmPi V 2.xx (64 or 128 electrodes)</li>
+      <li>OhmPi V 2.xx (64 or 128 electrodes and 12V)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/V2_00.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -76,8 +77,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="ohmpi-v-2-xx-64-or-128-electrodes">
-<h1>OhmPi V 2.xx (64 or 128 electrodes)<a class="headerlink" href="#ohmpi-v-2-xx-64-or-128-electrodes" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="ohmpi-v-2-xx-64-or-128-electrodes-and-12v">
+<h1>OhmPi V 2.xx (64 or 128 electrodes and 12V)<a class="headerlink" href="#ohmpi-v-2-xx-64-or-128-electrodes-and-12v" title="Permalink to this headline">¶</a></h1>
 <div class="align-center figure">
 <a class="reference internal image-reference" href="_images/Under-Construction.png"><img alt="Ohmpi 2" src="_images/Under-Construction.png" style="width: 500px; height: 250px;" /></a>
 </div>
@@ -195,9 +196,9 @@ control system</p></td>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_01.html"><strong>STEP n°1</strong> : Raspberry Pi  configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_01.html#os-installation">OS installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_01.html#virtual-environnement-and-packages">Virtual Environnement and packages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_01.html#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_01.html#part-a-os-installation"><strong>PART A</strong> OS installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_01.html#part-b-virtual-environnement-and-packages"><strong>PART B</strong> Virtual Environnement and packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_01.html#part-c-activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi"><strong>PART C</strong> Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_02.html"><strong>STEP n°2</strong>: Measurement board</a><ul>
@@ -208,6 +209,13 @@ control system</p></td>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_02.html#part-b-start-up-of-the-measurement-board"><strong>PART B</strong> Start-up of the measurement board</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_02.html#part-c-check-the-measurement-board"><strong>PART C</strong> Check the measurement board</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_03.html"><strong>STEP n°3</strong>: MUX board</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_03.html#part-a-assembly-of-mux-board"><strong>PART A</strong> Assembly of MUX board</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Ohmpi_V2_00/V2_00_step_03.html#required-components">Required components</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

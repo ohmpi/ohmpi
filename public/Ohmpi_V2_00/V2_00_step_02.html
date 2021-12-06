@@ -17,6 +17,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="STEP n°3: MUX board" href="V2_00_step_03.html" />
     <link rel="prev" title="STEP n°1 : Raspberry Pi configuration" href="V2_00_step_01.html" /> 
 </head>
 
@@ -39,7 +40,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../Ohmpi.html">OhmPi project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../V1_02.html">OhmPi V 1.02 (limited to 32 electrodes)</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes)</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes and 12V)</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../V2_00.html#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../V2_00.html#technical-data">Technical data</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../V2_00.html#ohmpi-2-step-by-step">Ohmpi 2 step by step</a><ul class="current">
@@ -50,6 +51,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#part-c-check-the-measurement-board"><strong>PART C</strong> Check the measurement board</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="V2_00_step_03.html"><strong>STEP n°3</strong>: MUX board</a></li>
 </ul>
 </li>
 </ul>
@@ -70,7 +72,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes)</a> &raquo;</li>
+          <li><a href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes and 12V)</a> &raquo;</li>
       <li><strong>STEP n°2</strong>: Measurement board</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/Ohmpi_V2_00/V2_00_step_02.rst.txt" rel="nofollow"> View page source</a>
@@ -316,7 +318,7 @@
 <div class="section" id="description">
 <h3>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="../_images/schema_measurement_board1.jpg"><img alt="alternate text" src="../_images/schema_measurement_board1.jpg" style="width: 600px; height: 450px;" /></a>
+<a class="reference internal image-reference" href="../_images/schema_measurement_board.jpg"><img alt="alternate text" src="../_images/schema_measurement_board.jpg" style="width: 600px; height: 450px;" /></a>
 </div>
 <p>Figure  shows the general schematics for the electronic measurement board developed.
 We have developed a complete “plug and play” measurement board. To measure electrical resistivity with Raspberry Pi.
@@ -859,7 +861,7 @@ on the screen.</p></td>
 <td><img alt="../_images/20210905_122820.jpg" src="../_images/20210905_122820.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Préparer le circuit équivalent</p></td>
+<tr class="row-even"><td><p>Prepare the equivalent electronic circuit test</p></td>
 </tr>
 </tbody>
 </table>
@@ -873,7 +875,7 @@ on the screen.</p></td>
 <td><img alt="../_images/20210905_123034.jpg" src="../_images/20210905_123034.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Préparer les cables de connexion aux batterie et les cosses</p></td>
+<tr class="row-even"><td><p>Prepare the battery connections and the terminals.</p></td>
 </tr>
 </tbody>
 </table>
@@ -887,7 +889,7 @@ on the screen.</p></td>
 <td><img alt="../_images/20210905_132856.jpg" src="../_images/20210905_132856.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Souder les câbles et les cosses</p></td>
+<tr class="row-even"><td><p>Soldering cables and terminals</p></td>
 </tr>
 </tbody>
 </table>
@@ -898,11 +900,11 @@ on the screen.</p></td>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td rowspan="2"><p>6</p></td>
-<td><img alt="../_images/20210905_210045.jpg" src="../_images/20210905_210045.jpg" />
+<td><img alt="../_images/Inked20211206_150522_LI.jpg" src="../_images/Inked20211206_150522_LI.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Installer les cables rouges sur la borne +12V et cable noir
-sur la borne ground.</p></td>
+<tr class="row-even"><td><p>Install the red cables on the +12V terminal and black cable
+on the ground terminal.</p></td>
 </tr>
 </tbody>
 </table>
@@ -913,14 +915,42 @@ sur la borne ground.</p></td>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td rowspan="2"><p>7</p></td>
-<td><img alt="../_images/20210905_210045.jpg" src="../_images/20210905_210045.jpg" />
+<td><img alt="../_images/Inked20211206_150522_LI2.jpg" src="../_images/Inked20211206_150522_LI2.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Installer le circuit de référence</p></td>
+<tr class="row-even"><td><p>Connect the equivalent electronic circuit test</p></td>
 </tr>
 </tbody>
 </table>
-<p>Run the Thonny IDE and load the code Ohmpy4elec.pi</p>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>7</p></td>
+<td><img alt="../_images/thonny_first_interface2.jpg" src="../_images/thonny_first_interface2.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Run Tonny Interpreter</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>7</p></td>
+<td><img alt="../_images/20211206_144334.jpg" src="../_images/20211206_144334.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Run Ohmpi_4elec.py, if everything works you should
+get the following result</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
@@ -929,6 +959,7 @@ sur la borne ground.</p></td>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="V2_00_step_01.html" class="btn btn-neutral float-left" title="STEP n°1 : Raspberry Pi configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="V2_00_step_03.html" class="btn btn-neutral float-right" title="STEP n°3: MUX board" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
