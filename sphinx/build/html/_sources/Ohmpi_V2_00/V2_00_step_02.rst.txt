@@ -40,9 +40,12 @@ We have developed a complete "plug and play" measurement board. To measure elect
 two ADS1115 were used,one for the voltage measurement one for the current measurement, as proposed by Florsch [7]. The ADS1115
 is a 16-bit ADC (Analog-to-Digital Converter), with an adaptable gain. The advantage of ADS1115 is that the 
 input signal value could lie between - to + 6.114 V. For the current measurement we have directly integrated the INA282 component, 
-which allows to realize precise current measurement around a shunt resistor. The assembly steps are described in the following steps:
+which allows to realize precise current measurement around a shunt resistor. The assembly are described in the following steps:
 
 
+.. note::
+	 
+	 In this version, We used a shunt resistor of 2 ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor.
 
 .. table::
    :align: center

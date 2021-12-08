@@ -26,9 +26,7 @@ Required components
 The multiplexing of the channels is a mechanical multiplexing based on OMRON's manufacturing relays (G5LE-1-VD 12 VDC). Each relay is combined with 
 a ZVN4206A power MOFSET. The raspberry has only 30 GPIOs, which is not enough to activate all the 64 electrodes, which represent 512 GPIOs. 
 We used gpio expender I2C (MCP23017). We have associated these components with an I2C muliplexer of type type TCA9548A from adafruit. 
-This combination allows to go up to 512 GPIOs and up to 128 electrodes.
-Each card has its own digital address between 0X70 and 0X77. 
-   
+This combination allows to go up to 512 GPIOs and up to 128 electrodes. Each card has its own digital address between 0X70 and 0X77. 
 In the following presentation for an Ohmpi 64 electrodes, we will use the addresses 0X70 for channel A, 0X71 for channel B, 0X72 for channel M and 0X73 for channel N. 
 0X73 for the N channel. 4 MUX board will be needed to multiplex an Ohmpi 64 electrodes.
    
@@ -41,3 +39,15 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
    |        | Take the Mux PCB                                           | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
+
+.. table::
+   :align: center
+   
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: step_n_3/a/MUX_01.jpg                         |
+   |      1 +------------------------------------------------------------+
+   |        | Take the Mux PCB                                           | 
+   |        |                                                            |                                                                       
+   +--------+------------------------------------------------------------+   
+   
+   
