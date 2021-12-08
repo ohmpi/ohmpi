@@ -39,7 +39,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../Ohmpi.html">OhmPi project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../V1_02.html">OhmPi V 1.02 (limited to 32 electrodes)</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes)</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes and 12V)</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../V2_00.html#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../V2_00.html#technical-data">Technical data</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../V2_00.html#ohmpi-2-step-by-step">Ohmpi 2 step by step</a><ul class="current">
@@ -69,7 +69,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes)</a> &raquo;</li>
+          <li><a href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes and 12V)</a> &raquo;</li>
       <li><strong>STEP n°3</strong>: MUX board</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/Ohmpi_V2_00/V2_00_step_03.rst.txt" rel="nofollow"> View page source</a>
@@ -252,6 +252,27 @@
 <td><p>Keystone Electronics</p></td>
 <td><p>25515</p></td>
 <td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Keystone-Electronics/25515?qs=UWqYQ%2F2cZWuxuhUmfr%252BZuQ%3D%3D">https://www.mouser.fr/ProductDetail/Keystone-Electronics/25515?qs=UWqYQ%2F2cZWuxuhUmfr%252BZuQ%3D%3D</a></p></td>
+</tr>
+</tbody>
+</table>
+<p>The multiplexing of the channels is a mechanical multiplexing based on OMRON’s manufacturing relays (G5LE-1-VD 12 VDC). Each relay is combined with
+a ZVN4206A power MOFSET. The raspberry has only 30 GPIOs, which is not enough to activate all the 64 electrodes, which represent 512 GPIOs.
+We used gpio expender I2C (MCP23017). We have associated these components with an I2C muliplexer of type type TCA9548A from adafruit.
+This combination allows to go up to 512 GPIOs and up to 128 electrodes.
+Each card has its own digital address between 0X70 and 0X77.</p>
+<p>In the following presentation for an Ohmpi 64 electrodes, we will use the addresses 0X70 for channel A, 0X71 for channel B, 0X72 for channel M and 0X73 for channel N.
+0X73 for the N channel. 4 MUX board will be needed to multiplex an Ohmpi 64 electrodes.</p>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>1</p></td>
+<td><img alt="../_images/MUX_00.jpg" src="../_images/MUX_00.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Take the Mux PCB</p></td>
 </tr>
 </tbody>
 </table>
