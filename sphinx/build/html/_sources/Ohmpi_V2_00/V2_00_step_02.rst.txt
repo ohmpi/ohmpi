@@ -43,9 +43,6 @@ input signal value could lie between - to + 6.114 V. For the current measurement
 which allows to realize precise current measurement around a shunt resistor. The assembly are described in the following steps:
 
 
-.. note::
-	 
-	 In this version, We used a shunt resistor of 2 ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor.
 
 .. table::
    :align: center
@@ -155,6 +152,12 @@ which allows to realize precise current measurement around a shunt resistor. The
    |         |  Soldering three capacitors (100nF)                        | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
+
+.. warning::
+	 
+	 In this version, We used a shunt resistor of 2 ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor.Change the shunt value in the code.
+
+
    
 .. table::
    :align: center

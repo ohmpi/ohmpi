@@ -326,10 +326,6 @@ two ADS1115 were used,one for the voltage measurement one for the current measur
 is a 16-bit ADC (Analog-to-Digital Converter), with an adaptable gain. The advantage of ADS1115 is that the
 input signal value could lie between - to + 6.114 V. For the current measurement we have directly integrated the INA282 component,
 which allows to realize precise current measurement around a shunt resistor. The assembly are described in the following steps:</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>In this version, We used a shunt resistor of 2 ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor.</p>
-</div>
 <table class="docutils align-center">
 <colgroup>
 <col style="width: 12%" />
@@ -487,6 +483,10 @@ electrodes A and B</p></td>
 </tr>
 </tbody>
 </table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>In this version, We used a shunt resistor of 2 ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor.Change the shunt value in the code.</p>
+</div>
 <table class="docutils align-center">
 <colgroup>
 <col style="width: 13%" />
