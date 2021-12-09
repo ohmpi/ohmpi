@@ -435,7 +435,8 @@ Setting up an equivalent electronic circuit, for this you will need:
    |        |   .. image:: step_n_2/c/Inked20211206_150522_LI.jpg        |
    |6       +------------------------------------------------------------+
    |        |Install the red cables on the +12V terminal and black cable |                                                                       
-   |        |on the ground terminal.                                     |
+   |        |on the ground terminal. Connect to two different 12V        |
+   |        |batteries                                                   |
    +--------+------------------------------------------------------------+ 
 
 .. table::
