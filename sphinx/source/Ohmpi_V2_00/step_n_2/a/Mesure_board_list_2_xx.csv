@@ -1,25 +1,25 @@
-Component,Number,Cost per unit € ,Total cost €,Manufacturer,Manufacturer s reference,Web reference
-Raspberry Pi 4 Model B,1,58.75,58.75,Raspberry,Raspberry Pi 4 Model B,https://www.mouser.fr/ProductDetail/Seeed-Studio/102110421?qs=7MVldsJ5UaxeN3LYyh3sqw%3D%3D
-LM158N AMP-o,4,14.5,58,Texas Instruments,LM358AN/NOPB,https://www.mouser.fr/ProductDetail/Texas-Instruments/LM158J?qs=X1J7HmVL2ZH8vpEfMl8%2FFQ%3D%3D
-Printed circuit board ,1,12,12,Asler,-,-
-ADS1115,2,11.9,23.8,Adafruit,1085,https://www.mouser.fr/ProductDetail/Adafruit/1085?qs=%2Fha2pyFaduhE%2FOGzuTWIQ9Iz5VjaqFOYugqAlGxpEcKiGrQvF4hn%252Bg%3D%3D
-Capacitor 100nF 50Vdc 10% Ceramic,4,0.2,0.8,KEMET, C320C104K1,https://www.mouser.fr/ProductDetail/KEMET/C320C104K1R5TA7303?qs=c4UyoTs%2FLq1th4mcyOeTmA%3D%3D
-Resistor 1 Kohm 0.5W +- 0.1%,2,1.3,2.6,TE Connectivity,H81K0BYA,https://www.mouser.fr/ProductDetail/TE-Connectivity-Holsworthy/H81K0BYA?qs=%2Fha2pyFaduhUylh7Az%2FmjFH2XjOUms6wZtUX4sOM%252BII%3D
-Resistor 1.5 Kohms +- 0.1%,2,1.3,2.6,TE Connectivity,H81K5BYA,https://www.mouser.fr/ProductDetail/TE-Connectivity-Holsworthy/H81K5BYA?qs=%2Fha2pyFadugy9tWham3rU9HmIJOhyWhBIN95kNm%252BX%2FM%3D
-Resistor 1.5 Kohms +- 5%,2,1.3,2.6,Vishay,CCF071K50GKE36,https://www.mouser.fr/ProductDetail/Vishay-Dale/CCF071K50GKE36?qs=QKEOZdL6EQpA6LZRLQFVOw%3D%3D
-Resistor 10 Mohms +-5%,2,0.762,1.524,VISHAY,CMF651M0000FKEK143,https://www.mouser.fr/ProductDetail/Vishay-Dale/CMF651M0000FKEK143?qs=CiayqK2gdcKzIA2LEVaLkg%3D%3D
-2 ohm shunt resistor+-  1%,1,2.42,2.42,Ohmite,41F2R0E,https://www.mouser.fr/ProductDetail/Ohmite/41F2R0E?qs=IM6ToxQzGOAuEDprb19mHA%3D%3D
-Dual screw terminal (5.08-mm pitch),5,0.648,3.24,CUI Devices,TB009-508-02BE,https://www.mouser.fr/ProductDetail/CUI-Devices/TB009-508-02BE?qs=vLWxofP3U2wCFk5uCkWTkA%3D%3D
-DC/DC converter 12 to 24V,2,15.58,31.16,TracoPower,TRN 3-1215,https://www.mouser.fr/ProductDetail/TRACO-Power/TRN-3-1215?qs=YCa%2FAAYMW02gqUicGQj0tA%3D%3D
-DIP Dual In Line Socket 2*4,3,0.72,2.16,Mill-Max,110-43-308-41-001000,https://www.mouser.fr/ProductDetail/Mill-Max/110-43-308-41-001000?qs=IGgAdOvCTsTu%2FqaUr8NArg%3D%3D&mgh=1&vip=1&gclid=EAIaIQobChMIn_TAxbCx8wIVQ5nVCh2QaQFpEAYYCCABEgJk1_D_BwE
-AQY211EH,4,3.84,15.36,Panasonic Industrial Devices,AQY211EH,https://www.mouser.fr/ProductDetail/Panasonic-Industrial-Devices/AQY211EH?qs=wKtUvITRialGIU8hcM7DvQ%3D%3D
-DIP Dual In Line Socket 2*2,4,0.449,1.796,Preci-dip,110-83-304-41-001101,https://www.mouser.fr/ProductDetail/Preci-dip/110-83-304-41-001101?qs=%2Fha2pyFadujQKqx4wAuiG%2FMGNdxMCNv%2F33Nj0gBxRocuLUcYnpyONg%3D%3D
-SSQ-103-03-G-D,1,2.06,2.06,Samtec,SSQ-103-03-G-D,https://www.mouser.fr/ProductDetail/Samtec/SSQ-103-03-G-D?qs=rU5fayqh%252BE2Z%252BZTchcPoHQ%3D%3D
-MCP23008,1,1.72,1.72,Adafruit,593,https://www.mouser.fr/ProductDetail/Adafruit/593?qs=sGAEpiMZZMsKEdP9slC0YYV4kPdpMD1Hts4SLctIVmw%3D
-Header sets 1x10,2,2.12,4.24,Samtec,SSW-110-02-G-S,https://www.mouser.fr/ProductDetail/Samtec/SSW-110-02-G-S?qs=rU5fayqh%252BE0w1ORXZiBQpw%3D%3D
-SMT Breakout PCB for SOIC-8,1,2.5,2.5,Adafruit,1212,https://www.mouser.fr/ProductDetail/Adafruit/1212?qs=GURawfaeGuCAqqfvnVtyeg%3D%3D&mgh=1&vip=1&gclid=EAIaIQobChMIt8zJzr6x8wIVGdnVCh2vBwVsEAQYAyABEgJqG_D_BwE
-INA282AID,1,4.11,4.11,Texas Instruments,INA282AID,https://www.mouser.fr/ProductDetail/Texas-Instruments/INA282AID?qs=Ze4%2FuFuz19ILFayZXOCfrA%3D%3D
-THD 15-1211N,1,39.72,39.72,TracoPower,THD 15-1211N,https://www.mouser.fr/ProductDetail/TRACO-Power/THD-15-1211N?qs=%2Fha2pyFadugpyEG4IDvm%2FMSR%252B7aN%2F0T3rUIs9PCAqJlT4%252BnRpUOOeQ%3D%3D
-DIP Dual In Line Socket 2*20,1,8.53,8.53,Samtec,SSQ-120-23-G-D,https://www.mouser.fr/ProductDetail/Samtec/SSQ-120-23-G-D?qs=rU5fayqh%252BE1BMVd%252BDZONqg%3D%3D
-Pin strip no ejector ,1,0.35,0.35,BLK electronic,10120550,https://www.conrad.com/p/bkl-electronic-10120550-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-6-no-of-rows-2-1-pcs-741435?searchTerm=741435&searchType=suggest&searchSuggest=product
-Male Female spacer 2.5M HEXAGONALE,	4,	0.87,	3.48,	HARWIN,	R25-3002002,	https://www.mouser.fr/ProductDetail/Harwin/R25-3002002?qs=W0yvOO0ixfENUv0hsdC4%2FQ%3D%3D
+"Component","Number","Cost per unit € ","Total cost €","Manufacturer","Manufacturer s reference","Web reference"
+"Raspberry Pi 4 Model B",1,"58,75","58,75","Raspberry","Raspberry Pi 4 Model B","https://www.mouser.fr/ProductDetail/Seeed-Studio/102110421?qs=7MVldsJ5UaxeN3LYyh3sqw%3D%3D"
+"LM158N AMP-o",2,"14,5",58,"Texas Instruments","LM358AN/NOPB","https://www.mouser.fr/ProductDetail/Texas-Instruments/LM158J?qs=X1J7HmVL2ZH8vpEfMl8%2FFQ%3D%3D"
+"Printed circuit board ",1,12,12,"Asler","-","-"
+"ADS1115",2,"11,9","23,8","Adafruit",1085,"https://www.mouser.fr/ProductDetail/Adafruit/1085?qs=%2Fha2pyFaduhE%2FOGzuTWIQ9Iz5VjaqFOYugqAlGxpEcKiGrQvF4hn%252Bg%3D%3D"
+"Capacitor 100nF 50Vdc 10% Ceramic",3,"0,2","0,8","KEMET"," C320C104K1","https://www.mouser.fr/ProductDetail/KEMET/C320C104K1R5TA7303?qs=c4UyoTs%2FLq1th4mcyOeTmA%3D%3D"
+"Resistor 1 Kohm 0.5W +- 0.1%",2,"1,3","2,6","TE Connectivity","H81K0BYA","https://www.mouser.fr/ProductDetail/TE-Connectivity-Holsworthy/H81K0BYA?qs=%2Fha2pyFaduhUylh7Az%2FmjFH2XjOUms6wZtUX4sOM%252BII%3D"
+"Resistor 1.5 Kohms +- 0.1%",2,"1,3","2,6","TE Connectivity","H81K5BYA","https://www.mouser.fr/ProductDetail/TE-Connectivity-Holsworthy/H81K5BYA?qs=%2Fha2pyFadugy9tWham3rU9HmIJOhyWhBIN95kNm%252BX%2FM%3D"
+"Resistor 1.5 Kohms +- 5%",2,"1,3","2,6","Vishay","CCF071K50GKE36","https://www.mouser.fr/ProductDetail/Vishay-Dale/CCF071K50GKE36?qs=QKEOZdL6EQpA6LZRLQFVOw%3D%3D"
+"Resistor 10 Mohms +-5%",2,"0,762","1,524","VISHAY","CMF651M0000FKEK143","https://www.mouser.fr/ProductDetail/Vishay-Dale/CMF651M0000FKEK143?qs=CiayqK2gdcKzIA2LEVaLkg%3D%3D"
+"2 ohm shunt resistor+-  1%",1,"2,42","2,42","Ohmite","41F2R0E","https://www.mouser.fr/ProductDetail/Ohmite/41F2R0E?qs=IM6ToxQzGOAuEDprb19mHA%3D%3D"
+"Dual screw terminal (5.08-mm pitch)",5,"0,648","3,24","CUI Devices","TB009-508-02BE","https://www.mouser.fr/ProductDetail/CUI-Devices/TB009-508-02BE?qs=vLWxofP3U2wCFk5uCkWTkA%3D%3D"
+"DC/DC converter 12 to 24V",1,"15,58","31,16","TracoPower","TRN 3-1215","https://www.mouser.fr/ProductDetail/TRACO-Power/TRN-3-1215?qs=YCa%2FAAYMW02gqUicGQj0tA%3D%3D"
+"DIP Dual In Line Socket 2*4",3,"0,72","2,16","Mill-Max","110-43-308-41-001000","https://www.mouser.fr/ProductDetail/Mill-Max/110-43-308-41-001000?qs=IGgAdOvCTsTu%2FqaUr8NArg%3D%3D&mgh=1&vip=1&gclid=EAIaIQobChMIn_TAxbCx8wIVQ5nVCh2QaQFpEAYYCCABEgJk1_D_BwE"
+"AQY211EH",4,"3,84","15,36","Panasonic Industrial Devices","AQY211EH","https://www.mouser.fr/ProductDetail/Panasonic-Industrial-Devices/AQY211EH?qs=wKtUvITRialGIU8hcM7DvQ%3D%3D"
+"DIP Dual In Line Socket 2*2",4,"0,449","1,796","Preci-dip","110-83-304-41-001101","https://www.mouser.fr/ProductDetail/Preci-dip/110-83-304-41-001101?qs=%2Fha2pyFadujQKqx4wAuiG%2FMGNdxMCNv%2F33Nj0gBxRocuLUcYnpyONg%3D%3D"
+"SSQ-103-03-G-D",1,"2,06","2,06","Samtec","SSQ-103-03-G-D","https://www.mouser.fr/ProductDetail/Samtec/SSQ-103-03-G-D?qs=rU5fayqh%252BE2Z%252BZTchcPoHQ%3D%3D"
+"MCP23008",1,"1,72","1,72","Adafruit",593,"https://www.mouser.fr/ProductDetail/Adafruit/593?qs=sGAEpiMZZMsKEdP9slC0YYV4kPdpMD1Hts4SLctIVmw%3D"
+"Header sets 1x10",2,"2,12","4,24","Samtec","SSW-110-02-G-S","https://www.mouser.fr/ProductDetail/Samtec/SSW-110-02-G-S?qs=rU5fayqh%252BE0w1ORXZiBQpw%3D%3D"
+"SMT Breakout PCB for SOIC-8",1,"2,5","2,5","Adafruit",1212,"https://www.mouser.fr/ProductDetail/Adafruit/1212?qs=GURawfaeGuCAqqfvnVtyeg%3D%3D&mgh=1&vip=1&gclid=EAIaIQobChMIt8zJzr6x8wIVGdnVCh2vBwVsEAQYAyABEgJqG_D_BwE"
+"INA282AID",1,"4,11","4,11","Texas Instruments","INA282AID","https://www.mouser.fr/ProductDetail/Texas-Instruments/INA282AID?qs=Ze4%2FuFuz19ILFayZXOCfrA%3D%3D"
+"THD 15-1211N",1,"39,72","39,72","TracoPower","THD 15-1211N","https://www.mouser.fr/ProductDetail/TRACO-Power/THD-15-1211N?qs=%2Fha2pyFadugpyEG4IDvm%2FMSR%252B7aN%2F0T3rUIs9PCAqJlT4%252BnRpUOOeQ%3D%3D"
+"DIP Dual In Line Socket 2*20",1,"8,53","8,53","Samtec","SSQ-120-23-G-D","https://www.mouser.fr/ProductDetail/Samtec/SSQ-120-23-G-D?qs=rU5fayqh%252BE1BMVd%252BDZONqg%3D%3D"
+"Pin strip no ejector ",1,"0,35","0,35","BLK electronic",10120550,"https://www.conrad.com/p/bkl-electronic-10120550-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-6-no-of-rows-2-1-pcs-741435?searchTerm=741435&searchType=suggest&searchSuggest=product"
+"Male Female spacer 2.5M HEXAGONALE",4,"0,87","3,48","HARWIN","R25-3002002","https://www.mouser.fr/ProductDetail/Harwin/R25-3002002?qs=W0yvOO0ixfENUv0hsdC4%2FQ%3D%3D"
