@@ -237,7 +237,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/a/20_mes_board.jpg                   |
    |20       +------------------------------------------------------------+
-   |         | Fixing MCP23008 component                                  | 
+   |         | Fixing MCP23008 component (Dot mark on the top left corner)| 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
    
@@ -247,8 +247,8 @@ which allows to realize precise current measurement around a shunt resistor. The
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/a/21_mes_board.jpg                   |
    |21       +------------------------------------------------------------+
-   |         |Mounting optical relay, AQY211EH                            | 
-   |         |                                                            |                                                                       
+   |         |Mounting optical relay, AQY211EH (Dot mark in the top left  | 
+   |         |corners)                                                    |                                                                       
    +---------+------------------------------------------------------------+
    
 .. table::
@@ -277,7 +277,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/a/24_mes_board.jpg                   |
    |24       +------------------------------------------------------------+
-   |         | Fixing the INA282                                          | 
+   |         | Fixing the INA282 (Dot mark in the top right corner)       | 
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
   
