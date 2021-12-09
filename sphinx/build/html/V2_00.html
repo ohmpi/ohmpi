@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,12 +8,21 @@
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+      <script>
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'open hardware resistivity-meter',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -86,13 +95,13 @@
 <a class="reference internal image-reference" href="_images/image_ohmpi_2.jpg"><img alt="Ohmpi 2" src="_images/image_ohmpi_2.jpg" style="width: 800px; height: 600px;" /></a>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
+<p class="first admonition-title">Note</p>
 <p>In this version, we have developed two new board types that allow the assembly of Ohmpi v2.00, a measurement board and a multiplexer board.
 This new version is made up of:</p>
-<ol class="arabic simple">
-<li><p>A measurement board for four-point measurement</p></li>
-<li><p>4 multiplexer cards</p></li>
-<li><p>A box</p></li>
+<ol class="last arabic simple">
+<li>A measurement board for four-point measurement</li>
+<li>4 multiplexer cards</li>
+<li>A box</li>
 </ol>
 </div>
 <div class="section" id="the-philosophy-of-ohmpi">
@@ -104,89 +113,89 @@ We will stop the development on the previous version, to dedicate our efforts on
 </div>
 <div class="section" id="technical-data">
 <h2>Technical data<a class="headerlink" href="#technical-data" title="Permalink to this headline">¶</a></h2>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 33%" />
-<col style="width: 22%" />
-<col style="width: 12%" />
-<col style="width: 22%" />
-<col style="width: 12%" />
+<col width="33%" />
+<col width="22%" />
+<col width="12%" />
+<col width="22%" />
+<col width="12%" />
 </colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>Parameter</strong></p></td>
-<td><dl class="simple">
-<dt><strong>Specifications</strong></dt><dd><p><strong>V1</strong></p>
-</dd>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Parameter</strong></td>
+<td><dl class="first last docutils">
+<dt><strong>Specifications</strong></dt>
+<dd><strong>V1</strong></dd>
 </dl>
 </td>
-<td><p>Units</p></td>
-<td><dl class="simple">
-<dt><strong>Specifications</strong></dt><dd><p><strong>V2</strong></p>
-</dd>
+<td>Units</td>
+<td><dl class="first last docutils">
+<dt><strong>Specifications</strong></dt>
+<dd><strong>V2</strong></dd>
 </dl>
 </td>
-<td><p>Units</p></td>
+<td>Units</td>
 </tr>
-<tr class="row-even"><td><p>Electrodes</p></td>
-<td><p>32</p></td>
-<td></td>
-<td><p>64 to 128</p></td>
-<td></td>
+<tr class="row-even"><td>Electrodes</td>
+<td>32</td>
+<td>&#160;</td>
+<td>64 to 128</td>
+<td>&#160;</td>
 </tr>
-<tr class="row-odd"><td><p>Operating temperature</p></td>
-<td><p>-0 to 50</p></td>
-<td><p>°c</p></td>
-<td><p>-25 to 50</p></td>
-<td><p>°c</p></td>
+<tr class="row-odd"><td>Operating temperature</td>
+<td>-0 to 50</td>
+<td>°c</td>
+<td>-25 to 50</td>
+<td>°c</td>
 </tr>
-<tr class="row-even"><td><p>Power consumption of CPU and
-control system</p></td>
-<td><p>18.5</p></td>
-<td><p>W</p></td>
-<td><p>18.5</p></td>
-<td><p>W</p></td>
+<tr class="row-even"><td>Power consumption of CPU and
+control system</td>
+<td>18.5</td>
+<td>W</td>
+<td>18.5</td>
+<td>W</td>
 </tr>
-<tr class="row-odd"><td><p>Voltage injection</p></td>
-<td><p>12</p></td>
-<td><p>V</p></td>
-<td><p>12</p></td>
-<td><p>V</p></td>
+<tr class="row-odd"><td>Voltage injection</td>
+<td>12</td>
+<td>V</td>
+<td>12</td>
+<td>V</td>
 </tr>
-<tr class="row-even"><td><p>Battery</p></td>
-<td><p>9</p></td>
-<td><p>V</p></td>
-<td><p>12</p></td>
-<td><p>V</p></td>
+<tr class="row-even"><td>Battery</td>
+<td>9</td>
+<td>V</td>
+<td>12</td>
+<td>V</td>
 </tr>
-<tr class="row-odd"><td><p>Current</p></td>
-<td><p>0 to 40</p></td>
-<td><p>mA</p></td>
-<td><p>0 to 40</p></td>
-<td><p>mA</p></td>
+<tr class="row-odd"><td>Current</td>
+<td>0 to 40</td>
+<td>mA</td>
+<td>0 to 40</td>
+<td>mA</td>
 </tr>
-<tr class="row-even"><td><p>Min pulse duration</p></td>
-<td><p>150</p></td>
-<td><p>mS</p></td>
-<td><p>150</p></td>
-<td><p>mS</p></td>
+<tr class="row-even"><td>Min pulse duration</td>
+<td>150</td>
+<td>mS</td>
+<td>150</td>
+<td>mS</td>
 </tr>
-<tr class="row-odd"><td><p>Input impedance</p></td>
-<td><p>80</p></td>
-<td><p>Mohm</p></td>
-<td><p>80</p></td>
-<td><p>Mohm</p></td>
+<tr class="row-odd"><td>Input impedance</td>
+<td>80</td>
+<td>Mohm</td>
+<td>80</td>
+<td>Mohm</td>
 </tr>
-<tr class="row-even"><td><p>Data storage</p></td>
-<td><p>micro SD card</p></td>
-<td></td>
-<td><p>micro SD card</p></td>
-<td></td>
+<tr class="row-even"><td>Data storage</td>
+<td>micro SD card</td>
+<td>&#160;</td>
+<td>micro SD card</td>
+<td>&#160;</td>
 </tr>
-<tr class="row-odd"><td><p>Resolution</p></td>
-<td><p>O.O1</p></td>
-<td><p>ohm</p></td>
-<td><p>O.O1</p></td>
-<td><p>ohm</p></td>
+<tr class="row-odd"><td>Resolution</td>
+<td>O.O1</td>
+<td>ohm</td>
+<td>O.O1</td>
+<td>ohm</td>
 </tr>
 </tbody>
 </table>

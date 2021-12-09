@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,12 +8,21 @@
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+      <script>
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'open hardware resistivity-meter',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -99,8 +108,8 @@
   <div class="section" id="ohmpi-v-1-01-limited-to-32-electrodes">
 <h1>OhmPi V 1.01 (limited to 32 electrodes)<a class="headerlink" href="#ohmpi-v-1-01-limited-to-32-electrodes" title="Permalink to this headline">¶</a></h1>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This version corresponds to the version published in the Hardware X journal.
+<p class="first admonition-title">Warning</p>
+<p class="last">This version corresponds to the version published in the Hardware X journal.
 However, we have corrected the bugs that existed on this version and explained the missing mounting points in detail below.
 We invite you to refer to this document to assemble Ohmpi V1.01.</p>
 </div>
@@ -112,57 +121,57 @@ but suitable for small laboratory experiments and small field time monitoring</p
 </div>
 <div class="section" id="technical-data">
 <h2>Technical data<a class="headerlink" href="#technical-data" title="Permalink to this headline">¶</a></h2>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 32%" />
-<col style="width: 18%" />
+<col width="50%" />
+<col width="32%" />
+<col width="18%" />
 </colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>Parameter</strong></p></td>
-<td><p><strong>Specifications</strong></p></td>
-<td><p>Units</p></td>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Parameter</strong></td>
+<td><strong>Specifications</strong></td>
+<td>Units</td>
 </tr>
-<tr class="row-even"><td><p>Electrodes</p></td>
-<td><p>32</p></td>
-<td></td>
+<tr class="row-even"><td>Electrodes</td>
+<td>32</td>
+<td>&#160;</td>
 </tr>
-<tr class="row-odd"><td><p>Operating temperature</p></td>
-<td><p>0 to 50</p></td>
-<td><p>°c</p></td>
+<tr class="row-odd"><td>Operating temperature</td>
+<td>0 to 50</td>
+<td>°c</td>
 </tr>
-<tr class="row-even"><td><p>Power consumption of CPU and
-control system</p></td>
-<td><p>18.5</p></td>
-<td><p>W</p></td>
+<tr class="row-even"><td>Power consumption of CPU and
+control system</td>
+<td>18.5</td>
+<td>W</td>
 </tr>
-<tr class="row-odd"><td><p>Voltage injection</p></td>
-<td><p>9</p></td>
-<td><p>V</p></td>
+<tr class="row-odd"><td>Voltage injection</td>
+<td>9</td>
+<td>V</td>
 </tr>
-<tr class="row-even"><td><p>Battery</p></td>
-<td><p>12</p></td>
-<td><p>V</p></td>
+<tr class="row-even"><td>Battery</td>
+<td>12</td>
+<td>V</td>
 </tr>
-<tr class="row-odd"><td><p>Current</p></td>
-<td><p>0 to 50</p></td>
-<td><p>mA</p></td>
+<tr class="row-odd"><td>Current</td>
+<td>0 to 50</td>
+<td>mA</td>
 </tr>
-<tr class="row-even"><td><p>Min pulse duration</p></td>
-<td><p>150</p></td>
-<td><p>mS</p></td>
+<tr class="row-even"><td>Min pulse duration</td>
+<td>150</td>
+<td>mS</td>
 </tr>
-<tr class="row-odd"><td><p>Input impedance</p></td>
-<td><p>36</p></td>
-<td><p>Mohm</p></td>
+<tr class="row-odd"><td>Input impedance</td>
+<td>36</td>
+<td>Mohm</td>
 </tr>
-<tr class="row-even"><td><p>Data storage</p></td>
-<td><p>micro SD card</p></td>
-<td></td>
+<tr class="row-even"><td>Data storage</td>
+<td>micro SD card</td>
+<td>&#160;</td>
 </tr>
-<tr class="row-odd"><td><p>Resolution</p></td>
-<td><p>O.O1</p></td>
-<td><p>ohm</p></td>
+<tr class="row-odd"><td>Resolution</td>
+<td>O.O1</td>
+<td>ohm</td>
 </tr>
 </tbody>
 </table>
@@ -174,82 +183,82 @@ control system</p></td>
 <p>The first step is to start up the Raspberry Pi board, including installation of an OS (operating system).
 For this step, the installation instructions are well described on the Raspberry website</p>
 <ol class="arabic simple">
-<li><p>Watch the vidéo “how to set up your raspberry Pi” (<a class="reference external" href="https://www.youtube.com/watch?v=wjWZhV1v3Pk">https://www.youtube.com/watch?v=wjWZhV1v3Pk</a>)</p></li>
-<li><p>The authors recommend installing the latest stable and complete version of Raspbian by using NOOBS (a simple-to-use operating system installer).</p></li>
+<li>Watch the vidéo “how to set up your raspberry Pi” (<a class="reference external" href="https://www.youtube.com/watch?v=wjWZhV1v3Pk">https://www.youtube.com/watch?v=wjWZhV1v3Pk</a>)</li>
+<li>The authors recommend installing the latest stable and complete version of Raspbian by using NOOBS (a simple-to-use operating system installer).</li>
 </ol>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
+<p class="first admonition-title">Note</p>
 <p>All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:</p>
-<div class="align-center figure">
+<div class="align-center last figure">
 <a class="reference internal image-reference" href="_images/raspbian_version1.jpg"><img alt="alternate text" src="_images/raspbian_version1.jpg" style="width: 800px; height: 400px;" /></a>
 </div>
 </div>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Once the OS has been installed,  <strong>1-wire, spi and GPIO remote option</strong> must be deactivated via the Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.</p>
+<p class="first admonition-title">Warning</p>
+<p class="last">Once the OS has been installed,  <strong>1-wire, spi and GPIO remote option</strong> must be deactivated via the Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.</p>
 </div>
 <p>3. When the relays are connected to the GPIO, make sure that all the GPIOs are in the low position when the raspberry starts up. If not, the relays will activate unexpectedly.
 To ensure that the GPIOs are in Low position, you will need to modify the /boot/config.txt file.</p>
 <blockquote>
 <div><p>Run the terminal, and write</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span>
 </pre></div>
 </div>
 </div></blockquote>
 <ol class="arabic simple" start="4">
-<li><p>Open config.txt with GNU nano editor</p></li>
+<li>Open config.txt with GNU nano editor</li>
 </ol>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="n">config</span><span class="o">.</span><span class="n">txt</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="n">config</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 </div></blockquote>
 <ol class="arabic simple" start="5">
-<li><p>At the end of the file write :</p></li>
+<li>At the end of the file write :</li>
 </ol>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gpio</span><span class="o">=</span><span class="mi">8</span><span class="o">=</span><span class="n">op</span><span class="p">,</span><span class="n">dl</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">gpio</span><span class="o">=</span><span class="mi">8</span><span class="o">=</span><span class="n">op</span><span class="p">,</span><span class="n">dl</span>
 <span class="n">gpio</span><span class="o">=</span><span class="mi">7</span><span class="o">=</span><span class="n">op</span><span class="p">,</span><span class="n">dl</span>
 </pre></div>
 </div>
 </div></blockquote>
 <ol class="arabic simple" start="6">
-<li><p>Press Ctrl +O to save the modifications and press enter</p></li>
-<li><p>Press Ctrl +x to escap and return to the terminal</p></li>
-<li><p>Close the terminal</p></li>
+<li>Press Ctrl +O to save the modifications and press enter</li>
+<li>Press Ctrl +x to escap and return to the terminal</li>
+<li>Close the terminal</li>
 </ol>
 </div>
 <div class="section" id="virtual-environnement-and-packages">
 <h3>Virtual Environnement and packages<a class="headerlink" href="#virtual-environnement-and-packages" title="Permalink to this headline">¶</a></h3>
 <p>All dependencies are specified in requirements.txt</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>All instructions below should be typed in the terminal</p>
+<p class="first admonition-title">Note</p>
+<p class="last">All instructions below should be typed in the terminal</p>
 </div>
 <p>It is first necessary to ensure that the libatlas-base-dev library is installed:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libatlas</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">dev</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libatlas</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">dev</span>
 </pre></div>
 </div>
 <p>We strongly recommend users to create a virtual environment to run the code and installed all required dependencies. It can be done either in a directory gathering all virtual environments used on the computer or within the ohmpy directory.</p>
 <p>Create the virtual environment:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="n">ohmpy</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="n">ohmpy</span>
 </pre></div>
 </div>
 <p>Activate it using the following command:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="n">ohmpy</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="n">ohmpy</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
 </pre></div>
 </div>
 <p>Install packages within the virtual environment. Installing the following package should be sufficient to meet dependencies:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">RPi</span><span class="o">.</span><span class="n">GPIO</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">blinka</span> <span class="n">numpy</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">circuitpython</span><span class="o">-</span><span class="n">ads1x15</span> <span class="n">pandas</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">RPi</span><span class="o">.</span><span class="n">GPIO</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">blinka</span> <span class="n">numpy</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">circuitpython</span><span class="o">-</span><span class="n">ads1x15</span> <span class="n">pandas</span>
 </pre></div>
 </div>
 <p>Check that requirements are met using</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="nb">list</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="nb">list</span>
 </pre></div>
 </div>
 <p>You should run you code within the virtual environment
 to leave the virtual environment simply type:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">deactivate</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">deactivate</span>
 </pre></div>
 </div>
 </div>
@@ -259,7 +268,7 @@ to leave the virtual environment simply type:</p>
 <p>1- Run the Thonny Python IDE software, Click on raspebrry acces <strong>menu &gt; programming&gt; Thonny pythonIDE</strong></p>
 <p>2- Thonny’s interface opens, Python runs on the Root (Python 3.7.3 (/usr/bin/python3))</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="_images/thonny_first_interface1.jpg"><img alt="alternate text" src="_images/thonny_first_interface1.jpg" style="width: 600px; height: 450px;" /></a>
+<a class="reference internal image-reference" href="_images/thonny_first_interface2.jpg"><img alt="alternate text" src="_images/thonny_first_interface2.jpg" style="width: 600px; height: 450px;" /></a>
 </div>
 <p>3-Click on <strong>Run&gt;select interpreter</strong>, a new window opens click on interpret</p>
 <div class="align-center figure">
@@ -318,7 +327,7 @@ A lithium ion battery or automobile-type lead-acid battery can deliver a strong 
 constitutes a potential hazard. We therefore recommend adding a 1.5-A fuse between the battery and resistor R9.</p>
 <div class="align-center figure" id="id1">
 <a class="reference internal image-reference" href="_images/schema_measurement_board1.jpg"><img alt="alternate text" src="_images/schema_measurement_board1.jpg" style="width: 800px; height: 400px;" /></a>
-<p class="caption"><span class="caption-text">Measurement board</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Measurement board</span></p>
 </div>
 </div>
 <div class="section" id="b-implementation">
@@ -326,18 +335,11 @@ constitutes a potential hazard. We therefore recommend adding a 1.5-A fuse betwe
 <p>The measurement board must be printed using the PCB file (Source file repository), with components soldered onto
 it by following the steps described below and illustrated in the following figure :</p>
 <ul>
-<li><dl>
-<dt>Step no. 1: test divider bridge</dt><dd><p>For each measurement channel, we have installed a bridge divider, it is necessary to test with ohmmeter the value of the resistances, to adjust  each coefficients (coef_p0, coef_p1, coef_p2, coef_p3) in the Ohmpi.py code..</p>
-<blockquote>
-<div><div class="math notranslate nohighlight">
-\[coeff po = (R1 + R2) / R1\]</div>
-<div class="math notranslate nohighlight">
-\[coeff p1 = (R3 + R4) / R3\]</div>
-<div class="math notranslate nohighlight">
-\[coeff p2 = (R7 + R6) / R7\]</div>
-<div class="math notranslate nohighlight">
-\[coeff p3 = (R9 + R8) / R9\]</div>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>36
+<li><dl class="first docutils">
+<dt>Step no. 1: test divider bridge</dt>
+<dd><p class="first">For each measurement channel, we have installed a bridge divider, it is necessary to test with ohmmeter the value of the resistances, to adjust  each coefficients (coef_p0, coef_p1, coef_p2, coef_p3) in the Ohmpi.py code..</p>
+<blockquote class="last">
+<div><div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>36
 37
 38
 39
@@ -359,11 +361,16 @@ it by following the steps described below and illustrated in the following figur
 </dd>
 </dl>
 </li>
-<li><p>Step no. 2: installation of the 1-Kohm resistors with an accuracy of ± 1%.</p></li>
-<li><p>Step no. 3: installation of the 1.5-Kohm resistors with an accuracy of ± 1%.</p></li>
-<li><p>Step no. 4: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks</p></li>
-<li><p>Step no. 5: installation of the 50-Ohm reference resistor ± 0.1%, please check the value and correct the line 39 in ohmpi.py code</p></li>
-<li><p>Step no. 6: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the direction).</p></li>
+<li><p class="first">Step no. 2: installation of the 1-Kohm resistors with an accuracy of ± 1%.</p>
+</li>
+<li><p class="first">Step no. 3: installation of the 1.5-Kohm resistors with an accuracy of ± 1%.</p>
+</li>
+<li><p class="first">Step no. 4: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks</p>
+</li>
+<li><p class="first">Step no. 5: installation of the 50-Ohm reference resistor ± 0.1%, please check the value and correct the line 39 in ohmpi.py code</p>
+</li>
+<li><p class="first">Step no. 6: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the direction).</p>
+</li>
 </ul>
 <p>1-Kohm and 1.5-Kohm resistors apply to the divider bridge. If, for example, you prefer using a weaker
 or stronger power supply, it would be possible to adjust the divider bridge value by simply modifying these resistors.
@@ -372,11 +379,11 @@ battery terminal, according to Figure 9. Between the battery and the TX+ termina
 place a fuse holder with a 1.5-A fuse for safety purposes.</p>
 <div class="align-center figure" id="id2">
 <a class="reference internal image-reference" href="_images/measurement_board.jpg"><img alt="alternate text" src="_images/measurement_board.jpg" style="width: 800px; height: 500px;" /></a>
-<p class="caption"><span class="caption-text">Measurement circuit board assembly: a) printed circuit board, b) adding the 1-Kohm resistors ± 1%, c)adding the 1.5-Kohm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Measurement circuit board assembly: a) printed circuit board, b) adding the 1-Kohm resistors ± 1%, c)adding the 1.5-Kohm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers</span></p>
 </div>
 <div class="align-center figure" id="id3">
 <a class="reference internal image-reference" href="_images/measurement_board-2.jpg"><img alt="alternate text" src="_images/measurement_board-2.jpg" style="width: 800px; height: 700px;" /></a>
-<p class="caption"><span class="caption-text">Measurement board installation with Raspberry Pi</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Measurement board installation with Raspberry Pi</span></p>
 </div>
 </div>
 </div>
@@ -395,7 +402,7 @@ the positive battery pole is connected to electrode A and the negative pole to e
 they remain in the normally closed position. This set-up offers a simple and robust solution to inject current.</p>
 <div class="align-center figure" id="id4">
 <a class="reference internal image-reference" href="_images/current_board.jpg"><img alt="alternate text" src="_images/current_board.jpg" style="width: 800px; height: 400px;" /></a>
-<p class="caption"><span class="caption-text">Wiring of the 4-channel relay module board for current injection management</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Wiring of the 4-channel relay module board for current injection management</span></p>
 </div>
 <p>The next step consists of featuring the 4-channel relay module used for current injection and its assembly. The wiring
 between the relays must be carried out in strict accordance with Fig. 10. This card must then be connected to the Raspberry
@@ -406,7 +413,7 @@ shown in the diagram, using 1-mm2 cables (red and black in Fig. 10). Lastly, con
 to terminals B and A of the measurement board.</p>
 <div class="align-center figure" id="id5">
 <a class="reference internal image-reference" href="_images/installation_current_board.jpg"><img alt="alternate text" src="_images/installation_current_board.jpg" style="width: 800px; height: 700px;" /></a>
-<p class="caption"><span class="caption-text">Current injection board installation with Raspberry Pi</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Current injection board installation with Raspberry Pi</span></p>
 </div>
 <p>Congratulations, you have build a 4 electrodes resistivity-meter.</p>
 </div>
@@ -430,7 +437,7 @@ which is entirely possible, a GPIO channel multiplier will have to be used.
 To prepare the multiplexer, the channels of the two relay boards must be connected according to the wiring diagram shown below.</p>
 <div class="align-center figure" id="id6">
 <a class="reference internal image-reference" href="_images/multiplexer_implementation.jpg"><img alt="alternate text" src="_images/multiplexer_implementation.jpg" style="width: 800px; height: 500px;" /></a>
-<p class="caption"><span class="caption-text">Schematic diagram of the wiring of two 16-channel relay shields</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Schematic diagram of the wiring of two 16-channel relay shields</span></p>
 </div>
 <p>For this purpose, 0.5-mm² cables with end caps are used and their length adjusted for each connection in order to produce a clean assembly.
 The length was adjusted so that the distance between the two points to be connected could be directly measured on the board once they had
@@ -442,7 +449,7 @@ see Section 2.4). To execute this step, it will be necessary to follow the proto
 <blockquote>
 <div><div class="align-center figure" id="id7">
 <a class="reference internal image-reference" href="_images/connection.jpg"><img alt="alternate text" src="_images/connection.jpg" style="width: 800px; height: 400px;" /></a>
-<p class="caption"><span class="caption-text">Connection to the 16-channel relay shield</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Connection to the 16-channel relay shield</span></p>
 </div>
 </div></blockquote>
 <p>For the 16-channel relay shield no. 1, these steps must be followed:
@@ -452,59 +459,58 @@ see Section 2.4). To execute this step, it will be necessary to follow the proto
 <p>For relay shield no. 2, follow the same procedure, but solder all the pins together (d-e-f).
 This same operation must be repeated for the other three multiplexers as well.
 The next step consists of connecting the relay card inputs to the Raspberry Pi according to Table 5 for all four multiplexers.</p>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 34%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 23%" />
+<col width="34%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
+<col width="23%" />
 </colgroup>
-<tbody>
-<tr class="row-odd"><td rowspan="2"></td>
-<td colspan="4"><p>Relay shield n°1</p></td>
-<td><p>Relay Shield n°2</p></td>
+<tbody valign="top">
+<tr class="row-odd"><td rowspan="2">&#160;</td>
+<td colspan="4">Relay shield n°1</td>
+<td>Relay Shield n°2</td>
 </tr>
-<tr class="row-even"><td><p>Pin 1</p></td>
-<td><p>Pin 2-3</p></td>
-<td><p>Pin 4-7</p></td>
-<td><p>Pin 8-16</p></td>
-<td><p>Pin 1- 16</p></td>
+<tr class="row-even"><td>Pin 1</td>
+<td>Pin 2-3</td>
+<td>Pin 4-7</td>
+<td>Pin 8-16</td>
+<td>Pin 1- 16</td>
 </tr>
-<tr class="row-odd"><td><p>Multiplexer A</p></td>
-<td><p>12</p></td>
-<td><p>16</p></td>
-<td><p>20</p></td>
-<td><p>21</p></td>
-<td><p>26</p></td>
+<tr class="row-odd"><td>Multiplexer A</td>
+<td>12</td>
+<td>16</td>
+<td>20</td>
+<td>21</td>
+<td>26</td>
 </tr>
-<tr class="row-even"><td><p>Multiplexer B</p></td>
-<td><p>18</p></td>
-<td><p>23</p></td>
-<td><p>24</p></td>
-<td><p>25</p></td>
-<td><p>19</p></td>
+<tr class="row-even"><td>Multiplexer B</td>
+<td>18</td>
+<td>23</td>
+<td>24</td>
+<td>25</td>
+<td>19</td>
 </tr>
-<tr class="row-odd"><td><p>Multiplexer M</p></td>
-<td><p>06</p></td>
-<td><p>13</p></td>
-<td><p>04</p></td>
-<td><p>17</p></td>
-<td><p>27</p></td>
+<tr class="row-odd"><td>Multiplexer M</td>
+<td>06</td>
+<td>13</td>
+<td>04</td>
+<td>17</td>
+<td>27</td>
 </tr>
-<tr class="row-even"><td><p>Multiplexer N</p></td>
-<td><p>22</p></td>
-<td><p>10</p></td>
-<td><p>09</p></td>
-<td><p>11</p></td>
-<td><p>05</p></td>
+<tr class="row-even"><td>Multiplexer N</td>
+<td>22</td>
+<td>10</td>
+<td>09</td>
+<td>11</td>
+<td>05</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<div><p>Connection of the GPIOs to each multiplexer</p>
-</div></blockquote>
+<div>Connection of the GPIOs to each multiplexer</div></blockquote>
 </div>
 <div class="section" id="electrode-connection">
 <h2>Electrode connection<a class="headerlink" href="#electrode-connection" title="Permalink to this headline">¶</a></h2>
@@ -513,18 +519,18 @@ According to the chosen multiplexer configuration, all the relays of each multip
 connections. Instead of having four cables connecting an electrode terminal to each multiplexer, we recommend using the cable assembly shown in the following Figure.</p>
 <div class="align-center figure" id="id8">
 <a class="reference internal image-reference" href="_images/cable.jpg"><img alt="alternate text" src="_images/cable.jpg" style="width: 800px; height: 300px;" /></a>
-<p class="caption"><span class="caption-text">Wire cabling for multiplexer and terminal screw connection</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Wire cabling for multiplexer and terminal screw connection</span></p>
 </div>
 <p>the next figure provides an example of multiplexer relay connections for electrode no. 1: this electrode of multiplexer MUX A must be connected to electrode no. 1 of MUX B. Moreover, electrode no. 1 of MUX B
 must be connected to electrode no. 1 of MUX N, which in turn must be connected to electrode no. 1 of MUX M. Lastly, electrode no. 1 of MUX M is connected to the terminal block.
 This operation must be repeated for all 32 electrodes.</p>
 <div class="align-center figure" id="id9">
 <a class="reference internal image-reference" href="_images/electrode_cable.jpg"><img alt="alternate text" src="_images/electrode_cable.jpg" style="width: 800px; height: 800px;" /></a>
-<p class="caption"><span class="caption-text">Example of a multiplexer connection to the screw terminal for electrode no. 1.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Example of a multiplexer connection to the screw terminal for electrode no. 1.</span></p>
 </div>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The 16 channel relay cards exist in 5-V and 12-V , in the bottom figure we have 12-V cards that we will directly connect to the battery.
+<p class="first admonition-title">Warning</p>
+<p class="last">The 16 channel relay cards exist in 5-V and 12-V , in the bottom figure we have 12-V cards that we will directly connect to the battery.
 In case you bought 16 channel relay 5-V cards, you will need to add a DC/DC 12-V/5-V converter. You can use a STEP DOWN MODULE DC-DC (Velleman WPM404) and set the voltage to 5V with the potentiometer.</p>
 </div>
 </div>
@@ -550,7 +556,7 @@ are displayed on the screen. A measurement file is automatically created and nam
 </div>
 <div class="section" id="electrical-resistivity-measurement-parameters-description">
 <h3>Electrical resistivity measurement parameters description<a class="headerlink" href="#electrical-resistivity-measurement-parameters-description" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>27
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>27
 28
 29
 30
@@ -573,168 +579,168 @@ are displayed on the screen. A measurement file is automatically created and nam
 <div class="section" id="complete-list-of-components">
 <h2>Complete list of components<a class="headerlink" href="#complete-list-of-components" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The list evolve a little bit after the publication of the article, it is necessary to refer to this list, the article is out of date</p>
+<p class="first admonition-title">Warning</p>
+<p class="last">The list evolve a little bit after the publication of the article, it is necessary to refer to this list, the article is out of date</p>
 </div>
-<table class="colwidths-given docutils align-default" id="id10">
+<table border="1" class="colwidths-given docutils" id="id10">
 <caption><span class="caption-text">Table Title</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 8%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
+<col width="8%" />
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Component</p></th>
-<th class="head"><p>Number</p></th>
-<th class="head"><p>Cost per unit</p></th>
-<th class="head"><p>Total cost</p></th>
-<th class="head"><p>Manufacturer</p></th>
-<th class="head"><p>Manufacturer s reference</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Component</th>
+<th class="head">Number</th>
+<th class="head">Cost per unit</th>
+<th class="head">Total cost</th>
+<th class="head">Manufacturer</th>
+<th class="head">Manufacturer s reference</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>Raspberry Pi 3 Model B+</p></td>
-<td><p>1</p></td>
-<td><p>37</p></td>
-<td><p>37</p></td>
-<td><p>Raspberry</p></td>
-<td><p>Raspberry Pi 3 Model B</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>Raspberry Pi 3 Model B+</td>
+<td>1</td>
+<td>37</td>
+<td>37</td>
+<td>Raspberry</td>
+<td>Raspberry Pi 3 Model B</td>
 </tr>
-<tr class="row-odd"><td><p>Raspberry Pi 1 2 and 3 Power Supply</p></td>
-<td><p>1</p></td>
-<td><p>8.37</p></td>
-<td><p>8.37</p></td>
-<td><p>Raspberry</p></td>
-<td><p>Raspberry Pi 1 2 and 3 Power Supply</p></td>
+<tr class="row-odd"><td>Raspberry Pi 1 2 and 3 Power Supply</td>
+<td>1</td>
+<td>8.37</td>
+<td>8.37</td>
+<td>Raspberry</td>
+<td>Raspberry Pi 1 2 and 3 Power Supply</td>
 </tr>
-<tr class="row-even"><td><p>SainSmart 16-Channel Canal 12V Relay Relais Module pour Arduino DSP AVR PIC ARM</p></td>
-<td><p>8</p></td>
-<td><p>24.99</p></td>
-<td><p>199.92</p></td>
-<td><p>Sain Smart</p></td>
-<td><p>101-70-103</p></td>
+<tr class="row-even"><td>SainSmart 16-Channel Canal 12V Relay Relais Module pour Arduino DSP AVR PIC ARM</td>
+<td>8</td>
+<td>24.99</td>
+<td>199.92</td>
+<td>Sain Smart</td>
+<td>101-70-103</td>
 </tr>
-<tr class="row-odd"><td><p>4-Channel 5V Relay Module</p></td>
-<td><p>1</p></td>
-<td><p>7.99</p></td>
-<td><p>7.99</p></td>
-<td><p>Sain Smart</p></td>
-<td><p>20-018-101-CMS</p></td>
+<tr class="row-odd"><td>4-Channel 5V Relay Module</td>
+<td>1</td>
+<td>7.99</td>
+<td>7.99</td>
+<td>Sain Smart</td>
+<td>20-018-101-CMS</td>
 </tr>
-<tr class="row-even"><td><p>cable 1X1 mm2 (50 m)</p></td>
-<td><p>1</p></td>
-<td><p>19.66</p></td>
-<td><p>19.66</p></td>
-<td><p>TRU COMPONENTS</p></td>
-<td><p>1568649</p></td>
+<tr class="row-even"><td>cable 1X1 mm2 (50 m)</td>
+<td>1</td>
+<td>19.66</td>
+<td>19.66</td>
+<td>TRU COMPONENTS</td>
+<td>1568649</td>
 </tr>
-<tr class="row-odd"><td><p>cable 1X0.5 mm2 (100 m)</p></td>
-<td><p>1</p></td>
-<td><p>29.71</p></td>
-<td><p>29.71</p></td>
-<td><p>TRU COMPONENTS</p></td>
-<td><p>1565235</p></td>
+<tr class="row-odd"><td>cable 1X0.5 mm2 (100 m)</td>
+<td>1</td>
+<td>29.71</td>
+<td>29.71</td>
+<td>TRU COMPONENTS</td>
+<td>1565235</td>
 </tr>
-<tr class="row-even"><td><p>Printed circuit board (packaging quantity x 3)</p></td>
-<td><p>1</p></td>
-<td><p>12</p></td>
-<td><p>12</p></td>
-<td><p>Asler</p></td>
-<td><p>0</p></td>
+<tr class="row-even"><td>Printed circuit board (packaging quantity x 3)</td>
+<td>1</td>
+<td>12</td>
+<td>12</td>
+<td>Asler</td>
+<td>0</td>
 </tr>
-<tr class="row-odd"><td><p>Header sets 1x10</p></td>
-<td><p>1</p></td>
-<td><p>2.68</p></td>
-<td><p>2.68</p></td>
-<td><p>Samtec</p></td>
-<td><p>SSW-110-02-G-S</p></td>
+<tr class="row-odd"><td>Header sets 1x10</td>
+<td>1</td>
+<td>2.68</td>
+<td>2.68</td>
+<td>Samtec</td>
+<td>SSW-110-02-G-S</td>
 </tr>
-<tr class="row-even"><td><p>Dual screw terminal (3.5-mm pitch)</p></td>
-<td><p>7</p></td>
-<td><p>0.648</p></td>
-<td><p>4.55</p></td>
-<td><p>RS PRO</p></td>
-<td><p>897-1332</p></td>
+<tr class="row-even"><td>Dual screw terminal (3.5-mm pitch)</td>
+<td>7</td>
+<td>0.648</td>
+<td>4.55</td>
+<td>RS PRO</td>
+<td>897-1332</td>
 </tr>
-<tr class="row-odd"><td><p>Resistor 1 Kohm 0.5W +- 0.1%</p></td>
-<td><p>4</p></td>
-<td><p>0.858</p></td>
-<td><p>3.44</p></td>
-<td><p>TE Connectivity</p></td>
-<td><p>H81K0BYA</p></td>
+<tr class="row-odd"><td>Resistor 1 Kohm 0.5W +- 0.1%</td>
+<td>4</td>
+<td>0.858</td>
+<td>3.44</td>
+<td>TE Connectivity</td>
+<td>H81K0BYA</td>
 </tr>
-<tr class="row-even"><td><p>Resistor 1.5 Kohms +- 0.1%</p></td>
-<td><p>4</p></td>
-<td><p>0.627</p></td>
-<td><p>2.52</p></td>
-<td><p>TE Connectivity</p></td>
-<td><p>H81K5BYA</p></td>
+<tr class="row-even"><td>Resistor 1.5 Kohms +- 0.1%</td>
+<td>4</td>
+<td>0.627</td>
+<td>2.52</td>
+<td>TE Connectivity</td>
+<td>H81K5BYA</td>
 </tr>
-<tr class="row-odd"><td><p>Resistor 50 +- 0.1%</p></td>
-<td><p>1</p></td>
-<td><p>8.7</p></td>
-<td><p>8.7</p></td>
-<td><p>TE Connectivity</p></td>
-<td><p>UPW50B50RV</p></td>
+<tr class="row-odd"><td>Resistor 50 +- 0.1%</td>
+<td>1</td>
+<td>8.7</td>
+<td>8.7</td>
+<td>TE Connectivity</td>
+<td>UPW50B50RV</td>
 </tr>
-<tr class="row-even"><td><p>LM358N AMP-o</p></td>
-<td><p>4</p></td>
-<td><p>0.8</p></td>
-<td><p>2.4</p></td>
-<td><p>Texas Instruments</p></td>
-<td><p>LM358AN/NOPB</p></td>
+<tr class="row-even"><td>LM358N AMP-o</td>
+<td>4</td>
+<td>0.8</td>
+<td>2.4</td>
+<td>Texas Instruments</td>
+<td>LM358AN/NOPB</td>
 </tr>
-<tr class="row-odd"><td><p>ADS1115</p></td>
-<td><p>1</p></td>
-<td><p>11.9</p></td>
-<td><p>11.9</p></td>
-<td><p>Adafruit</p></td>
-<td><p>1083</p></td>
+<tr class="row-odd"><td>ADS1115</td>
+<td>1</td>
+<td>11.9</td>
+<td>11.9</td>
+<td>Adafruit</td>
+<td>1083</td>
 </tr>
-<tr class="row-even"><td><p>12V battery 7ah</p></td>
-<td><p>1</p></td>
-<td><p>19.58</p></td>
-<td><p>19.58</p></td>
-<td><p>RS PRO</p></td>
-<td><p>537-5488</p></td>
+<tr class="row-even"><td>12V battery 7ah</td>
+<td>1</td>
+<td>19.58</td>
+<td>19.58</td>
+<td>RS PRO</td>
+<td>537-5488</td>
 </tr>
-<tr class="row-odd"><td><p>Battery Holder Type D LR20 (9V)</p></td>
-<td><p>1</p></td>
-<td><p>3.43</p></td>
-<td><p>3.43</p></td>
-<td><p>RS PRO</p></td>
-<td><p>185-4686</p></td>
+<tr class="row-odd"><td>Battery Holder Type D LR20 (9V)</td>
+<td>1</td>
+<td>3.43</td>
+<td>3.43</td>
+<td>RS PRO</td>
+<td>185-4686</td>
 </tr>
-<tr class="row-even"><td><p>Ferrule Crimp Terminal (1 mm2) (500 pieces)</p></td>
-<td><p>1</p></td>
-<td><p>30.48</p></td>
-<td><p>30.48</p></td>
-<td><p>WEIDMULLER</p></td>
-<td><p>9004330000</p></td>
+<tr class="row-even"><td>Ferrule Crimp Terminal (1 mm2) (500 pieces)</td>
+<td>1</td>
+<td>30.48</td>
+<td>30.48</td>
+<td>WEIDMULLER</td>
+<td>9004330000</td>
 </tr>
-<tr class="row-odd"><td><p>Electrical Crimp Terminal (0.5 mm2) (100 piece)</p></td>
-<td><p>1</p></td>
-<td><p>6.38</p></td>
-<td><p>6.38</p></td>
-<td><p>AMP - TE CONNECTIVITY</p></td>
-<td><p>966067-1</p></td>
+<tr class="row-odd"><td>Electrical Crimp Terminal (0.5 mm2) (100 piece)</td>
+<td>1</td>
+<td>6.38</td>
+<td>6.38</td>
+<td>AMP - TE CONNECTIVITY</td>
+<td>966067-1</td>
 </tr>
-<tr class="row-even"><td><p>Car Fuse 1.0 A</p></td>
-<td><p>1</p></td>
-<td><p>0.2</p></td>
-<td></td>
-<td><p>LITTELFUSE</p></td>
-<td><p>LITTELFUSE</p></td>
+<tr class="row-even"><td>Car Fuse 1.0 A</td>
+<td>1</td>
+<td>0.2</td>
+<td>&#160;</td>
+<td>LITTELFUSE</td>
+<td>LITTELFUSE</td>
 </tr>
-<tr class="row-odd"><td><p>Fuse holder (576-FHAC0002ZXJ)</p></td>
-<td><p>1</p></td>
-<td><p>4.96</p></td>
-<td><p>4.96</p></td>
-<td><p>LITTELFUSE</p></td>
-<td><p>FHAC0002ZXJ</p></td>
+<tr class="row-odd"><td>Fuse holder (576-FHAC0002ZXJ)</td>
+<td>1</td>
+<td>4.96</td>
+<td>4.96</td>
+<td>LITTELFUSE</td>
+<td>FHAC0002ZXJ</td>
 </tr>
 </tbody>
 </table>
