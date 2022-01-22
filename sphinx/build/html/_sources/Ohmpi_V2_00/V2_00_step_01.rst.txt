@@ -1,4 +1,4 @@
-**STEP n°1** : Raspberry Pi  configuration
+**STEP n°1** : Raspberry Pi  configuration 
 *******************************************
 
 
@@ -24,7 +24,7 @@ For this step, the installation instructions are well described on the Raspberry
 
 1. Watch the vidéo "how to set up your raspberry Pi" (https://www.youtube.com/watch?v=wjWZhV1v3Pk)
 
-2. The authors recommend installing the latest stable and complete version of Raspbian by using NOOBS (a simple-to-use operating system installer).
+2. The authors recommend installing the latest stable and complete version of Raspberry Pi OS (Previously called Raspbian) by using Raspberry Pi Imager.
 
 3. or you can visit this website : (https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up)  
 
@@ -41,7 +41,7 @@ For this step, the installation instructions are well described on the Raspberry
 
 
 .. warning::
-	 Once the OS has been installed,  **1-wire, spi and GPIO remote option** must be deactivated via the Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.
+	 Once the OS has been installed,  **1-wire, spi and GPIO remote option** must be deactivated and **I2C option** must be activated via the Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.
 
 3. When the relays are connected to the GPIO, make sure that all the GPIOs are in the low position when the raspberry starts up. If not, the relays will activate unexpectedly. 
 To ensure that the GPIOs are in Low position, you will need to modify the /boot/config.txt file.
@@ -104,8 +104,9 @@ Activate it using the following command:
 Install packages within the virtual environment. Installing the following package should be sufficient to meet dependencies:
 
 .. code-block:: python
-	 
-	 pip install RPi.GPIO adafruit-blinka numpy adafruit-circuitpython-ads1x15 pandas
+     
+     export CFLAGS=-fcommon
+	 sudo pip install RPi.GPIO adafruit-blinka numpy pandas adafruit-circuitpython-ads1x15 adafruit-circuitpython-tca9548a adafruit-circuitpython-mcp230xx gpiozero
 
 Check that requirements are met using 
 
