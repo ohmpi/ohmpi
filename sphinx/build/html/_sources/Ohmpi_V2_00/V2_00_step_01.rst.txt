@@ -19,6 +19,7 @@
 |Computer Keyboard                                   |              1|
 +----------------------------------------------------+---------------+
 
+
 The first step is to start up the Raspberry Pi board, including installation of an OS (operating system). 
 For this step, the installation instructions are well described on the Raspberry website 
 

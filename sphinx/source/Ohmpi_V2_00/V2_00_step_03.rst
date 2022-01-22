@@ -46,7 +46,7 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_3/a/MUX_01.jpg                         |
    |      2 +------------------------------------------------------------+
-   |        |Installation of the 150 Kohm resistors                                                              | 
+   |        |Installation of the 150 Kohm resistors                      | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+   
    
@@ -67,7 +67,7 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_3/a/MUX_03.jpg                         |
    |      4 +------------------------------------------------------------+
-   |        |Installation of the diode-1n4007                             | 
+   |        |Installation of the diode-1n4007                            | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+    
    
@@ -97,7 +97,7 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_3/a/MUX_06.jpg                         |
    |      7 +------------------------------------------------------------+
-   |        |Installation of generic male header                       | 
+   |        |Installation of generic male header                         | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+ 
 
