@@ -11,6 +11,7 @@ from digitalio import Direction
 
 
 address=0X70# choose the mux board address 
+
 activation_time=1 # choose your activation time in second 
 
 
@@ -73,6 +74,8 @@ if a== '2':
         time.sleep(activation_time) 
         switch_mux_off(electrode,address) 
         print('electrode:',electrode,' deactivate' ) 
+
         time.sleep(activation_time) 
+
 if a not in ['1', '2']: 
     print ("Wrong choice !") 

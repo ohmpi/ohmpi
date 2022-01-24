@@ -36,6 +36,7 @@ hardware parameters
 R_shunt = 2# reference resistance value in ohm
 Imax=4800/50/2
 print(colored(('The maximum current cannot be higher than ',Imax, 'mA'), 'red'))
+
 coef_p2 = 2.50# slope for current conversion for ADS.P2, measurement in V/V
 coef_p3 = 2.50 # slope for current conversion for ADS.P3, measurement in V/V
 offset_p2= 0
