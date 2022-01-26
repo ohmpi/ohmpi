@@ -1,7 +1,12 @@
 
 **STEP n°3**: MUX board
 ****************************************************
-
+The multiplexing of the channels is a mechanical multiplexing based on OMRON's manufacturing relays (G5LE-1-VD 12 VDC). Each relay is combined with 
+a ZVN4206A power MOFSET. The raspberry has only 30 GPIOs, which is not enough to activate all the 64 electrodes, which represent 512 GPIOs. 
+We used gpio expender I2C (MCP23017). We have associated these components with an I2C muliplexer of type type TCA9548A from adafruit. 
+This combination allows to go up to 512 GPIOs and up to 128 electrodes. Each card has its own digital address between 0X70 and 0X77. 
+In the following presentation for an Ohmpi 64 electrodes, we will use the addresses 0X70 for channel A, 0X71 for channel B, 0X72 for channel M and 0X73 for channel N. 
+0X73 for the N channel. 4 MUX board will be needed to multiplex an Ohmpi 64 electrodes.
 
 **PART A** Assembly of MUX board
 ======================================================
@@ -13,7 +18,7 @@ Required components
 .. figure:: step_n_3/a/MUX_board_componement.jpg       
 	   :width: 600px
 	   :align: center
-	   :height: 450px
+	   :height: 650px
 	   :alt: alternate text
 	   :figclass: align-center 
 
@@ -23,12 +28,6 @@ Required components
    :widths: 30, 70, 70, 70, 70, 35, 35
    :header-rows: 1 
    
-The multiplexing of the channels is a mechanical multiplexing based on OMRON's manufacturing relays (G5LE-1-VD 12 VDC). Each relay is combined with 
-a ZVN4206A power MOFSET. The raspberry has only 30 GPIOs, which is not enough to activate all the 64 electrodes, which represent 512 GPIOs. 
-We used gpio expender I2C (MCP23017). We have associated these components with an I2C muliplexer of type type TCA9548A from adafruit. 
-This combination allows to go up to 512 GPIOs and up to 128 electrodes. Each card has its own digital address between 0X70 and 0X77. 
-In the following presentation for an Ohmpi 64 electrodes, we will use the addresses 0X70 for channel A, 0X71 for channel B, 0X72 for channel M and 0X73 for channel N. 
-0X73 for the N channel. 4 MUX board will be needed to multiplex an Ohmpi 64 electrodes.
    
 .. table::
    :align: center
@@ -140,7 +139,84 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
    |        |Installation of MCP23017                                    | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+  
+   
+.. note:: 
+	 This step must be duplicated 4 times for every Mux card.   
 
 
-**PART B** Test of MUX board
-======================================================   
+**PART B** MUX board address
+====================================================== 
+To build an ohmpi it is necessary to have 4 MUX boards, with 4 different addresses. It is therefore necessary to identify each board, by assigning an address, which will be allocated in the Ohmpi code.
+We present here the addresses selected by default.
+
+For the A electrode board, we suggest addressing it with address 0x70:
+
+.. table::
+   :align: center
+   
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: step_n_3/b/A_0x70.jpg                         |
+   |     1  +------------------------------------------------------------+
+   |        |Mount the jumpers and note the value of the address and the |
+   |        |electrode name on the mux board (A).                        |                                                                       
+   |        +------------------------------------------------------------+  
+   |        |   .. image:: step_n_3/b/A_0x70-a.jpg                       |
+   |        +------------------------------------------------------------+
+   |        |Zoom on the jumper                                          | 
+   |        |                                                            |   
+   +--------+------------------------------------------------------------+   
+   
+   
+   
+   
+   
+For the B electrode board, we suggest addressing it with address 0x71:
+
+.. table::
+   :align: center
+   
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: step_n_3/b/B_0x71.jpg                         |
+   |     2  +------------------------------------------------------------+
+   |        |Mount the jumpers and note the value of the address and the |
+   |        |electrode name on the mux board (B).                        |                                                                       
+   |        +------------------------------------------------------------+  
+   |        |   .. image:: step_n_3/b/B_0x71-a.jpg                       |
+   |        +------------------------------------------------------------+
+   |        |Zoom on the jumper                                          | 
+   |        |                                                            |   
+   +--------+------------------------------------------------------------+ 
+
+For the N electrode board, we suggest addressing it with address 0x72:
+
+.. table::
+   :align: center
+   
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: step_n_3/b/M_0x72.jpg                         |
+   |     3  +------------------------------------------------------------+
+   |        |Mount the jumpers and note the value of the address and the |
+   |        |electrode name on the mux board (B).                        |                                                                     
+   |        +------------------------------------------------------------+  
+   |        |   .. image:: step_n_3/b/M_0x72-a.jpg                       |
+   |        +------------------------------------------------------------+
+   |        |Zoom on the jumper                                          | 
+   |        |                                                            |   
+   +--------+------------------------------------------------------------+ 
+
+For the M electrode board, we suggest addressing it with address 0x73: 
+  
+.. table::
+   :align: center
+   
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: step_n_3/b/N_0x73.jpg                         |
+   |     4  +------------------------------------------------------------+
+   |        |Mount the jumpers and note the value of the address and the |
+   |        |electrode name on the mux board (B).                        |                                                                     
+   |        +------------------------------------------------------------+  
+   |        |   .. image:: step_n_3/b/N_0x73-a.jpg                       |
+   |        +------------------------------------------------------------+
+   |        |Zoom on the jumper                                          | 
+   |        |                                                            |   
+   +--------+------------------------------------------------------------+    

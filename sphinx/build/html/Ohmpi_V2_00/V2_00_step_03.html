@@ -47,7 +47,7 @@
 <li class="toctree-l3"><a class="reference internal" href="V2_00_step_02.html"><strong>STEP n°2</strong>: Measurement board</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#"><strong>STEP n°3</strong>: MUX board</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#part-a-assembly-of-mux-board"><strong>PART A</strong> Assembly of MUX board</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#part-b-test-of-mux-board"><strong>PART B</strong> Test of MUX board</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#part-b-mux-board-address"><strong>PART B</strong> MUX board address</a></li>
 </ul>
 </li>
 </ul>
@@ -83,12 +83,18 @@
              
   <div class="section" id="step-n3-mux-board">
 <h1><strong>STEP n°3</strong>: MUX board<a class="headerlink" href="#step-n3-mux-board" title="Permalink to this headline">¶</a></h1>
+<p>The multiplexing of the channels is a mechanical multiplexing based on OMRON’s manufacturing relays (G5LE-1-VD 12 VDC). Each relay is combined with
+a ZVN4206A power MOFSET. The raspberry has only 30 GPIOs, which is not enough to activate all the 64 electrodes, which represent 512 GPIOs.
+We used gpio expender I2C (MCP23017). We have associated these components with an I2C muliplexer of type type TCA9548A from adafruit.
+This combination allows to go up to 512 GPIOs and up to 128 electrodes. Each card has its own digital address between 0X70 and 0X77.
+In the following presentation for an Ohmpi 64 electrodes, we will use the addresses 0X70 for channel A, 0X71 for channel B, 0X72 for channel M and 0X73 for channel N.
+0X73 for the N channel. 4 MUX board will be needed to multiplex an Ohmpi 64 electrodes.</p>
 <div class="section" id="part-a-assembly-of-mux-board">
 <h2><strong>PART A</strong> Assembly of MUX board<a class="headerlink" href="#part-a-assembly-of-mux-board" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="required-components">
 <h3>Required components<a class="headerlink" href="#required-components" title="Permalink to this headline">¶</a></h3>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="../_images/MUX_board_componement.jpg"><img alt="alternate text" src="../_images/MUX_board_componement.jpg" style="width: 600px; height: 450px;" /></a>
+<a class="reference internal image-reference" href="../_images/MUX_board_componement.jpg"><img alt="alternate text" src="../_images/MUX_board_componement.jpg" style="width: 600px; height: 650px;" /></a>
 </div>
 <table class="colwidths-given docutils align-default" id="id1">
 <caption><span class="caption-text">List of components</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
@@ -256,12 +262,6 @@
 </tr>
 </tbody>
 </table>
-<p>The multiplexing of the channels is a mechanical multiplexing based on OMRON’s manufacturing relays (G5LE-1-VD 12 VDC). Each relay is combined with
-a ZVN4206A power MOFSET. The raspberry has only 30 GPIOs, which is not enough to activate all the 64 electrodes, which represent 512 GPIOs.
-We used gpio expender I2C (MCP23017). We have associated these components with an I2C muliplexer of type type TCA9548A from adafruit.
-This combination allows to go up to 512 GPIOs and up to 128 electrodes. Each card has its own digital address between 0X70 and 0X77.
-In the following presentation for an Ohmpi 64 electrodes, we will use the addresses 0X70 for channel A, 0X71 for channel B, 0X72 for channel M and 0X73 for channel N.
-0X73 for the N channel. 4 MUX board will be needed to multiplex an Ohmpi 64 electrodes.</p>
 <table class="docutils align-center">
 <colgroup>
 <col style="width: 12%" />
@@ -416,10 +416,100 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This step must be duplicated 4 times for every Mux card.</p>
 </div>
 </div>
-<div class="section" id="part-b-test-of-mux-board">
-<h2><strong>PART B</strong> Test of MUX board<a class="headerlink" href="#part-b-test-of-mux-board" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="part-b-mux-board-address">
+<h2><strong>PART B</strong> MUX board address<a class="headerlink" href="#part-b-mux-board-address" title="Permalink to this headline">¶</a></h2>
+<p>To build an ohmpi it is necessary to have 4 MUX boards, with 4 different addresses. It is therefore necessary to identify each board, by assigning an address, which will be allocated in the Ohmpi code.
+We present here the addresses selected by default.</p>
+<p>For the A electrode board, we suggest addressing it with address 0x70:</p>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>1</p></td>
+<td><img alt="../_images/A_0x70.jpg" src="../_images/A_0x70.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Mount the jumpers and note the value of the address and the
+electrode name on the mux board (A).</p></td>
+</tr>
+<tr class="row-odd"><td><img alt="../_images/A_0x70-a.jpg" src="../_images/A_0x70-a.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Zoom on the jumper</p></td>
+</tr>
+</tbody>
+</table>
+<p>For the B electrode board, we suggest addressing it with address 0x71:</p>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>2</p></td>
+<td><img alt="../_images/B_0x71.jpg" src="../_images/B_0x71.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Mount the jumpers and note the value of the address and the
+electrode name on the mux board (B).</p></td>
+</tr>
+<tr class="row-odd"><td><img alt="../_images/B_0x71-a.jpg" src="../_images/B_0x71-a.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Zoom on the jumper</p></td>
+</tr>
+</tbody>
+</table>
+<p>For the N electrode board, we suggest addressing it with address 0x72:</p>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>3</p></td>
+<td><img alt="../_images/M_0x72.jpg" src="../_images/M_0x72.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Mount the jumpers and note the value of the address and the
+electrode name on the mux board (B).</p></td>
+</tr>
+<tr class="row-odd"><td><img alt="../_images/M_0x72-a.jpg" src="../_images/M_0x72-a.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Zoom on the jumper</p></td>
+</tr>
+</tbody>
+</table>
+<p>For the M electrode board, we suggest addressing it with address 0x73:</p>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>4</p></td>
+<td><img alt="../_images/N_0x73.jpg" src="../_images/N_0x73.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Mount the jumpers and note the value of the address and the
+electrode name on the mux board (B).</p></td>
+</tr>
+<tr class="row-odd"><td><img alt="../_images/N_0x73-a.jpg" src="../_images/N_0x73-a.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Zoom on the jumper</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
