@@ -60,7 +60,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/a/02_mes_board.jpg                   |
    |2       +------------------------------------------------------------+
-   |        | Soldering of 4 dual-in-line- socket (2 by 2 pins) for      | 
+   |        | Soldering of 4 dual-in-line socket (2 by 2 pins) for       | 
    |        | optical relay, AQY211EH.                                   |                                                                       
    +--------+------------------------------------------------------------+
    
@@ -70,8 +70,8 @@ which allows to realize precise current measurement around a shunt resistor. The
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/a/03_mes_board.jpg                   |
    |3       +------------------------------------------------------------+
-   |        | Soldering of 1 dual-in-line- socket (2 by 9 pins)          | 
-   |        | for INA282.                                                |                                                                       
+   |        | Soldering of 1 dual-in-line socket (2 by 9 pins)           | 
+   |        | for MCP23008.                                              |                                                                       
    +--------+------------------------------------------------------------+
    
 .. table::
@@ -80,7 +80,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/a/04_mes_board.jpg                   |
    | 4      +------------------------------------------------------------+
-   |        | Soldering of 1 dual-in-line- socket (2 by 4 pins)          | 
+   |        | Soldering of 1 dual-in-line socket (2 by 4 pins)           | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+ 
 .. table::
@@ -89,7 +89,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/a/05_mes_board.jpg                   |
    |5       +------------------------------------------------------------+
-   |        | Soldering of 2 dual-in-line- socket (2 by 4 pins)          | 
+   |        | Soldering of 2 dual-in-line socket (2 by 4 pins)           | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
    
