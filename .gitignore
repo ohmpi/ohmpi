@@ -1,3 +1,4 @@
 data/*.csv
 **/.ipynb_notebooks/**
 data.zip
+__pycache__

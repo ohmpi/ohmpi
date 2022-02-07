@@ -24,19 +24,23 @@ import pandas as pd
 import time
 from datetime import datetime
 from termcolor import colored
+import threading
 
-"""
-import board, busio,adafruit_tca9548a
-import adafruit_ads1x15.ads1115 as ADS
-from adafruit_ads1x15.analog_in import AnalogIn
-from adafruit_mcp230xx.mcp23008 import MCP23008
-from adafruit_mcp230xx.mcp23017 import MCP23017
-import digitalio
-from digitalio import Direction
-from gpiozero import CPUTemperature
-"""
 current_time = datetime.now()
 print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
+
+onpi = False  # set to True if running on raspberrypi
+
+if onpi:
+  import board, busio,adafruit_tca9548a
+  import adafruit_ads1x15.ads1115 as ADS
+  from adafruit_ads1x15.analog_in import AnalogIn
+  from adafruit_mcp230xx.mcp23008 import MCP23008
+  from adafruit_mcp230xx.mcp23017 import MCP23017
+  import digitalio
+  from digitalio import Direction
+  from gpiozero import CPUTemperature
+
 """
 Hardware parameters
 """
@@ -58,181 +62,181 @@ Import parameters
 #with open('ohmpi_param.json') as json_file:
 #    pardict = json.load(json_file)
 
-"""
-i2c = busio.I2C(board.SCL, board.SDA) #activation du protocle I2C
-mcp = MCP23008(i2c, address=0x20) #connexion I2C MCP23008, injection de courant
-ads_current = ADS.ADS1115(i2c, gain=16,data_rate=860, address=0X48)# connexion ADS1115, pour la mesure de courant
-ads_voltage = ADS.ADS1115(i2c, gain=2/3,data_rate=860, address=0X49)# connexion ADS1115, pour la mesure de courant
-#initialisation desvoie pour la polarité
-pin0 = mcp.get_pin(0)
-pin0.direction = Direction.OUTPUT
-pin1 = mcp.get_pin(1)
-pin1.direction = Direction.OUTPUT
-pin0.value = False
-pin1.value = False
+if onpi:
+  i2c = busio.I2C(board.SCL, board.SDA) #activation du protocle I2C
+  mcp = MCP23008(i2c, address=0x20) #connexion I2C MCP23008, injection de courant
+  ads_current = ADS.ADS1115(i2c, gain=16,data_rate=860, address=0X48)# connexion ADS1115, pour la mesure de courant
+  ads_voltage = ADS.ADS1115(i2c, gain=2/3,data_rate=860, address=0X49)# connexion ADS1115, pour la mesure de courant
+  #initialisation desvoie pour la polarité
+  pin0 = mcp.get_pin(0)
+  pin0.direction = Direction.OUTPUT
+  pin1 = mcp.get_pin(1)
+  pin1.direction = Direction.OUTPUT
+  pin0.value = False
+  pin1.value = False
 
 
-# Initialisation MUX
-Elec_A= adafruit_tca9548a.TCA9548A(i2c, 0X76)
-Elec_B= adafruit_tca9548a.TCA9548A(i2c, 0X71)
-Elec_M= adafruit_tca9548a.TCA9548A(i2c, 0X74)
-Elec_N= adafruit_tca9548a.TCA9548A(i2c, 0X70)
-"""    
+  # Initialisation MUX
+  Elec_A= adafruit_tca9548a.TCA9548A(i2c, 0X76)
+  Elec_B= adafruit_tca9548a.TCA9548A(i2c, 0X71)
+  Elec_M= adafruit_tca9548a.TCA9548A(i2c, 0X74)
+  Elec_N= adafruit_tca9548a.TCA9548A(i2c, 0X70)
 
 
-"""
-functions
-"""
-"""
-# function swtich_mux select the right channels for the multiplexer cascade for electrodes A, B, M and N.
-def switch_mux_on(quadripole):
-    elec_adress=[0x76,0X71,0x74,0x70]
-      
-    for i in range(0,4):
-        tca= adafruit_tca9548a.TCA9548A(i2c, elec_adress[i]) #choose MUX A B M or N
+
+  """
+  functions
+  """
+
+  # function swtich_mux select the right channels for the multiplexer cascade for electrodes A, B, M and N.
+  def switch_mux_on(quadripole):
+      elec_adress=[0x76,0X71,0x74,0x70]
         
-        if quadripole[i] < 17:
-            nb_i2C=7
-            a=quadripole[i]
-        elif quadripole[i] > 16 and quadripole[i] < 33:    
-            nb_i2C=6
-            a=quadripole[i]-16
-        elif quadripole[i] > 32 and quadripole[i] < 49:    
-            nb_i2C=5
-            a=quadripole[i]-32
-        elif quadripole[i] > 48 and quadripole[i] < 65:    
-            nb_i2C=4
-            a=quadripole[i]-48
+      for i in range(0,4):
+          tca= adafruit_tca9548a.TCA9548A(i2c, elec_adress[i]) #choose MUX A B M or N
+          
+          if quadripole[i] < 17:
+              nb_i2C=7
+              a=quadripole[i]
+          elif quadripole[i] > 16 and quadripole[i] < 33:    
+              nb_i2C=6
+              a=quadripole[i]-16
+          elif quadripole[i] > 32 and quadripole[i] < 49:    
+              nb_i2C=5
+              a=quadripole[i]-32
+          elif quadripole[i] > 48 and quadripole[i] < 65:    
+              nb_i2C=4
+              a=quadripole[i]-48
+                
+          mcp2 = MCP23017(tca[nb_i2C])     
+          mcp2.get_pin(a-1).direction=digitalio.Direction.OUTPUT
+          mcp2.get_pin(a-1).value=True
+   
+  def switch_mux_off(quadripole):
+      elec_adress=[0x76,0X71,0x74,0x70]
+        
+      for i in range(0,4):
+          tca= adafruit_tca9548a.TCA9548A(i2c, elec_adress[i]) #choose MUX A B M or N
+          
+          if quadripole[i] < 17:
+              nb_i2C=7
+              a=quadripole[i]
+          elif quadripole[i] > 16 and quadripole[i] < 33:    
+              nb_i2C=6
+              a=quadripole[i]-16
+          elif quadripole[i] > 32 and quadripole[i] < 49:    
+              nb_i2C=5
+              a=quadripole[i]-32
+          elif quadripole[i] > 48 and quadripole[i] < 65:    
+              nb_i2C=4
+              a=quadripole[i]-48
+                
+          mcp2 = MCP23017(tca[nb_i2C])     
+          mcp2.get_pin(a-1).direction=digitalio.Direction.OUTPUT
+          mcp2.get_pin(a-1).value=False
+         
+
+  #function to switch  off mux
+  def ZERO_mux(nb_elec):
+      elec_adress=[0x76,0X71,0x74,0x70]
+      for i in range(0,4):
+          tca= adafruit_tca9548a.TCA9548A(i2c, elec_adress[i]) #choose MUX A B M or N
+          for y in range(0,nb_elec):
+              qd=y+1
+              if qd < 17:
+                  nb_i2C=7
+                  a=qd
+              elif qd > 16 and qd < 33:    
+                  nb_i2C=6
+                  a=qd-16
+              elif qd > 32 and qd < 49:    
+                  nb_i2C=5
+                  a=qd-32
+              elif qd > 48 and qd < 65:    
+                  nb_i2C=4
+                  a=qd-48
+                    
+              mcp2 = MCP23017(tca[nb_i2C])     
+              mcp2.get_pin(a-1).direction=digitalio.Direction.OUTPUT
+              mcp2.get_pin(a-1).value= False
+
+
+  def run_measurement(nb_stack, injection_deltat, R_shunt, coefp2, coefp3, elec_array):
+      start_time=time.time()
+      # inner variable initialization
+      sum_I=0
+      sum_Vmn=0
+      sum_Ps=0
+      # injection courant and measure
+      mcp = MCP23008(i2c, address=0x20)
+      pin0 = mcp.get_pin(0)
+      pin0.direction = Direction.OUTPUT
+      pin1 = mcp.get_pin(1)
+      pin1.direction = Direction.OUTPUT
+      pin0.value = False
+      pin1.value = False
+      for n in range(0,3+2*nb_stack-1) :        
+          # current injection
+          
+          if (n % 2) == 0:
               
-        mcp2 = MCP23017(tca[nb_i2C])     
-        mcp2.get_pin(a-1).direction=digitalio.Direction.OUTPUT
-        mcp2.get_pin(a-1).value=True
- 
-def switch_mux_off(quadripole):
-    elec_adress=[0x76,0X71,0x74,0x70]
-      
-    for i in range(0,4):
-        tca= adafruit_tca9548a.TCA9548A(i2c, elec_adress[i]) #choose MUX A B M or N
-        
-        if quadripole[i] < 17:
-            nb_i2C=7
-            a=quadripole[i]
-        elif quadripole[i] > 16 and quadripole[i] < 33:    
-            nb_i2C=6
-            a=quadripole[i]-16
-        elif quadripole[i] > 32 and quadripole[i] < 49:    
-            nb_i2C=5
-            a=quadripole[i]-32
-        elif quadripole[i] > 48 and quadripole[i] < 65:    
-            nb_i2C=4
-            a=quadripole[i]-48
-              
-        mcp2 = MCP23017(tca[nb_i2C])     
-        mcp2.get_pin(a-1).direction=digitalio.Direction.OUTPUT
-        mcp2.get_pin(a-1).value=False
+              pin1.value = True
+              pin0.value = False # current injection polarity n°1        
+          else:
+              pin0.value = True
+              pin1.value = False# injection de courant polarity n°2
+          start_delay=time.time()
+          time.sleep(injection_deltat) # delay depending on current injection duration
+
+         
+          for k in range(0,integer):
+            meas[0,k] = ((AnalogIn(ads_current,ADS.P0).voltage/50)/R_shunt)*1000 # reading current value on ADS channel A0
+            meas[1,k] = AnalogIn(ads_voltage,ADS.P0).voltage * coefp2*1000
+            meas[2,k] = AnalogIn(ads_voltage,ADS.P1).voltage * coefp3*1000 # reading voltage value on ADS channel A2
+          pin1.value = False; pin0.value = False# stop current injection
+          end_delay=time.time()
+          sum_I=sum_I+(np.mean(meas[0,:]))
+          Vmn1=((np.mean(meas[1,:]))-(np.mean(meas[2,:])))
+          if (n % 2) == 0:
+                sum_Vmn=sum_Vmn-Vmn1
+                sum_Ps=sum_Ps+Vmn1
+          else:
+                sum_Vmn=sum_Vmn+Vmn1
+                sum_Ps=sum_Ps+Vmn1
+          end_calc=time.time()
+          cpu = CPUTemperature()
+          time.sleep((end_delay-start_delay)-(end_calc-end_delay)) 
+      # return averaged values
+  #     cpu= CPUTemperature()
+      output = pd.DataFrame({
+          "time":[datetime.now()],
+          "A":elec_array[0],
+          "B":elec_array[1],
+          "M":elec_array[2],
+          "N":elec_array[3],
+          "Vmn [mV]":[(sum_Vmn/(3+2*nb_stack-1))],
+          "I [mA]":[(sum_I/(3+2*nb_stack-1))],
+          "R [ohm]":[( (sum_Vmn/(3+2*nb_stack-1)/(sum_I/(3+2*nb_stack-1))))],
+  #         "Rab [KOhm]":[(Tab*2.47)/(sum_I/(3+2*nb_stack-1))/1000],
+  #         "Tx [V]":[Tx*2.47],              
+          "Ps [mV]":[(sum_Ps/(3+2*nb_stack-1))],
+          "nbStack":[nb_stack],
+          "CPU temp [°C]":[cpu.temperature],
+  #         "Hardware temp [°C]":[read_temp()-8],
+          "Time [S]":[(-start_time+time.time())]
+  #         "Rcontact[ohm]":[Rc],
+  #         "Rsoil[ohm]":[Rsoil],
+  #         "Rab_theory [Ohm]":[(Rc*2+Rsoil)]
        
-
-#function to switch  off mux
-def ZERO_mux(nb_elec):
-    elec_adress=[0x76,0X71,0x74,0x70]
-    for i in range(0,4):
-        tca= adafruit_tca9548a.TCA9548A(i2c, elec_adress[i]) #choose MUX A B M or N
-        for y in range(0,nb_elec):
-            qd=y+1
-            if qd < 17:
-                nb_i2C=7
-                a=qd
-            elif qd > 16 and qd < 33:    
-                nb_i2C=6
-                a=qd-16
-            elif qd > 32 and qd < 49:    
-                nb_i2C=5
-                a=qd-32
-            elif qd > 48 and qd < 65:    
-                nb_i2C=4
-                a=qd-48
-                  
-            mcp2 = MCP23017(tca[nb_i2C])     
-            mcp2.get_pin(a-1).direction=digitalio.Direction.OUTPUT
-            mcp2.get_pin(a-1).value= False
-
-
-def run_measurement(nb_stack, injection_deltat, R_shunt, coefp2, coefp3, elec_array):
-    start_time=time.time()
-    # inner variable initialization
-    sum_I=0
-    sum_Vmn=0
-    sum_Ps=0
-    # injection courant and measure
-    mcp = MCP23008(i2c, address=0x20)
-    pin0 = mcp.get_pin(0)
-    pin0.direction = Direction.OUTPUT
-    pin1 = mcp.get_pin(1)
-    pin1.direction = Direction.OUTPUT
-    pin0.value = False
-    pin1.value = False
-    for n in range(0,3+2*nb_stack-1) :        
-        # current injection
-        
-        if (n % 2) == 0:
-            
-            pin1.value = True
-            pin0.value = False # current injection polarity n°1        
-        else:
-            pin0.value = True
-            pin1.value = False# injection de courant polarity n°2
-        start_delay=time.time()
-        time.sleep(injection_deltat) # delay depending on current injection duration
-
        
-        for k in range(0,integer):
-          meas[0,k] = ((AnalogIn(ads_current,ADS.P0).voltage/50)/R_shunt)*1000 # reading current value on ADS channel A0
-          meas[1,k] = AnalogIn(ads_voltage,ADS.P0).voltage * coefp2*1000
-          meas[2,k] = AnalogIn(ads_voltage,ADS.P1).voltage * coefp3*1000 # reading voltage value on ADS channel A2
-        pin1.value = False; pin0.value = False# stop current injection
-        end_delay=time.time()
-        sum_I=sum_I+(np.mean(meas[0,:]))
-        Vmn1=((np.mean(meas[1,:]))-(np.mean(meas[2,:])))
-        if (n % 2) == 0:
-              sum_Vmn=sum_Vmn-Vmn1
-              sum_Ps=sum_Ps+Vmn1
-        else:
-              sum_Vmn=sum_Vmn+Vmn1
-              sum_Ps=sum_Ps+Vmn1
-        end_calc=time.time()
-        cpu = CPUTemperature()
-        time.sleep((end_delay-start_delay)-(end_calc-end_delay)) 
-    # return averaged values
-#     cpu= CPUTemperature()
-    output = pd.DataFrame({
-        "time":[datetime.now()],
-        "A":elec_array[0],
-        "B":elec_array[1],
-        "M":elec_array[2],
-        "N":elec_array[3],
-        "Vmn [mV]":[(sum_Vmn/(3+2*nb_stack-1))],
-        "I [mA]":[(sum_I/(3+2*nb_stack-1))],
-        "R [ohm]":[( (sum_Vmn/(3+2*nb_stack-1)/(sum_I/(3+2*nb_stack-1))))],
-#         "Rab [KOhm]":[(Tab*2.47)/(sum_I/(3+2*nb_stack-1))/1000],
-#         "Tx [V]":[Tx*2.47],              
-        "Ps [mV]":[(sum_Ps/(3+2*nb_stack-1))],
-        "nbStack":[nb_stack],
-        "CPU temp [°C]":[cpu.temperature],
-#         "Hardware temp [°C]":[read_temp()-8],
-        "Time [S]":[(-start_time+time.time())]
-#         "Rcontact[ohm]":[Rc],
-#         "Rsoil[ohm]":[Rsoil],
-#         "Rab_theory [Ohm]":[(Rc*2+Rsoil)]
-     
-     
-      # Dead time equivalent to the duration of the current injection pulse   
-    })
-    output=output.round(2)
-    print(output.to_string())
-    time.sleep(1)
-    return output
+        # Dead time equivalent to the duration of the current injection pulse   
+      })
+      output=output.round(2)
+      print(output.to_string())
+      time.sleep(1)
+      return output
 
-"""
+
 
 # function to find rows with identical values in different columns
 def find_identical_in_line(array_object):
@@ -287,7 +291,7 @@ def append_and_save(path, last_measurement):
 """
 Main loop
 """
-import threading
+
 
 class OhmPi(object):
     def __init__(self, pardict):
@@ -322,11 +326,14 @@ class OhmPi(object):
                     #switch_mux_on(N[i,])
 
                     # run a measurement
-                    #current_measurement = run_measurement(self.pardict.get("stack"), pardict.get("injection_duration"), R_shunt, coef_p2, coef_p3, N[i,])
+                    if onpi:
+                      current_measurement = run_measurement(self.pardict.get("stack"), self.pardict.get("injection_duration"), R_shunt, coef_p2, coef_p3, N[i,])
+                    else:
+                      current_measurement = pd.DataFrame({
+                          'A': [N[i, 0]], 'B': [N[i, 1]], 'M': [N[i, 2]], 'N': [N[i, 3]], 'R [ohm]': np.abs(np.random.randn(1))
+                      })
+                    
                     #switch_mux_off(N[i,])
-                    current_measurement = pd.DataFrame({
-                        'a': [N[i, 0]], 'b': [N[i, 1]], 'm': [N[i, 2]], 'n': [N[i, 3]], 'rho': np.abs(np.random.randn(1))
-                    })
                     time.sleep(np.abs(np.random.randn(1))[0])
 
                     # save data and print in a text file
@@ -352,3 +359,9 @@ class OhmPi(object):
         if self.t is not None:
             self.t.join()
         print('self.status', self.status)
+
+# test
+#with open('ohmpi_param.json') as json_file:
+#    pardict = json.load(json_file)
+#ohmpi = OhmPi(pardict)
+#ohmpi.measure()

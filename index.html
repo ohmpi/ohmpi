@@ -103,8 +103,8 @@
 
     <script type="text/javascript">
         //let serverUrl = 'http://10.3.141.1:8080'
-        //let serverUrl = 'http://0.0.0.0:8080'
-        let serverUrl = 'http://localhost:8080'
+        let serverUrl = 'http://0.0.0.0:8080'
+        //let serverUrl = 'http://localhost:8080'
         let output = document.getElementById('output')
         let data = {} // hold data of all surveys
         let interv = null // hold interval for automatic data retrieval
@@ -256,7 +256,7 @@
                 }
                 
                 // dropdown with number of surveys and +++
-                let surveyNames = Object.keys(data)
+                let surveyNames = Object.keys(data).sort()
 
                 // callback function to draw the plot
                 function surveySelectFunc(el) {
