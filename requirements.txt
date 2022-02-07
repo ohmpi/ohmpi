@@ -18,3 +18,4 @@ RPi.GPIO==0.7.0
 six==1.13.0
 spidev==3.4
 sysv-ipc==1.0.1 
+termcolor==1.1.0
