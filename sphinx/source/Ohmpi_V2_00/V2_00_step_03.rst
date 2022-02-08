@@ -165,10 +165,9 @@ For the A electrode board, we suggest addressing it with address 0x70:
    |        |Zoom on the jumper                                          | 
    |        |                                                            |   
    +--------+------------------------------------------------------------+   
-   
-   
-   
-   
+
+  
+
    
 For the B electrode board, we suggest addressing it with address 0x71:
 
@@ -223,7 +222,7 @@ For the M electrode board, we suggest addressing it with address 0x73:
 
 **PART C** Validation of MUX board
 ======================================================
-the first step is to test the Mux boards before assembling them definitively.
+The first step is to test the Mux boards before assembling them definitively.
 To test the Mux boards, it will be necessary first to make a simplified assembly of the Mux board and the measurement board.
 
 The first thing to do is to prepare a 50 cm long flat wire with two 6-poles connectors.
@@ -261,12 +260,16 @@ The first thing to do is to prepare a 50 cm long flat wire with two 6-poles conn
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_3/c/20220124_143823.jpg                |
    |     5  +------------------------------------------------------------+
-   |        |Connecter le cable 6 contacts                               |
+   |        |Connect the 6-contact cable                                 |
    |        |                                                            |                                                                     
    +--------+------------------------------------------------------------+
    
 
-Démarré votre alimentation
+Start your 12V power supply, the raspberry must start. You can now open the script called test_mux_board.py  
+
+   
+
+
    
    
    
