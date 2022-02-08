@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OhmPi V 1.01 (limited to 32 electrodes) &mdash; Ohmpi: open hardware resistivity-meter documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>OhmPi V 1.01 (limited to 32 electrodes) &mdash; Ohmpi: open hardware resistivity-meter documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -98,22 +96,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="ohmpi-v-1-01-limited-to-32-electrodes">
-<h1>OhmPi V 1.01 (limited to 32 electrodes)<a class="headerlink" href="#ohmpi-v-1-01-limited-to-32-electrodes" title="Permalink to this headline"></a></h1>
+  <div class="section" id="ohmpi-v-1-01-limited-to-32-electrodes">
+<h1>OhmPi V 1.01 (limited to 32 electrodes)<a class="headerlink" href="#ohmpi-v-1-01-limited-to-32-electrodes" title="Permalink to this headline">¶</a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This version corresponds to the version published in the Hardware X journal.
 However, we have corrected the bugs that existed on this version and explained the missing mounting points in detail below.
 We invite you to refer to this document to assemble Ohmpi V1.01.</p>
 </div>
-<section id="the-philosophy-of-ohmpi">
-<h2>The philosophy of Ohmpi<a class="headerlink" href="#the-philosophy-of-ohmpi" title="Permalink to this headline"></a></h2>
+<div class="section" id="the-philosophy-of-ohmpi">
+<h2>The philosophy of Ohmpi<a class="headerlink" href="#the-philosophy-of-ohmpi" title="Permalink to this headline">¶</a></h2>
 <p>The philosophy of Ohmpi V1.01 is to offer a multi electrode resistivity meter, from a set of commercially available
 electronic cards it is a resistivity meter limited to 32 electrodes only. It is limited to low-current injection,
 but suitable for small laboratory experiments and small field time monitoring</p>
-</section>
-<section id="technical-data">
-<h2>Technical data<a class="headerlink" href="#technical-data" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="technical-data">
+<h2>Technical data<a class="headerlink" href="#technical-data" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 50%" />
@@ -168,11 +166,11 @@ control system</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="raspberry-pi-configuration">
-<h2>Raspberry Pi  configuration<a class="headerlink" href="#raspberry-pi-configuration" title="Permalink to this headline"></a></h2>
-<section id="os-installation">
-<h3>OS installation<a class="headerlink" href="#os-installation" title="Permalink to this headline"></a></h3>
+</div>
+<div class="section" id="raspberry-pi-configuration">
+<h2>Raspberry Pi  configuration<a class="headerlink" href="#raspberry-pi-configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="os-installation">
+<h3>OS installation<a class="headerlink" href="#os-installation" title="Permalink to this headline">¶</a></h3>
 <p>The first step is to start up the Raspberry Pi board, including installation of an OS (operating system).
 For this step, the installation instructions are well described on the Raspberry website</p>
 <ol class="arabic simple">
@@ -182,9 +180,9 @@ For this step, the installation instructions are well described on the Raspberry
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:</p>
-<figure class="align-center">
+<div class="align-center figure">
 <a class="reference internal image-reference" href="_images/raspbian_version1.jpg"><img alt="alternate text" src="_images/raspbian_version1.jpg" style="width: 800px; height: 400px;" /></a>
-</figure>
+</div>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -220,9 +218,9 @@ To ensure that the GPIOs are in Low position, you will need to modify the /boot/
 <li><p>Press Ctrl +x to escap and return to the terminal</p></li>
 <li><p>Close the terminal</p></li>
 </ol>
-</section>
-<section id="virtual-environnement-and-packages">
-<h3>Virtual Environnement and packages<a class="headerlink" href="#virtual-environnement-and-packages" title="Permalink to this headline"></a></h3>
+</div>
+<div class="section" id="virtual-environnement-and-packages">
+<h3>Virtual Environnement and packages<a class="headerlink" href="#virtual-environnement-and-packages" title="Permalink to this headline">¶</a></h3>
 <p>All dependencies are specified in requirements.txt</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -254,39 +252,39 @@ to leave the virtual environment simply type:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">deactivate</span>
 </pre></div>
 </div>
-</section>
-<section id="activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">
-<h3>Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)<a class="headerlink" href="#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi" title="Permalink to this headline"></a></h3>
+</div>
+<div class="section" id="activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">
+<h3>Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)<a class="headerlink" href="#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi" title="Permalink to this headline">¶</a></h3>
 <p>If you decided to use a virtual environment, it is necessary to setup Thonny Python IDE the first time you use it.</p>
 <p>1- Run the Thonny Python IDE software, Click on raspebrry acces <strong>menu &gt; programming&gt; Thonny pythonIDE</strong></p>
 <p>2- Thonny’s interface opens, Python runs on the Root (Python 3.7.3 (/usr/bin/python3))</p>
-<figure class="align-center">
+<div class="align-center figure">
 <a class="reference internal image-reference" href="_images/thonny_first_interface2.jpg"><img alt="alternate text" src="_images/thonny_first_interface2.jpg" style="width: 600px; height: 450px;" /></a>
-</figure>
+</div>
 <p>3-Click on <strong>Run&gt;select interpreter</strong>, a new window opens click on interpret</p>
-<figure class="align-center">
+<div class="align-center figure">
 <a class="reference internal image-reference" href="_images/thonny_option1.jpg"><img alt="alternate text" src="_images/thonny_option1.jpg" style="width: 600px; height: 450px;" /></a>
-</figure>
+</div>
 <p>4-On the new open windows select <strong>alternative Pyhton3 or virtual environnement</strong></p>
-<figure class="align-center">
+<div class="align-center figure">
 <a class="reference internal image-reference" href="_images/thonny_interpreter1.jpg"><img alt="alternate text" src="_images/thonny_interpreter1.jpg" style="width: 600px; height: 450px;" /></a>
-</figure>
+</div>
 <p>5- New buttons appeared, selected <strong>“locate another python executable “</strong></p>
 <p>6- A new window opens, find the folder where there is the python 3 file in the virtual environment folder previously created <strong>/home/pi/ohmpi/bin/python3</strong>.</p>
 <p>7- In the <strong>known interpreter</strong> tab the path of the virtual environnementshould appear</p>
-<figure class="align-center">
+<div class="align-center figure">
 <a class="reference internal image-reference" href="_images/thonny_interpreter_folder1.jpg"><img alt="alternate text" src="_images/thonny_interpreter_folder1.jpg" style="width: 600px; height: 450px;" /></a>
-</figure>
+</div>
 <p>8- Close the window by clicking on <strong>ok</strong>.</p>
 <p>9- Close thonny to save modifications</p>
-</section>
-</section>
-<section id="assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi">
-<h2>Assembly of the measuring/current injection cards, and connection with the Raspberry Pi<a class="headerlink" href="#assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi" title="Permalink to this headline"></a></h2>
-<section id="electrical-resistivity-measurements-board">
-<h3>Electrical resistivity measurements board<a class="headerlink" href="#electrical-resistivity-measurements-board" title="Permalink to this headline"></a></h3>
-<section id="a-description">
-<h4>a) Description<a class="headerlink" href="#a-description" title="Permalink to this headline"></a></h4>
+</div>
+</div>
+<div class="section" id="assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi">
+<h2>Assembly of the measuring/current injection cards, and connection with the Raspberry Pi<a class="headerlink" href="#assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="electrical-resistivity-measurements-board">
+<h3>Electrical resistivity measurements board<a class="headerlink" href="#electrical-resistivity-measurements-board" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="a-description">
+<h4>a) Description<a class="headerlink" href="#a-description" title="Permalink to this headline">¶</a></h4>
 <p>To measure electrical resistivity with Raspberry Pi, an ADS1115 was introduced, as proposed by Florsch [7]. The ADS1115
 is a 16-bit ADC (Analog-to-Digital Converter), with an adaptable gain. Its value has been set at 2/3 in this study. The
 input signal value could lie between - to + 6.114 V. The ADS1115 is mounted on a board adapted from an in-house design.
@@ -318,15 +316,13 @@ electric field in the ground, with the total input impedance value being estimat
 A shortcut between Electrodes A and B will generate excessive currents, whose intensities depend on the type of battery used.
 A lithium ion battery or automobile-type lead-acid battery can deliver a strong enough current to damage the board and, as such,
 constitutes a potential hazard. We therefore recommend adding a 1.5-A fuse between the battery and resistor R9.</p>
-<figure class="align-center" id="id1">
+<div class="align-center figure" id="id1">
 <a class="reference internal image-reference" href="_images/schema_measurement_board1.jpg"><img alt="alternate text" src="_images/schema_measurement_board1.jpg" style="width: 800px; height: 400px;" /></a>
-<figcaption>
-<p><span class="caption-text">Measurement board</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-</section>
-<section id="b-implementation">
-<h4>b) Implementation<a class="headerlink" href="#b-implementation" title="Permalink to this headline"></a></h4>
+<p class="caption"><span class="caption-text">Measurement board</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="b-implementation">
+<h4>b) Implementation<a class="headerlink" href="#b-implementation" title="Permalink to this headline">¶</a></h4>
 <p>The measurement board must be printed using the PCB file (Source file repository), with components soldered onto
 it by following the steps described below and illustrated in the following figure :</p>
 <ul>
@@ -341,16 +337,23 @@ it by following the steps described below and illustrated in the following figur
 \[coeff p2 = (R7 + R6) / R7\]</div>
 <div class="math notranslate nohighlight">
 \[coeff p3 = (R9 + R8) / R9\]</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">36</span> <span class="sd">&quot;&quot;&quot;</span>
-<span class="linenos">37</span><span class="sd"> hardware parameters</span>
-<span class="linenos">38</span><span class="sd"> &quot;&quot;&quot;</span>
-<span class="linenos">39</span> <span class="n">R_ref</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># reference resistance value in ohm</span>
-<span class="linenos">40</span> <span class="n">coef_p0</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P0, measurement in V/V</span>
-<span class="linenos">41</span> <span class="n">coef_p1</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P1, measurement in V/V</span>
-<span class="linenos">42</span> <span class="n">coef_p2</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P2, measurement in V/V</span>
-<span class="linenos">43</span> <span class="n">coef_p3</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P3, measurement in V/V</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>36
+37
+38
+39
+40
+41
+42
+43</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"> hardware parameters</span>
+<span class="sd"> &quot;&quot;&quot;</span>
+ <span class="n">R_ref</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># reference resistance value in ohm</span>
+ <span class="n">coef_p0</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P0, measurement in V/V</span>
+ <span class="n">coef_p1</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P1, measurement in V/V</span>
+ <span class="n">coef_p2</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P2, measurement in V/V</span>
+ <span class="n">coef_p3</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P3, measurement in V/V</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>The coefficient parameters can be adjusted in lines 40 to 43 of the ohmpi.py code.</p>
 </div></blockquote>
 </dd>
@@ -367,22 +370,18 @@ or stronger power supply, it would be possible to adjust the divider bridge valu
 Once all the components have been soldered together, the measurement board can be connected to the Raspberry Pi and the
 battery terminal, according to Figure 9. Between the battery and the TX+ terminal of the measurement board, remember to
 place a fuse holder with a 1.5-A fuse for safety purposes.</p>
-<figure class="align-center" id="id2">
+<div class="align-center figure" id="id2">
 <a class="reference internal image-reference" href="_images/measurement_board.jpg"><img alt="alternate text" src="_images/measurement_board.jpg" style="width: 800px; height: 500px;" /></a>
-<figcaption>
-<p><span class="caption-text">Measurement circuit board assembly: a) printed circuit board, b) adding the 1-Kohm resistors ± 1%, c)adding the 1.5-Kohm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-<figure class="align-center" id="id3">
+<p class="caption"><span class="caption-text">Measurement circuit board assembly: a) printed circuit board, b) adding the 1-Kohm resistors ± 1%, c)adding the 1.5-Kohm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<div class="align-center figure" id="id3">
 <a class="reference internal image-reference" href="_images/measurement_board-2.jpg"><img alt="alternate text" src="_images/measurement_board-2.jpg" style="width: 800px; height: 700px;" /></a>
-<figcaption>
-<p><span class="caption-text">Measurement board installation with Raspberry Pi</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-</section>
-</section>
-<section id="current-injection-board">
-<h3>Current injection board<a class="headerlink" href="#current-injection-board" title="Permalink to this headline"></a></h3>
+<p class="caption"><span class="caption-text">Measurement board installation with Raspberry Pi</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="current-injection-board">
+<h3>Current injection board<a class="headerlink" href="#current-injection-board" title="Permalink to this headline">¶</a></h3>
 <p>To carry out the electrical resistivity measurement, the first step consists of injecting current into the ground.
 In our case, a simple 9-V lead-acid battery is used to create an electrical potential difference that results
 in current circulating into the ground. The current is injected through electrodes A and B (see Fig. 2). This
@@ -394,12 +393,10 @@ to the GPIO 7 on the Raspberry Pi and therefore activate simultaneously. The rol
 the polarity at electrodes A and B. Thus, when relays 3 and 4 are energized by the GPIO 8 in the open position,
 the positive battery pole is connected to electrode A and the negative pole to electrode B. When not energized,
 they remain in the normally closed position. This set-up offers a simple and robust solution to inject current.</p>
-<figure class="align-center" id="id4">
+<div class="align-center figure" id="id4">
 <a class="reference internal image-reference" href="_images/current_board.jpg"><img alt="alternate text" src="_images/current_board.jpg" style="width: 800px; height: 400px;" /></a>
-<figcaption>
-<p><span class="caption-text">Wiring of the 4-channel relay module board for current injection management</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-text">Wiring of the 4-channel relay module board for current injection management</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
 <p>The next step consists of featuring the 4-channel relay module used for current injection and its assembly. The wiring
 between the relays must be carried out in strict accordance with Fig. 10. This card must then be connected to the Raspberry
 Pi and the measurement card. On the Raspberry Pi, it is necessary to connect inputs In1 and In2 to the same GPIO. For this
@@ -407,23 +404,21 @@ purpose, it is necessary to solder together the two pins on the 4-channel relay 
 the relay card’s 4 channels respectively to the GND pin and 5Vcc of the Raspberry Pi. Now connect relays 1, 2, 3 and 4, as
 shown in the diagram, using 1-mm2 cables (red and black in Fig. 10). Lastly, connect the inputs of relay 1 and 2 respectively
 to terminals B and A of the measurement board.</p>
-<figure class="align-center" id="id5">
+<div class="align-center figure" id="id5">
 <a class="reference internal image-reference" href="_images/installation_current_board.jpg"><img alt="alternate text" src="_images/installation_current_board.jpg" style="width: 800px; height: 700px;" /></a>
-<figcaption>
-<p><span class="caption-text">Current injection board installation with Raspberry Pi</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-text">Current injection board installation with Raspberry Pi</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
 <p>Congratulations, you have build a 4 electrodes resistivity-meter.</p>
-</section>
-<section id="frist-four-electrodes-resistivity-mesurement">
-<h3>Frist four electrodes resistivity mesurement<a class="headerlink" href="#frist-four-electrodes-resistivity-mesurement" title="Permalink to this headline"></a></h3>
+</div>
+<div class="section" id="frist-four-electrodes-resistivity-mesurement">
+<h3>Frist four electrodes resistivity mesurement<a class="headerlink" href="#frist-four-electrodes-resistivity-mesurement" title="Permalink to this headline">¶</a></h3>
 <p>Under construction !</p>
 <p>Describe the way to valide the first part of the instruction.
 Electrical resistivity measurement on test circuit</p>
-</section>
-</section>
-<section id="multiplexer-implentation">
-<h2>Multiplexer implentation<a class="headerlink" href="#multiplexer-implentation" title="Permalink to this headline"></a></h2>
+</div>
+</div>
+<div class="section" id="multiplexer-implentation">
+<h2>Multiplexer implentation<a class="headerlink" href="#multiplexer-implentation" title="Permalink to this headline">¶</a></h2>
 <p>The resistivity measurement is conducted on four terminals (A, B, M and N). The user could perform each measurement
 by manually plugging four electrodes into the four channel terminals. In practice, ERT requires several tens or thousands
 of measurements conducted on different electrode arrays. A multiplexer is therefore used to connect each channel to one of
@@ -433,12 +428,10 @@ modules with 16 channels each. On the first board, on each MUX, 15 relays out of
 configuration enables making smaller multiplexers (8 or 16 electrodes only). On the other hand, if you prefer upping to 64 electrodes,
 which is entirely possible, a GPIO channel multiplier will have to be used.
 To prepare the multiplexer, the channels of the two relay boards must be connected according to the wiring diagram shown below.</p>
-<figure class="align-center" id="id6">
+<div class="align-center figure" id="id6">
 <a class="reference internal image-reference" href="_images/multiplexer_implementation.jpg"><img alt="alternate text" src="_images/multiplexer_implementation.jpg" style="width: 800px; height: 500px;" /></a>
-<figcaption>
-<p><span class="caption-text">Schematic diagram of the wiring of two 16-channel relay shields</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-text">Schematic diagram of the wiring of two 16-channel relay shields</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
 <p>For this purpose, 0.5-mm² cables with end caps are used and their length adjusted for each connection in order to produce a clean assembly.
 The length was adjusted so that the distance between the two points to be connected could be directly measured on the board once they had
 been assembled one above the other, in adding an extra 3 cm. The wires at the ends need to be stripped and the end caps added.
@@ -447,12 +440,10 @@ As a final step, connect the cables to the correct connectors. This operation mu
 for activating each relay (Fig. 12). However, we will be activating several relays with a single GPIO (to limit the number of GPIOs used on Raspberry Pi,
 see Section 2.4). To execute this step, it will be necessary to follow the protocol presented in Figure.</p>
 <blockquote>
-<div><figure class="align-center" id="id7">
+<div><div class="align-center figure" id="id7">
 <a class="reference internal image-reference" href="_images/connection.jpg"><img alt="alternate text" src="_images/connection.jpg" style="width: 800px; height: 400px;" /></a>
-<figcaption>
-<p><span class="caption-text">Connection to the 16-channel relay shield</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-text">Connection to the 16-channel relay shield</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
 </div></blockquote>
 <p>For the 16-channel relay shield no. 1, these steps must be followed:
 *       Position a test circuit with 10 horizontal and 10 vertical holes on the pins of the 16-channel relay shield board.
@@ -514,44 +505,40 @@ The next step consists of connecting the relay card inputs to the Raspberry Pi a
 <blockquote>
 <div><p>Connection of the GPIOs to each multiplexer</p>
 </div></blockquote>
-</section>
-<section id="electrode-connection">
-<h2>Electrode connection<a class="headerlink" href="#electrode-connection" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="electrode-connection">
+<h2>Electrode connection<a class="headerlink" href="#electrode-connection" title="Permalink to this headline">¶</a></h2>
 <p>At this point, all that remains is to connect the electrodes of each multiplexer to a terminal block (Fig. 13). In our set-up, screw terminals assembled on a din rail were used.
 According to the chosen multiplexer configuration, all the relays of each multiplexer will be connected to an electrode and, consequently, each electrode will have four incoming
 connections. Instead of having four cables connecting an electrode terminal to each multiplexer, we recommend using the cable assembly shown in the following Figure.</p>
-<figure class="align-center" id="id8">
+<div class="align-center figure" id="id8">
 <a class="reference internal image-reference" href="_images/cable.jpg"><img alt="alternate text" src="_images/cable.jpg" style="width: 800px; height: 300px;" /></a>
-<figcaption>
-<p><span class="caption-text">Wire cabling for multiplexer and terminal screw connection</span><a class="headerlink" href="#id8" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-text">Wire cabling for multiplexer and terminal screw connection</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
 <p>the next figure provides an example of multiplexer relay connections for electrode no. 1: this electrode of multiplexer MUX A must be connected to electrode no. 1 of MUX B. Moreover, electrode no. 1 of MUX B
 must be connected to electrode no. 1 of MUX N, which in turn must be connected to electrode no. 1 of MUX M. Lastly, electrode no. 1 of MUX M is connected to the terminal block.
 This operation must be repeated for all 32 electrodes.</p>
-<figure class="align-center" id="id9">
+<div class="align-center figure" id="id9">
 <a class="reference internal image-reference" href="_images/electrode_cable.jpg"><img alt="alternate text" src="_images/electrode_cable.jpg" style="width: 800px; height: 800px;" /></a>
-<figcaption>
-<p><span class="caption-text">Example of a multiplexer connection to the screw terminal for electrode no. 1.</span><a class="headerlink" href="#id9" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
+<p class="caption"><span class="caption-text">Example of a multiplexer connection to the screw terminal for electrode no. 1.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The 16 channel relay cards exist in 5-V and 12-V , in the bottom figure we have 12-V cards that we will directly connect to the battery.
 In case you bought 16 channel relay 5-V cards, you will need to add a DC/DC 12-V/5-V converter. You can use a STEP DOWN MODULE DC-DC (Velleman WPM404) and set the voltage to 5V with the potentiometer.</p>
 </div>
-</section>
-<section id="operating-instruction">
-<h2>Operating instruction<a class="headerlink" href="#operating-instruction" title="Permalink to this headline"></a></h2>
-<section id="preliminary-procedure-only-for-the-initial-operation">
-<h3>Preliminary procedure (Only for the initial operation)<a class="headerlink" href="#preliminary-procedure-only-for-the-initial-operation" title="Permalink to this headline"></a></h3>
+</div>
+<div class="section" id="operating-instruction">
+<h2>Operating instruction<a class="headerlink" href="#operating-instruction" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="preliminary-procedure-only-for-the-initial-operation">
+<h3>Preliminary procedure (Only for the initial operation)<a class="headerlink" href="#preliminary-procedure-only-for-the-initial-operation" title="Permalink to this headline">¶</a></h3>
 <p>The open source code must be downloaded at the Open Science Framework source file repository for this manuscript (<a class="reference external" href="https://osf.io/dzwb4/">https://osf.io/dzwb4/</a>)
 or at the following Gitlab repository address: <a class="reference external" href="https://gitlab.irstea.fr/reversaal/OhmPi">https://gitlab.irstea.fr/reversaal/OhmPi</a>. The code must be then unzipped into a selected folder (e.g. OhmPi-master). A “readme” file
 is proposed in the directory to assist with installation of the software and required python packages. It is strongly recommended to create a python virtual environment for installing
 the required packages and running the code.</p>
-</section>
-<section id="startup-procedure">
-<h3>Startup procedure<a class="headerlink" href="#startup-procedure" title="Permalink to this headline"></a></h3>
+</div>
+<div class="section" id="startup-procedure">
+<h3>Startup procedure<a class="headerlink" href="#startup-procedure" title="Permalink to this headline">¶</a></h3>
 <p>As an initial operating instruction, all batteries must be disconnected before any hardware handling. Ensure that the battery is charged at full capacity. Plug all the electrodes (32 or fewer)
 into the screw terminals. The Raspberry Pi must be plugged into a computer screen, with a mouse and keyboard accessed remotely. The Raspberry Pi must then be plugged into the power supply
 (for laboratory measurements) or a power bank (5V - 2A for field measurements). At this point, you’ll need to access the Raspbian operating system. Inside the previously created folder “ohmPi”,
@@ -560,30 +547,37 @@ function may be adjusted/optimized depending on the measurement attributes. For 
 plugged into the hardware; the “ohmpi.py” source code must be run within a python3 environment (or a virtual environment if one has been created) either in the terminal or using Thonny. You should now
 hear the characteristic sound of a relay switching as a result of electrode permutation. After each quadrupole measurement, the potential difference as well as the current intensity and resistance
 are displayed on the screen. A measurement file is automatically created and named “measure.csv”; it will be placed in the same folder.</p>
-</section>
-<section id="electrical-resistivity-measurement-parameters-description">
-<h3>Electrical resistivity measurement parameters description<a class="headerlink" href="#electrical-resistivity-measurement-parameters-description" title="Permalink to this headline"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">27</span> <span class="sd">&quot;&quot;&quot;</span>
-<span class="linenos">28</span><span class="sd"> measurement parameters</span>
-<span class="linenos">29</span><span class="sd"> &quot;&quot;&quot;</span>
-<span class="linenos">30</span> <span class="n">nb_electrodes</span> <span class="o">=</span> <span class="mi">32</span> <span class="c1"># maximum number of electrodes on the resistivity meter</span>
-<span class="linenos">31</span> <span class="n">injection_duration</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Current injection duration in second</span>
-<span class="linenos">32</span> <span class="n">nbr_meas</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># Number of times the quadripole sequence is repeated</span>
-<span class="linenos">33</span> <span class="n">sequence_delay</span><span class="o">=</span> <span class="mi">30</span> <span class="c1"># Delay in seconds between 2 sequences</span>
-<span class="linenos">34</span> <span class="n">stack</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># repetition of the current injection for each quadripole</span>
-</pre></div>
 </div>
+<div class="section" id="electrical-resistivity-measurement-parameters-description">
+<h3>Electrical resistivity measurement parameters description<a class="headerlink" href="#electrical-resistivity-measurement-parameters-description" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>27
+28
+29
+30
+31
+32
+33
+34</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"> measurement parameters</span>
+<span class="sd"> &quot;&quot;&quot;</span>
+ <span class="n">nb_electrodes</span> <span class="o">=</span> <span class="mi">32</span> <span class="c1"># maximum number of electrodes on the resistivity meter</span>
+ <span class="n">injection_duration</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Current injection duration in second</span>
+ <span class="n">nbr_meas</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># Number of times the quadripole sequence is repeated</span>
+ <span class="n">sequence_delay</span><span class="o">=</span> <span class="mi">30</span> <span class="c1"># Delay in seconds between 2 sequences</span>
+ <span class="n">stack</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># repetition of the current injection for each quadripole</span>
+</pre></div>
+</td></tr></table></div>
 <p>The measurement parameters can be adjusted in lines 27 to 30 of the ohmpi.py code.</p>
-</section>
-</section>
-<section id="complete-list-of-components">
-<h2>Complete list of components<a class="headerlink" href="#complete-list-of-components" title="Permalink to this headline"></a></h2>
+</div>
+</div>
+<div class="section" id="complete-list-of-components">
+<h2>Complete list of components<a class="headerlink" href="#complete-list-of-components" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The list evolve a little bit after the publication of the article, it is necessary to refer to this list, the article is out of date</p>
 </div>
 <table class="colwidths-given docutils align-default" id="id10">
-<caption><span class="caption-text">Table Title</span><a class="headerlink" href="#id10" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text">Table Title</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 8%" />
 <col style="width: 18%" />
@@ -744,8 +738,8 @@ are displayed on the screen. A measurement file is automatically created and nam
 </tr>
 </tbody>
 </table>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
