@@ -34,8 +34,6 @@ OhmPi project
    |   .. image:: logo_univ_mons.png  |  .. image:: ige.png               |   .. image:: logo-iris.jpg    |              
    +----------------------------------+-----------------------------------+-------------------------------+
    
-
-
   
 
 **Citing OhmPi:** 
