@@ -26,8 +26,8 @@ OhmPi V 2.00 (64 electrodes and 12V)
 	 
 	 3. A box 
 
-The philosophy of Ohmpi 
-=======================
+The philosophy of Ohmpi 2 
+==========================
 
 The philosophy of Ohmpi V2.00 is to offer a new DIY multielectrode resistivity meter. It is a resistivity meter with 64 electrodes , which can be upgraded to 128 electrodes. 
 It is limited to low-current injection,but suitable for small laboratory experiments and small field time-lapse monitoring.
@@ -62,14 +62,14 @@ Technical data
 +-------------------------------+-----------------------+-----------+-----------------------+-----------+
 |Data storage                   |micro SD card          |           |micro SD card          |           |
 +-------------------------------+-----------------------+-----------+-----------------------+-----------+
-|Resolution                     |O.O1                   |ohm        |O.O1                   |ohm        |
+|Resolution                     |0.01                   |ohm        |0.01                   |ohm        |
 +-------------------------------+-----------------------+-----------+-----------------------+-----------+
 
 Ohmpi 2 step by step
-**************************
+====================
 
 .. toctree:: 
-   :maxdepth: 3 
+   :maxdepth: 2 
 
    Ohmpi_V2_00/V2_00_step_01
    Ohmpi_V2_00/V2_00_step_02
