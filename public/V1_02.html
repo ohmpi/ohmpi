@@ -1,120 +1,138 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OhmPi V 1.02 (limited to 32 electrodes) &mdash; Ohmpi: open hardware resistivity-meter documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script src="_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="OhmPi V 2.xx (64 or 128 electrodes and 12V)" href="V2_00.html" />
-    <link rel="prev" title="OhmPi V 1.01 (limited to 32 electrodes)" href="V1_01.html" /> 
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<title>OhmPi V 1.02 (limited to 32 electrodes) | Ohmpi: open hardware resistivity-meter documentation</title>
+<link href="_static/pygments.css" rel="stylesheet"/>
+<link href="_static/theme.313ea551d1799b2102b1.css" rel="stylesheet"/>
+<link href="search.html" rel="search" title="Search"/>
+<link href="genindex.html" rel="index" title="Index"/>
+<link href="V2_00.html" rel="next" title="OhmPi V 2.00 (64 electrodes and 12V)"/>
+<link href="V1_01.html" rel="prev" title="OhmPi V 1.01 (limited to 32 electrodes)"/>
 </head>
-
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> Ohmpi:
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+<body class="antialiased text-gray">
+<div class="h-screen xl:grid xl:grid-layout" data-action="keydown@window-&gt;search#focus" data-controller="sidebar search" id="page">
+<a class="block text-xl bg-white py-4 z-20 absolute top-0 h-18 inset-x-0 text-center transform -translate-y-full focus:translate-y-0 focus:outline-none transition-transform duration-75" href="#ohmpi-v-1-02-limited-to-32-electrodes" title="Skip navigation links">Skip to content</a>
+<header class="grid-area-header z-10 h-14 sm:h-18">
+<div class="bg-gray-dark shadow-md flex items-center h-full xl:px-2 relative"><div class="flex items-center">
+<button class="xl:hidden h-14 w-14 sm:h-18 sm:w-18 leading-14 sm:leading-18 text-gray-100 hover:bg-gray-700 hover:text-brand focus:outline-none focus:bg-gray-700 focus:text-brand" data-action="sidebar#open" data-sidebar-target="hamburger">
+<span class="sr-only">Open navigation menu</span>
+<svg aria-hidden="true" class="fill-current h-8 w-8" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg>
+</button><a aria-label="Back to homepage" class="hover:bg-gray-700 focus:bg-gray-700 focus:outline-none tooltipped tooltipped-sw" href="index.html"><span class="hidden lg:inline-block shrink-0 font-medium text-gray-100 mx-5 leading-14 sm:leading-18 tracking-wider">Ohmpi: open hardware resistivity-meter documentation</span>
+</a></div><div class="flex justify-end items-center flex-1"><form action="search.html" class="flex print:hidden justify-between items-center leading-14 sm:leading-18 md:ml-4 bg-gray-dark text-gray-300 focus-within:bg-gray-50 focus-within:text-gray-800 focus-within:absolute focus-within:inset-x-0 focus-within:top-0 md:focus-within:w-full md:focus-within:static" data-action="click-&gt;search#focusSearchInput" id="searchbox" method="get">
+<button aria-label="Get search results" class="text-inherit h-14 w-14 sm:h-18 sm:w-18" tabindex="-1">
+<svg aria-hidden="true" class="fill-current stroke-current h-8 w-8" stroke-width="0.5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
+</button>
+<input aria-label="Search the docs" class="pr-2 bg-transparent text-inherit focus:outline-none w-0 md:w-auto focus:w-full transition-all duration-100" data-search-target="searchInput" id="search-input" name="q" placeholder="Search the docs" type="search"/>
+</form></div>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Ohmpi.html">OhmPi project</a></li>
-<li class="toctree-l1"><a class="reference internal" href="V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">OhmPi V 1.02 (limited to 32 electrodes)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#technical-data">Technical data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#raspberry-pi-configuration">Raspberry Pi  configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#os-installation">OS installation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#virtual-environnement-and-packages">Virtual Environnement and packages</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)</a></li>
+</header>
+<aside class="grid-area-sidebar h-full fixed xl:relative inset-y-0 left-0 z-20 xl:z-0 print:hidden overflow-y-auto transition-all transform transform-gpu -translate-x-full opacity-0 duration-300 xl:translate-x-0 xl:opacity-100" data-sidebar-target="sidebar">
+<nav class="h-full overflow-y-auto bg-white text-gray-600 pt-8 flex flex-col" role="navigation">
+<div class="nav-toc flex-1 pl-6"><ul class="current">
+<li class="toctree-l1"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="Ohmpi.html">OhmPi project</a></div><ul>
+<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="Ohmpi.html#partenaires"><strong>Partenaires</strong></a></div><ul>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="Ohmpi.html#citing-ohmpi"><strong>Citing OhmPi</strong></a></div></li>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="Ohmpi.html#introduction-to-ohmpi"><strong>Introduction to OhmPi</strong></a></div></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi">Assembly of the measuring/current injection cards, and connection with the Raspberry Pi</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#electrical-resistivity-measurements-board">Electrical resistivity measurements board</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#a-description">a) Description</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#b-implementation">b) Implementation</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#current-injection-board">Current injection board</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#frist-four-electrodes-resistivity-mesurement">Frist four electrodes resistivity mesurement</a></li>
+<li class="toctree-l1"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a></div><ul>
+<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></div></li>
+<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#technical-data">Technical data</a></div></li>
+<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#raspberry-pi-configuration">Raspberry Pi  configuration</a></div><ul>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#os-installation">OS installation</a></div></li>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#virtual-environnement-and-packages">Virtual Environnement and packages</a></div></li>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)</a></div></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#multiplexer-implentation">Multiplexer implentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#electrode-connection">Electrode connection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#operating-instruction">Operating instruction</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#preliminary-procedure-only-for-the-initial-operation">Preliminary procedure (Only for the initial operation)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#startup-procedure">Startup procedure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#electrical-resistivity-measurement-parameters-description">Electrical resistivity measurement parameters description</a></li>
+<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi">Assembly of the measuring/current injection cards, and connection with the Raspberry Pi</a></div><ul>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#electrical-resistivity-measurements-board">Electrical resistivity measurements board</a></div></li>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#current-injection-board">Current injection board</a></div></li>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#frist-four-electrodes-resistivity-mesurement">Frist four electrodes resistivity mesurement</a></div></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#complete-list-of-components">Complete list of components</a></li>
+<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#multiplexer-implentation">Multiplexer implentation</a></div></li>
+<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#electrode-connection">Electrode connection</a></div></li>
+<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#operating-instruction">Operating instruction</a></div><ul>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#preliminary-procedure-only-for-the-initial-operation">Preliminary procedure (Only for the initial operation)</a></div></li>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#startup-procedure">Startup procedure</a></div></li>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#electrical-resistivity-measurement-parameters-description">Electrical resistivity measurement parameters description</a></div></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="V2_00.html">OhmPi V 2.xx (64 or 128 electrodes and 12V)</a></li>
+<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V1_01.html#complete-list-of-components">Complete list of components</a></div></li>
 </ul>
-
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Ohmpi:</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>OhmPi V 1.02 (limited to 32 electrodes)</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="_sources/V1_02.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
+</li>
+<li class="toctree-l1 current expanded"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="current reference internal" data-action="click-&gt;sidebar#close" href="#">OhmPi V 1.02 (limited to 32 electrodes)</a></div><ul>
+<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></div></li>
+<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#technical-data">Technical data</a></div></li>
+<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="#raspberry-pi-configuration">Raspberry Pi  configuration</a></div><ul>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#os-installation">OS installation</a></div></li>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#virtual-environnement-and-packages">Virtual Environnement and packages</a></div></li>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)</a></div></li>
+</ul>
+</li>
+<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="#assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi">Assembly of the measuring/current injection cards, and connection with the Raspberry Pi</a></div><ul>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#electrical-resistivity-measurements-board">Electrical resistivity measurements board</a></div></li>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#current-injection-board">Current injection board</a></div></li>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#frist-four-electrodes-resistivity-mesurement">Frist four electrodes resistivity mesurement</a></div></li>
+</ul>
+</li>
+<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#multiplexer-implentation">Multiplexer implentation</a></div></li>
+<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#electrode-connection">Electrode connection</a></div></li>
+<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="#operating-instruction">Operating instruction</a></div><ul>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#preliminary-procedure-only-for-the-initial-operation">Preliminary procedure (Only for the initial operation)</a></div></li>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#startup-procedure">Startup procedure</a></div></li>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#electrical-resistivity-measurement-parameters-description">Electrical resistivity measurement parameters description</a></div></li>
+</ul>
+</li>
+<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="#complete-list-of-components">Complete list of components</a></div></li>
+</ul>
+</li>
+<li class="toctree-l1"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="V2_00.html">OhmPi V 2.00 (64 electrodes and 12V)</a></div><ul>
+<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V2_00.html#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></div></li>
+<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="V2_00.html#technical-data">Technical data</a></div><ul>
+<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="V2_00.html#ohmpi-2-step-by-step">Ohmpi 2 step by step</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <div class="section" id="ohmpi-v-1-02-limited-to-32-electrodes">
-<h1>OhmPi V 1.02 (limited to 32 electrodes)<a class="headerlink" href="#ohmpi-v-1-02-limited-to-32-electrodes" title="Permalink to this headline">¶</a></h1>
+<button class="text-4xl text-gray-800 p-4 bottom-0 hover:text-brand xl:hidden focus:text-brand self-center" data-action="" title="Close navigation menu">
+<span class="sr-only">Close navigation menu</span>
+<svg aria-hidden="true" class="fill-current stroke-current h-6 w-6" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</aside>
+<main class="px-10 xl:ml-fluid grid-area-main overflow-y-auto flex flex-col h-full mx-0 md:mx-auto xl:mr-0" data-action="scroll-&gt;scroll#showButton" data-controller="scroll"><nav aria-label="breadcrumbs" class="print:hidden mt-12 text-sm text-gray-light" role="navigation">
+<a class="text-gray-light text-sm hover:text-gray-dark font-medium focus:text-gray-dark" href="index.html">Ohmpi: open hardware resistivity-meter documentation</a>
+<span class="mr-1">/</span><span aria-current="page">OhmPi V 1.02 (limited to 32 electrodes)</span>
+</nav>
+<article class="flex-1" role="main">
+<div class="section" id="ohmpi-v-1-02-limited-to-32-electrodes">
+<h1>OhmPi V 1.02 (limited to 32 electrodes)<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#ohmpi-v-1-02-limited-to-32-electrodes">¶</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>In this version, we have improved the electronic measurement board. To upgrade from version 1.01 to 1.02, you just have to replace the measurement board by the new one proposed here.</p>
 </div>
 <div class="section" id="the-philosophy-of-ohmpi">
-<h2>The philosophy of Ohmpi<a class="headerlink" href="#the-philosophy-of-ohmpi" title="Permalink to this headline">¶</a></h2>
+<h2>The philosophy of Ohmpi<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#the-philosophy-of-ohmpi">¶</a></h2>
 <p>The philosophy of Ohmpi V1.01 is to offer a multi electrode resistivity meter, from a set of commercially available
 electronic cards it is a resistivity meter limited to 32 electrodes only. It is limited to low-current injection,
 but suitable for small laboratory experiments and small field time monitoring</p>
 </div>
 <div class="section" id="technical-data">
-<h2>Technical data<a class="headerlink" href="#technical-data" title="Permalink to this headline">¶</a></h2>
+<h2>Technical data<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#technical-data">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 32%" />
-<col style="width: 18%" />
+<col style="width: 50%"/>
+<col style="width: 32%"/>
+<col style="width: 18%"/>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><strong>Parameter</strong></p></td>
@@ -166,20 +184,20 @@ control system</p></td>
 </table>
 </div>
 <div class="section" id="raspberry-pi-configuration">
-<h2>Raspberry Pi  configuration<a class="headerlink" href="#raspberry-pi-configuration" title="Permalink to this headline">¶</a></h2>
+<h2>Raspberry Pi  configuration<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#raspberry-pi-configuration">¶</a></h2>
 <div class="section" id="os-installation">
-<h3>OS installation<a class="headerlink" href="#os-installation" title="Permalink to this headline">¶</a></h3>
+<h3>OS installation<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#os-installation">¶</a></h3>
 <p>The first step is to start up the Raspberry Pi board, including installation of an OS (operating system).
 For this step, the installation instructions are well described on the Raspberry website</p>
 <ol class="arabic simple">
-<li><p>Watch the vidéo “how to set up your raspberry Pi” (<a class="reference external" href="https://www.youtube.com/watch?v=wjWZhV1v3Pk">https://www.youtube.com/watch?v=wjWZhV1v3Pk</a>)</p></li>
+<li><p>Watch the vidéo “how to set up your raspberry Pi” (<a class="reference external" href="https://www.youtube.com/watch?v=wjWZhV1v3Pk" rel="nofollow noopener">https://www.youtube.com/watch?v=wjWZhV1v3Pk<svg aria-hidden="true" class="external-link-icon" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg></a>)</p></li>
 <li><p>The authors recommend installing the latest stable and complete version of Raspbian by using NOOBS (a simple-to-use operating system installer).</p></li>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="_images/raspbian_version1.jpg"><img alt="alternate text" src="_images/raspbian_version1.jpg" style="width: 800px; height: 400px;" /></a>
+<a class="reference internal image-reference" href="_images/raspbian_version1.jpg"><img alt="alternate text" src="_images/raspbian_version1.jpg" style="width: 800px; height: 400px;"/></a>
 </div>
 </div>
 <div class="admonition warning">
@@ -190,26 +208,32 @@ For this step, the installation instructions are well described on the Raspberry
 To ensure that the GPIOs are in Low position, you will need to modify the /boot/config.txt file.</p>
 <blockquote>
 <div><p>Run the terminal, and write</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span>
-</pre></div>
-</div>
+<div class="code-wrapper" data-controller="code">
+<div class="code-header">
+<span class="code-lang">python</span></div>
+<div class="highlight"><pre><code><span class="n">cd</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span>
+</code></pre></div></div>
 </div></blockquote>
 <ol class="arabic simple" start="4">
 <li><p>Open config.txt with GNU nano editor</p></li>
 </ol>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="n">config</span><span class="o">.</span><span class="n">txt</span>
-</pre></div>
-</div>
+<div><div class="code-wrapper" data-controller="code">
+<div class="code-header">
+<span class="code-lang">python</span></div>
+<div class="highlight"><pre><code><span class="n">sudo</span> <span class="n">nano</span> <span class="n">config</span><span class="o">.</span><span class="n">txt</span>
+</code></pre></div></div>
 </div></blockquote>
 <ol class="arabic simple" start="5">
 <li><p>At the end of the file write :</p></li>
 </ol>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gpio</span><span class="o">=</span><span class="mi">8</span><span class="o">=</span><span class="n">op</span><span class="p">,</span><span class="n">dl</span>
+<div><div class="code-wrapper" data-controller="code">
+<div class="code-header">
+<span class="code-lang">python</span></div>
+<div class="highlight"><pre><code><span class="n">gpio</span><span class="o">=</span><span class="mi">8</span><span class="o">=</span><span class="n">op</span><span class="p">,</span><span class="n">dl</span>
 <span class="n">gpio</span><span class="o">=</span><span class="mi">7</span><span class="o">=</span><span class="n">op</span><span class="p">,</span><span class="n">dl</span>
-</pre></div>
-</div>
+</code></pre></div></div>
 </div></blockquote>
 <ol class="arabic simple" start="6">
 <li><p>Press Ctrl +O to save the modifications and press enter</p></li>
@@ -218,71 +242,83 @@ To ensure that the GPIOs are in Low position, you will need to modify the /boot/
 </ol>
 </div>
 <div class="section" id="virtual-environnement-and-packages">
-<h3>Virtual Environnement and packages<a class="headerlink" href="#virtual-environnement-and-packages" title="Permalink to this headline">¶</a></h3>
+<h3>Virtual Environnement and packages<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#virtual-environnement-and-packages">¶</a></h3>
 <p>All dependencies are specified in requirements.txt</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>All instructions below should be typed in the terminal</p>
 </div>
 <p>It is first necessary to ensure that the libatlas-base-dev library is installed:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libatlas</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">dev</span>
-</pre></div>
-</div>
+<div class="code-wrapper" data-controller="code">
+<div class="code-header">
+<span class="code-lang">python</span></div>
+<div class="highlight"><pre><code><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libatlas</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">dev</span>
+</code></pre></div></div>
 <p>We strongly recommend users to create a virtual environment to run the code and installed all required dependencies. It can be done either in a directory gathering all virtual environments used on the computer or within the ohmpy directory.</p>
 <p>Create the virtual environment:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="n">ohmpy</span>
-</pre></div>
-</div>
+<div class="code-wrapper" data-controller="code">
+<div class="code-header">
+<span class="code-lang">python</span></div>
+<div class="highlight"><pre><code><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="n">ohmpy</span>
+</code></pre></div></div>
 <p>Activate it using the following command:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="n">ohmpy</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
-</pre></div>
-</div>
+<div class="code-wrapper" data-controller="code">
+<div class="code-header">
+<span class="code-lang">python</span></div>
+<div class="highlight"><pre><code><span class="n">source</span> <span class="n">ohmpy</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</code></pre></div></div>
 <p>Install packages within the virtual environment. Installing the following package should be sufficient to meet dependencies:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">RPi</span><span class="o">.</span><span class="n">GPIO</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">blinka</span> <span class="n">numpy</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">circuitpython</span><span class="o">-</span><span class="n">ads1x15</span> <span class="n">pandas</span>
-</pre></div>
-</div>
+<div class="code-wrapper" data-controller="code">
+<div class="code-header">
+<span class="code-lang">python</span></div>
+<div class="highlight"><pre><code><span class="n">pip</span> <span class="n">install</span> <span class="n">RPi</span><span class="o">.</span><span class="n">GPIO</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">blinka</span> <span class="n">numpy</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">circuitpython</span><span class="o">-</span><span class="n">ads1x15</span> <span class="n">pandas</span>
+</code></pre></div></div>
 <p>Check that requirements are met using</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="nb">list</span>
-</pre></div>
-</div>
+<div class="code-wrapper" data-controller="code">
+<div class="code-header">
+<span class="code-lang">python</span></div>
+<div class="highlight"><pre><code><span class="n">pip</span> <span class="nb">list</span>
+</code></pre></div></div>
 <p>You should run you code within the virtual environment
 to leave the virtual environment simply type:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">deactivate</span>
-</pre></div>
-</div>
+<div class="code-wrapper" data-controller="code">
+<div class="code-header">
+<span class="code-lang">python</span></div>
+<div class="highlight"><pre><code><span class="n">deactivate</span>
+</code></pre></div></div>
 </div>
 <div class="section" id="activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">
-<h3>Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)<a class="headerlink" href="#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi" title="Permalink to this headline">¶</a></h3>
+<h3>Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">¶</a></h3>
 <p>If you decided to use a virtual environment, it is necessary to setup Thonny Python IDE the first time you use it.</p>
 <p>1- Run the Thonny Python IDE software, Click on raspebrry acces <strong>menu &gt; programming&gt; Thonny pythonIDE</strong></p>
 <p>2- Thonny’s interface opens, Python runs on the Root (Python 3.7.3 (/usr/bin/python3))</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="_images/thonny_first_interface2.jpg"><img alt="alternate text" src="_images/thonny_first_interface2.jpg" style="width: 600px; height: 450px;" /></a>
+<a class="reference internal image-reference" href="_images/thonny_first_interface2.jpg"><img alt="alternate text" src="_images/thonny_first_interface2.jpg" style="width: 600px; height: 450px;"/></a>
 </div>
 <p>3-Click on <strong>Run&gt;select interpreter</strong>, a new window opens click on interpret</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="_images/thonny_option1.jpg"><img alt="alternate text" src="_images/thonny_option1.jpg" style="width: 600px; height: 450px;" /></a>
+<a class="reference internal image-reference" href="_images/thonny_option1.jpg"><img alt="alternate text" src="_images/thonny_option1.jpg" style="width: 600px; height: 450px;"/></a>
 </div>
 <p>4-On the new open windows select <strong>alternative Pyhton3 or virtual environnement</strong></p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="_images/thonny_interpreter1.jpg"><img alt="alternate text" src="_images/thonny_interpreter1.jpg" style="width: 600px; height: 450px;" /></a>
+<a class="reference internal image-reference" href="_images/thonny_interpreter1.jpg"><img alt="alternate text" src="_images/thonny_interpreter1.jpg" style="width: 600px; height: 450px;"/></a>
 </div>
 <p>5- New buttons appeared, selected <strong>“locate another python executable “</strong></p>
 <p>6- A new window opens, find the folder where there is the python 3 file in the virtual environment folder previously created <strong>/home/pi/ohmpi/bin/python3</strong>.</p>
 <p>7- In the <strong>known interpreter</strong> tab the path of the virtual environnementshould appear</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="_images/thonny_interpreter_folder1.jpg"><img alt="alternate text" src="_images/thonny_interpreter_folder1.jpg" style="width: 600px; height: 450px;" /></a>
+<a class="reference internal image-reference" href="_images/thonny_interpreter_folder1.jpg"><img alt="alternate text" src="_images/thonny_interpreter_folder1.jpg" style="width: 600px; height: 450px;"/></a>
 </div>
 <p>8- Close the window by clicking on <strong>ok</strong>.</p>
 <p>9- Close thonny to save modifications</p>
 </div>
 </div>
 <div class="section" id="assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi">
-<h2>Assembly of the measuring/current injection cards, and connection with the Raspberry Pi<a class="headerlink" href="#assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi" title="Permalink to this headline">¶</a></h2>
+<h2>Assembly of the measuring/current injection cards, and connection with the Raspberry Pi<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi">¶</a></h2>
 <div class="section" id="electrical-resistivity-measurements-board">
-<h3>Electrical resistivity measurements board<a class="headerlink" href="#electrical-resistivity-measurements-board" title="Permalink to this headline">¶</a></h3>
+<h3>Electrical resistivity measurements board<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#electrical-resistivity-measurements-board">¶</a></h3>
 <div class="section" id="a-description">
-<h4>a) Description<a class="headerlink" href="#a-description" title="Permalink to this headline">¶</a></h4>
+<h4>a) Description<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#a-description">¶</a></h4>
 <p>To measure electrical resistivity with Raspberry Pi, an ADS1115 was introduced, as proposed by Florsch [7]. The ADS1115
 is a 16-bit ADC (Analog-to-Digital Converter), with an adaptable gain. Its value has been set at 2/3 in this study. The
 input signal value could lie between - to + 6.114 V. The ADS1115 is mounted on a board adapted from an in-house design.
@@ -320,16 +356,16 @@ We also added 4 capacitors on the +12v inputs of the fast operational amplifiers
 between each power supply terminal and ground. The last point, we have added a four very high resistances of 10 MOhm, between the ground and
 the signal input on the operational amplifiers. This prevents the operational amplifiers from overheating.</p>
 <div class="align-center figure" id="id1">
-<a class="reference internal image-reference" href="_images/schema_measurement_board1_02.png"><img alt="alternate text" src="_images/schema_measurement_board1_02.png" style="width: 800px; height: 400px;" /></a>
-<p class="caption"><span class="caption-text">Measurement board (Ohmpi version 1.02)</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
+<a class="reference internal image-reference" href="_images/schema_measurement_board1_02.png"><img alt="alternate text" src="_images/schema_measurement_board1_02.png" style="width: 800px; height: 400px;"/></a>
+<figcaption><span class="caption-text">Measurement board (Ohmpi version 1.02)</span><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#id1">¶</a>
+</figcaption></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you want to have very accurate measurements you can replace the resistors with a tolerance of 1% by resistors with a tolerance of 0.01% which will improve the measurement, but the cost will be higher.</p>
 </div>
 </div>
 <div class="section" id="b-implementation">
-<h4>b) Implementation<a class="headerlink" href="#b-implementation" title="Permalink to this headline">¶</a></h4>
+<h4>b) Implementation<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#b-implementation">¶</a></h4>
 <p>The measurement board must be printed using the PCB file (Source file repository), with components soldered onto
 it by following the steps described below and illustrated in the following figure :</p>
 <ul>
@@ -344,23 +380,18 @@ it by following the steps described below and illustrated in the following figur
 \[coeff p2 = (R7 + R6) / R7\]</div>
 <div class="math notranslate nohighlight">
 \[coeff p3 = (R9 + R8) / R9\]</div>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>36
-37
-38
-39
-40
-41
-42
-43</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd"> hardware parameters</span>
-<span class="sd"> &quot;&quot;&quot;</span>
- <span class="n">R_ref</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># reference resistance value in ohm</span>
- <span class="n">coef_p0</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P0, measurement in V/V</span>
- <span class="n">coef_p1</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P1, measurement in V/V</span>
- <span class="n">coef_p2</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P2, measurement in V/V</span>
- <span class="n">coef_p3</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P3, measurement in V/V</span>
-</pre></div>
-</td></tr></table></div>
+<div class="code-wrapper" data-controller="code">
+<div class="code-header">
+<span class="code-lang">python</span></div>
+<div class="highlight"><pre><code><span class="code-line" id="line-36"><span class="linenos">36</span> <span class="sd">"""</span>
+</span><span class="code-line" id="line-37"><span class="linenos">37</span><span class="sd"> hardware parameters</span>
+</span><span class="code-line" id="line-38"><span class="linenos">38</span><span class="sd"> """</span>
+</span><span class="code-line" id="line-39"><span class="linenos">39</span> <span class="n">R_ref</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># reference resistance value in ohm</span>
+</span><span class="code-line" id="line-40"><span class="linenos">40</span> <span class="n">coef_p0</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P0, measurement in V/V</span>
+</span><span class="code-line" id="line-41"><span class="linenos">41</span> <span class="n">coef_p1</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P1, measurement in V/V</span>
+</span><span class="code-line" id="line-42"><span class="linenos">42</span> <span class="n">coef_p2</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P2, measurement in V/V</span>
+</span><span class="code-line" id="line-43"><span class="linenos">43</span> <span class="n">coef_p3</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P3, measurement in V/V</span>
+</span></code></pre></div></div>
 <p>The coefficient parameters can be adjusted in lines 40 to 43 of the ohmpi.py code.</p>
 </div></blockquote>
 </dd>
@@ -380,17 +411,17 @@ Once all the components have been soldered together, the measurement board can b
 battery terminal, according to Figure 9. Between the battery and the TX+ terminal of the measurement board, remember to
 place a fuse holder with a 1.5-A fuse for safety purposes.</p>
 <div class="align-center figure" id="id2">
-<a class="reference internal image-reference" href="_images/measurement_board1-02.jpg"><img alt="alternate text" src="_images/measurement_board1-02.jpg" style="width: 800px; height: 700px;" /></a>
-<p class="caption"><span class="caption-text">Measurement circuit board assembly: a) printed circuit board, b) adding the 1-Kohm resistors ± 1%, c)adding the 1.5-Kohm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
+<a class="reference internal image-reference" href="_images/measurement_board1-02.jpg"><img alt="alternate text" src="_images/measurement_board1-02.jpg" style="width: 800px; height: 700px;"/></a>
+<figcaption><span class="caption-text">Measurement circuit board assembly: a) printed circuit board, b) adding the 1-Kohm resistors ± 1%, c)adding the 1.5-Kohm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers</span><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#id2">¶</a>
+</figcaption></div>
 <div class="align-center figure" id="id3">
-<a class="reference internal image-reference" href="_images/measurement_board-2-V1-02.jpg"><img alt="alternate text" src="_images/measurement_board-2-V1-02.jpg" style="width: 800px; height: 700px;" /></a>
-<p class="caption"><span class="caption-text">Measurement board installation with Raspberry Pi</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
-</div>
+<a class="reference internal image-reference" href="_images/measurement_board-2-V1-02.jpg"><img alt="alternate text" src="_images/measurement_board-2-V1-02.jpg" style="width: 800px; height: 700px;"/></a>
+<figcaption><span class="caption-text">Measurement board installation with Raspberry Pi</span><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#id3">¶</a>
+</figcaption></div>
 </div>
 </div>
 <div class="section" id="current-injection-board">
-<h3>Current injection board<a class="headerlink" href="#current-injection-board" title="Permalink to this headline">¶</a></h3>
+<h3>Current injection board<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#current-injection-board">¶</a></h3>
 <p>To carry out the electrical resistivity measurement, the first step consists of injecting current into the ground.
 In our case, a simple 9-V lead-acid battery is used to create an electrical potential difference that results
 in current circulating into the ground. The current is injected through electrodes A and B (see Fig. 2). This
@@ -403,9 +434,9 @@ the polarity at electrodes A and B. Thus, when relays 3 and 4 are energized by t
 the positive battery pole is connected to electrode A and the negative pole to electrode B. When not energized,
 they remain in the normally closed position. This set-up offers a simple and robust solution to inject current.</p>
 <div class="align-center figure" id="id4">
-<a class="reference internal image-reference" href="_images/current_board.jpg"><img alt="alternate text" src="_images/current_board.jpg" style="width: 800px; height: 400px;" /></a>
-<p class="caption"><span class="caption-text">Wiring of the 4-channel relay module board for current injection management</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
-</div>
+<a class="reference internal image-reference" href="_images/current_board.jpg"><img alt="alternate text" src="_images/current_board.jpg" style="width: 800px; height: 400px;"/></a>
+<figcaption><span class="caption-text">Wiring of the 4-channel relay module board for current injection management</span><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#id4">¶</a>
+</figcaption></div>
 <p>The next step consists of featuring the 4-channel relay module used for current injection and its assembly. The wiring
 between the relays must be carried out in strict accordance with Fig. 10. This card must then be connected to the Raspberry
 Pi and the measurement card. On the Raspberry Pi, it is necessary to connect inputs In1 and In2 to the same GPIO. For this
@@ -414,20 +445,20 @@ the relay card’s 4 channels respectively to the GND pin and 5Vcc of the Raspbe
 shown in the diagram, using 1-mm2 cables (red and black in Fig. 10). Lastly, connect the inputs of relay 1 and 2 respectively
 to terminals B and A of the measurement board.</p>
 <div class="align-center figure" id="id5">
-<a class="reference internal image-reference" href="_images/installation_current_board_1_02.jpg"><img alt="alternate text" src="_images/installation_current_board_1_02.jpg" style="width: 800px; height: 700px;" /></a>
-<p class="caption"><span class="caption-text">Current injection board installation with Raspberry Pi</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
-</div>
+<a class="reference internal image-reference" href="_images/installation_current_board_1_02.jpg"><img alt="alternate text" src="_images/installation_current_board_1_02.jpg" style="width: 800px; height: 700px;"/></a>
+<figcaption><span class="caption-text">Current injection board installation with Raspberry Pi</span><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#id5">¶</a>
+</figcaption></div>
 <p>Congratulations, you have build a 4 electrodes resistivity-meter.</p>
 </div>
 <div class="section" id="frist-four-electrodes-resistivity-mesurement">
-<h3>Frist four electrodes resistivity mesurement<a class="headerlink" href="#frist-four-electrodes-resistivity-mesurement" title="Permalink to this headline">¶</a></h3>
+<h3>Frist four electrodes resistivity mesurement<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#frist-four-electrodes-resistivity-mesurement">¶</a></h3>
 <p>Under construction !</p>
 <p>Describe the way to valide the first part of the instruction.
 Electrical resistivity measurement on test circuit</p>
 </div>
 </div>
 <div class="section" id="multiplexer-implentation">
-<h2>Multiplexer implentation<a class="headerlink" href="#multiplexer-implentation" title="Permalink to this headline">¶</a></h2>
+<h2>Multiplexer implentation<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#multiplexer-implentation">¶</a></h2>
 <p>The resistivity measurement is conducted on four terminals (A, B, M and N). The user could perform each measurement
 by manually plugging four electrodes into the four channel terminals. In practice, ERT requires several tens or thousands
 of measurements conducted on different electrode arrays. A multiplexer is therefore used to connect each channel to one of
@@ -438,9 +469,9 @@ configuration enables making smaller multiplexers (8 or 16 electrodes only). On 
 which is entirely possible, a GPIO channel multiplier will have to be used.
 To prepare the multiplexer, the channels of the two relay boards must be connected according to the wiring diagram shown below.</p>
 <div class="align-center figure" id="id6">
-<a class="reference internal image-reference" href="_images/multiplexer_implementation.jpg"><img alt="alternate text" src="_images/multiplexer_implementation.jpg" style="width: 800px; height: 500px;" /></a>
-<p class="caption"><span class="caption-text">Schematic diagram of the wiring of two 16-channel relay shields</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
-</div>
+<a class="reference internal image-reference" href="_images/multiplexer_implementation.jpg"><img alt="alternate text" src="_images/multiplexer_implementation.jpg" style="width: 800px; height: 500px;"/></a>
+<figcaption><span class="caption-text">Schematic diagram of the wiring of two 16-channel relay shields</span><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#id6">¶</a>
+</figcaption></div>
 <p>For this purpose, 0.5-mm² cables with end caps are used and their length adjusted for each connection in order to produce a clean assembly.
 The length was adjusted so that the distance between the two points to be connected could be directly measured on the board once they had
 been assembled one above the other, in adding an extra 3 cm. The wires at the ends need to be stripped and the end caps added.
@@ -450,9 +481,9 @@ for activating each relay (Fig. 12). However, we will be activating several rela
 see Section 2.4). To execute this step, it will be necessary to follow the protocol presented in Figure.</p>
 <blockquote>
 <div><div class="align-center figure" id="id7">
-<a class="reference internal image-reference" href="_images/connection.jpg"><img alt="alternate text" src="_images/connection.jpg" style="width: 800px; height: 400px;" /></a>
-<p class="caption"><span class="caption-text">Connection to the 16-channel relay shield</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
-</div>
+<a class="reference internal image-reference" href="_images/connection.jpg"><img alt="alternate text" src="_images/connection.jpg" style="width: 800px; height: 400px;"/></a>
+<figcaption><span class="caption-text">Connection to the 16-channel relay shield</span><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#id7">¶</a>
+</figcaption></div>
 </div></blockquote>
 <p>For the 16-channel relay shield no. 1, these steps must be followed:
 *       Position a test circuit with 10 horizontal and 10 vertical holes on the pins of the 16-channel relay shield board.
@@ -463,12 +494,12 @@ This same operation must be repeated for the other three multiplexers as well.
 The next step consists of connecting the relay card inputs to the Raspberry Pi according to Table 5 for all four multiplexers.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 34%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 23%" />
+<col style="width: 34%"/>
+<col style="width: 11%"/>
+<col style="width: 11%"/>
+<col style="width: 11%"/>
+<col style="width: 11%"/>
+<col style="width: 23%"/>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td rowspan="2"></td>
@@ -516,21 +547,21 @@ The next step consists of connecting the relay card inputs to the Raspberry Pi a
 </div></blockquote>
 </div>
 <div class="section" id="electrode-connection">
-<h2>Electrode connection<a class="headerlink" href="#electrode-connection" title="Permalink to this headline">¶</a></h2>
+<h2>Electrode connection<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#electrode-connection">¶</a></h2>
 <p>At this point, all that remains is to connect the electrodes of each multiplexer to a terminal block (Fig. 13). In our set-up, screw terminals assembled on a din rail were used.
 According to the chosen multiplexer configuration, all the relays of each multiplexer will be connected to an electrode and, consequently, each electrode will have four incoming
 connections. Instead of having four cables connecting an electrode terminal to each multiplexer, we recommend using the cable assembly shown in the following Figure.</p>
 <div class="align-center figure" id="id8">
-<a class="reference internal image-reference" href="_images/cable.jpg"><img alt="alternate text" src="_images/cable.jpg" style="width: 800px; height: 300px;" /></a>
-<p class="caption"><span class="caption-text">Wire cabling for multiplexer and terminal screw connection</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
-</div>
+<a class="reference internal image-reference" href="_images/cable.jpg"><img alt="alternate text" src="_images/cable.jpg" style="width: 800px; height: 300px;"/></a>
+<figcaption><span class="caption-text">Wire cabling for multiplexer and terminal screw connection</span><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#id8">¶</a>
+</figcaption></div>
 <p>the next figure provides an example of multiplexer relay connections for electrode no. 1: this electrode of multiplexer MUX A must be connected to electrode no. 1 of MUX B. Moreover, electrode no. 1 of MUX B
 must be connected to electrode no. 1 of MUX N, which in turn must be connected to electrode no. 1 of MUX M. Lastly, electrode no. 1 of MUX M is connected to the terminal block.
 This operation must be repeated for all 32 electrodes.</p>
 <div class="align-center figure" id="id9">
-<a class="reference internal image-reference" href="_images/electrode_cable.jpg"><img alt="alternate text" src="_images/electrode_cable.jpg" style="width: 800px; height: 800px;" /></a>
-<p class="caption"><span class="caption-text">Example of a multiplexer connection to the screw terminal for electrode no. 1.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
-</div>
+<a class="reference internal image-reference" href="_images/electrode_cable.jpg"><img alt="alternate text" src="_images/electrode_cable.jpg" style="width: 800px; height: 800px;"/></a>
+<figcaption><span class="caption-text">Example of a multiplexer connection to the screw terminal for electrode no. 1.</span><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#id9">¶</a>
+</figcaption></div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The 16 channel relay cards exist in 5-V and 12-V , in the bottom figure we have 12-V cards that we will directly connect to the battery.
@@ -538,16 +569,16 @@ In case you bought 16 channel relay 5-V cards, you will need to add a DC/DC 12-V
 </div>
 </div>
 <div class="section" id="operating-instruction">
-<h2>Operating instruction<a class="headerlink" href="#operating-instruction" title="Permalink to this headline">¶</a></h2>
+<h2>Operating instruction<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#operating-instruction">¶</a></h2>
 <div class="section" id="preliminary-procedure-only-for-the-initial-operation">
-<h3>Preliminary procedure (Only for the initial operation)<a class="headerlink" href="#preliminary-procedure-only-for-the-initial-operation" title="Permalink to this headline">¶</a></h3>
-<p>The open source code must be downloaded at the Open Science Framework source file repository for this manuscript (<a class="reference external" href="https://osf.io/dzwb4/">https://osf.io/dzwb4/</a>)
-or at the following Gitlab repository address: <a class="reference external" href="https://gitlab.irstea.fr/reversaal/OhmPi">https://gitlab.irstea.fr/reversaal/OhmPi</a>. The code must be then unzipped into a selected folder (e.g. OhmPi-master). A “readme” file
+<h3>Preliminary procedure (Only for the initial operation)<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#preliminary-procedure-only-for-the-initial-operation">¶</a></h3>
+<p>The open source code must be downloaded at the Open Science Framework source file repository for this manuscript (<a class="reference external" href="https://osf.io/dzwb4/" rel="nofollow noopener">https://osf.io/dzwb4/<svg aria-hidden="true" class="external-link-icon" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg></a>)
+or at the following Gitlab repository address: <a class="reference external" href="https://gitlab.irstea.fr/reversaal/OhmPi" rel="nofollow noopener">https://gitlab.irstea.fr/reversaal/OhmPi<svg aria-hidden="true" class="external-link-icon" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg></a>. The code must be then unzipped into a selected folder (e.g. OhmPi-master). A “readme” file
 is proposed in the directory to assist with installation of the software and required python packages. It is strongly recommended to create a python virtual environment for installing
 the required packages and running the code.</p>
 </div>
 <div class="section" id="startup-procedure">
-<h3>Startup procedure<a class="headerlink" href="#startup-procedure" title="Permalink to this headline">¶</a></h3>
+<h3>Startup procedure<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#startup-procedure">¶</a></h3>
 <p>As an initial operating instruction, all batteries must be disconnected before any hardware handling. Ensure that the battery is charged at full capacity. Plug all the electrodes (32 or fewer)
 into the screw terminals. The Raspberry Pi must be plugged into a computer screen, with a mouse and keyboard accessed remotely. The Raspberry Pi must then be plugged into the power supply
 (for laboratory measurements) or a power bank (5V - 2A for field measurements). At this point, you’ll need to access the Raspbian operating system. Inside the previously created folder “ohmPi”,
@@ -558,38 +589,35 @@ hear the characteristic sound of a relay switching as a result of electrode perm
 are displayed on the screen. A measurement file is automatically created and named “measure.csv”; it will be placed in the same folder.</p>
 </div>
 <div class="section" id="electrical-resistivity-measurement-parameters-description">
-<h3>Electrical resistivity measurement parameters description<a class="headerlink" href="#electrical-resistivity-measurement-parameters-description" title="Permalink to this headline">¶</a></h3>
+<h3>Electrical resistivity measurement parameters description<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#electrical-resistivity-measurement-parameters-description">¶</a></h3>
 <p>In the version 1.02, the measurement parameters are in the Jason file (ohmpi_param.json).</p>
-<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="n">nb_electrodes</span> <span class="o">=</span> <span class="mi">32</span> <span class="c1"># maximum number of electrodes on the resistivity meter</span>
- <span class="n">injection_duration</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Current injection duration in second</span>
- <span class="n">nbr_meas</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># Number of times the quadripole sequence is repeated</span>
- <span class="n">sequence_delay</span><span class="o">=</span> <span class="mi">30</span> <span class="c1"># Delay in seconds between 2 sequences</span>
- <span class="n">stack</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># repetition of the current injection for each quadripole</span>
- <span class="n">export_path</span><span class="o">=</span> <span class="s2">&quot;home/pi/Desktop/measurement.csv&quot;</span>
-</pre></div>
-</td></tr></table></div>
+<div class="code-wrapper" data-controller="code">
+<div class="code-header">
+<span class="code-lang">python</span></div>
+<div class="highlight"><pre><code><span class="code-line" id="line-1"><span class="linenos">1</span> <span class="n">nb_electrodes</span> <span class="o">=</span> <span class="mi">32</span> <span class="c1"># maximum number of electrodes on the resistivity meter</span>
+</span><span class="code-line" id="line-2"><span class="linenos">2</span> <span class="n">injection_duration</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Current injection duration in second</span>
+</span><span class="code-line" id="line-3"><span class="linenos">3</span> <span class="n">nbr_meas</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># Number of times the quadripole sequence is repeated</span>
+</span><span class="code-line" id="line-4"><span class="linenos">4</span> <span class="n">sequence_delay</span><span class="o">=</span> <span class="mi">30</span> <span class="c1"># Delay in seconds between 2 sequences</span>
+</span><span class="code-line" id="line-5"><span class="linenos">5</span> <span class="n">stack</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># repetition of the current injection for each quadripole</span>
+</span><span class="code-line" id="line-6"><span class="linenos">6</span> <span class="n">export_path</span><span class="o">=</span> <span class="s2">"home/pi/Desktop/measurement.csv"</span>
+</span></code></pre></div></div>
 </div>
 </div>
 <div class="section" id="complete-list-of-components">
-<h2>Complete list of components<a class="headerlink" href="#complete-list-of-components" title="Permalink to this headline">¶</a></h2>
+<h2>Complete list of components<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#complete-list-of-components">¶</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The list evolve a little bit after the publication of the article, it is necessary to refer to this list, the article is out of date</p>
 </div>
 <table class="colwidths-given docutils align-default" id="id10">
-<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">List of components</span><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#id10">¶</a></caption>
 <colgroup>
-<col style="width: 8%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
+<col style="width: 8%"/>
+<col style="width: 18%"/>
+<col style="width: 18%"/>
+<col style="width: 18%"/>
+<col style="width: 18%"/>
+<col style="width: 18%"/>
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Component</p></th>
@@ -752,36 +780,20 @@ are displayed on the screen. A measurement file is automatically created and nam
 </table>
 </div>
 </div>
-
-
-           </div>
-          </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="V1_01.html" class="btn btn-neutral float-left" title="OhmPi V 1.01 (limited to 32 electrodes)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="V2_00.html" class="btn btn-neutral float-right" title="OhmPi V 2.xx (64 or 128 electrodes and 12V)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2020, INRAE, Rémi CLEMENT.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
-        </div>
-      </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
-
+</article>
+<footer>
+<div class="mt-20 mb-4 text-sm text-gray-700">© 2022, INRAE, Team Ohmpi Made with <a href="https://www.sphinx-doc.org">Sphinx 4.3.0</a></div>
+</footer></main>
+<button class="fixed bottom-0 right-0 z-20 opacity-0 p-4 m-4 tracking-wide bg-gray-900 text-gray-100 transition transform transform-gpu duration-500 translate-y-full" data-action="search#hideSnackbar" data-search-target="snackbar">
+  Clear highlights
+</button><div class="fixed hidden inset-0 bg-black bg-opacity-50" data-action="click-&gt;sidebar#close" data-sidebar-target="screen">
+</div>
+</div>
+<script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+<script src="_static/jquery.js"></script>
+<script src="_static/underscore.js"></script>
+<script src="_static/doctools.js"></script>
+<script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="_static/theme.3666d2347a4c66e5d7a8.js"></script>
 </body>
 </html>
