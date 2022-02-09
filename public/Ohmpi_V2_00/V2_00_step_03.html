@@ -48,6 +48,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#"><strong>STEP n°3</strong>: MUX board</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#part-a-assembly-of-mux-board"><strong>PART A</strong> Assembly of MUX board</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#part-b-mux-board-address"><strong>PART B</strong> MUX board address</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#part-c-validation-of-mux-board"><strong>PART C</strong> Validation of MUX board</a></li>
 </ul>
 </li>
 </ul>
@@ -260,6 +261,14 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
 <td><p>25515</p></td>
 <td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Keystone-Electronics/25515?qs=UWqYQ%2F2cZWuxuhUmfr%252BZuQ%3D%3D">https://www.mouser.fr/ProductDetail/Keystone-Electronics/25515?qs=UWqYQ%2F2cZWuxuhUmfr%252BZuQ%3D%3D</a></p></td>
 </tr>
+<tr class="row-odd"><td><p>DIP dual-in-line 2*14</p></td>
+<td><p>16</p></td>
+<td><p>1.55</p></td>
+<td><p>24.8</p></td>
+<td><p>Preci-dip</p></td>
+<td><p>110-87-328-41-001101</p></td>
+<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Preci-dip/110-87-328-41-001101?qs=uQD7XCvsSCNr3HWD6fta8g%3D%3D">https://www.mouser.fr/ProductDetail/Preci-dip/110-87-328-41-001101?qs=uQD7XCvsSCNr3HWD6fta8g%3D%3D</a></p></td>
+</tr>
 </tbody>
 </table>
 <table class="docutils align-center">
@@ -286,7 +295,7 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
 <td><img alt="../_images/MUX_01.jpg" src="../_images/MUX_01.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Installation of the 150 Kohm resistors</p></td>
+<tr class="row-even"><td><p>Installation of the 100 Kohm resistors</p></td>
 </tr>
 </tbody>
 </table>
@@ -510,6 +519,114 @@ electrode name on the mux board (B).</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="part-c-validation-of-mux-board">
+<h2><strong>PART C</strong> Validation of MUX board<a class="headerlink" href="#part-c-validation-of-mux-board" title="Permalink to this headline">¶</a></h2>
+<p>The first step is to test the Mux boards before assembling them definitively.
+To test the Mux boards, it will be necessary first to make a simplified assembly of the Mux board and the measurement board.</p>
+<p>The first thing to do is to prepare a 50 cm long flat wire with two 6-poles connectors.</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>1</p></td>
+<td><img alt="../_images/20211207_115706.jpg" src="../_images/20211207_115706.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Build a cable with 6 contacts with 6 pins connector.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>2</p></td>
+<td><img alt="../_images/20220124_142929.jpg" src="../_images/20220124_142929.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Prepare the measurement board and the first mux board by
+example the card with address 0x71.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>3</p></td>
+<td><img alt="../_images/20220124_143105.jpg" src="../_images/20220124_143105.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Connect the cables for the 12V power supply to the MUX board
+without powering the board.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>4</p></td>
+<td><img alt="../_images/20220207_154111.jpg" src="../_images/20220207_154111.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Connect the 12V power supply screw terminal of the mux board
+to the 12V screw terminal power supply of the measurement
+board.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>5</p></td>
+<td><img alt="../_images/20220124_143823.jpg" src="../_images/20220124_143823.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Connect the 6-contact cable</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Start your 12V power supply, the raspberry must start.</p>
+<p>Run the terminal and write:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">i2cdetect</span> <span class="o">-</span><span class="n">y</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Three addresses should appear, including the address of the MUX board you have selected. This implies that your board has been detected.</p>
+<p>Open the script called “test_mux_board.py”.</p>
+<p>Run the script</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>6</p></td>
+<td><img alt="../_images/thonny_mux_test_01.png" src="../_images/thonny_mux_test_01.png" />
+</td>
+</tr>
+<tr class="row-even"><td><p>choose to run option 2 to run all channels</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
 </div>
 </div>
 
