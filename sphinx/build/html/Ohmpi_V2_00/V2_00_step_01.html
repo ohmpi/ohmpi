@@ -1,128 +1,96 @@
-
 <!DOCTYPE html>
-
-<html lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta charset="utf-8"/>
-<title>STEP n°1 : Raspberry Pi configuration | Ohmpi: open hardware resistivity-meter documentation</title>
-<link href="../_static/pygments.css" rel="stylesheet"/>
-<link href="../_static/theme.313ea551d1799b2102b1.css" rel="stylesheet"/>
-<link href="../search.html" rel="search" title="Search"/>
-<link href="../genindex.html" rel="index" title="Index"/>
-<link href="V2_00_step_02.html" rel="next" title="STEP n°2: Measurement board"/>
-<link href="../V2_00.html" rel="prev" title="OhmPi V 2.00 (64 electrodes and 12V)"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STEP n°1 : Raspberry Pi configuration &mdash; Ohmpi: open hardware resistivity-meter documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="STEP n°2: Measurement board" href="V2_00_step_02.html" />
+    <link rel="prev" title="OhmPi V 2.00 (64 electrodes and 12V)" href="../V2_00.html" /> 
 </head>
-<body class="antialiased text-gray">
-<div class="h-screen xl:grid xl:grid-layout" data-action="keydown@window-&gt;search#focus" data-controller="sidebar search" id="page">
-<a class="block text-xl bg-white py-4 z-20 absolute top-0 h-18 inset-x-0 text-center transform -translate-y-full focus:translate-y-0 focus:outline-none transition-transform duration-75" href="#strong-step-n1-strong-raspberry-pi-configuration" title="Skip navigation links">Skip to content</a>
-<header class="grid-area-header z-10 h-14 sm:h-18">
-<div class="bg-gray-dark shadow-md flex items-center h-full xl:px-2 relative"><div class="flex items-center">
-<button class="xl:hidden h-14 w-14 sm:h-18 sm:w-18 leading-14 sm:leading-18 text-gray-100 hover:bg-gray-700 hover:text-brand focus:outline-none focus:bg-gray-700 focus:text-brand" data-action="sidebar#open" data-sidebar-target="hamburger">
-<span class="sr-only">Open navigation menu</span>
-<svg aria-hidden="true" class="fill-current h-8 w-8" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg>
-</button><a aria-label="Back to homepage" class="hover:bg-gray-700 focus:bg-gray-700 focus:outline-none tooltipped tooltipped-sw" href="../index.html"><span class="hidden lg:inline-block shrink-0 font-medium text-gray-100 mx-5 leading-14 sm:leading-18 tracking-wider">Ohmpi: open hardware resistivity-meter documentation</span>
-</a></div><div class="flex justify-end items-center flex-1"><form action="../search.html" class="flex print:hidden justify-between items-center leading-14 sm:leading-18 md:ml-4 bg-gray-dark text-gray-300 focus-within:bg-gray-50 focus-within:text-gray-800 focus-within:absolute focus-within:inset-x-0 focus-within:top-0 md:focus-within:w-full md:focus-within:static" data-action="click-&gt;search#focusSearchInput" id="searchbox" method="get">
-<button aria-label="Get search results" class="text-inherit h-14 w-14 sm:h-18 sm:w-18" tabindex="-1">
-<svg aria-hidden="true" class="fill-current stroke-current h-8 w-8" stroke-width="0.5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
-</button>
-<input aria-label="Search the docs" class="pr-2 bg-transparent text-inherit focus:outline-none w-0 md:w-auto focus:w-full transition-all duration-100" data-search-target="searchInput" id="search-input" name="q" placeholder="Search the docs" type="search"/>
-</form></div>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Ohmpi:
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
 </div>
-</header>
-<aside class="grid-area-sidebar h-full fixed xl:relative inset-y-0 left-0 z-20 xl:z-0 print:hidden overflow-y-auto transition-all transform transform-gpu -translate-x-full opacity-0 duration-300 xl:translate-x-0 xl:opacity-100" data-sidebar-target="sidebar">
-<nav class="h-full overflow-y-auto bg-white text-gray-600 pt-8 flex flex-col" role="navigation">
-<div class="nav-toc flex-1 pl-6"><ul class="current">
-<li class="toctree-l1"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="../Ohmpi.html">OhmPi project</a></div><ul>
-<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="../Ohmpi.html#partenaires"><strong>Partenaires</strong></a></div><ul>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../Ohmpi.html#citing-ohmpi"><strong>Citing OhmPi</strong></a></div></li>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../Ohmpi.html#introduction-to-ohmpi"><strong>Introduction to OhmPi</strong></a></div></li>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Ohmpi.html">OhmPi project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../V1_02.html">OhmPi V 1.02 (limited to 32 electrodes)</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../V2_00.html">OhmPi V 2.00 (64 electrodes and 12V)</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../V2_00.html#the-philosophy-of-ohmpi-2">The philosophy of Ohmpi 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../V2_00.html#technical-data">Technical data</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../V2_00.html#ohmpi-2-step-by-step">Ohmpi 2 step by step</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><strong>STEP n°1</strong> : Raspberry Pi  configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#part-a-os-installation"><strong>PART A:</strong> OS installation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#part-b-virtual-environnement-and-packages"><strong>PART B:</strong> Virtual Environnement and packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#part-c-activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi"><strong>PART C:</strong> Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l1"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a></div><ul>
-<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></div></li>
-<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#technical-data">Technical data</a></div></li>
-<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#raspberry-pi-configuration">Raspberry Pi  configuration</a></div><ul>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#os-installation">OS installation</a></div></li>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#virtual-environnement-and-packages">Virtual Environnement and packages</a></div></li>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)</a></div></li>
-</ul>
-</li>
-<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi">Assembly of the measuring/current injection cards, and connection with the Raspberry Pi</a></div><ul>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#electrical-resistivity-measurements-board">Electrical resistivity measurements board</a></div></li>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#current-injection-board">Current injection board</a></div></li>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#frist-four-electrodes-resistivity-mesurement">Frist four electrodes resistivity mesurement</a></div></li>
-</ul>
-</li>
-<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#multiplexer-implentation">Multiplexer implentation</a></div></li>
-<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#electrode-connection">Electrode connection</a></div></li>
-<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#operating-instruction">Operating instruction</a></div><ul>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#preliminary-procedure-only-for-the-initial-operation">Preliminary procedure (Only for the initial operation)</a></div></li>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#startup-procedure">Startup procedure</a></div></li>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#electrical-resistivity-measurement-parameters-description">Electrical resistivity measurement parameters description</a></div></li>
-</ul>
-</li>
-<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_01.html#complete-list-of-components">Complete list of components</a></div></li>
-</ul>
-</li>
-<li class="toctree-l1"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html">OhmPi V 1.02 (limited to 32 electrodes)</a></div><ul>
-<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></div></li>
-<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#technical-data">Technical data</a></div></li>
-<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#raspberry-pi-configuration">Raspberry Pi  configuration</a></div><ul>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#os-installation">OS installation</a></div></li>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#virtual-environnement-and-packages">Virtual Environnement and packages</a></div></li>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)</a></div></li>
-</ul>
-</li>
-<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi">Assembly of the measuring/current injection cards, and connection with the Raspberry Pi</a></div><ul>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#electrical-resistivity-measurements-board">Electrical resistivity measurements board</a></div></li>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#current-injection-board">Current injection board</a></div></li>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#frist-four-electrodes-resistivity-mesurement">Frist four electrodes resistivity mesurement</a></div></li>
-</ul>
-</li>
-<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#multiplexer-implentation">Multiplexer implentation</a></div></li>
-<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#electrode-connection">Electrode connection</a></div></li>
-<li class="toctree-l2"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#operating-instruction">Operating instruction</a></div><ul>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#preliminary-procedure-only-for-the-initial-operation">Preliminary procedure (Only for the initial operation)</a></div></li>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#startup-procedure">Startup procedure</a></div></li>
-<li class="toctree-l3"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#electrical-resistivity-measurement-parameters-description">Electrical resistivity measurement parameters description</a></div></li>
-</ul>
-</li>
-<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V1_02.html#complete-list-of-components">Complete list of components</a></div></li>
-</ul>
-</li>
-<li class="toctree-l1 current expanded"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V2_00.html">OhmPi V 2.00 (64 electrodes and 12V)</a></div><ul class="current">
-<li class="toctree-l2"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V2_00.html#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></div></li>
-<li class="toctree-l2 current expanded"><div class="nav-link"><svg class="expand" data-action="click-&gt;sidebar#expand keydown-&gt;sidebar#expandKeyPressed" tabindex="0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V2_00.html#technical-data">Technical data</a></div><ul class="current">
-<li class="toctree-l3 current expanded"><div class="nav-link"><a class="reference internal" data-action="click-&gt;sidebar#close" href="../V2_00.html#ohmpi-2-step-by-step">Ohmpi 2 step by step</a></div></li>
+<li class="toctree-l3"><a class="reference internal" href="V2_00_step_02.html"><strong>STEP n°2</strong>: Measurement board</a></li>
+<li class="toctree-l3"><a class="reference internal" href="V2_00_step_03.html"><strong>STEP n°3:</strong> MUX board</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ohmpi:</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../V2_00.html">OhmPi V 2.00 (64 electrodes and 12V)</a> &raquo;</li>
+      <li><strong>STEP n°1</strong> : Raspberry Pi  configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Ohmpi_V2_00/V2_00_step_01.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
 </div>
-<button class="text-4xl text-gray-800 p-4 bottom-0 hover:text-brand xl:hidden focus:text-brand self-center" data-action="" title="Close navigation menu">
-<span class="sr-only">Close navigation menu</span>
-<svg aria-hidden="true" class="fill-current stroke-current h-6 w-6" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
-</button>
-</nav>
-</aside>
-<main class="px-10 xl:ml-fluid grid-area-main overflow-y-auto flex flex-col h-full mx-0 md:mx-auto xl:mr-0" data-action="scroll-&gt;scroll#showButton" data-controller="scroll"><nav aria-label="breadcrumbs" class="print:hidden mt-12 text-sm text-gray-light" role="navigation">
-<a class="text-gray-light text-sm hover:text-gray-dark font-medium focus:text-gray-dark" href="../index.html">Ohmpi: open hardware resistivity-meter documentation</a>
-<span class="mr-1">/</span><a class="text-gray-light text-sm hover:text-gray-dark" href="../V2_00.html">OhmPi V 2.00 (64 electrodes and 12V)</a>
-<span class="mr-1">/</span><span aria-current="page"><strong>STEP n°1</strong> : Raspberry Pi  configuration</span>
-</nav>
-<article class="flex-1" role="main">
-<div class="section" id="step-n1-raspberry-pi-configuration">
-<h1><strong>STEP n°1</strong> : Raspberry Pi  configuration<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#step-n1-raspberry-pi-configuration">¶</a></h1>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="step-n1-raspberry-pi-configuration">
+<h1><strong>STEP n°1</strong> : Raspberry Pi  configuration<a class="headerlink" href="#step-n1-raspberry-pi-configuration" title="Permalink to this headline"></a></h1>
 <div class="section" id="part-a-os-installation">
-<h2><strong>PART A:</strong> OS installation<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#part-a-os-installation">¶</a></h2>
+<h2><strong>PART A:</strong> OS installation<a class="headerlink" href="#part-a-os-installation" title="Permalink to this headline"></a></h2>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 78%"/>
-<col style="width: 22%"/>
+<col style="width: 78%" />
+<col style="width: 22%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><strong>Required components</strong></p></td>
@@ -148,15 +116,15 @@
 <p>The first step is to start up the Raspberry Pi board, including installation of an OS (operating system).
 For this step, the installation instructions are well described on the Raspberry website</p>
 <ol class="arabic simple">
-<li><p>Watch the vidéo “how to set up your raspberry Pi” (<a class="reference external" href="https://www.youtube.com/watch?v=wjWZhV1v3Pk" rel="nofollow noopener">https://www.youtube.com/watch?v=wjWZhV1v3Pk<svg aria-hidden="true" class="external-link-icon" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg></a>)</p></li>
+<li><p>Watch the vidéo <a class="reference external" href="https://www.youtube.com/watch?v=wjWZhV1v3Pk">how to set up your raspberry Pi</a>.</p></li>
 <li><p>The authors recommend installing the latest stable and complete version of Raspberry Pi OS (Previously called Raspbian) by using Raspberry Pi Imager.</p></li>
-<li><p>or you can visit this website : (<a class="reference external" href="https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up" rel="nofollow noopener">https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up<svg aria-hidden="true" class="external-link-icon" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg></a>)</p></li>
+<li><p>or you can visit this <cite>website &lt;https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up&gt;</cite>.</p></li>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="../_images/raspbian_version.jpg"><img alt="alternate text" src="../_images/raspbian_version.jpg" style="width: 800px; height: 400px;"/></a>
+<a class="reference internal image-reference" href="../_images/raspbian_version.jpg"><img alt="alternate text" src="../_images/raspbian_version.jpg" style="width: 800px; height: 400px;" /></a>
 </div>
 </div>
 <div class="admonition warning">
@@ -167,32 +135,26 @@ For this step, the installation instructions are well described on the Raspberry
 To ensure that the GPIOs are in Low position, you will need to modify the /boot/config.txt file.</p>
 <blockquote>
 <div><p>Run the terminal, and write</p>
-<div class="code-wrapper" data-controller="code">
-<div class="code-header">
-<span class="code-lang">python</span></div>
-<div class="highlight"><pre><code><span class="n">cd</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span>
-</code></pre></div></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span>
+</pre></div>
+</div>
 </div></blockquote>
 <ol class="arabic simple" start="4">
 <li><p>Open config.txt with GNU nano editor</p></li>
 </ol>
 <blockquote>
-<div><div class="code-wrapper" data-controller="code">
-<div class="code-header">
-<span class="code-lang">python</span></div>
-<div class="highlight"><pre><code><span class="n">sudo</span> <span class="n">nano</span> <span class="n">config</span><span class="o">.</span><span class="n">txt</span>
-</code></pre></div></div>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="n">config</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
 </div></blockquote>
 <ol class="arabic simple" start="5">
 <li><p>At the end of the file write :</p></li>
 </ol>
 <blockquote>
-<div><div class="code-wrapper" data-controller="code">
-<div class="code-header">
-<span class="code-lang">python</span></div>
-<div class="highlight"><pre><code><span class="n">gpio</span><span class="o">=</span><span class="mi">8</span><span class="o">=</span><span class="n">op</span><span class="p">,</span><span class="n">dl</span>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gpio</span><span class="o">=</span><span class="mi">8</span><span class="o">=</span><span class="n">op</span><span class="p">,</span><span class="n">dl</span>
 <span class="n">gpio</span><span class="o">=</span><span class="mi">7</span><span class="o">=</span><span class="n">op</span><span class="p">,</span><span class="n">dl</span>
-</code></pre></div></div>
+</pre></div>
+</div>
 </div></blockquote>
 <ol class="arabic simple" start="6">
 <li><p>Press Ctrl +O to save the modifications and press enter</p></li>
@@ -201,7 +163,7 @@ To ensure that the GPIOs are in Low position, you will need to modify the /boot/
 </ol>
 </div>
 <div class="section" id="part-b-virtual-environnement-and-packages">
-<h2><strong>PART B:</strong> Virtual Environnement and packages<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#part-b-virtual-environnement-and-packages">¶</a></h2>
+<h2><strong>PART B:</strong> Virtual Environnement and packages<a class="headerlink" href="#part-b-virtual-environnement-and-packages" title="Permalink to this headline"></a></h2>
 <p>A virtual environment is a way to have multiple, parallel instances of the Python interpreter, each with different package sets and different configurations.
 Each virtual environment contains a discrete copy of the Python interpreter, including copies of its support utilities. It also protects your system in case of problems with the packages.</p>
 <p>All dependencies are specified in requirements.txt</p>
@@ -210,84 +172,89 @@ Each virtual environment contains a discrete copy of the Python interpreter, inc
 <p>All instructions below should be typed in the terminal</p>
 </div>
 <p>It is first necessary to ensure that the libatlas-base-dev library is installed:</p>
-<div class="code-wrapper" data-controller="code">
-<div class="code-header">
-<span class="code-lang">python</span></div>
-<div class="highlight"><pre><code><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libatlas</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">dev</span>
-</code></pre></div></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libatlas</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+</div>
 <p>We strongly recommend users to create a virtual environment to run the code and installed all required dependencies. It can be done either in a directory gathering all virtual environments used on the computer or within the ohmpy directory.</p>
 <p>Create the virtual environment:</p>
-<div class="code-wrapper" data-controller="code">
-<div class="code-header">
-<span class="code-lang">python</span></div>
-<div class="highlight"><pre><code><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="n">ohmpy</span>
-</code></pre></div></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="n">ohmpy</span>
+</pre></div>
+</div>
 <p>Activate it using the following command:</p>
-<div class="code-wrapper" data-controller="code">
-<div class="code-header">
-<span class="code-lang">python</span></div>
-<div class="highlight"><pre><code><span class="n">source</span> <span class="n">ohmpy</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
-</code></pre></div></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="n">ohmpy</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</pre></div>
+</div>
 <p>Install packages within the virtual environment. Installing the following package should be sufficient to meet dependencies:</p>
-<div class="code-wrapper" data-controller="code">
-<div class="code-header">
-<span class="code-lang">python</span></div>
-<div class="highlight"><pre><code><span class="n">export</span> <span class="n">CFLAGS</span><span class="o">=-</span><span class="n">fcommon</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">CFLAGS</span><span class="o">=-</span><span class="n">fcommon</span>
     <span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">RPi</span><span class="o">.</span><span class="n">GPIO</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">blinka</span> <span class="n">numpy</span> <span class="n">pandas</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">circuitpython</span><span class="o">-</span><span class="n">ads1x15</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">circuitpython</span><span class="o">-</span><span class="n">tca9548a</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">circuitpython</span><span class="o">-</span><span class="n">mcp230xx</span> <span class="n">gpiozero</span>
-</code></pre></div></div>
+</pre></div>
+</div>
 <p>Check that requirements are met using</p>
-<div class="code-wrapper" data-controller="code">
-<div class="code-header">
-<span class="code-lang">python</span></div>
-<div class="highlight"><pre><code><span class="n">pip</span> <span class="nb">list</span>
-</code></pre></div></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="nb">list</span>
+</pre></div>
+</div>
 <p>You should run you code within the virtual environment
 to leave the virtual environment simply type:</p>
-<div class="code-wrapper" data-controller="code">
-<div class="code-header">
-<span class="code-lang">python</span></div>
-<div class="highlight"><pre><code><span class="n">deactivate</span>
-</code></pre></div></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">deactivate</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="part-c-activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">
-<h2><strong>PART C:</strong> Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#part-c-activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi">¶</a></h2>
+<h2><strong>PART C:</strong> Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi)<a class="headerlink" href="#part-c-activate-virtual-environnement-on-thonny-python-ide-on-rapberry-pi" title="Permalink to this headline"></a></h2>
 <p>If you decided to use a virtual environment, it is necessary to setup Thonny Python IDE the first time you use it.</p>
 <p>1- Run the Thonny Python IDE software, Click on raspebrry acces <strong>menu &gt; programming&gt; Thonny pythonIDE</strong></p>
 <p>2- Thonny’s interface opens, Python runs on the Root (Python 3.7.3 (/usr/bin/python3))</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="../_images/thonny_first_interface.jpg"><img alt="alternate text" src="../_images/thonny_first_interface.jpg" style="width: 600px; height: 450px;"/></a>
+<a class="reference internal image-reference" href="../_images/thonny_first_interface.jpg"><img alt="alternate text" src="../_images/thonny_first_interface.jpg" style="width: 600px; height: 450px;" /></a>
 </div>
 <p>3-Click on <strong>Run&gt;select interpreter</strong>, a new window opens click on interpret</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="../_images/thonny_option.jpg"><img alt="alternate text" src="../_images/thonny_option.jpg" style="width: 600px; height: 450px;"/></a>
+<a class="reference internal image-reference" href="../_images/thonny_option.jpg"><img alt="alternate text" src="../_images/thonny_option.jpg" style="width: 600px; height: 450px;" /></a>
 </div>
 <p>4-On the new open windows select <strong>alternative Pyhton3 or virtual environnement</strong></p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="../_images/thonny_interpreter.jpg"><img alt="alternate text" src="../_images/thonny_interpreter.jpg" style="width: 600px; height: 450px;"/></a>
+<a class="reference internal image-reference" href="../_images/thonny_interpreter.jpg"><img alt="alternate text" src="../_images/thonny_interpreter.jpg" style="width: 600px; height: 450px;" /></a>
 </div>
 <p>5- New buttons appeared, selected <strong>“locate another python executable “</strong></p>
 <p>6- A new window opens, find the folder where there is the python 3 file in the virtual environment folder previously created <strong>/home/pi/ohmpi/bin/python3</strong>.</p>
 <p>7- In the <strong>known interpreter</strong> tab the path of the virtual environnementshould appear</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="../_images/thonny_interpreter_folder.jpg"><img alt="alternate text" src="../_images/thonny_interpreter_folder.jpg" style="width: 600px; height: 450px;"/></a>
+<a class="reference internal image-reference" href="../_images/thonny_interpreter_folder.jpg"><img alt="alternate text" src="../_images/thonny_interpreter_folder.jpg" style="width: 600px; height: 450px;" /></a>
 </div>
 <p>8- Close the window by clicking on <strong>ok</strong>.</p>
 <p>9- Close thonny to save modifications</p>
 </div>
 </div>
-</article>
-<footer>
-<div class="mt-20 mb-4 text-sm text-gray-700">© 2022, INRAE, Team Ohmpi Made with <a href="https://www.sphinx-doc.org">Sphinx 4.3.0</a></div>
-</footer></main>
-<button class="fixed bottom-0 right-0 z-20 opacity-0 p-4 m-4 tracking-wide bg-gray-900 text-gray-100 transition transform transform-gpu duration-500 translate-y-full" data-action="search#hideSnackbar" data-search-target="snackbar">
-  Clear highlights
-</button><div class="fixed hidden inset-0 bg-black bg-opacity-50" data-action="click-&gt;sidebar#close" data-sidebar-target="screen">
-</div>
-</div>
-<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-<script src="../_static/jquery.js"></script>
-<script src="../_static/underscore.js"></script>
-<script src="../_static/doctools.js"></script>
-<script src="../_static/theme.3666d2347a4c66e5d7a8.js"></script>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../V2_00.html" class="btn btn-neutral float-left" title="OhmPi V 2.00 (64 electrodes and 12V)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="V2_00_step_02.html" class="btn btn-neutral float-right" title="STEP n°2: Measurement board" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, INRAE, Team Ohmpi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
 </body>
 </html>

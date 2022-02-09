@@ -2,13 +2,14 @@
 OhmPi project 
 ***************
 
- 
-.. image:: logo_ohmpi.JPG
-   :width: 250 px
-   :align: left
-   :height: 180 px
-   :alt: Logo OhmPi
-  
+	.. image:: logo_ohmpi.JPG
+		:width: 250 px
+		:align: center
+		:height: 180 px
+		:alt: Logo OhmPi
+
+
+|  
 
 **Authors:** 
 ------------
@@ -16,8 +17,8 @@ OhmPi project
 | Yannick FARGIER, GERS-RRO, Univ Gustave Eiffel, IFSTTAR, Lyon, France.
 | Julien GANCE, IRIS Instruments, Orléans, France.
 | Hélène GUYARD, IGE Grenoble, Université Grenoble Alpes, Grenoble, France.
-| Olivier Kaufmann, Université de Mons, Department of Geology and Applied Geology, Mons, Belgium 
-| Guillaume Banchy, ILVO,Merelbeke, France
+| Olivier Kaufmann, Université de Mons, Mons, Belgium 
+| Guillaume Banchy, ILVO,Merelbeke, Belgium
 |
 
 
@@ -28,18 +29,13 @@ OhmPi project
    :align: center
   
    +----------------------------------+-----------------------------------+-------------------------------+
-   |   .. image:: logo_inrae.jpg      |  .. image:: logo_univ_gustave.png |                               |
+   |   .. image:: logo_inrae.jpg      |  .. image:: logo_univ_gustave.png |   .. image:: logo_ilvo.png    |
    +----------------------------------+-----------------------------------+-------------------------------+
    |   .. image:: logo_univ_mons.png  |  .. image:: ige.png               |   .. image:: logo-iris.jpg    |              
    +----------------------------------+-----------------------------------+-------------------------------+
    
-Creation date : July 10, 2020
 
-Update : February 09, 2022.
 
-Status of document: In progress.
-
-|
   
 
 **Citing OhmPi:** 
@@ -53,8 +49,8 @@ Status of document: In progress.
 
 |
    
-**Introduction to OhmPi:** 
---------------------------
+**Introduction :** 
+-------------------
 
 |
 

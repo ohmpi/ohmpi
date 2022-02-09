@@ -23,11 +23,11 @@
 The first step is to start up the Raspberry Pi board, including installation of an OS (operating system). 
 For this step, the installation instructions are well described on the Raspberry website 
 
-1. Watch the vidéo "how to set up your raspberry Pi" (https://www.youtube.com/watch?v=wjWZhV1v3Pk)
+1. Watch the vidéo `how to set up your raspberry Pi <https://www.youtube.com/watch?v=wjWZhV1v3Pk>`_.
 
 2. The authors recommend installing the latest stable and complete version of Raspberry Pi OS (Previously called Raspbian) by using Raspberry Pi Imager.
 
-3. or you can visit this website : (https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up)  
+3. or you can visit this `website <https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up>`.  
 
 .. note:: 
 	 All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:
