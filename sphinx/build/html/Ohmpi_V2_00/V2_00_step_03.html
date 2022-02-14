@@ -1,32 +1,69 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>STEP n°3: MUX board &mdash; Ohmpi: open hardware resistivity-meter documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    <script src="../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="prev" title="STEP n°2: Measurement board" href="V2_00_step_02.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../index.html" class="icon icon-home"> Ohmpi:
+          
+
+          
           </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -34,7 +71,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../Ohmpi.html">OhmPi project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a></li>
@@ -57,33 +105,75 @@
 </li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">Ohmpi:</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
+    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
           <li><a href="../V2_00.html">OhmPi V 2.00 (64 electrodes and 12V)</a> &raquo;</li>
+        
       <li><strong>STEP n°3:</strong> MUX board</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+          
             <a href="../_sources/Ohmpi_V2_00/V2_00_step_03.rst.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <div class="section" id="step-n3-mux-board">
-<h1><strong>STEP n°3:</strong> MUX board<a class="headerlink" href="#step-n3-mux-board" title="Permalink to this headline"></a></h1>
+<h1><strong>STEP n°3:</strong> MUX board<a class="headerlink" href="#step-n3-mux-board" title="Permalink to this headline">¶</a></h1>
 <p>The multiplexing of the channels is a mechanical multiplexing based on OMRON’s manufacturing relays (G5LE-1-VD 12 VDC). Each relay is combined with
 a ZVN4206A power MOFSET. The raspberry has only 30 GPIOs, which is not enough to activate all the 64 electrodes, which represent 512 GPIOs.
 We used gpio expender I2C (MCP23017). We have associated these components with an I2C muliplexer of type type TCA9548A from adafruit.
@@ -91,14 +181,14 @@ This combination allows to go up to 512 GPIOs and up to 128 electrodes. Each car
 In the following presentation for an Ohmpi 64 electrodes, we will use the addresses 0X70 for channel A, 0X71 for channel B, 0X72 for channel M and 0X73 for channel N.
 0X73 for the N channel. 4 MUX board will be needed to multiplex an Ohmpi 64 electrodes.</p>
 <div class="section" id="part-a-assembly-of-mux-board">
-<h2><strong>PART A</strong> Assembly of MUX board<a class="headerlink" href="#part-a-assembly-of-mux-board" title="Permalink to this headline"></a></h2>
+<h2><strong>PART A</strong> Assembly of MUX board<a class="headerlink" href="#part-a-assembly-of-mux-board" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="required-components">
-<h3>Required components<a class="headerlink" href="#required-components" title="Permalink to this headline"></a></h3>
+<h3>Required components<a class="headerlink" href="#required-components" title="Permalink to this headline">¶</a></h3>
 <div class="align-center figure">
 <a class="reference internal image-reference" href="../_images/MUX_board_componement.jpg"><img alt="alternate text" src="../_images/MUX_board_componement.jpg" style="width: 600px; height: 650px;" /></a>
 </div>
 <table class="colwidths-given docutils align-default" id="id1">
-<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 8%" />
 <col style="width: 18%" />
@@ -138,7 +228,7 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
 <td><p>0.62</p></td>
 <td><p>9.92</p></td>
 <td><p>BLK electronic</p></td>
-<td><p>10120550</p></td>
+<td><p>1580994</p></td>
 <td><p><a class="reference external" href="https://www.conrad.com/p/tru-components-1580994-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-16-no-of-rows-2-1-pcs-1580994">https://www.conrad.com/p/tru-components-1580994-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-16-no-of-rows-2-1-pcs-1580994</a></p></td>
 </tr>
 <tr class="row-even"><td><p>diode-1n4007</p></td>
@@ -155,7 +245,7 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
 <td><p>1.56</p></td>
 <td><p>BLK electronic</p></td>
 <td><p>10120550</p></td>
-<td><p><a class="reference external" href="https://www.conrad.com/p/tru-components-1580994-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-16-no-of-rows-2-1-pcs-1580994">https://www.conrad.com/p/tru-components-1580994-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-16-no-of-rows-2-1-pcs-1580994</a></p></td>
+<td><p><a class="reference external" href="https://www.conrad.com/p/bkl-electronic-10120550-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-6-no-of-rows-2-1-pcs-741435">https://www.conrad.com/p/bkl-electronic-10120550-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-6-no-of-rows-2-1-pcs-741435</a></p></td>
 </tr>
 <tr class="row-even"><td><p>Dual screw terminal (5.08-mm pitch)</p></td>
 <td><p>12</p></td>
@@ -197,7 +287,7 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
 <td><p>ZVN4206A</p></td>
 <td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Diodes-Incorporated/ZVN4206A?qs=vHuUswq2%252Bsz9b%2Ff6fcXt7g%3D%3D">https://www.mouser.fr/ProductDetail/Diodes-Incorporated/ZVN4206A?qs=vHuUswq2%252Bsz9b%2Ff6fcXt7g%3D%3D</a></p></td>
 </tr>
-<tr class="row-odd"><td><p>100k? Resistor</p></td>
+<tr class="row-odd"><td><p>100kΩ Resistor</p></td>
 <td><p>256</p></td>
 <td><p>0.061</p></td>
 <td><p>15.616</p></td>
@@ -229,7 +319,7 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
 <td><p>10120862</p></td>
 <td><p><a class="reference external" href="https://www.conrad.com/p/bkl-electronic-10120862-pin-connector-strain-relief-contact-spacing-254-mm-total-number-of-pins-6-no-of-rows-2-1-742063">https://www.conrad.com/p/bkl-electronic-10120862-pin-connector-strain-relief-contact-spacing-254-mm-total-number-of-pins-6-no-of-rows-2-1-742063</a></p></td>
 </tr>
-<tr class="row-odd"><td><p>BKL Electronic 10120158/10 Ribbon cable Contact spacing: 1.27 mm 16 x 0.08 mm Multi-coloured 10 m</p></td>
+<tr class="row-odd"><td><p>BKL Electronic 10120158/10 Ribbon cable Contact spacing: 1.27 mm 16 x 0.08 mm² Multi-coloured 10 m</p></td>
 <td><p>1</p></td>
 <td><p>27</p></td>
 <td><p>27</p></td>
@@ -351,7 +441,7 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
 <td><img alt="../_images/MUX_05.jpg" src="../_images/MUX_05.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Instalation of the terminal screw</p></td>
+<tr class="row-even"><td><p>Installation of the terminal screw</p></td>
 </tr>
 </tbody>
 </table>
@@ -432,7 +522,7 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
 </div>
 </div>
 <div class="section" id="part-b-mux-board-address">
-<h2><strong>PART B</strong> MUX board address<a class="headerlink" href="#part-b-mux-board-address" title="Permalink to this headline"></a></h2>
+<h2><strong>PART B</strong> MUX board address<a class="headerlink" href="#part-b-mux-board-address" title="Permalink to this headline">¶</a></h2>
 <p>To build an ohmpi it is necessary to have 4 MUX boards, with 4 different addresses. It is therefore necessary to identify each board, by assigning an address, which will be allocated in the Ohmpi code.
 We present here the addresses selected by default.</p>
 <p>For the A electrode board, we suggest addressing it with address 0x70:</p>
@@ -521,7 +611,7 @@ electrode name on the mux board (B).</p></td>
 </table>
 </div>
 <div class="section" id="part-c-validation-of-mux-board">
-<h2><strong>PART C</strong> Validation of MUX board<a class="headerlink" href="#part-c-validation-of-mux-board" title="Permalink to this headline"></a></h2>
+<h2><strong>PART C</strong> Validation of MUX board<a class="headerlink" href="#part-c-validation-of-mux-board" title="Permalink to this headline">¶</a></h2>
 <p>The first step is to test the Mux boards before assembling them definitively.
 To test the Mux boards, it will be necessary first to make a simplified assembly of the Mux board and the measurement board.</p>
 <p>The first thing to do is to prepare a 50 cm long flat wire with two 6-poles connectors.</p>
@@ -616,32 +706,49 @@ board.</p></td>
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="V2_00_step_02.html" class="btn btn-neutral float-left" title="STEP n°2: Measurement board" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, INRAE, Team Ohmpi.</p>
-  </div>
+    <p>
+        &#169; Copyright 2022, INRAE, Team Ohmpi.
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
