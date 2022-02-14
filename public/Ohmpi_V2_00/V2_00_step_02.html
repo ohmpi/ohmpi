@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>STEP n°2: Measurement board &mdash; Ohmpi: open hardware resistivity-meter documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>STEP n°2: Measurement board &mdash; Ohmpi: open hardware resistivity-meter documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -40,8 +40,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../Ohmpi.html">OhmPi project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../V1_02.html">OhmPi V 1.02 (limited to 32 electrodes)</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes and 12V)</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../V2_00.html#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../V2_00.html">OhmPi V 2.00 (64 electrodes and 12V)</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../V2_00.html#the-philosophy-of-ohmpi-2">The philosophy of Ohmpi 2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../V2_00.html#technical-data">Technical data</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../V2_00.html#ohmpi-2-step-by-step">Ohmpi 2 step by step</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="V2_00_step_01.html"><strong>STEP n°1</strong> : Raspberry Pi  configuration</a></li>
@@ -51,7 +51,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#part-c-check-the-measurement-board"><strong>PART C</strong> Check the measurement board</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="V2_00_step_03.html"><strong>STEP n°3</strong>: MUX board</a></li>
+<li class="toctree-l3"><a class="reference internal" href="V2_00_step_03.html"><strong>STEP n°3:</strong> MUX board</a></li>
 </ul>
 </li>
 </ul>
@@ -72,7 +72,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes and 12V)</a> &raquo;</li>
+          <li><a href="../V2_00.html">OhmPi V 2.00 (64 electrodes and 12V)</a> &raquo;</li>
       <li><strong>STEP n°2</strong>: Measurement board</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/Ohmpi_V2_00/V2_00_step_02.rst.txt" rel="nofollow"> View page source</a>
@@ -84,16 +84,16 @@
            <div itemprop="articleBody">
              
   <div class="section" id="step-n2-measurement-board">
-<h1><strong>STEP n°2</strong>: Measurement board<a class="headerlink" href="#step-n2-measurement-board" title="Permalink to this headline">¶</a></h1>
+<h1><strong>STEP n°2</strong>: Measurement board<a class="headerlink" href="#step-n2-measurement-board" title="Permalink to this headline"></a></h1>
 <div class="section" id="part-a-assembly-of-measurement-board">
-<h2><strong>PART A</strong> Assembly of measurement board<a class="headerlink" href="#part-a-assembly-of-measurement-board" title="Permalink to this headline">¶</a></h2>
+<h2><strong>PART A</strong> Assembly of measurement board<a class="headerlink" href="#part-a-assembly-of-measurement-board" title="Permalink to this headline"></a></h2>
 <div class="section" id="required-components">
-<h3>Required components<a class="headerlink" href="#required-components" title="Permalink to this headline">¶</a></h3>
+<h3>Required components<a class="headerlink" href="#required-components" title="Permalink to this headline"></a></h3>
 <div class="align-center figure">
 <a class="reference internal image-reference" href="../_images/00_mes_board_components.jpg"><img alt="alternate text" src="../_images/00_mes_board_components.jpg" style="width: 600px; height: 450px;" /></a>
 </div>
 <table class="colwidths-given docutils align-default" id="id1">
-<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 8%" />
 <col style="width: 18%" />
@@ -157,10 +157,7 @@
 <td><p>0,2</p></td>
 <td><p>0,8</p></td>
 <td><p>KEMET</p></td>
-<td><blockquote>
-<div><p>C320C104K1</p>
-</div></blockquote>
-</td>
+<td><p>C320C104K1</p></td>
 <td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/KEMET/C320C104K1R5TA7303?qs=c4UyoTs%2FLq1th4mcyOeTmA%3D%3D">https://www.mouser.fr/ProductDetail/KEMET/C320C104K1R5TA7303?qs=c4UyoTs%2FLq1th4mcyOeTmA%3D%3D</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Resistor 1 Kohm 0.5W +- 0.1%</p></td>
@@ -307,11 +304,19 @@
 <td><p>R25-3002002</p></td>
 <td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Harwin/R25-3002002?qs=W0yvOO0ixfENUv0hsdC4%2FQ%3D%3D">https://www.mouser.fr/ProductDetail/Harwin/R25-3002002?qs=W0yvOO0ixfENUv0hsdC4%2FQ%3D%3D</a></p></td>
 </tr>
+<tr class="row-odd"><td><p>DIP Dual In Line Socket 2*9</p></td>
+<td><p>1</p></td>
+<td><p>1,86</p></td>
+<td><p>1,86</p></td>
+<td><p>Preci-dip</p></td>
+<td><p>437-1108331841001101</p></td>
+<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Preci-dip/110-83-318-41-001101?qs=FtMuP6KVi2TNQOezIAQ%2FPA%3D%3D">https://www.mouser.fr/ProductDetail/Preci-dip/110-83-318-41-001101?qs=FtMuP6KVi2TNQOezIAQ%2FPA%3D%3D</a></p></td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="description">
-<h3>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<h3>Description<a class="headerlink" href="#description" title="Permalink to this headline"></a></h3>
 <div class="align-center figure">
 <a class="reference internal image-reference" href="../_images/schema_measurement_board.jpg"><img alt="alternate text" src="../_images/schema_measurement_board.jpg" style="width: 600px; height: 450px;" /></a>
 </div>
@@ -345,7 +350,7 @@ which allows to realize precise current measurement around a shunt resistor. The
 <td><img alt="../_images/02_mes_board.jpg" src="../_images/02_mes_board.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Soldering of 4 dual-in-line- socket (2 by 2 pins) for
+<tr class="row-even"><td><p>Soldering of 4 dual-in-line socket (2 by 2 pins) for
 optical relay, AQY211EH.</p></td>
 </tr>
 </tbody>
@@ -360,8 +365,8 @@ optical relay, AQY211EH.</p></td>
 <td><img alt="../_images/03_mes_board.jpg" src="../_images/03_mes_board.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Soldering of 1 dual-in-line- socket (2 by 9 pins)
-for INA282.</p></td>
+<tr class="row-even"><td><p>Soldering of 1 dual-in-line socket (2 by 9 pins)
+for MCP23008.</p></td>
 </tr>
 </tbody>
 </table>
@@ -375,7 +380,7 @@ for INA282.</p></td>
 <td><img alt="../_images/04_mes_board.jpg" src="../_images/04_mes_board.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Soldering of 1 dual-in-line- socket (2 by 4 pins)</p></td>
+<tr class="row-even"><td><p>Soldering of 1 dual-in-line socket (2 by 4 pins)</p></td>
 </tr>
 </tbody>
 </table>
@@ -389,7 +394,7 @@ for INA282.</p></td>
 <td><img alt="../_images/05_mes_board.jpg" src="../_images/05_mes_board.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Soldering of 2 dual-in-line- socket (2 by 4 pins)</p></td>
+<tr class="row-even"><td><p>Soldering of 2 dual-in-line socket (2 by 4 pins)</p></td>
 </tr>
 </tbody>
 </table>
@@ -669,7 +674,7 @@ corners)</p></td>
 </div>
 </div>
 <div class="section" id="part-b-start-up-of-the-measurement-board">
-<h2><strong>PART B</strong> Start-up of the measurement board<a class="headerlink" href="#part-b-start-up-of-the-measurement-board" title="Permalink to this headline">¶</a></h2>
+<h2><strong>PART B</strong> Start-up of the measurement board<a class="headerlink" href="#part-b-start-up-of-the-measurement-board" title="Permalink to this headline"></a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 100%" />
@@ -680,7 +685,7 @@ corners)</p></td>
 </tbody>
 </table>
 <table class="colwidths-given docutils align-default" id="id2">
-<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 8%" />
 <col style="width: 18%" />
@@ -806,7 +811,7 @@ Raspberry Pi’s power port.</p></td>
 </table>
 </div>
 <div class="section" id="part-c-check-the-measurement-board">
-<h2><strong>PART C</strong> Check the measurement board<a class="headerlink" href="#part-c-check-the-measurement-board" title="Permalink to this headline">¶</a></h2>
+<h2><strong>PART C</strong> Check the measurement board<a class="headerlink" href="#part-c-check-the-measurement-board" title="Permalink to this headline"></a></h2>
 <blockquote>
 <div><p>Run the terminal, and write</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">i2cdetect</span> <span class="o">-</span><span class="n">y</span> <span class="mi">1</span>
@@ -966,7 +971,7 @@ get the following result (220 ohm)</p></td>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, INRAE, Rémi CLEMENT.</p>
+    <p>&#169; Copyright 2022, INRAE, Team Ohmpi.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

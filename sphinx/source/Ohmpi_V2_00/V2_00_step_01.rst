@@ -2,8 +2,8 @@
 *******************************************
 
 
-**PART A** OS installation  
-==========================
+**PART A:** OS installation  
+=============================
 
 +----------------------------------------------------+---------------+
 | **Required components**                            | **Quantity**  | 
@@ -23,11 +23,11 @@
 The first step is to start up the Raspberry Pi board, including installation of an OS (operating system). 
 For this step, the installation instructions are well described on the Raspberry website 
 
-1. Watch the vidéo "how to set up your raspberry Pi" (https://www.youtube.com/watch?v=wjWZhV1v3Pk)
+1. Watch the vidéo `how to set up your raspberry Pi <https://www.youtube.com/watch?v=wjWZhV1v3Pk>`_.
 
 2. The authors recommend installing the latest stable and complete version of Raspberry Pi OS (Previously called Raspbian) by using Raspberry Pi Imager.
 
-3. or you can visit this website : (https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up)  
+3. or you can visit this `website <https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up>`.  
 
 .. note:: 
 	 All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:
@@ -71,8 +71,8 @@ To ensure that the GPIOs are in Low position, you will need to modify the /boot/
 8. Close the terminal
 
 
-**PART B** Virtual Environnement and packages
-=============================================
+**PART B:** Virtual Environnement and packages
+===============================================
 
 A virtual environment is a way to have multiple, parallel instances of the Python interpreter, each with different package sets and different configurations. 
 Each virtual environment contains a discrete copy of the Python interpreter, including copies of its support utilities. It also protects your system in case of problems with the packages.
@@ -123,8 +123,8 @@ to leave the virtual environment simply type:
 	 deactivate
 
 
-**PART C** Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi) 
-==================================================================================
+**PART C:** Activate virtual environnement on Thonny (Python IDE)  (on Rapberry Pi) 
+====================================================================================
 
 If you decided to use a virtual environment, it is necessary to setup Thonny Python IDE the first time you use it.
 

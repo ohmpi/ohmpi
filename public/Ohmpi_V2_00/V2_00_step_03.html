@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>STEP n°3: MUX board &mdash; Ohmpi: open hardware resistivity-meter documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>STEP n°3: MUX board &mdash; Ohmpi: open hardware resistivity-meter documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -39,15 +39,16 @@
 <li class="toctree-l1"><a class="reference internal" href="../Ohmpi.html">OhmPi project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../V1_02.html">OhmPi V 1.02 (limited to 32 electrodes)</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes and 12V)</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../V2_00.html#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../V2_00.html">OhmPi V 2.00 (64 electrodes and 12V)</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../V2_00.html#the-philosophy-of-ohmpi-2">The philosophy of Ohmpi 2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../V2_00.html#technical-data">Technical data</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../V2_00.html#ohmpi-2-step-by-step">Ohmpi 2 step by step</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="V2_00_step_01.html"><strong>STEP n°1</strong> : Raspberry Pi  configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="V2_00_step_02.html"><strong>STEP n°2</strong>: Measurement board</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#"><strong>STEP n°3</strong>: MUX board</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><strong>STEP n°3:</strong> MUX board</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#part-a-assembly-of-mux-board"><strong>PART A</strong> Assembly of MUX board</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#part-b-mux-board-address"><strong>PART B</strong> MUX board address</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#part-c-validation-of-mux-board"><strong>PART C</strong> Validation of MUX board</a></li>
 </ul>
 </li>
 </ul>
@@ -70,8 +71,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../V2_00.html">OhmPi V 2.xx (64 or 128 electrodes and 12V)</a> &raquo;</li>
-      <li><strong>STEP n°3</strong>: MUX board</li>
+          <li><a href="../V2_00.html">OhmPi V 2.00 (64 electrodes and 12V)</a> &raquo;</li>
+      <li><strong>STEP n°3:</strong> MUX board</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/Ohmpi_V2_00/V2_00_step_03.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -82,7 +83,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="step-n3-mux-board">
-<h1><strong>STEP n°3</strong>: MUX board<a class="headerlink" href="#step-n3-mux-board" title="Permalink to this headline">¶</a></h1>
+<h1><strong>STEP n°3:</strong> MUX board<a class="headerlink" href="#step-n3-mux-board" title="Permalink to this headline"></a></h1>
 <p>The multiplexing of the channels is a mechanical multiplexing based on OMRON’s manufacturing relays (G5LE-1-VD 12 VDC). Each relay is combined with
 a ZVN4206A power MOFSET. The raspberry has only 30 GPIOs, which is not enough to activate all the 64 electrodes, which represent 512 GPIOs.
 We used gpio expender I2C (MCP23017). We have associated these components with an I2C muliplexer of type type TCA9548A from adafruit.
@@ -90,14 +91,14 @@ This combination allows to go up to 512 GPIOs and up to 128 electrodes. Each car
 In the following presentation for an Ohmpi 64 electrodes, we will use the addresses 0X70 for channel A, 0X71 for channel B, 0X72 for channel M and 0X73 for channel N.
 0X73 for the N channel. 4 MUX board will be needed to multiplex an Ohmpi 64 electrodes.</p>
 <div class="section" id="part-a-assembly-of-mux-board">
-<h2><strong>PART A</strong> Assembly of MUX board<a class="headerlink" href="#part-a-assembly-of-mux-board" title="Permalink to this headline">¶</a></h2>
+<h2><strong>PART A</strong> Assembly of MUX board<a class="headerlink" href="#part-a-assembly-of-mux-board" title="Permalink to this headline"></a></h2>
 <div class="section" id="required-components">
-<h3>Required components<a class="headerlink" href="#required-components" title="Permalink to this headline">¶</a></h3>
+<h3>Required components<a class="headerlink" href="#required-components" title="Permalink to this headline"></a></h3>
 <div class="align-center figure">
 <a class="reference internal image-reference" href="../_images/MUX_board_componement.jpg"><img alt="alternate text" src="../_images/MUX_board_componement.jpg" style="width: 600px; height: 650px;" /></a>
 </div>
 <table class="colwidths-given docutils align-default" id="id1">
-<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 8%" />
 <col style="width: 18%" />
@@ -260,6 +261,14 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
 <td><p>25515</p></td>
 <td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Keystone-Electronics/25515?qs=UWqYQ%2F2cZWuxuhUmfr%252BZuQ%3D%3D">https://www.mouser.fr/ProductDetail/Keystone-Electronics/25515?qs=UWqYQ%2F2cZWuxuhUmfr%252BZuQ%3D%3D</a></p></td>
 </tr>
+<tr class="row-odd"><td><p>DIP dual-in-line 2*14</p></td>
+<td><p>16</p></td>
+<td><p>1.55</p></td>
+<td><p>24.8</p></td>
+<td><p>Preci-dip</p></td>
+<td><p>110-87-328-41-001101</p></td>
+<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Preci-dip/110-87-328-41-001101?qs=uQD7XCvsSCNr3HWD6fta8g%3D%3D">https://www.mouser.fr/ProductDetail/Preci-dip/110-87-328-41-001101?qs=uQD7XCvsSCNr3HWD6fta8g%3D%3D</a></p></td>
+</tr>
 </tbody>
 </table>
 <table class="docutils align-center">
@@ -286,7 +295,7 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
 <td><img alt="../_images/MUX_01.jpg" src="../_images/MUX_01.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Installation of the 150 Kohm resistors</p></td>
+<tr class="row-even"><td><p>Installation of the 100 Kohm resistors</p></td>
 </tr>
 </tbody>
 </table>
@@ -423,7 +432,7 @@ In the following presentation for an Ohmpi 64 electrodes, we will use the addres
 </div>
 </div>
 <div class="section" id="part-b-mux-board-address">
-<h2><strong>PART B</strong> MUX board address<a class="headerlink" href="#part-b-mux-board-address" title="Permalink to this headline">¶</a></h2>
+<h2><strong>PART B</strong> MUX board address<a class="headerlink" href="#part-b-mux-board-address" title="Permalink to this headline"></a></h2>
 <p>To build an ohmpi it is necessary to have 4 MUX boards, with 4 different addresses. It is therefore necessary to identify each board, by assigning an address, which will be allocated in the Ohmpi code.
 We present here the addresses selected by default.</p>
 <p>For the A electrode board, we suggest addressing it with address 0x70:</p>
@@ -511,6 +520,98 @@ electrode name on the mux board (B).</p></td>
 </tbody>
 </table>
 </div>
+<div class="section" id="part-c-validation-of-mux-board">
+<h2><strong>PART C</strong> Validation of MUX board<a class="headerlink" href="#part-c-validation-of-mux-board" title="Permalink to this headline"></a></h2>
+<p>The first step is to test the Mux boards before assembling them definitively.
+To test the Mux boards, it will be necessary first to make a simplified assembly of the Mux board and the measurement board.</p>
+<p>The first thing to do is to prepare a 50 cm long flat wire with two 6-poles connectors.</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>1</p></td>
+<td><img alt="../_images/20211207_115706.jpg" src="../_images/20211207_115706.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Build a cable with 6 contacts with 6 pins connector.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>2</p></td>
+<td><img alt="../_images/20220124_142929.jpg" src="../_images/20220124_142929.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Prepare the measurement board and the first mux board by
+example the card with address 0x71.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>3</p></td>
+<td><img alt="../_images/20220124_143105.jpg" src="../_images/20220124_143105.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Connect the cables for the 12V power supply to the MUX board
+without powering the board.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>4</p></td>
+<td><img alt="../_images/20220207_154111.jpg" src="../_images/20220207_154111.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Connect the 12V power supply screw terminal of the mux board
+to the 12V screw terminal power supply of the measurement
+board.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>5</p></td>
+<td><img alt="../_images/20220124_143823.jpg" src="../_images/20220124_143823.jpg" />
+</td>
+</tr>
+<tr class="row-even"><td><p>Connect the 6-contact cable</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Start your 12V power supply, the raspberry must start.</p>
+<p>Run the terminal and write:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">i2cdetect</span> <span class="o">-</span><span class="n">y</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Three addresses should appear, including the address of the MUX board you have selected. This implies that your board has been detected.</p>
+<p>Open the script called “test_mux_board.py”.</p>
+<p>Run the script</p>
+</div>
 </div>
 
 
@@ -523,7 +624,7 @@ electrode name on the mux board (B).</p></td>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, INRAE, Rémi CLEMENT.</p>
+    <p>&#169; Copyright 2022, INRAE, Team Ohmpi.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

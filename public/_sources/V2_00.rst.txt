@@ -1,5 +1,5 @@
 ********************************************
-OhmPi V 2.xx (64 or 128 electrodes and 12V)
+OhmPi V 2.00 (64 electrodes and 12V)
 ******************************************** 
 
 .. figure:: Under-Construction.png
@@ -10,13 +10,13 @@ OhmPi V 2.xx (64 or 128 electrodes and 12V)
 	   :figclass: align-center
 
 .. figure:: image_ohmpi_2.jpg
-	   :width: 800px
+	   :width: 400px
 	   :align: center
-	   :height: 600px
+	   :height: 350px
 	   :alt: Ohmpi 2
 	   :figclass: align-center
 
-.. note::
+.. note:: 
 	 In this version, we have developed two new board types that allow the assembly of Ohmpi v2.00, a measurement board and a multiplexer board.
 	 This new version is made up of: 
 	 
@@ -26,47 +26,50 @@ OhmPi V 2.xx (64 or 128 electrodes and 12V)
 	 
 	 3. A box 
 
-The philosophy of Ohmpi 
-**************************
+The philosophy of Ohmpi 2 
+==========================
+
 The philosophy of Ohmpi V2.00 is to offer a new DIY multielectrode resistivity meter. It is a resistivity meter with 64 electrodes , which can be upgraded to 128 electrodes. 
 It is limited to low-current injection,but suitable for small laboratory experiments and small field time-lapse monitoring.
 Ohmpi, is developed by a team that seeks to share all its experience and wishes to improve and offer a more and more robust tool to the community.Ohmpi V2.00 is a completely different version from the previous one. 
-We will stop the development on the previous version, to dedicate our efforts on this new version. 
+We will stop the development on the previous version, to dedicate our efforts on this new version.
+	
+=============================================================================================================================================================
 
+ 
 Technical data
-***************
+==============
 
-+-------------------------------+--------------------+-----------+--------------------+-----------+
-| **Parameter**                 | **Specifications** | Units     | **Specifications** | Units     |
-|                               |       **V1**       |           |       **V2**       |           |
-+-------------------------------+--------------------+-----------+--------------------+-----------+
-|Electrodes                     |32                  |           |64 to 128           |           |
-+-------------------------------+--------------------+-----------+--------------------+-----------+
-|Operating temperature          |-0 to 50            |°c         |-25 to 50           |°c         |
-+-------------------------------+--------------------+-----------+--------------------+-----------+
-|Power consumption of CPU and   |18.5                |W          |18.5                |W          |              
-|control system                 |                    |           |                    |           |
-+-------------------------------+--------------------+-----------+--------------------+-----------+
-|Voltage injection              |12                  |V          |12                  |V          |
-+-------------------------------+--------------------+-----------+--------------------+-----------+
-|Battery                        |9                   |V          |12                  |V          |
-+-------------------------------+--------------------+-----------+--------------------+-----------+
-|Current                        |0 to 40             |mA         |0 to 40             |mA         |
-+-------------------------------+--------------------+-----------+--------------------+-----------+
-|Min pulse duration             |150                 |mS         |150                 |mS         |
-+-------------------------------+--------------------+-----------+--------------------+-----------+
-|Input impedance                |80                  |Mohm       |80                  |Mohm       |
-+-------------------------------+--------------------+-----------+--------------------+-----------+
-|Data storage                   |micro SD card       |           |micro SD card       |           |
-+-------------------------------+--------------------+-----------+--------------------+-----------+
-|Resolution                     |O.O1                |ohm        |O.O1                |ohm        |
-+-------------------------------+--------------------+-----------+--------------------+-----------+
++-------------------------------+-----------------------+-----------+-----------------------+-----------+
+| **Parameter**                 | **Specifications V1** | Units     | **Specifications v2** | Units     |
++===============================+=======================+===========+=======================+===========+
+|Electrodes                     |32                     |           |64 to 128              |           |
++-------------------------------+-----------------------+-----------+-----------------------+-----------+
+|Operating temperature          |-0 to 50               |°c         |-25 to 50              |°c         |
++-------------------------------+-----------------------+-----------+-----------------------+-----------+
+|Power consumption of CPU and   |18.5                   |W          |18.5                   |W          |              
+|control system                 |                       |           |                       |           |
++-------------------------------+-----------------------+-----------+-----------------------+-----------+
+|Voltage injection              |12                     |V          |12                     |V          |
++-------------------------------+-----------------------+-----------+-----------------------+-----------+
+|Battery                        |9                      |V          |12                     |V          |
++-------------------------------+-----------------------+-----------+-----------------------+-----------+
+|Current                        |0 to 40                |mA         |0 to 40                |mA         |
++-------------------------------+-----------------------+-----------+-----------------------+-----------+
+|Min pulse duration             |150                    |mS         |150                    |mS         |
++-------------------------------+-----------------------+-----------+-----------------------+-----------+
+|Input impedance                |80                     |Mohm       |80                     |Mohm       |
++-------------------------------+-----------------------+-----------+-----------------------+-----------+
+|Data storage                   |micro SD card          |           |micro SD card          |           |
++-------------------------------+-----------------------+-----------+-----------------------+-----------+
+|Resolution                     |0.01                   |ohm        |0.01                   |ohm        |
++-------------------------------+-----------------------+-----------+-----------------------+-----------+
 
 Ohmpi 2 step by step
-**************************
+====================
 
 .. toctree:: 
-   :maxdepth: 3 
+   :maxdepth: 2 
 
    Ohmpi_V2_00/V2_00_step_01
    Ohmpi_V2_00/V2_00_step_02
