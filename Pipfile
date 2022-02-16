@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+jupyterlab = "*"
+sphinx-rtd-theme = "*"
+recommonmark = "*"
+sphinx-pdj-theme = "*"
+
+[packages]
+paho-mqtt = "*"
+numpy = "*"
+pandas = "*"
+pytz = "*"
+six = "*"
+
+[requires]
+python_version = "3.8"
