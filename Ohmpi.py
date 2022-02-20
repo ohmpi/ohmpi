@@ -136,9 +136,9 @@ class OhmPi(object):
 
         if self.output == 'print':
             if level == 'error':
-                print(colored(level.upper() + ' : ' + msg), 'red')
+                print(colored(level.upper() + ' : ' + msg, 'red'))
             elif level == 'warn':
-                print(colored(level.upper() + ' : ' + msg), 'yellow')
+                print(colored(level.upper() + ' : ' + msg, 'yellow'))
             else:
                 print(level.upper() + ' : ' + msg)
         elif self.output == 'mqtt':
@@ -165,7 +165,8 @@ class OhmPi(object):
         if isinstance(config, dict):
             self.pardict.update(config)
         else:
-            dic = json.loads(config)
+            with open(config) as json_file:
+                dic = json.load(json_file)
             self.pardict.update(dic)
         self.dump('Acquisition parameters updated: ' + str(self.pardict), level='debug')
 
@@ -589,8 +590,8 @@ class OhmPi(object):
         self.dump('status = ' + self.status)
 
 # test
-#with open('ohmpi_param.json') as json_file:
-#    pardict = json.load(json_file)
-ohmpi = OhmPi()
+#ohmpi = OhmPi(config='ohmpi_param.json')
 #ohmpi.measure()
+#time.sleep(4)
+#ohmpi.stop()
 
