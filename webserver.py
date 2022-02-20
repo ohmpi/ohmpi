@@ -7,8 +7,8 @@ import threading
 import pandas as pd
 import shutil
 
-hostName = "0.0.0.0"
-#hostName = 'localhost'
+#hostName = "0.0.0.0"
+hostName = 'localhost'
 serverPort = 8080
 
 # https://gist.github.com/MichaelCurrie/19394abc19abd0de4473b595c0e37a3a
