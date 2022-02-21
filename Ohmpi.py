@@ -28,7 +28,7 @@ from datetime import datetime
 from termcolor import colored
 import threading
 
-if False:
+if True:
     import board, busio, adafruit_tca9548a
     import adafruit_ads1x15.ads1115 as ADS
     from adafruit_ads1x15.analog_in import AnalogIn
@@ -50,7 +50,7 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 
 
 class OhmPi(object):
-    def __init__(self, config=None, sequence=None, onpi=False, output='print'):
+    def __init__(self, config=None, sequence=None, onpi=True, output='print'):
         """Create the main OhmPi object.
 
         Parameters
@@ -96,7 +96,7 @@ class OhmPi(object):
         if sequence is None:
             self.sequence = np.array([[1, 2, 3, 4]])
         else:
-            self.sequence = self.read_quad(sequence)
+            self.read_quad(sequence)
 
         # address of the multiplexer board
         self.board_address = {
@@ -263,9 +263,9 @@ class OhmPi(object):
             output = None
 
         if output is not None:
-            self.dump('Sequence of {:d} quadrupoles read.'.format(output.shape[0]), info='debug')
+            self.dump('Sequence of {:d} quadrupoles read.'.format(output.shape[0]), level='debug')
     
-        return output
+        self.sequence = output
 
 
     def switch_mux(self, electrode_nr, state, role):
@@ -411,11 +411,11 @@ class OhmPi(object):
 
             # measurement of current i and voltage u
             # sampling for each stack at the end of the injection
-            meas = np.zero_like((3, self.nb_samples))
+            meas = np.zeros((self.nb_samples, 3))
             for k in range(0, self.nb_samples):
-                meas[0, k] = (AnalogIn(self.ads_current, ADS.P0).voltage*1000) / (50 * self.r_shunt) # reading current value on ADS channel A0
-                meas[1, k] = AnalogIn(self.ads_voltage, ADS.P0).voltage * self.coefp2 * 1000
-                meas[2, k] = AnalogIn(self.ads_voltage, ADS.P1).voltage * self.coefp3 * 1000  # reading voltage value on ADS channel A2
+                meas[k, 0] = (AnalogIn(self.ads_current, ADS.P0).voltage*1000) / (50 * self.r_shunt) # reading current value on ADS channel A0
+                meas[k, 1] = AnalogIn(self.ads_voltage, ADS.P0).voltage * self.coef_p2 * 1000
+                meas[k, 2] = AnalogIn(self.ads_voltage, ADS.P1).voltage * self.coef_p3 * 1000  # reading voltage value on ADS channel A2
 
             # stop current injection
             pin1.value = False
@@ -424,8 +424,8 @@ class OhmPi(object):
 
             # take average from the samples per stack, then sum them all
             # average for all stack is done outside the loop
-            injection_current = injection_current + (np.mean(meas[0, :]))
-            vmn1 = np.mean(meas[1, :]) - np.mean(meas[2, :])
+            injection_current = injection_current + (np.mean(meas[:, 0]))
+            vmn1 = np.mean(meas[:, 1]) - np.mean(meas[:, 2])
             if (n % 2) == 0:
                 sum_vmn = sum_vmn - vmn1
                 sum_ps = sum_ps + vmn1
@@ -590,8 +590,8 @@ class OhmPi(object):
         self.dump('status = ' + self.status)
 
 # test
-#ohmpi = OhmPi(config='ohmpi_param.json')
-#ohmpi.measure()
-#time.sleep(4)
-#ohmpi.stop()
+ohmpi = OhmPi(config='ohmpi_param.json')
+ohmpi.measure()
+time.sleep(4)
+ohmpi.stop()
 
