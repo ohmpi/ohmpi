@@ -6,12 +6,13 @@ pages:
   script:
   - apt-get update
   - apt-get install --assume-yes pandoc
-  - pip install sphinx numpydoc sphinx_rtd_theme sphinx_nbexamples pandoc
+  - pip install numpy pandas termcolor  # top import of Ohmpi.py
+  - pip install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark
   - cd doc
   - make html
   # also make latex? pdf?
   - cd ..
-  - mv doc/_build_html/ public/
+  - mv doc/build/html/ public/
   - ls public/
   artifacts:
     paths:

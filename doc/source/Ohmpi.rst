@@ -13,12 +13,12 @@ OhmPi project
 
 **Authors:** 
 ------------
-| Rémi CLEMENT,Vivien DUBOIS,Nicolas Forquet, INRAE, REVERSAAL, Villeurbanne, France.
-| Yannick FARGIER, GERS-RRO, Univ Gustave Eiffel, IFSTTAR, Lyon, France.
-| Julien GANCE, IRIS Instruments, Orléans, France.
-| Hélène GUYARD, IGE Grenoble, Université Grenoble Alpes, Grenoble, France.
+| Rémi CLEMENT,Vivien DUBOIS,Nicolas Forquet, INRAE, REVERSAAL, Villeurbanne, France
+| Yannick FARGIER, GERS-RRO, Univ Gustave Eiffel, IFSTTAR, Lyon, France
+| Julien GANCE, IRIS Instruments, Orléans, France
+| Hélène GUYARD, IGE Grenoble, Université Grenoble Alpes, Grenoble, France
 | Olivier Kaufmann, Université de Mons, Mons, Belgium 
-| Guillaume Banchy, ILVO,Merelbeke, Belgium
+| Guillaume Banchy, ILVO, Merelbeke, Belgium
 |
 
 

@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 """
 created on January 6, 2020
 Update February 2022
-Ohmpi.py is a program to control a low-cost and open hardward resistivity meter OhmPi that has been developed by Rémi CLEMENT(INRAE),Vivien DUBOIS(INRAE),Hélène GUYARD(IGE), Nicolas FORQUET (INRAE), and Yannick FARGIER (IFSTTAR).
+Ohmpi.py is a program to control a low-cost and open hardward resistivity meter OhmPi that has been developed by Rémi CLEMENT (INRAE),Vivien DUBOIS (INRAE),Hélène GUYARD (IGE), Nicolas FORQUET (INRAE), Yannick FARGIER (IFSTTAR)
+and Guillaume BLANCHY (ILVO).
 """
 
 VERSION = '2.0.0'
@@ -28,16 +30,6 @@ from datetime import datetime
 from termcolor import colored
 import threading
 
-if True:
-    import board, busio, adafruit_tca9548a
-    import adafruit_ads1x15.ads1115 as ADS
-    from adafruit_ads1x15.analog_in import AnalogIn
-    from adafruit_mcp230xx.mcp23008 import MCP23008
-    from adafruit_mcp230xx.mcp23017 import MCP23017
-    import digitalio
-    from digitalio import Direction
-    from gpiozero import CPUTemperature
-
 current_time = datetime.now()
 print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 
@@ -50,22 +42,22 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 
 
 class OhmPi(object):
-    def __init__(self, config=None, sequence=None, onpi=True, output='print'):
-        """Create the main OhmPi object.
+    """Create the main OhmPi object.
 
-        Parameters
-        ----------
-        config : str, optional
-            Path to the .json configuration file.
-        sequence : str, optional
-            Path to the .txt where the sequence is read. By default, a 1 quadrupole
-            sequence: 1, 2, 3, 4 is used.
-        onpi : bool, optional
-            True if running on the RaspberryPi. False for testing (random data generated).
-        output : str, optional
-            Either 'print' for a console output or 'mqtt' for publication onto
-            MQTT broker.
-        """
+    Parameters
+    ----------
+    config : str, optional
+        Path to the .json configuration file.
+    sequence : str, optional
+        Path to the .txt where the sequence is read. By default, a 1 quadrupole
+        sequence: 1, 2, 3, 4 is used.
+    onpi : bool, optional
+        True if running on the RaspberryPi. False for testing (random data generated).
+    output : str, optional
+        Either 'print' for a console output or 'mqtt' for publication onto
+        MQTT broker.
+    """
+    def __init__(self, config=None, sequence=None, onpi=True, output='print'):
         # flags and attributes
         self.onpi = onpi  # True if run from the RaspberryPi with the hardware, otherwise False for random data
         self.output = output # type of output print
@@ -73,6 +65,18 @@ class OhmPi(object):
         self.run = False  # flag is True when measuring
         self.thread = None  # contains the handle for the thread taking the measurement
         self.path = 'data/' # wher to save the .csv
+        
+        # finish import (done only when class is instantiated as some libs are
+        # only available on arm64 platform)
+        if self.onpi:
+          import board, busio, adafruit_tca9548a
+          import adafruit_ads1x15.ads1115 as ADS
+          from adafruit_ads1x15.analog_in import AnalogIn
+          from adafruit_mcp230xx.mcp23008 import MCP23008
+          from adafruit_mcp230xx.mcp23017 import MCP23017
+          import digitalio
+          from digitalio import Direction
+          from gpiozero import CPUTemperature
 
         # read in hardware parameters (seetings.py)
         self._read_hardware_parameters()
@@ -590,8 +594,8 @@ class OhmPi(object):
         self.dump('status = ' + self.status)
 
 # test
-ohmpi = OhmPi(config='ohmpi_param.json')
-ohmpi.measure()
-time.sleep(4)
-ohmpi.stop()
+#ohmpi = OhmPi(config='ohmpi_param.json')
+#ohmpi.measure()
+#time.sleep(4)
+#ohmpi.stop()
 

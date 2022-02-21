@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -12,15 +14,16 @@
 #
 import os
 import sys
-# sys.path.insert(0, os.path.abspath('.'))
+sys.path.append(os.path.abspath('../..'))
+import Ohmpi  # import Ohmpi module to be documented in api.rst by numpydoc
 import sphinx_rtd_theme
 
 
 from shutil import copyfile
 # -- Project information -----------------------------------------------------
 
-project = 'Ohmpi:'
-copyright = '2022, INRAE, Team Ohmpi'
+project = 'OhmPi'
+copyright = '2022, INRAE, Team OhmPi'
 author = 'Rémi CLEMENT'
 
 # The full version, including alpha/beta/rc tags
@@ -30,8 +33,17 @@ release = 'open hardware resistivity-meter'
 # -- General configuration ---------------------------------------------------
 
 
-extensions = ['recommonmark']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.coverage',
+    'sphinx.ext.mathjax',
+    'numpydoc',
+    'recommonmark'
+]
 
+
+
+numpydoc_show_class_members = False
 
 
 # Add any paths that contain templates here, relative to this directory.
