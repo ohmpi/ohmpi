@@ -19,7 +19,7 @@ try:
 except:
     pass
 
-from pandas import DataFrame
+# from pandas import DataFrame
 from datetime import datetime
 import time
 import numpy as np
@@ -230,28 +230,23 @@ def run_measurement(nb_stack, injection_deltat, r_shunt, coefp2, coefp3):
         #print(['time stop=',((2*(end_delay-start_delay)-(end_calc-start_delay)))])
     # return averaged values
 #     cpu= CPUTemperature()
-    output = DataFrame({
-        "time": [datetime.now()],
-        "A": [(1)],
-        "B": [(2)],
-        "M": [(3)],
-        "N": [(4)],
+    output = {
+        "time": datetime.now(),
+        "A": (1),
+        "B": (2),
+        "M": (3),
+        "N": (4),
         "inj time [ms]": (end_delay - start_delay) * 1000,
-        "Vmn [mV]": [(sum_vmn / (3 + 2 * nb_stack - 1))],
-        "I [mA]": [(injection_current / (3 + 2 * nb_stack - 1))],
-        "R [ohm]": [(sum_vmn / (3 + 2 * nb_stack - 1) / (injection_current / (3 + 2 * nb_stack - 1)))],
-        "Ps [mV]": [(sum_ps / (3 + 2 * nb_stack - 1))],
-        "nbStack": [nb_stack],
-        "CPU temp [°C]": [cpu.temperature],
-        "Time [s]": [(-start_time + time.time())],
-        "Integer [-]": [integer]
-
-     
-     
-      # Dead time equivalent to the duration of the current injection pulse   
-    })
-    output = output.round(2)
-    print(output.to_string())
+        "Vmn [mV]": (sum_vmn / (3 + 2 * nb_stack - 1)),
+        "I [mA]": (injection_current / (3 + 2 * nb_stack - 1)),
+        "R [ohm]": (sum_vmn / (3 + 2 * nb_stack - 1) / (injection_current / (3 + 2 * nb_stack - 1))),
+        "Ps [mV]": (sum_ps / (3 + 2 * nb_stack - 1)),
+        "nbStack": nb_stack,
+        "CPU temp [°C]": cpu.temperature,
+        "Time [s]": (-start_time + time.time()),
+        "Integer [-]": integer}
+    # output = output.round(2)
+    print(output) # .to_string())
     time.sleep(1)
     return output
 
@@ -260,13 +255,14 @@ def append_and_save(data_path, last_measurement):
     """Save data"""
     if path.isfile(data_path):
         # Load data file and append data to it
-        with open(data_path, 'a') as f:
-            last_measurement.to_csv(f, header=False)
+        # with open(data_path, 'a') as f:
+        #    last_measurement.to_csv(f, header=False)
+        pass
     else:
         # create data file and add headers
-        with open(data_path, 'a') as f:
-            last_measurement.to_csv(f, header=True)
-
+        # with open(data_path, 'a') as f:
+        #    last_measurement.to_csv(f, header=True)
+        pass
 
 """
 Main loop
@@ -275,7 +271,7 @@ for g in range(0, pardict.get("nbr_meas")):  # for time-lapse monitoring
     current_measurement = run_measurement(pardict.get("stack"), pardict.get("injection_duration"), 
                                           OHMPI_CONFIG['R_shunt'], OHMPI_CONFIG['coef_p2'], OHMPI_CONFIG['coef_p3'])
     append_and_save(pardict.get("export_path"), current_measurement)
-    msg = f'Resitivity: {current_measurement.iloc[-1]["R [ohm]"]:.2f} ohm'
+    msg = f'Resitivity: {current_measurement["R [ohm]"]:.2f} ohm'
     msg_logger.info(msg)
     mqtt_client.publish(measurement_topic, msg)
     time.sleep(pardict.get("sequence_delay"))  # waiting next measurement (time-lapse)

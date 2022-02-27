@@ -4,17 +4,20 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-jupyterlab = "*"
-sphinx-rtd-theme = "*"
-recommonmark = "*"
-sphinx-pdj-theme = "*"
 
 [packages]
-paho-mqtt = "*"
 numpy = "*"
-pandas = "*"
+# cython = "*"
+# pandas = "*"
+paho-mqtt = "*"
 pytz = "*"
 six = "*"
+gpiozero = "*"
+adafruit-blinka = "*"
+adafruit-circuitpython-ads1x15 = "*"
+adafruit-circuitpython-tca9548a = "*"
+adafruit-circuitpython-mcp230xx = "*"
+termcolor ="*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
