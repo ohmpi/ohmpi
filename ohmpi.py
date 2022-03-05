@@ -234,8 +234,8 @@ class OhmPi(object):
             with io.open('/sys/firmware/devicetree/base/model', 'r') as f:
                 if 'raspberry pi' in f.read().lower():
                     running_on_pi = True
-        except Exception as e:
-            print(e)
+        except FileNotFoundError:
+            pass
         return running_on_pi and arm64_imports
 
     def read_quad(self, filename):
