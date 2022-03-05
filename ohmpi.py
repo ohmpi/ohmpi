@@ -16,6 +16,8 @@ import time
 from datetime import datetime
 from termcolor import colored
 import threading
+from logging_setup import setup_loggers
+# from mqtt_setup import mqtt_client_setup
 
 # finish import (done only when class is instantiated as some libs are
 # only available on arm64 platform)
@@ -31,11 +33,13 @@ try:
     from digitalio import Direction
     from gpiozero import CPUTemperature
     arm64_imports = True
-except Exception as e:
+except ImportError as e:
     print(f'Warning: {e}')
     arm64_imports = False
 
-
+msg_logger, msg_log_filename, data_logger, data_log_filename, logging_level = setup_loggers()
+# mqtt_client, measurement_topic = mqtt_client_setup()
+# msg_logger.info(f'publishing mqtt to topic {measurement_topic}')
 VERSION = '2.0.1'
 
 print('\033[1m'+'\033[31m'+' ________________________________')
@@ -53,13 +57,6 @@ current_time = datetime.now()
 print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 
 
-# from logging_setup import setup_loggers
-# from mqtt_setup import mqtt_client_setup
-# msg_logger, msg_log_filename, data_logger, data_log_filename, logging_level = setup_loggers()
-# mqtt_client, measurement_topic = mqtt_client_setup()
-# msg_logger.info(f'publishing mqtt to topic {measurement_topic}')
-
-
 class OhmPi(object):
     """Create the main OhmPi object.
 
@@ -70,8 +67,6 @@ class OhmPi(object):
     sequence : str, optional
         Path to the .txt where the sequence is read. By default, a 1 quadrupole
         sequence: 1, 2, 3, 4 is used.
-    on_pi : bool, optional
-        True if running on the RaspberryPi. False for testing (random data generated).
     output : str, optional
         Either 'print' for a console output or 'mqtt' for publication onto
         MQTT broker.
@@ -87,8 +82,7 @@ class OhmPi(object):
 
         if not arm64_imports:
             self.dump(f'Warning: {e}\n Some libraries only available on arm64 platform could not be imported.\n'
-                  f'The Ohmpi class will fake operations for testing purposes.', 'warning')
-
+                      f'The Ohmpi class will fake operations for testing purposes.', 'warning')
 
         # read in hardware parameters (settings.py)
         self._read_hardware_parameters()
@@ -113,14 +107,6 @@ class OhmPi(object):
             self.sequence = np.array([[1, 2, 3, 4]])
         else:
             self.read_quad(sequence)
-
-        # address of the multiplexer board
-        self.board_address = {
-            'A': 0x76,
-            'B': 0x71,
-            'M': 0x74,
-            'N': 0x70
-        }
 
         # connect to components on the OhmPi board
         if self.on_pi:
@@ -198,6 +184,7 @@ class OhmPi(object):
         self.nb_samples = OHMPI_CONFIG['integer']  # number of samples measured for each stack
         self.version = OHMPI_CONFIG['version']  # hardware version
         self.max_elec = OHMPI_CONFIG['max_elec']  # maximum number of electrodes
+        self.board_address = OHMPI_CONFIG['board_address']
         self.dump('OHMPI_CONFIG = ' + str(OHMPI_CONFIG), level='debug')
 
     @staticmethod

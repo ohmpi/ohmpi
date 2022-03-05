@@ -10,6 +10,7 @@ OHMPI_CONFIG = {
     'integer': 2,  # Max value 10 WHAT IS THIS?
     'version': 2,
     'max_elec': 64,
+    'board_address': {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
 }
 
 # local messages logging configuration
