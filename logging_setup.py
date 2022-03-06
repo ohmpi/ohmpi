@@ -1,3 +1,5 @@
+import os
+
 from settings import LOGGING_CONFIG, DATA_LOGGING_CONFIG, MQTT_LOGGING_CONFIG
 from os import path, mkdir, statvfs
 from time import gmtime
@@ -49,7 +51,7 @@ def setup_loggers(mqtt=True):
     if logging_to_console:
         msg_logger.addHandler(logging.StreamHandler())
     if mqtt:
-        mqtt_msg_handler = MQTTHandler(MQTT_LOGGING_CONFIG['hostname'], MQTT_LOGGING_CONFIG['topic'])
+        mqtt_msg_handler = MQTTHandler(MQTT_LOGGING_CONFIG['hostname'], MQTT_LOGGING_CONFIG['msg_topic'])
         mqtt_msg_handler.setLevel(logging_level)
         mqtt_msg_handler.setFormatter(msg_formatter)
         msg_logger.addHandler(mqtt_msg_handler)
@@ -68,7 +70,7 @@ def setup_loggers(mqtt=True):
     return msg_logger, msg_log_filename, data_logger, data_log_filename, logging_level
 
 
-def init_logging(msg_logger, logging_level, data_log_filename):
+def init_logging(msg_logger, logging_level, log_path='.', data_log_filename):
     """ This is the init sequence for the logging system """
 
     init_logging_status = True
