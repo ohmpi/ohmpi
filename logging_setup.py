@@ -49,7 +49,7 @@ def setup_loggers(mqtt=True):
     if logging_to_console:
         msg_logger.addHandler(logging.StreamHandler())
     if mqtt:
-        mqtt_msg_handler = MQTTHandler(MQTT_LOGGING_CONFIG['hostname'], MQTT_LOGGING_CONFIG['topic'])
+        mqtt_msg_handler = MQTTHandler(MQTT_LOGGING_CONFIG['hostname'], MQTT_LOGGING_CONFIG['msg_topic'])
         mqtt_msg_handler.setLevel(logging_level)
         mqtt_msg_handler.setFormatter(msg_formatter)
         msg_logger.addHandler(mqtt_msg_handler)
