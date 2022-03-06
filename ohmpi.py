@@ -33,27 +33,12 @@ try:
     from digitalio import Direction
     from gpiozero import CPUTemperature
     arm64_imports = True
-except ImportError as e:
-    print(f'Warning: {e}')
+except ImportError as error:
+    print(colored(f'Import error: {error}', 'yellow'))
     arm64_imports = False
-
-msg_logger, msg_log_filename, data_logger, data_log_filename, logging_level = setup_loggers()
-# mqtt_client, measurement_topic = mqtt_client_setup()
-# msg_logger.info(f'publishing mqtt to topic {measurement_topic}')
-VERSION = '2.0.1'
-
-print('\033[1m'+'\033[31m'+' ________________________________')
-print(r'|  _  | | | ||  \/  || ___ \_   _|')
-print(r'| | | | |_| || .  . || |_/ / | |')
-print(r'| | | |  _  || |\/| ||  __/  | |')
-print(r'\ \_/ / | | || |  | || |    _| |_')
-print(r' \___/\_| |_/\_|  |_/\_|    \___/ ')
-print('\033[0m')
-print('OhmPi start')
-print('Version:', VERSION)
-
-current_time = datetime.now()
-print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
+except Exception as error:
+    print(colored(f'Unexpected error: {error}', 'red'))
+    exit()
 
 
 class OhmPi(object):
@@ -70,9 +55,12 @@ class OhmPi(object):
         Either 'print' for a console output or 'mqtt' for publication onto
         MQTT broker.
     """
-    def __init__(self, config=None, sequence=None, output='print', data_logger=None, msg_logger=None, soh_logger=None):
+    def __init__(self, config=None, sequence=None, output='print', data_logger=None, msg_logger=None, soh_logger=None,
+                 on_pi=None):
         # flags and attributes
-        # self.on_pi = on_pi  # True if run from the RaspberryPi with the hardware, otherwise False for random data
+        if on_pi is None:
+            _, on_pi = OhmPi.get_platform()
+        self.on_pi = on_pi  # True if run from the RaspberryPi with the hardware, otherwise False for random data
         self.output = output  # type of output print
         self.status = 'idle'  # either running or idle
         self.run = False  # flag is True when measuring
@@ -81,11 +69,6 @@ class OhmPi(object):
         self.data_logger = data_logger
         self.msg_logger = msg_logger
         self.soh_logger = soh_logger
-
-
-        if not arm64_imports:
-            self.log_msg(f'Warning: {e}\n Some libraries only available on arm64 platform could not be imported.\n'
-                      f'The Ohmpi class will fake operations for testing purposes.', 'warning')
 
         # read in hardware parameters (settings.py)
         self._read_hardware_parameters()
@@ -231,17 +214,20 @@ class OhmPi(object):
         #             output.append(i)
         return output
 
-    @property
-    def on_pi(self):
-        """Returns True if code is running on a raspberry pi and required arm64 libs have been imported"""
-        running_on_pi = False
+    @staticmethod
+    def get_platform():
+        """Get platform name and check if it is a raspberry pi"""
+
+        platform = 'unknown'
+        on_pi = False
         try:
             with io.open('/sys/firmware/devicetree/base/model', 'r') as f:
-                if 'raspberry pi' in f.read().lower():
-                    running_on_pi = True
+                platform = f.read().lower()
+            if 'raspberry pi' in platform:
+                on_pi = True
         except FileNotFoundError:
             pass
-        return running_on_pi and arm64_imports
+        return platform, on_pi
 
     def read_quad(self, filename):
         """Read quadrupole sequence from file.
@@ -619,6 +605,31 @@ class OhmPi(object):
             self.thread.join()
         self.log_msg('status = ' + self.status)
 
+
+msg_logger, msg_log_filename, data_logger, data_log_filename, logging_level = setup_loggers()
+# mqtt_client, measurement_topic = mqtt_client_setup()
+# msg_logger.info(f'publishing mqtt to topic {measurement_topic}')
+VERSION = '2.0.1'
+
+print(colored(r' ________________________________' + '\n' +
+              r'|  _  | | | ||  \/  || ___ \_   _|' + '\n' +
+              r'| | | | |_| || .  . || |_/ / | |' + '\n' +
+              r'| | | |  _  || |\/| ||  __/  | |' + '\n' +
+              r'\ \_/ / | | || |  | || |    _| |_' + '\n' +
+              r' \___/\_| |_/\_|  |_/\_|    \___/ ', 'red'))
+print('OhmPi start')
+print('Version:', VERSION)
+platform, on_pi = OhmPi.get_platform()
+if on_pi:
+    print(colored(f'Running on {platform} platform', 'green'))
+    if not arm64_imports:
+        print(colored(f'Warning: Required packages are missing.\n'
+                      f'Please run . env.sh at command prompt to update your virtual environment\n', 'yellow'))
+else:
+    print(colored(f'Not running on the Raspberry Pi platform.\nFor simulation purposes only...', 'yellow'))
+
+current_time = datetime.now()
+print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 
 # for testing
 if __name__ == "__main__":
