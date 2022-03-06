@@ -29,8 +29,8 @@ class MQTTHandler(logging.Handler):
     to a MQTT server to a topic.
     """
     def __init__(self, hostname, topic, qos=0, retain=False,
-            port=1883, client_id='', keepalive=60, will=None, auth=None,
-            tls=None, protocol=MQTTv31, transport='tcp'):
+                 port=1883, client_id='', keepalive=60, will=None, auth=None,
+                 tls=None, protocol=MQTTv31, transport='tcp'):
         logging.Handler.__init__(self)
         self.topic = topic
         self.qos = qos
@@ -52,7 +52,7 @@ class MQTTHandler(logging.Handler):
         """
         msg = self.format(record)
         publish.single(self.topic, msg, self.qos, self.retain,
-            hostname=self.hostname, port=self.port,
-            client_id=self.client_id, keepalive=self.keepalive,
-            will=self.will, auth=self.auth, tls=self.tls,
-            protocol=self.protocol, transport=self.transport)
+                       hostname=self.hostname, port=self.port,
+                       client_id=self.client_id, keepalive=self.keepalive,
+                       will=self.will, auth=self.auth, tls=self.tls,
+                       protocol=self.protocol, transport=self.transport)
