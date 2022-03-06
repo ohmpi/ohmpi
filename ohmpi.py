@@ -160,7 +160,7 @@ class OhmPi(object):
     def _read_hardware_parameters(self):
         """Read hardware parameters from settings.py.
         """
-        from settings import OHMPI_CONFIG
+        from config import OHMPI_CONFIG
         self.id = OHMPI_CONFIG['id']  # ID of the OhmPi
         self.r_shunt = OHMPI_CONFIG['R_shunt']  # reference resistance value in ohm
         self.Imax = OHMPI_CONFIG['Imax']  # maximum current
@@ -606,9 +606,9 @@ class OhmPi(object):
         self.log_msg('status = ' + self.status)
 
 
-msg_logger, msg_log_filename, data_logger, data_log_filename, logging_level = setup_loggers()
+exec_logger, exec_log_filename, data_logger, data_log_filename, logging_level = setup_loggers()  # TODO: add SOH
 # mqtt_client, measurement_topic = mqtt_client_setup()
-# msg_logger.info(f'publishing mqtt to topic {measurement_topic}')
+
 VERSION = '2.0.1'
 
 print(colored(r' ________________________________' + '\n' +
@@ -622,6 +622,7 @@ print('Version:', VERSION)
 platform, on_pi = OhmPi.get_platform()
 if on_pi:
     print(colored(f'Running on {platform} platform', 'green'))
+    # TODO: check model for compatible platforms (e.g. Raspberry Pi 3B is not supported...) and emit a warning otherwise
     if not arm64_imports:
         print(colored(f'Warning: Required packages are missing.\n'
                       f'Please run . env.sh at command prompt to update your virtual environment\n', 'yellow'))
