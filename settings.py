@@ -37,7 +37,7 @@ DATA_LOGGING_CONFIG = {
 
 # MQTT configuration parameters
 MQTT_LOGGING_CONFIG = {
-    'broker': 'ohmpy.umons.ac.be',
+    'hostname': 'ohmpy.umons.ac.be',
     'port': 1883,
     'qos': 0,
     'retain': False,
