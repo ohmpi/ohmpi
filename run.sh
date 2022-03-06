@@ -1,2 +1,2 @@
-source ../ohmpy/bin/activate
+source ./ohmpy/bin/activate
 python3 webserver.py
