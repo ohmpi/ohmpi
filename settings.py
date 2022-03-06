@@ -1,4 +1,4 @@
-from paho import mqtt
+from paho.mqtt.client import MQTTv31
 
 # OhmPi configuration
 OHMPI_CONFIG = {
@@ -45,7 +45,7 @@ MQTT_LOGGING_CONFIG = {
     'will': None,
     'auth': None,
     'tls':None,
-    'protocol': mqtt.MQTTv31,
+    'protocol': MQTTv31,
     'transport': 'tcp',
     'client_id': f'ohmpi_sn_{OHMPI_CONFIG["id"]}',
     'control_topic': f'cmd_ohmpi_sn_{OHMPI_CONFIG["id"]}',

@@ -19,7 +19,7 @@ SOFTWARE.
 """
 
 import logging
-import paho.mqtt.client as mqtt
+from paho.mqtt.client import MQTTv31
 import paho.mqtt.publish as publish
 
 
@@ -30,7 +30,7 @@ class MQTTHandler(logging.Handler):
     """
     def __init__(self, hostname, topic, qos=0, retain=False,
             port=1883, client_id='', keepalive=60, will=None, auth=None,
-            tls=None, protocol=mqtt.MQTTv31, transport='tcp'):
+            tls=None, protocol=MQTTv31, transport='tcp'):
         logging.Handler.__init__(self)
         self.topic = topic
         self.qos = qos
