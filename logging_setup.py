@@ -1,17 +1,21 @@
-from settings import LOGGING_CONFIG, DATA_LOGGING_CONFIG
+from settings import LOGGING_CONFIG, DATA_LOGGING_CONFIG, MQTT_LOGGING_CONFIG
 from os import path, mkdir, statvfs
 from time import gmtime
 import logging
+from mqtt_logger import MQTTHandler
 from compressed_sized_timed_rotating_logger import CompressedSizedTimedRotatingFileHandler
 
 
-def setup_loggers():
+def setup_loggers(mqtt=True):
     # Message logging setup
     log_path = path.join(path.dirname(__file__), 'logs')
     if not path.isdir(log_path):
         mkdir(log_path)
     msg_log_filename = path.join(log_path, 'msg_log')
     msg_logger = logging.getLogger('msg_logger')
+
+    # SOH logging setup
+    # TODO: Add state of health logging here
 
     # Data logging setup
     base_path = path.dirname(__file__)
@@ -44,6 +48,11 @@ def setup_loggers():
 
     if logging_to_console:
         msg_logger.addHandler(logging.StreamHandler())
+    if mqtt:
+        mqtt_msg_handler = MQTTHandler(MQTT_LOGGING_CONFIG['hostname'], MQTT_LOGGING_CONFIG['topic'])
+        mqtt_msg_handler.setLevel(logging_level)
+        mqtt_msg_handler.setFormatter(msg_formatter)
+        msg_logger.addHandler(mqtt_msg_handler)
 
     # Set data logging level and handler
     data_logger.setLevel(logging.INFO)

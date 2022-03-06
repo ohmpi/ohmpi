@@ -1,3 +1,5 @@
+from paho import mqtt
+
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': '0001',  # Unique identifier of the OhmPi board (string)
@@ -34,9 +36,20 @@ DATA_LOGGING_CONFIG = {
 }
 
 # MQTT configuration parameters
-MQTT_CONFIG = {
-    'mqtt_broker': 'mg3d-dev.umons.ac.be',
+MQTT_LOGGING_CONFIG = {
+    'broker': 'ohmpy.umons.ac.be',
+    'port': 1883,
+    'qos': 0,
+    'retain': False,
+    'keepalive': 60,
+    'will': None,
+    'auth': None,
+    'tls':None,
+    'protocol': mqtt.MQTTv31,
+    'transport': 'tcp',
     'client_id': f'ohmpi_sn_{OHMPI_CONFIG["id"]}',
     'control_topic': f'cmd_ohmpi_sn_{OHMPI_CONFIG["id"]}',
-    'measurements_topic': f'measurements_ohmpi_sn_{OHMPI_CONFIG["id"]}'
+    'msg_topic': f'msg_ohmpi_sn_{OHMPI_CONFIG["id"]}',
+    'data_topic': f'data_ohmpi_sn_{OHMPI_CONFIG["id"]}',
+    'soh_topic': f'soh_ohmpi_sn_{OHMPI_CONFIG["id"]}'
 }
