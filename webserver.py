@@ -1,13 +1,12 @@
 from http.server import SimpleHTTPRequestHandler, HTTPServer
-import time
+# import time
 import os
 import json
-from Ohmpi import OhmPi
-import threading
+from ohmpi import OhmPi
+# import threading
 import pandas as pd
 import shutil
 
-#hostName = "0.0.0.0"
 hostName = 'localhost'
 serverPort = 8080
 
@@ -17,6 +16,7 @@ with open('ohmpi_param.json') as json_file:
     pardict = json.load(json_file)
 
 ohmpi = OhmPi(pardict)
+
 
 class MyServer(SimpleHTTPRequestHandler):
     # because we use SimpleHTTPRequestHandler, we do not need to implement
@@ -32,9 +32,10 @@ class MyServer(SimpleHTTPRequestHandler):
     #     self.end_headers()
     #     with open(os.path.join('.', self.path[1:]), 'r') as f:
     #         self.wfile.write(bytes(f.read(), "utf-8"))
-        
+
     def do_POST(self):
-        global ohmpiThread, status, run
+        # global ohmpiThread, status, run
+
         dic = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
         rdic = {}
         if dic['command'] == 'start':

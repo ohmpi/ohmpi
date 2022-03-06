@@ -39,7 +39,7 @@ class CompressedSizedTimedRotatingFileHandler(handlers.TimedRotatingFileHandler)
         dir_name, base_name = os.path.split(self.baseFilename)
         file_names = os.listdir(dir_name)
         result = []
-        prefix = f'{base_name}.2'  # we want to find a rotated file with eg filename.2017-12-12... name
+        prefix = f'{base_name}.2'  # we want to find a rotated file with e.g. filename.2017-12-12... name
         for file_name in file_names:
             if file_name.startswith(prefix) and not file_name.endswith('.zip'):
                 result.append(file_name)
