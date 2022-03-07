@@ -36,15 +36,15 @@ def setup_loggers(mqtt=True):
     # Set message logging format and level
     log_format = '%(asctime)-15s | %(process)d | %(levelname)s: %(message)s'
     logging_to_console = EXEC_LOGGING_CONFIG['logging_to_console']
-    msg_handler = CompressedSizedTimedRotatingFileHandler(exec_log_filename, max_bytes=EXEC_LOGGING_CONFIG['max_bytes'],
+    exec_handler = CompressedSizedTimedRotatingFileHandler(exec_log_filename, max_bytes=EXEC_LOGGING_CONFIG['max_bytes'],
                                                           backup_count=EXEC_LOGGING_CONFIG['backup_count'],
                                                           when=EXEC_LOGGING_CONFIG['when'],
                                                           interval=EXEC_LOGGING_CONFIG['interval'])
-    msg_formatter = logging.Formatter(log_format)
-    msg_formatter.converter = gmtime
-    msg_formatter.datefmt = '%Y/%m/%d %H:%M:%S UTC'
-    msg_handler.setFormatter(msg_formatter)
-    exec_logger.addHandler(msg_handler)
+    exec_formatter = logging.Formatter(log_format)
+    exec_formatter.converter = gmtime
+    exec_formatter.datefmt = '%Y/%m/%d %H:%M:%S UTC'
+    exec_handler.setFormatter(exec_formatter)
+    exec_logger.addHandler(exec_handler)
     exec_logger.setLevel(logging_level)
 
     if logging_to_console:
@@ -52,7 +52,7 @@ def setup_loggers(mqtt=True):
     if mqtt:
         mqtt_msg_handler = MQTTHandler(MQTT_LOGGING_CONFIG['hostname'], MQTT_LOGGING_CONFIG['exec_topic'])
         mqtt_msg_handler.setLevel(logging_level)
-        mqtt_msg_handler.setFormatter(msg_formatter)
+        mqtt_msg_handler.setFormatter(exec_formatter)
         exec_logger.addHandler(mqtt_msg_handler)
 
     # Set data logging level and handler
@@ -69,30 +69,30 @@ def setup_loggers(mqtt=True):
     return exec_logger, exec_log_filename, data_logger, data_log_filename, logging_level
 
 
-def init_logging(msg_logger, logging_level, log_path, data_log_filename):
+def init_logging(exec_logger, logging_level, log_path, data_log_filename):
     """ This is the init sequence for the logging system """
 
     init_logging_status = True
-    msg_logger.info('')
-    msg_logger.info('****************************')
-    msg_logger.info('*** NEW SESSION STARTING ***')
-    msg_logger.info('****************************')
-    msg_logger.info('')
-    msg_logger.info('Logging level: %s' % logging_level)
+    exec_logger.info('')
+    exec_logger.info('****************************')
+    exec_logger.info('*** NEW SESSION STARTING ***')
+    exec_logger.info('****************************')
+    exec_logger.info('')
+    exec_logger.info('Logging level: %s' % logging_level)
     try:
         st = statvfs('.')
         available_space = st.f_bavail * st.f_frsize / 1024 / 1024
-        msg_logger.info(f'Remaining disk space : {available_space:.1f} MB')
+        exec_logger.info(f'Remaining disk space : {available_space:.1f} MB')
     except Exception as e:
-        msg_logger.debug('Unable to get remaining disk space: {e}')
-    msg_logger.info('Saving data log to ' + data_log_filename)
-    msg_logger.info('OhmPi settings:')
+        exec_logger.debug('Unable to get remaining disk space: {e}')
+    exec_logger.info('Saving data log to ' + data_log_filename)
+    exec_logger.info('OhmPi settings:')
     # TODO Add OhmPi settings
     config_dict = {'execution logging configuration': json.dumps(EXEC_LOGGING_CONFIG, indent=4),
                    'data logging configuration': json.dumps(DATA_LOGGING_CONFIG, indent=4),
                    'mqtt logging configuration': json.dumps(MQTT_LOGGING_CONFIG, indent=4)}
     for k, v in config_dict.items():
-        msg_logger.info(f'{k}:\n{v}')
-    msg_logger.info('')
-    msg_logger.info(f'init_logging_status: {init_logging_status}')
+        exec_logger.info(f'{k}:\n{v}')
+    exec_logger.info('')
+    exec_logger.info(f'init_logging_status: {init_logging_status}')
     return init_logging_status
