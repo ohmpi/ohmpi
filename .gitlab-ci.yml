@@ -11,6 +11,9 @@ pages:
   # also make latex? pdf?
   - cd ..
   - mv sphinx/build/html/ public/
+  artifacts:
+    paths:
+    - public/
   only:
   - master
 
