@@ -12,6 +12,9 @@ pages:
   - cd ..
   - mv sphinx/build/html/ public/
   - ls public/
+  artifacts:
+    paths:
+      - public/
   only:
   - master
 
