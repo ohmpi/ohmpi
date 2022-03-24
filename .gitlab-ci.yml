@@ -1,3 +1,4 @@
+image: python:3.9-bullseye
 pages:
   stage: deploy
   script:
