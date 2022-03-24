@@ -6,7 +6,7 @@ pages:
   - apt-get install --assume-yes pandoc
   - pip3 install numpy pandas termcolor  # top import of Ohmpi.py
   - pip3 install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark
-  - cd sphinx/source
+  - cd sphinx
   - make html
   # also make latex? pdf?
   - cd ..
