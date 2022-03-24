@@ -14,5 +14,8 @@ pages:
   - cd ..
   - mv doc/build/html/ public/
   - ls public/
-only:
+  artifacts:
+    paths:
+    - public/
+  only:
   - master
