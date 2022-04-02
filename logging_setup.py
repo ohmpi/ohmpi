@@ -60,7 +60,7 @@ def setup_loggers(mqtt=True):
     log_format = '%(asctime)-15s | %(process)d | %(levelname)s: %(message)s'
     logging_to_console = DATA_LOGGING_CONFIG['logging_to_console']
 
-    data_handler = CompressedSizedTimedRotatingFileHandler(exec_log_filename,
+    data_handler = CompressedSizedTimedRotatingFileHandler(data_log_filename,
                                                            max_bytes=DATA_LOGGING_CONFIG['max_bytes'],
                                                            backup_count=DATA_LOGGING_CONFIG['backup_count'],
                                                            when=DATA_LOGGING_CONFIG['when'],
