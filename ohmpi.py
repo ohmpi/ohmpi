@@ -444,7 +444,7 @@ class OhmPi(object):
             for k in range(0, self.nb_samples):
                 # reading current value on ADS channel A0
                 meas[k, 0] = (AnalogIn(self.ads_current, ads.P0).voltage*1000) / (50 * self.r_shunt)
-                meas[k, 1] = AnalogIn(self.ads_voltage, ads.P0, ADS.P1).voltage * self.coef_p2 * 1000
+                meas[k, 1] = AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * self.coef_p2 * 1000
                 # reading voltage value on ADS channel A2
                 #meas[k, 2] = AnalogIn(self.ads_voltage, ads.P1).voltage * self.coef_p3 * 1000
 
