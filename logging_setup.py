@@ -36,10 +36,11 @@ def setup_loggers(mqtt=True):
     # Set message logging format and level
     log_format = '%(asctime)-15s | %(process)d | %(levelname)s: %(message)s'
     logging_to_console = EXEC_LOGGING_CONFIG['logging_to_console']
-    exec_handler = CompressedSizedTimedRotatingFileHandler(exec_log_filename, max_bytes=EXEC_LOGGING_CONFIG['max_bytes'],
-                                                          backup_count=EXEC_LOGGING_CONFIG['backup_count'],
-                                                          when=EXEC_LOGGING_CONFIG['when'],
-                                                          interval=EXEC_LOGGING_CONFIG['interval'])
+    exec_handler = CompressedSizedTimedRotatingFileHandler(exec_log_filename,
+                                                           max_bytes=EXEC_LOGGING_CONFIG['max_bytes'],
+                                                           backup_count=EXEC_LOGGING_CONFIG['backup_count'],
+                                                           when=EXEC_LOGGING_CONFIG['when'],
+                                                           interval=EXEC_LOGGING_CONFIG['interval'])
     exec_formatter = logging.Formatter(log_format)
     exec_formatter.converter = gmtime
     exec_formatter.datefmt = '%Y/%m/%d %H:%M:%S UTC'
@@ -55,21 +56,39 @@ def setup_loggers(mqtt=True):
         mqtt_msg_handler.setFormatter(exec_formatter)
         exec_logger.addHandler(mqtt_msg_handler)
 
-    # Set data logging level and handler
-    data_logger.setLevel(logging.INFO)
-    data_handler = CompressedSizedTimedRotatingFileHandler(data_log_filename,
+    # Set data logging format and level
+    log_format = '%(asctime)-15s | %(process)d | %(levelname)s: %(message)s'
+    logging_to_console = DATA_LOGGING_CONFIG['logging_to_console']
+
+    data_handler = CompressedSizedTimedRotatingFileHandler(exec_log_filename,
                                                            max_bytes=DATA_LOGGING_CONFIG['max_bytes'],
                                                            backup_count=DATA_LOGGING_CONFIG['backup_count'],
                                                            when=DATA_LOGGING_CONFIG['when'],
                                                            interval=DATA_LOGGING_CONFIG['interval'])
+    data_formatter = logging.Formatter(log_format)
+    data_formatter.converter = gmtime
+    data_formatter.datefmt = '%Y/%m/%d %H:%M:%S UTC'
+    data_handler.setFormatter(exec_formatter)
     data_logger.addHandler(data_handler)
+    data_logger.setLevel(logging_level)
 
-    if not init_logging(exec_logger, logging_level, log_path, data_log_filename):
-        print('ERROR: Could not initialize logging!')
-    return exec_logger, exec_log_filename, data_logger, data_log_filename, logging_level
+    if logging_to_console:
+        data_logger.addHandler(logging.StreamHandler())
+    if mqtt:
+        mqtt_data_handler = MQTTHandler(MQTT_LOGGING_CONFIG['hostname'], MQTT_LOGGING_CONFIG['data_topic'])
+        mqtt_data_handler.setLevel(logging_level)
+        mqtt_data_handler.setFormatter(data_formatter)
+        data_logger.addHandler(mqtt_data_handler)
+
+    try:
+        init_logging(exec_logger, data_logger, logging_level, log_path, data_log_filename)
+    except Exception as err:
+        print(f'ERROR: Could not initialize logging!\n{err}')
+    finally:
+        return exec_logger, exec_log_filename, data_logger, data_log_filename, logging_level
 
 
-def init_logging(exec_logger, logging_level, log_path, data_log_filename):
+def init_logging(exec_logger, data_logger, logging_level, log_path, data_log_filename):
     """ This is the init sequence for the logging system """
 
     init_logging_status = True
@@ -95,4 +114,5 @@ def init_logging(exec_logger, logging_level, log_path, data_log_filename):
         exec_logger.info(f'{k}:\n{v}')
     exec_logger.info('')
     exec_logger.info(f'init_logging_status: {init_logging_status}')
+    data_logger.info('Starting_session')
     return init_logging_status

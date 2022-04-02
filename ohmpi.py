@@ -19,19 +19,19 @@ import threading
 from logging_setup import setup_loggers
 # from mqtt_setup import mqtt_client_setup
 
-# finish import (done only when class is instantiated as some libs are
-# only available on arm64 platform)
+# finish import (done only when class is instantiated as some libs are only available on arm64 platform)
+arm_64_imports = False
 try:
-    import board
-    import busio
-    import adafruit_tca9548a
-    import adafruit_ads1x15.ads1115 as ads
-    from adafruit_ads1x15.analog_in import AnalogIn
-    from adafruit_mcp230xx.mcp23008 import MCP23008
-    from adafruit_mcp230xx.mcp23017 import MCP23017
-    import digitalio
-    from digitalio import Direction
-    from gpiozero import CPUTemperature
+    import board  # noqa
+    import busio  # noqa
+    import adafruit_tca9548a  # noqa
+    import adafruit_ads1x15.ads1115 as ads   # noqa
+    from adafruit_ads1x15.analog_in import AnalogIn   # noqa
+    from adafruit_mcp230xx.mcp23008 import MCP23008  # noqa
+    from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
+    import digitalio  # noqa
+    from digitalio import Direction  # noqa
+    from gpiozero import CPUTemperature  # noqa
     arm64_imports = True
 except ImportError as error:
     print(colored(f'Import error: {error}', 'yellow'))
@@ -51,24 +51,27 @@ class OhmPi(object):
     sequence : str, optional
         Path to the .txt where the sequence is read. By default, a 1 quadrupole
         sequence: 1, 2, 3, 4 is used.
-    output : str, optional
-        Either 'print' for a console output or 'mqtt' for publication onto
-        MQTT broker.
     """
-    def __init__(self, config=None, sequence=None, output='print', data_logger=None, exec_logger=None, soh_logger=None,
-                 on_pi=None):
+    def __init__(self, config=None, sequence=None, mqtt=True, on_pi=None):
         # flags and attributes
         if on_pi is None:
             _, on_pi = OhmPi.get_platform()
+        self.sequence = sequence
         self.on_pi = on_pi  # True if run from the RaspberryPi with the hardware, otherwise False for random data
-        self.output = output  # type of output print
         self.status = 'idle'  # either running or idle
         self.run = False  # flag is True when measuring
         self.thread = None  # contains the handle for the thread taking the measurement
         self.path = 'data/'  # where to save the .csv
-        self.data_logger = data_logger
-        self.exec_logger = exec_logger
-        self.soh_logger = soh_logger
+
+        # set loggers
+        config_exec_logger, _, config_data_logger, _, _ = setup_loggers(mqtt=mqtt)  # TODO: add SOH
+        self.data_logger = config_data_logger
+        self.exec_logger = config_exec_logger
+        self.soh_logger = None
+        print('Loggers:')
+        print(colored(f'Exec logger {self.exec_logger.handlers if self.exec_logger is not None else "None"}', 'blue'))
+        print(colored(f'Data logger {self.data_logger.handlers if self.data_logger is not None else "None"}', 'blue'))
+        print(colored(f'SOH logger {self.soh_logger.handlers if self.soh_logger is not None else "None"}', 'blue'))
 
         # read in hardware parameters (settings.py)
         self._read_hardware_parameters()
@@ -86,7 +89,7 @@ class OhmPi(object):
         if config is not None:
             self._read_acquisition_parameters(config)
 
-        self.log_exec('Initialized with configuration:' + str(self.pardict), level='debug')
+        self.exec_logger.debug('Initialized with configuration:' + str(self.pardict))
     
         # read quadrupole sequence
         if sequence is None:
@@ -97,7 +100,7 @@ class OhmPi(object):
         # connect to components on the OhmPi board
         if self.on_pi:
             # activation of I2C protocol
-            self.i2c = busio.I2C(board.SCL, board.SDA)
+            self.i2c = busio.I2C(board.SCL, board.SDA)   # noqa
 
             # I2C connexion to MCP23008, for current injection
             self.mcp = MCP23008(self.i2c, address=0x20)
@@ -107,32 +110,6 @@ class OhmPi(object):
             
             # ADS1115 for voltage measurement (MN)
             self.ads_voltage = ads.ADS1115(self.i2c, gain=2/3, data_rate=860, address=0x49)
-
-    def log_exec(self, msg, level='debug'):
-        """Function for output management.
-
-        Parameters
-        ----------
-        msg : str
-            Body of the message.
-        level : str, optional
-            Level of the message, either: 'error', 'warn', 'debug'
-        """
-        # TODO all message to be logged using python logging library and rotating log
-
-        if self.exec_logger is not None:
-            self.exec_logger.info(msg)
-        # if self.output == 'print':
-        #     if level == 'error':
-        #         print(colored(level.upper() + ' : ' + msg, 'red'))
-        #     elif level == 'warn':
-        #         print(colored(level.upper() + ' : ' + msg, 'yellow'))
-        #     else:
-        #         print(level.upper() + ' : ' + msg)
-        # elif self.output == 'mqtt':
-        #     if level == 'debug':
-        #         # TODO mqtt transmission here
-        #         pass
 
     def _read_acquisition_parameters(self, config):
         """Read acquisition parameters.
@@ -155,7 +132,7 @@ class OhmPi(object):
             with open(config) as json_file:
                 dic = json.load(json_file)
             self.pardict.update(dic)
-        self.log_exec('Acquisition parameters updated: ' + str(self.pardict), level='debug')
+        self.exec_logger.debug('Acquisition parameters updated: ' + str(self.pardict))
 
     def _read_hardware_parameters(self):
         """Read hardware parameters from settings.py.
@@ -164,16 +141,16 @@ class OhmPi(object):
         self.id = OHMPI_CONFIG['id']  # ID of the OhmPi
         self.r_shunt = OHMPI_CONFIG['R_shunt']  # reference resistance value in ohm
         self.Imax = OHMPI_CONFIG['Imax']  # maximum current
-        self.log_exec(f'The maximum current cannot be higher than {self.Imax} mA', level='warn')
+        self.exec_logger.warning(f'The maximum current cannot be higher than {self.Imax} mA')
         self.coef_p2 = OHMPI_CONFIG['coef_p2']  # slope for current conversion for ads.P2, measurement in V/V
         self.coef_p3 = OHMPI_CONFIG['coef_p3']  # slope for current conversion for ads.P3, measurement in V/V
-        self.offset_p2 = OHMPI_CONFIG['offset_p2']
-        self.offset_p3 = OHMPI_CONFIG['offset_p3']
+        # self.offset_p2 = OHMPI_CONFIG['offset_p2'] parameter removed
+        # self.offset_p3 = OHMPI_CONFIG['offset_p3'] parameter removed
         self.nb_samples = OHMPI_CONFIG['integer']  # number of samples measured for each stack
         self.version = OHMPI_CONFIG['version']  # hardware version
         self.max_elec = OHMPI_CONFIG['max_elec']  # maximum number of electrodes
         self.board_address = OHMPI_CONFIG['board_address']
-        self.log_exec('OHMPI_CONFIG = ' + str(OHMPI_CONFIG), level='debug')
+        self.exec_logger.debug(f'OHMPI_CONFIG = {str(OHMPI_CONFIG)}')
 
     @staticmethod
     def find_identical_in_line(quads):
@@ -254,19 +231,18 @@ class OhmPi(object):
         # if statement with exit cases (TODO rajouter un else if pour le deuxième cas du ticket #2)
         if test_index_elec.size != 0:
             for i in range(len(test_index_elec[0, :])):
-                self.log_exec('Error: An electrode index at line ' + str(test_index_elec[0, i] + 1) +
-                          ' exceeds the maximum number of electrodes', level='error')
+                self.exec_logger.error(f'An electrode index at line {str(test_index_elec[0, i] + 1)} '
+                                       f'exceeds the maximum number of electrodes')
             # sys.exit(1)
             output = None
         elif len(test_same_elec) != 0:
             for i in range(len(test_same_elec)):
-                self.log_exec('Error: An electrode index A == B detected at line ' + str(test_same_elec[i] + 1),
-                              level="error")
+                self.exec_logger.error(f'An electrode index A == B detected at line {str(test_same_elec[i] + 1)}')
             # sys.exit(1)
             output = None
 
         if output is not None:
-            self.log_exec('Sequence of {:d} quadrupoles read.'.format(output.shape[0]), level='debug')
+            self.exec_logger.debug('Sequence of {:d} quadrupoles read.'.format(output.shape[0]))
     
         self.sequence = output
 
@@ -319,12 +295,12 @@ class OhmPi(object):
                 else:
                     mcp2.get_pin(relay_nr-1).value = False
                 
-                self.log_exec(f'Switching relay {relay_nr} {state} for electrode {electrode_nr}', level='debug')
+                self.exec_logger.debug(f'Switching relay {relay_nr} {state} for electrode {electrode_nr}')
             else:
-                self.log_exec(f'Unable to address electrode nr {electrode_nr}', level='warn')
+                self.exec_logger.warning(f'Unable to address electrode nr {electrode_nr}')
 
     def switch_mux_on(self, quadrupole):
-        """Switch on multiplexer relays for given quadrupole.
+        """ Switch on multiplexer relays for given quadrupole.
         
         Parameters
         ----------
@@ -337,10 +313,10 @@ class OhmPi(object):
             for i in range(0, 4):
                 self.switch_mux(quadrupole[i], 'on', roles[i])
         else:
-            self.log_exec('A == B -> short circuit detected!', level='error')
+            self.exec_logger.error('A == B -> short circuit risk detected!')
 
     def switch_mux_off(self, quadrupole):
-        """Switch off multiplexer relays for given quadrupole.
+        """ Switch off multiplexer relays for given quadrupole.
         
         Parameters
         ----------
@@ -357,7 +333,7 @@ class OhmPi(object):
         for i in range(0, 4):
             for j in range(1, self.max_elec + 1):
                 self.switch_mux(j, 'off', roles[i])
-        self.log_exec('All MUX switched off.', level='debug')
+        self.exec_logger.debug('All MUX switched off.')
 
     def run_measurement(self, quad, nb_stack=None, injection_duration=None):  # NOTE: quad not used?!
         """ Do a 4 electrode measurement and measure transfer resistance obtained.
@@ -392,7 +368,9 @@ class OhmPi(object):
         pin1.direction = Direction.OUTPUT
         pin0.value = False
         pin1.value = False
-        
+
+        self.exec_logger.debug('Starting measurement')
+        self.data_logger.info('Waiting for data')
         # TODO I don't get why 3 + 2*nb_stack - 1? why not just rnage(nb_stack)?
         # or do we consider 1 stack = one full polarity? do we discard the first 3 readings?
         for n in range(0, 3+2*nb_stack-1):
@@ -443,7 +421,7 @@ class OhmPi(object):
             
         # create a dictionary and compute averaged values from all stacks
         d = {
-            "time": [datetime.now()],
+            "time": [datetime.now().isoformat()],
             "A": [1],
             "B": [2],
             "M": [3],
@@ -469,13 +447,13 @@ class OhmPi(object):
                 val = d[k]
                 output += f'{val}\t'
         output = output[:-1]
-        self.log_exec(output, level='debug')
+        self.exec_logger.debug(output)
         time.sleep(1)  # NOTE: why this?
 
         return d
 
     def rs_check(self):
-        """Check contact resistance.
+        """ Check contact resistance.
         """
         # create custom sequence where MN == AB
         nelec = self.sequence.max()  # number of elec used in the sequence
@@ -495,7 +473,7 @@ class OhmPi(object):
         self.sequence = quads
         
         # run the RS check
-        self.log_exec('RS check (check contact resistance)', level='debug')
+        self.exec_logger.debug('RS check (check contact resistance)')
         self.measure()
         
         # restore
@@ -503,29 +481,29 @@ class OhmPi(object):
         self.sequence = sequence
 
         # TODO if interrupted, we would need to restore the values
-        # TODO or we offer the possiblity in 'run_measurement' to have rs_check each time?
+        # TODO or we offer the possibility in 'run_measurement' to have rs_check each time?
 
     @staticmethod
-    def append_and_save(fname, last_measurement):
+    def append_and_save(filename, last_measurement):
         """Append and save last measurement dataframe.
 
         Parameters
         ----------
-        fname : str
+        filename : str
             filename to save the last measurement dataframe
         last_measurement : dict
             Last measurement taken in the form of a python dictionary
         """
         
-        if os.path.isfile(fname):
+        if os.path.isfile(filename):
             # Load data file and append data to it
-            with open(fname, 'a') as f:
+            with open(filename, 'a') as f:
                 w = csv.DictWriter(f, last_measurement.keys())
                 w.writerow(last_measurement)
                 # last_measurement.to_csv(f, header=False)
         else:
             # create data file and add headers
-            with open(fname, 'a') as f:
+            with open(filename, 'a') as f:
                 w = csv.DictWriter(f, last_measurement.keys())
                 w.writeheader()
                 w.writerow(last_measurement)
@@ -536,19 +514,19 @@ class OhmPi(object):
         """
         self.run = True
         self.status = 'running'
-        self.log_exec('status = ' + self.status, level='debug')
+        self.exec_logger.debug(f'Status: {self.status}')
 
         def func():
             for g in range(0, self.pardict["nbr_meas"]):  # for time-lapse monitoring
                 if self.run is False:
-                    self.log_exec('INTERRUPTED', level='debug')
+                    self.exec_logger.warning('Data acquisition interrupted')
                     break
                 t0 = time.time()
 
                 # create filename with timestamp
-                fname = self.pardict["export_path"].replace('.csv', '_' + datetime.now().strftime('%Y%m%dT%H%M%S')
-                                                            + '.csv')
-                self.log_exec('saving to ' + fname, level='debug')
+                filename = self.pardict["export_path"].replace('.csv',
+                                                               f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
+                self.exec_logger.debug(f'Saving to {filename}')
 
                 # make sure all multiplexer are off
                 self.reset_mux()
@@ -575,9 +553,11 @@ class OhmPi(object):
                     # switch mux off
                     self.switch_mux_off(quad)
 
+                    # log data to the data logger
+                    self.data_logger.info(f'{current_measurement}')
                     # save data and print in a text file
-                    self.append_and_save(fname, current_measurement)
-                    self.log_exec('{:d}/{:d}'.format(i + 1, self.sequence.shape[0]), level='debug')
+                    self.append_and_save(filename, current_measurement)
+                    self.exec_logger.debug('{:d}/{:d}'.format(i + 1, self.sequence.shape[0]))
 
                 # compute time needed to take measurement and subtract it from interval
                 # between two sequence run (= sequence_delay)
@@ -587,8 +567,8 @@ class OhmPi(object):
                 if sleep_time < 0:
                     # it means that the measuring time took longer than the sequence delay
                     sleep_time = 0
-                    self.log_exec('The measuring time is longer than the sequence delay. Increase the sequence delay',
-                                  level='warn')
+                    self.exec_logger.warning('The measuring time is longer than the sequence delay. '
+                                          'Increase the sequence delay')
 
                 # sleeping time between sequence
                 if self.pardict["nbr_meas"] > 1:
@@ -603,13 +583,15 @@ class OhmPi(object):
         self.run = False
         if self.thread is not None:
             self.thread.join()
-        self.log_exec('status = ' + self.status)
+        self.exec_logger.debug(f'Status: {self.status}')
 
 
-exec_logger, exec_log_filename, data_logger, data_log_filename, logging_level = setup_loggers()  # TODO: add SOH
+# exec_logger, exec_log_filename, data_logger, data_log_filename, logging_level = setup_loggers()  # TODO: add SOH
+
+
 # mqtt_client, measurement_topic = mqtt_client_setup()
 
-VERSION = '2.0.1'
+VERSION = '2.0.2'
 
 print(colored(r' ________________________________' + '\n' +
               r'|  _  | | | ||  \/  || ___ \_   _|' + '\n' +
@@ -622,7 +604,8 @@ print('Version:', VERSION)
 platform, on_pi = OhmPi.get_platform()
 if on_pi:
     print(colored(f'Running on {platform} platform', 'green'))
-    # TODO: check model for compatible platforms (e.g. Raspberry Pi 3B is not supported...) and emit a warning otherwise
+    # TODO: check model for compatible platforms (exclude Raspberry Pi versions that are not supported...)
+    #       and emit a warning otherwise
     if not arm64_imports:
         print(colored(f'Warning: Required packages are missing.\n'
                       f'Please run . env.sh at command prompt to update your virtual environment\n', 'yellow'))

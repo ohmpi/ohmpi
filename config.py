@@ -17,7 +17,7 @@ OHMPI_CONFIG = {
 
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
-    'debug_mode': False,
+    'debug_mode': True,
     'logging_to_console': False,
     'file_name': 'ohmpi_log',
     'max_bytes': 262144,
@@ -29,6 +29,7 @@ EXEC_LOGGING_CONFIG = {
 # Data logging configuration
 DATA_LOGGING_CONFIG = {
     'file_name': 'data_log',
+    'logging_to_console': False,
     'max_bytes': 16777216,
     'backup_count': 1024,
     'when': 'd',
@@ -38,6 +39,7 @@ DATA_LOGGING_CONFIG = {
 # State of Health logging configuration
 SOH_LOGGING_CONFIG = {
     'file_name': 'soh_log',
+    'logging_to_console': True,
     'max_bytes': 16777216,
     'backup_count': 1024,
     'when': 'd',
@@ -53,7 +55,7 @@ MQTT_LOGGING_CONFIG = {
     'keepalive': 60,
     'will': None,
     'auth': None,
-    'tls':None,
+    'tls': None,
     'protocol': MQTTv31,
     'transport': 'tcp',
     'client_id': f'ohmpi_sn_{OHMPI_CONFIG["id"]}',

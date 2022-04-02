@@ -108,8 +108,8 @@
         let output = document.getElementById('output')
         let data = {} // hold data of all surveys
         let interv = null // hold interval for automatic data retrieval
-        let quads = [] // available quadrupoles for time-serie figure
-        let squads = [] // selected quadrupoles for time-serie figure
+        let quads = [] // available quadrupoles for time-series figure
+        let squads = [] // selected quadrupoles for time-series figure
 
         // useful functions
         function sendCommand(query, callback=null) {
@@ -201,10 +201,10 @@
         }
         Plotly.newPlot('gd', [trace], layout)
 
-        // make time-serie plot
+        // make time-series plot
         let tdata = []
         let layout2 = {
-            title: 'Time-serie',
+            title: 'Time-series',
             yaxis: {
                 title: 'App. res. [Ohm.m]'
             },
@@ -214,7 +214,7 @@
         }
         Plotly.newPlot('ts', tdata, layout2)
 
-        // add trace to time-serie plot
+        // add trace to time-series plot
         function addTraceBtnFunc() {
             let val = document.getElementById('quadSelect').value
             squads.push(val.split(', '))
@@ -230,7 +230,7 @@
         let addTraceBtn = document.getElementById('addTraceBtn')
         addTraceBtn.addEventListener('click', addTraceBtnFunc)
 
-        // remove all traces from time-serie plot
+        // remove all traces from time-series plot
         function removeTracesBtnFunc() {
             squads = []
             tdata = []            
@@ -250,7 +250,7 @@
                 output.innerHTML = 'Status: ' + ddic['status']
 
                 // update data dic with new data
-                data = { // destructuring assignement (magic! :o)
+                data = { // destructuring assignment (magic! :o)
                     ...data,
                     ...ddic['data'] // value from second dic are preferred
                 }
@@ -307,7 +307,7 @@
                 surveySelect.value = surveyNames[surveyNames.length - 1]
                 
                 // call the function directly
-                // (as progammatically chaging the value does not trigger the event)
+                // (as programmatically changing the value does not trigger the event)
                 surveySelectFunc({'target': surveySelect})
 
                 // update list of quadrupoles if any
@@ -327,7 +327,7 @@
                     console.log('quads=', quads)
                 }
 
-                // update time-serie figure
+                // update time-series figure
                 if (squads.length > 0) {
 
                     // transform all surveyNames to datetime
@@ -362,7 +362,7 @@
                             }
                         }
 
-                        // update trace dictionnary
+                        // update trace dictionary
                         tdata[k]['x'] = x
                         tdata[k]['y'] = y
                     }
