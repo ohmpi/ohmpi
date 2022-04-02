@@ -359,6 +359,19 @@ class OhmPi(object):
                 self.switch_mux(j, 'off', roles[i])
         self.log_exec('All MUX switched off.', level='debug')
 
+    def gain_auto(self,channel):
+        gain=2/3
+        if ((abs(channel.voltage)<2.040) and (abs(channel.voltage)>=1.023)):
+            gain=2
+        elif ((abs(channel.voltage)<1.023) and (abs(channel.voltage)>=0.508)):
+            gain=4
+        elif ((abs(channel.voltage)<0.508) and (abs(channel.voltage)>=0.250)):
+            gain=8
+        elif abs(channel.voltage)<0.256:
+            gain=16
+        #print(gain)
+        return gain       
+
     def run_measurement(self, quad, nb_stack=None, injection_duration=None):  # NOTE: quad not used?!
         """ Do a 4 electrode measurement and measure transfer resistance obtained.
 
@@ -392,6 +405,25 @@ class OhmPi(object):
         pin1.direction = Direction.OUTPUT
         pin0.value = False
         pin1.value = False
+
+        # FUNCTION AUTOGAIN
+        # ADS1115 for current measurement (AB)
+        self.ads_current = ads.ADS1115(self.i2c, gain=2/3, data_rate=860, address=0x48)
+        # ADS1115 for voltage measurement (MN)
+        self.ads_voltage = ads.ADS1115(self.i2c, gain=2/3, data_rate=860, address=0x49)
+        # try auto gain
+        pin1.value = True
+        pin0.value = False
+        time.sleep(injection_duration)
+        gain_current=self.gain_auto(AnalogIn(self.ads_current,ads.P0))
+        gain_voltage=self.gain_auto(AnalogIn(self.ads_voltage,ads.P0,ads.P1))      
+        pin0.value = False
+        pin1.value = False
+        print(gain_current)
+        print(gain_voltage)
+        self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=0x48)
+        self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=0x49)
+
         
         # TODO I don't get why 3 + 2*nb_stack - 1? why not just rnage(nb_stack)?
         # or do we consider 1 stack = one full polarity? do we discard the first 3 readings?
@@ -412,9 +444,9 @@ class OhmPi(object):
             for k in range(0, self.nb_samples):
                 # reading current value on ADS channel A0
                 meas[k, 0] = (AnalogIn(self.ads_current, ads.P0).voltage*1000) / (50 * self.r_shunt)
-                meas[k, 1] = AnalogIn(self.ads_voltage, ads.P0).voltage * self.coef_p2 * 1000
+                meas[k, 1] = AnalogIn(self.ads_voltage, ads.P0, ADS.P1).voltage * self.coef_p2 * 1000
                 # reading voltage value on ADS channel A2
-                meas[k, 2] = AnalogIn(self.ads_voltage, ads.P1).voltage * self.coef_p3 * 1000
+                #meas[k, 2] = AnalogIn(self.ads_voltage, ads.P1).voltage * self.coef_p3 * 1000
 
             # stop current injection
             pin1.value = False
