@@ -444,10 +444,10 @@ class OhmPi(object):
         # create a dictionary and compute averaged values from all stacks
         d = {
             "time": [datetime.now()],
-            "A": [1],
-            "B": [2],
-            "M": [3],
-            "N": [4],
+            "A": quad[1],
+            "B": quad[2],
+            "M": quad[3],
+            "N": quad[4],
             "inj time [ms]": (end_delay - start_delay) * 1000,
             "Vmn [mV]": [(sum_vmn / (3 + 2 * nb_stack - 1))],
             "I [mA]": [(injection_current / (3 + 2 * nb_stack - 1))],
