@@ -475,7 +475,7 @@ class OhmPi(object):
             
         # create a dictionary and compute averaged values from all stacks
         d = {
-            "time": [datetime.now()],
+            "time": [datetime.now().isoformat()],
             "A": quad[0],
             "B": quad[1],
             "M": quad[2],
