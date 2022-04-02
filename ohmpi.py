@@ -103,7 +103,7 @@ class OhmPi(object):
             self.mcp = MCP23008(self.i2c, address=0x20)
             
             # ADS1115 for current measurement (AB)
-            self.ads_current = ads.ADS1115(self.i2c, gain=16, data_rate=860, address=0x48)
+            self.ads_current = ads.ADS1115(self.i2c, gain=2/3, data_rate=860, address=0x48)
             
             # ADS1115 for voltage measurement (MN)
             self.ads_voltage = ads.ADS1115(self.i2c, gain=2/3, data_rate=860, address=0x49)
