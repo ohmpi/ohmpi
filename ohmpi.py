@@ -395,7 +395,7 @@ class OhmPi(object):
         pin1.value = False
 
         self.exec_logger.debug('Starting measurement')
-        self.data_logger.info('Waiting for data')
+        self.exec_logger.info('Waiting for data')
 
         # FUNCTION AUTOGAIN
         # ADS1115 for current measurement (AB)
@@ -508,24 +508,54 @@ class OhmPi(object):
             np.arange(nelec - 1) + 2
         ]).T
 
-        # create backup TODO not good
-        export_path = self.pardict['export_path'].copy()
-        sequence = self.sequence.copy()
+        for i in range(0, quads.shape[0]):
+            quad = quads[i, :]  # quadrupole
+            self.reset_mux()
+            self.switch_mux_on(quad)
+            pin0 = self.mcp.get_pin(0)
+            pin0.direction = Direction.OUTPUT
+            pin1 = self.mcp.get_pin(1)
+            pin1.direction = Direction.OUTPUT
+            pin0.value = False
+            pin1.value = False
 
-        # assign new value
-        self.pardict['export_path'] = export_path.replace('.csv', '_rs.csv')
-        self.sequence = quads
+            print(quad)
+            # call the switch_mux function to switch to the right electrodes
+            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
+            # ADS1115 for voltage measurement (MN)
+            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
+            pin1.value = True
+            pin0.value = False
+            time.sleep(0.2)
+            current = AnalogIn(self.ads_current, ads.P0).voltage / (50 * self.r_shunt)
+            voltage = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * 2.5
+            resistance = voltage / current
+            # print(B)
+            # print(A)
+            print(abs(round(resistance / 1000, 1)), "kOhm")
+            self.switch_mux_off(quad)
+            pin0.value = False
+            pin1.value = False
 
-        # run the RS check
-        self.exec_logger.debug('RS check (check contact resistance)')
-        self.measure()
-
-        # restore
-        self.pardict['export_path'] = export_path
-        self.sequence = sequence
-
-        # TODO if interrupted, we would need to restore the values
-        # TODO or we offer the possibility in 'run_measurement' to have rs_check each time?
+    #         # create backup TODO not good
+    #         export_path = self.pardict['export_path']
+    #         sequence = self.sequence.copy()
+    #
+    #         # assign new value
+    #         self.pardict['export_path'] = export_path.replace('.csv', '_rs.csv')
+    #         self.sequence = quads
+    #         print(self.sequence)
+    #
+    #         # run the RS check
+    #         self.log_exec('RS check (check contact resistance)', level='debug')
+    #         self.measure()
+    #
+    #         # restore
+    #         self.pardict['export_path'] = export_path
+    #         self.sequence = sequence
+    #
+    #         # TODO if interrupted, we would need to restore the values
+    #         # TODO or we offer the possiblity in 'run_measurement' to have rs_check each time?
 
     @staticmethod
     def append_and_save(filename, last_measurement):
