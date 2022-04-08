@@ -4,5 +4,5 @@
     "nbr_meas": 100,
     "sequence_delay": 1,
     "stack": 1,
-    "export_path": "/home/pi/Documents/OhmPi/measurement.csv" 
+    "export_path": "data/measurement.csv" 
 }

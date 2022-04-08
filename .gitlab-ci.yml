@@ -1,19 +1,21 @@
 image: python:3.9-bullseye
+# This file is a template, and might need editing before it works on your project.
+# Full project: https://gitlab.com/pages/plain-html
 pages:
   stage: deploy
   script:
   - apt-get update
   - apt-get install --assume-yes pandoc
-  - pip3 install numpy pandas termcolor  # top import of Ohmpi.py
-  - pip3 install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark
-  - cd sphinx
+  - pip install numpy pandas termcolor  # top import of Ohmpi.py
+  - pip install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark
+  - cd doc
   - make html
   # also make latex? pdf?
   - cd ..
-  - mv sphinx/build/html/ public/
+  - mv doc/build/html/ public/
+  - ls public/
   artifacts:
     paths:
     - public/
   only:
   - master
-
