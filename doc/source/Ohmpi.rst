@@ -15,11 +15,9 @@ OhmPi project
 ------------
 | Rémi CLEMENT,Vivien DUBOIS,Nicolas Forquet, INRAE, REVERSAAL, Villeurbanne, France
 | Yannick FARGIER, GERS-RRO, Univ Gustave Eiffel, IFSTTAR, Lyon, France
-| Julien GANCE, IRIS Instruments, Orléans, France
 | Hélène GUYARD, IGE Grenoble, Université Grenoble Alpes, Grenoble, France
 | Olivier Kaufmann, Université de Mons, Mons, Belgium 
-| Guillaume Banchy, ILVO, Merelbeke, Belgium
-|
+| Guillaume Banchy, ILVO, Merelbeke, Belgium|
 
 
 **Parteners:**
@@ -31,7 +29,7 @@ OhmPi project
    +----------------------------------+-----------------------------------+-------------------------------+
    |   .. image:: logo_inrae.jpg      |  .. image:: logo_univ_gustave.png |   .. image:: logo_ilvo.png    |
    +----------------------------------+-----------------------------------+-------------------------------+
-   |   .. image:: logo_univ_mons.png  |  .. image:: ige.png               |   .. image:: logo-iris.jpg    |              
+   |   .. image:: logo_univ_mons.png  |  .. image:: ige.png               |                               |              
    +----------------------------------+-----------------------------------+-------------------------------+
    
   
