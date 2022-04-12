@@ -1,0 +1,27 @@
+
+**STEP n°4:** assemble Ohmpi 
+****************************************************
+   
+.. table::
+   :align: center
+   
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: step_n_4/step_4_1.jpg                         |
+   |      1 +------------------------------------------------------------+
+   |        |Cut 4 ribbon cables composed of 16 wires each to the proper | 
+   |        |length (about 1.5m). Each wire corresponds to an electrode. |                                                                      
+   +--------+------------------------------------------------------------+
+
+.. table::
+   :align: center
+
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: step_n_4/step_4_2.jpg                         |
+   |      1 +------------------------------------------------------------+
+   |        |Crimp the ribbon cable on the corresponding idc connector   | 
+   |        |with a suitable clamp. Pay attention to the direction of the|                                                                      
+   |        |cables. Unbalanced IDC connector. The ribbon cable must be  | 
+   |        |perpendicular to the connector.                             |
+   +--------+------------------------------------------------------------+
+   
+   
