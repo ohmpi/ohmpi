@@ -23,7 +23,7 @@ class MyServer(SimpleHTTPRequestHandler):
     # the do_GET() method (if we use the BaseHTTPRequestHandler, we would need to)
    
     # def do_GET(self):
-    #     # normal get for wepages (not so secure!)
+    #     # normal get for webpages (not so secure!)
     #     print(self.command)
     #     print(self.headers)
     #     print(self.request)

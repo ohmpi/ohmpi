@@ -18,8 +18,6 @@ from termcolor import colored
 import threading
 from logging_setup import setup_loggers
 
-# from mqtt_setup import mqtt_client_setup
-
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
 try:
     import board  # noqa
@@ -161,7 +159,7 @@ class OhmPi(object):
         
         Parameters
         ----------
-        quads : 1D or 2D array
+        quads : numpy.ndarray
             List of quadrupoles of shape nquad x 4 or 1D vector of shape nquad.
         
         Returns
@@ -219,16 +217,19 @@ class OhmPi(object):
 
         Returns
         -------
-        output : numpy.array
+        sequence : numpy.array
             Array of shape (number quadrupoles * 4).
         """
-        output = np.loadtxt(filename, delimiter=" ", dtype=int)  # load quadrupole file
+        sequence = np.loadtxt(filename, delimiter=" ", dtype=int)  # load quadrupole file
+
+        if sequence is not None:
+            self.exec_logger.debug('Sequence of {:d} quadrupoles read.'.format(sequence.shape[0]))
 
         # locate lines where the electrode index exceeds the maximum number of electrodes
-        test_index_elec = np.array(np.where(output > self.max_elec))
+        test_index_elec = np.array(np.where(sequence > self.max_elec))
 
         # locate lines where electrode A == electrode B
-        test_same_elec = self.find_identical_in_line(output)
+        test_same_elec = self.find_identical_in_line(sequence)
 
         # if statement with exit cases (TODO rajouter un else if pour le deuxième cas du ticket #2)
         if test_index_elec.size != 0:
@@ -236,17 +237,17 @@ class OhmPi(object):
                 self.exec_logger.error(f'An electrode index at line {str(test_index_elec[0, i] + 1)} '
                                        f'exceeds the maximum number of electrodes')
             # sys.exit(1)
-            output = None
+            sequence = None
         elif len(test_same_elec) != 0:
             for i in range(len(test_same_elec)):
                 self.exec_logger.error(f'An electrode index A == B detected at line {str(test_same_elec[i] + 1)}')
             # sys.exit(1)
-            output = None
+            sequence = None
 
-        if output is not None:
-            self.exec_logger.debug('Sequence of {:d} quadrupoles read.'.format(output.shape[0]))
+        if sequence is not None:
+            self.exec_logger.info('Sequence of {:d} quadrupoles read.'.format(sequence.shape[0]))
 
-        self.sequence = output
+        self.sequence = sequence
 
     def switch_mux(self, electrode_nr, state, role):
         """Select the right channel for the multiplexer cascade for a given electrode.
@@ -661,9 +662,7 @@ class OhmPi(object):
         self.exec_logger.debug(f'Status: {self.status}')
 
 
-# mqtt_client, measurement_topic = mqtt_client_setup()
-
-VERSION = '2.0.2'
+VERSION = '2.0.3'
 
 print(colored(r' ________________________________' + '\n' +
               r'|  _  | | | ||  \/  || ___ \_   _|' + '\n' +

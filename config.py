@@ -2,7 +2,7 @@ from paho.mqtt.client import MQTTv31
 
 # OhmPi configuration
 OHMPI_CONFIG = {
-    'id': '0001',  # Unique identifier of the OhmPi board (string)
+    'id': '0000',  # Unique identifier of the OhmPi board (string)
     'R_shunt': 2,  # Shunt resistance in Ohms
     'Imax': 4800/50/2,  # Maximum current
     'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
@@ -50,7 +50,7 @@ SOH_LOGGING_CONFIG = {
 MQTT_LOGGING_CONFIG = {
     'hostname': 'ohmpy.umons.ac.be',
     'port': 1883,
-    'qos': 0,
+    'qos': 1,
     'retain': False,
     'keepalive': 60,
     'will': None,
@@ -58,9 +58,9 @@ MQTT_LOGGING_CONFIG = {
     'tls': None,
     'protocol': MQTTv31,
     'transport': 'tcp',
-    'client_id': f'ohmpi_sn_{OHMPI_CONFIG["id"]}',
-    'control_topic': f'ctrl_ohmpi_sn_{OHMPI_CONFIG["id"]}',
-    'exec_topic': f'exec_ohmpi_sn_{OHMPI_CONFIG["id"]}',
-    'data_topic': f'data_ohmpi_sn_{OHMPI_CONFIG["id"]}',
-    'soh_topic': f'soh_ohmpi_sn_{OHMPI_CONFIG["id"]}'
+    'client_id': f'{OHMPI_CONFIG["id"]}',
+    'ctrl_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/ctrl',
+    'exec_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/exec',
+    'data_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/data',
+    'soh_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/soh'
 }
