@@ -1,0 +1,5 @@
+data/*.csv
+**/.ipynb_notebooks/**
+data.zip
+__pycache__
+Ohmpi_4elec_mqtt.py
