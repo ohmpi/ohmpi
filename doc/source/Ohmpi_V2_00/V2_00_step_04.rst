@@ -68,4 +68,43 @@
    |        +------------------------------------------------------------+
    |        |Profile view for mounting the spacers above and below.      | 
    |        |                                                            |                                                                      
-   +--------+------------------------------------------------------------+    
+   +--------+------------------------------------------------------------+ 
+
+.. table::
+   :align: center
+
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: step_n_4/step_4_8.jpg                         |
+   |      7 +------------------------------------------------------------+
+   |        |Cut a 50 cm long wire of any color (here yellow). Strip and | 
+   |        |tin each end of the wire. Install the wire "A" on the screw |
+   |        |terminal of MUX board « A ».                                |                                                                                       
+   +--------+------------------------------------------------------------+
+
+
+.. table::
+   :align: center
+
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: step_n_4/step_4_9.jpg                         |
+   |      8 +------------------------------------------------------------+
+   |        |Cut a red wire and a black wire of 50 cm length. Strip, tin | 
+   |        |and position the wires on the left screw terminal as shown  |
+   |        |in the picture: i)Red wire 12 V, ii) Black wire GND         |                                                                                       
+   +--------+------------------------------------------------------------+
+   
+
+
+.. table::
+   :align: center
+
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: step_n_4/step_4_10.jpg                        |
+   |      9 +------------------------------------------------------------+
+   |        |Mount the 4 ribbon cables (16-wires each) with IDC          | 
+   |        |connectors. A small noise is often heard when the IDC       |
+   |        |connector is clipped in place.                              |                                                                                       
+   +--------+------------------------------------------------------------+
+   
+
+   
