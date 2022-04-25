@@ -347,7 +347,7 @@
    |        |this measurement board with an associated resistance simply |
    |        |for testing purposes (do not consider this temporary        |
    |        |modification of the board). Same for the orange wire present|                                                 
-   |        | on the board.                                              |   
+   |        |on the board.                                               |   
    +--------+------------------------------------------------------------+  
 
 
