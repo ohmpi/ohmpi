@@ -3,6 +3,6 @@
     "injection_duration":0.2,
     "nbr_meas": 100,
     "sequence_delay": 1,
-    "stack": 1,
+    "nb_stack": 1,
     "export_path": "data/measurement.csv" 
 }
