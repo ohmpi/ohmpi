@@ -12,7 +12,8 @@ OHMPI_CONFIG = {
     'integer': 2,  # Max value 10 # TODO: Explain what this is...
     'version': 2,
     'max_elec': 64,
-    'board_address': {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
+    'board_address': {'A': 0x70, 'B': 0x71, 'M': 0x72, 'N': 0x73}  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
+    #'board_address': {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
 }
 
 # Execution logging configuration
@@ -48,7 +49,7 @@ SOH_LOGGING_CONFIG = {
 
 # MQTT logging configuration parameters
 MQTT_LOGGING_CONFIG = {
-    'hostname': 'ohmpy.umons.ac.be',
+    'hostname': 'raspberrypi.local',
     'port': 1883,
     'qos': 0,
     'retain': False,

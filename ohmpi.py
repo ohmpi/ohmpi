@@ -120,7 +120,7 @@ class OhmPi(object):
             - injection_duration (in seconds)
             - nbr_meas (total number of times the sequence will be run)
             - sequence_delay (delay in second between each sequence run)
-            - stack (number of stack for each quadrupole measurement)
+            - nb_stack (number of stack for each quadrupole measurement)
             - export_path (path where to export the data, timestamp will be added to filename)
 
         Parameters
@@ -379,7 +379,7 @@ class OhmPi(object):
         # TODO here we can add the current_injected or voltage_injected in mA or mV
         # check arguments
         if nb_stack is None:
-            nb_stack = self.pardict['stack']
+            nb_stack = self.pardict['nb_stack']
         if injection_duration is None:
             injection_duration = self.pardict['injection_duration']
 
@@ -414,8 +414,7 @@ class OhmPi(object):
         gain_voltage = self.gain_auto(AnalogIn(self.ads_voltage, ads.P0, ads.P1))
         pin0.value = False
         pin1.value = False
-        print(gain_current)
-        print(gain_voltage)
+        print('gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
         self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=0x48)
         self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=0x49)
 
@@ -469,20 +468,20 @@ class OhmPi(object):
 
         # create a dictionary and compute averaged values from all stacks
         d = {
-            "time": [datetime.now().isoformat()],
+            "time": datetime.now().isoformat(),
             "A": quad[0],
             "B": quad[1],
             "M": quad[2],
             "N": quad[3],
             "inj time [ms]": (end_delay - start_delay) * 1000,
-            "Vmn [mV]": [(sum_vmn / (3 + 2 * nb_stack - 1))],
-            "I [mA]": [(injection_current / (3 + 2 * nb_stack - 1))],
-            "R [ohm]": [(sum_vmn / (3 + 2 * nb_stack - 1) / (injection_current / (3 + 2 * nb_stack - 1)))],
-            "Ps [mV]": [(sum_ps / (3 + 2 * nb_stack - 1))],
-            "nbStack": [nb_stack],
-            "CPU temp [degC]": [CPUTemperature().temperature],
-            "Time [s]": [(-start_time + time.time())],
-            "Nb samples [-]": [self.nb_samples]
+            "Vmn [mV]": (sum_vmn / (3 + 2 * nb_stack - 1)),
+            "I [mA]": (injection_current / (3 + 2 * nb_stack - 1)),
+            "R [ohm]": (sum_vmn / (3 + 2 * nb_stack - 1) / (injection_current / (3 + 2 * nb_stack - 1))),
+            "Ps [mV]": (sum_ps / (3 + 2 * nb_stack - 1)),
+            "nbStack": nb_stack,
+            "CPU temp [degC]": CPUTemperature().temperature,
+            "Time [s]": (-start_time + time.time()),
+            "Nb samples [-]": self.nb_samples
         }
 
         # round number to two decimal for nicer string output
@@ -504,18 +503,45 @@ class OhmPi(object):
         """ Check contact resistance.
         """
         # create custom sequence where MN == AB
-        nelec = self.sequence.max()  # number of elec used in the sequence
+        # we only check the electrodes which are in the sequence (not all might be connected)
+        elec = np.sort(np.unique(self.sequence.flatten())) # assumed order
         quads = np.vstack([
-            np.arange(nelec - 1) + 1,
-            np.arange(nelec - 1) + 2,
-            np.arange(nelec - 1) + 1,
-            np.arange(nelec - 1) + 2
+            elec[:-1],
+            elec[1:],
+            elec[:-1],
+            elec[1:],
         ]).T
+        
+        # create filename to store RS
+        export_path_rs = self.pardict['export_path'].replace('.csv', '') \
+                      + '_' + datetime.now().strftime('%Y%m%dT%H%M%S') + '_rs.csv'
 
+        # perform RS check
+        self.run = True
+        self.status = 'running'
+        
+        # make sure all mux are off to start with
+        self.reset_mux()
+
+        # measure all quad of the RS sequence
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole
-            self.reset_mux()
-            self.switch_mux_on(quad)
+            
+            # NOTE (GB): I'd use the self.run_measurement() for all this middle part so we an make use of autogain and so ...
+            # call the switch_mux function to switch to the right electrodes
+            #self.switch_mux_on(quad)
+
+            # run a measurement
+            #current_measurement = self.run_measurement(quad, 1, 0.25)
+            
+            # switch mux off
+            #self.switch_mux_off(quad)
+
+            # save data and print in a text file
+            #self.append_and_save(export_path_rs, current_measurement)
+            
+            
+            # current injection
             pin0 = self.mcp.get_pin(0)
             pin0.direction = Direction.OUTPUT
             pin1 = self.mcp.get_pin(1)
@@ -523,40 +549,51 @@ class OhmPi(object):
             pin0.value = False
             pin1.value = False
 
-            print(quad)
             # call the switch_mux function to switch to the right electrodes
+            self.switch_mux_on(quad)
             self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
             # ADS1115 for voltage measurement (MN)
             self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
-            pin1.value = True
+            pin1.value = True  # inject from pin1 to pin0
             pin0.value = False
             time.sleep(0.2)
+            
+            # measure current and voltage
             current = AnalogIn(self.ads_current, ads.P0).voltage / (50 * self.r_shunt)
             voltage = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * 2.5
             resistance = voltage / current
-            # print(B)
-            # print(A)
-            print(abs(round(resistance / 1000, 1)), "kOhm")
+            
+            # compute resistance measured (= contact resistance)
+            resist = abs(resistance / 1000)
+            msg = 'Contact resistance {:s}: {:.3f} kOhm'.format(
+                str(quad), resist)
+            print(msg)
+            self.exec_logger.debug(msg)
+            
+            
+            # if contact resistance = 0 -> we have a short circuit!!
+            if resist < 1e-5:
+                msg = '!!!SHORT CIRCUIT!!! {:s}: {:.3f} kOhm'.format(
+                    str(quad), resist)
+                self.exec_logger.warning(msg)
+                print(msg)
+                
+            # save data and print in a text file
+            self.append_and_save(export_path_rs, {
+                'A': quad[0],
+                'B': quad[1],
+                'RS [kOhm]': resist,
+            })
+            
+            # close mux path and put pin back to GND
             self.switch_mux_off(quad)
             pin0.value = False
             pin1.value = False
+            
+        self.reset_mux()
+        self.status = 'idle'
+        self.run = False
 
-    #         # create backup TODO not good
-    #         export_path = self.pardict['export_path']
-    #         sequence = self.sequence.copy()
-    #
-    #         # assign new value
-    #         self.pardict['export_path'] = export_path.replace('.csv', '_rs.csv')
-    #         self.sequence = quads
-    #         print(self.sequence)
-    #
-    #         # run the RS check
-    #         self.log_exec('RS check (check contact resistance)', level='debug')
-    #         self.measure()
-    #
-    #         # restore
-    #         self.pardict['export_path'] = export_path
-    #         self.sequence = sequence
     #
     #         # TODO if interrupted, we would need to restore the values
     #         # TODO or we offer the possiblity in 'run_measurement' to have rs_check each time?
@@ -620,7 +657,7 @@ class OhmPi(object):
 
                     # run a measurement
                     if self.on_pi:
-                        current_measurement = self.run_measurement(quad, self.pardict["stack"],
+                        current_measurement = self.run_measurement(quad, self.pardict["nb_stack"],
                                                                    self.pardict["injection_duration"])
                     else:  # for testing, generate random data
                         current_measurement = {
@@ -682,7 +719,7 @@ if on_pi:
     #       and emit a warning otherwise
     if not arm64_imports:
         print(colored(f'Warning: Required packages are missing.\n'
-                      f'Please run . env.sh at command prompt to update your virtual environment\n', 'yellow'))
+                      f'Please run ./env.sh at command prompt to update your virtual environment\n', 'yellow'))
 else:
     print(colored(f'Not running on the Raspberry Pi platform.\nFor simulation purposes only...', 'yellow'))
 

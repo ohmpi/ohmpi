@@ -26,12 +26,17 @@
         <div class="form-check">
             <input id="dataRetrievalCheck" class="form-check-input" type="checkbox" value="">
             <label class="form-check-label" for="dataRetrievalCheck">
-                Automatically get data every 1 second
+                Automaticaly get data every 1 second
             </label>
         </div>
         <div id='output'>Status: idle</div>
+        
+        <!-- Pseudo section -->
         <select id='surveySelect' class='custom-select'>
         </select>
+        <input id="cmin" type="number" value="0"/>
+        <input id="cmax" type="number" value="150"/>
+        <button id="capplyBtn" type="button" class="btn btn-info">Apply</button>
         <div id="gd"></div>
         <div class="mb3 row">
             <label for="quadSelect">Quadrupole:</label>
@@ -39,9 +44,18 @@
                 <select id='quadSelect' class='custom-select'></select>    
             </div>
         </div>
+        
+        <!-- trace figure -->
         <button id="addTraceBtn" type="button" class="btn btn-info">Add trace</button>
         <button id="removeTracesBtn" type="button" class="btn btn-info">Remove all traces</button>    
         <div id="ts"></div>
+        
+        <!-- RS check -->
+        <button id="rsBtn" type="button" class="btn btn-info">Check contact resistance</button>
+        <button id="rsClearBtn" type="button" class="btn btn-info">Clear plot</button>
+        <div id="rs"></div>
+        
+        <!-- Additional buttons -->
         <button id="downloadBtn" type="button" class="btn btn-primary">Download data</button>
         <!-- <button id="invertBtn" type="button" class="btn btn-primary">Invert</button> -->
         <a id="download"></a>
@@ -87,7 +101,13 @@
                             <div class="col-sm-10">
                               <input type="number" class="form-control-number" id="nbStack" value="1">
                             </div>
-                          </div>        
+                          </div>
+                          <div class="form-group row">
+                            <label for="sequence" class="col-sm-2 col-form-label">Sequence</label>
+                            <div class="col-sm-10">
+                              <input type="file" class="form-control" id="sequence">
+                            </div>
+                          </div>           
                       </form>
                 </div>
                 <div class="modal-footer">
@@ -97,19 +117,22 @@
             </div>
             </div>
         </div>
-        
+        <button id="restartBtn" type="button" class="btn btn-danger">Restart</button>
+        <button id="shutdownBtn" type="button" class="btn btn-danger">Shutdown</button>
         <footer>v0.2.0</footer>
     </div>
 
     <script type="text/javascript">
         //let serverUrl = 'http://10.3.141.1:8080'
-        let serverUrl = 'http://0.0.0.0:8080'
+        //let serverUrl = 'http://0.0.0.0:8080'
         //let serverUrl = 'http://localhost:8080'
+        let serverUrl = 'http://' + window.location.host
+        console.log('serverUrl =', serverUrl)
         let output = document.getElementById('output')
         let data = {} // hold data of all surveys
         let interv = null // hold interval for automatic data retrieval
-        let quads = [] // available quadrupoles for time-series figure
-        let squads = [] // selected quadrupoles for time-series figure
+        let quads = [] // available quadrupoles for time-serie figure
+        let squads = [] // selected quadrupoles for time-serie figure
 
         // useful functions
         function sendCommand(query, callback=null) {
@@ -164,13 +187,39 @@
                 formVals[field] = document.getElementById(field).value
             }
             console.log(formVals)
-
-            sendCommand(JSON.stringify({
-                'command': 'setConfig',
-                 'config': formVals
-            }), function(x) {
-                console.log('setconfig:', x)
-            })
+            
+            // define callback to send settigs to Pi
+            function configCallback() {
+                sendCommand(JSON.stringify({
+                    'command': 'setConfig',
+                     'config': formVals
+                }), function(x) {
+                    console.log('setconfig:', x)
+                })
+            }
+            
+            // deal with the potential file containing the sequence
+            // https://stackoverflow.com/questions/19038919/is-it-possible-to-upload-a-text-file-to-input-in-html-js
+            if (!window.FileReader) {
+                alert('Your browser is not supported');
+                return false;
+            }
+            let input = document.getElementById('sequence')
+            if (input.files.length) {
+                const reader = new FileReader()
+                reader.readAsText(input.files[0])
+                reader.addEventListener('load', () => {
+                    formVals['sequence'] = reader.result
+                    console.log('file==', reader.result)
+                    configCallback()
+                }, false)
+            } else {
+                console.log('no sequence uploaded')
+                formVals['sequence'] = ''
+                configCallback()
+            } 
+            
+            
         }
         let saveConfigBtn = document.getElementById('saveConfigBtn')
         saveConfigBtn.addEventListener('click', saveConfigBtnFunc)
@@ -184,7 +233,9 @@
                 size: 40,
                 color: [],
                 colorbar: {
-                    title: 'App. res. [Ohm.m]'
+                    title: 'App. res. [Ohm.m]',
+                    cmin: 0,
+                    cmax: 100,
                 }
             }
         }
@@ -201,10 +252,10 @@
         }
         Plotly.newPlot('gd', [trace], layout)
 
-        // make time-series plot
+        // make time-serie plot
         let tdata = []
         let layout2 = {
-            title: 'Time series',
+            title: 'Time-serie',
             yaxis: {
                 title: 'App. res. [Ohm.m]'
             },
@@ -214,7 +265,7 @@
         }
         Plotly.newPlot('ts', tdata, layout2)
 
-        // add trace to time-series plot
+        // add trace to time-serie plot
         function addTraceBtnFunc() {
             let val = document.getElementById('quadSelect').value
             squads.push(val.split(', '))
@@ -230,7 +281,7 @@
         let addTraceBtn = document.getElementById('addTraceBtn')
         addTraceBtn.addEventListener('click', addTraceBtnFunc)
 
-        // remove all traces from time-series plot
+        // remove all traces from time-serie plot
         function removeTracesBtnFunc() {
             squads = []
             tdata = []            
@@ -239,6 +290,83 @@
         let removeTracesBtn = document.getElementById('removeTracesBtn')
         removeTracesBtn.addEventListener('click', removeTracesBtnFunc)
 
+        // callback function to draw the plot
+        function surveySelectFunc(el) {
+            let surveyName = el['target'].value
+            let df = data[surveyName]
+            if (df != undefined) {
+                let a = df['a']
+                let b = df['b']
+                let m = df['m']
+                let n = df['n']
+                // let's assume electrodes are 1 m distance
+                // compute pseudo-depth (assume no topo)
+                // compute app res (assumping flat, line survey)
+                let xpos = []
+                let ypos = []
+                let app = []
+                for (let i = 0; i < a.length; i++) {
+                    let ab = (a[i] + b[i])/2
+                    let mn = (m[i] + n[i])/2
+                    let dist = Math.abs(ab - mn)
+                    xpos.push(Math.min(ab, mn) + dist/2)
+                    ypos.push(Math.sqrt(2)/2*dist)
+                    let am = Math.abs(a[i] - m[i])
+                    let bm = Math.abs(b[i] - m[i])
+                    let an = Math.abs(a[i] - n[i])
+                    let bn = Math.abs(a[i] - n[i])
+                    let K = (2*Math.PI)/((1/am)-(1/an)-(1/an)+(1/bn))
+                    app.push(df['rho'][i]*-K)
+                }
+                console.log(app)
+                // update the trace and redraw the figure
+                trace['x'] = xpos
+                trace['y'] = ypos
+                trace['marker']['color'] = app
+                trace['marker']['cmax'] = document.getElementById('cmax').value
+                trace['marker']['cmin'] = document.getElementById('cmin').value
+                Plotly.redraw('gd')
+            }
+        }
+        let surveySelect = document.getElementById('surveySelect')
+
+        // bar chart for contact resistance
+        let rsdata = []
+        let rslayout = {
+            title: 'Contact resistances',
+            yaxis: {
+                title: 'Resistance [kOhm]'
+            },
+            xaxis: {
+                title: 'Consecutive electrodes'
+            }
+        }
+        Plotly.newPlot('rs', rsdata, rslayout)
+        
+        // run RS check
+        function rsBtnFunc() {
+            sendCommand('{"command": "rsCheck"}', function (res) {
+                // update the bar plot
+                rsdata.push({
+                x: res['data']['AB'],
+                y: res['data']['res'],
+                name: 'RS',
+                type: 'bar'
+                })
+                Plotly.redraw('rs')
+            })
+        }
+        let rsBtn = document.getElementById('rsBtn')
+        rsBtn.addEventListener('click', rsBtnFunc)
+        
+        // clear RS graph
+        function rsClearBtnFunc() {
+            rsdata = []
+            Plotly.newPlot('rs', rsdata, rslayout)
+        }
+        let rsClearBtn = document.getElementById('rsClearBtn')
+        rsClearBtn.addEventListener('click', rsClearBtnFunc)
+        
         // getData
         function getData() {
             sendCommand(JSON.stringify({
@@ -250,7 +378,7 @@
                 output.innerHTML = 'Status: ' + ddic['status']
 
                 // update data dic with new data
-                data = { // destructuring assignment (magic! :o)
+                data = { // destructuring assignement (magic! :o)
                     ...data,
                     ...ddic['data'] // value from second dic are preferred
                 }
@@ -258,36 +386,6 @@
                 // dropdown with number of surveys and +++
                 let surveyNames = Object.keys(data).sort()
 
-                // callback function to draw the plot
-                function surveySelectFunc(el) {
-                    let surveyName = el['target'].value
-                    let df = data[surveyName]
-                    if (df != undefined) {
-                        let a = df['a']
-                        let b = df['b']
-                        let m = df['m']
-                        let n = df['n']
-                        // let's assume electrodes are 1 m distance
-                        // compute pseudo-depth (assume no topo)
-                        let xpos = []
-                        let ypos = []
-                        for (let i = 0; i < a.length; i++) {
-                            let ab = (a[i] + b[i])/2
-                            let mn = (m[i] + n[i])/2
-                            let dist = Math.abs(ab - mn)
-                            xpos.push(Math.min(ab, mn) + dist/2)
-                            ypos.push(Math.sqrt(2)/2*dist)
-                        }
-                        // update the trace and redraw the figure
-                        trace['x'] = xpos
-                        trace['y'] = ypos
-                        trace['marker']['color'] = df['rho']
-                        Plotly.redraw('gd')
-                    }
-                }
-
-                let surveySelect = document.getElementById('surveySelect')
-                
                 // remove listener as we will replace the choices
                 surveySelect.removeEventListener('change', surveySelectFunc)
                 surveySelect.innerHTML = ''  // clearing all child nodes
@@ -307,7 +405,7 @@
                 surveySelect.value = surveyNames[surveyNames.length - 1]
                 
                 // call the function directly
-                // (as programmatically changing the value does not trigger the event)
+                // (as progammatically chaging the value does not trigger the event)
                 surveySelectFunc({'target': surveySelect})
 
                 // update list of quadrupoles if any
@@ -327,7 +425,7 @@
                     console.log('quads=', quads)
                 }
 
-                // update time-series figure
+                // update time-serie figure
                 if (squads.length > 0) {
 
                     // transform all surveyNames to datetime
@@ -362,7 +460,7 @@
                             }
                         }
 
-                        // update trace dictionary
+                        // update trace dictionnary
                         tdata[k]['x'] = x
                         tdata[k]['y'] = y
                     }
@@ -373,6 +471,12 @@
         }
         let getDataBtn = document.getElementById('getDataBtn')
         getDataBtn.addEventListener('click', getData)
+        
+        // apply new colorscale
+        let capplyBtn = document.getElementById('capplyBtn')
+        capplyBtn.addEventListener('click', function() {
+            surveySelectFunc({'target': surveySelect})
+        })
         
         // checkbox interaction for data download
         function dataRetrievalCheckFunc(x) {
@@ -396,6 +500,24 @@
         let removeDataBtn = document.getElementById('removeDataBtn')
         removeDataBtn.addEventListener('click', removeDataBtnFunc)
 
+        // shutdown Pi
+        function shutdownBtnFunc() {
+            sendCommand('{"command": "shutdown"}', function(x) {
+                console.log('shuting down...')
+            })
+        }
+        let shutdownBtn = document.getElementById('shutdownBtn')
+        shutdownBtn.addEventListener('click', shutdownBtnFunc)
+        
+        // restart Pi
+        function restartBtnFunc() {
+            sendCommand('{"command": "restart"}', function(x) {
+                console.log('rebooting...')
+            })
+        }
+        let restartBtn = document.getElementById('restartBtn')
+        restartBtn.addEventListener('click', restartBtnFunc)
+        
         // invert data
         // function invertBtnFunc() {
         //     sendCommand('{"command": "invert"}', function(x) {
