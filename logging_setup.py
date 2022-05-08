@@ -1,5 +1,5 @@
 import json
-from config import EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, MQTT_LOGGING_CONFIG
+from config import EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, MQTT_LOGGING_CONFIG, MQTT_CONTROL_CONFIG
 from os import path, mkdir, statvfs
 from time import gmtime
 import logging
@@ -109,7 +109,8 @@ def init_logging(exec_logger, data_logger, logging_level, log_path, data_log_fil
     # TODO Add OhmPi settings
     config_dict = {'execution logging configuration': json.dumps(EXEC_LOGGING_CONFIG, indent=4),
                    'data logging configuration': json.dumps(DATA_LOGGING_CONFIG, indent=4),
-                   'mqtt logging configuration': json.dumps(MQTT_LOGGING_CONFIG, indent=4)}
+                   'mqtt logging configuration': json.dumps(MQTT_LOGGING_CONFIG, indent=4),
+                   'mqtt control configuration': json.dumps(MQTT_CONTROL_CONFIG, indent=4)}
     for k, v in config_dict.items():
         exec_logger.info(f'{k}:\n{v}')
     exec_logger.info('')

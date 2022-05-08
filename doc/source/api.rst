@@ -3,7 +3,7 @@ API reference
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-.. automodule:: Ohmpi
+.. automodule:: ohmpi
    :members:
 
 

@@ -7,23 +7,27 @@ from ohmpi import OhmPi
 import pandas as pd
 import shutil
 
-hostName = 'localhost'
+hostName = "raspberrypi.local"  # works for AP-STA
+# hostName = "192.168.50.1"  # fixed IP in AP-STA mode
+# hostName = "0.0.0.0"  # for AP mode (not AP-STA)
 serverPort = 8080
 
 # https://gist.github.com/MichaelCurrie/19394abc19abd0de4473b595c0e37a3a
 
 with open('ohmpi_param.json') as json_file:
-    pardict = json.load(json_file)
+    settings = json.load(json_file)
 
-ohmpi = OhmPi(pardict)
+ohmpi = OhmPi(settings, sequence='breadboard.txt')
+
+# ohmpi = OhmPi(settings, sequence='dd16s0no8.txt')
 
 
 class MyServer(SimpleHTTPRequestHandler):
     # because we use SimpleHTTPRequestHandler, we do not need to implement
     # the do_GET() method (if we use the BaseHTTPRequestHandler, we would need to)
-   
+
     # def do_GET(self):
-    #     # normal get for webpages (not so secure!)
+    #     # normal get for wepages (not so secure!)
     #     print(self.command)
     #     print(self.headers)
     #     print(self.request)
@@ -34,8 +38,7 @@ class MyServer(SimpleHTTPRequestHandler):
     #         self.wfile.write(bytes(f.read(), "utf-8"))
 
     def do_POST(self):
-        # global ohmpiThread, status, run
-
+        global ohmpiThread, status, run
         dic = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
         rdic = {}
         if dic['command'] == 'start':
@@ -44,10 +47,12 @@ class MyServer(SimpleHTTPRequestHandler):
             ohmpi.stop()
         elif dic['command'] == 'getData':
             # get all .csv file in data folder
-            fnames = os.listdir('data/')
+            fnames = [fname for fname in os.listdir('data/') if fname[-4:] == '.csv']
             ddic = {}
             for fname in fnames:
-                if fname.replace('.csv', '') not in dic['surveyNames'] and fname != 'readme.txt':
+                if (fname.replace('.csv', '') not in dic['surveyNames']
+                        and fname != 'readme.txt'
+                        and '_rs' not in fname):
                     df = pd.read_csv('data/' + fname)
                     ddic[fname.replace('.csv', '')] = {
                         'a': df['A'].tolist(),
@@ -63,22 +68,42 @@ class MyServer(SimpleHTTPRequestHandler):
         elif dic['command'] == 'setConfig':
             ohmpi.stop()
             cdic = dic['config']
-            ohmpi.pardict['nb_electrodes'] = int(cdic['nbElectrodes'])
-            ohmpi.pardict['injection_duration'] = float(cdic['injectionDuration'])
-            ohmpi.pardict['nbr_meas'] = int(cdic['nbMeasurements'])
-            ohmpi.pardict['stack'] = int(cdic['nbStack'])
-            ohmpi.pardict['sequence_delay'] = int(cdic['sequenceDelay'])
-            print('setConfig', ohmpi.pardict)
+            ohmpi.settings['nb_electrodes'] = int(cdic['nbElectrodes'])
+            ohmpi.settings['injection_duration'] = float(cdic['injectionDuration'])
+            ohmpi.settings['nbr_meas'] = int(cdic['nbMeasurements'])
+            ohmpi.settings['nb_stack'] = int(cdic['nbStack'])
+            ohmpi.settings['sequence_delay'] = int(cdic['sequenceDelay'])
+            if cdic['sequence'] != '':
+                with open('sequence.txt', 'w') as f:
+                    f.write(cdic['sequence'])
+                ohmpi.read_quad('sequence.txt')
+                print('new sequence set.')
+            print('setConfig', ohmpi.settings)
         elif dic['command'] == 'invert':
             pass
         elif dic['command'] == 'getResults':
             pass
+        elif dic['command'] == 'rsCheck':
+            ohmpi.rs_check()
+            fnames = sorted([fname for fname in os.listdir('data/') if fname[-7:] == '_rs.csv'])
+            df = pd.read_csv('data/' + fnames[-1])
+            ddic = {
+                'AB': (df['A'].astype('str') + '-' + df['B'].astype(str)).tolist(),
+                'res': df['RS [kOhm]'].tolist()
+            }
+            rdic['data'] = ddic
         elif dic['command'] == 'download':
             shutil.make_archive('data', 'zip', 'data')
+        elif dic['command'] == 'shutdown':
+            print('shutting down...')
+            os.system('shutdown now -h')
+        elif dic['command'] == 'restart':
+            print('shutting down...')
+            os.system('reboot')
         else:
             # command not found
             rdic['response'] = 'command not found'
-        
+
         rdic['status'] = ohmpi.status
         self.send_response(200)
         self.send_header('Content-Type', 'text/json')
@@ -86,7 +111,7 @@ class MyServer(SimpleHTTPRequestHandler):
         self.wfile.write(bytes(json.dumps(rdic), 'utf8'))
 
 
-if __name__ == "__main__":        
+if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
 

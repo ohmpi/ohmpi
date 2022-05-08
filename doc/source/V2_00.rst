@@ -2,12 +2,10 @@
 OhmPi V 2.00 (64 electrodes and 12V)
 ******************************************** 
 
-.. figure:: Under-Construction.png
-	   :width: 500px
-	   :align: center
-	   :height: 250px
-	   :alt: Ohmpi 2
-	   :figclass: align-center
+.. warning::
+	**Ohmpi is a participative project open to all, it requires skills in electronics and to respect the safety rules. Ohmpi must be assembled in a professional context and by people competent in electronics. The Ohmpi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The Ohmpi team cannot be held responsible if the equipment does not work after assembly.**
+
+
 
 .. figure:: image_ohmpi_2.jpg
 	   :width: 400px
@@ -74,6 +72,7 @@ Ohmpi 2 step by step
    Ohmpi_V2_00/V2_00_step_01
    Ohmpi_V2_00/V2_00_step_02
    Ohmpi_V2_00/V2_00_step_03
+   Ohmpi_V2_00/V2_00_step_04
 
 
 

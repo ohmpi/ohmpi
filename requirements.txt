@@ -8,3 +8,4 @@ adafruit-circuitpython-mcp230xx
 gpiozero
 termcolor
 pandas
+pyzmq
