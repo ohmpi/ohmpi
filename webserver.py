@@ -7,9 +7,9 @@ import threading
 import pandas as pd
 import shutil
 
-hostName = "raspberrypi.local" # works for AP-STA
+#hostName = "raspberrypi.local" # works for AP-STA
 #hostName = "192.168.50.1"  # fixed IP in AP-STA mode
-#hostName = "0.0.0.0"  # for AP mode (not AP-STA)
+hostName = "0.0.0.0"  # for AP mode (not AP-STA)
 serverPort = 8080
 
 # https://gist.github.com/MichaelCurrie/19394abc19abd0de4473b595c0e37a3a
@@ -17,7 +17,7 @@ serverPort = 8080
 with open('ohmpi_param.json') as json_file:
     pardict = json.load(json_file)
 
-ohmpi = OhmPi(pardict, sequence='breadboard.txt')
+ohmpi = OhmPi(pardict, sequence='dd.txt')
 #ohmpi = OhmPi(pardict, sequence='dd16s0no8.txt')
 
 

@@ -54,7 +54,7 @@ class OhmPi(object):
         sequence: 1, 2, 3, 4 is used.
     """
 
-    def __init__(self, config=None, sequence=None, mqtt=True, on_pi=None):
+    def __init__(self, config=None, sequence=None, mqtt=False, on_pi=None):
         # flags and attributes
         if on_pi is None:
             _, on_pi = OhmPi.get_platform()
@@ -558,12 +558,14 @@ class OhmPi(object):
             current = AnalogIn(self.ads_current, ads.P0).voltage / (50 * self.r_shunt)
             voltage = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * 2.5
             resistance = voltage / current
+            print('I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} Ohm'.format(
+                current*1000, voltage*1000, resistance))
             
             # compute resistance measured (= contact resistance)
             resist = abs(resistance / 1000)
             msg = 'Contact resistance {:s}: {:.3f} kOhm'.format(
                 str(quad), resist)
-            print(msg)
+            #print(msg)
             self.exec_logger.debug(msg)
             
             
@@ -727,6 +729,9 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 # for testing
 if __name__ == "__main__":
     ohmpi = OhmPi(config='ohmpi_param.json')
+    #ohmpi.measure()
+    ohmpi.read_quad('breadboard.txt')
+    ohmpi.rs_check()
     ohmpi.measure()
     time.sleep(4)
     ohmpi.stop()
