@@ -59,8 +59,24 @@ MQTT_LOGGING_CONFIG = {
     'protocol': MQTTv31,
     'transport': 'tcp',
     'client_id': f'ohmpi_sn_{OHMPI_CONFIG["id"]}',
-    'control_topic': f'ctrl_ohmpi_sn_{OHMPI_CONFIG["id"]}',
+    'ctrl_topic': f'ctrl_ohmpi_sn_{OHMPI_CONFIG["id"]}',
     'exec_topic': f'exec_ohmpi_sn_{OHMPI_CONFIG["id"]}',
     'data_topic': f'data_ohmpi_sn_{OHMPI_CONFIG["id"]}',
     'soh_topic': f'soh_ohmpi_sn_{OHMPI_CONFIG["id"]}'
+}
+
+# MQTT command configuration parameters
+MQTT_CONTROL_CONFIG = {
+    'hostname': 'ohmpy.umons.ac.be',
+    'port': 1883,
+    'qos': 0,
+    'retain': False,
+    'keepalive': 60,
+    'will': None,
+    'auth': None,
+    'tls': None,
+    'protocol': MQTTv31,
+    'transport': 'tcp',
+    'client_id': f'ohmpi_sn_{OHMPI_CONFIG["id"]}',
+    'cmd_topic': f'cmd_ohmpi_sn_{OHMPI_CONFIG["id"]}'
 }

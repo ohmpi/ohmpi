@@ -137,7 +137,7 @@ class OhmPi(object):
         self.exec_logger.debug('Acquisition parameters updated: ' + str(self.pardict))
 
     def _read_hardware_parameters(self):
-        """Read hardware parameters from settings.py.
+        """Read hardware parameters from config.py
         """
         from config import OHMPI_CONFIG
         self.id = OHMPI_CONFIG['id']  # ID of the OhmPi
@@ -161,7 +161,7 @@ class OhmPi(object):
         
         Parameters
         ----------
-        quads : 1D or 2D array
+        quads : numpy.ndarray
             List of quadrupoles of shape nquad x 4 or 1D vector of shape nquad.
         
         Returns
@@ -195,7 +195,11 @@ class OhmPi(object):
 
     @staticmethod
     def get_platform():
-        """Get platform name and check if it is a raspberry pi"""
+        """Get platform name and check if it is a raspberry pi
+        Returns
+        =======
+        str, bool
+            name of the platform on which the code is running, boolean that is true if the platform is a raspberry pi"""
 
         platform = 'unknown'
         on_pi = False
@@ -219,7 +223,7 @@ class OhmPi(object):
 
         Returns
         -------
-        output : numpy.array
+        output : numpy.ndarray
             Array of shape (number quadrupoles * 4).
         """
         output = np.loadtxt(filename, delimiter=" ", dtype=int)  # load quadrupole file
@@ -455,7 +459,7 @@ class OhmPi(object):
                 sum_ps = sum_ps + vmn1
 
             # TODO get battery voltage and warn if battery is running low
-
+            # TODO send a message on SOH stating the battery level
             end_calc = time.time()
 
             # TODO I am not sure I understand the computation below
@@ -661,9 +665,7 @@ class OhmPi(object):
         self.exec_logger.debug(f'Status: {self.status}')
 
 
-# mqtt_client, measurement_topic = mqtt_client_setup()
-
-VERSION = '2.0.2'
+VERSION = '2.1.0'
 
 print(colored(r' ________________________________' + '\n' +
               r'|  _  | | | ||  \/  || ___ \_   _|' + '\n' +
