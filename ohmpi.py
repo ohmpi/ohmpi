@@ -812,6 +812,6 @@ if __name__ == "__main__":
     # start interface
     Popen(['python', CONTROL_CONFIG['interface']])
 
-    ohmpi = OhmPi(settings='ohmpi_param.json')
+    ohmpi = OhmPi(settings='ohmpi_settings.json')
     
         
