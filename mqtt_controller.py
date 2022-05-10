@@ -31,6 +31,11 @@ cmd_id = uuid.uuid4().hex
 payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'set_sequence', 'args': sequence})
 print(f'Set sequence message: {payload} to {publisher_config["topic"]} with config {publisher_config}')
 publish.single(payload=payload, **publisher_config)
+cmd_id = uuid.uuid4().hex
+payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'rs_check'})
+print(f'Run rs_check: {payload} to {publisher_config["topic"]} with config {publisher_config}')
+publish.single(payload=payload, **publisher_config)
+
 for i in range(4):
     cmd_id = uuid.uuid4().hex
     payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'start'})

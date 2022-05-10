@@ -1,31 +1,30 @@
 from http.server import SimpleHTTPRequestHandler, HTTPServer
-# import time
+import time
 import os
 import json
 from ohmpi import OhmPi
-# import threading
+import threading
 import pandas as pd
 import shutil
 
-hostName = "raspberrypi.local"  # works for AP-STA
-# hostName = "192.168.50.1"  # fixed IP in AP-STA mode
-# hostName = "0.0.0.0"  # for AP mode (not AP-STA)
+#hostName = "raspberrypi.local" # works for AP-STA
+#hostName = "192.168.50.1"  # fixed IP in AP-STA mode
+hostName = "0.0.0.0"  # for AP mode (not AP-STA)
 serverPort = 8080
 
 # https://gist.github.com/MichaelCurrie/19394abc19abd0de4473b595c0e37a3a
 
 with open('ohmpi_param.json') as json_file:
-    settings = json.load(json_file)
+    pardict = json.load(json_file)
 
-ohmpi = OhmPi(settings, sequence='breadboard.txt')
-
-# ohmpi = OhmPi(settings, sequence='dd16s0no8.txt')
+ohmpi = OhmPi(pardict, sequence='dd.txt')
+#ohmpi = OhmPi(pardict, sequence='dd16s0no8.txt')
 
 
 class MyServer(SimpleHTTPRequestHandler):
     # because we use SimpleHTTPRequestHandler, we do not need to implement
     # the do_GET() method (if we use the BaseHTTPRequestHandler, we would need to)
-
+   
     # def do_GET(self):
     #     # normal get for wepages (not so secure!)
     #     print(self.command)
@@ -36,7 +35,7 @@ class MyServer(SimpleHTTPRequestHandler):
     #     self.end_headers()
     #     with open(os.path.join('.', self.path[1:]), 'r') as f:
     #         self.wfile.write(bytes(f.read(), "utf-8"))
-
+        
     def do_POST(self):
         global ohmpiThread, status, run
         dic = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
@@ -50,9 +49,9 @@ class MyServer(SimpleHTTPRequestHandler):
             fnames = [fname for fname in os.listdir('data/') if fname[-4:] == '.csv']
             ddic = {}
             for fname in fnames:
-                if (fname.replace('.csv', '') not in dic['surveyNames']
-                        and fname != 'readme.txt'
-                        and '_rs' not in fname):
+                if (fname.replace('.csv', '') not in dic['surveyNames'] 
+                    and fname != 'readme.txt'
+                    and '_rs' not in fname):
                     df = pd.read_csv('data/' + fname)
                     ddic[fname.replace('.csv', '')] = {
                         'a': df['A'].tolist(),
@@ -68,17 +67,17 @@ class MyServer(SimpleHTTPRequestHandler):
         elif dic['command'] == 'setConfig':
             ohmpi.stop()
             cdic = dic['config']
-            ohmpi.settings['nb_electrodes'] = int(cdic['nbElectrodes'])
-            ohmpi.settings['injection_duration'] = float(cdic['injectionDuration'])
-            ohmpi.settings['nbr_meas'] = int(cdic['nbMeasurements'])
-            ohmpi.settings['nb_stack'] = int(cdic['nbStack'])
-            ohmpi.settings['sequence_delay'] = int(cdic['sequenceDelay'])
+            ohmpi.pardict['nb_electrodes'] = int(cdic['nbElectrodes'])
+            ohmpi.pardict['injection_duration'] = float(cdic['injectionDuration'])
+            ohmpi.pardict['nbr_meas'] = int(cdic['nbMeasurements'])
+            ohmpi.pardict['nb_stack'] = int(cdic['nbStack'])
+            ohmpi.pardict['sequence_delay'] = int(cdic['sequenceDelay'])
             if cdic['sequence'] != '':
                 with open('sequence.txt', 'w') as f:
                     f.write(cdic['sequence'])
                 ohmpi.read_quad('sequence.txt')
                 print('new sequence set.')
-            print('setConfig', ohmpi.settings)
+            print('setConfig', ohmpi.pardict)
         elif dic['command'] == 'invert':
             pass
         elif dic['command'] == 'getResults':
@@ -103,7 +102,7 @@ class MyServer(SimpleHTTPRequestHandler):
         else:
             # command not found
             rdic['response'] = 'command not found'
-
+        
         rdic['status'] = ohmpi.status
         self.send_response(200)
         self.send_header('Content-Type', 'text/json')
@@ -111,7 +110,7 @@ class MyServer(SimpleHTTPRequestHandler):
         self.wfile.write(bytes(json.dumps(rdic), 'utf8'))
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
 

@@ -5,6 +5,7 @@ from time import gmtime
 import logging
 from mqtt_logger import MQTTHandler
 from compressed_sized_timed_rotating_logger import CompressedSizedTimedRotatingFileHandler
+import sys
 
 
 def setup_loggers(mqtt=True):
@@ -26,13 +27,6 @@ def setup_loggers(mqtt=True):
     data_log_filename = path.join(data_path, 'data_log')
     data_logger = logging.getLogger('data_logger')
 
-    # Debug and logging
-    debug = EXEC_LOGGING_CONFIG['debug_mode']
-    if debug:
-        logging_level = logging.DEBUG
-    else:
-        logging_level = logging.INFO
-
     # Set message logging format and level
     log_format = '%(asctime)-15s | %(process)d | %(levelname)s: %(message)s'
     logging_to_console = EXEC_LOGGING_CONFIG['logging_to_console']
@@ -46,10 +40,14 @@ def setup_loggers(mqtt=True):
     exec_formatter.datefmt = '%Y/%m/%d %H:%M:%S UTC'
     exec_handler.setFormatter(exec_formatter)
     exec_logger.addHandler(exec_handler)
-    exec_logger.setLevel(logging_level)
+    exec_logger.setLevel(MQTT_LOGGING_CONFIG['logging_level'])
 
     if logging_to_console:
-        exec_logger.addHandler(logging.StreamHandler())
+        console_exec_handler = logging.StreamHandler(sys.stdout)
+        console_exec_handler.setLevel(MQTT_LOGGING_CONFIG['logging_level'])
+        console_exec_handler.setFormatter(exec_formatter)
+        exec_logger.addHandler(console_exec_handler)
+
     if mqtt:
         mqtt_settings = MQTT_LOGGING_CONFIG.copy()
         [mqtt_settings.pop(i) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic']]

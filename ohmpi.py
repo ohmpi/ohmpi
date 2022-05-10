@@ -66,8 +66,6 @@ class OhmPi(object):
         self.run = False  # flag is True when measuring
         self.thread = None  # contains the handle for the thread taking the measurement
         # self.path = 'data/'  # where to save the .csv
-        #self.cmd_thread = threading.Thread(
-        #    target=self.process_commands)  # thread handling commands received on tcp port
 
         # set loggers
         config_exec_logger, _, config_data_logger, _, _ = setup_loggers(mqtt=mqtt)  # TODO: add SOH
@@ -572,19 +570,17 @@ class OhmPi(object):
             # measure current and voltage
             current = AnalogIn(self.ads_current, ads.P0).voltage / (50 * self.r_shunt)
             voltage = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * 2.5
-            resistance = voltage / current
-
             # compute resistance measured (= contact resistance)
-            resist = abs(resistance / 1000)
-            msg = 'Contact resistance {:s}: {:.3f} kOhm'.format(
-                str(quad), resist)
+            resistance = np.abs(voltage / current)
+            msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, V: {voltage * 1000.:>10.3f} mV, ' \
+                  f'R: {resistance /1000.:>10.3f} kOhm'
+
             print(msg)
             self.exec_logger.debug(msg)
 
             # if contact resistance = 0 -> we have a short circuit!!
-            if resist < 1e-5:
-                msg = '!!!SHORT CIRCUIT!!! {:s}: {:.3f} kOhm'.format(
-                    str(quad), resist)
+            if resistance < 1e-2:
+                msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {resistance / 1000.:.3f} kOhm'
                 self.exec_logger.warning(msg)
                 print(msg)
 
@@ -592,7 +588,7 @@ class OhmPi(object):
             self.append_and_save(export_path_rs, {
                 'A': quad[0],
                 'B': quad[1],
-                'RS [kOhm]': resist,
+                'RS [kOhm]': resistance / 1000.,
             })
 
             # close mux path and put pin back to GND
