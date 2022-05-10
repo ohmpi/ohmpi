@@ -21,6 +21,7 @@ from termcolor import colored
 import threading
 from logging_setup import setup_loggers
 from config import CONTROL_CONFIG
+from subprocess import Popen
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
 try:
@@ -801,4 +802,9 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 
 # for testing
 if __name__ == "__main__":
+    # start interface
+    Popen(['python', CONTROL_CONFIG['interface']])
+
     ohmpi = OhmPi(settings='ohmpi_param.json')
+    
+        
