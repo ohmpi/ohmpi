@@ -24,7 +24,7 @@ CONTROL_CONFIG = {
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
     'logging_level': logging.DEBUG,
-    'logging_to_console': True,
+    'logging_to_console': False,
     'file_name': 'ohmpi_log',
     'max_bytes': 262144,
     'backup_count': 30,

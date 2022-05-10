@@ -446,10 +446,9 @@ class OhmPi(object):
             meas = np.zeros((self.nb_samples, 3))
             for k in range(0, self.nb_samples):
                 # reading current value on ADS channel A0
-                meas[k, 0] = (AnalogIn(self.ads_current, ads.P0).voltage * 1000) / (50 * self.r_shunt)
-                meas[k, 1] = AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * self.coef_p2 * 1000
+                meas[k, 0] = (AnalogIn(self.ads_current, ads.P0).voltage * 1000) / (50 * self.r_shunt)  # TODO: replace 50 by factor depending on INA model specifed in config.py
                 # reading voltage value on ADS channel A2
-                # meas[k, 2] = AnalogIn(self.ads_voltage, ads.P1).voltage * self.coef_p3 * 1000
+                meas[k, 1] = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * self.coef_p2 * 1000  # NOTE: Changed sign
 
             # stop current injection
             pin1.value = False
@@ -547,8 +546,7 @@ class OhmPi(object):
             # switch mux off
             # self.switch_mux_off(quad)
 
-            # save data and print in a text file
-            # self.append_and_save(export_path_rs, current_measurement)
+            self.switch_mux_on(quad)
 
             # current injection
             pin0 = self.mcp.get_pin(0)
@@ -559,7 +557,6 @@ class OhmPi(object):
             pin1.value = False
 
             # call the switch_mux function to switch to the right electrodes
-            self.switch_mux_on(quad)
             self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
             # ADS1115 for voltage measurement (MN)
             self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
@@ -602,7 +599,7 @@ class OhmPi(object):
 
     #
     #         # TODO if interrupted, we would need to restore the values
-    #         # TODO or we offer the possiblity in 'run_measurement' to have rs_check each time?
+    #         # TODO or we offer the possibility in 'run_measurement' to have rs_check each time?
 
     @staticmethod
     def append_and_save(filename, last_measurement):
@@ -648,7 +645,7 @@ class OhmPi(object):
                 cmd_id = decoded_message.pop('cmd_id', None)
                 cmd = decoded_message.pop('cmd', None)
                 args = decoded_message.pop('args', None)
-                status=False
+                status = False
                 e = None
                 if cmd is not None and cmd_id is not None:
                     if cmd == 'update_settings' and args is not None:
