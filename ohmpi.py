@@ -20,7 +20,7 @@ from datetime import datetime
 from termcolor import colored
 import threading
 from logging_setup import setup_loggers
-from config import CONTROL_CONFIG
+from config import CONTROL_CONFIG, OHMPI_CONFIG
 from subprocess import Popen
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
@@ -118,6 +118,7 @@ class OhmPi(object):
             self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
 
         # Starts the command processing thread
+        self.cmd_listen = True
         self.cmd_thread = threading.Thread(target=self.process_commands)
         self.cmd_thread.start()
 
@@ -650,7 +651,7 @@ class OhmPi(object):
         print(colored(f'Listening to commands on tcp port {tcp_port}.'
                       f' Make sure your client interface is running and bound to this port...', 'blue'))
         self.exec_logger.debug(f'Start listening for commands on port {tcp_port}')
-        while True:
+        while self.cmd_listen:
             message = socket.recv()
             self.exec_logger.debug(f'Received command: {message}')
             e = None
@@ -780,6 +781,15 @@ class OhmPi(object):
         if self.thread is not None:
             self.thread.join()
         self.exec_logger.debug(f'Status: {self.status}')
+
+    def quit(self):
+        """Quit OhmPi.
+        """
+        self.cmd_listen = False
+        if self.cmd_thread is not None:
+            self.cmd_thread.join()
+        self.exec_logger.debug(f'Stopped listening to tcp port.')
+        exit()
     
 
 
@@ -812,6 +822,6 @@ if __name__ == "__main__":
     # start interface
     Popen(['python', CONTROL_CONFIG['interface']])
 
-    ohmpi = OhmPi(settings='ohmpi_settings.json')
+    ohmpi = OhmPi(settings=OHMPI_CONFIG['settings'])
     
         

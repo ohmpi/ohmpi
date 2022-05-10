@@ -15,7 +15,7 @@ publisher_config['topic'] = MQTT_CONTROL_CONFIG['ctrl_topic']
 publisher_config.pop('ctrl_topic')
 settings = {
             'injection_duration': 0.2,
-            'nbr_meas': 100,
+            'nbr_meas': 1,
             'sequence_delay': 1,
             'nb_stack': 1,
             'export_path': 'data/measurement.csv'

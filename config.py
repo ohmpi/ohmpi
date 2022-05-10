@@ -15,7 +15,8 @@ OHMPI_CONFIG = {
     'version': 2,
     'max_elec': 64,
     'board_address': {'A': 0x70, 'B': 0x71, 'M': 0x72, 'N': 0x73},  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
-}
+    'settings': 'ohmpi_settings.json'
+}  # TODO: add a dictionary with INA models and associated gain values
 
 CONTROL_CONFIG = {
     'tcp_port': 5555,
