@@ -51,7 +51,10 @@ def setup_loggers(mqtt=True):
     if logging_to_console:
         exec_logger.addHandler(logging.StreamHandler())
     if mqtt:
-        mqtt_msg_handler = MQTTHandler(MQTT_LOGGING_CONFIG['hostname'], MQTT_LOGGING_CONFIG['exec_topic'])
+        mqtt_settings = MQTT_LOGGING_CONFIG.copy()
+        [mqtt_settings.pop(i) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic']]
+        mqtt_settings.update({'topic':MQTT_LOGGING_CONFIG['exec_topic']})
+        mqtt_msg_handler = MQTTHandler(**mqtt_settings)
         mqtt_msg_handler.setLevel(logging_level)
         mqtt_msg_handler.setFormatter(exec_formatter)
         exec_logger.addHandler(mqtt_msg_handler)
@@ -75,7 +78,10 @@ def setup_loggers(mqtt=True):
     if logging_to_console:
         data_logger.addHandler(logging.StreamHandler())
     if mqtt:
-        mqtt_data_handler = MQTTHandler(MQTT_LOGGING_CONFIG['hostname'], MQTT_LOGGING_CONFIG['data_topic'])
+        mqtt_settings = MQTT_LOGGING_CONFIG.copy()
+        [mqtt_settings.pop(i) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic']]
+        mqtt_settings.update({'topic': MQTT_LOGGING_CONFIG['data_topic']})
+        mqtt_data_handler = MQTTHandler(**mqtt_settings)
         mqtt_data_handler.setLevel(logging_level)
         mqtt_data_handler.setFormatter(data_formatter)
         data_logger.addHandler(mqtt_data_handler)

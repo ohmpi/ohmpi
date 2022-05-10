@@ -645,6 +645,7 @@ class OhmPi(object):
         while True:
             message = socket.recv()
             print(f'Received command: {message}')
+            e = None
             try:
                 cmd_id = None
                 decoded_message = json.loads(message.decode('utf-8'))
@@ -658,6 +659,7 @@ class OhmPi(object):
                         self._update_acquisition_settings(args)
                     elif cmd == 'start':
                         self.measure(cmd_id)
+                        self.stop()
                         status = True
                     elif cmd == 'stop':
                         self.stop()
@@ -680,19 +682,18 @@ class OhmPi(object):
                             status = True
                         except Exception as e:
                             self.exec_logger.warning(f'Unable to run rs-check: {e}')
+                    else:
+                        self.exec_logger.warning(f'Unkown command {cmd} - cmd_id: {cmd_id}')
             except Exception as e:
                 self.exec_logger.warning(f'Unable to decode command {message}: {e}')
                 status = False
             finally:
                 reply = {'cmd_id': cmd_id, 'status': status}
-                if not status:
-                    reply.update({'Exception': e})
                 reply = json.dumps(reply)
+                print(reply)
                 self.exec_logger.debug(reply)
                 reply = bytes(reply, 'utf-8')
                 socket.send(reply)
-
-            print(cmd_id)
             #  Do some 'work'
             time.sleep(.1)
 

@@ -19,7 +19,7 @@ def on_message(client, userdata, message):
     print(f'Received reply {message.payload.decode("utf-8")}: {reply}')
 
 
-mqtt_client = mqtt.Client(f'ohmpi_{OHMPI_CONFIG["id"]}_listener')  # create new instance
+mqtt_client = mqtt.Client(f'ohmpi_{OHMPI_CONFIG["id"]}_listener', clean_session=False)  # create new instance
 print('connecting to broker')
 mqtt_client.connect(MQTT_CONTROL_CONFIG['hostname'])
 print('Subscribing to topic', MQTT_CONTROL_CONFIG['ctrl_topic'])

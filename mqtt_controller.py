@@ -6,7 +6,7 @@ from config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG
 import time
 import uuid
 
-client = mqtt.Client(f'ohmpi_{OHMPI_CONFIG["id"]}_controller')  # create new instance
+client = mqtt.Client(f'ohmpi_{OHMPI_CONFIG["id"]}_controller', clean_session=False)  # create new instance
 print('connecting to broker')
 client.connect(MQTT_CONTROL_CONFIG['hostname'])
 client.loop_start()
