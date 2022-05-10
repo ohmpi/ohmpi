@@ -546,69 +546,72 @@ class OhmPi(object):
         self.run = True
         self.status = 'running'
 
-        # make sure all mux are off to start with
-        self.reset_mux()
+        if self.on_pi:
+            # make sure all mux are off to start with
+            self.reset_mux()
 
-        # measure all quad of the RS sequence
-        for i in range(0, quads.shape[0]):
-            quad = quads[i, :]  # quadrupole
+            # measure all quad of the RS sequence
+            for i in range(0, quads.shape[0]):
+                quad = quads[i, :]  # quadrupole
 
-            # NOTE (GB): I'd use the self.run_measurement() for all this middle part so we an make use of autogain and so ...
-            # call the switch_mux function to switch to the right electrodes
-            # self.switch_mux_on(quad)
+                # NOTE (GB): I'd use the self.run_measurement() for all this middle part so we an make use of autogain and so ...
+                # call the switch_mux function to switch to the right electrodes
+                # self.switch_mux_on(quad)
 
-            # run a measurement
-            # current_measurement = self.run_measurement(quad, 1, 0.25)
+                # run a measurement
+                # current_measurement = self.run_measurement(quad, 1, 0.25)
 
-            # switch mux off
-            # self.switch_mux_off(quad)
+                # switch mux off
+                # self.switch_mux_off(quad)
 
-            self.switch_mux_on(quad)
+                self.switch_mux_on(quad)
 
-            # current injection
-            pin0 = self.mcp.get_pin(0)
-            pin0.direction = Direction.OUTPUT
-            pin1 = self.mcp.get_pin(1)
-            pin1.direction = Direction.OUTPUT
-            pin0.value = False
-            pin1.value = False
+                # current injection
+                pin0 = self.mcp.get_pin(0)
+                pin0.direction = Direction.OUTPUT
+                pin1 = self.mcp.get_pin(1)
+                pin1.direction = Direction.OUTPUT
+                pin0.value = False
+                pin1.value = False
 
-            # call the switch_mux function to switch to the right electrodes
-            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
-            # ADS1115 for voltage measurement (MN)
-            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
-            pin1.value = True  # inject from pin1 to pin0
-            pin0.value = False
-            time.sleep(0.2)
+                # call the switch_mux function to switch to the right electrodes
+                self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
+                # ADS1115 for voltage measurement (MN)
+                self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
+                pin1.value = True  # inject from pin1 to pin0
+                pin0.value = False
+                time.sleep(0.2)
 
-            # measure current and voltage
-            current = AnalogIn(self.ads_current, ads.P0).voltage / (50 * self.r_shunt)
-            voltage = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * 2.5
-            # compute resistance measured (= contact resistance)
-            resistance = np.abs(voltage / current)
-            msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, V: {voltage * 1000.:>10.3f} mV, ' \
-                  f'R: {resistance /1000.:>10.3f} kOhm'
+                # measure current and voltage
+                current = AnalogIn(self.ads_current, ads.P0).voltage / (50 * self.r_shunt)
+                voltage = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * 2.5
+                # compute resistance measured (= contact resistance)
+                resistance = np.abs(voltage / current)
+                msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, V: {voltage * 1000.:>10.3f} mV, ' \
+                      f'R: {resistance /1000.:>10.3f} kOhm'
 
-            self.exec_logger.debug(msg)
+                self.exec_logger.debug(msg)
 
-            # if contact resistance = 0 -> we have a short circuit!!
-            if resistance < 1e-2:
-                msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {resistance / 1000.:.3f} kOhm'
-                self.exec_logger.warning(msg)
+                # if contact resistance = 0 -> we have a short circuit!!
+                if resistance < 1e-2:
+                    msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {resistance / 1000.:.3f} kOhm'
+                    self.exec_logger.warning(msg)
 
-            # save data and print in a text file
-            self.append_and_save(export_path_rs, {
-                'A': quad[0],
-                'B': quad[1],
-                'RS [kOhm]': resistance / 1000.,
-            })
+                # save data and print in a text file
+                self.append_and_save(export_path_rs, {
+                    'A': quad[0],
+                    'B': quad[1],
+                    'RS [kOhm]': resistance / 1000.,
+                })
 
-            # close mux path and put pin back to GND
-            self.switch_mux_off(quad)
-            pin0.value = False
-            pin1.value = False
+                # close mux path and put pin back to GND
+                self.switch_mux_off(quad)
+                pin0.value = False
+                pin1.value = False
 
-        self.reset_mux()
+            self.reset_mux()
+        else:
+            pass
         self.status = 'idle'
         self.run = False
 
@@ -652,61 +655,62 @@ class OhmPi(object):
                       f' Make sure your client interface is running and bound to this port...', 'blue'))
         self.exec_logger.debug(f'Start listening for commands on port {tcp_port}')
         while self.cmd_listen:
-            message = socket.recv()
-            self.exec_logger.debug(f'Received command: {message}')
-            e = None
             try:
-                cmd_id = None
-                decoded_message = json.loads(message.decode('utf-8'))
-                cmd_id = decoded_message.pop('cmd_id', None)
-                cmd = decoded_message.pop('cmd', None)
-                args = decoded_message.pop('args', None)
-                status = False
+                message = socket.recv(flags=zmq.NOBLOCK)
+                self.exec_logger.debug(f'Received command: {message}')
                 e = None
-                if cmd is not None and cmd_id is not None:
-                    if cmd == 'update_settings' and args is not None:
-                        self._update_acquisition_settings(args)
-                    elif cmd == 'start':
-                        self.measure(cmd_id)
-                        while not self.status == 'idle':
-                            time.sleep(0.1)
-                        status = True
-                    elif cmd == 'stop':
-                        self.stop()
-                        status = True
-                    elif cmd == 'read_sequence':
-                        try:
-                            self.read_quad(args)
+                try:
+                    cmd_id = None
+                    decoded_message = json.loads(message.decode('utf-8'))
+                    cmd_id = decoded_message.pop('cmd_id', None)
+                    cmd = decoded_message.pop('cmd', None)
+                    args = decoded_message.pop('args', None)
+                    status = False
+                    e = None
+                    if cmd is not None and cmd_id is not None:
+                        if cmd == 'update_settings' and args is not None:
+                            self._update_acquisition_settings(args)
+                        elif cmd == 'start':
+                            self.measure(cmd_id)
+                            while not self.status == 'idle':
+                                time.sleep(0.1)
                             status = True
-                        except Exception as e:
-                            self.exec_logger.warning(f'Unable to read sequence: {e}')
-                    elif cmd == 'set_sequence':
-                        try:
-                            self.sequence = np.array(args)
+                        elif cmd == 'stop':
+                            self.stop()
                             status = True
-                        except Exception as e:
-                            self.exec_logger.warning(f'Unable to set sequence: {e}')
-                    elif cmd == 'rs_check':
-                        try:
-                            self.rs_check()
-                            status = True
-                        except Exception as e:
-                            print('error====', e)
-                            self.exec_logger.warning(f'Unable to run rs-check: {e}')
-                    else:
-                        self.exec_logger.warning(f'Unkown command {cmd} - cmd_id: {cmd_id}')
-            except Exception as e:
-                self.exec_logger.warning(f'Unable to decode command {message}: {e}')
-                status = False
-            finally:
-                reply = {'cmd_id': cmd_id, 'status': status}
-                reply = json.dumps(reply)
-                self.exec_logger.debug(f'Execution report: {reply}')
-                self.exec_logger.debug(reply)
-                reply = bytes(reply, 'utf-8')
-                socket.send(reply)
-            #  Do some 'work'
-            time.sleep(.1)
+                        elif cmd == 'read_sequence':
+                            try:
+                                self.read_quad(args)
+                                status = True
+                            except Exception as e:
+                                self.exec_logger.warning(f'Unable to read sequence: {e}')
+                        elif cmd == 'set_sequence':
+                            try:
+                                self.sequence = np.array(args)
+                                status = True
+                            except Exception as e:
+                                self.exec_logger.warning(f'Unable to set sequence: {e}')
+                        elif cmd == 'rs_check':
+                            try:
+                                self.rs_check()
+                                status = True
+                            except Exception as e:
+                                print('error====', e)
+                                self.exec_logger.warning(f'Unable to run rs-check: {e}')
+                        else:
+                            self.exec_logger.warning(f'Unkown command {cmd} - cmd_id: {cmd_id}')
+                except Exception as e:
+                    self.exec_logger.warning(f'Unable to decode command {message}: {e}')
+                    status = False
+                finally:
+                    reply = {'cmd_id': cmd_id, 'status': status}
+                    reply = json.dumps(reply)
+                    self.exec_logger.debug(f'Execution report: {reply}')
+                    self.exec_logger.debug(reply)
+                    reply = bytes(reply, 'utf-8')
+                    socket.send(reply)
+            except zmq.Again:
+                time.sleep(.1)
 
     def measure(self, cmd_id=None):
         """Run the sequence in a separate thread. Can be stopped by 'OhmPi.stop()'.
