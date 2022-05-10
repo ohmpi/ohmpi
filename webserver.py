@@ -18,8 +18,8 @@ serverPort = 8080
 
 # https://gist.github.com/MichaelCurrie/19394abc19abd0de4473b595c0e37a3a
 
-with open('ohmpi_param.json') as json_file:
-    pardict = json.load(json_file)
+#with open('ohmpi_settings.json') as json_file:
+#    pardict = json.load(json_file)
 
 #ohmpi = OhmPi(pardict, sequence='dd.txt')
 #ohmpi = OhmPi(pardict, sequence='dd16s0no8.txt')

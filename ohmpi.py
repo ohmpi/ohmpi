@@ -810,8 +810,9 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 # for testing
 if __name__ == "__main__":
     # start interface
-    Popen(['python', CONTROL_CONFIG['interface']])
+    #Popen(['python', CONTROL_CONFIG['interface']])
 
     ohmpi = OhmPi(settings='ohmpi_settings.json')
+    
     
         
