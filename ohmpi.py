@@ -122,7 +122,6 @@ class OhmPi(object):
         self.cmd_thread = threading.Thread(target=self.process_commands)
         self.cmd_thread.start()
 
-
     def _update_acquisition_settings(self, config):
         """Update acquisition settings from a json file or dictionary.
         Parameters can be:
@@ -587,7 +586,8 @@ class OhmPi(object):
                 voltage = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * 2.5
                 # compute resistance measured (= contact resistance)
                 resistance = np.abs(voltage / current)
-                msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, V: {voltage * 1000.:>10.3f} mV, ' \
+                msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, ' \
+                      f'V: {voltage * 1000.:>10.3f} mV, ' \
                       f'R: {resistance /1000.:>10.3f} kOhm'
 
                 self.exec_logger.debug(msg)
@@ -698,7 +698,7 @@ class OhmPi(object):
                                 print('error====', e)
                                 self.exec_logger.warning(f'Unable to run rs-check: {e}')
                         else:
-                            self.exec_logger.warning(f'Unkown command {cmd} - cmd_id: {cmd_id}')
+                            self.exec_logger.warning(f'Unknown command {cmd} - cmd_id: {cmd_id}')
                 except Exception as e:
                     self.exec_logger.warning(f'Unable to decode command {message}: {e}')
                     status = False
@@ -794,7 +794,6 @@ class OhmPi(object):
             self.cmd_thread.join()
         self.exec_logger.debug(f'Stopped listening to tcp port.')
         exit()
-    
 
 
 VERSION = '2.1.0'
@@ -824,7 +823,7 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 # for testing
 if __name__ == "__main__":
     # start interface
-    #Popen(['python', CONTROL_CONFIG['interface']])
+    Popen(['python', CONTROL_CONFIG['interface']])
 
     ohmpi = OhmPi(settings=OHMPI_CONFIG['settings'])
     
