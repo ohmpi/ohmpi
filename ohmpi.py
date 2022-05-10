@@ -116,8 +116,9 @@ class OhmPi(object):
             self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
 
         # Starts the command processing thread
-        #self.cmd_thread.start()
-        self.process_commands()
+        self.cmd_thread = threading.Thread(target=self.process_commands)
+        self.cmd_thread.start()
+        #self.process_commands()
 
     def _update_acquisition_settings(self, config):
         """Update acquisition settings from a json file or dictionary.
@@ -681,6 +682,7 @@ class OhmPi(object):
                             self.rs_check()
                             status = True
                         except Exception as e:
+                            print('error====', e)
                             self.exec_logger.warning(f'Unable to run rs-check: {e}')
                     else:
                         self.exec_logger.warning(f'Unkown command {cmd} - cmd_id: {cmd_id}')
@@ -770,6 +772,7 @@ class OhmPi(object):
         if self.thread is not None:
             self.thread.join()
         self.exec_logger.debug(f'Status: {self.status}')
+    
 
 
 VERSION = '2.1.0'

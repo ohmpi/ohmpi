@@ -2,10 +2,14 @@ from http.server import SimpleHTTPRequestHandler, HTTPServer
 import time
 import os
 import json
-from ohmpi import OhmPi
+import uuid
+#from ohmpi import OhmPi
+from config import CONTROL_CONFIG
+from termcolor import colored
 import threading
 import pandas as pd
 import shutil
+import zmq # to write on TCP
 
 #hostName = "raspberrypi.local" # works for AP-STA
 #hostName = "192.168.50.1"  # fixed IP in AP-STA mode
@@ -17,11 +21,16 @@ serverPort = 8080
 with open('ohmpi_param.json') as json_file:
     pardict = json.load(json_file)
 
-ohmpi = OhmPi(pardict, sequence='dd.txt')
+#ohmpi = OhmPi(pardict, sequence='dd.txt')
 #ohmpi = OhmPi(pardict, sequence='dd16s0no8.txt')
 
+tcp_port = CONTROL_CONFIG['tcp_port']
+context = zmq.Context()
+socket = context.socket(zmq.REQ)
+socket.connect(f'tcp://localhost:{CONTROL_CONFIG["tcp_port"]}')
+print(colored(f'Sending commands and listenning on tcp port {tcp_port}.'))
 
-class MyServer(SimpleHTTPRequestHandler):
+class MyServer(SimpleHTTPRequestHandler):            
     # because we use SimpleHTTPRequestHandler, we do not need to implement
     # the do_GET() method (if we use the BaseHTTPRequestHandler, we would need to)
    
@@ -37,13 +46,24 @@ class MyServer(SimpleHTTPRequestHandler):
     #         self.wfile.write(bytes(f.read(), "utf-8"))
         
     def do_POST(self):
-        global ohmpiThread, status, run
+        cmd_id = uuid.uuid4().hex
+        global socket
+
+        #global ohmpiThread, status, run
         dic = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
-        rdic = {}
+        rdic = {} # response dictionnary
         if dic['command'] == 'start':
-            ohmpi.measure()
+            #ohmpi.measure()
+            socket.send_string(json.dumps({
+                'cmd_id': cmd_id,
+                'command': 'start'
+            }))
         elif dic['command'] == 'stop':
-            ohmpi.stop()
+            #ohmpi.stop()
+            socket.send_string(json.dumps({
+                'cmd_id': cmd_id,
+                'command': 'stop'
+            }))
         elif dic['command'] == 'getData':
             # get all .csv file in data folder
             fnames = [fname for fname in os.listdir('data/') if fname[-4:] == '.csv']
@@ -64,9 +84,16 @@ class MyServer(SimpleHTTPRequestHandler):
         elif dic['command'] == 'removeData':
             shutil.rmtree('data')
             os.mkdir('data')
-        elif dic['command'] == 'setConfig':
-            ohmpi.stop()
+        elif dic['command'] == 'update_settings':
+            #ohmpi.stop()
+            socket.send_string(json.dumps({
+                'cmd_id': cmd_id,
+                'cmd': 'update_settings',
+                'args': dic['config']
+            }))
             cdic = dic['config']
+            
+            """
             ohmpi.pardict['nb_electrodes'] = int(cdic['nbElectrodes'])
             ohmpi.pardict['injection_duration'] = float(cdic['injectionDuration'])
             ohmpi.pardict['nbr_meas'] = int(cdic['nbMeasurements'])
@@ -78,12 +105,17 @@ class MyServer(SimpleHTTPRequestHandler):
                 ohmpi.read_quad('sequence.txt')
                 print('new sequence set.')
             print('setConfig', ohmpi.pardict)
+            """
         elif dic['command'] == 'invert':
             pass
         elif dic['command'] == 'getResults':
             pass
         elif dic['command'] == 'rsCheck':
-            ohmpi.rs_check()
+            #ohmpi.rs_check()
+            socket.send_string(json.dumps({
+                'cmd_id': cmd_id,
+                'cmd': 'rs_check'
+            }))
             fnames = sorted([fname for fname in os.listdir('data/') if fname[-7:] == '_rs.csv'])
             df = pd.read_csv('data/' + fnames[-1])
             ddic = {
@@ -103,7 +135,29 @@ class MyServer(SimpleHTTPRequestHandler):
             # command not found
             rdic['response'] = 'command not found'
         
-        rdic['status'] = ohmpi.status
+        #rdic['status'] = ohmpi.status
+        rdic['status'] = 'unknown' # socket_out.
+        # wait for reply
+        
+        message = socket.recv()
+        print('+++////', message)
+        rdic['data'] = message
+        """
+        while False:
+            message = socket.recv()
+            print(f'Received command: {message}')
+            e = None
+            try:
+                decoded_message = json.loads(message.decode('utf-8'))
+                cmd = decoded_message.pop('cmd', None)
+                args = decoded_message.pop('args', None)
+                status = False
+                e = None
+                if cmd is not None and cmd_id is decoded_message.pop('cmd_id', None):
+                    print('reply=', decoded_message)
+            except Exception as e:
+                print(f'Unable to decode command {message}: {e}')
+            """
         self.send_response(200)
         self.send_header('Content-Type', 'text/json')
         self.end_headers()
