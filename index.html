@@ -107,6 +107,12 @@
                             <div class="col-sm-10">
                               <input type="file" class="form-control" id="sequence">
                             </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="elecSpacing" class="col-sm-2 col-form-label">Electrode spacing [m]</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control" id="elecSpacing", value="1">
+                            </div>
                           </div>           
                       </form>
                 </div>
@@ -133,6 +139,7 @@
         let interv = null // hold interval for automatic data retrieval
         let quads = [] // available quadrupoles for time-serie figure
         let squads = [] // selected quadrupoles for time-serie figure
+        let elecSpacing = 1 // m
 
         // useful functions
         function sendCommand(query, callback=null) {
@@ -153,6 +160,7 @@
             xhr.open('POST', serverUrl)
             xhr.setRequestHeader('Content-Type', 'application/json')
             xhr.send(query)
+            console.log('sendCommand:', query)
         }
 
         // start button
@@ -172,6 +180,7 @@
             sendCommand('{"command": "stop"}', function(x) {
                 output.innerHTML = 'Status: ' + x['status']
                 clearInterval(interv)
+                document.getElementById('dataRetrievalCheck').checked = false
                 getData()
             })
         }
@@ -183,10 +192,11 @@
             // collect values from modal
             let formVals = {}
             for (let field of ['nbElectrodes', 'injectionDuration',
-             'nbMeasurements', 'sequenceDelay', 'nbStack']) {
+             'nbMeasurements', 'sequenceDelay', 'nbStack', 'elecSpacing']) {
                 formVals[field] = document.getElementById(field).value
             }
             console.log(formVals)
+            elecSpacing = formVals['elecSpacing']
             
             // define callback to send settigs to Pi
             function configCallback() {
@@ -225,45 +235,69 @@
         saveConfigBtn.addEventListener('click', saveConfigBtnFunc)
 
         // make pseudo plot
-        var trace = {
-            x: [],
-            y: [],
-            mode: 'markers',
-            marker: {
-                size: 40,
-                color: [],
-                colorbar: {
-                    title: 'App. res. [Ohm.m]',
-                    cmin: 0,
-                    cmax: 100,
-                }
-            }
-        }
-        let layout = {
-            title: 'Pseudo-section',
-            yaxis: {
-                title: 'Pseudo-depth',
-                autorange: 'reversed'
-            },
-            xaxis: {
-                title: 'X'
-            }
-
-        }
-        Plotly.newPlot('gd', [trace], layout)
-
-        // make time-serie plot
+        var trace = {}
+        let layout = {}
         let tdata = []
-        let layout2 = {
-            title: 'Time-serie',
-            yaxis: {
-                title: 'App. res. [Ohm.m]'
-            },
-            xaxis: {
-                title: 'Sampling time'
-            }
-        }
-        Plotly.newPlot('ts', tdata, layout2)
+        let layout2 = {}
+        let rsdata = []
+        let rslayout = {}
+        
+        // initialize all plots
+        function initPlots() {
+			trace = {
+				x: [],
+				y: [],
+				mode: 'markers',
+				marker: {
+					size: 40,
+					color: [],
+					colorbar: {
+						title: 'App. res. [Ohm.m]',
+						cmin: 0,
+						cmax: 100,
+					}
+				}
+			}
+			layout = {
+				title: 'Pseudo-section',
+				yaxis: {
+					title: 'Pseudo-depth',
+					autorange: 'reversed'
+				},
+				xaxis: {
+					title: 'X'
+				}
+
+			}
+			Plotly.newPlot('gd', [trace], layout)
+
+			// make time-serie plot
+			tdata = []
+			layout2 = {
+				title: 'Time-serie',
+				yaxis: {
+					title: 'App. res. [Ohm.m]'
+				},
+				xaxis: {
+					title: 'Sampling time'
+				}
+			}
+			Plotly.newPlot('ts', tdata, layout2)
+			
+			// bar chart for contact resistance
+			rsdata = []
+			rslayout = {
+				title: 'Contact resistances',
+				yaxis: {
+					title: 'Resistance [kOhm]'
+				},
+				xaxis: {
+					title: 'Consecutive electrodes'
+				}
+			}
+			Plotly.newPlot('rs', rsdata, rslayout)
+		}
+		initPlots()
 
         // add trace to time-serie plot
         function addTraceBtnFunc() {
@@ -295,28 +329,36 @@
             let surveyName = el['target'].value
             let df = data[surveyName]
             if (df != undefined) {
-                let a = df['a']
-                let b = df['b']
-                let m = df['m']
-                let n = df['n']
                 // let's assume electrodes are 1 m distance
                 // compute pseudo-depth (assume no topo)
                 // compute app res (assumping flat, line survey)
                 let xpos = []
                 let ypos = []
                 let app = []
-                for (let i = 0; i < a.length; i++) {
-                    let ab = (a[i] + b[i])/2
-                    let mn = (m[i] + n[i])/2
+                for (let i = 0; i < df['a'].length; i++) {
+                    let a = df['a'][i]
+                    let b = df['b'][i]
+                    let m = df['m'][i]
+                    let n = df['n'][i]
+                    // let's sort the electrodes AB are the two left, MN, the two right
+                    // TODO not sure this is correct, resipy code is much more complex here
+                    let abmn = [a, b, m, n]
+                    abmn = abmn.sort((a, b) => a - b)
+                    a = abmn[0]
+                    b = abmn[1]
+                    m = abmn[2]
+                    n = abmn[3]
+                    let ab = (a + b)/2
+                    let mn = (m + n)/2
                     let dist = Math.abs(ab - mn)
-                    xpos.push(Math.min(ab, mn) + dist/2)
-                    ypos.push(Math.sqrt(2)/2*dist)
-                    let am = Math.abs(a[i] - m[i])
-                    let bm = Math.abs(b[i] - m[i])
-                    let an = Math.abs(a[i] - n[i])
-                    let bn = Math.abs(a[i] - n[i])
+                    xpos.push((Math.min(ab, mn) + dist/2)*elecSpacing)
+                    ypos.push((Math.sqrt(2)/2*dist)*elecSpacing)
+                    let am = Math.abs(a - m)*elecSpacing
+                    let bm = Math.abs(b - m)*elecSpacing
+                    let an = Math.abs(a - n)*elecSpacing
+                    let bn = Math.abs(a - n)*elecSpacing
                     let K = (2*Math.PI)/((1/am)-(1/an)-(1/an)+(1/bn))
-                    app.push(df['rho'][i]*-K)
+                    app.push(df['rho'][i]*K)
                 }
                 console.log(app)
                 // update the trace and redraw the figure
@@ -330,18 +372,6 @@
         }
         let surveySelect = document.getElementById('surveySelect')
 
-        // bar chart for contact resistance
-        let rsdata = []
-        let rslayout = {
-            title: 'Contact resistances',
-            yaxis: {
-                title: 'Resistance [kOhm]'
-            },
-            xaxis: {
-                title: 'Consecutive electrodes'
-            }
-        }
-        Plotly.newPlot('rs', rsdata, rslayout)
         
         // run RS check
         function rsBtnFunc() {
@@ -409,8 +439,14 @@
                 surveySelectFunc({'target': surveySelect})
 
                 // update list of quadrupoles if any
-                if (quads.length == 0) {
+                let idiff = false
+                if (data[surveyNames[0]] != undefined) {
+                    idiff = quads.length != data[surveyNames[0]]['a'].length
+                } 
+                //console.log('idiff=', idiff, quads.length, data[surveyNames[0]]['a'].length)
+                if (((quads.length == 0) | idiff) & (data[surveyNames[0]] != undefined)){
                     console.log('updating list of quadrupoles')
+                    quads = []
                     let df = data[surveyNames[0]]
                     let quadSelect = document.getElementById('quadSelect')
                     quadSelect.innerHTML = ''
@@ -481,13 +517,14 @@
         // checkbox interaction for data download
         function dataRetrievalCheckFunc(x) {
             if (x['target'].checked == true) {
-                interv = setInterval(getData, 1000) // every 5s
+                interv = setInterval(getData, 1000) // every 1s
             } else {
                 clearInterval(interv)
             }             
         }
         let dataRetrievalCheck = document.getElementById('dataRetrievalCheck')
         dataRetrievalCheck.addEventListener('change', dataRetrievalCheckFunc)
+			
 
         // remove data
         function removeDataBtnFunc() {
@@ -495,6 +532,7 @@
                 data = {}
                 output.innerHTML = 'Status: ' + x['status'] + ' (all data cleared)'
                 console.log('all data removed')
+                initPlots() // reset all plots
             })
         }
         let removeDataBtn = document.getElementById('removeDataBtn')
