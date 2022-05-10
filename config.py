@@ -35,7 +35,7 @@ EXEC_LOGGING_CONFIG = {
 # Data logging configuration
 DATA_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
-    'logging_to_console': False,
+    'logging_to_console': True,
     'file_name': 'data_log',
     'max_bytes': 16777216,
     'backup_count': 1024,

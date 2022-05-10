@@ -84,21 +84,22 @@ class OhmPi(object):
         # default acquisition settings
         self.settings = {
             'injection_duration': 0.2,
-            'nbr_meas': 100,
+            'nbr_meas': 1,
             'sequence_delay': 1,
             'nb_stack': 1,
             'export_path': 'data/measurement.csv'
         }
-
+        print(self.settings)
         # read in acquisition settings
         if settings is not None:
             self._update_acquisition_settings(settings)
 
-        self.exec_logger.debug('Initialized with configuration:' + str(self.settings))
+        print(self.settings)
+        self.exec_logger.debug('Initialized with settings:' + str(self.settings))
 
         # read quadrupole sequence
         if sequence is None:
-            self.sequence = np.array([[1, 2, 3, 4]])
+            self.sequence = np.array([[1, 2, 3, 4]], dtype=np.int32)
         else:
             self.read_quad(sequence)
 
@@ -119,7 +120,7 @@ class OhmPi(object):
         # Starts the command processing thread
         self.cmd_thread = threading.Thread(target=self.process_commands)
         self.cmd_thread.start()
-        #self.process_commands()
+
 
     def _update_acquisition_settings(self, config):
         """Update acquisition settings from a json file or dictionary.
@@ -234,7 +235,7 @@ class OhmPi(object):
         sequence : numpy.array
             Array of shape (number quadrupoles * 4).
         """
-        sequence = np.loadtxt(filename, delimiter=" ", dtype=int)  # load quadrupole file
+        sequence = np.loadtxt(filename, delimiter=" ", dtype=np.int32)  # load quadrupole file
 
         if sequence is not None:
             self.exec_logger.debug('Sequence of {:d} quadrupoles read.'.format(sequence.shape[0]))
@@ -498,8 +499,7 @@ class OhmPi(object):
             }
         else:  # for testing, generate random data
             d = {'time': datetime.now().isoformat(), 'A': quad[0], 'B': quad[1], 'M': quad[2], 'N': quad[3],
-                'R [ohm]': np.abs(np.random.randn(1))
-            }
+                 'R [ohm]': np.abs(np.random.randn(1)).tolist()}
 
         # round number to two decimal for nicer string output
         output = [f'{k}\t' for k in d.keys()]
@@ -512,7 +512,14 @@ class OhmPi(object):
                 output += f'{val}\t'
         output = output[:-1]
         self.exec_logger.debug(output)
-        self.data_logger.info(json.loads(d))
+        dd = d.copy()
+        dd.update({'A': str(dd['A'])})
+        dd.update({'B': str(dd['B'])})
+        dd.update({'M': str(dd['M'])})
+        dd.update({'N': str(dd['N'])})
+        print(np.dtype(d['A']))
+        print(json.dumps(dd))
+        self.data_logger.info(json.dumps(dd))
         time.sleep(1)  # NOTE: why this?
 
         return d
