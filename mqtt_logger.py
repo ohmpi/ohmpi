@@ -44,7 +44,6 @@ class MQTTHandler(logging.Handler):
         self.tls = tls
         self.protocol = protocol
         self.transport = transport
-        print(f'init logger QoS={self.qos}')
 
     def emit(self, record):
         """

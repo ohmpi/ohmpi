@@ -10,7 +10,7 @@ Olivier KAUFMANN (UMONS) and Guillaume BLANCHY (ILVO).
 import os
 import io
 import json
-import subprocess
+# import subprocess
 
 import numpy as np
 import csv
@@ -388,110 +388,116 @@ class OhmPi(object):
         """
         # TODO here we can add the current_injected or voltage_injected in mA or mV
         # check arguments
-        if nb_stack is None:
-            nb_stack = self.settings['nb_stack']
-        if injection_duration is None:
-            injection_duration = self.settings['injection_duration']
-
-        start_time = time.time()
-
-        # inner variable initialization
-        injection_current = 0
-        sum_vmn = 0
-        sum_ps = 0
-
-        # injection courant and measure
-        pin0 = self.mcp.get_pin(0)
-        pin0.direction = Direction.OUTPUT
-        pin1 = self.mcp.get_pin(1)
-        pin1.direction = Direction.OUTPUT
-        pin0.value = False
-        pin1.value = False
 
         self.exec_logger.debug('Starting measurement')
         self.exec_logger.info('Waiting for data')
 
-        # FUNCTION AUTOGAIN
-        # ADS1115 for current measurement (AB)
-        self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
-        # ADS1115 for voltage measurement (MN)
-        self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
-        # try auto gain
-        pin1.value = True
-        pin0.value = False
-        time.sleep(injection_duration)
-        gain_current = self.gain_auto(AnalogIn(self.ads_current, ads.P0))
-        gain_voltage = self.gain_auto(AnalogIn(self.ads_voltage, ads.P0, ads.P1))
-        pin0.value = False
-        pin1.value = False
-        print('gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
-        self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=0x48)
-        self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=0x49)
+        if self.on_pi:
+            if nb_stack is None:
+                nb_stack = self.settings['nb_stack']
+            if injection_duration is None:
+                injection_duration = self.settings['injection_duration']
 
-        # TODO I don't get why 3 + 2*nb_stack - 1? why not just range(nb_stack)?
-        # or do we consider 1 stack = one full polarity? do we discard the first 3 readings?
-        for n in range(0, 3 + 2 * nb_stack - 1):
-            # current injection
-            if (n % 2) == 0:
-                pin1.value = True
-                pin0.value = False  # current injection polarity nr1
-            else:
-                pin0.value = True
-                pin1.value = False  # current injection nr2
-            start_delay = time.time()  # stating measurement time
-            time.sleep(injection_duration)  # delay depending on current injection duration
+            start_time = time.time()
 
-            # measurement of current i and voltage u
-            # sampling for each stack at the end of the injection
-            meas = np.zeros((self.nb_samples, 3))
-            for k in range(0, self.nb_samples):
-                # reading current value on ADS channel A0
-                meas[k, 0] = (AnalogIn(self.ads_current, ads.P0).voltage * 1000) / (50 * self.r_shunt)  # TODO: replace 50 by factor depending on INA model specifed in config.py
-                # reading voltage value on ADS channel A2
-                meas[k, 1] = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * self.coef_p2 * 1000  # NOTE: Changed sign
+            # inner variable initialization
+            injection_current = 0
+            sum_vmn = 0
+            sum_ps = 0
 
-            # stop current injection
-            pin1.value = False
+            # injection courant and measure
+            pin0 = self.mcp.get_pin(0)
+            pin0.direction = Direction.OUTPUT
+            pin1 = self.mcp.get_pin(1)
+            pin1.direction = Direction.OUTPUT
             pin0.value = False
-            end_delay = time.time()
+            pin1.value = False
 
-            # take average from the samples per stack, then sum them all
-            # average for all stack is done outside the loop
-            injection_current = injection_current + (np.mean(meas[:, 0]))
-            vmn1 = np.mean(meas[:, 1]) - np.mean(meas[:, 2])
-            if (n % 2) == 0:
-                sum_vmn = sum_vmn - vmn1
-                sum_ps = sum_ps + vmn1
-            else:
-                sum_vmn = sum_vmn + vmn1
-                sum_ps = sum_ps + vmn1
+            # FUNCTION AUTOGAIN
+            # ADS1115 for current measurement (AB)
+            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
+            # ADS1115 for voltage measurement (MN)
+            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
+            # try auto gain
+            pin1.value = True
+            pin0.value = False
+            time.sleep(injection_duration)
+            gain_current = self.gain_auto(AnalogIn(self.ads_current, ads.P0))
+            gain_voltage = self.gain_auto(AnalogIn(self.ads_voltage, ads.P0, ads.P1))
+            pin0.value = False
+            pin1.value = False
+            print('gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
+            self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=0x48)
+            self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=0x49)
 
-            # TODO get battery voltage and warn if battery is running low
-            # TODO send a message on SOH stating the battery level
-            end_calc = time.time()
+            # TODO I don't get why 3 + 2*nb_stack - 1? why not just range(nb_stack)?
+            # or do we consider 1 stack = one full polarity? do we discard the first 3 readings?
+            for n in range(0, 3 + 2 * nb_stack - 1):
+                # current injection
+                if (n % 2) == 0:
+                    pin1.value = True
+                    pin0.value = False  # current injection polarity nr1
+                else:
+                    pin0.value = True
+                    pin1.value = False  # current injection nr2
+                start_delay = time.time()  # stating measurement time
+                time.sleep(injection_duration)  # delay depending on current injection duration
 
-            # TODO I am not sure I understand the computation below
-            # wait twice the actual injection time between two injection
-            # so it's a 50% duty cycle right?
-            time.sleep(2 * (end_delay - start_delay) - (end_calc - start_delay))
+                # measurement of current i and voltage u
+                # sampling for each stack at the end of the injection
+                meas = np.zeros((self.nb_samples, 3))
+                for k in range(0, self.nb_samples):
+                    # reading current value on ADS channel A0
+                    meas[k, 0] = (AnalogIn(self.ads_current, ads.P0).voltage * 1000) / (50 * self.r_shunt)  # TODO: replace 50 by factor depending on INA model specifed in config.py
+                    # reading voltage value on ADS channel A2
+                    meas[k, 1] = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * self.coef_p2 * 1000  # NOTE: Changed sign
 
-        # create a dictionary and compute averaged values from all stacks
-        d = {
-            "time": datetime.now().isoformat(),
-            "A": quad[0],
-            "B": quad[1],
-            "M": quad[2],
-            "N": quad[3],
-            "inj time [ms]": (end_delay - start_delay) * 1000,
-            "Vmn [mV]": (sum_vmn / (3 + 2 * nb_stack - 1)),
-            "I [mA]": (injection_current / (3 + 2 * nb_stack - 1)),
-            "R [ohm]": (sum_vmn / (3 + 2 * nb_stack - 1) / (injection_current / (3 + 2 * nb_stack - 1))),
-            "Ps [mV]": (sum_ps / (3 + 2 * nb_stack - 1)),
-            "nbStack": nb_stack,
-            "CPU temp [degC]": CPUTemperature().temperature,
-            "Time [s]": (-start_time + time.time()),
-            "Nb samples [-]": self.nb_samples
-        }
+                # stop current injection
+                pin1.value = False
+                pin0.value = False
+                end_delay = time.time()
+
+                # take average from the samples per stack, then sum them all
+                # average for all stack is done outside the loop
+                injection_current = injection_current + (np.mean(meas[:, 0]))
+                vmn1 = np.mean(meas[:, 1]) - np.mean(meas[:, 2])
+                if (n % 2) == 0:
+                    sum_vmn = sum_vmn - vmn1
+                    sum_ps = sum_ps + vmn1
+                else:
+                    sum_vmn = sum_vmn + vmn1
+                    sum_ps = sum_ps + vmn1
+
+                # TODO get battery voltage and warn if battery is running low
+                # TODO send a message on SOH stating the battery level
+                end_calc = time.time()
+
+                # TODO I am not sure I understand the computation below
+                # wait twice the actual injection time between two injection
+                # so it's a 50% duty cycle right?
+                time.sleep(2 * (end_delay - start_delay) - (end_calc - start_delay))
+
+            # create a dictionary and compute averaged values from all stacks
+            d = {
+                "time": datetime.now().isoformat(),
+                "A": quad[0],
+                "B": quad[1],
+                "M": quad[2],
+                "N": quad[3],
+                "inj time [ms]": (end_delay - start_delay) * 1000,
+                "Vmn [mV]": (sum_vmn / (3 + 2 * nb_stack - 1)),
+                "I [mA]": (injection_current / (3 + 2 * nb_stack - 1)),
+                "R [ohm]": (sum_vmn / (3 + 2 * nb_stack - 1) / (injection_current / (3 + 2 * nb_stack - 1))),
+                "Ps [mV]": (sum_ps / (3 + 2 * nb_stack - 1)),
+                "nbStack": nb_stack,
+                "CPU temp [degC]": CPUTemperature().temperature,
+                "Time [s]": (-start_time + time.time()),
+                "Nb samples [-]": self.nb_samples
+            }
+        else:  # for testing, generate random data
+            d = {'time': datetime.now().isoformat(), 'A': quad[0], 'B': quad[1], 'M': quad[2], 'N': quad[3],
+                'R [ohm]': np.abs(np.random.randn(1))
+            }
 
         # round number to two decimal for nicer string output
         output = [f'{k}\t' for k in d.keys()]
@@ -504,6 +510,7 @@ class OhmPi(object):
                 output += f'{val}\t'
         output = output[:-1]
         self.exec_logger.debug(output)
+        self.data_logger.info(json.loads(d))
         time.sleep(1)  # NOTE: why this?
 
         return d
@@ -572,14 +579,12 @@ class OhmPi(object):
             msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, V: {voltage * 1000.:>10.3f} mV, ' \
                   f'R: {resistance /1000.:>10.3f} kOhm'
 
-            print(msg)
             self.exec_logger.debug(msg)
 
             # if contact resistance = 0 -> we have a short circuit!!
             if resistance < 1e-2:
                 msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {resistance / 1000.:.3f} kOhm'
                 self.exec_logger.warning(msg)
-                print(msg)
 
             # save data and print in a text file
             self.append_and_save(export_path_rs, {
@@ -628,16 +633,17 @@ class OhmPi(object):
                 # last_measurement.to_csv(f, header=True)
 
     def process_commands(self):
-        tcp_port = CONTROL_CONFIG['tcp_port']
         context = zmq.Context()
+        tcp_port = CONTROL_CONFIG["tcp_port"]
         socket = context.socket(zmq.REP)
         socket.bind(f'tcp://*:{tcp_port}')
+
         print(colored(f'Listening to commands on tcp port {tcp_port}.'
                       f' Make sure your client interface is running and bound to this port...', 'blue'))
         self.exec_logger.debug(f'Start listening for commands on port {tcp_port}')
         while True:
             message = socket.recv()
-            print(f'Received command: {message}')
+            self.exec_logger.debug(f'Received command: {message}')
             e = None
             try:
                 cmd_id = None
@@ -652,7 +658,8 @@ class OhmPi(object):
                         self._update_acquisition_settings(args)
                     elif cmd == 'start':
                         self.measure(cmd_id)
-                        self.stop()
+                        while not self.status == 'idle':
+                            time.sleep(0.1)
                         status = True
                     elif cmd == 'stop':
                         self.stop()
@@ -683,7 +690,7 @@ class OhmPi(object):
             finally:
                 reply = {'cmd_id': cmd_id, 'status': status}
                 reply = json.dumps(reply)
-                print(reply)
+                self.exec_logger.debug(f'Execution report: {reply}')
                 self.exec_logger.debug(reply)
                 reply = bytes(reply, 'utf-8')
                 socket.send(reply)
@@ -722,25 +729,20 @@ class OhmPi(object):
                     self.switch_mux_on(quad)
 
                     # run a measurement
-                    if self.on_pi:
-                        current_measurement = self.run_measurement(quad, self.settings["nb_stack"],
+                    acquired_data = self.run_measurement(quad, self.settings["nb_stack"],
                                                                    self.settings["injection_duration"])
-                    else:  # for testing, generate random data
-                        current_measurement = {
-                            'A': [quad[0]], 'B': [quad[1]], 'M': [quad[2]], 'N': [quad[3]],
-                            'R [ohm]': np.abs(np.random.randn(1))
-                        }
 
                     # switch mux off
                     self.switch_mux_off(quad)
 
                     # add command_id in dataset
-                    current_measurement.update({'cmd_id': cmd_id})
+                    acquired_data.update({'cmd_id': cmd_id})
                     # log data to the data logger
-                    self.data_logger.info(f'{current_measurement}')
+                    self.data_logger.info(f'{acquired_data}')
+                    print(f'{acquired_data}')
                     # save data and print in a text file
-                    self.append_and_save(filename, current_measurement)
-                    self.exec_logger.debug('{:d}/{:d}'.format(i + 1, self.sequence.shape[0]))
+                    self.append_and_save(filename, acquired_data)
+                    self.exec_logger.debug(f'{i+1:d}/{self.sequence.shape[0]:d}')
 
                 # compute time needed to take measurement and subtract it from interval
                 # between two sequence run (= sequence_delay)
