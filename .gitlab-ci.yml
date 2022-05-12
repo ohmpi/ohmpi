@@ -10,6 +10,7 @@ pages:
   - pip install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark
   - cd doc
   - make html
+  
   # also make latex? pdf?
   - cd ..
   - mv doc/build/html/ public/
