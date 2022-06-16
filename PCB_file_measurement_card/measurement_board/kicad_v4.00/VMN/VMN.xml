@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="E">
   <design>
-    <source>/home/su530201/KICAD_Projects/VMN_rc/VMN/VMN.kicad_sch</source>
-    <date>Thu 16 Jun 2022 15:48:06 CEST</date>
+    <source>/home/su530201/PycharmProjects/ohmpi_reversaal/OhmPi/PCB_file_measurement_card/measurement_board/kicad_v4.00/VMN/VMN.kicad_sch</source>
+    <date>Thu 16 Jun 2022 18:04:25 CEST</date>
     <tool>Eeschema 6.0.5-a6ca702e91~116~ubuntu20.04.1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -237,7 +237,7 @@
     </comp>
     <comp ref="J4">
       <value>Raspberry_Pi_2_3</value>
-      <footprint>Connector_PinHeader_2.54mm:PinHeader_2x20_P2.54mm_Vertical</footprint>
+      <footprint>Connector_PinSocket_2.54mm:PinSocket_2x20_P2.54mm_Vertical</footprint>
       <datasheet>https://www.raspberrypi.org/documentation/hardware/raspberrypi/schematics/rpi_SCH_3bplus_1p0_reduced.pdf</datasheet>
       <libsource lib="Connector" part="Raspberry_Pi_2_3" description="expansion header for Raspberry Pi 2 &amp; 3"/>
       <property name="Sheetname" value=""/>
@@ -404,7 +404,7 @@
     </comp>
     <comp ref="R6">
       <value>2</value>
-      <footprint>Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal</footprint>
+      <footprint>Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P20.32mm_Horizontal</footprint>
       <libsource lib="Device" part="R" description="Resistor"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="VMN.kicad_sch"/>
@@ -1088,10 +1088,10 @@
   </libparts>
   <libraries>
     <library logical="1085">
-      <uri>/home/su530201/KICAD_Projects/VMN_rc/VMN/1085/1085.lib</uri>
+      <uri>/home/su530201/PycharmProjects/ohmpi_reversaal/OhmPi/PCB_file_measurement_card/measurement_board/kicad_v4.00/VMN/1085/1085.kicad_sym</uri>
     </library>
     <library logical="AQY211EH">
-      <uri>/home/su530201/KICAD_Projects/VMN_rc/VMN/AQY211EH/AQY211EH.lib</uri>
+      <uri>/home/su530201/PycharmProjects/ohmpi_reversaal/OhmPi/PCB_file_measurement_card/measurement_board/kicad_v4.00/VMN/AQY211EH/AQY211EH.kicad_sym</uri>
     </library>
     <library logical="Amplifier_Current">
       <uri>/usr/share/kicad/symbols//Amplifier_Current.kicad_sym</uri>
@@ -1118,10 +1118,10 @@
       <uri>/usr/share/kicad/symbols//Isolator.kicad_sym</uri>
     </library>
     <library logical="THD_15-1211N">
-      <uri>/home/su530201/KICAD_Projects/VMN_rc/VMN/THD_15-1222N/THD_15-1222N.lib</uri>
+      <uri>/home/su530201/PycharmProjects/ohmpi_reversaal/OhmPi/PCB_file_measurement_card/measurement_board/kicad_v4.00/VMN/THD_15-1222N/THD_15-1222N.kicad_sym</uri>
     </library>
     <library logical="THD_15-1222N">
-      <uri>/home/su530201/KICAD_Projects/VMN_rc/VMN/THD_15-1211N/THD_15-1211N.lib</uri>
+      <uri>/home/su530201/PycharmProjects/ohmpi_reversaal/OhmPi/PCB_file_measurement_card/measurement_board/kicad_v4.00/VMN/THD_15-1211N/THD_15-1211N.kicad_sym</uri>
     </library>
   </libraries>
   <nets>
