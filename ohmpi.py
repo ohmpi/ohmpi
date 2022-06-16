@@ -483,7 +483,8 @@ class OhmPi(object):
             "Time [s]": (-start_time + time.time()),
             "Nb samples [-]": self.nb_samples
         }
-
+        print(d)
+        
         # round number to two decimal for nicer string output
         output = [f'{k}\t' for k in d.keys()]
         output = str(output)[:-1] + '\n'
@@ -539,7 +540,7 @@ class OhmPi(object):
 
             # save data and print in a text file
             #self.append_and_save(export_path_rs, current_measurement)
-            
+            self.switch_mux_on(quad)  # put before raising the pins (otherwise conflict i2c)
             
             # current injection
             pin0 = self.mcp.get_pin(0)
@@ -550,19 +551,19 @@ class OhmPi(object):
             pin1.value = False
 
             # call the switch_mux function to switch to the right electrodes
-            self.switch_mux_on(quad)
+           
             self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
             # ADS1115 for voltage measurement (MN)
             self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
             pin1.value = True  # inject from pin1 to pin0
             pin0.value = False
-            time.sleep(0.2)
+            time.sleep(0.5)
             
             # measure current and voltage
             current = AnalogIn(self.ads_current, ads.P0).voltage / (50 * self.r_shunt)
             voltage = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * 2.5
             resistance = voltage / current
-            print('I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} Ohm'.format(
+            print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} Ohm'.format(
                 current*1000, voltage*1000, resistance))
             
             # compute resistance measured (= contact resistance)
@@ -732,8 +733,8 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 if __name__ == "__main__":
     ohmpi = OhmPi(config='ohmpi_param.json')
     #ohmpi.measure()
-    ohmpi.read_quad('breadboard.txt')
+    #ohmpi.read_quad('breadboard.txt')
     ohmpi.rs_check()
-    ohmpi.measure()
-    time.sleep(4)
-    ohmpi.stop()
+    #ohmpi.measure()
+    #time.sleep(20)
+    #ohmpi.stop()
