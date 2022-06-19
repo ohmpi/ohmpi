@@ -1,4 +1,25 @@
-20238301828747440
+20246103658308978
+1085
+1085
+1085
+Integrated Circuit
+0
+12
+12
+1085
+MODULE_1085
+
+
+0
+12
+12
+AQY211EH
+DIP762W47P254L478H340Q4N
+DIP4
+Relay or Contactor
+0
+4
+4
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -80212,6 +80233,20 @@ Logo WEEE
 0
 0
 0
+THD_15-1211N
+THD151211N
+THD 15-1211N-1
+Power Supply
+0
+9
+9
+THD_15-1222N
+CONV_THD_15-1222N
+
+
+0
+9
+9
 TerminalBlock
 TerminalBlock_Altech_AK300-2_P5.00mm
 Altech AK300 terminal block, pitch 5.0mm, 45 degree angled, see http://www.mouser.com/ds/2/16/PCBMETRC-24178.pdf
