@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="E">
   <design>
-    <source>/home/su530201/PycharmProjects/ohmpi_reversaal/OhmPi/PCB_file_measurement_card/measurement_board/kicad_v4.00/VMN/VMN.kicad_sch</source>
-    <date>Thu 16 Jun 2022 18:04:25 CEST</date>
-    <tool>Eeschema 6.0.5-a6ca702e91~116~ubuntu20.04.1</tool>
+    <source>C:\Users\reclement\Documents\39_ohmpi\OhmPi\PCB_file_measurement_card\measurement_board\kicad_v4.00\VMN\VMN.kicad_sch</source>
+    <date>17/06/2022 22:12:54</date>
+    <tool>Eeschema (6.0.5)</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title/>
@@ -244,6 +244,15 @@
       <property name="Sheetfile" value="VMN.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>8a40f48c-bc43-44b1-97af-ec3163b7498f</tstamps>
+    </comp>
+    <comp ref="J6">
+      <value>Conn_02x03_Top_Bottom</value>
+      <footprint>Connector_IDC:IDC-Header_2x03_P2.54mm_Vertical</footprint>
+      <libsource lib="Connector_Generic" part="Conn_02x03_Top_Bottom" description="Generic connector, double row, 02x03, top/bottom pin numbering scheme (row 1: 1...pins_per_row, row2: pins_per_row+1 ... num_pins), script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="VMN.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>49058ded-2ed2-473c-ba90-e52b2c428f78</tstamps>
     </comp>
     <comp ref="K1">
       <value>AQY211EH</value>
@@ -915,6 +924,26 @@
         <pin num="2" name="Pin_2" type="passive"/>
       </pins>
     </libpart>
+    <libpart lib="Connector_Generic" part="Conn_02x03_Top_Bottom">
+      <description>Generic connector, double row, 02x03, top/bottom pin numbering scheme (row 1: 1...pins_per_row, row2: pins_per_row+1 ... num_pins), script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_2x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_02x03_Top_Bottom</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+        <pin num="5" name="Pin_5" type="passive"/>
+        <pin num="6" name="Pin_6" type="passive"/>
+      </pins>
+    </libpart>
     <libpart lib="Device" part="C_Polarized_Small">
       <description>Polarized capacitor, small symbol</description>
       <docs>~</docs>
@@ -1088,40 +1117,43 @@
   </libparts>
   <libraries>
     <library logical="1085">
-      <uri>/home/su530201/PycharmProjects/ohmpi_reversaal/OhmPi/PCB_file_measurement_card/measurement_board/kicad_v4.00/VMN/1085/1085.kicad_sym</uri>
+      <uri>C:\Users\reclement\Documents\39_ohmpi\OhmPi\PCB_file_measurement_card\measurement_board\kicad_v4.00\VMN/1085/1085.kicad_sym</uri>
     </library>
     <library logical="AQY211EH">
-      <uri>/home/su530201/PycharmProjects/ohmpi_reversaal/OhmPi/PCB_file_measurement_card/measurement_board/kicad_v4.00/VMN/AQY211EH/AQY211EH.kicad_sym</uri>
+      <uri>C:\Users\reclement\Documents\39_ohmpi\OhmPi\PCB_file_measurement_card\measurement_board\kicad_v4.00\VMN/AQY211EH/AQY211EH.kicad_sym</uri>
     </library>
     <library logical="Amplifier_Current">
-      <uri>/usr/share/kicad/symbols//Amplifier_Current.kicad_sym</uri>
+      <uri>C:\Program Files\KiCad\6.0\share\kicad\symbols\/Amplifier_Current.kicad_sym</uri>
     </library>
     <library logical="Amplifier_Instrumentation">
-      <uri>/usr/share/kicad/symbols//Amplifier_Instrumentation.kicad_sym</uri>
+      <uri>C:\Program Files\KiCad\6.0\share\kicad\symbols\/Amplifier_Instrumentation.kicad_sym</uri>
     </library>
     <library logical="Amplifier_Operational">
-      <uri>/usr/share/kicad/symbols//Amplifier_Operational.kicad_sym</uri>
+      <uri>C:\Program Files\KiCad\6.0\share\kicad\symbols\/Amplifier_Operational.kicad_sym</uri>
     </library>
     <library logical="Connector">
-      <uri>/usr/share/kicad/symbols//Connector.kicad_sym</uri>
+      <uri>C:\Program Files\KiCad\6.0\share\kicad\symbols\/Connector.kicad_sym</uri>
+    </library>
+    <library logical="Connector_Generic">
+      <uri>C:\Program Files\KiCad\6.0\share\kicad\symbols\/Connector_Generic.kicad_sym</uri>
     </library>
     <library logical="Device">
-      <uri>/usr/share/kicad/symbols//Device.kicad_sym</uri>
+      <uri>C:\Program Files\KiCad\6.0\share\kicad\symbols\/Device.kicad_sym</uri>
     </library>
     <library logical="Diode">
-      <uri>/usr/share/kicad/symbols//Diode.kicad_sym</uri>
+      <uri>C:\Program Files\KiCad\6.0\share\kicad\symbols\/Diode.kicad_sym</uri>
     </library>
     <library logical="Interface_Expansion">
-      <uri>/usr/share/kicad/symbols//Interface_Expansion.kicad_sym</uri>
+      <uri>C:\Program Files\KiCad\6.0\share\kicad\symbols\/Interface_Expansion.kicad_sym</uri>
     </library>
     <library logical="Isolator">
-      <uri>/usr/share/kicad/symbols//Isolator.kicad_sym</uri>
+      <uri>C:\Program Files\KiCad\6.0\share\kicad\symbols\/Isolator.kicad_sym</uri>
     </library>
     <library logical="THD_15-1211N">
-      <uri>/home/su530201/PycharmProjects/ohmpi_reversaal/OhmPi/PCB_file_measurement_card/measurement_board/kicad_v4.00/VMN/THD_15-1222N/THD_15-1222N.kicad_sym</uri>
+      <uri>C:\Users\reclement\Documents\39_ohmpi\OhmPi\PCB_file_measurement_card\measurement_board\kicad_v4.00\VMN/THD_15-1222N/THD_15-1222N.kicad_sym</uri>
     </library>
     <library logical="THD_15-1222N">
-      <uri>/home/su530201/PycharmProjects/ohmpi_reversaal/OhmPi/PCB_file_measurement_card/measurement_board/kicad_v4.00/VMN/THD_15-1211N/THD_15-1211N.kicad_sym</uri>
+      <uri>C:\Users\reclement\Documents\39_ohmpi\OhmPi\PCB_file_measurement_card\measurement_board\kicad_v4.00\VMN/THD_15-1211N/THD_15-1211N.kicad_sym</uri>
     </library>
   </libraries>
   <nets>
@@ -1468,70 +1500,88 @@
     <net code="72" name="unconnected-(J4-Pad40)">
       <node ref="J4" pin="40" pinfunction="GPIO21/SCLK1" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="73" name="unconnected-(U1-Pad1)">
+    <net code="73" name="unconnected-(J6-Pad1)">
+      <node ref="J6" pin="1" pinfunction="Pin_1" pintype="passive+no_connect"/>
+    </net>
+    <net code="74" name="unconnected-(J6-Pad2)">
+      <node ref="J6" pin="2" pinfunction="Pin_2" pintype="passive+no_connect"/>
+    </net>
+    <net code="75" name="unconnected-(J6-Pad3)">
+      <node ref="J6" pin="3" pinfunction="Pin_3" pintype="passive+no_connect"/>
+    </net>
+    <net code="76" name="unconnected-(J6-Pad4)">
+      <node ref="J6" pin="4" pinfunction="Pin_4" pintype="passive+no_connect"/>
+    </net>
+    <net code="77" name="unconnected-(J6-Pad5)">
+      <node ref="J6" pin="5" pinfunction="Pin_5" pintype="passive+no_connect"/>
+    </net>
+    <net code="78" name="unconnected-(J6-Pad6)">
+      <node ref="J6" pin="6" pinfunction="Pin_6" pintype="passive+no_connect"/>
+    </net>
+    <net code="79" name="unconnected-(U1-Pad1)">
       <node ref="U1" pin="1" pinfunction="Rg" pintype="passive+no_connect"/>
     </net>
-    <net code="74" name="unconnected-(U1-Pad8)">
+    <net code="80" name="unconnected-(U1-Pad8)">
       <node ref="U1" pin="8" pinfunction="Rg" pintype="passive+no_connect"/>
     </net>
-    <net code="75" name="unconnected-(U2-Pad7)">
+    <net code="81" name="unconnected-(U2-Pad7)">
       <node ref="U2" pin="7" pinfunction="NC" pintype="no_connect"/>
     </net>
-    <net code="76" name="unconnected-(U2-Pad8)">
+    <net code="82" name="unconnected-(U2-Pad8)">
       <node ref="U2" pin="8" pinfunction="INT" pintype="output+no_connect"/>
     </net>
-    <net code="77" name="unconnected-(U2-Pad12)">
+    <net code="83" name="unconnected-(U2-Pad12)">
       <node ref="U2" pin="12" pinfunction="GP2" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="78" name="unconnected-(U2-Pad13)">
+    <net code="84" name="unconnected-(U2-Pad13)">
       <node ref="U2" pin="13" pinfunction="GP3" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="79" name="unconnected-(U2-Pad14)">
+    <net code="85" name="unconnected-(U2-Pad14)">
       <node ref="U2" pin="14" pinfunction="GP4" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="80" name="unconnected-(U2-Pad15)">
+    <net code="86" name="unconnected-(U2-Pad15)">
       <node ref="U2" pin="15" pinfunction="GP5" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="81" name="unconnected-(U2-Pad16)">
+    <net code="87" name="unconnected-(U2-Pad16)">
       <node ref="U2" pin="16" pinfunction="GP6" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="82" name="unconnected-(U2-Pad17)">
+    <net code="88" name="unconnected-(U2-Pad17)">
       <node ref="U2" pin="17" pinfunction="GP7" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="83" name="unconnected-(U4-Pad4)">
+    <net code="89" name="unconnected-(U4-Pad4)">
       <node ref="U4" pin="4" pinfunction="NC" pintype="no_connect"/>
     </net>
-    <net code="84" name="unconnected-(U5-Pad1)">
+    <net code="90" name="unconnected-(U5-Pad1)">
       <node ref="U5" pin="1" pinfunction="A3" pintype="passive+no_connect"/>
     </net>
-    <net code="85" name="unconnected-(U5-Pad2)">
+    <net code="91" name="unconnected-(U5-Pad2)">
       <node ref="U5" pin="2" pinfunction="A2" pintype="passive+no_connect"/>
     </net>
-    <net code="86" name="unconnected-(U5-Pad3)">
+    <net code="92" name="unconnected-(U5-Pad3)">
       <node ref="U5" pin="3" pinfunction="A1" pintype="passive+no_connect"/>
     </net>
-    <net code="87" name="unconnected-(U5-Pad5)">
+    <net code="93" name="unconnected-(U5-Pad5)">
       <node ref="U5" pin="5" pinfunction="ALRT" pintype="passive+no_connect"/>
     </net>
-    <net code="88" name="unconnected-(U5-PadMH1)">
+    <net code="94" name="unconnected-(U5-PadMH1)">
       <node ref="U5" pin="MH1" pinfunction="MH1" pintype="passive+no_connect"/>
     </net>
-    <net code="89" name="unconnected-(U5-PadMH2)">
+    <net code="95" name="unconnected-(U5-PadMH2)">
       <node ref="U5" pin="MH2" pinfunction="MH2" pintype="passive+no_connect"/>
     </net>
-    <net code="90" name="unconnected-(U6-Pad1)">
+    <net code="96" name="unconnected-(U6-Pad1)">
       <node ref="U6" pin="1" pinfunction="A3" pintype="passive+no_connect"/>
     </net>
-    <net code="91" name="unconnected-(U6-Pad3)">
+    <net code="97" name="unconnected-(U6-Pad3)">
       <node ref="U6" pin="3" pinfunction="A1" pintype="passive+no_connect"/>
     </net>
-    <net code="92" name="unconnected-(U6-Pad5)">
+    <net code="98" name="unconnected-(U6-Pad5)">
       <node ref="U6" pin="5" pinfunction="ALRT" pintype="passive+no_connect"/>
     </net>
-    <net code="93" name="unconnected-(U6-PadMH1)">
+    <net code="99" name="unconnected-(U6-PadMH1)">
       <node ref="U6" pin="MH1" pinfunction="MH1" pintype="passive+no_connect"/>
     </net>
-    <net code="94" name="unconnected-(U6-PadMH2)">
+    <net code="100" name="unconnected-(U6-PadMH2)">
       <node ref="U6" pin="MH2" pinfunction="MH2" pintype="passive+no_connect"/>
     </net>
   </nets>
