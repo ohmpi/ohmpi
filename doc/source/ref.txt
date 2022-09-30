@@ -1,0 +1,18 @@
+************ 
+OhmPi V 1.01 Implementation
+************ 
+
+
+Image 
+***** 
+
+.. image:: logo_ohmpi.JPG
+   :align: center 
+
+Texte 
+***** 
+
+Voici un second texte pour notre Démo. 
+
+.. note:: 
+   J'espère que cela vous parle un peu plus que la présentation présente.
