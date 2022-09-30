@@ -20,8 +20,18 @@ def on_message(client, userdata, message):
 
 
 mqtt_client = mqtt.Client(f'ohmpi_{OHMPI_CONFIG["id"]}_listener', clean_session=False)  # create new instance
+print('now this')
 print('connecting to broker')
-mqtt_client.connect(MQTT_CONTROL_CONFIG['hostname'])
+trials = 0
+trials_max = 10
+while trials < trials_max:
+    try:
+        mqtt_client.connect(MQTT_CONTROL_CONFIG['hostname'])
+        trials = trials_max
+    except:
+        print('new trial')
+        time.sleep(2)
+        trials+=1
 print('Subscribing to topic', MQTT_CONTROL_CONFIG['ctrl_topic'])
 mqtt_client.subscribe(MQTT_CONTROL_CONFIG['ctrl_topic'], MQTT_CONTROL_CONFIG['qos'])
 mqtt_client.on_message = on_message

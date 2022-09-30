@@ -709,8 +709,11 @@ class OhmPi(object):
                     self.exec_logger.debug(reply)
                     reply = bytes(reply, 'utf-8')
                     socket.send(reply)
-            except zmq.Again:
-                time.sleep(.1)
+            except zmq.ZMQError as e:
+                if e.errno == zmq.EAGAIN:
+                    pass # no message was ready (yet!)
+                else:
+                    traceback.print_exc()
 
     def measure(self, cmd_id=None):
         """Run the sequence in a separate thread. Can be stopped by 'OhmPi.stop()'.
