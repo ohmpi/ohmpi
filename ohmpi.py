@@ -410,7 +410,7 @@ class OhmPi(object):
 
         tau = np.nan
         # voltage optimization
-        for volt in range(1, 10, 2):
+        for volt in range(4, 10, 2):
             print('trying with v:', volt)
             self.DPS.write_register(0x0000,volt,2) # fixe la voltage pour la mesure à 5V
             time.sleep(1) # inject for 1 s at least on DPS5005
