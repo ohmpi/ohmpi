@@ -539,8 +539,6 @@ class OhmPi(object):
         if injection_duration is None:
             injection_duration = self.pardict['injection_duration']
 
-        start_time = time.time()
-
         # inner variable initialization
         sum_i = 0
         sum_vmn = 0
@@ -556,9 +554,9 @@ class OhmPi(object):
         else:
             polarity = 1
         
-        # first reset the gain to 2/3 before trying to find best gain
-        self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=128, address=0x49)
-        self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=128, address=0x48)
+        # first reset the gain to 2/3 before trying to find best gain (mode 0 is continuous)
+        self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=128, address=0x49, mode=0)
+        self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=128, address=0x48, mode=0)
         
         # turn on the power supply
         oor = False
@@ -584,12 +582,24 @@ class OhmPi(object):
                 self.pin0.value = False
                 self.pin1.value = False
                 print('gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
-                self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=128, address=0x49)
-                self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=128, address=0x48)
+                self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=0x49, mode=0)
+                self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=0x48, mode=0)
 
             # one stack = 2 half-cycles (one positive, one negative)
             pinMN = 0 if polarity > 0 else 2
+            
+            # start counter
+            #  we sample every 10 ms (as using AnalogIn for both current
+            # and voltage takes about 7 ms). When we go over the injection
+            # duration, we break the loop and truncate the meas arrays
+            # only the last values in meas will be taken into account
+            start_time = time.time()
             for n in range(0, nb_stack * 2):  # for each half-cycles
+                # sampling for each stack at the end of the injection
+                sampling_interval = 10  # ms
+                self.nb_samples = int(injection_duration * 1000 // sampling_interval) + 1
+                meas = np.zeros((self.nb_samples, 2))
+                
                 # current injection
                 if (n % 2) == 0:
                     self.pin0.value = True
@@ -599,19 +609,30 @@ class OhmPi(object):
                     self.pin1.value = True  # current injection nr2
                     
                 start_delay = time.time()  # stating measurement time
-                time.sleep(injection_duration)  # delay depending on current injection duration
+                #time.sleep(injection_duration)  # delay depending on current injection duration
 
                 # measurement of current i and voltage u
-                # sampling for each stack at the end of the injection
-                meas = np.zeros((self.nb_samples, 2))
+                dt = 0
                 for k in range(0, self.nb_samples):
-                    # reading current value on ADS channel A0
+                    # reading current value on ADS channels
                     meas[k, 0] = (AnalogIn(self.ads_current, ads.P0).voltage * 1000) / (50 * self.r_shunt)
                     if pinMN == 0:
                         meas[k, 1] = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000
                     else:
                         meas[k, 1] = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000 *-1
-                print(meas)
+                    time.sleep(sampling_interval / 1000)
+                    dt = time.time() - start_delay  # real injection time (s)
+                    if dt > (injection_duration - 0 * sampling_interval /1000):
+                        break
+                
+                # stop current injection
+                self.pin0.value = False
+                self.pin1.value = False
+                
+                end_delay = time.time()
+                
+                # truncate the meas array if we didn't fill the last samples
+                meas = meas[:k+1:]
                 
                 # we alternate on which ADS1115 pin we measure because of sign of voltage
                 if pinMN == 0:
@@ -619,15 +640,11 @@ class OhmPi(object):
                 else:
                     pinMN = 0
                 
-                # stop current injection
-                self.pin0.value = False
-                self.pin1.value = False
-                end_delay = time.time()
-
                 # take average from the samples per stack, then sum them all
-                # average for all stack is done outside the loop
-                sum_i = sum_i + (np.mean(meas[:, 0]))
-                vmn1 = np.mean(meas[:, 1])
+                # average for the last third of the stacked values
+                #  is done outside the loop
+                sum_i = sum_i + (np.mean(meas[-int(meas.shape[0]//3):, 0]))
+                vmn1 = np.mean(meas[-int(meas.shape[0]//3), 1])
                 if (n % 2) == 0:
                     sum_vmn = sum_vmn - vmn1
                     sum_ps = sum_ps + vmn1
@@ -637,12 +654,14 @@ class OhmPi(object):
 
                 # TODO get battery voltage and warn if battery is running low
                 # TODO send a message on SOH stating the battery level
-                end_calc = time.time()
-
-                # TODO I am not sure I understand the computation below
-                # wait twice the actual injection time between two injection
-                # so it's a 50% duty cycle right?
-                time.sleep(2 * (end_delay - start_delay) - (end_calc - start_delay))
+                
+                # wait once the actual injection time between two injection
+                # so it's a 50% duty cycle
+                print('crenaux (s)', (end_delay - start_delay))
+                print('sleep for (s)', injection_duration - (end_delay - start_delay))
+                time.sleep(dt)
+                #time.sleep(injection_duration)  # off time between half-cycles
+#                time.sleep(2*(end_delay - start_delay) - (end_calc - start_delay))
                 
             if self.idps:
                 self.DPS.write_register(0x0000, 0, 2)  # reset to 0 volt
@@ -666,7 +685,7 @@ class OhmPi(object):
             "Ps [mV]": sum_ps / (2 * nb_stack),
             "nbStack": nb_stack,
             "CPU temp [degC]": CPUTemperature().temperature,
-            "Time [s]": (-start_time + time.time()),
+            "Time [s]": (time.time() - start_time),
             "Nb samples [-]": self.nb_samples
         }
         print(d)
@@ -791,6 +810,7 @@ class OhmPi(object):
     #         # TODO if interrupted, we would need to restore the values
     #         # TODO or we offer the possiblity in 'run_measurement' to have rs_check each time?
 
+
     @staticmethod
     def append_and_save(filename, last_measurement):
         """Append and save last measurement dataframe.
@@ -816,6 +836,7 @@ class OhmPi(object):
                 w.writeheader()
                 w.writerow(last_measurement)
                 # last_measurement.to_csv(f, header=True)
+
 
     def measure(self):
         """Run the sequence in a separate thread. Can be stopped by 'OhmPi.stop()'.
