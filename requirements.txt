@@ -7,5 +7,4 @@ adafruit-circuitpython-tca9548a
 adafruit-circuitpython-mcp230xx
 gpiozero
 termcolor
-pandas
 pyzmq
