@@ -397,7 +397,7 @@ class OhmPi(object):
         return gain
 
 
-    def compute_tx_volt(self):
+    def compute_tx_volt(self, best_tx_injtime=1):
         """Compute best voltage to inject to be in our range of Vmn 
         (10 mV - 4500 mV) and current (2 - 45 mA)
         """
@@ -418,14 +418,14 @@ class OhmPi(object):
         for volt in range(2, 10, 2):
             print('trying with v:', volt)
             self.DPS.write_register(0x0000,volt,2) # fixe la voltage pour la mesure à 5V
-            time.sleep(1) # inject for 1 s at least on DPS5005
+            time.sleep(best_tx_injtime) # inject for 1 s at least on DPS5005
             
             # autogain
             self.ads_current = ads.ADS1115(self.i2c, gain=2/3, data_rate=128, address=0x49)
             self.ads_voltage = ads.ADS1115(self.i2c, gain=2/3, data_rate=128, address=0x48)
-            print(AnalogIn(self.ads_current, ads.P0).voltage)
-            print(AnalogIn(self.ads_voltage, ads.P0).voltage)
-            print(AnalogIn(self.ads_voltage, ads.P2).voltage)
+            print('current P0', AnalogIn(self.ads_current, ads.P0).voltage)
+            print('voltage P0', AnalogIn(self.ads_voltage, ads.P0).voltage)
+            print('voltage P2', AnalogIn(self.ads_voltage, ads.P2).voltage)
             gain_current = self.gain_auto(AnalogIn(self.ads_current, ads.P0))
             gain_voltage0 = self.gain_auto(AnalogIn(self.ads_voltage, ads.P0))
             gain_voltage2 = self.gain_auto(AnalogIn(self.ads_voltage, ads.P2))
@@ -507,7 +507,7 @@ class OhmPi(object):
         
 
     def run_measurement(self, quad=[1, 2, 3, 4], nb_stack=None, injection_duration=None,
-                        best_tx=True, tx_volt=0, autogain=True):
+                        best_tx=True, tx_volt=0, autogain=True, best_tx_injtime=1):
         """Do a 4 electrode measurement and measure transfer resistance obtained.
 
         Parameters
@@ -551,7 +551,7 @@ class OhmPi(object):
 
         # get best voltage to inject
         if self.idps and tx_volt == 0:
-            tx_volt, polarity = self.compute_tx_volt()
+            tx_volt, polarity = self.compute_tx_volt(best_tx_injtime=best_tx_injtime)
             print('tx volt V:', tx_volt)
         else:
             polarity = 1
@@ -713,6 +713,8 @@ class OhmPi(object):
         # measure all quad of the RS sequence
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole
+            self.switch_mux_on(quad)  # put before raising the pins (otherwise conflict i2c)
+            d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=0.5, tx_volt=5, autogain=True)
             
             # NOTE (GB): I'd use the self.run_measurement() for all this middle part so we an make use of autogain and so ...
             # call the switch_mux function to switch to the right electrodes
@@ -726,31 +728,33 @@ class OhmPi(object):
 
             # save data and print in a text file
             #self.append_and_save(export_path_rs, current_measurement)
-            self.switch_mux_on(quad)  # put before raising the pins (otherwise conflict i2c)
             
             # current injection
-            self.pin0 = self.mcp.get_pin(0)
-            self.pin0.direction = Direction.OUTPUT
-            self.pin1 = self.mcp.get_pin(1)
-            self.pin1.direction = Direction.OUTPUT
-            self.pin0.value = False
-            self.pin1.value = False
+            # self.pin0 = self.mcp.get_pin(0)
+            # self.pin0.direction = Direction.OUTPUT
+            # self.pin1 = self.mcp.get_pin(1)
+            # self.pin1.direction = Direction.OUTPUT
+            # self.pin0.value = False
+            # self.pin1.value = False
 
-            # call the switch_mux function to switch to the right electrodes
+            # # call the switch_mux function to switch to the right electrodes
            
-            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
-            # ADS1115 for voltage measurement (MN)
-            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
-            self.pin1.value = True  # inject from pin1 to self.pin0
-            self.pin0.value = False
-            time.sleep(0.5)
+            # self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
+            # # ADS1115 for voltage measurement (MN)
+            # self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
+            # self.pin1.value = True  # inject from pin1 to self.pin0
+            # self.pin0.value = False
+            # time.sleep(0.5)
             
-            # measure current and voltage
-            current = AnalogIn(self.ads_current, ads.P0).voltage / (50 * self.r_shunt)
-            voltage = -AnalogIn(self.ads_voltage, ads.P0, ADS.P2).voltage * 2.5
-            resistance = voltage / current
+            # # measure current and voltage
+            # current = AnalogIn(self.ads_current, ads.P0).voltage / (50 * self.r_shunt)
+            # voltage = -AnalogIn(self.ads_voltage, ads.P0, ADS.P2).voltage * 2.5
+            # resistance = voltage / current
+            current = d['R [ohm]']
+            voltage = d['Vmn [mV]']
+            current = d['I [mA]']
             print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} Ohm'.format(
-                current*1000, voltage*1000, resistance))
+                current, voltage, resistance))
             
             # compute resistance measured (= contact resistance)
             resist = abs(resistance / 1000)
@@ -776,8 +780,8 @@ class OhmPi(object):
             
             # close mux path and put pin back to GND
             self.switch_mux_off(quad)
-            self.pin0.value = False
-            self.pin1.value = False
+            #self.pin0.value = False
+            #self.pin1.value = False
             
         self.reset_mux()
         self.status = 'idle'
