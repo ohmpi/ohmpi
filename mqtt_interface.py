@@ -14,11 +14,6 @@ def on_message(client, userdata, message):
     socket.send(message.payload)
 
     #  Get the reply
-    # event = socket.poll(timeout=1000)
-    # if event == 0:
-    #     print('timeout')
-    #     reply = 'no reply...'
-    # else:
     reply = socket.recv()
 
     print(f'Received reply {message.payload.decode("utf-8")}: {reply}')

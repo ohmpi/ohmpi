@@ -20,7 +20,7 @@ OHMPI_CONFIG = {
 
 CONTROL_CONFIG = {
     'tcp_port': 5555,
-    'interface': 'mqtt_interface.py'
+    'interface': 'http_interface.py' # 'mqtt_interface'
 }
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {

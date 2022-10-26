@@ -656,9 +656,6 @@ class OhmPi(object):
         self.exec_logger.debug(f'Start listening for commands on port {tcp_port}')
         while self.cmd_listen:
             try:
-                #id_sock = socket.recv()
-                #assert not socket.recv()    # empty data here
-                #assert socket.recv() == id_sock
                 message = socket.recv(flags=zmq.NOBLOCK)
                 self.exec_logger.debug(f'Received command: {message}')
                 e = None
@@ -673,6 +670,7 @@ class OhmPi(object):
                     if cmd is not None and cmd_id is not None:
                         if cmd == 'update_settings' and args is not None:
                             self._update_acquisition_settings(args)
+                            status = True
                         elif cmd == 'start':
                             self.measure(cmd_id)
                             while not self.status == 'idle':
