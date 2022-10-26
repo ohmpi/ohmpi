@@ -656,6 +656,9 @@ class OhmPi(object):
         self.exec_logger.debug(f'Start listening for commands on port {tcp_port}')
         while self.cmd_listen:
             try:
+                #id_sock = socket.recv()
+                #assert not socket.recv()    # empty data here
+                #assert socket.recv() == id_sock
                 message = socket.recv(flags=zmq.NOBLOCK)
                 self.exec_logger.debug(f'Received command: {message}')
                 e = None
@@ -706,14 +709,15 @@ class OhmPi(object):
                     reply = {'cmd_id': cmd_id, 'status': status}
                     reply = json.dumps(reply)
                     self.exec_logger.debug(f'Execution report: {reply}')
-                    self.exec_logger.debug(reply)
-                    reply = bytes(reply, 'utf-8')
+                    # self.exec_logger.debug(reply)
+                    # reply = bytes(reply, 'utf-8')
+                    reply = reply.encode('utf-8')
                     socket.send(reply)
             except zmq.ZMQError as e:
                 if e.errno == zmq.EAGAIN:
                     pass # no message was ready (yet!)
                 else:
-                    traceback.print_exc()
+                    self.exec_logger.error(f'Unexpected error while process: {e}')
 
     def measure(self, cmd_id=None):
         """Run the sequence in a separate thread. Can be stopped by 'OhmPi.stop()'.
@@ -827,8 +831,5 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 if __name__ == "__main__":
     # start interface
     Popen(['python', CONTROL_CONFIG['interface']])
-
+    print('done')
     ohmpi = OhmPi(settings=OHMPI_CONFIG['settings'])
-    
-    
-        

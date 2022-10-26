@@ -56,13 +56,13 @@ SOH_LOGGING_CONFIG = {
 
 # MQTT logging configuration parameters
 MQTT_LOGGING_CONFIG = {
-    'hostname': 'ohmpy.umons.ac.be',
+    'hostname':'mg3d-dev.umons.ac.be',
     'port': 1883,
     'qos': 2,
     'retain': False,
     'keepalive': 60,
     'will': None,
-    'auth': None,
+    'auth': { 'username': 'mqtt_user', 'password': 'mqtt_password' },
     'tls': None,
     'protocol': MQTTv31,
     'transport': 'tcp',
@@ -74,13 +74,13 @@ MQTT_LOGGING_CONFIG = {
 
 # MQTT control configuration parameters
 MQTT_CONTROL_CONFIG = {
-    'hostname': 'ohmpy.umons.ac.be',
+    'hostname': 'mg3d-dev.umons.ac.be',
     'port': 1883,
     'qos': 2,
     'retain': False,
     'keepalive': 60,
     'will': None,
-    'auth': None,
+    'auth': { 'username': 'mqtt_user', 'password': 'mqtt_password' },
     'tls': None,
     'protocol': MQTTv31,
     'transport': 'tcp',

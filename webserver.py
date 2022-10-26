@@ -29,6 +29,8 @@ context = zmq.Context()
 socket = context.socket(zmq.REQ)
 socket.connect(f'tcp://localhost:{CONTROL_CONFIG["tcp_port"]}')
 print(colored(f'Sending commands and listenning on tcp port {tcp_port}.'))
+#id_sock = socket.getsockopt(zmq.IDENTITY)
+#socket.send(id_sock, zmq.SNDMORE)
 
 class MyServer(SimpleHTTPRequestHandler):            
     # because we use SimpleHTTPRequestHandler, we do not need to implement
@@ -52,19 +54,19 @@ class MyServer(SimpleHTTPRequestHandler):
         #global ohmpiThread, status, run
         dic = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
         rdic = {} # response dictionnary
-        if dic['command'] == 'start':
+        if dic['cmd'] == 'start':
             #ohmpi.measure()
             socket.send_string(json.dumps({
                 'cmd_id': cmd_id,
-                'command': 'start'
+                'cmd': 'start'
             }))
-        elif dic['command'] == 'stop':
+        elif dic['cmd'] == 'stop':
             #ohmpi.stop()
             socket.send_string(json.dumps({
                 'cmd_id': cmd_id,
-                'command': 'stop'
+                'cmd': 'stop'
             }))
-        elif dic['command'] == 'getData':
+        elif dic['cmd'] == 'getData':
             # get all .csv file in data folder
             fnames = [fname for fname in os.listdir('data/') if fname[-4:] == '.csv']
             ddic = {}
@@ -81,10 +83,10 @@ class MyServer(SimpleHTTPRequestHandler):
                         'rho': df['R [ohm]'].tolist(),
                     }
             rdic['data'] = ddic
-        elif dic['command'] == 'removeData':
+        elif dic['cmd'] == 'removeData':
             shutil.rmtree('data')
             os.mkdir('data')
-        elif dic['command'] == 'update_settings':
+        elif dic['cmd'] == 'update_settings':
             #ohmpi.stop()
             socket.send_string(json.dumps({
                 'cmd_id': cmd_id,
@@ -106,11 +108,11 @@ class MyServer(SimpleHTTPRequestHandler):
                 print('new sequence set.')
             print('setConfig', ohmpi.pardict)
             """
-        elif dic['command'] == 'invert':
+        elif dic['cmd'] == 'invert':
             pass
-        elif dic['command'] == 'getResults':
+        elif dic['cmd'] == 'getResults':
             pass
-        elif dic['command'] == 'rsCheck':
+        elif dic['cmd'] == 'rsCheck':
             #ohmpi.rs_check()
             socket.send_string(json.dumps({
                 'cmd_id': cmd_id,
@@ -123,12 +125,12 @@ class MyServer(SimpleHTTPRequestHandler):
                 'res': df['RS [kOhm]'].tolist()
             }
             rdic['data'] = ddic
-        elif dic['command'] == 'download':
+        elif dic['cmd'] == 'download':
             shutil.make_archive('data', 'zip', 'data')
-        elif dic['command'] == 'shutdown':
+        elif dic['cmd'] == 'shutdown':
             print('shutting down...')
             os.system('shutdown now -h')
-        elif dic['command'] == 'restart':
+        elif dic['cmd'] == 'restart':
             print('shutting down...')
             os.system('reboot')
         else:
@@ -141,7 +143,7 @@ class MyServer(SimpleHTTPRequestHandler):
         
         message = socket.recv()
         print('+++////', message)
-        rdic['data'] = message
+        rdic['data'] = message.decode('utf-8')
         """
         while False:
             message = socket.recv()

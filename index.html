@@ -142,7 +142,7 @@
 
         // useful functions
         function sendCommand(query, callback=null) {
-            // dic in the form: {'command': X, ...} as JSON
+            // dic in the form: {'cmd': X, ...} as JSON
             if (callback == null) {
                 function callback(x) {
                     console.log('default callback:', x)
@@ -163,7 +163,7 @@
 
         // start button
         function startBtnFunc() {
-            sendCommand('{"command": "start"}', function(x) {
+            sendCommand('{"cmd": "start"}', function(x) {
                 console.log(x['status'])
                 if (x['status'] == 'running') {
                     output.innerHTML = 'Status: measuring...'
@@ -175,7 +175,7 @@
 
         // stop button
         function stopBtnFunc() {
-            sendCommand('{"command": "stop"}', function(x) {
+            sendCommand('{"cmd": "stop"}', function(x) {
                 output.innerHTML = 'Status: ' + x['status']
                 clearInterval(interv)
                 getData()
@@ -197,7 +197,7 @@
             // define callback to send settigs to Pi
             function configCallback() {
                 sendCommand(JSON.stringify({
-                    'command': 'setConfig',
+                    'cmd': 'setConfig',
                      'config': formVals
                 }), function(x) {
                     console.log('setconfig:', x)
@@ -351,7 +351,7 @@
         
         // run RS check
         function rsBtnFunc() {
-            sendCommand('{"command": "rsCheck"}', function (res) {
+            sendCommand('{"cmd": "rsCheck"}', function (res) {
                 // update the bar plot
                 rsdata.push({
                 x: res['data']['AB'],
@@ -376,7 +376,7 @@
         // getData
         function getData() {
             sendCommand(JSON.stringify({
-                'command': 'getData',
+                'cmd': 'getData',
                 'surveyNames': Object.keys(data).slice(0, -1)
                 // last survey is often partial so we download it again
             }), function(ddic) {
@@ -497,7 +497,7 @@
 
         // remove data
         function removeDataBtnFunc() {
-            sendCommand('{"command": "removeData"}',function(x) {
+            sendCommand('{"cmd": "removeData"}',function(x) {
                 data = {}
                 output.innerHTML = 'Status: ' + x['status'] + ' (all data cleared)'
                 console.log('all data removed')
@@ -508,7 +508,7 @@
 
         // shutdown Pi
         function shutdownBtnFunc() {
-            sendCommand('{"command": "shutdown"}', function(x) {
+            sendCommand('{"cmd": "shutdown"}', function(x) {
                 console.log('shuting down...')
             })
         }
@@ -517,7 +517,7 @@
         
         // restart Pi
         function restartBtnFunc() {
-            sendCommand('{"command": "restart"}', function(x) {
+            sendCommand('{"cmd": "restart"}', function(x) {
                 console.log('rebooting...')
             })
         }
@@ -526,7 +526,7 @@
         
         // invert data
         // function invertBtnFunc() {
-        //     sendCommand('{"command": "invert"}', function(x) {
+        //     sendCommand('{"cmd": "invert"}', function(x) {
         //         console.log('inversion results', x)
         //     })
         // }
@@ -535,7 +535,7 @@
 
         // download data
         function downloadBtnFunc() {
-            sendCommand('{"command": "download"}', function(x) {
+            sendCommand('{"cmd": "download"}', function(x) {
                 let dwl = document.getElementById('download')
                 dwl.setAttribute('href', serverUrl + '/data.zip')
                 dwl.setAttribute('download', 'data.zip')
