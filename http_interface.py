@@ -1,28 +1,18 @@
 from http.server import SimpleHTTPRequestHandler, HTTPServer
-import time
 import os
 import json
 import uuid
-# from ohmpi import OhmPi
 from config import CONTROL_CONFIG
 from termcolor import colored
 import threading
 import pandas as pd
 import shutil
-import zmq  # to write on TCP
+import zmq # to write on TCP
 
-# hostName = "raspberrypi.local" # works for AP-STA
-# hostName = "192.168.50.1"  # fixed IP in AP-STA mode
 hostName = "0.0.0.0"  # for AP mode (not AP-STA)
 serverPort = 8080
 
 # https://gist.github.com/MichaelCurrie/19394abc19abd0de4473b595c0e37a3a
-
-# with open('ohmpi_settings.json') as json_file:
-#    pardict = json.load(json_file)
-
-# ohmpi = OhmPi(pardict, sequence='dd.txt')
-# ohmpi = OhmPi(pardict, sequence='dd16s0no8.txt')
 
 tcp_port = CONTROL_CONFIG['tcp_port']
 context = zmq.Context()
@@ -52,20 +42,20 @@ class MyServer(SimpleHTTPRequestHandler):
 
         # global ohmpiThread, status, run
         dic = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
-        rdic = {}  # response dictionnary
-        if dic['command'] == 'start':
-            # ohmpi.measure()
+        rdic = {} # response dictionnary
+        if dic['cmd'] == 'start':
+            #ohmpi.measure()
             socket.send_string(json.dumps({
                 'cmd_id': cmd_id,
-                'command': 'start'
+                'cmd': 'start'
             }))
-        elif dic['command'] == 'stop':
+        elif dic['cmd'] == 'stop':
             # ohmpi.stop()
             socket.send_string(json.dumps({
                 'cmd_id': cmd_id,
-                'command': 'stop'
+                'cmd': 'stop'
             }))
-        elif dic['command'] == 'getData':
+        elif dic['cmd'] == 'getData':
             # get all .csv file in data folder
             fnames = [fname for fname in os.listdir('data/') if fname[-4:] == '.csv']
             ddic = {}
@@ -82,10 +72,10 @@ class MyServer(SimpleHTTPRequestHandler):
                         'rho': df['R [ohm]'].tolist(),
                     }
             rdic['data'] = ddic
-        elif dic['command'] == 'removeData':
+        elif dic['cmd'] == 'removeData':
             shutil.rmtree('data')
             os.mkdir('data')
-        elif dic['command'] == 'update_settings':
+        elif dic['cmd'] == 'update_settings':
             # ohmpi.stop()
             socket.send_string(json.dumps({
                 'cmd_id': cmd_id,
@@ -93,7 +83,7 @@ class MyServer(SimpleHTTPRequestHandler):
                 'args': dic['config']
             }))
             cdic = dic['config']
-
+            
             """
             ohmpi.pardict['nb_electrodes'] = int(cdic['nbElectrodes'])
             ohmpi.pardict['injection_duration'] = float(cdic['injectionDuration'])
@@ -107,11 +97,11 @@ class MyServer(SimpleHTTPRequestHandler):
                 print('new sequence set.')
             print('setConfig', ohmpi.pardict)
             """
-        elif dic['command'] == 'invert':
+        elif dic['cmd'] == 'invert':
             pass
-        elif dic['command'] == 'getResults':
+        elif dic['cmd'] == 'getResults':
             pass
-        elif dic['command'] == 'rsCheck':
+        elif dic['cmd'] == 'rsCheck':
             # ohmpi.rs_check()
             socket.send_string(json.dumps({
                 'cmd_id': cmd_id,
@@ -124,12 +114,12 @@ class MyServer(SimpleHTTPRequestHandler):
                 'res': df['RS [kOhm]'].tolist()
             }
             rdic['data'] = ddic
-        elif dic['command'] == 'download':
+        elif dic['cmd'] == 'download':
             shutil.make_archive('data', 'zip', 'data')
-        elif dic['command'] == 'shutdown':
+        elif dic['cmd'] == 'shutdown':
             print('shutting down...')
             os.system('shutdown now -h')
-        elif dic['command'] == 'restart':
+        elif dic['cmd'] == 'restart':
             print('shutting down...')
             os.system('reboot')
         else:
@@ -142,7 +132,7 @@ class MyServer(SimpleHTTPRequestHandler):
 
         message = socket.recv()
         print('+++////', message)
-        rdic['data'] = message
+        rdic['data'] = message.decode('utf-8')
         """
         while False:
             message = socket.recv()

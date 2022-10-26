@@ -17,7 +17,7 @@
     <div class='container'>
         <h1>OhmPi Acquisition Board</h1>
         <!-- nb stacks, on-time -->
-        <button id="setConfigBtn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Settings</button>
+        <button id="update_settingsBtn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Settings</button>
         <button id='startBtn' type="button" class="btn btn-primary">Start</button>
         <button id='stopBtn' type="button" class="btn btn-warning">Stop</button>
         <!-- upload button for csv which display the table ABMN -->
@@ -142,7 +142,11 @@
 
         // useful functions
         function sendCommand(query, callback=null) {
+<<<<<<< HEAD
+            // dic in the form: {'cmd': X, ...} as JSON
+=======
             // dic in the form: {'command': X, ...} as JSON
+>>>>>>> a52ac9e5e0984f701ed4e4c3a437d7ae4cf0673a
             if (callback == null) {
                 function callback(x) {
                     console.log('default callback:', x)
@@ -163,7 +167,11 @@
 
         // start button
         function startBtnFunc() {
+<<<<<<< HEAD
+            sendCommand('{"cmd": "start"}', function(x) {
+=======
             sendCommand('{"command": "start"}', function(x) {
+>>>>>>> a52ac9e5e0984f701ed4e4c3a437d7ae4cf0673a
                 console.log(x['status'])
                 if (x['status'] == 'running') {
                     output.innerHTML = 'Status: measuring...'
@@ -175,7 +183,11 @@
 
         // stop button
         function stopBtnFunc() {
+<<<<<<< HEAD
+            sendCommand('{"cmd": "stop"}', function(x) {
+=======
             sendCommand('{"command": "stop"}', function(x) {
+>>>>>>> a52ac9e5e0984f701ed4e4c3a437d7ae4cf0673a
                 output.innerHTML = 'Status: ' + x['status']
                 clearInterval(interv)
                 getData()
@@ -197,10 +209,17 @@
             // define callback to send settigs to Pi
             function configCallback() {
                 sendCommand(JSON.stringify({
+<<<<<<< HEAD
+                    'cmd': 'update_settings',
+                     'config': formVals
+                }), function(x) {
+                    console.log('update_settings', x)
+=======
                     'command': 'setConfig',
                      'config': formVals
                 }), function(x) {
                     console.log('setconfig:', x)
+>>>>>>> a52ac9e5e0984f701ed4e4c3a437d7ae4cf0673a
                 })
             }
             
@@ -351,7 +370,11 @@
         
         // run RS check
         function rsBtnFunc() {
+<<<<<<< HEAD
+            sendCommand('{"cmd": "rsCheck"}', function (res) {
+=======
             sendCommand('{"command": "rsCheck"}', function (res) {
+>>>>>>> a52ac9e5e0984f701ed4e4c3a437d7ae4cf0673a
                 // update the bar plot
                 rsdata.push({
                 x: res['data']['AB'],
@@ -376,7 +399,11 @@
         // getData
         function getData() {
             sendCommand(JSON.stringify({
+<<<<<<< HEAD
+                'cmd': 'getData',
+=======
                 'command': 'getData',
+>>>>>>> a52ac9e5e0984f701ed4e4c3a437d7ae4cf0673a
                 'surveyNames': Object.keys(data).slice(0, -1)
                 // last survey is often partial so we download it again
             }), function(ddic) {
@@ -497,7 +524,11 @@
 
         // remove data
         function removeDataBtnFunc() {
+<<<<<<< HEAD
+            sendCommand('{"cmd": "removeData"}',function(x) {
+=======
             sendCommand('{"command": "removeData"}',function(x) {
+>>>>>>> a52ac9e5e0984f701ed4e4c3a437d7ae4cf0673a
                 data = {}
                 output.innerHTML = 'Status: ' + x['status'] + ' (all data cleared)'
                 console.log('all data removed')
@@ -508,7 +539,11 @@
 
         // shutdown Pi
         function shutdownBtnFunc() {
+<<<<<<< HEAD
+            sendCommand('{"cmd": "shutdown"}', function(x) {
+=======
             sendCommand('{"command": "shutdown"}', function(x) {
+>>>>>>> a52ac9e5e0984f701ed4e4c3a437d7ae4cf0673a
                 console.log('shuting down...')
             })
         }
@@ -517,7 +552,11 @@
         
         // restart Pi
         function restartBtnFunc() {
+<<<<<<< HEAD
+            sendCommand('{"cmd": "restart"}', function(x) {
+=======
             sendCommand('{"command": "restart"}', function(x) {
+>>>>>>> a52ac9e5e0984f701ed4e4c3a437d7ae4cf0673a
                 console.log('rebooting...')
             })
         }
@@ -526,7 +565,11 @@
         
         // invert data
         // function invertBtnFunc() {
+<<<<<<< HEAD
+        //     sendCommand('{"cmd": "invert"}', function(x) {
+=======
         //     sendCommand('{"command": "invert"}', function(x) {
+>>>>>>> a52ac9e5e0984f701ed4e4c3a437d7ae4cf0673a
         //         console.log('inversion results', x)
         //     })
         // }
@@ -535,7 +578,11 @@
 
         // download data
         function downloadBtnFunc() {
+<<<<<<< HEAD
+            sendCommand('{"cmd": "download"}', function(x) {
+=======
             sendCommand('{"command": "download"}', function(x) {
+>>>>>>> a52ac9e5e0984f701ed4e4c3a437d7ae4cf0673a
                 let dwl = document.getElementById('download')
                 dwl.setAttribute('href', serverUrl + '/data.zip')
                 dwl.setAttribute('download', 'data.zip')
