@@ -20,7 +20,7 @@ def on_message(client, userdata, message):
 
 
 mqtt_client = mqtt.Client(f'ohmpi_{OHMPI_CONFIG["id"]}_listener', clean_session=False)  # create new instance
-print('connecting to broker')
+print('connecting command listener to broker')
 mqtt_client.connect(MQTT_CONTROL_CONFIG['hostname'])
 print('Subscribing to topic', MQTT_CONTROL_CONFIG['ctrl_topic'])
 mqtt_client.subscribe(MQTT_CONTROL_CONFIG['ctrl_topic'], MQTT_CONTROL_CONFIG['qos'])

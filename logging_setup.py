@@ -52,10 +52,14 @@ def setup_loggers(mqtt=True):
         mqtt_settings = MQTT_LOGGING_CONFIG.copy()
         [mqtt_settings.pop(i) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic']]
         mqtt_settings.update({'topic':MQTT_LOGGING_CONFIG['exec_topic']})
-        mqtt_exec_handler = MQTTHandler(**mqtt_settings)
-        mqtt_exec_handler.setLevel(EXEC_LOGGING_CONFIG['logging_level'])
-        mqtt_exec_handler.setFormatter(exec_formatter)
-        exec_logger.addHandler(mqtt_exec_handler)
+        # TODO: handle the case of MQTT broker down or temporarily unavailable
+        try:
+            mqtt_exec_handler = MQTTHandler(**mqtt_settings)
+            mqtt_exec_handler.setLevel(EXEC_LOGGING_CONFIG['logging_level'])
+            mqtt_exec_handler.setFormatter(exec_formatter)
+            exec_logger.addHandler(mqtt_exec_handler)
+        except:
+            mqtt = False
 
     # Set data logging format and level
     log_format = '%(asctime)-15s | %(process)d | %(levelname)s: %(message)s'

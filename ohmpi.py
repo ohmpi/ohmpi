@@ -744,8 +744,8 @@ class OhmPi(object):
                     self.switch_mux_on(quad)
 
                     # run a measurement
-                    acquired_data = self.run_measurement(quad, self.settings["nb_stack"],
-                                                                   self.settings["injection_duration"])
+                    acquired_data = self.run_measurement(quad, self.settings['nb_stack'],
+                                                                   self.settings['injection_duration'])
 
                     # switch mux off
                     self.switch_mux_off(quad)

@@ -51,6 +51,7 @@ class MQTTHandler(logging.Handler):
         cleanly.
         """
         msg = self.format(record)
+
         publish.single(self.topic, msg, self.qos, self.retain,
                        hostname=self.hostname, port=self.port,
                        client_id=self.client_id, keepalive=self.keepalive,
