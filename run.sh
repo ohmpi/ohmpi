@@ -1,4 +1,6 @@
 #!bin/bash
 
-source ./ohmpy/bin/activate
+cd /home/pi/OhmPi
+
+source /home/pi/OhmPi/ohmpy/bin/activate
 python ohmpi.py

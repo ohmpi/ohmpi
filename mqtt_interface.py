@@ -11,12 +11,11 @@ def on_message(client, userdata, message):
 
     # Send the command
     print(f'Sending command {message.payload.decode("utf-8")}')
-    socket.send_string(message.payload.decode("utf-8"))
+    socket.send(message.payload)
 
     #  Get the reply
     reply = socket.recv()
     print(f'Received reply {message.payload.decode("utf-8")}: {reply}')
-
 
 mqtt_client = mqtt.Client(f'ohmpi_{OHMPI_CONFIG["id"]}_listener', clean_session=False)  # create new instance
 print('connecting command listener to broker')
