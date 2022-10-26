@@ -13,7 +13,7 @@ def setup_loggers(mqtt=True):
     log_path = path.join(path.dirname(__file__), 'logs')
     if not path.isdir(log_path):
         mkdir(log_path)
-    exec_log_filename = path.join(log_path, 'msg_log')
+    exec_log_filename = path.join(log_path, EXEC_LOGGING_CONFIG['file_name'])
     exec_logger = logging.getLogger('exec_logger')
 
     # SOH logging setup
@@ -24,7 +24,7 @@ def setup_loggers(mqtt=True):
     data_path = path.join(base_path, 'data')
     if not path.isdir(data_path):
         mkdir(data_path)
-    data_log_filename = path.join(data_path, 'data_log')
+    data_log_filename = path.join(data_path, DATA_LOGGING_CONFIG['file_name'])
     data_logger = logging.getLogger('data_logger')
 
     # Set message logging format and level

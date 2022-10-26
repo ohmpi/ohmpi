@@ -20,13 +20,13 @@ OHMPI_CONFIG = {
 
 CONTROL_CONFIG = {
     'tcp_port': 5555,
-    'interface': 'mqtt_interface.py' # 'mqtt_interface'
+    'interface': 'http_interface.py' # 'mqtt_interface'
 }
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
     'logging_level': logging.DEBUG,
     'logging_to_console': True,
-    'file_name': 'ohmpi_log',
+    'file_name': 'exec.log',
     'max_bytes': 262144,
     'backup_count': 30,
     'when': 'd',
@@ -37,7 +37,7 @@ EXEC_LOGGING_CONFIG = {
 DATA_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
     'logging_to_console': True,
-    'file_name': 'data_log',
+    'file_name': 'data.log',
     'max_bytes': 16777216,
     'backup_count': 1024,
     'when': 'd',
@@ -46,7 +46,7 @@ DATA_LOGGING_CONFIG = {
 
 # State of Health logging configuration
 SOH_LOGGING_CONFIG = {
-    'file_name': 'soh_log',
+    'file_name': 'soh.log',
     'logging_to_console': True,
     'max_bytes': 16777216,
     'backup_count': 1024,
@@ -56,7 +56,7 @@ SOH_LOGGING_CONFIG = {
 
 # MQTT logging configuration parameters
 MQTT_LOGGING_CONFIG = {
-    'hostname':'mg3d-dev.umons.ac.be',
+    'hostname':'ohmpy.umons.ac.be',
     'port': 1883,
     'qos': 2,
     'retain': False,
@@ -74,7 +74,7 @@ MQTT_LOGGING_CONFIG = {
 
 # MQTT control configuration parameters
 MQTT_CONTROL_CONFIG = {
-    'hostname': 'mg3d-dev.umons.ac.be',
+    'hostname': 'ohmpy.umons.ac.be',
     'port': 1883,
     'qos': 2,
     'retain': False,
