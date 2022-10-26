@@ -17,7 +17,7 @@
     <div class='container'>
         <h1>OhmPi Acquisition Board</h1>
         <!-- nb stacks, on-time -->
-        <button id="setConfigBtn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Settings</button>
+        <button id="update_settingsBtn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Settings</button>
         <button id='startBtn' type="button" class="btn btn-primary">Start</button>
         <button id='stopBtn' type="button" class="btn btn-warning">Stop</button>
         <!-- upload button for csv which display the table ABMN -->
@@ -197,10 +197,10 @@
             // define callback to send settigs to Pi
             function configCallback() {
                 sendCommand(JSON.stringify({
-                    'cmd': 'setConfig',
+                    'cmd': 'update_settings',
                      'config': formVals
                 }), function(x) {
-                    console.log('setconfig:', x)
+                    console.log('update_settings', x)
                 })
             }
             
