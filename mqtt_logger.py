@@ -59,3 +59,4 @@ class MQTTHandler(logging.Handler):
                        protocol=self.protocol, transport=self.transport)
         except Exception as e:
             print(e)
+

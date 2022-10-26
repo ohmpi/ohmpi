@@ -11,6 +11,7 @@ def on_message(client, userdata, message):
 
     # Send the command
     print(f'Sending command {message.payload.decode("utf-8")}')
+<<<<<<< HEAD
     socket.send(message.payload)
 
     #  Get the reply
@@ -50,3 +51,4 @@ if broker_connected:
 else:
     print("Unable to connect to broker")
     exit(1)
+

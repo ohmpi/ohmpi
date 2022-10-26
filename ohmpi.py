@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 created on January 6, 2020.
-Update May 2022
+Updates May 2022, Oct 2022.
 Ohmpi.py is a program to control a low-cost and open hardware resistivity meter OhmPi that has been developed by
 Rémi CLEMENT (INRAE),Vivien DUBOIS (INRAE), Hélène GUYARD (IGE), Nicolas FORQUET (INRAE), Yannick FARGIER (IFSTTAR)
 Olivier KAUFMANN (UMONS) and Guillaume BLANCHY (ILVO).
@@ -10,7 +10,6 @@ Olivier KAUFMANN (UMONS) and Guillaume BLANCHY (ILVO).
 import os
 import io
 import json
-# import subprocess
 
 import numpy as np
 import csv
@@ -707,8 +706,6 @@ class OhmPi(object):
                     reply = {'cmd_id': cmd_id, 'status': status}
                     reply = json.dumps(reply)
                     self.exec_logger.debug(f'Execution report: {reply}')
-                    # self.exec_logger.debug(reply)
-                    # reply = bytes(reply, 'utf-8')
                     reply = reply.encode('utf-8')
                     socket.send(reply)
             except zmq.ZMQError as e:

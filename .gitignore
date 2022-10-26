@@ -1,0 +1,8 @@
+data/*
+**/.ipynb_notebooks/**
+data.zip
+__pycache__
+Ohmpi_4elec_mqtt.py
+ohmpy/*
+logs/*
+sequence.txt
