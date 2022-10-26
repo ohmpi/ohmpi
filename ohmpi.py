@@ -588,6 +588,14 @@ class OhmPi(object):
             # one stack = 2 half-cycles (one positive, one negative)
             pinMN = 0 if polarity > 0 else 2
             
+            # sampling for each stack at the end of the injection
+            sampling_interval = 10  # ms
+            self.nb_samples = int(injection_duration * 1000 // sampling_interval) + 1
+
+            # full data for waveform
+            #fulldata = np.zeros((nb_stack * self.nb_samples, 3)) * np.nan
+            fulldata = []
+            
             # start counter
             #  we sample every 10 ms (as using AnalogIn for both current
             # and voltage takes about 7 ms). When we go over the injection
@@ -595,11 +603,6 @@ class OhmPi(object):
             # only the last values in meas will be taken into account
             start_time = time.time()
             for n in range(0, nb_stack * 2):  # for each half-cycles
-                # sampling for each stack at the end of the injection
-                sampling_interval = 10  # ms
-                self.nb_samples = int(injection_duration * 1000 // sampling_interval) + 1
-                meas = np.zeros((self.nb_samples, 2))
-                
                 # current injection
                 if (n % 2) == 0:
                     self.pin0.value = True
@@ -607,11 +610,10 @@ class OhmPi(object):
                 else:
                     self.pin0.value = False
                     self.pin1.value = True  # current injection nr2
-                    
-                start_delay = time.time()  # stating measurement time
-                #time.sleep(injection_duration)  # delay depending on current injection duration
 
-                # measurement of current i and voltage u
+                # measurement of current i and voltage u during injection
+                meas = np.zeros((self.nb_samples, 3)) * np.nan
+                start_delay = time.time()  # stating measurement time
                 dt = 0
                 for k in range(0, self.nb_samples):
                     # reading current value on ADS channels
@@ -622,17 +624,39 @@ class OhmPi(object):
                         meas[k, 1] = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000 *-1
                     time.sleep(sampling_interval / 1000)
                     dt = time.time() - start_delay  # real injection time (s)
+                    meas[k, 2] = time.time() - start_time
                     if dt > (injection_duration - 0 * sampling_interval /1000):
                         break
                 
                 # stop current injection
                 self.pin0.value = False
                 self.pin1.value = False
+                end_delay = time.time()
+                
+                # truncate the meas array if we didn't fill the last samples
+                meas = meas[:k+1]
+                
+                # measurement of current i and voltage u during off time
+                measpp = np.zeros((meas.shape[0], 3)) * np.nan
+                start_delay = time.time()  # stating measurement time
+                dt = 0
+                for k in range(0, measpp.shape[0]):
+                    # reading current value on ADS channels
+                    measpp[k, 0] = (AnalogIn(self.ads_current, ads.P0).voltage * 1000) / (50 * self.r_shunt)
+                    if pinMN == 0:
+                        measpp[k, 1] = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000
+                    else:
+                        measpp[k, 1] = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000 *-1
+                    time.sleep(sampling_interval / 1000)
+                    dt = time.time() - start_delay  # real injection time (s)
+                    measpp[k, 2] = time.time() - start_time
+                    if dt > (injection_duration - 0 * sampling_interval /1000):
+                        break
                 
                 end_delay = time.time()
                 
                 # truncate the meas array if we didn't fill the last samples
-                meas = meas[:k+1:]
+                measpp = measpp[:k+1]
                 
                 # we alternate on which ADS1115 pin we measure because of sign of voltage
                 if pinMN == 0:
@@ -640,6 +664,22 @@ class OhmPi(object):
                 else:
                     pinMN = 0
                 
+                # store data for full wave form
+                fulldata.append(meas)
+                fulldata.append(measpp)
+                
+                # wait once the actual injection time between two injection
+                # so it's a 50% duty cycle
+                #print('crenaux (s)', (end_delay - start_delay))
+                #print('sleep for (s)', injection_duration - (end_delay - start_delay))
+                #print(meas)
+                #print(measpp)
+            
+            # TODO get battery voltage and warn if battery is running low
+            # TODO send a message on SOH stating the battery level
+                
+            # let's do some calculation (out of the stacking loop)
+            for n, meas in enumerate(fulldata[::2]):
                 # take average from the samples per stack, then sum them all
                 # average for the last third of the stacked values
                 #  is done outside the loop
@@ -652,16 +692,6 @@ class OhmPi(object):
                     sum_vmn = sum_vmn + vmn1
                     sum_ps = sum_ps + vmn1
 
-                # TODO get battery voltage and warn if battery is running low
-                # TODO send a message on SOH stating the battery level
-                
-                # wait once the actual injection time between two injection
-                # so it's a 50% duty cycle
-                print('crenaux (s)', (end_delay - start_delay))
-                print('sleep for (s)', injection_duration - (end_delay - start_delay))
-                time.sleep(dt)
-                #time.sleep(injection_duration)  # off time between half-cycles
-#                time.sleep(2*(end_delay - start_delay) - (end_calc - start_delay))
                 
             if self.idps:
                 self.DPS.write_register(0x0000, 0, 2)  # reset to 0 volt
@@ -686,7 +716,8 @@ class OhmPi(object):
             "nbStack": nb_stack,
             "CPU temp [degC]": CPUTemperature().temperature,
             "Time [s]": (time.time() - start_time),
-            "Nb samples [-]": self.nb_samples
+            "Nb samples [-]": self.nb_samples,
+            "fulldata": np.vstack(fulldata)
         }
         print(d)
         
@@ -735,41 +766,7 @@ class OhmPi(object):
             self.switch_mux_on(quad)  # put before raising the pins (otherwise conflict i2c)
             d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=0.5, tx_volt=5, autogain=True)
             
-            # NOTE (GB): I'd use the self.run_measurement() for all this middle part so we an make use of autogain and so ...
-            # call the switch_mux function to switch to the right electrodes
-            #self.switch_mux_on(quad)
-
-            # run a measurement
-            #current_measurement = self.run_measurement(quad, 1, 0.25)
-            
-            # switch mux off
-            #self.switch_mux_off(quad)
-
-            # save data and print in a text file
-            #self.append_and_save(export_path_rs, current_measurement)
-            
-            # current injection
-            # self.pin0 = self.mcp.get_pin(0)
-            # self.pin0.direction = Direction.OUTPUT
-            # self.pin1 = self.mcp.get_pin(1)
-            # self.pin1.direction = Direction.OUTPUT
-            # self.pin0.value = False
-            # self.pin1.value = False
-
-            # # call the switch_mux function to switch to the right electrodes
-           
-            # self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
-            # # ADS1115 for voltage measurement (MN)
-            # self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
-            # self.pin1.value = True  # inject from pin1 to self.pin0
-            # self.pin0.value = False
-            # time.sleep(0.5)
-            
-            # # measure current and voltage
-            # current = AnalogIn(self.ads_current, ads.P0).voltage / (50 * self.r_shunt)
-            # voltage = -AnalogIn(self.ads_voltage, ads.P0, ADS.P2).voltage * 2.5
-            # resistance = voltage / current
-            current = d['R [ohm]']
+            resistance = d['R [ohm]']
             voltage = d['Vmn [mV]']
             current = d['I [mA]']
             print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} Ohm'.format(
