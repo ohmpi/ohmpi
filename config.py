@@ -1,3 +1,4 @@
+import logging
 from paho.mqtt.client import MQTTv31
 
 mqtt_broker = 'localhost'

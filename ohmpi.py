@@ -597,7 +597,7 @@ class OhmPi(object):
             if self.idps:
                 tx_volt, polarity = self.compute_tx_volt(
                     best_tx_injtime=best_tx_injtime, strategy=strategy, tx_volt=tx_volt)
-                self.exec_logger.debug('best vab found is {:.3}V'.format(tx_volt))
+                self.exec_logger.debug('Best vab found is {:.3}V'.format(tx_volt))
             else:
                 polarity = 1
             
@@ -613,7 +613,7 @@ class OhmPi(object):
                     self.DPS.write_register(0x09, 1) # DPS5005 on
                     time.sleep(0.05)
                 else:
-                    self.exec_logger.debug('no best voltage found, will not take measurement')
+                    self.exec_logger.debug('No best voltage found, will not take measurement')
                     oor = True
                     
             if oor == False:  # we found a vab in the range so we measure
@@ -629,7 +629,7 @@ class OhmPi(object):
                         gain_voltage = self.gain_auto(AnalogIn(self.ads_voltage, ads.P2))
                     self.pin0.value = False
                     self.pin1.value = False
-                    self.exec_logger.debug('gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
+                    self.exec_logger.debug('Gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
                     self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=0x49, mode=0)
                     self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=0x48, mode=0)
 
@@ -659,7 +659,7 @@ class OhmPi(object):
                     else:
                         self.pin0.value = False
                         self.pin1.value = True  # current injection nr2
-                    #print('stack', n, self.pin0.value, self.pin1.value)
+                    self.exec_logger.debug(str(n) + ' ' + str(self.pin0.value) + ' ' + str(self.pin1.value))
 
                     # measurement of current i and voltage u during injection
                     meas = np.zeros((self.nb_samples, 3)) * np.nan
@@ -675,8 +675,8 @@ class OhmPi(object):
                                 meas[k, 1] = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000 *-1
                         elif self.board_version == '22.10':
                             meas[k, 1] = AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * 1000
-                        else:
-                            self.exec_logger.debug('unknown board')
+                        #else:
+                        #   self.exec_logger.debug('Unknown board')
                         time.sleep(sampling_interval / 1000)
                         dt = time.time() - start_delay  # real injection time (s)
                         meas[k, 2] = time.time() - start_time
@@ -800,7 +800,7 @@ class OhmPi(object):
                 val = d[k]
                 output += f'{val}\t'
         output = output[:-1]
-        self.exec_logger.debug(output)
+        #self.exec_logger.debug(output)
 
         # to the data logger
         dd = d.copy()
@@ -946,7 +946,7 @@ class OhmPi(object):
         self.exec_logger.debug(f'Start listening for commands on port {tcp_port}')
         while self.cmd_listen:
             try:
-                message = socket.recv(flags=zmq.NOBLOCK)
+                message = socket.recv() # flags=zmq.NOBLOCK)
                 self.exec_logger.debug(f'Received command: {message}')
                 e = None
                 try:
@@ -1008,6 +1008,7 @@ class OhmPi(object):
                     pass # no message was ready (yet!)
                 else:
                     self.exec_logger.error(f'Unexpected error while process: {e}')
+
 
     def measure(self, cmd_id=None):
         """Run the sequence in a separate thread. Can be stopped by 'OhmPi.stop()'.

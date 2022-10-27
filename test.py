@@ -24,8 +24,8 @@ k.settings['nbr_meas'] = 1
 #k.rs_check(tx_volt=12)
 
 # x = []
-for i in range(1):
-    out = k.run_measurement(injection_duration=0.5, nb_stack=2, strategy='vmin', tx_volt=5, autogain=True)
+for i in range(5):
+    out = k.run_measurement(injection_duration=0.5, nb_stack=2, strategy='constant', tx_volt=12, autogain=True)
     #x.append(out['R [ohm]'])
     k.append_and_save('out.csv', out)
 
