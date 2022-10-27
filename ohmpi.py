@@ -13,6 +13,7 @@ import json
 import numpy as np
 import csv
 import time
+from io import StringIO
 import zmq
 from datetime import datetime
 from termcolor import colored
@@ -673,8 +674,7 @@ class OhmPi(object):
                             self._update_acquisition_settings(args)
                             status = True
                         elif cmd == 'set_sequence' and args is not None:
-                            self.sequence = np.array_str
-                            self._update_acquisition_settings(args)
+                            self.sequence = np.loadtxt(StringIO(args))
                             status = True
                         elif cmd == 'start':
                             self.measure(cmd_id)
