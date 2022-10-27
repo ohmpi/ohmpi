@@ -5,8 +5,8 @@ mqtt_broker = 'localhost'
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': '0001',  # Unique identifier of the OhmPi board (string)
-    'R_shunt': 1,  # Shunt resistance in Ohms
-    'Imax': 4800/50/1,  # Maximum current
+    'R_shunt': 2,  # Shunt resistance in Ohms
+    'Imax': 4800/50/2,  # Maximum current
     'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
     'coef_p3': 2.50,  # slope for current conversion for ADS.P3, measurement in V/V
     'offset_p2': 0,
@@ -17,7 +17,7 @@ OHMPI_CONFIG = {
     'board_address': {'A': 0x72, 'B': 0x73, 'M': 0x70, 'N': 0x71},  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
      #'board_address': {'A': 0x70, 'B': 0x71, 'M': 0x72, 'N': 0x73},  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
     'settings': 'ohmpi_settings.json',
-    'board_version': '22.11',
+    'board_version': '22.10',
 }  # TODO: add a dictionary with INA models and associated gain values
 
 CONTROL_CONFIG = {

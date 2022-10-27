@@ -114,10 +114,12 @@ class OhmPi(object):
             self.mcp = MCP23008(self.i2c, address=0x20)
 
             # ADS1115 for current measurement (AB)
-            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=128, address=0x49)
+            self.ads_current_address = 0x48
+            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_current_address)
 
             # ADS1115 for voltage measurement (MN)
-            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=128, address=0x48)
+            self.ads_voltage_address = 0x49
+            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_voltage_address)
 
             # current injection module
             if self.idps:
@@ -178,6 +180,7 @@ class OhmPi(object):
         self.r_shunt = OHMPI_CONFIG['R_shunt']  # reference resistance value in ohm
         self.Imax = OHMPI_CONFIG['Imax']  # maximum current
         self.exec_logger.warning(f'The maximum current cannot be higher than {self.Imax} mA')
+        self.coef_p2 = OHMPI_CONFIG['coef_p2']  # slope for current conversion for ads.P2, measurement in V/V
         self.nb_samples = OHMPI_CONFIG['integer']  # number of samples measured for each stack
         self.version = OHMPI_CONFIG['version']  # hardware version
         self.max_elec = OHMPI_CONFIG['max_elec']  # maximum number of electrodes
@@ -461,8 +464,8 @@ class OhmPi(object):
         time.sleep(best_tx_injtime) # inject for given tx time
         
         # autogain
-        self.ads_current = ads.ADS1115(self.i2c, gain=2/3, data_rate=860, address=0x49)
-        self.ads_voltage = ads.ADS1115(self.i2c, gain=2/3, data_rate=860, address=0x48)
+        self.ads_current = ads.ADS1115(self.i2c, gain=2/3, data_rate=860, address=self.ads_current_address)
+        self.ads_voltage = ads.ADS1115(self.i2c, gain=2/3, data_rate=860, address=self.ads_voltage_address)
         #print('current P0', AnalogIn(self.ads_current, ads.P0).voltage)
         #print('voltage P0', AnalogIn(self.ads_voltage, ads.P0).voltage)
         #print('voltage P2', AnalogIn(self.ads_voltage, ads.P2).voltage)
@@ -471,8 +474,8 @@ class OhmPi(object):
         gain_voltage2 = self.gain_auto(AnalogIn(self.ads_voltage, ads.P2))
         gain_voltage = np.min([gain_voltage0, gain_voltage2])
         #print('gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
-        self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=0x49)
-        self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=0x48)
+        self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=self.ads_current_address)
+        self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=self.ads_voltage_address)
         
         # we measure the voltage on both A0 and A2 to guess the polarity
         I = (AnalogIn(self.ads_current, ads.P0).voltage) * 1000/50/self.r_shunt # measure current
@@ -602,8 +605,8 @@ class OhmPi(object):
                 polarity = 1
             
             # first reset the gain to 2/3 before trying to find best gain (mode 0 is continuous)
-            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49, mode=0)
-            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48, mode=0)
+            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_current_address, mode=0)
+            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_voltage_address, mode=0)
             
             # turn on the power supply
             oor = False
@@ -630,8 +633,8 @@ class OhmPi(object):
                     self.pin0.value = False
                     self.pin1.value = False
                     self.exec_logger.debug('Gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
-                    self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=0x49, mode=0)
-                    self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=0x48, mode=0)
+                    self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=self.ads_current_address, mode=0)
+                    self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=self.ads_voltage_address, mode=0)
 
                 self.pin0.value = False
                 self.pin1.value = False
@@ -674,7 +677,7 @@ class OhmPi(object):
                             else:
                                 meas[k, 1] = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000 *-1
                         elif self.board_version == '22.10':
-                            meas[k, 1] = AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * 1000
+                            meas[k, 1] = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * self.coef_p2 * 1000
                         #else:
                         #   self.exec_logger.debug('Unknown board')
                         time.sleep(sampling_interval / 1000)
@@ -704,7 +707,7 @@ class OhmPi(object):
                             else:
                                 measpp[k, 1] = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000 *-1
                         elif self.board_version == '22.10':
-                            measpp[k, 1] = AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * 1000
+                            measpp[k, 1] = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * self.coef_p2 * 1000
                         else:
                             self.exec_logger.debug('unknown board')
                         time.sleep(sampling_interval / 1000)
