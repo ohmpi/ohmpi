@@ -1,4 +1,6 @@
 #!bin/bash
 
-source ./ohmpy/bin/activate
-python webserver.py
+cd /home/pi/OhmPi
+
+source /home/pi/OhmPi/ohmpy/bin/activate
+python ohmpi.py

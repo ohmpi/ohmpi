@@ -9,9 +9,9 @@ n = a + 2
 seq = np.c_[a, b, m, n]
 
 k = OhmPi(idps=True)
-k.pardict['injection_duration'] = 0.5
-k.pardict['nb_stack'] = 1
-k.pardict['nbr_meas'] = 1
+k.settings['injection_duration'] = 0.5
+k.settings['nb_stack'] = 1
+k.settings['nbr_meas'] = 1
 #k.sequence = seq
 #k.reset_mux()
 #k.switch_mux_on([4, 7, 5, 6])
@@ -24,8 +24,8 @@ k.pardict['nbr_meas'] = 1
 #k.rs_check(tx_volt=12)
 
 # x = []
-for i in range(5):
-    out = k.run_measurement(injection_duration=0.5, nb_stack=5, strategy='vmin', tx_volt=5, autogain=True)
+for i in range(1):
+    out = k.run_measurement(injection_duration=0.5, nb_stack=2, strategy='vmin', tx_volt=5, autogain=True)
     #x.append(out['R [ohm]'])
     k.append_and_save('out.csv', out)
 
