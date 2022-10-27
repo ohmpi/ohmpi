@@ -1,5 +1,5 @@
 from ohmpi import OhmPi
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import numpy as np
 
 a = np.arange(13) + 1
@@ -24,15 +24,15 @@ k.settings['nbr_meas'] = 1
 #k.rs_check(tx_volt=12)
 
 # x = []
-for i in range(1):
-    out = k.run_measurement(injection_duration=0.5, nb_stack=1, strategy='vmin', tx_volt=5, autogain=True)
+for i in range(3):
+    out = k.run_measurement(injection_duration=2, nb_stack=2, strategy='constant', tx_volt=5, autogain=False)
     #x.append(out['R [ohm]'])
-    k.append_and_save('out.csv', out)
+    #k.append_and_save('out.csv', out)
 
 data = out['fulldata']
 inan = ~np.isnan(data[:,0])
 
-if False:
+if True:
     fig, axs = plt.subplots(2, 1, sharex=True)
     ax = axs[0]
     ax.plot(data[inan,2], data[inan,0], 'r.-', label='current [mA]')
