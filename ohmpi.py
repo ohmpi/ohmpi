@@ -527,31 +527,34 @@ class OhmPi(object):
 
         
     def run_measurement(self, quad=[1, 2, 3, 4], nb_stack=None, injection_duration=None,
-                        tx_volt=5, autogain=True, best_tx_injtime=0.1, strategy='constant'):
+                        autogain=True, strategy='constant', tx_volt=5, best_tx_injtime=0.1):
         """Do a 4 electrode measurement and measure transfer resistance obtained.
 
         Parameters
         ----------
         quad : list of int
-            Quadrupole to measure.
+            Quadrupole to measure, just for labelling. Only switch_mux_on/off
+            really create the route to the electrodes.
         nb_stack : int, optional
             Number of stacks. A stacl is considered two half-cycles (one
             positive, one negative).
         injection_duration : int, optional
             Injection time in seconds.
-        tx_volt : float, optional
-            If specified, voltage will be imposed. If 0, we will look 
-            for the best voltage. If a best Tx cannot be found, no
-            measurement will be taken and values will be NaN.
         autogain : bool, optional
             If True, will adapt the gain of the ADS1115 to maximize the
             resolution of the reading.
         strategy : str, optional
-            If we search for best voltage (tx_volt == 0), we can choose
+            (V3.0 only) If we search for best voltage (tx_volt == 0), we can choose
             different strategy:
             - vmin: find lowest voltage that gives us a signal
             - vmax: find max voltage that are in the range
             For a constant value, just set the tx_volt.
+        tx_volt : float, optional
+            (V3.0 only) If specified, voltage will be imposed. If 0, we will look 
+            for the best voltage. If a best Tx cannot be found, no
+            measurement will be taken and values will be NaN.
+        best_tx_injtime : float, optional
+            (V3.0 only) Injection time in seconds used for finding the best voltage.
         """
         # check arguments
         if nb_stack is None:

@@ -11,7 +11,6 @@ seq = np.c_[a, b, m, n]
 k = OhmPi(idps=True)
 k.pardict['injection_duration'] = 0.5
 k.pardict['nb_stack'] = 1
-k.pardict['tx_volt'] = 0
 k.pardict['nbr_meas'] = 1
 #k.sequence = seq
 #k.reset_mux()
