@@ -4,13 +4,12 @@ created on January 6, 2020.
 Updates May 2022, Oct 2022.
 Ohmpi.py is a program to control a low-cost and open hardware resistivity meter OhmPi that has been developed by
 Rémi CLEMENT (INRAE),Vivien DUBOIS (INRAE), Hélène GUYARD (IGE), Nicolas FORQUET (INRAE), Yannick FARGIER (IFSTTAR)
-Olivier KAUFMANN (UMONS) and Guillaume BLANCHY (ILVO).
+Olivier KAUFMANN (UMONS), Arnaud WATELET (UMONS) and Guillaume BLANCHY (ILVO).
 """
 
 import os
 import io
 import json
-
 import numpy as np
 import csv
 import time
@@ -582,7 +581,7 @@ class OhmPi(object):
 
                 # measure current and voltage
                 current = AnalogIn(self.ads_current, ads.P0).voltage / (50 * self.r_shunt)
-                voltage = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * 2.5
+                voltage = 12.
                 # compute resistance measured (= contact resistance)
                 resistance = np.abs(voltage / current)
                 msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, ' \
