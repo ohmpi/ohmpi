@@ -62,7 +62,7 @@ class OhmPi(object):
         self.sequence = sequence
         self.on_pi = on_pi  # True if run from the RaspberryPi with the hardware, otherwise False for random data
         self.status = 'idle'  # either running or idle
-        self.run = False  # flag is True when measuring
+        # self.run = False  # flag is True when measuring
         self.thread = None  # contains the handle for the thread taking the measurement
         # self.path = 'data/'  # where to save the .csv
 
@@ -96,9 +96,9 @@ class OhmPi(object):
         self.exec_logger.debug('Initialized with settings:' + str(self.settings))
 
         # read quadrupole sequence
-        if sequence is None:
-            self.sequence = np.array([[1, 2, 3, 4]], dtype=np.int32)
-        else:
+        if sequence is not None:
+#            self.sequence = np.array([[1, 2, 3, 4]], dtype=np.int32)
+#        else:
             self.read_quad(sequence)
 
         # connect to components on the OhmPi board
@@ -274,7 +274,7 @@ class OhmPi(object):
         role : str
             Either 'A', 'B', 'M' or 'N', so we can assign it to a MUX board.
         """
-        if self.sequence.max() <= 4:  # only 4 electrodes so no MUX
+        if self.sequence is None:  # only 4 electrodes so no MUX
             pass
         else:
             # choose with MUX board
@@ -374,7 +374,7 @@ class OhmPi(object):
         self.exec_logger.debug(f'Setting gain to {gain}')
         return gain
 
-    def run_measurement(self, quad, nb_stack=None, injection_duration=None):
+    def run_measurement(self, quad=[0,0,0,0], nb_stack=None, injection_duration=None):
         """ Do a 4 electrode measurement and measure transfer resistance obtained.
 
         Parameters
@@ -527,20 +527,23 @@ class OhmPi(object):
         """
         # create custom sequence where MN == AB
         # we only check the electrodes which are in the sequence (not all might be connected)
-        elec = np.sort(np.unique(self.sequence.flatten()))  # assumed order
-        quads = np.vstack([
-            elec[:-1],
-            elec[1:],
-            elec[:-1],
-            elec[1:],
-        ]).T
+        if self.sequence is None:
+            quads = np.array([[1,2,1,2]])
+        else:
+            elec = np.sort(np.unique(self.sequence.flatten()))  # assumed order
+            quads = np.vstack([
+                elec[:-1],
+                elec[1:],
+                elec[:-1],
+                elec[1:],
+            ]).T
 
         # create filename to store RS
         export_path_rs = self.settings['export_path'].replace('.csv', '') \
                          + '_' + datetime.now().strftime('%Y%m%dT%H%M%S') + '_rs.csv'
 
         # perform RS check
-        self.run = True
+        # self.run = True
         self.status = 'running'
 
         if self.on_pi:
@@ -611,7 +614,7 @@ class OhmPi(object):
         else:
             pass
         self.status = 'idle'
-        self.run = False
+        # self.run = False
 
     #
     #         # TODO if interrupted, we would need to restore the values
@@ -654,7 +657,7 @@ class OhmPi(object):
         self.exec_logger.debug(f'Start listening for commands on port {tcp_port}')
         while self.cmd_listen:
             try:
-                message = socket.recv(flags=zmq.NOBLOCK)
+                message = socket.recv() # flags=zmq.NOBLOCK)
                 self.exec_logger.debug(f'Received command: {message}')
                 e = None
                 try:
@@ -720,13 +723,13 @@ class OhmPi(object):
     def measure(self, cmd_id=None):
         """Run the sequence in a separate thread. Can be stopped by 'OhmPi.stop()'.
         """
-        self.run = True
+        # self.run = True
         self.status = 'running'
         self.exec_logger.debug(f'Status: {self.status}')
 
         def func():
             for g in range(0, self.settings["nbr_meas"]):  # for time-lapse monitoring
-                if self.run is False:
+                if self.status != 'running':
                     self.exec_logger.warning('Data acquisition interrupted')
                     break
                 t0 = time.time()
@@ -786,7 +789,7 @@ class OhmPi(object):
     def stop(self):
         """Stop the acquisition.
         """
-        self.run = False
+        self.status = 'stopping'
         if self.thread is not None:
             self.thread.join()
         self.exec_logger.debug(f'Status: {self.status}')
