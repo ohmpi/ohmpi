@@ -1,0 +1,20 @@
+.ZVN4206ASTZ :1 ;N-Channel 60 V 600mA (Ta) 700mW (Ta) Through Hole E-Line (TO-92 compatible)
+ZVN4206ASTZ
+*STM Q
+*NGS
+*PLB 1="D" 2="G" 3="S"
+*MXP 3
+*DFN ZVN4206ASTZ
+~!Manufacturer_Name (Diodes Inc.)
+~!Manufacturer_Part_Number (ZVN4206ASTZ)
+~!Mouser Part Number (522-ZVN4206ASTZ)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Diodes-Incorporated/ZVN4206ASTZ?qs=OlC7AqGiEDlGIiNe7stL%252BQ%3D%3D)
+~!Arrow Part Number (ZVN4206ASTZ)
+~!Link Arrow Price/Stock (https://www.arrow.com/en/products/zvn4206astz/diodes-incorporated?region=nac)
+~!Mouser Testing Part Number (-)
+~!Mouser Testing Price/Stock (-)
+~!Link Datasheet (https://www.diodes.com/assets/Datasheets/ZVN4206A.pdf)
+~!Height (4.01mm)
+~!3D_Model (ZVN4206ASTZ)
+ZVN4206ASTZ
+1.1!U 2.1!U 3.1!U 
