@@ -43,6 +43,7 @@ def setup_loggers(mqtt=True):
     exec_logger.setLevel(EXEC_LOGGING_CONFIG['logging_level'])
 
     if logging_to_console:
+        print(f'logging exec ? {logging_to_console}') # TODO: delete this line
         console_exec_handler = logging.StreamHandler(sys.stdout)
         console_exec_handler.setLevel(EXEC_LOGGING_CONFIG['logging_level'])
         console_exec_handler.setFormatter(exec_formatter)

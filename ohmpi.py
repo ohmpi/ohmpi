@@ -578,7 +578,7 @@ class OhmPi(object):
                 self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
                 pin1.value = True  # inject from pin1 to pin0
                 pin0.value = False
-                time.sleep(0.2)
+                # time.sleep(0.2)
 
                 # measure current and voltage
                 current = AnalogIn(self.ads_current, ads.P0).voltage / (50 * self.r_shunt)
@@ -668,6 +668,10 @@ class OhmPi(object):
                     e = None
                     if cmd is not None and cmd_id is not None:
                         if cmd == 'update_settings' and args is not None:
+                            self._update_acquisition_settings(args)
+                            status = True
+                        elif cmd == 'set_sequence' and args is not None:
+                            self.sequence = np.array_str
                             self._update_acquisition_settings(args)
                             status = True
                         elif cmd == 'start':
