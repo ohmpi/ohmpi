@@ -745,7 +745,7 @@ class OhmPi(object):
                 # measure all quadrupole of the sequence
                 for i in range(0, self.sequence.shape[0]):
                     quad = self.sequence[i, :]  # quadrupole
-                    if self.run is False:
+                    if self.status == 'stopping':
                         break
 
                     # call the switch_mux function to switch to the right electrodes
