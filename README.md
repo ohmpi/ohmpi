@@ -1,6 +1,6 @@
 # OhmPi
 
-Development of a low-cost multi-electrodes resistivimeter  for electrical resistivity mesaurement for lab applications, based on raspberry board
+Development of a low-cost multi-electrodes resistivity meter for electrical resistivity mesaurement for lab applications, based on raspberry board
 
 ## Installation
 
