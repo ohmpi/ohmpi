@@ -1,5 +1,5 @@
 from ohmpi import OhmPi
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import numpy as np
 
 a = np.arange(13) + 1
@@ -8,10 +8,10 @@ m = a + 1
 n = a + 2
 seq = np.c_[a, b, m, n]
 
-k = OhmPi(idps=True)
-k.pardict['injection_duration'] = 0.5
-k.pardict['nb_stack'] = 1
-k.pardict['nbr_meas'] = 1
+k = OhmPi(idps=False)
+k.settings['injection_duration'] = 0.5
+k.settings['nb_stack'] = 1
+k.settings['nbr_meas'] = 1
 #k.sequence = seq
 #k.reset_mux()
 #k.switch_mux_on([4, 7, 5, 6])
@@ -24,15 +24,15 @@ k.pardict['nbr_meas'] = 1
 #k.rs_check(tx_volt=12)
 
 # x = []
-for i in range(5):
-    out = k.run_measurement(injection_duration=0.5, nb_stack=5, strategy='vmin', tx_volt=5, autogain=True)
+for i in range(1):
+    out = k.run_measurement(injection_duration=0.5, nb_stack=1, strategy='vmin', tx_volt=5, autogain=True)
     #x.append(out['R [ohm]'])
     k.append_and_save('out.csv', out)
 
 data = out['fulldata']
 inan = ~np.isnan(data[:,0])
 
-if True:
+if False:
     fig, axs = plt.subplots(2, 1, sharex=True)
     ax = axs[0]
     ax.plot(data[inan,2], data[inan,0], 'r.-', label='current [mA]')
