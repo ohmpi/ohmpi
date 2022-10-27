@@ -1,10 +1,10 @@
 import paho.mqtt.client as mqtt
 from config import MQTT_CONTROL_CONFIG, CONTROL_CONFIG, OHMPI_CONFIG
 import time
-from queue import Queue
+# from queue import Queue
 import zmq
 
-ctrl_queue = Queue()
+# ctrl_queue = Queue()
 
 
 def on_message(client, userdata, message):
@@ -50,5 +50,5 @@ if broker_connected:
     while True:
         time.sleep(.1)
 else:
-    print("Unable to connect to broker")
+    print("Unable to connect to control broker")
     exit(1)
