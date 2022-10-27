@@ -1,7 +1,6 @@
-import logging
-
 from paho.mqtt.client import MQTTv31
 
+mqtt_broker = 'localhost'
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': '0001',  # Unique identifier of the OhmPi board (string)
@@ -58,7 +57,7 @@ SOH_LOGGING_CONFIG = {
 
 # MQTT logging configuration parameters
 MQTT_LOGGING_CONFIG = {
-    'hostname':'ohmpy.umons.ac.be',
+    'hostname': mqtt_broker,
     'port': 1883,
     'qos': 2,
     'retain': False,
@@ -76,7 +75,7 @@ MQTT_LOGGING_CONFIG = {
 
 # MQTT control configuration parameters
 MQTT_CONTROL_CONFIG = {
-    'hostname': 'ohmpy.umons.ac.be',
+    'hostname': mqtt_broker,
     'port': 1883,
     'qos': 2,
     'retain': False,
