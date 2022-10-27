@@ -3,6 +3,7 @@ import logging
 from paho.mqtt.client import MQTTv31
 
 mqtt_broker = 'localhost'
+logging_suffix = '_interactive'
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': '0001',  # Unique identifier of the OhmPi board (string)
@@ -21,13 +22,13 @@ OHMPI_CONFIG = {
 
 CONTROL_CONFIG = {
     'tcp_port': 5555,
-    'interface': 'http_interface.py' # 'mqtt_interface'
+    'interface': 'mqtt_interface.py'  # 'http_interface'
 }
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
     'logging_level': logging.DEBUG,
     'logging_to_console': True,
-    'file_name': 'exec.log',
+    'file_name': f'exec{logging_suffix}.log',
     'max_bytes': 262144,
     'backup_count': 30,
     'when': 'd',
@@ -38,7 +39,7 @@ EXEC_LOGGING_CONFIG = {
 DATA_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
     'logging_to_console': True,
-    'file_name': 'data.log',
+    'file_name': f'data{logging_suffix}.log',
     'max_bytes': 16777216,
     'backup_count': 1024,
     'when': 'd',
@@ -47,7 +48,7 @@ DATA_LOGGING_CONFIG = {
 
 # State of Health logging configuration
 SOH_LOGGING_CONFIG = {
-    'file_name': 'soh.log',
+    'file_name': f'soh{logging_suffix}.log',
     'logging_to_console': True,
     'max_bytes': 16777216,
     'backup_count': 1024,
