@@ -2,23 +2,64 @@ from ohmpi import OhmPi
 import matplotlib.pyplot as plt
 import numpy as np
 
+a = np.arange(13) + 1
+b = a + 3
+m = a + 1
+n = a + 2
+seq = np.c_[a, b, m, n]
+
 k = OhmPi(idps=True)
-k.rs_check()
+k.pardict['injection_duration'] = 0.5
+k.pardict['nb_stack'] = 1
+k.pardict['tx_volt'] = 0
+k.pardict['nbr_meas'] = 1
+#k.sequence = seq
+#k.reset_mux()
+#k.switch_mux_on([4, 7, 5, 6])
+#k.switch_mux_on([12, 15, 13, 14])
+#k.measure(strategy='vmax')
+#print('vab', k.compute_tx_volt(strategy='vmin'))
+#k.rs_check()
+# out = k.run_measurement(quad=[3, 3, 3, 3], nb_stack=1, tx_volt=12, strategy='constant', autogain=True)
+#k.reset_mux()
+#k.rs_check(tx_volt=12)
 
-x = []
-for i in range(1):
-    out = k.run_measurement(injection_duration=0.5, nb_stack=1, tx_volt=0, autogain=True, best_tx_injtime=0.2)
-    x.append(out['R [ohm]'])
-
+# x = []
+for i in range(5):
+    out = k.run_measurement(injection_duration=0.5, nb_stack=5, strategy='vmin', tx_volt=5, autogain=True)
+    #x.append(out['R [ohm]'])
+    k.append_and_save('out.csv', out)
 
 data = out['fulldata']
 inan = ~np.isnan(data[:,0])
 
 if True:
-    plt.plot(data[inan,2], data[inan,0], '.-', label='current [mA]')
-    plt.plot(data[inan,2], data[inan,1], '.-', label='voltage [mV]')
-    plt.legend()
+    fig, axs = plt.subplots(2, 1, sharex=True)
+    ax = axs[0]
+    ax.plot(data[inan,2], data[inan,0], 'r.-', label='current [mA]')
+    ax.set_ylabel('Current AB [mA]')
+    ax = axs[1]
+    ax.plot(data[inan,2], data[inan,1], '.-', label='voltage [mV]')
+    ax.set_ylabel('Voltage MN [mV]')
+    ax.set_xlabel('Time [s]')
     plt.show()
+    
+#     fig,ax=plt.subplots()
+#     
+#    
+#     ax.plot(data[inan,2], data[inan,0],  label='current [mA]', marker="o")
+#     ax2=ax.twinx()
+#     ax2.plot(data[inan,2], data[inan,1],'r.-' , label='current [mV]')
+#     ax2.set_ylabel('Voltage [mV]', color='r')
+#     ymin=-50
+#     ymax=50
+#     ymin1=-4500
+#     ymax1= 4500
+#     ax.set_ylim([ymin,ymax])
+#     ax2.set_ylim([ymin1,ymax1])
+#     
+#     plt.show()
+    
 
 
 if False:
