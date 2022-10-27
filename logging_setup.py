@@ -1,10 +1,11 @@
 import json
-from config import EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, MQTT_LOGGING_CONFIG
+from config import EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, MQTT_LOGGING_CONFIG, MQTT_CONTROL_CONFIG
 from os import path, mkdir, statvfs
 from time import gmtime
 import logging
 from mqtt_logger import MQTTHandler
 from compressed_sized_timed_rotating_logger import CompressedSizedTimedRotatingFileHandler
+import sys
 
 
 def setup_loggers(mqtt=True):
@@ -12,7 +13,7 @@ def setup_loggers(mqtt=True):
     log_path = path.join(path.dirname(__file__), 'logs')
     if not path.isdir(log_path):
         mkdir(log_path)
-    exec_log_filename = path.join(log_path, 'msg_log')
+    exec_log_filename = path.join(log_path, EXEC_LOGGING_CONFIG['file_name'])
     exec_logger = logging.getLogger('exec_logger')
 
     # SOH logging setup
@@ -23,15 +24,8 @@ def setup_loggers(mqtt=True):
     data_path = path.join(base_path, 'data')
     if not path.isdir(data_path):
         mkdir(data_path)
-    data_log_filename = path.join(data_path, 'data_log')
+    data_log_filename = path.join(data_path, DATA_LOGGING_CONFIG['file_name'])
     data_logger = logging.getLogger('data_logger')
-
-    # Debug and logging
-    debug = EXEC_LOGGING_CONFIG['debug_mode']
-    if debug:
-        logging_level = logging.DEBUG
-    else:
-        logging_level = logging.INFO
 
     # Set message logging format and level
     log_format = '%(asctime)-15s | %(process)d | %(levelname)s: %(message)s'
@@ -46,15 +40,27 @@ def setup_loggers(mqtt=True):
     exec_formatter.datefmt = '%Y/%m/%d %H:%M:%S UTC'
     exec_handler.setFormatter(exec_formatter)
     exec_logger.addHandler(exec_handler)
-    exec_logger.setLevel(logging_level)
+    exec_logger.setLevel(EXEC_LOGGING_CONFIG['logging_level'])
 
     if logging_to_console:
-        exec_logger.addHandler(logging.StreamHandler())
+        print(f'logging exec ? {logging_to_console}') # TODO: delete this line
+        console_exec_handler = logging.StreamHandler(sys.stdout)
+        console_exec_handler.setLevel(EXEC_LOGGING_CONFIG['logging_level'])
+        console_exec_handler.setFormatter(exec_formatter)
+        exec_logger.addHandler(console_exec_handler)
+
     if mqtt:
-        mqtt_msg_handler = MQTTHandler(MQTT_LOGGING_CONFIG['hostname'], MQTT_LOGGING_CONFIG['exec_topic'])
-        mqtt_msg_handler.setLevel(logging_level)
-        mqtt_msg_handler.setFormatter(exec_formatter)
-        exec_logger.addHandler(mqtt_msg_handler)
+        mqtt_settings = MQTT_LOGGING_CONFIG.copy()
+        [mqtt_settings.pop(i) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic']]
+        mqtt_settings.update({'topic':MQTT_LOGGING_CONFIG['exec_topic']})
+        # TODO: handle the case of MQTT broker down or temporarily unavailable
+        try:
+            mqtt_exec_handler = MQTTHandler(**mqtt_settings)
+            mqtt_exec_handler.setLevel(EXEC_LOGGING_CONFIG['logging_level'])
+            mqtt_exec_handler.setFormatter(exec_formatter)
+            exec_logger.addHandler(mqtt_exec_handler)
+        except:
+            mqtt = False
 
     # Set data logging format and level
     log_format = '%(asctime)-15s | %(process)d | %(levelname)s: %(message)s'
@@ -70,25 +76,32 @@ def setup_loggers(mqtt=True):
     data_formatter.datefmt = '%Y/%m/%d %H:%M:%S UTC'
     data_handler.setFormatter(exec_formatter)
     data_logger.addHandler(data_handler)
-    data_logger.setLevel(logging_level)
+    data_logger.setLevel(DATA_LOGGING_CONFIG['logging_level'])
 
     if logging_to_console:
-        data_logger.addHandler(logging.StreamHandler())
+        console_data_handler = logging.StreamHandler(sys.stdout)
+        console_data_handler.setLevel(DATA_LOGGING_CONFIG['logging_level'])
+        console_data_handler.setFormatter(exec_formatter)
+        data_logger.addHandler(console_data_handler)
+
     if mqtt:
-        mqtt_data_handler = MQTTHandler(MQTT_LOGGING_CONFIG['hostname'], MQTT_LOGGING_CONFIG['data_topic'])
-        mqtt_data_handler.setLevel(logging_level)
+        mqtt_settings = MQTT_LOGGING_CONFIG.copy()
+        [mqtt_settings.pop(i) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic']]
+        mqtt_settings.update({'topic': MQTT_LOGGING_CONFIG['data_topic']})
+        mqtt_data_handler = MQTTHandler(**mqtt_settings)
+        mqtt_data_handler.setLevel(DATA_LOGGING_CONFIG['logging_level'])
         mqtt_data_handler.setFormatter(data_formatter)
         data_logger.addHandler(mqtt_data_handler)
 
     try:
-        init_logging(exec_logger, data_logger, logging_level, log_path, data_log_filename)
+        init_logging(exec_logger, data_logger, EXEC_LOGGING_CONFIG['logging_level'], log_path, data_log_filename)
     except Exception as err:
         print(f'ERROR: Could not initialize logging!\n{err}')
     finally:
-        return exec_logger, exec_log_filename, data_logger, data_log_filename, logging_level
+        return exec_logger, exec_log_filename, data_logger, data_log_filename, EXEC_LOGGING_CONFIG['logging_level']
 
 
-def init_logging(exec_logger, data_logger, logging_level, log_path, data_log_filename):
+def init_logging(exec_logger, data_logger, exec_logging_level, log_path, data_log_filename):
     """ This is the init sequence for the logging system """
 
     init_logging_status = True
@@ -97,7 +110,7 @@ def init_logging(exec_logger, data_logger, logging_level, log_path, data_log_fil
     exec_logger.info('*** NEW SESSION STARTING ***')
     exec_logger.info('****************************')
     exec_logger.info('')
-    exec_logger.info('Logging level: %s' % logging_level)
+    exec_logger.info('Logging level: %s' % exec_logging_level)
     try:
         st = statvfs('.')
         available_space = st.f_bavail * st.f_frsize / 1024 / 1024
@@ -109,7 +122,8 @@ def init_logging(exec_logger, data_logger, logging_level, log_path, data_log_fil
     # TODO Add OhmPi settings
     config_dict = {'execution logging configuration': json.dumps(EXEC_LOGGING_CONFIG, indent=4),
                    'data logging configuration': json.dumps(DATA_LOGGING_CONFIG, indent=4),
-                   'mqtt logging configuration': json.dumps(MQTT_LOGGING_CONFIG, indent=4)}
+                   'mqtt logging configuration': json.dumps(MQTT_LOGGING_CONFIG, indent=4),
+                   'mqtt control configuration': json.dumps(MQTT_CONTROL_CONFIG, indent=4)}
     for k, v in config_dict.items():
         exec_logger.info(f'{k}:\n{v}')
     exec_logger.info('')

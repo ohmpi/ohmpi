@@ -1,5 +1,7 @@
+import logging
 from paho.mqtt.client import MQTTv31
 
+mqtt_broker = 'localhost'
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': '0001',  # Unique identifier of the OhmPi board (string)
@@ -12,15 +14,21 @@ OHMPI_CONFIG = {
     'integer': 2,  # Max value 10 # TODO: Explain what this is...
     'version': 2,
     'max_elec': 64,
-    'board_address': {'A': 0x72, 'B': 0x73, 'M': 0x70, 'N': 0x71}  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
-    #'board_address': {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
-}
+    'board_address': {'A': 0x72, 'B': 0x73, 'M': 0x70, 'N': 0x71},  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
+     #'board_address': {'A': 0x70, 'B': 0x71, 'M': 0x72, 'N': 0x73},  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
+    'settings': 'ohmpi_settings.json',
+    'board_version': '22.11',
+}  # TODO: add a dictionary with INA models and associated gain values
 
+CONTROL_CONFIG = {
+    'tcp_port': 5555,
+    'interface': 'http_interface.py' # 'mqtt_interface'
+}
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
-    'debug_mode': True,
-    'logging_to_console': False,
-    'file_name': 'ohmpi_log',
+    'logging_level': logging.DEBUG,
+    'logging_to_console': True,
+    'file_name': 'exec.log',
     'max_bytes': 262144,
     'backup_count': 30,
     'when': 'd',
@@ -29,8 +37,9 @@ EXEC_LOGGING_CONFIG = {
 
 # Data logging configuration
 DATA_LOGGING_CONFIG = {
-    'file_name': 'data_log',
-    'logging_to_console': False,
+    'logging_level': logging.INFO,
+    'logging_to_console': True,
+    'file_name': 'data.log',
     'max_bytes': 16777216,
     'backup_count': 1024,
     'when': 'd',
@@ -39,7 +48,7 @@ DATA_LOGGING_CONFIG = {
 
 # State of Health logging configuration
 SOH_LOGGING_CONFIG = {
-    'file_name': 'soh_log',
+    'file_name': 'soh.log',
     'logging_to_console': True,
     'max_bytes': 16777216,
     'backup_count': 1024,
@@ -49,35 +58,34 @@ SOH_LOGGING_CONFIG = {
 
 # MQTT logging configuration parameters
 MQTT_LOGGING_CONFIG = {
-    'hostname': 'raspberrypi.local',
+    'hostname': mqtt_broker,
     'port': 1883,
-    'qos': 0,
+    'qos': 2,
     'retain': False,
     'keepalive': 60,
     'will': None,
-    'auth': None,
+    'auth': { 'username': 'mqtt_user', 'password': 'mqtt_password' },
     'tls': None,
     'protocol': MQTTv31,
     'transport': 'tcp',
-    'client_id': f'ohmpi_sn_{OHMPI_CONFIG["id"]}',
-    'ctrl_topic': f'ctrl_ohmpi_sn_{OHMPI_CONFIG["id"]}',
-    'exec_topic': f'exec_ohmpi_sn_{OHMPI_CONFIG["id"]}',
-    'data_topic': f'data_ohmpi_sn_{OHMPI_CONFIG["id"]}',
-    'soh_topic': f'soh_ohmpi_sn_{OHMPI_CONFIG["id"]}'
+    'client_id': f'{OHMPI_CONFIG["id"]}',
+    'exec_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/exec',
+    'data_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/data',
+    'soh_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/soh'
 }
 
-# MQTT command configuration parameters
+# MQTT control configuration parameters
 MQTT_CONTROL_CONFIG = {
-    'hostname': 'ohmpy.umons.ac.be',
+    'hostname': mqtt_broker,
     'port': 1883,
-    'qos': 0,
+    'qos': 2,
     'retain': False,
     'keepalive': 60,
     'will': None,
-    'auth': None,
+    'auth': { 'username': 'mqtt_user', 'password': 'mqtt_password' },
     'tls': None,
     'protocol': MQTTv31,
     'transport': 'tcp',
-    'client_id': f'ohmpi_sn_{OHMPI_CONFIG["id"]}',
-    'cmd_topic': f'cmd_ohmpi_sn_{OHMPI_CONFIG["id"]}'
+    'client_id': f'{OHMPI_CONFIG["id"]}',
+    'ctrl_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/ctrl'
 }

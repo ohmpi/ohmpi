@@ -51,8 +51,11 @@ class MQTTHandler(logging.Handler):
         cleanly.
         """
         msg = self.format(record)
-        publish.single(self.topic, msg, self.qos, self.retain,
+        try:
+            publish.single(self.topic, msg, self.qos, self.retain,
                        hostname=self.hostname, port=self.port,
                        client_id=self.client_id, keepalive=self.keepalive,
                        will=self.will, auth=self.auth, tls=self.tls,
                        protocol=self.protocol, transport=self.transport)
+        except Exception as e:
+            pass # TODO log in exec ?
