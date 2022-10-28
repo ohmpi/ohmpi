@@ -861,7 +861,7 @@ class OhmPi(object):
                 # compute resistance measured (= contact resistance)
                 resist = abs(voltage / current) /1000.
                 #print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} kOhm'.format(
-                    current, voltage, resist))
+                #    current, voltage, resist))
                 msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, ' \
                           f'V: {voltage :>10.3f} mV, ' \
                           f'R: {resist :>10.3f} kOhm'

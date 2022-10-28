@@ -14,12 +14,12 @@ k.settings['nb_stack'] = 1
 k.settings['nbr_meas'] = 1
 k.sequence = seq
 k.reset_mux()
-#k.switch_mux_on([1, 4, 2, 3])
+k.switch_mux_on([1, 4, 2, 3])
 #k.switch_mux_on([12, 15, 13, 14])
 #k.measure(strategy='vmax')
 #print('vab', k.compute_tx_volt(strategy='vmin'))
-k.rs_check()
-#out = k.run_measurement(quad=[3, 3, 3, 3], nb_stack=1, tx_volt=12, strategy='constant', autogain=True)
+#k.rs_check()
+out = k.run_measurement(quad=[3, 3, 3, 3], nb_stack=1, tx_volt=12, strategy='constant', autogain=True)
 #k.reset_mux()
 #k.rs_check(tx_volt=12)
 
