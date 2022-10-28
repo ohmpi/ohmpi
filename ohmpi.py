@@ -853,18 +853,18 @@ class OhmPi(object):
                 d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=1, tx_volt=tx_volt, autogain=False)
                 
                 if self.idps:
-                    voltage = tx_volt  # imposed voltage on dps5005
+                    voltage = tx_volt * 1000.0 # imposed voltage on dps5005
                 else:
                     voltage = d['Vmn [mV]']
                 current = d['I [mA]']
                 
                 # compute resistance measured (= contact resistance)
-                resist = abs(voltage / current) / 1000
-                print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} kOhm'.format(
+                resist = abs(voltage / current) /1000.
+                #print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} kOhm'.format(
                     current, voltage, resist))
                 msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, ' \
-                          f'V: {voltage * 1000.:>10.3f} mV, ' \
-                          f'R: {resistance /1000.:>10.3f} kOhm'
+                          f'V: {voltage :>10.3f} mV, ' \
+                          f'R: {resist :>10.3f} kOhm'
 
                 self.exec_logger.debug(msg)
                 

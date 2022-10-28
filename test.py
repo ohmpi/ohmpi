@@ -9,23 +9,23 @@ n = a + 2
 seq = np.c_[a, b, m, n]
 
 k = OhmPi(idps=False)
-k.settings['injection_duration'] = 0.5
+k.settings['injection_duration'] = 1
 k.settings['nb_stack'] = 1
 k.settings['nbr_meas'] = 1
-#k.sequence = seq
-#k.reset_mux()
-#k.switch_mux_on([4, 7, 5, 6])
+k.sequence = seq
+k.reset_mux()
+#k.switch_mux_on([1, 4, 2, 3])
 #k.switch_mux_on([12, 15, 13, 14])
 #k.measure(strategy='vmax')
 #print('vab', k.compute_tx_volt(strategy='vmin'))
-#k.rs_check()
-# out = k.run_measurement(quad=[3, 3, 3, 3], nb_stack=1, tx_volt=12, strategy='constant', autogain=True)
+k.rs_check()
+#out = k.run_measurement(quad=[3, 3, 3, 3], nb_stack=1, tx_volt=12, strategy='constant', autogain=True)
 #k.reset_mux()
 #k.rs_check(tx_volt=12)
 
 # x = []
-for i in range(3):
-    out = k.run_measurement(injection_duration=2, nb_stack=2, strategy='constant', tx_volt=5, autogain=False)
+#for i in range(3):
+#    out = k.run_measurement(injection_duration=2, nb_stack=2, strategy='constant', tx_volt=5, autogain=False)
     #x.append(out['R [ohm]'])
     #k.append_and_save('out.csv', out)
 

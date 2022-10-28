@@ -14,7 +14,7 @@ OHMPI_CONFIG = {
     'integer': 2,  # Max value 10 # TODO: Explain what this is...
     'version': 2,
     'max_elec': 64,
-    'board_address': {'A': 0x72, 'B': 0x73, 'M': 0x70, 'N': 0x71},  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
+    'board_address': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
      #'board_address': {'A': 0x70, 'B': 0x71, 'M': 0x72, 'N': 0x73},  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
     'settings': 'ohmpi_settings.json',
     'board_version': '22.10',
