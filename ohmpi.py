@@ -201,14 +201,13 @@ class OhmPi(object):
         self.update_settings(config)
 
     def update_settings(self, config):
-        """Update acquisition settings from a json file or dictionary.
-        Parameters can be:
-            - nb_electrodes (number of electrode used, if 4, no MUX needed)
-            - injection_duration (in seconds)
-            - nb_meas (total number of times the sequence will be run)
-            - sequence_delay (delay in second between each sequence run)
-            - nb_stack (number of stack for each quadrupole measurement)
-            - export_path (path where to export the data, timestamp will be added to filename)
+        """Update acquisition settings from a json file or dictionary. Parameters can be:
+        - nb_electrodes (number of electrode used, if 4, no MUX needed)
+        - injection_duration (in seconds)
+        - nb_meas (total number of times the sequence will be run)
+        - sequence_delay (delay in second between each sequence run)
+        - nb_stack (number of stack for each quadrupole measurement)
+        - export_path (path where to export the data, timestamp will be added to filename)
 
         Parameters
         ----------
