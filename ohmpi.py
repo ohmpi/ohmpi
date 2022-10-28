@@ -59,6 +59,7 @@ class OhmPi(object):
         # flags and attributes
         if on_pi is None:
             _, on_pi = OhmPi.get_platform()
+
         self.sequence = sequence
 
         self.on_pi = on_pi  # True if run from the RaspberryPi with the hardware, otherwise False for random data
@@ -252,7 +253,7 @@ class OhmPi(object):
             pass
         return platform, on_pi
 
-    def read_quad(self, filename):
+    def load_sequence(self, filename):
         """Read quadrupole sequence from file.
 
         Parameters
@@ -266,7 +267,7 @@ class OhmPi(object):
         sequence : numpy.array
             Array of shape (number quadrupoles * 4).
         """
-        sequence = np.loadtxt(filename, delimiter=" ", dtype=np.int32)  # load quadrupole file
+        sequence = np.loadtxt(filename, delimiter=" ", dtype=np.uint32)  # load quadrupole file
 
         if sequence is not None:
             self.exec_logger.debug('Sequence of {:d} quadrupoles read.'.format(sequence.shape[0]))
@@ -549,7 +550,7 @@ class OhmPi(object):
         # create custom sequence where MN == AB
         # we only check the electrodes which are in the sequence (not all might be connected)
         if self.sequence is None:
-            quads = np.array([[1, 2, 1, 2]])
+            quads = np.array([[1, 2, 1, 2]], dtype=np.uint32)
         else:
             elec = np.sort(np.unique(self.sequence.flatten()))  # assumed order
             quads = np.vstack([
@@ -681,8 +682,12 @@ class OhmPi(object):
                     self._update_acquisition_settings(args)
                     status = True
                 elif cmd == 'set_sequence' and args is not None:
-                    self.sequence = np.loadtxt(StringIO(args))
-                    status = True
+                    try:
+                        self.sequence = np.loadtxt(StringIO(args)).astype('uint32')
+                        status = True
+                    except Exception as e:
+                        self.exec_logger.warning(f'Unable to set sequence: {e}')
+                        status = False
                 elif cmd == 'start':
                     self.measure(cmd_id)
                     while not self.status == 'idle':
@@ -691,18 +696,13 @@ class OhmPi(object):
                 elif cmd == 'stop':
                     self.stop()
                     status = True
-                elif cmd == 'read_sequence':
+                elif cmd == 'load_sequence':
                     try:
-                        self.read_quad(args)
+                        self.load_sequence(args)
                         status = True
                     except Exception as e:
-                        self.exec_logger.warning(f'Unable to read sequence: {e}')
-                elif cmd == 'set_sequence':
-                    try:
-                        self.sequence = np.array(args)
-                        status = True
-                    except Exception as e:
-                        self.exec_logger.warning(f'Unable to set sequence: {e}')
+                        self.exec_logger.warning(f'Unable to load sequence: {e}')
+                        status = False
                 elif cmd == 'rs_check':
                     try:
                         self.rs_check()
