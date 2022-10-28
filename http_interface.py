@@ -40,48 +40,48 @@ class MyServer(SimpleHTTPRequestHandler):
     #     with open(os.path.join('.', self.path[1:]), 'r') as f:
     #         self.wfile.write(bytes(f.read(), "utf-8"))
 
-    # def __init__(self):
-    #     super().__init__(self)
-    #     # set controller
-    #     self.controller = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)  # create new instance
-    #     print(colored(f"Connecting to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']} on {MQTT_CONTROL_CONFIG['hostname']} broker", 'blue'))
-    #     trials = 0
-    #     trials_max = 10
-    #     broker_connected = False
-    #     while trials < trials_max:
-    #         try:
-    #             self.controller.username_pw_set(MQTT_CONTROL_CONFIG['auth'].get('username'),
-    #                                             MQTT_CONTROL_CONFIG['auth']['password'])
-    #             self.controller.connect(MQTT_CONTROL_CONFIG['hostname'])
-    #             trials = trials_max
-    #             broker_connected = True
-    #         except Exception as e:
-    #             print(f'Unable to connect control broker: {e}')
-    #             print('trying again to connect to control broker...')
-    #             time.sleep(2)
-    #             trials += 1
-    #     if broker_connected:
-    #         print(f"Subscribing to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']}")
-    #         self.controller.subscribe(MQTT_CONTROL_CONFIG['ctrl_topic'], MQTT_CONTROL_CONFIG['qos'])
-    #     else:
-    #         print(f"Unable to connect to control broker on {MQTT_CONTROL_CONFIG['hostname']}")
-    #         self.controller = None
-    #     self.cmd_thread = threading.Thread(target=self._control)
-    #
-    # def _control(self):
-    #     def on_message(client, userdata, message):
-    #         global cmd_id, rdic
-    #
-    #         command = message.payload.decode('utf-8')
-    #         print(f'Received command {command}')
-    #         # self.process_commands(command)
-    #         if 'reply' in command.keys and command['cmd_id'] == cmd_id :
-    #             rdic = command['reply']
-    #
-    #     self.controller.on_message = on_message
-    #     self.controller.loop_start()
-    #     while True:
-    #         time.sleep(.1)
+    def __init__(self, request, client_address, server):
+        super().__init__(request, client_address, server)
+        # set controller
+        self.controller = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)  # create new instance
+        print(colored(f"Connecting to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']} on {MQTT_CONTROL_CONFIG['hostname']} broker", 'blue'))
+        trials = 0
+        trials_max = 10
+        broker_connected = False
+        while trials < trials_max:
+            try:
+                self.controller.username_pw_set(MQTT_CONTROL_CONFIG['auth'].get('username'),
+                                                MQTT_CONTROL_CONFIG['auth']['password'])
+                self.controller.connect(MQTT_CONTROL_CONFIG['hostname'])
+                trials = trials_max
+                broker_connected = True
+            except Exception as e:
+                print(f'Unable to connect control broker: {e}')
+                print('trying again to connect to control broker...')
+                time.sleep(2)
+                trials += 1
+        if broker_connected:
+            print(f"Subscribing to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']}")
+            self.controller.subscribe(MQTT_CONTROL_CONFIG['ctrl_topic'], MQTT_CONTROL_CONFIG['qos'])
+        else:
+            print(f"Unable to connect to control broker on {MQTT_CONTROL_CONFIG['hostname']}")
+            self.controller = None
+        self.cmd_thread = threading.Thread(target=self._control)
+
+    def _control(self):
+        def on_message(client, userdata, message):
+            global cmd_id, rdic
+
+            command = message.payload.decode('utf-8')
+            print(f'Received command {command}')
+            # self.process_commands(command)
+            if 'reply' in command.keys and command['cmd_id'] == cmd_id :
+                rdic = command
+
+        self.controller.on_message = on_message
+        self.controller.loop_start()
+        while True:
+            time.sleep(.1)
 
     def do_POST(self):
         global cmd_id, rdic

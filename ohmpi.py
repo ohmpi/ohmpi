@@ -55,12 +55,13 @@ class OhmPi(object):
         sequence: 1, 2, 3, 4 is used.
     """
 
-    def __init__(self, settings=None, sequence=None, mqtt=True, on_pi=None):
+    def __init__(self, settings=None, sequence=None, use_mux=False, mqtt=True, on_pi=None):
         # flags and attributes
         if on_pi is None:
             _, on_pi = OhmPi.get_platform()
-        self.sequence = sequence
 
+        self.sequence = sequence
+        self.use_mux = use_mux
         self.on_pi = on_pi  # True if run from the RaspberryPi with the hardware, otherwise False for random data
         self.status = 'idle'  # either running or idle
         self.thread = None  # contains the handle for the thread taking the measurement
@@ -121,7 +122,7 @@ class OhmPi(object):
 
         # read quadrupole sequence
         if sequence is not None:
-            self.read_quad(sequence)
+            self.load_sequence(sequence)
 
         # connect to components on the OhmPi board
         if self.on_pi:
@@ -252,7 +253,7 @@ class OhmPi(object):
             pass
         return platform, on_pi
 
-    def read_quad(self, filename):
+    def load_sequence(self, filename):
         """Read quadrupole sequence from file.
 
         Parameters
@@ -266,7 +267,7 @@ class OhmPi(object):
         sequence : numpy.array
             Array of shape (number quadrupoles * 4).
         """
-        sequence = np.loadtxt(filename, delimiter=" ", dtype=np.int32)  # load quadrupole file
+        sequence = np.loadtxt(filename, delimiter=" ", dtype=np.uint32)  # load quadrupole file
 
         if sequence is not None:
             self.exec_logger.debug('Sequence of {:d} quadrupoles read.'.format(sequence.shape[0]))
@@ -309,8 +310,10 @@ class OhmPi(object):
         role : str
             Either 'A', 'B', 'M' or 'N', so we can assign it to a MUX board.
         """
-        if self.sequence is None:  # only 4 electrodes so no MUX
-            pass
+        if not self.use_mux:
+            pass # no MUX or don't use MUX
+        elif self.sequence is None:
+            self.exec_logger.warning('Unable to switch MUX without a sequence')
         else:
             # choose with MUX board
             tca = adafruit_tca9548a.TCA9548A(self.i2c, self.board_addresses[role])
@@ -548,8 +551,8 @@ class OhmPi(object):
         """
         # create custom sequence where MN == AB
         # we only check the electrodes which are in the sequence (not all might be connected)
-        if self.sequence is None:
-            quads = np.array([[1, 2, 1, 2]])
+        if self.sequence is None or not self.use_mux:
+            quads = np.array([[1, 2, 1, 2]], dtype=np.uint32)
         else:
             elec = np.sort(np.unique(self.sequence.flatten()))  # assumed order
             quads = np.vstack([
@@ -681,8 +684,12 @@ class OhmPi(object):
                     self._update_acquisition_settings(args)
                     status = True
                 elif cmd == 'set_sequence' and args is not None:
-                    self.sequence = np.loadtxt(StringIO(args))
-                    status = True
+                    try:
+                        self.sequence = np.loadtxt(StringIO(args)).astype('uint32')
+                        status = True
+                    except Exception as e:
+                        self.exec_logger.warning(f'Unable to set sequence: {e}')
+                        status = False
                 elif cmd == 'start':
                     self.measure(cmd_id)
                     while not self.status == 'idle':
@@ -691,18 +698,13 @@ class OhmPi(object):
                 elif cmd == 'stop':
                     self.stop()
                     status = True
-                elif cmd == 'read_sequence':
+                elif cmd == 'load_sequence':
                     try:
-                        self.read_quad(args)
+                        self.load_sequence(args)
                         status = True
                     except Exception as e:
-                        self.exec_logger.warning(f'Unable to read sequence: {e}')
-                elif cmd == 'set_sequence':
-                    try:
-                        self.sequence = np.array(args)
-                        status = True
-                    except Exception as e:
-                        self.exec_logger.warning(f'Unable to set sequence: {e}')
+                        self.exec_logger.warning(f'Unable to load sequence: {e}')
+                        status = False
                 elif cmd == 'rs_check':
                     try:
                         self.rs_check()
@@ -812,7 +814,7 @@ class OhmPi(object):
         exit()
 
 
-VERSION = '2.1.0'
+VERSION = '2.1.5'
 
 print(colored(r' ________________________________' + '\n' +
               r'|  _  | | | ||  \/  || ___ \_   _|' + '\n' +
