@@ -1,4 +1,4 @@
-rom http.server import SimpleHTTPRequestHandler, HTTPServer
+from http.server import SimpleHTTPRequestHandler, HTTPServer
 import os
 import json
 import uuid

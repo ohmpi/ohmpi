@@ -1012,13 +1012,13 @@ class OhmPi(object):
                     except Exception as e:
                         self.exec_logger.warning(f'Unable to set sequence: {e}')
                         status = False
-                elif cmd == 'start':
-                    self.measure(cmd_id)
+                elif cmd == 'run_sequence':
+                    self.run_sequence(cmd_id)
                     while not self.status == 'idle':
                         time.sleep(0.1)
                     status = True
-                elif cmd == 'stop':
-                    self.stop()
+                elif cmd == 'interrupt':
+                    self.interrupt()
                     status = True
                 elif cmd == 'load_sequence':
                     try:

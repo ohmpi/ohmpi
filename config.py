@@ -18,7 +18,7 @@ OHMPI_CONFIG = {
     'max_elec': 64,
     'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
     'settings': 'ohmpi_settings.json',
-    'board_version':2.0
+    'board_version': '22.10'
 }  # TODO: add a dictionary with INA models and associated gain values
 
 # CONTROL_CONFIG = {
