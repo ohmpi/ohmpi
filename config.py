@@ -2,7 +2,7 @@ import logging
 
 from paho.mqtt.client import MQTTv31
 
-mqtt_broker = 'mg3d-dev.umons.ac.be'  # TODO: set back to 'localhost'
+mqtt_broker = 'localhost'  # TODO: set back to 'localhost'
 logging_suffix = '_interactive'
 # OhmPi configuration
 OHMPI_CONFIG = {
