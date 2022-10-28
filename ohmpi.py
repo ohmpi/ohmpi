@@ -60,7 +60,7 @@ class OhmPi(object):
         if on_pi is None:
             _, on_pi = OhmPi.get_platform()
 
-        self.sequence = sequence
+        self._sequence = sequence
         self.use_mux = use_mux
         self.on_pi = on_pi  # True if run from the RaspberryPi with the hardware, otherwise False for random data
         self.status = 'idle'  # either running or idle
@@ -142,6 +142,22 @@ class OhmPi(object):
         self.cmd_listen = True
         self.cmd_thread = threading.Thread(target=self._control)
         self.cmd_thread.start()
+
+    @property
+    def sequence(self):
+        """Gets or sets sequence"""
+        if self._sequence is not None:
+            assert isinstance(self._sequence, np.ndarray)
+        return self._sequence
+
+    @sequence.setter
+    def sequence(self, sequence):
+        if sequence is not None:
+            assert isinstance(sequence, np.ndarray)
+            self.use_mux = True
+        else:
+            self.use_mux = False
+        self._sequence = sequence
 
     def _control(self):
         def on_message(client, userdata, message):
