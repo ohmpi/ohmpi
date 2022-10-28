@@ -16,8 +16,10 @@ k.sequence = np.array([[1,2,3,4]])    # set numpy array of shape (n,4)
 # k.load_sequence('ABMN.txt')    # load sequence from a local file
 
 ### Run contact resistance check
-k.rs_check()
+# k.rs_check()
 
 ### Run sequence
-k.run_sequence()   
-# k.interrupt()
+k.run_sequence()
+# k.run_sequence_async()
+# time.sleep(2)
+# k.interrupt()

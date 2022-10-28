@@ -21,10 +21,10 @@ OHMPI_CONFIG = {
     'board_version': '22.10'
 }  # TODO: add a dictionary with INA models and associated gain values
 
-# CONTROL_CONFIG = {
-#     'tcp_port': 5555,
-#     'interface': 'mqtt_interface.py'  # 'http_interface'
-# }
+CONTROL_CONFIG = {
+    'tcp_port': 5555,
+    'interface': 'mqtt_interface.py'  # 'http_interface'
+}
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
     'logging_level': logging.DEBUG,

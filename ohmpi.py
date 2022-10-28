@@ -1013,7 +1013,7 @@ class OhmPi(object):
                         self.exec_logger.warning(f'Unable to set sequence: {e}')
                         status = False
                 elif cmd == 'run_sequence':
-                    self.run_sequence(cmd_id)
+                    self.run_sequence_async(cmd_id)
                     while not self.status == 'idle':
                         time.sleep(0.1)
                     status = True

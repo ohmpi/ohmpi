@@ -95,7 +95,6 @@ class MyServer(SimpleHTTPRequestHandler):
             payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'run_sequence'})
             publish.single(payload=payload, **publisher_config)
         elif dic['cmd'] == 'interrupt':
-            # ohmpi.stop()
             payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'interrupt'})
             publish.single(payload=payload, **publisher_config)
         elif dic['cmd'] == 'getData':
