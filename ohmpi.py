@@ -110,7 +110,7 @@ class OhmPi(object):
         # default acquisition settings
         self.settings = {
             'injection_duration': 0.2,
-            'nbr_meas': 1,
+            'nb_meas': 1,
             'sequence_delay': 1,
             'nb_stack': 1,
             'export_path': 'data/measurement.csv'
@@ -205,7 +205,7 @@ class OhmPi(object):
         Parameters can be:
             - nb_electrodes (number of electrode used, if 4, no MUX needed)
             - injection_duration (in seconds)
-            - nbr_meas (total number of times the sequence will be run)
+            - nb_meas (total number of times the sequence will be run)
             - sequence_delay (delay in second between each sequence run)
             - nb_stack (number of stack for each quadrupole measurement)
             - export_path (path where to export the data, timestamp will be added to filename)
@@ -1249,7 +1249,7 @@ class OhmPi(object):
                                              'Increase the sequence delay')
 
                 # sleeping time between sequence
-                if self.settings["nbr_meas"] > 1:
+                if self.settings["nb_meas"] > 1:
                     time.sleep(sleep_time)  # waiting for next measurement (time-lapse)
             self.status = 'idle'
 
