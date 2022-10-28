@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP 1085
+D Data Conversion IC Development Tools ADS1115 16-Bit ADC - 4 Channel with Programmable Gain Amplifier
+K
+F https://cdn-shop.adafruit.com/datasheets/ads1115.pdf
+$ENDCMP
+#
+#End Doc Library

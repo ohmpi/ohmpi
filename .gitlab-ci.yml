@@ -6,7 +6,7 @@ pages:
   script:
   - apt-get update
   - apt-get install --assume-yes pandoc
-  - pip install numpy pandas termcolor paho-mqtt  # top import of Ohmpi.py
+  - pip install numpy pandas termcolor paho-mqtt zmq  # top import of Ohmpi.py
   - pip install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark
   - cd doc
   - make html
