@@ -3,6 +3,7 @@ import logging
 from paho.mqtt.client import MQTTv31
 
 mqtt_broker = 'localhost'
+logging_suffix = '_interactive'
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': '0001',  # Unique identifier of the OhmPi board (string)
