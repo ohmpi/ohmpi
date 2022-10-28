@@ -55,13 +55,13 @@ class OhmPi(object):
         sequence: 1, 2, 3, 4 is used.
     """
 
-    def __init__(self, settings=None, sequence=None, mqtt=True, on_pi=None):
+    def __init__(self, settings=None, sequence=None, use_mux=False, mqtt=True, on_pi=None):
         # flags and attributes
         if on_pi is None:
             _, on_pi = OhmPi.get_platform()
 
         self.sequence = sequence
-
+        self.use_mux = use_mux
         self.on_pi = on_pi  # True if run from the RaspberryPi with the hardware, otherwise False for random data
         self.status = 'idle'  # either running or idle
         self.thread = None  # contains the handle for the thread taking the measurement
@@ -122,7 +122,7 @@ class OhmPi(object):
 
         # read quadrupole sequence
         if sequence is not None:
-            self.read_quad(sequence)
+            self.load_sequence(sequence)
 
         # connect to components on the OhmPi board
         if self.on_pi:
@@ -310,8 +310,10 @@ class OhmPi(object):
         role : str
             Either 'A', 'B', 'M' or 'N', so we can assign it to a MUX board.
         """
-        if self.sequence is None:  # only 4 electrodes so no MUX
-            pass
+        if not self.use_mux:
+            pass # no MUX or don't use MUX
+        elif self.sequence is None:
+            self.exec_logger.warning('Unable to switch MUX without a sequence')
         else:
             # choose with MUX board
             tca = adafruit_tca9548a.TCA9548A(self.i2c, self.board_addresses[role])
@@ -549,7 +551,7 @@ class OhmPi(object):
         """
         # create custom sequence where MN == AB
         # we only check the electrodes which are in the sequence (not all might be connected)
-        if self.sequence is None:
+        if self.sequence is None or not self.use_mux:
             quads = np.array([[1, 2, 1, 2]], dtype=np.uint32)
         else:
             elec = np.sort(np.unique(self.sequence.flatten()))  # assumed order
@@ -812,7 +814,7 @@ class OhmPi(object):
         exit()
 
 
-VERSION = '2.1.0'
+VERSION = '2.1.5'
 
 print(colored(r' ________________________________' + '\n' +
               r'|  _  | | | ||  \/  || ___ \_   _|' + '\n' +
