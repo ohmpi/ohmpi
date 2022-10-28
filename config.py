@@ -2,8 +2,7 @@ import logging
 
 from paho.mqtt.client import MQTTv31
 
-mqtt_broker = 'localhost'  # TODO: set back to 'localhost'
-logging_suffix = '_interactive'
+mqtt_broker = 'localhost'
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': '0001',  # Unique identifier of the OhmPi board (string)
@@ -48,7 +47,7 @@ DATA_LOGGING_CONFIG = {
 
 # State of Health logging configuration
 SOH_LOGGING_CONFIG = {
-    'file_name': f'soh{logging_suffix}.log',
+    'file_name': 'soh.log',
     'logging_to_console': True,
     'max_bytes': 16777216,
     'backup_count': 1024,

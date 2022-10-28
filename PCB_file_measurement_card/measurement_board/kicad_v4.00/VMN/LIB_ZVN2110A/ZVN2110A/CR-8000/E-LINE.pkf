@@ -1,0 +1,10 @@
+(unit MM)
+
+(package "E-LINE"
+    (type UNDEF)
+    (uver 2)
+    (mountForm default
+        (footprintRef "E-LINE")
+        (spec "default")
+    )
+)

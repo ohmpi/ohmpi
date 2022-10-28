@@ -10,6 +10,7 @@ Olivier KAUFMANN (UMONS), Arnaud WATELET (UMONS) and Guillaume BLANCHY (ILVO).
 import os
 import io
 import json
+
 import numpy as np
 import csv
 import time
@@ -55,7 +56,7 @@ class OhmPi(object):
         sequence: 1, 2, 3, 4 is used.
     """
 
-    def __init__(self, settings=None, sequence=None, use_mux=False, mqtt=True, on_pi=None):
+    def __init__(self, settings=None, sequence=None, use_mux=False, mqtt=True, on_pi=None idps=False):
         # flags and attributes
         if on_pi is None:
             _, on_pi = OhmPi.get_platform()
@@ -112,7 +113,6 @@ class OhmPi(object):
             'nb_stack': 1,
             'export_path': 'data/measurement.csv'
         }
-        print(self.settings)
         # read in acquisition settings
         if settings is not None:
             self._update_acquisition_settings(settings)
@@ -124,19 +124,49 @@ class OhmPi(object):
         if sequence is not None:
             self.load_sequence(sequence)
 
+        self.idps = idps  # flag to use dps for injection or not
+        
         # connect to components on the OhmPi board
         if self.on_pi:
-            # activation of I2C protocol
+            # activation of I2C protocolge
             self.i2c = busio.I2C(board.SCL, board.SDA)  # noqa
 
             # I2C connexion to MCP23008, for current injection
             self.mcp = MCP23008(self.i2c, address=0x20)
 
             # ADS1115 for current measurement (AB)
-            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
+            self.ads_current_address = 0x48
+            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_current_address)
 
             # ADS1115 for voltage measurement (MN)
-            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
+            self.ads_voltage_address = 0x49
+            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_voltage_address)
+
+            # current injection module
+            if self.idps:
+                self.DPS = minimalmodbus.Instrument(port='/dev/ttyUSB0', slaveaddress=1) # port name, slave address (in decimal)
+                self.DPS.serial.baudrate = 9600                      # Baud rate 9600 as listed in doc
+                self.DPS.serial.bytesize = 8                         # 
+                self.DPS.serial.timeout  = 1                         # greater than 0.5 for it to work
+                self.DPS.debug           = False                     # 
+                self.DPS.serial.parity   = 'N'                       # No parity
+                self.DPS.mode            = minimalmodbus.MODE_RTU    # RTU mode
+                self.DPS.write_register(0x0001, 40, 0)   # max current allowed (36 mA for relays)
+                # (last number) 0 is for mA, 3 is for A
+            
+            # injection courant and measure (TODO check if it works, otherwise back in run_measurement())
+            self.pin0 = self.mcp.get_pin(0)
+            self.pin0.direction = Direction.OUTPUT
+            self.pin0.value = False
+            self.pin1 = self.mcp.get_pin(1)
+            self.pin1.direction = Direction.OUTPUT
+            self.pin1.value = False
+
+
+        # Starts the command processing thread
+        self.cmd_listen = True
+        self.cmd_thread = threading.Thread(target=self.process_commands)
+        self.cmd_thread.start()
 
         # Starts the command processing thread
         self.cmd_listen = True
@@ -171,6 +201,11 @@ class OhmPi(object):
             time.sleep(.5)
 
     def _update_acquisition_settings(self, config):
+        warnings.warn('This function is deprecated, use update_settings() instead.',
+                      DeprecationWarning)
+        self.update_settings(config)
+   
+   def update_settings(self, config):
         """Update acquisition settings from a json file or dictionary.
         Parameters can be:
             - nb_electrodes (number of electrode used, if 4, no MUX needed)
@@ -202,17 +237,17 @@ class OhmPi(object):
         self.Imax = OHMPI_CONFIG['Imax']  # maximum current
         self.exec_logger.warning(f'The maximum current cannot be higher than {self.Imax} mA')
         self.coef_p2 = OHMPI_CONFIG['coef_p2']  # slope for current conversion for ads.P2, measurement in V/V
-        self.coef_p3 = OHMPI_CONFIG['coef_p3']  # slope for current conversion for ads.P3, measurement in V/V
-        # self.offset_p2 = OHMPI_CONFIG['offset_p2'] parameter removed
-        # self.offset_p3 = OHMPI_CONFIG['offset_p3'] parameter removed
         self.nb_samples = OHMPI_CONFIG['integer']  # number of samples measured for each stack
         self.version = OHMPI_CONFIG['version']  # hardware version
         self.max_elec = OHMPI_CONFIG['max_elec']  # maximum number of electrodes
         self.board_addresses = OHMPI_CONFIG['board_addresses']
+        self.board_version = OHMPI_CONFIG['board_version']
         self.exec_logger.debug(f'OHMPI_CONFIG = {str(OHMPI_CONFIG)}')
+        
+
 
     @staticmethod
-    def find_identical_in_line(quads):
+    def _find_identical_in_line(quads):
         """Find quadrupole where A and B are identical.
         If A and B are connected to the same relay, the Pi burns (short-circuit).
         
@@ -250,6 +285,7 @@ class OhmPi(object):
         #             output.append(i)
         return output
 
+
     @staticmethod
     def get_platform():
         """Get platform name and check if it is a raspberry pi
@@ -269,6 +305,13 @@ class OhmPi(object):
             pass
         return platform, on_pi
 
+
+    def read_quad(self, filename):
+        warnings.warn('This function is deprecated, use load_sequence() instead.',
+                      DeprecationWarning)
+
+        self.load_sequence(filaname)
+        
     def load_sequence(self, filename):
         """Read quadrupole sequence from file.
 
@@ -314,6 +357,7 @@ class OhmPi(object):
 
         self.sequence = sequence
 
+
     def switch_mux(self, electrode_nr, state, role):
         """Select the right channel for the multiplexer cascade for a given electrode.
         
@@ -335,10 +379,11 @@ class OhmPi(object):
             tca = adafruit_tca9548a.TCA9548A(self.i2c, self.board_addresses[role])
 
             # find I2C address of the electrode and corresponding relay
-            # TODO from number of electrode, the below can be guessed
             # considering that one MCP23017 can cover 16 electrodes
-            i2c_address = 7 - (electrode_nr - 1) // 16  # quotient without rest of the division
-            relay_nr = electrode_nr - (electrode_nr // 16) * 16 +1
+            electrode_nr = electrode_nr - 1  # switch to 0 indexing
+            i2c_address = 7 - electrode_nr // 16  # quotient without rest of the division
+            relay_nr = electrode_nr - (electrode_nr // 16) * 16
+            relay_nr = relay_nr + 1  # switch back to 1 based indexing
 
             if i2c_address is not None:
                 # select the MCP23017 of the selected MUX board
@@ -354,6 +399,7 @@ class OhmPi(object):
             else:
                 self.exec_logger.warning(f'Unable to address electrode nr {electrode_nr}')
 
+
     def switch_mux_on(self, quadrupole):
         """ Switch on multiplexer relays for given quadrupole.
         
@@ -366,9 +412,11 @@ class OhmPi(object):
         # another check to be sure A != B
         if quadrupole[0] != quadrupole[1]:
             for i in range(0, 4):
-                self.switch_mux(quadrupole[i], 'on', roles[i])
+                if quadrupole[i] > 0:
+                    self.switch_mux(quadrupole[i], 'on', roles[i])
         else:
             self.exec_logger.error('A == B -> short circuit risk detected!')
+
 
     def switch_mux_off(self, quadrupole):
         """ Switch off multiplexer relays for given quadrupole.
@@ -380,7 +428,9 @@ class OhmPi(object):
         """
         roles = ['A', 'B', 'M', 'N']
         for i in range(0, 4):
-            self.switch_mux(quadrupole[i], 'off', roles[i])
+            if quadrupole[i] > 0:
+                self.switch_mux(quadrupole[i], 'off', roles[i])
+
 
     def reset_mux(self):
         """Switch off all multiplexer relays."""
@@ -389,6 +439,7 @@ class OhmPi(object):
             for j in range(1, self.max_elec + 1):
                 self.switch_mux(j, 'off', roles[i])
         self.exec_logger.debug('All MUX switched off.')
+
 
     def gain_auto(self, channel):
         """ Automatically set the gain on a channel
@@ -412,111 +463,385 @@ class OhmPi(object):
             gain = 16
         self.exec_logger.debug(f'Setting gain to {gain}')
         return gain
+        
+        
+    def _compute_tx_volt(self, best_tx_injtime=0.1, strategy='vmax', tx_volt=5):
+        """Estimating best Tx voltage based on different strategy.
+        At first a half-cycle is made for a short duration with a fixed
+        known voltage. This gives us Iab and Rab. We also measure Vmn.
+        A constant c = vmn/iab is computed (only depends on geometric
+        factor and ground resistivity, that doesn't change during a 
+        quadrupole). Then depending on the strategy, we compute which
+        vab to inject to reach the minimum/maximum Iab current or 
+        min/max Vmn.
+        This function also compute the polarity on Vmn (on which pin
+        of the ADS1115 we need to measure Vmn to get the positive value).
+        
+        Parameters
+        ----------
+        best_tx_injtime : float, optional
+            Time in milliseconds for the half-cycle used to compute Rab.
+        strategy : str, optional
+            Either:
+            - vmin : compute Vab to reach a minimum Iab and Vmn
+            - vmax : compute Vab to reach a maximum Iab and Vmn
+            - constant : apply given Vab
+        tx_volt : float, optional
+            Voltage apply to try to guess the best voltage. 5 V applied 
+            by default. If strategy "constant" is chosen, constant voltage
+            to applied is "tx_volt".
+        
+        Returns
+        -------
+        vab : float
+            Proposed Vab according to the given strategy.
+        polarity : int
+            Either 1 or -1 to know on which pin of the ADS the Vmn is measured.
+        """
+        
+        # hardware limits
+        voltage_min = 10  # mV
+        voltage_max = 4500
+        current_min = voltage_min / (self.r_shunt * 50)  # mA
+        current_max = voltage_max / (self.r_shunt * 50)
+        tx_max = 40  # volt
+        
+        # check of volt
+        volt = tx_volt
+        if volt > tx_max:
+            print('sorry, cannot inject more than 40 V, set it back to 5 V')
+            volt = 5
+        
+        # redefined the pin of the mcp (needed when relays are connected)
+        self.pin0 = self.mcp.get_pin(0)
+        self.pin0.direction = Direction.OUTPUT
+        self.pin0.value = False
+        self.pin1 = self.mcp.get_pin(1)
+        self.pin1.direction = Direction.OUTPUT
+        self.pin1.value = False
+        
+        # select a polarity to start with
+        self.pin0.value = True
+        self.pin1.value = False
+        
+        # set voltage for test
+        self.DPS.write_register(0x0000, volt, 2) 
+        self.DPS.write_register(0x09, 1) # DPS5005 on
+        time.sleep(best_tx_injtime) # inject for given tx time
+        
+        # autogain
+        self.ads_current = ads.ADS1115(self.i2c, gain=2/3, data_rate=860, address=self.ads_current_address)
+        self.ads_voltage = ads.ADS1115(self.i2c, gain=2/3, data_rate=860, address=self.ads_voltage_address)
+        #print('current P0', AnalogIn(self.ads_current, ads.P0).voltage)
+        #print('voltage P0', AnalogIn(self.ads_voltage, ads.P0).voltage)
+        #print('voltage P2', AnalogIn(self.ads_voltage, ads.P2).voltage)
+        gain_current = self.gain_auto(AnalogIn(self.ads_current, ads.P0))
+        gain_voltage0 = self.gain_auto(AnalogIn(self.ads_voltage, ads.P0))
+        gain_voltage2 = self.gain_auto(AnalogIn(self.ads_voltage, ads.P2))
+        gain_voltage = np.min([gain_voltage0, gain_voltage2])
+        #print('gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
+        self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=self.ads_current_address)
+        self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=self.ads_voltage_address)
+        
+        # we measure the voltage on both A0 and A2 to guess the polarity
+        I = (AnalogIn(self.ads_current, ads.P0).voltage) * 1000/50/self.r_shunt # measure current
+        U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000 # measure voltage
+        U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000
+        #print('I (mV)', I*50*self.r_shunt)
+        #print('I (mA)', I)
+        #print('U0 (mV)', U0)
+        #print('U2 (mV)', U2)
+        
+        # check polarity
+        polarity = 1  # by default, we guessed it right
+        vmn = U0
+        if U0 < 0: # we guessed it wrong, let's use a correction factor
+            polarity = -1
+            vmn = U2
+        #print('polarity', polarity)
+        
+        # compute constant
+        c = vmn / I
+        Rab = (volt * 1000) / I
+        
+        self.exec_logger.debug('Rab = {:.2f} Ohms'.format(Rab))
 
-    def run_measurement(self, quad=None, nb_stack=None, injection_duration=None):
-        """ Do a 4 electrode measurement and measure transfer resistance obtained.
+        # implement different strategy
+        if strategy == 'vmax':
+            vmn_max = c * current_max
+            if vmn_max < voltage_max and vmn_max > voltage_min:
+                vab = current_max * Rab
+                self.exec_logger.debug('target max current')
+            else:
+                iab = voltage_max / c
+                vab = iab * Rab
+                self.exec_logger.debug('target max voltage')
+            if vab > 25000:
+                vab = 25000
+            vab = vab / 1000 * 0.9
+            
+        elif strategy == 'vmin':
+            vmn_min = c * current_min
+            if vmn_min > voltage_min and vmn_min < voltage_max:
+                vab = current_min * Rab
+                self.exec_logger.debug('target min current')
+            else:
+                iab = voltage_min / c
+                vab = iab * Rab
+                self.exec_logger.debug('target min voltage')
+            if vab < 1000:
+                vab = 1000
+            vab = vab / 1000 * 1.1
+        
+        elif strategy == 'constant':
+            vab = volt
+        else:
+            vab = 5
+            
+        #self.DPS.write_register(0x09, 0) # DPS5005 off
+        self.pin0.value = False
+        self.pin1.value = False
+        
+        return vab, polarity
+        
+        
+    def run_measurement(self, quad=None, nb_stack=None, injection_duration=None,
+                        autogain=True, strategy='constant', tx_volt=5, best_tx_injtime=0.1):
+        """Do a 4 electrode measurement and measure transfer resistance obtained.
 
         Parameters
         ----------
         quad : iterable (list of int)
-            Quadrupole to measure.
+            Quadrupole to measure, just for labelling. Only switch_mux_on/off
+            really create the route to the electrodes.
         nb_stack : int, optional
-            Number of stacks.
+            Number of stacks. A stacl is considered two half-cycles (one
+            positive, one negative).
         injection_duration : int, optional
             Injection time in seconds.
-
+        autogain : bool, optional
+            If True, will adapt the gain of the ADS1115 to maximize the
+            resolution of the reading.
+        strategy : str, optional
+            (V3.0 only) If we search for best voltage (tx_volt == 0), we can choose
+            different strategy:
+            - vmin: find lowest voltage that gives us a signal
+            - vmax: find max voltage that are in the range
+            For a constant value, just set the tx_volt.
+        tx_volt : float, optional
+            (V3.0 only) If specified, voltage will be imposed. If 0, we will look 
+            for the best voltage. If a best Tx cannot be found, no
+            measurement will be taken and values will be NaN.
+        best_tx_injtime : float, optional
+            (V3.0 only) Injection time in seconds used for finding the best voltage.
         """
+        self.exec_logger.debug('Starting measurement')
+        self.exec_logger.info('Waiting for data')
+
         # TODO here we can add the current_injected or voltage_injected in mA or mV
         # check arguments
         if quad is None:
             quad = [0, 0, 0, 0]
-        self.exec_logger.debug('Starting measurement')
-        self.exec_logger.info('Waiting for data')
 
+        
         if self.on_pi:
+            
+            # check arguments
             if nb_stack is None:
                 nb_stack = self.settings['nb_stack']
             if injection_duration is None:
                 injection_duration = self.settings['injection_duration']
-
-            start_time = time.time()
+            tx_volt = float(tx_volt)
 
             # inner variable initialization
-            injection_current = 0
+            sum_i = 0
             sum_vmn = 0
             sum_ps = 0
 
-            # injection courant and measure
-            pin0 = self.mcp.get_pin(0)
-            pin0.direction = Direction.OUTPUT
-            pin1 = self.mcp.get_pin(1)
-            pin1.direction = Direction.OUTPUT
-            pin0.value = False
-            pin1.value = False
-
-            # FUNCTION AUTOGAIN
-            # ADS1115 for current measurement (AB)
-            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
-            # ADS1115 for voltage measurement (MN)
-            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
-            # try auto gain
-            pin1.value = True
-            pin0.value = False
-            time.sleep(injection_duration)
-            gain_current = self.gain_auto(AnalogIn(self.ads_current, ads.P0))
-            gain_voltage = self.gain_auto(AnalogIn(self.ads_voltage, ads.P0, ads.P1))
-            pin0.value = False
-            pin1.value = False
-            print('gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
-            self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=0x48)
-            self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=0x49)
-
-            # TODO I don't get why 3 + 2*nb_stack - 1? why not just range(nb_stack)?
-            # or do we consider 1 stack = one full polarity? do we discard the first 3 readings?
-            for n in range(0, 3 + 2 * nb_stack - 1):
-                # current injection
-                if (n % 2) == 0:
-                    pin1.value = True
-                    pin0.value = False  # current injection polarity nr1
+            # let's define the pin again as if we run through measure()
+            # as it's run in another thread, it doesn't consider these
+            # and this can lead to short circuit!
+            self.pin0 = self.mcp.get_pin(0)
+            self.pin0.direction = Direction.OUTPUT
+            self.pin0.value = False
+            self.pin1 = self.mcp.get_pin(1)
+            self.pin1.direction = Direction.OUTPUT
+            self.pin1.value = False
+            
+            # get best voltage to inject AND polarity
+            if self.idps:
+                tx_volt, polarity = self._compute_tx_volt(
+                    best_tx_injtime=best_tx_injtime, strategy=strategy, tx_volt=tx_volt)
+                self.exec_logger.debug('Best vab found is {:.3}V'.format(tx_volt))
+            else:
+                polarity = 1
+            
+            # first reset the gain to 2/3 before trying to find best gain (mode 0 is continuous)
+            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_current_address, mode=0)
+            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_voltage_address, mode=0)
+            
+            # turn on the power supply
+            oor = False
+            if self.idps:
+                if np.isnan(tx_volt) == False:
+                    self.DPS.write_register(0x0000, tx_volt, 2) # set tx voltage in V
+                    self.DPS.write_register(0x09, 1) # DPS5005 on
+                    time.sleep(0.05)
                 else:
-                    pin0.value = True
-                    pin1.value = False  # current injection nr2
-                start_delay = time.time()  # stating measurement time
-                time.sleep(injection_duration)  # delay depending on current injection duration
+                    self.exec_logger.debug('No best voltage found, will not take measurement')
+                    oor = True
+                    
+            if oor == False:  # we found a vab in the range so we measure
+                if autogain:
+                    # compute autogain
+                    self.pin0.value = True
+                    self.pin1.value = False
+                    time.sleep(injection_duration)
+                    gain_current = self.gain_auto(AnalogIn(self.ads_current, ads.P0))
+                    if polarity > 0:
+                        gain_voltage = self.gain_auto(AnalogIn(self.ads_voltage, ads.P0))
+                    else:
+                        gain_voltage = self.gain_auto(AnalogIn(self.ads_voltage, ads.P2))
+                    self.pin0.value = False
+                    self.pin1.value = False
+                    self.exec_logger.debug('Gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
+                    self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=self.ads_current_address, mode=0)
+                    self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=self.ads_voltage_address, mode=0)
 
-                # measurement of current i and voltage u
+                self.pin0.value = False
+                self.pin1.value = False
+                
+                # one stack = 2 half-cycles (one positive, one negative)
+                pinMN = 0 if polarity > 0 else 2
+                
                 # sampling for each stack at the end of the injection
-                meas = np.zeros((self.nb_samples, 3))
-                for k in range(0, self.nb_samples):
-                    # reading current value on ADS channel A0
-                    meas[k, 0] = (AnalogIn(self.ads_current, ads.P0).voltage * 1000) / (50 * self.r_shunt)  # TODO: replace 50 by factor depending on INA model specifed in config.py
-                    # reading voltage value on ADS channel A2
-                    meas[k, 1] = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * self.coef_p2 * 1000  # NOTE: Changed sign
+                sampling_interval = 10  # ms
+                self.nb_samples = int(injection_duration * 1000 // sampling_interval) + 1
 
-                # stop current injection
-                pin1.value = False
-                pin0.value = False
-                end_delay = time.time()
+                # full data for waveform
+                fulldata = []
+                
+                #  we sample every 10 ms (as using AnalogIn for both current
+                # and voltage takes about 7 ms). When we go over the injection
+                # duration, we break the loop and truncate the meas arrays
+                # only the last values in meas will be taken into account
+                start_time = time.time()  # start counter
+                for n in range(0, nb_stack * 2):  # for each half-cycles
+                    # current injection
+                    if (n % 2) == 0:
+                        self.pin0.value = True
+                        self.pin1.value = False
+                    else:
+                        self.pin0.value = False
+                        self.pin1.value = True  # current injection nr2
+                    self.exec_logger.debug(str(n) + ' ' + str(self.pin0.value) + ' ' + str(self.pin1.value))
 
-                # take average from the samples per stack, then sum them all
-                # average for all stack is done outside the loop
-                injection_current = injection_current + (np.mean(meas[:, 0]))
-                vmn1 = np.mean(meas[:, 1]) - np.mean(meas[:, 2])
-                if (n % 2) == 0:
-                    sum_vmn = sum_vmn - vmn1
-                    sum_ps = sum_ps + vmn1
-                else:
-                    sum_vmn = sum_vmn + vmn1
-                    sum_ps = sum_ps + vmn1
+                    # measurement of current i and voltage u during injection
+                    meas = np.zeros((self.nb_samples, 3)) * np.nan
+                    start_delay = time.time()  # stating measurement time
+                    dt = 0
+                    for k in range(0, self.nb_samples):
+                        # reading current value on ADS channels
+                        meas[k, 0] = (AnalogIn(self.ads_current, ads.P0).voltage * 1000) / (50 * self.r_shunt)
+                        if self.board_version == '22.11':
+                            if pinMN == 0:
+                                meas[k, 1] = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000
+                            else:
+                                meas[k, 1] = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000 *-1
+                        elif self.board_version == '22.10':
+                            meas[k, 1] = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * self.coef_p2 * 1000
+                        #else:
+                        #   self.exec_logger.debug('Unknown board')
+                        time.sleep(sampling_interval / 1000)
+                        dt = time.time() - start_delay  # real injection time (s)
+                        meas[k, 2] = time.time() - start_time
+                        if dt > (injection_duration - 0 * sampling_interval /1000):
+                            break
+                    
+                    # stop current injection
+                    self.pin0.value = False
+                    self.pin1.value = False
+                    end_delay = time.time()
 
+                    # truncate the meas array if we didn't fill the last samples
+                    meas = meas[:k+1]
+                    
+                    # measurement of current i and voltage u during off time
+                    measpp = np.zeros((meas.shape[0], 3)) * np.nan
+                    start_delay = time.time()  # stating measurement time
+                    dt = 0
+                    for k in range(0, measpp.shape[0]):
+                        # reading current value on ADS channels
+                        measpp[k, 0] = (AnalogIn(self.ads_current, ads.P0).voltage * 1000) / (50 * self.r_shunt)
+                        if self.board_version == '22.11':
+                            if pinMN == 0:
+                                measpp[k, 1] = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000
+                            else:
+                                measpp[k, 1] = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000 *-1
+                        elif self.board_version == '22.10':
+                            measpp[k, 1] = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * self.coef_p2 * 1000
+                        else:
+                            self.exec_logger.debug('unknown board')
+                        time.sleep(sampling_interval / 1000)
+                        dt = time.time() - start_delay  # real injection time (s)
+                        measpp[k, 2] = time.time() - start_time
+                        if dt > (injection_duration - 0 * sampling_interval /1000):
+                            break
+                    
+                    end_delay = time.time()
+                    
+                    # truncate the meas array if we didn't fill the last samples
+                    measpp = measpp[:k+1]
+                    
+                    # we alternate on which ADS1115 pin we measure because of sign of voltage
+                    if pinMN == 0:
+                        pinMN = 2
+                    else:
+                        pinMN = 0
+                    
+                    # store data for full wave form
+                    fulldata.append(meas)
+                    fulldata.append(measpp)
+                
                 # TODO get battery voltage and warn if battery is running low
                 # TODO send a message on SOH stating the battery level
-                end_calc = time.time()
+                    
+                # let's do some calculation (out of the stacking loop)
+                for n, meas in enumerate(fulldata[::2]):
+                    # take average from the samples per stack, then sum them all
+                    # average for the last third of the stacked values
+                    #  is done outside the loop
+                    sum_i = sum_i + (np.mean(meas[-int(meas.shape[0]//3):, 0]))
+                    vmn1 = np.mean(meas[-int(meas.shape[0]//3), 1])
+                    if (n % 2) == 0:
+                        sum_vmn = sum_vmn - vmn1
+                        sum_ps = sum_ps + vmn1
+                    else:
+                        sum_vmn = sum_vmn + vmn1
+                        sum_ps = sum_ps + vmn1
 
-                # TODO I am not sure I understand the computation below
-                # wait twice the actual injection time between two injection
-                # so it's a 50% duty cycle right?
-                time.sleep(2 * (end_delay - start_delay) - (end_calc - start_delay))
+            else:
+                sum_i = np.nan
+                sum_vmn = np.nan
+                sum_ps = np.nan
+                
+            if self.idps:
+                self.DPS.write_register(0x0000, 0, 2)  # reset to 0 volt
+                self.DPS.write_register(0x09, 0) # DPS5005 off
+                
+            # reshape full data to an array of good size
+            # we need an array of regular size to save in the csv
+            if oor == False:
+                fulldata = np.vstack(fulldata)
+                # we create a big enough array given nb_samples, number of
+                # half-cycles (1 stack = 2 half-cycles), and twice as we 
+                # measure decay as well
+                a = np.zeros((nb_stack * self.nb_samples * 2 * 2, 3)) * np.nan
+                a[:fulldata.shape[0], :] = fulldata
+                fulldata = a
+            else:
+                np.array([[]])
+
 
             # create a dictionary and compute averaged values from all stacks
             d = {
@@ -525,16 +850,19 @@ class OhmPi(object):
                 "B": quad[1],
                 "M": quad[2],
                 "N": quad[3],
-                "inj time [ms]": (end_delay - start_delay) * 1000,
-                "Vmn [mV]": (sum_vmn / (3 + 2 * nb_stack - 1)),
-                "I [mA]": (injection_current / (3 + 2 * nb_stack - 1)),
-                "R [ohm]": (sum_vmn / (3 + 2 * nb_stack - 1) / (injection_current / (3 + 2 * nb_stack - 1))),
-                "Ps [mV]": (sum_ps / (3 + 2 * nb_stack - 1)),
+                "inj time [ms]": (end_delay - start_delay) * 1000 if oor == False else 0,
+                "Vmn [mV]": sum_vmn / (2 * nb_stack),
+                "I [mA]": sum_i / (2 * nb_stack),
+                "R [ohm]": sum_vmn / sum_i,
+                "Ps [mV]": sum_ps / (2 * nb_stack),
                 "nbStack": nb_stack,
+                "Tx [V]": tx_volt if oor == False else 0,
                 "CPU temp [degC]": CPUTemperature().temperature,
-                "Time [s]": (-start_time + time.time()),
-                "Nb samples [-]": self.nb_samples
+                "Nb samples [-]": self.nb_samples,
+                "fulldata": fulldata,
             }
+            
+
         else:  # for testing, generate random data
             d = {'time': datetime.now().isoformat(), 'A': quad[0], 'B': quad[1], 'M': quad[2], 'N': quad[3],
                  'R [ohm]': np.abs(np.random.randn(1)).tolist()}
@@ -549,20 +877,20 @@ class OhmPi(object):
                 val = d[k]
                 output += f'{val}\t'
         output = output[:-1]
-        self.exec_logger.debug(output)
+
+        # to the data logger
         dd = d.copy()
+        dd.pop('fulldata')  # too much for logger
         dd.update({'A': str(dd['A'])})
         dd.update({'B': str(dd['B'])})
         dd.update({'M': str(dd['M'])})
         dd.update({'N': str(dd['N'])})
-        print(np.dtype(d['A']))
-        print(json.dumps(dd))
         self.data_logger.info(json.dumps(dd))
-        time.sleep(1)  # NOTE: why this?
 
         return d
 
-    def rs_check(self):
+
+    def rs_check(self, tx_volt=12):
         """ Check contact resistance.
         """
         # create custom sequence where MN == AB
@@ -577,6 +905,9 @@ class OhmPi(object):
                 elec[:-1],
                 elec[1:],
             ]).T
+        if self.idps:
+            quads[:, 2:] = 0  # we don't open Vmn to prevent burning the MN part
+            # as it has a smaller range of accepted voltage
 
         # create filename to store RS
         export_path_rs = self.settings['export_path'].replace('.csv', '') \
@@ -593,66 +924,47 @@ class OhmPi(object):
             # measure all quad of the RS sequence
             for i in range(0, quads.shape[0]):
                 quad = quads[i, :]  # quadrupole
-
-                # NOTE (GB): I'd use the self.run_measurement() for all this middle part so we an make use of autogain and so ...
-                # call the switch_mux function to switch to the right electrodes
-                # self.switch_mux_on(quad)
-
-                # run a measurement
-                # current_measurement = self.run_measurement(quad, 1, 0.25)
-
-                # switch mux off
-                # self.switch_mux_off(quad)
-
-                self.switch_mux_on(quad)
-
-                # current injection
-                pin0 = self.mcp.get_pin(0)
-                pin0.direction = Direction.OUTPUT
-                pin1 = self.mcp.get_pin(1)
-                pin1.direction = Direction.OUTPUT
-                pin0.value = False
-                pin1.value = False
-
-                # call the switch_mux function to switch to the right electrodes
-                self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x48)
-                # ADS1115 for voltage measurement (MN)
-                self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=0x49)
-                pin1.value = True  # inject from pin1 to pin0
-                pin0.value = False
-                time.sleep(0.2)
-
-                # measure current and voltage
-                current = AnalogIn(self.ads_current, ads.P0).voltage / (50 * self.r_shunt)
-                voltage = 12.
+                self.switch_mux_on(quad)  # put before raising the pins (otherwise conflict i2c)
+                d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=1, tx_volt=tx_volt, autogain=False)
+                
+                if self.idps:
+                    voltage = tx_volt * 1000.0 # imposed voltage on dps5005
+                else:
+                    voltage = d['Vmn [mV]']
+                current = d['I [mA]']
+                
                 # compute resistance measured (= contact resistance)
-                resistance = np.abs(voltage / current)
+                resist = abs(voltage / current) /1000.
+                #print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} kOhm'.format(
+                #    current, voltage, resist))
                 msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, ' \
-                      f'V: {voltage * 1000.:>10.3f} mV, ' \
-                      f'R: {resistance /1000.:>10.3f} kOhm'
+                          f'V: {voltage :>10.3f} mV, ' \
+                          f'R: {resist :>10.3f} kOhm'
 
                 self.exec_logger.debug(msg)
-
+                
                 # if contact resistance = 0 -> we have a short circuit!!
-                if resistance < 1e-2:
-                    msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {resistance / 1000.:.3f} kOhm'
+                if resist < 1e-5:
+                    msg = '!!!SHORT CIRCUIT!!! {:s}: {:.3f} kOhm'.format(
+                        str(quad), resist)
                     self.exec_logger.warning(msg)
-
+                    print(msg)
+                    
                 # save data and print in a text file
                 self.append_and_save(export_path_rs, {
                     'A': quad[0],
                     'B': quad[1],
-                    'RS [kOhm]': resistance / 1000.,
+                    'RS [kOhm]': resist,
                 })
-
+                
                 # close mux path and put pin back to GND
                 self.switch_mux_off(quad)
-                pin0.value = False
-                pin1.value = False
-
+                
             self.reset_mux()
+
         else:
             pass
+            
         self.status = 'idle'
         # self.run = False
 
@@ -671,6 +983,19 @@ class OhmPi(object):
         last_measurement : dict
             Last measurement taken in the form of a python dictionary
         """
+        last_measurement = deepcopy(last_measurement)
+        if 'fulldata' in last_measurement:
+            d = last_measurement['fulldata']
+            n = d.shape[0]
+            if n > 1:
+                idic = dict(zip(['i' + str(i) for i in range(n)], d[:,0]))
+                udic = dict(zip(['u' + str(i) for i in range(n)], d[:,1]))
+                tdic = dict(zip(['t' + str(i) for i in range(n)], d[:,2]))
+                last_measurement.update(idic)
+                last_measurement.update(udic)
+                last_measurement.update(tdic)
+            last_measurement.pop('fulldata')
+
 
         if os.path.isfile(filename):
             # Load data file and append data to it
@@ -778,8 +1103,13 @@ class OhmPi(object):
                     self.switch_mux_on(quad)
 
                     # run a measurement
-                    acquired_data = self.run_measurement(quad, self.settings['nb_stack'],
-                                                                   self.settings['injection_duration'])
+                    if self.on_pi:
+                        acquired_data = self.run_measurement(quad, **kwargs)
+                    else:  # for testing, generate random data
+                        acquired_data = {
+                            'A': [quad[0]], 'B': [quad[1]], 'M': [quad[2]], 'N': [quad[3]],
+                            'R [ohm]': np.abs(np.random.randn(1))
+                        }
 
                     # switch mux off
                     self.switch_mux_off(quad)
@@ -856,4 +1186,17 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 
 # for testing
 if __name__ == "__main__":
-    ohmpi = OhmPi(settings=OHMPI_CONFIG['settings'])
+    
+    # to run from 'python ohmpi.py'
+    #ohmpi = OhmPi(config='ohmpi_param.json')
+    #ohmpi.run_measurement()
+    #ohmpi.measure()
+    #ohmpi.read_quad('breadboard.txt')
+    #ohmpi.measure()
+    #time.sleep(20)
+    #ohmpi.stop()
+    
+    # to start interface (also python ohmpi.py)
+    Popen(['python', CONTROL_CONFIG['interface']])
+    print('done')
+
