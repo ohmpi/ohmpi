@@ -120,6 +120,10 @@ class MyServer(SimpleHTTPRequestHandler):
             os.mkdir('data')
         elif dic['cmd'] == 'update_settings':
             # ohmpi.stop()
+            if 'sequence' in dic['config'].keys and dic['config']['sequence'] is not None:
+                sequence = dic['config']['sequence']
+                dic['config'].pop('sequence', None)
+                payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'set_sequence', 'args': sequence})
             payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'update_settings', 'args': dic['config']})
             cdic = dic['config']
             publish.single(payload=payload, **publisher_config)
