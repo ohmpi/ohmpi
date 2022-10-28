@@ -18,15 +18,15 @@
         <h1>OhmPi Acquisition Board</h1>
         <!-- nb stacks, on-time -->
         <button id="update_settingsBtn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Settings</button>
-        <button id='startBtn' type="button" class="btn btn-primary">Start</button>
-        <button id='stopBtn' type="button" class="btn btn-warning">Stop</button>
+        <button id='runBtn' type="button" class="btn btn-primary">Run</button>
+        <button id='stopBtn' type="button" class="btn btn-warning">Interrupt</button>
         <!-- upload button for csv which display the table ABMN -->
         <button id="removeDataBtn" type="button" class="btn btn-danger">Clear data</button>
         <button id="getDataBtn" type="button" class="btn btn-info">Get data</button>
         <div class="form-check">
             <input id="dataRetrievalCheck" class="form-check-input" type="checkbox" value="">
             <label class="form-check-label" for="dataRetrievalCheck">
-                Automaticaly get data every 1 second
+                Automaticaly get data every 1 secondStart
             </label>
         </div>
         <div id='output'>Status: idle</div>
@@ -161,21 +161,21 @@
             xhr.send(query)
         }
 
-        // start button
-        function startBtnFunc() {
-            sendCommand('{"cmd": "start"}', function(x) {
+        // run button
+        function runBtnFunc() {
+            sendCommand('{"cmd": "run_sequence"}', function(x) {
                 console.log(x['status'])
                 if (x['status'] == 'running') {
                     output.innerHTML = 'Status: measuring...'
                 }
             })
         }
-        let startBtn = document.getElementById('startBtn')
-        startBtn.addEventListener('click', startBtnFunc)
+        let runBtn = document.getElementById('runBtn')
+        runBtn.addEventListener('click', runBtnFunc)
 
-        // stop button
+        // interrupt button
         function stopBtnFunc() {
-            sendCommand('{"cmd": "stop"}', function(x) {
+            sendCommand('{"cmd": "interrupt"}', function(x) {
                 output.innerHTML = 'Status: ' + x['status']
                 clearInterval(interv)
                 getData()

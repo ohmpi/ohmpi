@@ -91,12 +91,12 @@ class MyServer(SimpleHTTPRequestHandler):
         # global ohmpiThread, status, run
         dic = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
         rdic = {} # response dictionary
-        if dic['cmd'] == 'start':
-            payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'start'})
+        if dic['cmd'] == 'run_sequence':
+            payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'run_sequence'})
             publish.single(payload=payload, **publisher_config)
-        elif dic['cmd'] == 'stop':
+        elif dic['cmd'] == 'interrupt':
             # ohmpi.stop()
-            payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'stop'})
+            payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'interrupt'})
             publish.single(payload=payload, **publisher_config)
         elif dic['cmd'] == 'getData':
             # get all .csv file in data folder
