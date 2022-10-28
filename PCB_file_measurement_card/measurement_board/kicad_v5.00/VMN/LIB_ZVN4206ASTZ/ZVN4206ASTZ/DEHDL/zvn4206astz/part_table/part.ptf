@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'ZVN4206ASTZ'
+CLASS = DISCRETE
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "ARROW_PART_NUMBER", "ARROW_PRICE/STOCK", "MOUSER_TESTING_PART_NUMBER", "MOUSER_TESTING_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Diodes Inc.", "ZVN4206ASTZ" (!) = "", "ZVN4206ASTZ", "Other", "522-ZVN4206ASTZ", "https://www.mouser.co.uk/ProductDetail/Diodes-Incorporated/ZVN4206ASTZ?qs=OlC7AqGiEDlGIiNe7stL%252BQ%3D%3D", "ZVN4206ASTZ", "https://www.arrow.com/en/products/zvn4206astz/diodes-incorporated?region=nac", "", "", "N-Channel 60 V 600mA (Ta) 700mW (Ta) Through Hole E-Line (TO-92 compatible)", "https://www.diodes.com/assets/Datasheets/ZVN4206A.pdf", "4.01 mm"
+END_PART
+
+END.

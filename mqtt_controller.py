@@ -1,12 +1,12 @@
 import json
 
-import paho.mqtt.client as mqtt_client
+import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 from config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG
 import time
 import uuid
 
-client = mqtt_client.Client(f'ohmpi_{OHMPI_CONFIG["id"]}_controller', clean_session=False)  # create new instance
+client = mqtt.Client(f'ohmpi_{OHMPI_CONFIG["id"]}_controller', clean_session=False)  # create new instance
 print('connecting controller to broker')
 client.connect(MQTT_CONTROL_CONFIG['hostname'])
 client.loop_start()

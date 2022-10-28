@@ -2,8 +2,7 @@ import logging
 
 from paho.mqtt.client import MQTTv31
 
-mqtt_broker = 'mg3d-dev.umons.ac.be'  # TODO: set back to 'localhost'
-logging_suffix = '_interactive'
+mqtt_broker = 'localhost'
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': '0001',  # Unique identifier of the OhmPi board (string)
@@ -16,7 +15,7 @@ OHMPI_CONFIG = {
     'integer': 2,  # Max value 10 # TODO: Explain what this is...
     'version': 2,
     'max_elec': 64,
-    'board_addresses': {'A': 0x70, 'B': 0x71, 'M': 0x72, 'N': 0x73},  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
+    'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
     'settings': 'ohmpi_settings.json'
 }  # TODO: add a dictionary with INA models and associated gain values
 
@@ -48,7 +47,7 @@ DATA_LOGGING_CONFIG = {
 
 # State of Health logging configuration
 SOH_LOGGING_CONFIG = {
-    'file_name': f'soh{logging_suffix}.log',
+    'file_name': 'soh.log',
     'logging_to_console': True,
     'max_bytes': 16777216,
     'backup_count': 1024,
