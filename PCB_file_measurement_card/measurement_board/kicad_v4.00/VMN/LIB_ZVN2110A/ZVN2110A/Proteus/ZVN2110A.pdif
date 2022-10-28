@@ -1,0 +1,144 @@
+;Proteus Design Interchange Format
+(PDIF
+ (vendor "SamacSys Limited")
+ (version 1 0)
+ (library
+  (part "ZVN2110A"
+   (description "Diodes Inc ZVN2110A N-channel MOSFET Transistor, 0.32 A, 100 V, 3-Pin E-Line")
+   (family "TRX")
+   (package "E-LINE")
+   (attribute "Datasheet Link" "http://uk.rs-online.com/web/p/products/1574574")
+   (attribute "Manufacturer_Name" "Diodes Inc.")
+   (attribute "Manufacturer_Part_Number" "ZVN2110A")
+   (attribute "Mouser Part Number" "522-ZVN2110A")
+   (attribute "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Diodes-Incorporated/ZVN2110A?qs=GBLSl2Akirt3HiEZrqH%252Bcw%3D%3D")
+   (attribute "Arrow Part Number" "ZVN2110A")
+   (attribute "Arrow Price/Stock" "https://www.arrow.com/en/products/zvn2110a/diodes-incorporated?region=nac")
+   (attribute "Mouser Testing Part Number" "")
+   (attribute "Mouser Testing Price/Stock" "")
+   (gate
+    (symbol "ZVN2110A")
+    (pin "G" 2 PS)
+    (pin "D" 1 PS)
+    (pin "S" 3 PS)
+   )
+  )
+  (symbol "ZVN2110A"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (circle (pt 400 100) (pt 100 100))
+   )
+   (graphic
+    (stroke 10)
+    (path (pt 300 100) (pt 300 -100))
+   )
+   (graphic
+    (stroke 10)
+    (path (pt 300 200) (pt 300 300))
+   )
+   (graphic
+    (stroke 10)
+    (path (pt 100 0) (pt 200 0) (pt 200 200))
+   )
+   (graphic
+    (stroke 10)
+    (path (pt 300 100) (pt 230 100))
+   )
+   (graphic
+    (stroke 10)
+    (path (pt 300 200) (pt 230 200))
+   )
+   (graphic
+    (stroke 10)
+    (path (pt 230 0) (pt 300 0))
+   )
+   (graphic
+    (stroke 10)
+    (path (pt 230 220) (pt 230 180))
+   )
+   (graphic
+    (stroke 10)
+    (path (pt 230 -20) (pt 230 20))
+   )
+   (graphic
+    (stroke 10)
+    (path (pt 230 80) (pt 230 120))
+   )
+   (graphic
+    (stroke 10)
+    (path (closed true) (pt 230 100) (pt 270 120) (pt 270 80) (pt 230 100))
+   )
+   (terminal
+    (body (symbol "PINSHORT") (pt 0 0) (rot 0) (mir 0) (visible true))
+    (name (pt 0 -20) (rot 0) (just TOP LEFT) (visible false))
+    (number (pt 80 10) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PINSHORT") (pt 300 400) (rot 90) (mir X) (visible true))
+    (name (pt 0 -20) (rot 90) (just TOP RIGHT) (visible false))
+    (number (pt 0 20) (rot 90) (just TOP LEFT) (visible true)))
+   (terminal
+    (body (symbol "PINSHORT") (pt 300 -200) (rot 90) (mir 0) (visible true))
+    (name (pt 0 -20) (rot 90) (just TOP RIGHT) (visible false))
+    (number (pt 0 20) (rot 90) (just TOP LEFT) (visible true)))
+  )
+  (symbol "PIN"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 200 0))))
+  (symbol "PINSHORT"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 100 0))))
+  (package "E-LINE"
+   (units MM)
+   (layer TASM
+    (graphic
+     (stroke 0.254)
+     (path
+      (closed true)
+      (pt -2.285 1.14)
+      (pt 2.285 1.14)
+      (pt 2.285 -1.14)
+      (pt -2.285 -1.14)
+      (pt -2.285 1.14))))
+   (layer TSLK
+    (graphic
+     (stroke 0.254)
+     (path
+      (closed false)
+      (pt -2.285 1.14)
+      (pt -2.285 -1.14)
+      (pt 2.285 -1.14)
+      (pt 2.285 1.14)
+      (pt -2.285 1.14))))
+   (layer TSLK
+    (graphic
+     (stroke 0.254)
+     (circle
+      (pt -2.70947 0.026) (pt -2.61253 0.026)
+     )
+    )
+   )
+   (leg 1 (pt -1.27 0) (padstack 0))
+   (leg 2 (pt 0 0) (padstack 0))
+   (leg 3 (pt 1.27 0) (padstack 0))
+   (padstack 0
+    (hole 0.7)
+    (plated true)
+    (pad (layer TCOP) (round 1.13))
+    (pad (layer INNER) (round 1.13))
+    (pad (layer BCOP) (round 1.13))
+   )
+   (model "ZVN2110A.stp"
+    (euler 90 0 0)
+    (offset 0 0 0.30000001192092896)
+   )
+  )
+ )
+)

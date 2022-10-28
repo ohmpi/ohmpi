@@ -498,7 +498,19 @@
     ],
     [
       "9f60bb1d-ca92-41d5-b592-f34396aa7479",
-      "Alim"
+      "Alimentation"
+    ],
+    [
+      "433fb79c-38b7-4d80-8278-5eb2a5e83393",
+      "Relay_switch_dsp"
+    ],
+    [
+      "b2026999-6d31-4d17-9f3d-996babd42897",
+      "Vmn_measurement"
+    ],
+    [
+      "3a1d549c-401c-4ddf-9a51-4b7588f9097f",
+      "Current_injection_and_measurement"
     ]
   ],
   "text_variables": {}
