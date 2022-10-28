@@ -25,6 +25,7 @@ print(colored(f"Sending commands control topic {MQTT_CONTROL_CONFIG['ctrl_topic'
 cmd_id = None
 rdic = {}
 
+
 class MyServer(SimpleHTTPRequestHandler):
     # because we use SimpleHTTPRequestHandler, we do not need to implement
     # the do_GET() method (if we use the BaseHTTPRequestHandler, we would need to)

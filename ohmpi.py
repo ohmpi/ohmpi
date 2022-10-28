@@ -10,6 +10,8 @@ Olivier KAUFMANN (UMONS), Arnaud WATELET (UMONS) and Guillaume BLANCHY (ILVO).
 import os
 import io
 import json
+import warnings
+
 import numpy as np
 import csv
 import time
@@ -58,7 +60,7 @@ class OhmPi(object):
     def __init__(self, settings=None, sequence=None, use_mux=False, mqtt=True, on_pi=None):
         # flags and attributes
         if on_pi is None:
-            _, on_pi = OhmPi.get_platform()
+            _, on_pi = OhmPi._get_platform()
 
         self._sequence = sequence
         self.use_mux = use_mux
@@ -115,7 +117,7 @@ class OhmPi(object):
         print(self.settings)
         # read in acquisition settings
         if settings is not None:
-            self._update_acquisition_settings(settings)
+            self.update_settings(settings)
 
         print(self.settings)
         self.exec_logger.debug('Initialized with settings:' + str(self.settings))
@@ -163,14 +165,14 @@ class OhmPi(object):
         def on_message(client, userdata, message):
             command = message.payload.decode('utf-8')
             self.exec_logger.debug(f'Received command {command}')
-            self.process_commands(command)
+            self._process_commands(command)
 
         self.controller.on_message = on_message
         self.controller.loop_start()
         while True:
             time.sleep(.5)
 
-    def _update_acquisition_settings(self, config):
+    def update_settings(self, config):
         """Update acquisition settings from a json file or dictionary.
         Parameters can be:
             - nb_electrodes (number of electrode used, if 4, no MUX needed)
@@ -212,7 +214,7 @@ class OhmPi(object):
         self.exec_logger.debug(f'OHMPI_CONFIG = {str(OHMPI_CONFIG)}')
 
     @staticmethod
-    def find_identical_in_line(quads):
+    def _find_identical_in_line(quads):
         """Find quadrupole where A and B are identical.
         If A and B are connected to the same relay, the Pi burns (short-circuit).
         
@@ -251,7 +253,7 @@ class OhmPi(object):
         return output
 
     @staticmethod
-    def get_platform():
+    def _get_platform():
         """Get platform name and check if it is a raspberry pi
         Returns
         =======
@@ -268,6 +270,10 @@ class OhmPi(object):
         except FileNotFoundError:
             pass
         return platform, on_pi
+
+    def read_quad(self, filename):
+        warnings.warn('This function is deprecated. Use load_sequence instead.', DeprecationWarning)
+        self.load_sequence(self, filename)
 
     def load_sequence(self, filename):
         """Read quadrupole sequence from file.
@@ -292,7 +298,7 @@ class OhmPi(object):
         test_index_elec = np.array(np.where(sequence > self.max_elec))
 
         # locate lines where electrode A == electrode B
-        test_same_elec = self.find_identical_in_line(sequence)
+        test_same_elec = self._find_identical_in_line(sequence)
 
         # if statement with exit cases (TODO rajouter un else if pour le deuxième cas du ticket #2)
         if test_index_elec.size != 0:
@@ -314,7 +320,7 @@ class OhmPi(object):
 
         self.sequence = sequence
 
-    def switch_mux(self, electrode_nr, state, role):
+    def _switch_mux(self, electrode_nr, state, role):
         """Select the right channel for the multiplexer cascade for a given electrode.
         
         Parameters
@@ -366,7 +372,7 @@ class OhmPi(object):
         # another check to be sure A != B
         if quadrupole[0] != quadrupole[1]:
             for i in range(0, 4):
-                self.switch_mux(quadrupole[i], 'on', roles[i])
+                self._switch_mux(quadrupole[i], 'on', roles[i])
         else:
             self.exec_logger.error('A == B -> short circuit risk detected!')
 
@@ -380,17 +386,17 @@ class OhmPi(object):
         """
         roles = ['A', 'B', 'M', 'N']
         for i in range(0, 4):
-            self.switch_mux(quadrupole[i], 'off', roles[i])
+            self._switch_mux(quadrupole[i], 'off', roles[i])
 
     def reset_mux(self):
         """Switch off all multiplexer relays."""
         roles = ['A', 'B', 'M', 'N']
         for i in range(0, 4):
             for j in range(1, self.max_elec + 1):
-                self.switch_mux(j, 'off', roles[i])
+                self._switch_mux(j, 'off', roles[i])
         self.exec_logger.debug('All MUX switched off.')
 
-    def gain_auto(self, channel):
+    def _gain_auto(self, channel):
         """ Automatically set the gain on a channel
 
         Parameters
@@ -463,8 +469,8 @@ class OhmPi(object):
             pin1.value = True
             pin0.value = False
             time.sleep(injection_duration)
-            gain_current = self.gain_auto(AnalogIn(self.ads_current, ads.P0))
-            gain_voltage = self.gain_auto(AnalogIn(self.ads_voltage, ads.P0, ads.P1))
+            gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
+            gain_voltage = self._gain_auto(AnalogIn(self.ads_voltage, ads.P0, ads.P1))
             pin0.value = False
             pin1.value = False
             print('gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
@@ -588,7 +594,7 @@ class OhmPi(object):
 
         if self.on_pi:
             # make sure all mux are off to start with
-            self.reset_mux()
+            self._reset_mux()
 
             # measure all quad of the RS sequence
             for i in range(0, quads.shape[0]):
@@ -604,7 +610,7 @@ class OhmPi(object):
                 # switch mux off
                 # self.switch_mux_off(quad)
 
-                self.switch_mux_on(quad)
+                self._switch_mux_on(quad)
 
                 # current injection
                 pin0 = self.mcp.get_pin(0)
@@ -646,11 +652,11 @@ class OhmPi(object):
                 })
 
                 # close mux path and put pin back to GND
-                self.switch_mux_off(quad)
+                self._switch_mux_off(quad)
                 pin0.value = False
                 pin1.value = False
 
-            self.reset_mux()
+            self._reset_mux()
         else:
             pass
         self.status = 'idle'
@@ -662,7 +668,7 @@ class OhmPi(object):
 
     @staticmethod
     def append_and_save(filename, last_measurement):
-        """Append and save last measurement dataframe.
+        """Append and save last measurement dict.
 
         Parameters
         ----------
@@ -684,9 +690,18 @@ class OhmPi(object):
                 w = csv.DictWriter(f, last_measurement.keys())
                 w.writeheader()
                 w.writerow(last_measurement)
-                # last_measurement.to_csv(f, header=True)
 
-    def process_commands(self, command):
+    def _process_commands(self, command):
+        """ TODO
+
+        Parameters
+        ----------
+        command
+
+        Returns
+        -------
+
+        """
         try:
             cmd_id = None
             decoded_message = json.loads(command)
@@ -697,7 +712,7 @@ class OhmPi(object):
             e = None
             if cmd is not None and cmd_id is not None:
                 if cmd == 'update_settings' and args is not None:
-                    self._update_acquisition_settings(args)
+                    self.update_settings(args)
                     status = True
                 elif cmd == 'set_sequence' and args is not None:
                     try:
@@ -738,8 +753,20 @@ class OhmPi(object):
             reply = json.dumps(reply)
             self.exec_logger.debug(f'Execution report: {reply}')
 
-    def measure(self, cmd_id=None):
-        """Run the sequence in a separate thread. Can be stopped by 'OhmPi.stop()'.
+    def measure(self, *args, **kwargs):
+        warnings.warn('This function is deprecated. Use load_sequence instead.', DeprecationWarning)
+        self.run_sequence(self, *args, **kwargs)
+
+    def set_sequence(self, args):
+        try:
+            self.sequence = np.loadtxt(StringIO(args)).astype('uint32')
+            status = True
+        except Exception as e:
+            self.exec_logger.warning(f'Unable to set sequence: {e}')
+            status = False
+
+    def run_sequence(self, cmd_id=None):
+        """ Run the sequence in a separate thread. Can be stopped by 'OhmPi.stop()'.
         """
         # self.run = True
         self.status = 'running'
@@ -759,7 +786,7 @@ class OhmPi(object):
                 self.exec_logger.debug(f'Saving to {filename}')
 
                 # make sure all multiplexer are off
-                self.reset_mux()
+                self._reset_mux()
 
                 # measure all quadrupole of the sequence
                 if self.sequence is None:
@@ -775,14 +802,14 @@ class OhmPi(object):
                         break
 
                     # call the switch_mux function to switch to the right electrodes
-                    self.switch_mux_on(quad)
+                    self._switch_mux_on(quad)
 
                     # run a measurement
                     acquired_data = self.run_measurement(quad, self.settings['nb_stack'],
                                                                    self.settings['injection_duration'])
 
                     # switch mux off
-                    self.switch_mux_off(quad)
+                    self._switch_mux_off(quad)
 
                     # add command_id in dataset
                     acquired_data.update({'cmd_id': cmd_id})
@@ -813,8 +840,11 @@ class OhmPi(object):
         self.thread.start()
 
     def stop(self):
-        """Stop the acquisition.
-        """
+        warnings.warn('This function is deprecated. Use interrupt instead.', DeprecationWarning)
+        self.interrupt()
+
+    def interrupt(self):
+        """ Interrupt the acquisition. """
         self.status = 'stopping'
         if self.thread is not None:
             self.thread.join()
@@ -826,8 +856,12 @@ class OhmPi(object):
         self.cmd_listen = False
         if self.cmd_thread is not None:
             self.cmd_thread.join()
-        self.exec_logger.debug(f'Stopped listening to tcp port.')
+        self.exec_logger.debug(f'Stopped listening to control topic.')
         exit()
+
+    def restart(self):
+        self.exec_logger.info('Restarting pi...')
+        os.system('reboot')
 
 
 VERSION = '2.1.5'
@@ -840,7 +874,7 @@ print(colored(r' ________________________________' + '\n' +
               r' \___/\_| |_/\_|  |_/\_|    \___/ ', 'red'))
 print('OhmPi start')
 print('Version:', VERSION)
-platform, on_pi = OhmPi.get_platform()
+platform, on_pi = OhmPi._get_platform()
 if on_pi:
     print(colored(f'Running on {platform} platform', 'green'))
     # TODO: check model for compatible platforms (exclude Raspberry Pi versions that are not supported...)
