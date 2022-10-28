@@ -164,12 +164,6 @@ class OhmPi(object):
             self.pin1.direction = Direction.OUTPUT
             self.pin1.value = False
 
-
-        # Starts the command processing thread
-        self.cmd_listen = True
-        self.cmd_thread = threading.Thread(target=self.process_commands)
-        self.cmd_thread.start()
-
         # Starts the command processing thread
         self.cmd_listen = True
         self.cmd_thread = threading.Thread(target=self._control)
@@ -285,7 +279,7 @@ class OhmPi(object):
         return output
 
     @staticmethod
-    def get_platform():
+    def _get_platform():
         """Get platform name and check if it is a raspberry pi
         Returns
         =======
