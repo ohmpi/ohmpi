@@ -114,58 +114,52 @@ files (.json and .py).
 
 
 .. code-block:: python
-   :caption: Example of using the Python API to control OhmPi
+  :caption: Example of using the Python API to control OhmPi
 
+  import os
+  import numpy as np
+  import time
+  os.chdir("/home/pi/OhmPi")
+  from ohmpi import OhmPi
 
-   from ohmpi import OhmPi
-   k = OhmPi(idps=True)  # if V3.0 make sure to set idps to True
-   # the DPS5005 is used in V3.0 to inject higher voltage
+  ### Define object from class OhmPi
+  k = OhmPi()  # this load default parameters from the disk
+  
+  ### Default parameters can also be edited manually
+  k.settings['injection_duration'] = 0.5  # injection time in seconds
+  k.settings['nb_stack'] = 1  # one stack is two half-cycles
+  k.settings['nbr_meas'] = 1  # number of time the sequence is repeated
+
+  ### Update settings if needed 
+  k.update_settings({"injection_duration":0.2})
+
+  ### Set or load sequence
+  k.sequence = np.array([[1,2,3,4]])    # set numpy array of shape (n,4)
+  # k.set_sequence('1 2 3 4\n2 3 4 5')    # call function set_sequence and pass a string
+  # k.load_sequence('ABMN.txt')    # load sequence from a local file
+
+  ### Run contact resistance check
+  # k.rs_check()
+
+  ### Run sequence (synchronously - it will wait that all 
+  # sequence is measured before returning the prompt
+  k.run_sequence()
+  # k.run_sequence_async()  # sequence is run in a separate thread and the prompt returns immediately
+  # time.sleep(2)
+  # k.interrupt()  # kill the asynchrone sequence
+
+  ### Single measurement can also be taken with
+  k.switch_mux_on([1, 4, 2, 3])
+  k.run_measuremen()  # use default acquisition parameters
+  k.switch_mux_off([1, 4, 2, 3])  # don't forget this! risk of short-circuit
+  
+  ### Custom or adaptative argument (see help of  run_measurement())
+  k.run_measurement(nb_stack=4,  # do 4 stacks (8 half-cycles)
+                    injection_duration=2,  # inject for 2 seconds
+                    autogain=True)  # adapt gain of ADS to get good resolution   
    
-   # default parameters are stored in the pardict argument
-   # they can be manually changed
-   k.settings['injection_duration'] = 0.5  # injection time in seconds
-   k.settings['nb_stack'] = 1  # one stack is two half-cycles
-   k.settings['nbr_meas'] = 1  # number of time the sequence is repeated
-   
-   # without multiplexer, one can simple measure using
-   out = k.run_measurement()
-   # out contains information about the measurement and can be save as
-   k.append_and_save('out.csv', out)
-   
-   # custom or adaptative argument (see help of run_measurement())
-   k.run_measurement(nb_stack=4,  # do 4 stacks (8 half-cycles)
-                     injection_duration=2,  # inject for 2 seconds
-                     autogain=True,  # adapt gain of ADS to get good resolution
-                     strategy='vmin',  # inject min voltage for Vab (v3.0)
-                     tx_volt=5)  # vab for finding vmin or vab injectected
-                     # if 'strategy' is 'constant'
-   
-   # if a multiplexer is connected, we can also manually switch it
-   k.reset_mux()  # check that all mux are closed (do this FIRST)
-   k.switch_mux_on([1, 4, 2, 3])
-   k.run_measurement()
-   k.switch_mux_off([1, 4, 2, 3])  # don't forget this! risk of short-circuit
-   
-   # import a sequence
-   k.read_quad('sequence.txt')  # four columns, no header, space as separator
-   print(k.sequence)  # where the sequence is stored
-   
-   # rs check
-   k.rs_check()  # run an RS check (check contact resistances) for all
-   # electrodes of the given sequence
-   
-   # run a sequence
-   k.measure()  # measure accept same arguments as run_measurement()
-   # NOTE: this is an asynchronous command that runs in a separate thread
-   # after executing the command, the prompt will return immediately
-   # the asynchronous thread can be stopped during execution using
-   k.stop()
-   # otherwise, it will exit by itself at the end of the sequence
-   # if multiple measurement are to be taken, the sequence will be repeated
    
 
-
-   
 ***MQTT interface***
 
 Interface to communicate with the Pi designed for the Internet of Things (IoT).
