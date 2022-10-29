@@ -139,7 +139,7 @@ files (.json and .py).
   # k.load_sequence('ABMN.txt')    # load sequence from a local file
 
   ### Run contact resistance check
-  # k.rs_check()
+  k.rs_check()
 
   ### Run sequence (synchronously - it will wait that all 
   # sequence is measured before returning the prompt
@@ -148,12 +148,18 @@ files (.json and .py).
   # time.sleep(2)
   # k.interrupt()  # kill the asynchrone sequence
 
+  ### Run multiple sequences at given time interval
+  k.settings['nb_meas'] = 3  # run sequence three times
+  k.settings['sequence_delay'] = 100 # every 100 s 
+  k.run_multiple_sequences()  # asynchrone
+  # k.interrupt()  # kill the asynchrone sequence
+  
   ### Single measurement can also be taken with
   k.switch_mux_on([1, 4, 2, 3])
-  k.run_measuremen()  # use default acquisition parameters
+  k.run_measurement()  # use default acquisition parameters
   k.switch_mux_off([1, 4, 2, 3])  # don't forget this! risk of short-circuit
   
-  ### Custom or adaptative argument (see help of  run_measurement())
+  ### Custom or adaptative argument, see help(k.run_measurement)
   k.run_measurement(nb_stack=4,  # do 4 stacks (8 half-cycles)
                     injection_duration=2,  # inject for 2 seconds
                     autogain=True)  # adapt gain of ADS to get good resolution   
