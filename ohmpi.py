@@ -19,7 +19,6 @@ from io import StringIO
 from datetime import datetime
 from termcolor import colored
 import threading
-import paho.mqtt.client as mqtt_client
 from logging_setup import setup_loggers
 from config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG
 
@@ -80,29 +79,55 @@ class OhmPi(object):
         print(colored(f'SOH logger {self.soh_logger.handlers if self.soh_logger is not None else "None"}', 'blue'))
 
         # set controller
-        self.controller = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)  # create new instance
-        print(colored(f"Connecting to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']} on {MQTT_CONTROL_CONFIG['hostname']} broker", 'blue'))
-        trials = 0
-        trials_max = 10
-        broker_connected = False
-        while trials < trials_max:
-            try:
-                self.controller.username_pw_set(MQTT_CONTROL_CONFIG['auth'].get('username'),
-                                                MQTT_CONTROL_CONFIG['auth']['password'])
-                self.controller.connect(MQTT_CONTROL_CONFIG['hostname'])
-                trials = trials_max
-                broker_connected = True
-            except Exception as e:
-                self.exec_logger.debug(f'Unable to connect control broker: {e}')
-                self.exec_logger.info('trying again to connect to control broker...')
-                time.sleep(2)
-                trials += 1
-        if broker_connected:
-            self.exec_logger.info(f"Subscribing to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']}")
-            self.controller.subscribe(MQTT_CONTROL_CONFIG['ctrl_topic'], MQTT_CONTROL_CONFIG['qos'])
-        else:
-            self.exec_logger.error(f"Unable to connect to control broker on {MQTT_CONTROL_CONFIG['hostname']}")
-            self.controller = None
+        self.mqtt = False
+        self.cmd_id = None
+        if mqtt:
+            self.mqtt = True
+            import paho.mqtt.client as mqtt_client  # if we don't use MQTT but just Python API, we don't need to install it to start the ohmpi.py
+            import paho.mqtt.publish as publish
+            self.controller = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)  # create new instance
+            print(colored(f"Connecting to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']} on {MQTT_CONTROL_CONFIG['hostname']} broker", 'blue'))
+            trials = 0
+            trials_max = 10
+            broker_connected = False
+            while trials < trials_max:
+                try:
+                    self.controller.username_pw_set(MQTT_CONTROL_CONFIG['auth'].get('username'),
+                                                    MQTT_CONTROL_CONFIG['auth']['password'])
+                    self.controller.connect(MQTT_CONTROL_CONFIG['hostname'])
+                    trials = trials_max
+                    broker_connected = True
+                except Exception as e:
+                    self.exec_logger.debug(f'Unable to connect control broker: {e}')
+                    self.exec_logger.info('trying again to connect to control broker...')
+                    time.sleep(2)
+                    trials += 1
+            if broker_connected:
+                self.exec_logger.info(f"Subscribing to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']}")
+                self.controller.subscribe(MQTT_CONTROL_CONFIG['ctrl_topic'], MQTT_CONTROL_CONFIG['qos'])
+            
+                # MQTT does not ensure that the message is delivered to the subscribed client
+                # this is important for us as we want to ensure the command has been sent AND
+                # received. Hence, upon reception of a command, we publish a message acknowledgement
+                publisher_config = MQTT_CONTROL_CONFIG.copy()
+                publisher_config['topic'] = MQTT_CONTROL_CONFIG['ctrl_topic']
+                publisher_config.pop('ctrl_topic')
+                
+                def on_message(client, userdata, message):
+                    command = message.payload.decode('utf-8')
+                    dic = json.loads(command)
+                    if dic['cmd_id'] != self.cmd_id:
+                        self.cmd_id = dic['cmd_id']
+                        self.exec_logger.debug(f'Received command {command}')
+                        payload = json.dumps({'cmd_id': dic['cmd_id'], 'reply': 'ok'})
+                        publish.single(payload=payload, **publisher_config)
+                        self._process_commands(command)
+
+                self.controller.on_message = on_message
+    
+            else:
+                self.exec_logger.error(f"Unable to connect to control broker on {MQTT_CONTROL_CONFIG['hostname']}")
+                self.controller = None
 
         # read in hardware parameters (config.py)
         self._read_hardware_config()
@@ -164,10 +189,11 @@ class OhmPi(object):
             self.pin1.direction = Direction.OUTPUT
             self.pin1.value = False
 
-        # Starts the command processing thread
-        self.cmd_listen = True
-        self.cmd_thread = threading.Thread(target=self._control)
-        self.cmd_thread.start()
+        if False:
+            # Starts the command processing thread
+            self.cmd_listen = True
+            self.cmd_thread = threading.Thread(target=self._control)
+            self.cmd_thread.start()
 
     @property
     def sequence(self):
@@ -184,8 +210,9 @@ class OhmPi(object):
         else:
             self.use_mux = False
         self._sequence = sequence
-
-    def _control(self):
+    
+    def _control(self):  # ISSUE: somehow not ALL message are catch by this method in a thread
+        # this might be due to the thread... -> that means we can miss commands!
         def on_message(client, userdata, message):
             command = message.payload.decode('utf-8')
             self.exec_logger.debug(f'Received command {command}')
@@ -989,6 +1016,7 @@ class OhmPi(object):
         -------
 
         """
+        print('yyyy', command)
         try:
             cmd_id = None
             decoded_message = json.loads(command)
@@ -1008,15 +1036,18 @@ class OhmPi(object):
                     except Exception as e:
                         self.exec_logger.warning(f'Unable to set sequence: {e}')
                         status = False
-                elif cmd == 'run_sequence':
+                elif cmd == 'run_sequence': 
+                    self.run_sequence(cmd_id=cmd_id)
+                elif cmd == 'run_sequence_async':
                     self.run_sequence_async(cmd_id=cmd_id)
-                    while not self.status == 'idle':
-                        time.sleep(0.1)
+                    #while not self.status == 'idle':  # idem for async, we need to return immediately otherwise
+                    # the interrupt command cannot be processed
+                    #    time.sleep(0.1)
                     status = True
                 elif cmd == 'run_multiple_sequences':
                     self.run_multiple_sequences(cmd_id=cmd_id)
-                    while not self.status == 'idle':
-                        time.sleep(0.1)
+                    #while not self.status == 'idle':  # we cannot do that as it's supposed to be an asynchrone command
+                    #    time.sleep(0.1)
                     status = True
                 elif cmd == 'interrupt':
                     self.interrupt()
@@ -1200,3 +1231,7 @@ print(current_time.strftime("%Y-%m-%d %H:%M:%S"))
 # for testing
 if __name__ == "__main__":
     ohmpi = OhmPi(settings=OHMPI_CONFIG['settings'])
+    def func():
+        ohmpi.controller.loop_forever()
+    t = threading.Thread(target=func)
+    t.start()

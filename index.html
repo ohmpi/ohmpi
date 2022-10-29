@@ -26,7 +26,7 @@
         <div class="form-check">
             <input id="dataRetrievalCheck" class="form-check-input" type="checkbox" value="">
             <label class="form-check-label" for="dataRetrievalCheck">
-                Automaticaly get data every 1 secondStart
+                Automaticaly get data every 1 second
             </label>
         </div>
         <div id='output'>Status: idle</div>
@@ -421,18 +421,20 @@
                 // update list of quadrupoles if any
                 if (quads.length == 0) {
                     console.log('updating list of quadrupoles')
-                    let df = data[surveyNames[0]]
-                    let quadSelect = document.getElementById('quadSelect')
-                    quadSelect.innerHTML = ''
-                    for (let i = 0; i < df['a'].length; i++) {
-                        quad = [df['a'][i], df['b'][i], df['m'][i], df['n'][i]]
-                        quads.push(quad)
-                        let option = document.createElement('option')
-                        option.value = quad.join(', ')
-                        option.innerText = quad.join(', ')
-                        quadSelect.appendChild(option)
+                    if (surveyNames.length > 0) {
+                        let df = data[surveyNames[0]]
+                        let quadSelect = document.getElementById('quadSelect')
+                        quadSelect.innerHTML = ''
+                        for (let i = 0; i < df['a'].length; i++) {
+                            quad = [df['a'][i], df['b'][i], df['m'][i], df['n'][i]]
+                            quads.push(quad)
+                            let option = document.createElement('option')
+                            option.value = quad.join(', ')
+                            option.innerText = quad.join(', ')
+                            quadSelect.appendChild(option)
+                        }
+                        console.log('quads=', quads)
                     }
-                    console.log('quads=', quads)
                 }
 
                 // update time-serie figure

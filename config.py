@@ -80,7 +80,7 @@ MQTT_CONTROL_CONFIG = {
     'hostname': mqtt_broker,
     'port': 1883,
     'qos': 2,
-    'retain': False,
+    'retain': True,
     'keepalive': 60,
     'will': None,
     'auth': { 'username': 'mqtt_user', 'password': 'mqtt_password' },
@@ -88,5 +88,5 @@ MQTT_CONTROL_CONFIG = {
     'protocol': MQTTv31,
     'transport': 'tcp',
     'client_id': f'{OHMPI_CONFIG["id"]}',
-    'ctrl_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/ctrl'
+    'ctrl_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/ctrl',
 }
