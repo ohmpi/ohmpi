@@ -9,15 +9,27 @@ import os
 idps = False
 board_version = '22.10' # v2.0
 use_mux = True
-start_elec = 1  # start elec
+start_elec = 17  # start elec
 nelec = 16  # max elec in the sequence for testing
+
+# nelec electrodes Wenner sequence
+a = np.arange(nelec-3) + start_elec
+b = a + 3
+m = a + 1
+n = a + 2
+seq = np.c_[a, b, m, n]
 
 # testing measurement board only
 k = OhmPi(idps=idps, use_mux=use_mux)
+k.sequence = seq  # we need a sequence for possibly switching the mux
 k.reset_mux()  # just for safety
+if use_mux:
+    k.switch_mux_on(seq[:, 0])
 out1 = k.run_measurement(injection_duration=0.25, nb_stack=4, strategy='constant', tx_volt=12, autogain=True)
 out2 = k.run_measurement(injection_duration=0.5, nb_stack=2, strategy='vmin', tx_volt=5, autogain=True)
 out3 = k.run_measurement(injection_duration=1, nb_stack=1, strategy='vmax', tx_volt=5, autogain=True)
+if use_mux:
+    k.switch_mux_off(seq[:, 0])
 
 # visual figure of the full wave form
 fig, axs = plt.subplots(2, 1, sharex=True)
@@ -40,66 +52,63 @@ fig.savefig('check-fullwave.jpg')
 
 
 # test a sequence
+if use_mux:
+    # manually edit default settings
+    k.settings['injection_duration'] = 1
+    k.settings['nb_stack'] = 1
+    #k.settings['nbr_meas'] = 1
+    k.sequence = seq
+    k.reset_mux()
 
-# nelec electrodes Wenner sequence
-a = np.arange(nelec-3) + start_elec
-b = a + 3
-m = a + 1
-n = a + 2
-seq = np.c_[a, b, m, n]
+    # set quadrupole manually
+    k.switch_mux_on(seq[0, :])
+    out = k.run_measurement(quad=[3, 3, 3, 3], nb_stack=1, tx_volt=12, strategy='constant', autogain=True)
+    k.switch_mux_off(seq[0, :])
+    print(out)
 
-# manually edit default settings
-k.settings['injection_duration'] = 1
-k.settings['nb_stack'] = 1
-#k.settings['nbr_meas'] = 1
-k.sequence = seq
-k.reset_mux()
+    # run rs_check() and save data
+    k.rs_check()  # check all electrodes of the sequence
 
-# set quadrupole manually
-k.switch_mux_on([1, 4, 2, 3])
-out = k.run_measurement(quad=[3, 3, 3, 3], nb_stack=1, tx_volt=12, strategy='constant', autogain=True)
-k.switch_mux_off([1, 4, 2, 3])
-print(out)
+    # check values measured
+    fname = sorted(os.listdir('data/'))[-1]
+    print(fname)
+    dfrs = pd.read_csv('data/' + fname)
+    fig, ax = plt.subplots()
+    ax.hist(dfrs['RS [kOhm]'])
+    ax.set_xticks(np.arange(dfrs.shape[0]))
+    ax.set_xticklabels(dfrs['A'].astype(str) + ' - ' +
+                       dfrs['B'].astype(str), rotation=90)
+    ax.set_ylabel('Contact resistances [kOhm]')
+    fig.tight_layout()
+    fig.savefig('check-rs.jpg')
 
-# run rs_check() and save data
-k.rs_check()  # check all electrodes of the sequence
+    # run sequence synchronously and save data to file
+    k.run_sequence(nb_stack=1, injection_duration=0.25)
 
-# check values measured
-fname = sorted(os.listdir('data/'))[-1]
-print(fname)
-dfrs = pd.read_csv('data/' + fname)
-fig, ax = plt.subplots()
-ax.hist(dfrs['R [Ohm]']/1000)
-ax.set_xticks(np.arange(df.shape[0]))
-ax.set_xticklabels(df['A'].str + ' - ' + df['B'].str)
-ax.set_ylabel('Contact resistances [kOhm]')
-fig.tight_layout()
-fig.savefig('check-rs.jpg')
+    # check values measured
+    fname = sorted(os.listdir('data/'))[-1]
+    print(fname)
+    df = pd.read_csv('data/' + fname)
+    fig, ax = plt.subplots()
+    ax.hist(df['R [ohm]'])
+    ax.set_ylabel('Transfer resistance [Ohm]')
+    ax.set_xticks(np.arange(df.shape[0]))
+    ax.set_xticklabels(df['A'].astype(str) + ','
+                       + df['B'].astype(str) + ','
+                       + df['M'].astype(str) + ','
+                       + df['N'].astype(str), rotation=90)
+    fig.tight_layout()
+    fig.savefig('check-r.jpg')
 
-# run sequence synchronously and save data to file
-k.run_sequence(nb_stack=1, injection_duration=0.25)
+    # run sequence asynchronously and save data to file
+    k.run_sequence_async(nb_stack=1, injection_duration=0.25)
+    time.sleep(2)
+    k.interrupt()  # will kill the asynchronous sequence running
 
-# check values measured
-fname = sorted(os.listdir('data/'))[-1]
-print(fname)
-df = pd.read_csv('data/' + fname)
-fig, ax = plt.subplots()
-ax.hist(df['R [ohm]'])
-ax.set_ylabel('Transfer resistance [Ohm]')
-ax.set_xticks(np.arange(df.shape[0]))
-ax.set_xticklabels(df['A'] + ',' + df['B'] + ',' + df['M'] + ',' + df['N'])
-fig.tight_layou()
-fig.savefig('check-r.jpg')
-
-# run sequence asynchronously and save data to file
-k.run_sequence_async(nb_stack=1, injection_duration=0.25)
-time.sleep(2)
-k.interrupt()  # will kill the asynchronous sequence running
-
-# run a series of asynchronous sequences
-k.run_sequences(nb_stack=1, injection_duration=0.25)
-time.sleep(10)
-k.interrupt()
+    # run a series of asynchronous sequences
+    k.run_multiple_sequences(nb_stack=1, injection_duration=0.25)
+    time.sleep(2)
+    k.interrupt()
 
 
 # look at the noise frequency with FFT

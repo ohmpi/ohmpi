@@ -4,7 +4,7 @@ created on January 6, 2020.
 Updates May 2022, Oct 2022.
 Ohmpi.py is a program to control a low-cost and open hardware resistivity meter OhmPi that has been developed by
 Rémi CLEMENT (INRAE),Vivien DUBOIS (INRAE), Hélène GUYARD (IGE), Nicolas FORQUET (INRAE), Yannick FARGIER (IFSTTAR)
-Olivier KAUFMANN (UMONS), Arnaud WATELET (UMONS) and Guillaume BLANCHY (ILVO).
+Olivier KAUFMANN (UMONS), Arnaud WATELET (UMONS) and Guillaume BLANCHY (FNRS/ULiege).
 """
 
 import os
@@ -1042,10 +1042,7 @@ class OhmPi(object):
             reply = {'cmd_id': cmd_id, 'status': status}
             reply = json.dumps(reply)
             self.exec_logger.debug(f'Execution report: {reply}')
-
-    def measure(self, *args, **kwargs):
-        warnings.warn('This function is deprecated. Use load_sequence instead.', DeprecationWarning)
-        self.run_sequence(self, *args, **kwargs)
+        
 
     def set_sequence(self, args):
         try:
@@ -1056,7 +1053,8 @@ class OhmPi(object):
             status = False
 
     def run_sequence(self, cmd_id=None, **kwargs):
-        """Run sequence in sync mode
+        """Run sequence synchronously (=blocking on main thread).
+           Additional arguments are passed to run_measurement().
         """
         self.status = 'running'
         self.exec_logger.debug(f'Status: {self.status}')
@@ -1113,6 +1111,7 @@ class OhmPi(object):
 
     def run_sequence_async(self, cmd_id=None, **kwargs):
         """ Run the sequence in a separate thread. Can be stopped by 'OhmPi.interrupt()'.
+            Additional arguments are passed to run_measurement().
         """
         # self.run = True
         self.status = 'running'
@@ -1175,9 +1174,14 @@ class OhmPi(object):
         self.thread = threading.Thread(target=func)
         self.thread.start()
         
+    def measure(self, *args, **kwargs):
+        warnings.warn('This function is deprecated. Use run_multiple_sequences() instead.', DeprecationWarning)
+        self.run_sequence(self, *args, **kwargs)
+        
     def run_multiple_sequences(self, cmd_id=None, **kwargs):
         """ Run multiple sequences in a separate thread for monitoring mode.
             Can be stopped by 'OhmPi.interrupt()'.
+            Additional arguments are passed to run_measurement().
         """
         # self.run = True
         self.status = 'running'
