@@ -1009,12 +1009,12 @@ class OhmPi(object):
                         self.exec_logger.warning(f'Unable to set sequence: {e}')
                         status = False
                 elif cmd == 'run_sequence':
-                    self.run_sequence_async(cmd_id)
+                    self.run_sequence_async(cmd_id=cmd_id)
                     while not self.status == 'idle':
                         time.sleep(0.1)
                     status = True
                 elif cmd == 'run_multiple_sequences':
-                    self.run_multiple_sequences(cmd_id)
+                    self.run_multiple_sequences(cmd_id=cmd_id)
                     while not self.status == 'idle':
                         time.sleep(0.1)
                     status = True
@@ -1127,6 +1127,7 @@ class OhmPi(object):
         # self.run = True
         if sequence_delay == None:
             sequence_delay = self.settings['sequence_delay']
+        sequence_delay = int(sequence_delay)
         self.status = 'running'
         def func():
             for g in range(0, self.settings["nb_meas"]): # for time-lapse monitoring
@@ -1143,7 +1144,6 @@ class OhmPi(object):
                 if self.settings["nb_meas"] > 1:
                     time.sleep(dt)  # waiting for next measurement (time-lapse)
             self.status = 'idle'
-
         self.thread = threading.Thread(target=func)
         self.thread.start()
 
@@ -1155,6 +1155,7 @@ class OhmPi(object):
         """ Interrupt the acquisition. """
         self.status = 'stopping'
         if self.thread is not None:
+            print('joining thread')
             self.thread.join()
         self.exec_logger.debug(f'Status: {self.status}')
 
