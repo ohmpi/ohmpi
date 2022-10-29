@@ -125,31 +125,19 @@ class MyServer(SimpleHTTPRequestHandler):
         rdic = {} # response dictionary
         if dic['cmd'] == 'run_multiple_sequences':
             payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'run_multiple_sequences'})
-            #print('-- payload...', end='')
             publish.single(payload=payload, **publisher_config)
-            #print('published!')
 
         elif dic['cmd'] == 'interrupt':
             payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'interrupt'})
-            #for i in range(10):
             publish.single(payload=payload, **publisher_config)
-            #    time.sleep(.5)
-                # if received:
-                #     break
         elif dic['cmd'] == 'getData':
-            print(dic)
             # get all .csv file in data folder
-            fnames = sorted([fname for fname in os.listdir('data/') if fname[-4:] == '.csv'])
+            fnames = [fname for fname in os.listdir('data/') if fname[-4:] == '.csv']
             ddic = {}
-            fdownloaded = True
-            if dic['lastSurvey'] == '0':
-                fdownloaded = False
             for fname in fnames:
-                if (((fname != 'readme.txt')
-                        and ('_rs' not in fname))
-                    and ((fname.replace('.csv', '') == dic['lastSurvey'])
-                         or (fdownloaded == False))):
-                    fdownloaded = False
+                if ((fname != 'readme.txt')
+                    and ('_rs' not in fname)
+                    and (fname.replace('.csv', '') not in dic['surveyNames'])):
                     df = pd.read_csv('data/' + fname)
                     ddic[fname.replace('.csv', '')] = {
                         'a': df['A'].tolist(),

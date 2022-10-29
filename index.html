@@ -375,13 +375,10 @@
         
         // getData
         function getData() {
-            let lastSurvey = '0'
-            if (Object.keys(data).length > 1) {
-                lastSurvey = Object.keys(data).slice(-2, -1)
-            }
+            let surveyNames = []
             sendCommand(JSON.stringify({
                 'cmd': 'getData',
-                'lastSurvey': lastSurvey
+                'surveyNames': surveyNames
                 // last survey is often partial so we download it again
             }), function(ddic) {
                 // update status
@@ -393,8 +390,8 @@
                     ...ddic['data'] // value from second dic are preferred
                 }
                 
-                // dropdown with number of surveys and +++
-                let surveyNames = Object.keys(data).sort()
+                // dropdown with number of surveys
+                surveyNames = Object.keys(data).sort()
 
                 // remove listener as we will replace the choices
                 surveySelect.removeEventListener('change', surveySelectFunc)
