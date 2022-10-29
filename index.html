@@ -34,8 +34,8 @@
         <!-- Pseudo section -->
         <select id='surveySelect' class='custom-select'>
         </select>
-        <input id="cmin" type="number" value="0"/>
-        <input id="cmax" type="number" value="150"/>
+        <input id="cmin" type="number" value=""/>
+        <input id="cmax" type="number" value=""/>
         <button id="capplyBtn" type="button" class="btn btn-info">Apply</button>
         <div id="gd"></div>
         <div class="mb3 row">
@@ -163,9 +163,9 @@
 
         // run button
         function runBtnFunc() {
-            sendCommand('{"cmd": "run_sequence"}', function(x) {
-                console.log(x['status'])
-                if (x['status'] == 'running') {
+            sendCommand('{"cmd": "run_multiple_sequences"}', function(x) {
+                console.log(x['ohmpi_status'])
+                if (x['ohmpi_status'] == 'running') {
                     output.innerHTML = 'Status: measuring...'
                 }
             })
@@ -176,7 +176,7 @@
         // interrupt button
         function stopBtnFunc() {
             sendCommand('{"cmd": "interrupt"}', function(x) {
-                output.innerHTML = 'Status: ' + x['status']
+                output.innerHTML = 'Status: ' + x['ohmpi_status']
                 clearInterval(interv)
                 getData()
             })
@@ -375,13 +375,17 @@
         
         // getData
         function getData() {
+            let lastSurvey = '0'
+            if (Object.keys(data).length > 1) {
+                lastSurvey = Object.keys(data).slice(-2, -1)
+            }
             sendCommand(JSON.stringify({
                 'cmd': 'getData',
-                'surveyNames': Object.keys(data).slice(0, -1)
+                'lastSurvey': lastSurvey
                 // last survey is often partial so we download it again
             }), function(ddic) {
                 // update status
-                output.innerHTML = 'Status: ' + ddic['status']
+                //output.innerHTML = 'Status: ' + ddic['status']
 
                 // update data dic with new data
                 data = { // destructuring assignement (magic! :o)
@@ -499,7 +503,7 @@
         function removeDataBtnFunc() {
             sendCommand('{"cmd": "removeData"}',function(x) {
                 data = {}
-                output.innerHTML = 'Status: ' + x['status'] + ' (all data cleared)'
+                output.innerHTML = 'Status: ' + x['ohmpi_status'] + ' (all data cleared)'
                 console.log('all data removed')
             })
         }

@@ -92,19 +92,25 @@ class MyServer(SimpleHTTPRequestHandler):
         dic = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
         rdic = {} # response dictionary
         if dic['cmd'] == 'run_sequence':
-            payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'run_sequence'})
+            payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'run_multiple_sequences'})
             publish.single(payload=payload, **publisher_config)
         elif dic['cmd'] == 'interrupt':
             payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'interrupt'})
             publish.single(payload=payload, **publisher_config)
         elif dic['cmd'] == 'getData':
+            print(dic)
             # get all .csv file in data folder
-            fnames = [fname for fname in os.listdir('data/') if fname[-4:] == '.csv']
+            fnames = sorted([fname for fname in os.listdir('data/') if fname[-4:] == '.csv'])
             ddic = {}
+            fdownloaded = True
+            if dic['lastSurvey'] == '0':
+                fdownloaded = False
             for fname in fnames:
-                if (fname.replace('.csv', '') not in dic['surveyNames']
-                        and fname != 'readme.txt'
-                        and '_rs' not in fname):
+                if (((fname != 'readme.txt')
+                        and ('_rs' not in fname))
+                    and ((fname.replace('.csv', '') == dic['lastSurvey'])
+                         or (fdownloaded == False))):
+                    fdownloaded = False
                     df = pd.read_csv('data/' + fname)
                     ddic[fname.replace('.csv', '')] = {
                         'a': df['A'].tolist(),

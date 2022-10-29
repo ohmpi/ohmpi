@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
+import time
 
 # configure testing
 idps = False
@@ -102,12 +103,13 @@ if use_mux:
 
     # run sequence asynchronously and save data to file
     k.run_sequence_async(nb_stack=1, injection_duration=0.25)
-    time.sleep(2)
+    time.sleep(2) # if too short, it will still be resetting the mux (= no effect)
     k.interrupt()  # will kill the asynchronous sequence running
 
     # run a series of asynchronous sequences
+    k.settings['nb_meas'] = 2  # run the sequence twice
     k.run_multiple_sequences(nb_stack=1, injection_duration=0.25)
-    time.sleep(2)
+    time.sleep(5)
     k.interrupt()
 
 
