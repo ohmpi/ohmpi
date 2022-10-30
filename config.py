@@ -2,11 +2,12 @@ import logging
 
 from paho.mqtt.client import MQTTv31
 
-mqtt_broker = 'mg3d-dev.umons.ac.be' # 'localhost'
+ohmpi_id = '0001'
+mqtt_broker = 'localhost'
 logging_suffix = ''
 # OhmPi configuration
 OHMPI_CONFIG = {
-    'id': '0001',  # Unique identifier of the OhmPi board (string)
+    'id': ohmpi_id,  # Unique identifier of the OhmPi board (string)
     'R_shunt': 2,  # Shunt resistance in Ohms
     'Imax': 4800/50/2,  # Maximum current
     'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V

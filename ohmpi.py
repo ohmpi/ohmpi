@@ -4,7 +4,7 @@ created on January 6, 2020.
 Updates May 2022, Oct 2022.
 Ohmpi.py is a program to control a low-cost and open hardware resistivity meter OhmPi that has been developed by
 Rémi CLEMENT (INRAE), Vivien DUBOIS (INRAE), Hélène GUYARD (IGE), Nicolas FORQUET (INRAE), Yannick FARGIER (IFSTTAR)
-Olivier KAUFMANN (UMONS), Arnaud WATELET (UMONS) and Guillaume BLANCHY (ILVO).
+Olivier KAUFMANN (UMONS), Arnaud WATELET (UMONS) and Guillaume BLANCHY (FNRS/ULiege).
 """
 
 import os
@@ -19,7 +19,6 @@ from io import StringIO
 from datetime import datetime
 from termcolor import colored
 import threading
-import paho.mqtt.client as mqtt_client
 from logging_setup import setup_loggers
 from config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 from logging import DEBUG
@@ -53,7 +52,7 @@ class OhmPi(object):
 
     def __init__(self, settings=None, sequence=None, use_mux=False, mqtt=True, on_pi=None, idps=False):
         """Constructs the ohmpi object
-         
+
         Parameters
         ----------
         settings:
@@ -69,7 +68,7 @@ class OhmPi(object):
         idps:
             if true uses the DPS
         """
-        
+
         if on_pi is None:
             _, on_pi = OhmPi._get_platform()
 
@@ -85,40 +84,6 @@ class OhmPi(object):
         self.exec_logger = config_exec_logger
         self.soh_logger = None  # TODO: Implement the SOH logger
         print(msg)
-
-        # set controller
-        self.controller = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)
-        trials = 0
-        trials_max = 10
-        broker_connected = False
-        self.exec_logger.debug(f"Connecting to control broker: {MQTT_CONTROL_CONFIG['hostname']}")
-        while trials < trials_max:
-            try:
-                self.controller.username_pw_set(MQTT_CONTROL_CONFIG['auth'].get('username'),
-                                                MQTT_CONTROL_CONFIG['auth']['password'])
-                self.controller.connect(MQTT_CONTROL_CONFIG['hostname'])
-                trials = trials_max
-                broker_connected = True
-            except Exception as e:
-                self.exec_logger.debug(f'Unable to connect control broker: {e}')
-                self.exec_logger.debug('Retrying to connect control broker...')
-                time.sleep(2)
-                trials += 1
-        if broker_connected:
-            self.exec_logger.debug(f"Subscribing to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']}")
-            try:
-                self.controller.subscribe(MQTT_CONTROL_CONFIG['ctrl_topic'], MQTT_CONTROL_CONFIG['qos'])
-
-                msg = f"\u2611 Subscribed to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']}" \
-                      f" on {MQTT_CONTROL_CONFIG['hostname']} broker"
-                self.exec_logger.debug(msg)
-                print(colored(msg, 'blue'))
-            except Exception as e:
-                self.exec_logger.warning(f'Unable to subscribe to control topic : {e}')
-                self.controller = None
-        else:
-            self.exec_logger.error(f"Unable to connect to control broker on {MQTT_CONTROL_CONFIG['hostname']}")
-            self.controller = None
 
         # read in hardware parameters (config.py)
         self._read_hardware_config()
@@ -179,14 +144,68 @@ class OhmPi(object):
             self.pin1.direction = Direction.OUTPUT
             self.pin1.value = False
 
-        # Starts the command processing thread
-        if self.controller is not None:
-            self.cmd_listen = True
-            self.cmd_thread = threading.Thread(target=self._control)
-            self.cmd_thread.start()
-        else:
-            self.exec_logger.warning('No connection to control broker.'
-                                     ' Use python/ipython to interact with OhmPi object...')
+        # set controller
+        self.mqtt = mqtt
+        self.cmd_id = None
+        if self.mqtt:
+            import paho.mqtt.client as mqtt_client
+            import paho.mqtt.publish as publish
+
+            self.exec_logger.debug(f"Connecting to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']}"
+                                   f" on {MQTT_CONTROL_CONFIG['hostname']} broker")
+
+            def connect_mqtt() -> mqtt_client:
+                def on_connect(client, userdata, flags, rc):
+                    if rc == 0:
+                        self.exec_logger.debug(f"Successfully connected to control broker:"
+                                               f" {MQTT_CONTROL_CONFIG['hostname']}")
+                    else:
+                        self.exec_logger.warning(f'Failed to connect to control broker. Return code : {rc}')
+
+                client = mqtt_client.Client("ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)
+                client.username_pw_set(MQTT_CONTROL_CONFIG['auth'].get('username'),
+                                       MQTT_CONTROL_CONFIG['auth']['password'])
+                client.on_connect = on_connect
+                client.connect(MQTT_CONTROL_CONFIG['hostname'], MQTT_CONTROL_CONFIG['port'])
+                return client
+            try:
+                self.exec_logger.debug(f"Connecting to control broker: {MQTT_CONTROL_CONFIG['hostname']}")
+                self.controller = connect_mqtt()
+            except Exception as e:
+                self.exec_logger.debug(f'Unable to connect control broker: {e}')
+                self.controller = None
+            if self.controller is not None:
+                self.exec_logger.debug(f"Subscribing to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']}")
+                try:
+                    self.controller.subscribe(MQTT_CONTROL_CONFIG['ctrl_topic'], MQTT_CONTROL_CONFIG['qos'])
+
+                    msg = f"Subscribed to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']}" \
+                          f" on {MQTT_CONTROL_CONFIG['hostname']} broker"
+                    self.exec_logger.debug(msg)
+                    print(colored(f'\u2611 {msg}', 'blue'))
+                except Exception as e:
+                    self.exec_logger.warning(f'Unable to subscribe to control topic : {e}')
+                    self.controller = None
+                publisher_config = MQTT_CONTROL_CONFIG.copy()
+                publisher_config['topic'] = MQTT_CONTROL_CONFIG['ctrl_topic']
+                publisher_config.pop('ctrl_topic')
+
+                def on_message(client, userdata, message):
+                    print(message.payload.decode('utf-8'))
+                    command = message.payload.decode('utf-8')
+                    dic = json.loads(command)
+                    if dic['cmd_id'] != self.cmd_id:
+                        self.cmd_id = dic['cmd_id']
+                        self.exec_logger.debug(f'Received command {command}')
+                        payload = json.dumps({'cmd_id': dic['cmd_id'], 'reply': 'ok'})
+                        publish.single(payload=payload, **publisher_config)
+                        self._process_commands(command)
+
+                self.controller.on_message = on_message
+            else:
+                self.controller = None
+                self.exec_logger.warning('No connection to control broker.'
+                                         ' Use python/ipython to interact with OhmPi object...')
 
     @property
     def sequence(self):
@@ -204,18 +223,6 @@ class OhmPi(object):
         else:
             self.use_mux = False
         self._sequence = sequence
-
-    def _control(self):
-        """Gets commands from the controller(s) and execute them"""
-        def on_message(client, userdata, message):
-            command = message.payload.decode('utf-8')
-            self.exec_logger.debug(f'Received command {command}')
-            self._process_commands(command)
-
-        self.controller.on_message = on_message
-        self.controller.loop_start()
-        while True:
-            time.sleep(.5)  # TODO: Check if this waiting time should be reduced...
 
     def _update_acquisition_settings(self, config):
         warnings.warn('This function is deprecated, use update_settings() instead.', DeprecationWarning)
@@ -297,7 +304,7 @@ class OhmPi(object):
     @staticmethod
     def _get_platform():
         """Gets platform name and checks if it is a raspberry pi
-        
+
         Returns
         -------
         str, bool
@@ -403,7 +410,8 @@ class OhmPi(object):
                 else:
                     mcp2.get_pin(relay_nr - 1).value = False
 
-                self.exec_logger.debug(f'Switching relay {relay_nr} {state} for electrode {electrode_nr}')
+                self.exec_logger.debug(f'Switching relay {relay_nr} '
+                                       f'({str(hex(self.board_addresses[role]))}) {state} for electrode {electrode_nr}')
             else:
                 self.exec_logger.warning(f'Unable to address electrode nr {electrode_nr}')
 
@@ -456,11 +464,13 @@ class OhmPi(object):
 
         Parameters
         ----------
-        channel:
+        channel : object
+            Instance of ADS where voltage is measured.
 
         Returns
         -------
-            float
+        gain : float
+            Gain to be applied on ADS1115.
         """
         gain = 2 / 3
         if (abs(channel.voltage) < 2.040) and (abs(channel.voltage) >= 1.023):
@@ -553,9 +563,9 @@ class OhmPi(object):
         self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=self.ads_voltage_address)
 
         # we measure the voltage on both A0 and A2 to guess the polarity
-        I = AnalogIn(self.ads_current, ads.P0).voltage * 1000/50/self.r_shunt  # measure current
-        U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000  # measure voltage
-        U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000
+        I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt  # measure current
+        U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.  # measure voltage
+        U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.
         # print('I (mV)', I*50*self.r_shunt)
         # print('I (mA)', I)
         # print('U0 (mV)', U0)
@@ -571,7 +581,7 @@ class OhmPi(object):
 
         # compute constant
         c = vmn / I
-        Rab = (volt * 1000) / I
+        Rab = (volt * 1000.) / I
 
         self.exec_logger.debug(f'Rab = {Rab:.2f} Ohms')
 
@@ -585,9 +595,9 @@ class OhmPi(object):
                 iab = voltage_max / c
                 vab = iab * Rab
                 self.exec_logger.debug('target max voltage')
-            if vab > 25000:
-                vab = 25000
-            vab = vab / 1000 * 0.9
+            if vab > 25000.:
+                vab = 25000.
+            vab = vab / 1000. * 0.9
 
         elif strategy == 'vmin':
             vmn_min = c * current_min
@@ -598,9 +608,9 @@ class OhmPi(object):
                 iab = voltage_min / c
                 vab = iab * Rab
                 self.exec_logger.debug('target min voltage')
-            if vab < 1000:
-                vab = 1000
-            vab = vab / 1000 * 1.1
+            if vab < 1000.:
+                vab = 1000.
+            vab = vab / 1000. * 1.1
 
         elif strategy == 'constant':
             vab = volt
@@ -614,7 +624,8 @@ class OhmPi(object):
         return vab, polarity
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None,
-                        autogain=True, strategy='constant', tx_volt=5., best_tx_injtime=0.1):
+                        autogain=True, strategy='constant', tx_volt=5, best_tx_injtime=0.1,
+                        cmd_id=None):
         """Measures on a quadrupole and returns transfer resistance.
 
         Parameters
@@ -742,7 +753,7 @@ class OhmPi(object):
                     else:
                         self.pin0.value = False
                         self.pin1.value = True  # current injection nr2
-                    self.exec_logger.debug(str(n) + ' ' + str(self.pin0.value) + ' ' + str(self.pin1.value))
+                    self.exec_logger.debug(f'Stack {n} {self.pin0.value} {self.pin1.value}')
 
                     # measurement of current i and voltage u during injection
                     meas = np.zeros((self.nb_samples, 3)) * np.nan
@@ -759,7 +770,7 @@ class OhmPi(object):
                         elif self.board_version == '22.10':
                             meas[k, 1] = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * self.coef_p2 * 1000
                         # else:
-                        #   self.exec_logger.debug('Unknown board')
+                        #    self.exec_logger.debug('Unknown board')
                         time.sleep(sampling_interval / 1000)
                         dt = time.time() - start_delay  # real injection time (s)
                         meas[k, 2] = time.time() - start_time
@@ -873,17 +884,6 @@ class OhmPi(object):
             d = {'time': datetime.now().isoformat(), 'A': quad[0], 'B': quad[1], 'M': quad[2], 'N': quad[3],
                  'R [ohm]': np.abs(np.random.randn(1)).tolist()}
 
-        # round number to two decimal for nicer string output
-        output = [f'{k}\t' for k in d.keys()]
-        output = str(output)[:-1] + '\n'
-        for k in d.keys():
-            if isinstance(d[k], float):
-                val = np.round(d[k], 2)
-            else:
-                val = d[k]
-                output += f'{val}\t'
-        output = output[:-1]
-
         # to the data logger
         dd = d.copy()
         dd.pop('fulldata')  # too much for logger
@@ -891,7 +891,14 @@ class OhmPi(object):
         dd.update({'B': str(dd['B'])})
         dd.update({'M': str(dd['M'])})
         dd.update({'N': str(dd['N'])})
-        self.data_logger.info(json.dumps(dd))
+
+        # round float to 2 decimal
+        for key in dd.keys():
+            if isinstance(dd[key], float):
+                dd[key] = np.round(dd[key], 3)
+
+        dd['cmd_id'] = str(cmd_id)
+        self.data_logger.info(dd)
 
         return d
 
@@ -962,11 +969,9 @@ class OhmPi(object):
 
                 # close mux path and put pin back to GND
                 self.switch_mux_off(quad)
-            self.reset_mux()
         else:
             pass
         self.status = 'idle'
-        # self.run = False
 
     #
     #         # TODO if interrupted, we would need to restore the values
@@ -1024,10 +1029,12 @@ class OhmPi(object):
             cmd_id = decoded_message.pop('cmd_id', None)
             cmd = decoded_message.pop('cmd', None)
             args = decoded_message.pop('args', '[]')
-            if args[0] != '[':
+            if len(args) == 0:
                 args = f'["{args}"]'
             args = json.loads(args)
             kwargs = decoded_message.pop('kwargs', '{}')
+            if len(kwargs) == 0:
+                kwargs= '{}'
             kwargs = json.loads(kwargs)
             self.exec_logger.debug(f'Calling method {cmd}({args}, {kwargs})')
             status = False
@@ -1040,7 +1047,9 @@ class OhmPi(object):
                     output = getattr(self, cmd)(*args, **kwargs)
                     status = True
                 except Exception as e:
-                    self.exec_logger.error(f'{e}\nUnable to execute {cmd}({args}, {kwargs}')
+                    self.exec_logger.error(
+                        f"{e}\nUnable to execute {cmd}({args + ', ' if args != '[]' else ''}"
+                        f"{kwargs if kwargs != '{}' else ''})")
                     status = False
         except Exception as e:
             self.exec_logger.warning(f'Unable to decode command {message}: {e}')
@@ -1049,10 +1058,6 @@ class OhmPi(object):
             reply = {'cmd_id': cmd_id, 'status': status}
             reply = json.dumps(reply)
             self.exec_logger.debug(f'Execution report: {reply}')
-
-    def measure(self, *args, **kwargs):
-        warnings.warn('This function is deprecated. Use load_sequence instead.', DeprecationWarning)
-        self.run_sequence(*args, **kwargs)
 
     def set_sequence(self, sequence=sequence):
         try:
@@ -1063,7 +1068,8 @@ class OhmPi(object):
             status = False
 
     def run_sequence(self, cmd_id=None, **kwargs):
-        """Runs sequence in sync mode
+        """Runs sequence synchronously (=blocking on main thread).
+           Additional arguments are passed to run_measurement().
         """
         self.status = 'running'
         self.exec_logger.debug(f'Status: {self.status}')
@@ -1110,160 +1116,72 @@ class OhmPi(object):
             acquired_data.update({'cmd_id': cmd_id})
             # log data to the data logger
             self.data_logger.info(f'{acquired_data}')
-            print(f'{acquired_data}')
             # save data and print in a text file
             self.append_and_save(filename, acquired_data)
-            self.exec_logger.debug(f'{i+1:d}/{n:d}')
+            self.exec_logger.debug(f'quadrupole {i+1:d}/{n:d}')
 
         self.status = 'idle'
 
     def run_sequence_async(self, cmd_id=None, **kwargs):
         """Runs the sequence in a separate thread. Can be stopped by 'OhmPi.interrupt()'.
-           
+            Additional arguments are passed to run_measurement().
+
             Parameters
             ----------
-            cmd_id: 
-                
+            cmd_id:
+
         """
-        # self.run = True
-        self.status = 'running'
-        self.exec_logger.debug(f'Status: {self.status}')
-        self.exec_logger.debug(f'Measuring sequence: {self.sequence}')
 
         def func():
-            # if self.status != 'running':
-            #    self.exec_logger.warning('Data acquisition interrupted')
-            #    break
-            t0 = time.time()
-
-            # create filename with timestamp
-            filename = self.settings["export_path"].replace('.csv',
-                                                            f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
-            self.exec_logger.debug(f'Saving to {filename}')
-
-            # make sure all multiplexer are off
-            self.reset_mux()
-
-            # measure all quadrupole of the sequence
-            if self.sequence is None:
-                n = 1
-            else:
-                n = self.sequence.shape[0]
-            for i in range(0, n):
-                if self.sequence is None:
-                    quad = np.array([0, 0, 0, 0])
-                else:
-                    quad = self.sequence[i, :]  # quadrupole
-                if self.status == 'stopping':
-                    break
-
-                # call the switch_mux function to switch to the right electrodes
-                self.switch_mux_on(quad)
-
-                # run a measurement
-                if self.on_pi:
-                    acquired_data = self.run_measurement(quad, **kwargs)
-                else:  # for testing, generate random data
-                    acquired_data = {
-                        'A': [quad[0]], 'B': [quad[1]], 'M': [quad[2]], 'N': [quad[3]],
-                        'R [ohm]': np.abs(np.random.randn(1))
-                    }
-
-                # switch mux off
-                self.switch_mux_off(quad)
-
-                # add command_id in dataset
-                acquired_data.update({'cmd_id': cmd_id})
-                # log data to the data logger
-                self.data_logger.info(f'{acquired_data}')
-                print(f'{acquired_data}')
-                # save data and print in a text file
-                self.append_and_save(filename, acquired_data)
-                self.exec_logger.debug(f'{i+1:d}/{n:d}')
-
-        self.status = 'idle'
+            self.run_sequence(**kwargs)
 
         self.thread = threading.Thread(target=func)
         self.thread.start()
+        self.status = 'idle'
 
-    def run_multiple_sequences(self, *args, **kwargs):
-        """Run multiple sequences in a separate thread for monitoring mode.
-            Can be stopped by 'OhmPi.interrupt()'.
+    def measure(self, *args, **kwargs):
+        warnings.warn('This function is deprecated. Use run_multiple_sequences() instead.', DeprecationWarning)
+        self.run_multiple_sequences(self, *args, **kwargs)
+
+    def run_multiple_sequences(self, cmd_id=None, sequence_delay=None, nb_meas=None, **kwargs):
+        """Runs multiple sequences in a separate thread for monitoring mode.
+           Can be stopped by 'OhmPi.interrupt()'.
+           Additional arguments are passed to run_measurement().
+
+        Parameters
+        ----------
+        sequence_delay : int, optional
+            Number of seconds at which the sequence must be started from each others.
+        nb_meas : int, optional
+            Number of time the sequence must be repeated.
+        kwargs : dict, optional
+            See help(k.run_measurement) for more info.
         """
         # self.run = True
+        if sequence_delay is None:
+            sequence_delay = self.settings['sequence_delay']
+        sequence_delay = int(sequence_delay)
+        if nb_meas is None:
+            nb_meas = self.settings['nb_meas']
         self.status = 'running'
         self.exec_logger.debug(f'Status: {self.status}')
         self.exec_logger.debug(f'Measuring sequence: {self.sequence}')
-        cmd_id = kwargs.pop('cmd_id', None)
-        
+
         def func():
-            for g in range(0, self.settings["nb_meas"]):  # for time-lapse monitoring
-                if self.status != 'running':
+            for g in range(0, nb_meas): # for time-lapse monitoring
+                if self.status == 'stopping':
                     self.exec_logger.warning('Data acquisition interrupted')
                     break
                 t0 = time.time()
-
-                # create filename with timestamp
-                filename = self.settings["export_path"].replace('.csv',
-                                                                f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
-                self.exec_logger.debug(f'Saving to {filename}')
-
-                # make sure all multiplexer are off
-                self.reset_mux()
-
-                # measure all quadrupole of the sequence
-                if self.sequence is None:
-                    n = 1
-                else:
-                    n = self.sequence.shape[0]
-                for i in range(0, n):
-                    if self.sequence is None:
-                        quad = np.array([0, 0, 0, 0])
-                    else:
-                        quad = self.sequence[i, :]  # quadrupole
-                    if self.status == 'stopping':
-                        break
-
-                    # call the switch_mux function to switch to the right electrodes
-                    self.switch_mux_on(quad)
-
-                    # run a measurement
-                    if self.on_pi:
-                        acquired_data = self.run_measurement(quad, **kwargs)
-                    else:  # for testing, generate random data
-                        acquired_data = {
-                            'A': [quad[0]], 'B': [quad[1]], 'M': [quad[2]], 'N': [quad[3]],
-                            'R [ohm]': np.abs(np.random.randn(1))
-                        }
-
-                    # switch mux off
-                    self.switch_mux_off(quad)
-
-                    # add command_id in dataset
-                    acquired_data.update({'cmd_id': cmd_id})
-                    # log data to the data logger
-                    self.data_logger.info(f'{acquired_data}')
-                    print(f'{acquired_data}')
-                    # save data and print in a text file
-                    self.append_and_save(filename, acquired_data)
-                    self.exec_logger.debug(f'{i+1:d}/{n:d}')
-
-                # compute time needed to take measurement and subtract it from interval
-                # between two sequence run (= sequence_delay)
-                measuring_time = time.time() - t0
-                sleep_time = self.settings["sequence_delay"] - measuring_time
-
-                if sleep_time < 0:
-                    # it means that the measuring time took longer than the sequence delay
-                    sleep_time = 0
-                    self.exec_logger.warning('The measuring time is longer than the sequence delay. '
-                                             'Increase the sequence delay')
+                self.run_sequence(**kwargs)
 
                 # sleeping time between sequence
-                if self.settings["nb_meas"] > 1:
-                    time.sleep(sleep_time)  # waiting for next measurement (time-lapse)
+                dt = sequence_delay - (time.time() - t0)
+                if dt < 0:
+                    dt = 0
+                if nb_meas > 1:
+                    time.sleep(dt)  # waiting for next measurement (time-lapse)
             self.status = 'idle'
-
         self.thread = threading.Thread(target=func)
         self.thread.start()
 
@@ -1275,6 +1193,7 @@ class OhmPi(object):
         """Interrupts the acquisition. """
         self.status = 'stopping'
         if self.thread is not None:
+            self.exec_logger.debug('Joining tread...')
             self.thread.join()
         else:
             self.exec_logger.debug('No sequence measurement thread to interrupt.')
@@ -1320,3 +1239,5 @@ print(f'local date and time : {current_time.strftime("%Y-%m-%d %H:%M:%S")}')
 # for testing
 if __name__ == "__main__":
     ohmpi = OhmPi(settings=OHMPI_CONFIG['settings'])
+    if ohmpi.controller is not None:
+        ohmpi.controller.loop_forever()

@@ -23,7 +23,55 @@ publisher_config.pop('ctrl_topic')
 
 print(colored(f"Sending commands control topic {MQTT_CONTROL_CONFIG['ctrl_topic']} on {MQTT_CONTROL_CONFIG['hostname']} broker."))
 cmd_id = None
+received = False
 rdic = {}
+
+
+# set controller globally as __init__ seem to be called for each request and so we subscribe again each time (=overhead)
+controller = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)  # create new instance
+print(colored(f"Connecting to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']} on {MQTT_CONTROL_CONFIG['hostname']} broker", 'blue'))
+trials = 0
+trials_max = 10
+broker_connected = False
+while trials < trials_max:
+    try:
+        controller.username_pw_set(MQTT_CONTROL_CONFIG['auth'].get('username'),
+                                        MQTT_CONTROL_CONFIG['auth']['password'])
+        controller.connect(MQTT_CONTROL_CONFIG['hostname'])
+        trials = trials_max
+        broker_connected = True
+    except Exception as e:
+        print(f'Unable to connect control broker: {e}')
+        print('trying again to connect to control broker...')
+        time.sleep(2)
+        trials += 1
+if broker_connected:
+    print(f"Subscribing to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']}")
+    controller.subscribe(MQTT_CONTROL_CONFIG['ctrl_topic'], MQTT_CONTROL_CONFIG['qos'])
+else:
+    print(f"Unable to connect to control broker on {MQTT_CONTROL_CONFIG['hostname']}")
+    controller = None
+
+
+# start a listener for acknowledgement
+def _control():
+    def on_message(client, userdata, message):
+        global cmd_id, rdic, received
+
+        command = json.loads(message.payload.decode('utf-8'))
+        #print('++++', cmd_id, received, command)
+        if ('reply' in command.keys()) and (command['cmd_id'] == cmd_id):
+            print(f'Acknowledgement reception of command {command} by OhmPi')
+           # print('oooooooooook', command['reply'])
+            received = True
+            #rdic = command
+
+    controller.on_message = on_message
+    controller.loop_forever()
+    
+t = threading.Thread(target=_control)
+t.start()
+
 
 class MyServer(SimpleHTTPRequestHandler):
     # because we use SimpleHTTPRequestHandler, we do not need to implement
@@ -42,60 +90,44 @@ class MyServer(SimpleHTTPRequestHandler):
 
     def __init__(self, request, client_address, server):
         super().__init__(request, client_address, server)
-        # set controller
-        self.controller = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)  # create new instance
-        print(colored(f"Connecting to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']} on {MQTT_CONTROL_CONFIG['hostname']} broker", 'blue'))
-        trials = 0
-        trials_max = 10
-        broker_connected = False
-        while trials < trials_max:
-            try:
-                self.controller.username_pw_set(MQTT_CONTROL_CONFIG['auth'].get('username'),
-                                                MQTT_CONTROL_CONFIG['auth']['password'])
-                self.controller.connect(MQTT_CONTROL_CONFIG['hostname'])
-                trials = trials_max
-                broker_connected = True
-            except Exception as e:
-                print(f'Unable to connect control broker: {e}')
-                print('trying again to connect to control broker...')
-                time.sleep(2)
-                trials += 1
-        if broker_connected:
-            print(f"Subscribing to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']}")
-            self.controller.subscribe(MQTT_CONTROL_CONFIG['ctrl_topic'], MQTT_CONTROL_CONFIG['qos'])
-        else:
-            print(f"Unable to connect to control broker on {MQTT_CONTROL_CONFIG['hostname']}")
-            self.controller = None
-        self.cmd_thread = threading.Thread(target=self._control)
+        # global controller, once  # using global variable otherwise, we subscribe to client for EACH request
+        # if once:
+        #     self.controller = controller
+        #     self.cmd_thread = threading.Thread(target=self._control)
+        #     self.cmd_thread.start()
+        #     once = False
 
-    def _control(self):
-        def on_message(client, userdata, message):
-            global cmd_id, rdic
 
-            command = message.payload.decode('utf-8')
-            print(f'Received command {command}')
-            # self.process_commands(command)
-            if 'reply' in command.keys and command['cmd_id'] == cmd_id :
-                rdic = command
+    # we would like to listen to the ackn topic to check our message has been wel received
+    # by the OhmPi, however, this won't work as it seems an instance of MyServer is created
+    # each time (actually it's not a server but a requestHandler)
+    # def _control(self):
+    #     def on_message(client, userdata, message):
+    #         global cmd_id, rdic
 
-        self.controller.on_message = on_message
-        self.controller.loop_start()
-        while True:
-            time.sleep(.1)
+    #         command = json.loads(message.payload.decode('utf-8'))
+    #         print(f'Acknowledgement reception of command {command} by OhmPi')
+    #         if 'reply' in command.keys() and command['cmd_id'] == cmd_id :
+    #             print('oooooooooook', command['reply'])
+    #             #rdic = command
+
+    #     self.controller.on_message = on_message
+    #     print('starting loop')
+    #     self.controller.loop_forever()
+    #     print('forever')
 
     def do_POST(self):
-        global cmd_id, rdic
+        global cmd_id, rdic, received
+        received = False
         cmd_id = uuid.uuid4().hex
-        # global socket
-
-        # global ohmpiThread, status, run
         dic = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
+        #print('++', dic, cmd_id)
         rdic = {} # response dictionary
-        if dic['cmd'] == 'run_sequence':
-            payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'run_sequence'})
+        if dic['cmd'] == 'run_multiple_sequences':
+            payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'run_multiple_sequences'})
             publish.single(payload=payload, **publisher_config)
+
         elif dic['cmd'] == 'interrupt':
-            # ohmpi.stop()
             payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'interrupt'})
             publish.single(payload=payload, **publisher_config)
         elif dic['cmd'] == 'getData':
@@ -103,9 +135,9 @@ class MyServer(SimpleHTTPRequestHandler):
             fnames = [fname for fname in os.listdir('data/') if fname[-4:] == '.csv']
             ddic = {}
             for fname in fnames:
-                if (fname.replace('.csv', '') not in dic['surveyNames']
-                        and fname != 'readme.txt'
-                        and '_rs' not in fname):
+                if ((fname != 'readme.txt')
+                    and ('_rs' not in fname)
+                    and (fname.replace('.csv', '') not in dic['surveyNames'])):
                     df = pd.read_csv('data/' + fname)
                     ddic[fname.replace('.csv', '')] = {
                         'a': df['A'].tolist(),

@@ -26,7 +26,7 @@
         <div class="form-check">
             <input id="dataRetrievalCheck" class="form-check-input" type="checkbox" value="">
             <label class="form-check-label" for="dataRetrievalCheck">
-                Automaticaly get data every 1 secondStart
+                Automaticaly get data every 1 second
             </label>
         </div>
         <div id='output'>Status: idle</div>
@@ -34,8 +34,8 @@
         <!-- Pseudo section -->
         <select id='surveySelect' class='custom-select'>
         </select>
-        <input id="cmin" type="number" value="0"/>
-        <input id="cmax" type="number" value="150"/>
+        <input id="cmin" type="number" value=""/>
+        <input id="cmax" type="number" value=""/>
         <button id="capplyBtn" type="button" class="btn btn-info">Apply</button>
         <div id="gd"></div>
         <div class="mb3 row">
@@ -163,9 +163,9 @@
 
         // run button
         function runBtnFunc() {
-            sendCommand('{"cmd": "run_sequence"}', function(x) {
-                console.log(x['status'])
-                if (x['status'] == 'running') {
+            sendCommand('{"cmd": "run_multiple_sequences"}', function(x) {
+                console.log(x['ohmpi_status'])
+                if (x['ohmpi_status'] == 'running') {
                     output.innerHTML = 'Status: measuring...'
                 }
             })
@@ -176,7 +176,7 @@
         // interrupt button
         function stopBtnFunc() {
             sendCommand('{"cmd": "interrupt"}', function(x) {
-                output.innerHTML = 'Status: ' + x['status']
+                output.innerHTML = 'Status: ' + x['ohmpi_status']
                 clearInterval(interv)
                 getData()
             })
@@ -375,13 +375,14 @@
         
         // getData
         function getData() {
+            let surveyNames = []
             sendCommand(JSON.stringify({
                 'cmd': 'getData',
-                'surveyNames': Object.keys(data).slice(0, -1)
+                'surveyNames': surveyNames
                 // last survey is often partial so we download it again
             }), function(ddic) {
                 // update status
-                output.innerHTML = 'Status: ' + ddic['status']
+                //output.innerHTML = 'Status: ' + ddic['status']
 
                 // update data dic with new data
                 data = { // destructuring assignement (magic! :o)
@@ -389,8 +390,8 @@
                     ...ddic['data'] // value from second dic are preferred
                 }
                 
-                // dropdown with number of surveys and +++
-                let surveyNames = Object.keys(data).sort()
+                // dropdown with number of surveys
+                surveyNames = Object.keys(data).sort()
 
                 // remove listener as we will replace the choices
                 surveySelect.removeEventListener('change', surveySelectFunc)
@@ -417,18 +418,20 @@
                 // update list of quadrupoles if any
                 if (quads.length == 0) {
                     console.log('updating list of quadrupoles')
-                    let df = data[surveyNames[0]]
-                    let quadSelect = document.getElementById('quadSelect')
-                    quadSelect.innerHTML = ''
-                    for (let i = 0; i < df['a'].length; i++) {
-                        quad = [df['a'][i], df['b'][i], df['m'][i], df['n'][i]]
-                        quads.push(quad)
-                        let option = document.createElement('option')
-                        option.value = quad.join(', ')
-                        option.innerText = quad.join(', ')
-                        quadSelect.appendChild(option)
+                    if (surveyNames.length > 0) {
+                        let df = data[surveyNames[0]]
+                        let quadSelect = document.getElementById('quadSelect')
+                        quadSelect.innerHTML = ''
+                        for (let i = 0; i < df['a'].length; i++) {
+                            quad = [df['a'][i], df['b'][i], df['m'][i], df['n'][i]]
+                            quads.push(quad)
+                            let option = document.createElement('option')
+                            option.value = quad.join(', ')
+                            option.innerText = quad.join(', ')
+                            quadSelect.appendChild(option)
+                        }
+                        console.log('quads=', quads)
                     }
-                    console.log('quads=', quads)
                 }
 
                 // update time-serie figure
@@ -499,7 +502,7 @@
         function removeDataBtnFunc() {
             sendCommand('{"cmd": "removeData"}',function(x) {
                 data = {}
-                output.innerHTML = 'Status: ' + x['status'] + ' (all data cleared)'
+                output.innerHTML = 'Status: ' + x['ohmpi_status'] + ' (all data cleared)'
                 console.log('all data removed')
             })
         }
