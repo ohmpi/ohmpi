@@ -37,7 +37,7 @@ def setup_loggers(mqtt=True):
                                                            interval=EXEC_LOGGING_CONFIG['interval'])
     exec_formatter = logging.Formatter(log_format)
     exec_formatter.converter = gmtime
-    exec_formatter.datefmt = '%Y/%m/%d %H:%M:%S UTC'
+    exec_formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
     exec_handler.setFormatter(exec_formatter)
     exec_logger.addHandler(exec_handler)
     exec_logger.setLevel(EXEC_LOGGING_CONFIG['logging_level'])
@@ -73,7 +73,7 @@ def setup_loggers(mqtt=True):
                                                            interval=DATA_LOGGING_CONFIG['interval'])
     data_formatter = logging.Formatter(log_format)
     data_formatter.converter = gmtime
-    data_formatter.datefmt = '%Y/%m/%d %H:%M:%S UTC'
+    data_formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
     data_handler.setFormatter(exec_formatter)
     data_logger.addHandler(data_handler)
     data_logger.setLevel(DATA_LOGGING_CONFIG['logging_level'])

@@ -21,10 +21,10 @@ OHMPI_CONFIG = {
     'board_version': '22.10'
 }  # TODO: add a dictionary with INA models and associated gain values
 
-# CONTROL_CONFIG = {
-#     'tcp_port': 5555,
-#     'interface': 'mqtt_interface.py'  # 'http_interface'
-# }
+CONTROL_CONFIG = {
+    'tcp_port': 5555,
+    'interface': 'mqtt_interface.py'  # 'http_interface'
+}
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
     'logging_level': logging.DEBUG,
@@ -80,7 +80,7 @@ MQTT_CONTROL_CONFIG = {
     'hostname': mqtt_broker,
     'port': 1883,
     'qos': 2,
-    'retain': False,
+    'retain': True,
     'keepalive': 60,
     'will': None,
     'auth': { 'username': 'mqtt_user', 'password': 'mqtt_password' },
@@ -88,5 +88,5 @@ MQTT_CONTROL_CONFIG = {
     'protocol': MQTTv31,
     'transport': 'tcp',
     'client_id': f'{OHMPI_CONFIG["id"]}',
-    'ctrl_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/ctrl'
+    'ctrl_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/ctrl',
 }
