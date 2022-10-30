@@ -2,4 +2,3 @@ numpy
 paho-mqtt
 termcolor
 pandas
-pyzmq

@@ -2,8 +2,8 @@ import logging
 
 from paho.mqtt.client import MQTTv31
 
-mqtt_broker = 'localhost'
-logging_suffix = '_interactive'
+mqtt_broker = 'mg3d-dev.umons.ac.be' # 'localhost'
+logging_suffix = ''
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': '0001',  # Unique identifier of the OhmPi board (string)
@@ -21,13 +21,9 @@ OHMPI_CONFIG = {
     'board_version': '22.10'
 }  # TODO: add a dictionary with INA models and associated gain values
 
-# CONTROL_CONFIG = {
-#     'tcp_port': 5555,
-#     'interface': 'mqtt_interface.py'  # 'http_interface'
-# }
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
-    'logging_level': logging.DEBUG,
+    'logging_level': logging.INFO,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',
     'max_bytes': 262144,
