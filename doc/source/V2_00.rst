@@ -95,8 +95,29 @@ Once configure, the webserver should start by itself on start and once
 connected to the Pi, the user can go to `10.3.141.1:8080 <http://10.3.141.1:8080>`_
 to access the interface.
  
- 
-TODO add screenshot of interface
+.. figure:: img/http-interface-pseudo-section.png
+	   :width: 400px
+	   :align: center
+	   :height: 350px
+	   :alt: Web Interface
+	   :caption: Web interface with its interactive pseudo-section.
+	   :figclass: align-center
+	   
+.. figure:: img/http-interface-evolution.png
+	   :width: 400px
+	   :align: center
+	   :height: 350px
+	   :alt: Evolution of apparent resistivity with time
+	   :caption: Evolution of quadrupole apparent resistivity with time.
+	   :figclass: align-center
+	   
+.. figure:: img/http-interface-rs.png
+	   :width: 400px
+	   :align: center
+	   :height: 350px
+	   :alt: Contact resistance check
+	   :caption: Contact resistance check.
+	   :figclass: align-center
  
 
 

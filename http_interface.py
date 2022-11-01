@@ -30,7 +30,7 @@ rdic = {}
 
 
 # set controller globally as __init__ seem to be called for each request and so we subscribe again each time (=overhead)
-controller = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)  # create new instance
+controller = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_interface_http", clean_session=False)  # create new instance
 print(colored(f"Connecting to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']} on {MQTT_CONTROL_CONFIG['hostname']} broker", 'blue'))
 trials = 0
 trials_max = 10

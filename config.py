@@ -1,9 +1,13 @@
 import logging
+from utils import get_platform
 
 from paho.mqtt.client import MQTTv31
 
+_, on_pi = get_platform()
 ohmpi_id = '0001'
-mqtt_broker = 'localhost'
+# mqtt_broker = 'localhost'
+mqtt_broker = 'localhost' if on_pi else 'mg3d-dev.umons.ac.be'
+
 logging_suffix = ''
 # OhmPi configuration
 OHMPI_CONFIG = {
@@ -25,6 +29,7 @@ OHMPI_CONFIG = {
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
+    'log_file_logging_level' : logging.DEBUG,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',
     'max_bytes': 262144,
