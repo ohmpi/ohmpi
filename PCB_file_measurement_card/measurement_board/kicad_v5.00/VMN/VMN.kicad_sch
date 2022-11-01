@@ -2958,9 +2958,6 @@
     (path "/ba752f58-4858-4c95-abf1-e383c286c581"
       (reference "#PWR08") (unit 1) (value "GNDD") (footprint "")
     )
-    (path "/b2026999-6d31-4d17-9f3d-996babd42897/bf359b6d-5c2e-4fa8-a5ca-b65740612361"
-      (reference "#PWR09") (unit 1) (value "GNDA") (footprint "")
-    )
     (path "/4957c3f8-8efd-44f7-9fab-639c1a78dfd1"
       (reference "#PWR010") (unit 1) (value "GNDA") (footprint "")
     )
@@ -3054,6 +3051,12 @@
     (path "/b2026999-6d31-4d17-9f3d-996babd42897/5b775fe6-442e-49a3-becb-9a7bfd78718b"
       (reference "D6") (unit 1) (value "BAT86") (footprint "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal")
     )
+    (path "/b2026999-6d31-4d17-9f3d-996babd42897/ff68e563-7ccd-40ea-9ae9-d0948dd7aeee"
+      (reference "D7") (unit 1) (value "1N4148") (footprint "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal")
+    )
+    (path "/b2026999-6d31-4d17-9f3d-996babd42897/1cd5668a-fd41-4801-98c7-061c675f1e45"
+      (reference "D8") (unit 1) (value "1N4148") (footprint "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal")
+    )
     (path "/daee4369-1d59-4521-8a6f-a3117d6884ee"
       (reference "J1") (unit 1) (value "DSP_out_12v_GND") (footprint "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal")
     )
@@ -3080,9 +3083,6 @@
     )
     (path "/69f7acd3-c534-45d5-925d-06ac5b005f91"
       (reference "J9") (unit 1) (value "TX_bat") (footprint "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal")
-    )
-    (path "/3a1d549c-401c-4ddf-9a51-4b7588f9097f/dc8ace8c-66d7-4c4a-b13c-55802e4eb204"
-      (reference "J10") (unit 1) (value "A/B") (footprint "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal")
     )
     (path "/b9b8c2ec-5606-4304-8c21-fd009a485940"
       (reference "J11") (unit 1) (value "Screw_Terminal_VMN") (footprint "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal")
@@ -3149,6 +3149,9 @@
     )
     (path "/3a1d549c-401c-4ddf-9a51-4b7588f9097f/fbe7548e-b89f-429b-9c09-7d2f7071b3e6"
       (reference "R8") (unit 1) (value "2") (footprint "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P20.32mm_Horizontal")
+    )
+    (path "/b2026999-6d31-4d17-9f3d-996babd42897/914b961e-0bd4-4471-a78c-02544442e2f2"
+      (reference "R9") (unit 1) (value "20 Mohms") (footprint "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal")
     )
     (path "/9692e08d-7b1f-4dfb-891d-67e2a7a88347"
       (reference "U1") (unit 1) (value "MCP23008-xP") (footprint "Package_DIP:DIP-18_W7.62mm")

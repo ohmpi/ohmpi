@@ -33,9 +33,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.7,
-          "height": 1.5,
-          "width": 1.5
+          "drill": 3.2,
+          "height": 3.2,
+          "width": 3.2
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -446,7 +446,7 @@
     "last_paths": {
       "gencad": "",
       "idf": "",
-      "netlist": "VMN.net",
+      "netlist": "VMN4.net",
       "specctra_dsn": "",
       "step": "",
       "vrml": ""
@@ -474,7 +474,7 @@
     "meta": {
       "version": 1
     },
-    "net_format_name": "",
+    "net_format_name": "KiCad",
     "ngspice": {
       "fix_include_paths": true,
       "fix_passive_vals": false,
