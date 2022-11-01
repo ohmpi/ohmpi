@@ -967,7 +967,7 @@ class OhmPi(object):
             # add command_id in dataset
             acquired_data.update({'cmd_id': cmd_id})
             # log data to the data logger
-            self.data_logger.info(f'{acquired_data}')
+            # self.data_logger.info(f'{acquired_data}')  # already in run_measurement()
             # save data and print in a text file
             self.append_and_save(filename, acquired_data)
             self.exec_logger.debug(f'quadrupole {i + 1:d}/{n:d}')
