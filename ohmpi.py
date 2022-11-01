@@ -655,7 +655,7 @@ class OhmPi(object):
             (V3.0 only) Injection time in seconds used for finding the best voltage.
         """
         self.exec_logger.debug('Starting measurement')
-        self.exec_logger.info('Waiting for data')
+        self.exec_logger.info('Waiting for data')  # do we need this as info? debug is enough I think (gb)
 
         # check arguments
         if quad is None:
@@ -936,7 +936,7 @@ class OhmPi(object):
             for i in range(0, quads.shape[0]):
                 quad = quads[i, :]  # quadrupole
                 self.switch_mux_on(quad)  # put before raising the pins (otherwise conflict i2c)
-                d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=1, tx_volt=tx_volt, autogain=False)
+                d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=0.2, tx_volt=tx_volt, autogain=False)
 
                 if self.idps:
                     voltage = tx_volt * 1000.  # imposed voltage on dps5005
@@ -984,9 +984,9 @@ class OhmPi(object):
         Parameters
         ----------
         filename : str
-            filename to save the last measurement dataframe
+            Filename to save the last measurement dataframe.
         last_measurement : dict
-            Last measurement taken in the form of a python dictionary
+            Last measurement taken in the form of a python dictionary.
         """
         last_measurement = deepcopy(last_measurement)
         if 'fulldata' in last_measurement:
@@ -1015,27 +1015,21 @@ class OhmPi(object):
                 w.writerow(last_measurement)
 
     def _process_commands(self, message):
-        """Processes commands received from the controller(s)
+        """Process commands received from the controller(s).
 
         Parameters
         ----------
         message : str
-            message containing a command and arguments or keywords and arguments
+            Message containing a command and arguments or keywords and arguments 
+            that can be passed as a JSON string.
         """
-
         try:
             decoded_message = json.loads(message)
             print(f'decoded message: {decoded_message}')
             cmd_id = decoded_message.pop('cmd_id', None)
             cmd = decoded_message.pop('cmd', None)
-            args = decoded_message.pop('args', '[]')
-            if len(args) == 0:
-                args = f'["{args}"]'
-            args = json.loads(args)
-            kwargs = decoded_message.pop('kwargs', '{}')
-            if len(kwargs) == 0:
-                kwargs= '{}'
-            kwargs = json.loads(kwargs)
+            args = decoded_message.pop('args', [])
+            kwargs = decoded_message.pop('kwargs', {})
             self.exec_logger.debug(f'Calling method {cmd}({args}, {kwargs})')
             status = False
             # e = None  # NOTE: Why this?
@@ -1059,9 +1053,17 @@ class OhmPi(object):
             reply = json.dumps(reply)
             self.exec_logger.debug(f'Execution report: {reply}')
 
-    def set_sequence(self, sequence=sequence):
+    def set_sequence(self, sequence=''):
+        """Set a sequence from a string of text.
+        
+        Parameters
+        ----------
+        sequence : list of list of int
+            List of quadrupoles in formatted as [[A1, B1, M1, N1], [A2, B2, M2, N2], ...].
+        """
         try:
-            self.sequence = np.loadtxt(StringIO(sequence)).astype('uint32')
+            self.sequence = np.array(sequence).astype(int)
+            # self.sequence = np.loadtxt(StringIO(sequence)).astype('uint32')
             status = True
         except Exception as e:
             self.exec_logger.warning(f'Unable to set sequence: {e}')
@@ -1115,7 +1117,7 @@ class OhmPi(object):
             # add command_id in dataset
             acquired_data.update({'cmd_id': cmd_id})
             # log data to the data logger
-            self.data_logger.info(f'{acquired_data}')
+            # self.data_logger.info(f'{acquired_data}')  # already in run_measurement()
             # save data and print in a text file
             self.append_and_save(filename, acquired_data)
             self.exec_logger.debug(f'quadrupole {i+1:d}/{n:d}')
