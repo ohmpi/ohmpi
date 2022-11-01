@@ -8,7 +8,7 @@ Olivier KAUFMANN (UMONS), Arnaud WATELET (UMONS) and Guillaume BLANCHY (FNRS/ULi
 """
 
 import os
-import io
+from utils import get_platform
 import json
 import warnings
 from copy import deepcopy
@@ -64,13 +64,14 @@ class OhmPi(object):
         mqtt: bool, defaut: True
             if True publish on mqtt topics while logging, otherwise use other loggers only
         on_pi: bool,None default: None
-            if None, the platform on which the class is instanciated is determined to set on_pi to either True or False
+            if None, the platform on which the class is instantiated is determined to set on_pi to either True or False.
+            if False the behaviour of an ohmpi will be partially emulated and return random data.
         idps:
             if true uses the DPS
         """
 
         if on_pi is None:
-            _, on_pi = OhmPi._get_platform()
+            _, on_pi = get_platform()
 
         self._sequence = sequence
         self.use_mux = use_mux
@@ -162,7 +163,7 @@ class OhmPi(object):
                     else:
                         self.exec_logger.warning(f'Failed to connect to control broker. Return code : {rc}')
 
-                client = mqtt_client.Client("ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)
+                client = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)
                 client.username_pw_set(MQTT_CONTROL_CONFIG['auth'].get('username'),
                                        MQTT_CONTROL_CONFIG['auth']['password'])
                 client.on_connect = on_connect
@@ -197,8 +198,8 @@ class OhmPi(object):
                     if dic['cmd_id'] != self.cmd_id:
                         self.cmd_id = dic['cmd_id']
                         self.exec_logger.debug(f'Received command {command}')
-                        payload = json.dumps({'cmd_id': dic['cmd_id'], 'reply': 'ok'})
-                        publish.single(payload=payload, **publisher_config)
+                        # payload = json.dumps({'cmd_id': dic['cmd_id'], 'reply': 'ok'})
+                        # publish.single(payload=payload, **publisher_config)
                         self._process_commands(command)
 
                 self.controller.on_message = on_message
@@ -300,26 +301,6 @@ class OhmPi(object):
         output = np.where(quads[:, 0] == quads[:, 1])[0]
 
         return output
-
-    @staticmethod
-    def _get_platform():
-        """Gets platform name and checks if it is a raspberry pi
-
-        Returns
-        -------
-        str, bool
-            name of the platform on which the code is running, boolean that is true if the platform is a raspberry pi"""
-
-        platform = 'unknown'
-        on_pi = False
-        try:
-            with io.open('/sys/firmware/devicetree/base/model', 'r') as f:
-                platform = f.read().lower()
-            if 'raspberry pi' in platform:
-                on_pi = True
-        except FileNotFoundError:
-            pass
-        return platform, on_pi
 
     def read_quad(self, filename):
         warnings.warn('This function is deprecated. Use load_sequence instead.', DeprecationWarning)
@@ -1028,13 +1009,13 @@ class OhmPi(object):
             print(f'decoded message: {decoded_message}')
             cmd_id = decoded_message.pop('cmd_id', None)
             cmd = decoded_message.pop('cmd', None)
-            args = decoded_message.pop('args', '[]')
+            args = decoded_message.pop('args', '')
             if len(args) == 0:
                 args = f'["{args}"]'
             args = json.loads(args)
-            kwargs = decoded_message.pop('kwargs', '{}')
+            kwargs = decoded_message.pop('kwargs', '')
             if len(kwargs) == 0:
-                kwargs= '{}'
+                kwargs = '"{}"'
             kwargs = json.loads(kwargs)
             self.exec_logger.debug(f'Calling method {cmd}({args}, {kwargs})')
             status = False
@@ -1222,7 +1203,8 @@ print(colored(r' ________________________________' + '\n' +
               r'\ \_/ / | | || |  | || |    _| |_' + '\n' +
               r' \___/\_| |_/\_|  |_/\_|    \___/ ', 'red'))
 print('Version:', VERSION)
-platform, on_pi = OhmPi._get_platform()  # noqa
+platform, on_pi = get_platform()
+
 if on_pi:
     print(colored(f'\u2611 Running on {platform} platform', 'green'))
     # TODO: check model for compatible platforms (exclude Raspberry Pi versions that are not supported...)

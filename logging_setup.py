@@ -42,7 +42,7 @@ def setup_loggers(mqtt=True):
     exec_formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
     exec_handler.setFormatter(exec_formatter)
     exec_logger.addHandler(exec_handler)
-    exec_logger.setLevel(EXEC_LOGGING_CONFIG['logging_level'])
+    exec_logger.setLevel(EXEC_LOGGING_CONFIG['log_file_logging_level'])
 
     if logging_to_console:
         console_exec_handler = logging.StreamHandler(sys.stdout)
