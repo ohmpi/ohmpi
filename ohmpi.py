@@ -485,9 +485,9 @@ class OhmPi(object):
 
         self.sequence = sequence
 
-    def measure(self, *args, **kwargs):
+    def measure(self, **kwargs):
         warnings.warn('This function is deprecated. Use run_multiple_sequences() instead.', DeprecationWarning)
-        self.run_multiple_sequences(self, *args, **kwargs)
+        self.run_multiple_sequences(self, **kwargs)
 
     def _process_commands(self, message):
         """Processes commands received from the controller(s)
@@ -505,47 +505,50 @@ class OhmPi(object):
             self.exec_logger.debug(f'Decoded message {decoded_message}')
             cmd_id = decoded_message.pop('cmd_id', None)
             cmd = decoded_message.pop('cmd', None)
-            args = decoded_message.pop('args', None)
-            if args is not None:
-                if len(args) != 0:
-                    if args[0] != '[':
-                        args = f'["{args}"]'
-                    self.exec_logger.debug(f'args to decode: {args}')
-                    args = json.loads(args) if args != '[]' else None
-                    self.exec_logger.debug(f'Decoded args {args}')
-                else:
-                    args = None
+            # args = decoded_message.pop('args', None)
+            # if args is not None:
+            #    if len(args) != 0:
+            #        if args[0] != '[':
+            #            args = f'["{args}"]'
+            #        self.exec_logger.debug(f'args to decode: {args}')
+            #        args = json.loads(args) if args != '[]' else None
+            #        self.exec_logger.debug(f'Decoded args {args}')
+            #    else:
+            #        args = None
             kwargs = decoded_message.pop('kwargs', None)
-            if kwargs is not None:
-                if len(kwargs) != 0:
-                    if kwargs[0] != '{':
-                        kwargs = '{"' + kwargs + '"}'
-                    self.exec_logger.debug(f'kwargs to decode: {kwargs}')
-                    kwargs = json.loads(kwargs) if kwargs != '' else None
-                    self.exec_logger.debug(f'Decoded kwargs {kwargs}')
-                else:
-                    kwargs = None
-            self.exec_logger.debug(f"Calling method {cmd}({str(args) + ', ' if args is not None else ''}"
-                                   f"{str(kwargs) if kwargs is not None else ''})")
+            # if kwargs is not None:
+            #     if len(kwargs) != 0:
+            #         if kwargs[0] != '{':
+            #             kwargs = '{"' + kwargs + '"}'
+            #         self.exec_logger.debug(f'kwargs to decode: {kwargs}')
+            #         kwargs = json.loads(kwargs) if kwargs != '' else None
+            #         self.exec_logger.debug(f'Decoded kwargs {kwargs}')
+            #     else:
+            #         kwargs = None
+            self.exec_logger.debug(f"Calling method {cmd}({str(kwargs) if kwargs is not None else ''})")
+            # self.exec_logger.debug(f"Calling method {cmd}({str(args) + ', ' if args is not None else ''}"
+            #                        f"{str(kwargs) if kwargs is not None else ''})")
             if cmd_id is None:
                 self.exec_logger.warning('You should use a unique identifier for cmd_id')
             if cmd is not None:
                 try:
-                    if args is None:
-                        if kwargs is None:
-                            output = getattr(self, cmd)()
-                        else:
-                            output = getattr(self, cmd)(**kwargs)
+                    # if args is None:
+                    #     if kwargs is None:
+                    #         output = getattr(self, cmd)()
+                    #     else:
+                    #         output = getattr(self, cmd)(**kwargs)
+                    # else:
+                    if kwargs is None:
+                        output = getattr(self, cmd)()
                     else:
-                        if kwargs is None:
-                            output = getattr(self, cmd)(*args)
-                        else:
-                            output = getattr(self, cmd)(*args, **kwargs)
+                        output = getattr(self, cmd)(**kwargs)
                     status = True
                 except Exception as e:
+                    print(f'kwargs: {kwargs}')
                     self.exec_logger.error(
-                        f"Unable to execute {cmd}({str(args) + ', ' if args is not None else ''}"
-                        f"{str(kwargs) if kwargs is not None else ''}): {e}")
+                        f"Unable to execute {cmd}({str(kwargs) if kwargs is not None else ''}): {e}")
+                        # f"Unable to execute {cmd}({str(args) + ', ' if args is not None else ''}"
+                        # f"{str(kwargs) if kwargs is not None else ''}): {e}")
                     status = False
         except Exception as e:
             self.exec_logger.warning(f'Unable to decode command {message}: {e}')
