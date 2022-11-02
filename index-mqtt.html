@@ -145,11 +145,14 @@
         let callbacks = {} // store callback (might not be needed)
 
         // function with MQTT
-        let topic = '/World'
-        let hostname = 'localhost'
+        let topic = 'ohmpi_0001' // we could change this through a drop-down to connect to a different ohmpi
+        let topic_ctrl = topic + '/ctrl'
+        let topic_exec = topic + '/exec'
+        let topic_data = topic + '/data'
+        let hostname = location.hostname
         let port = 9001
         let clientId = 'ohmpi_0001_html'
-
+        let message = null
 
         // create client
         client = new Paho.MQTT.Client(hostname, port, clientId);
@@ -159,28 +162,42 @@
 
         function onConnect() {
             console.log("onConnect")
-            client.subscribe(topic)
+            client.subscribe(topic_data)
+            client.subscribe(topic_exec)
+
+            // send welcome message
             message = new Paho.MQTT.Message("Hello from index.html")
-            message.destinationName = topic
+            message.destinationName = topic_ctrl
             client.send(message)
         }
 
         function onConnectionLost(responseObject) {
             if (responseObject.errorCode !== 0)
-                console.log("onConnectionLost:"+responseObject.errorMessage)
+                console.log("onConnectionLost:" + responseObject.errorMessage)
         }
         
         function onMessageArrived(message) {
-            console.log("onMessageArrived:"+message.payloadString)
+            console.log("onMessageArrived:" + message.payloadString)
             try {
-                let response = JSON.parse(message.payloadString)
-                console.log('response=', response)
-                // check ID of message against our dictionnary of callback
-                let cmd_id = response['cmd_id']
-                if (callbacks.hasOwnProperty(cmd_id)) {
-                    console.log('++ execute callback')
-                    callbacks[cmd_id](response['content']) // execute callback
+                let payload = message.payloadString
+                if (message.topic == topic_data) {
+                    // process data
+                    console.log('DATA', payload)
+                    // usually these don't have a cmd_id so we are not sure when
+
+                } else if (message.topic == topic_exec) {
+                    // display it in the log
+                    console.log('EXEC LOG:', payload)
                 }
+
+                // let response = JSON.parse(message.payloadString)
+                // console.log('response=', response)
+                // // check ID of message against our dictionnary of callback
+                // let cmd_id = response['cmd_id']
+                // if (callbacks.hasOwnProperty(cmd_id)) {
+                //     console.log('++ execute callback')
+                //     callbacks[cmd_id](response['content']) // execute callback
+                // }
             } catch (e) {
                 console.log(e)
             }
@@ -188,6 +205,14 @@
         }
         
         // useful functions
+        function generateUniqSerial() {  
+            return 'xxxx-xxxx-xxx-xxxx'.replace(/[x]/g, (c) => {  
+                const r = Math.floor(Math.random() * 16);  
+                return r.toString(16);  
+            });  
+        }
+
+        // sending commands to the OhmPi
         function sendCommand(query, callback=null) {
             // dic in the form: {'cmd': X, ...} as JSON
             if (callback == null) {
@@ -211,19 +236,19 @@
             */
             
             // generate a unique command id to be associated with the commands
-            let uuid = crypto.randomUUID()
+            let uuid = generateUniqSerial()
             commands[uuid] = query
             callbacks[uuid] = callback // store the callback to be processed later when message arrives
             let payload = '{"cmd_id": "' + uuid + '",' + query.slice(1)
             console.log('sendCommand()', payload)
             message = new Paho.MQTT.Message(payload)
-            message.destinationName = topic
+            message.destinationName = topic_ctrl
             client.send(message)            
         }
 
         // run button
         function runBtnFunc() {
-            sendCommand('{"cmd": "run_sequence"}', function(x) {
+            sendCommand('{"cmd": "run_multiple_sequences"}', function(x) {
                 console.log(x['status'])
                 if (x['status'] == 'running') {
                     output.innerHTML = 'Status: measuring...'
@@ -258,7 +283,9 @@
             function configCallback() {
                 sendCommand(JSON.stringify({
                     'cmd': 'update_settings',
-                     'config': formVals
+                    'kwargs': {
+                        'config': formVals
+                    }
                 }), function(x) {
                     console.log('update_settings', x)
                 })

@@ -872,15 +872,13 @@ class OhmPi(object):
 
         return d
 
-    def run_multiple_sequences(self, cmd_id=None, sequence_delay=None, nb_meas=None, **kwargs):
+    def run_multiple_sequences(self, sequence_delay=None, nb_meas=None, **kwargs):
         """Runs multiple sequences in a separate thread for monitoring mode.
            Can be stopped by 'OhmPi.interrupt()'.
            Additional arguments are passed to run_measurement().
 
         Parameters
         ----------
-        cmd_id :
-
         sequence_delay : int, optional
             Number of seconds at which the sequence must be started from each others.
         nb_meas : int, optional
@@ -916,7 +914,7 @@ class OhmPi(object):
         self.thread = threading.Thread(target=func)
         self.thread.start()
 
-    def run_sequence(self, cmd_id=None, **kwargs):
+    def run_sequence(self, **kwargs):
         """Runs sequence synchronously (=blocking on main thread).
            Additional arguments are passed to run_measurement().
         """
@@ -962,9 +960,9 @@ class OhmPi(object):
             self.switch_mux_off(quad)
 
             # add command_id in dataset
-            acquired_data.update({'cmd_id': cmd_id})
+            # acquired_data.update({'cmd_id': cmd_id}) // in run_measurement()
             # log data to the data logger
-            # self.data_logger.info(f'{acquired_data}')
+            # self.data_logger.info(f'{acquired_data}') // in run_measurement()
             # save data and print in a text file
             self.append_and_save(filename, acquired_data)
             self.exec_logger.debug(f'quadrupole {i + 1:d}/{n:d}')
@@ -1177,7 +1175,8 @@ class OhmPi(object):
 
     def set_sequence(self, sequence=None):
         try:
-            self.sequence = np.loadtxt(StringIO(sequence)).astype('uint32')
+            self.sequence = np.array(sequence)
+            #self.sequence = np.loadtxt(StringIO(sequence)).astype('uint32')
             status = True
         except Exception as e:
             self.exec_logger.warning(f'Unable to set sequence: {e}')
