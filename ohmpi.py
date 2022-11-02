@@ -1388,7 +1388,7 @@ class OhmPi(object):
                     with open(config) as json_file:
                         dic = json.load(json_file)
                     self.settings.update(dic)
-                self.exec_logger.debug('Acquisition parameters updated: ' + str(self.settings))
+                self.exec_logger.info('Acquisition parameters updated: ' + str(self.settings))
                 status = True
             except Exception as e:
                 self.exec_logger.warning('Unable to update settings.')
