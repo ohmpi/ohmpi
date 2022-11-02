@@ -232,7 +232,7 @@ Interface to communicate with the Pi designed for the Internet of Things (IoT). 
   }
   
 A local Mosquitto broker can be set up and enabled to run as a service on the OhmPi using the bash script install_local_mqtt_broker.sh.
-The mqtt messages can be interfaced easily using the third party software `MQTT Explorer <http://mqtt-explorer.com/>`. They can also form part of a browser-based flow editor such as `Node-red <http://mqtt-explorer.com/>` which can help desinging more complex IoT experiments and monitoring systems in which OhmPi is a component. An example of a simple flow incorporating execution commands and data outputs from OhmPi can be found in the OhmPi examples. For more documentation dedicated to node-red, please refer to the Node-red `cookbooks <https://cookbook.nodered.org/>`.
+The mqtt messages can be interfaced easily using the third party software `MQTT Explorer <http://mqtt-explorer.com/>`_. They can also form part of a browser-based flow editor such as `Node-red <http://mqtt-explorer.com/>`_ which can help desinging more complex IoT experiments and monitoring systems in which OhmPi is a component. An example of a simple flow incorporating execution commands and data outputs from OhmPi can be found in the OhmPi examples. For more documentation dedicated to node-red, please refer to the Node-red `cookbooks <https://cookbook.nodered.org/>`_.
 
 
 
