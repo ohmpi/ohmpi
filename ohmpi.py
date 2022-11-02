@@ -204,7 +204,7 @@ class OhmPi(object):
                                          ' Use python/ipython to interact with OhmPi object...')
 
     @staticmethod
-    def append_and_save(filename, last_measurement):
+    def append_and_save(filename: str, last_measurement: dict, cmd_id=None):
         """Appends and saves the last measurement dict.
 
         Parameters
@@ -429,7 +429,7 @@ class OhmPi(object):
         self.exec_logger.debug(f'Setting gain to {gain}')
         return gain
 
-    def interrupt(self):
+    def interrupt(self, cmd_id=None):
         """Interrupts the acquisition. """
         self.status = 'stopping'
         if self.thread is not None:
@@ -439,7 +439,7 @@ class OhmPi(object):
             self.exec_logger.debug('No sequence measurement thread to interrupt.')
         self.exec_logger.debug(f'Status: {self.status}')
 
-    def load_sequence(self, filename: str):
+    def load_sequence(self, filename: str, cmd_id=None):
         """Reads quadrupole sequence from file.
 
         Parameters
@@ -489,7 +489,7 @@ class OhmPi(object):
         warnings.warn('This function is deprecated. Use run_multiple_sequences() instead.', DeprecationWarning)
         self.run_multiple_sequences(self, **kwargs)
 
-    def _process_commands(self, message):
+    def _process_commands(self, message: str):
         """Processes commands received from the controller(s)
 
         Parameters
@@ -544,7 +544,6 @@ class OhmPi(object):
                         output = getattr(self, cmd)(**kwargs)
                     status = True
                 except Exception as e:
-                    print(f'kwargs: {kwargs}')
                     self.exec_logger.error(
                         f"Unable to execute {cmd}({str(kwargs) if kwargs is not None else ''}): {e}")
                         # f"Unable to execute {cmd}({str(args) + ', ' if args is not None else ''}"
@@ -559,7 +558,7 @@ class OhmPi(object):
             self.exec_logger.debug(f'Execution report: {reply}')
 
     @staticmethod
-    def quit(self):
+    def quit(self, cmd_id=None):
         """Quits OhmPi"""
 
         exit()
@@ -580,11 +579,11 @@ class OhmPi(object):
         self.board_version = OHMPI_CONFIG['board_version']
         self.exec_logger.debug(f'OHMPI_CONFIG = {str(OHMPI_CONFIG)}')
 
-    def read_quad(self, filename):
+    def read_quad(self, **kwargs):
         warnings.warn('This function is deprecated. Use load_sequence instead.', DeprecationWarning)
-        self.load_sequence(filename)
+        self.load_sequence(**kwargs)
 
-    def restart(self):
+    def restart(self, cmd_id=None):
         self.exec_logger.info('Restarting pi...')
         os.system('reboot')
 
@@ -1103,7 +1102,7 @@ class OhmPi(object):
         self.thread.start()
         self.status = 'idle'
 
-    def rs_check(self, tx_volt=12):
+    def rs_check(self, tx_volt=12, cmd_id=None):
         """Checks contact resistances"""
         # create custom sequence where MN == AB
         # we only check the electrodes which are in the sequence (not all might be connected)
@@ -1261,7 +1260,7 @@ class OhmPi(object):
         for i in range(0, 4):
             if quadrupole[i] > 0:
                 self._switch_mux(quadrupole[i], 'off', roles[i])
-    def set_sequence(self, sequence=None):
+    def set_sequence(self, sequence=None, cmd_id=None):
         try:
             self.sequence = np.array(sequence).astype(int)
             # self.sequence = np.loadtxt(StringIO(sequence)).astype('uint32')
@@ -1270,7 +1269,7 @@ class OhmPi(object):
             self.exec_logger.warning(f'Unable to set sequence: {e}')
             status = False
 
-    def stop(self):
+    def stop(self, cmd_id=None):
         warnings.warn('This function is deprecated. Use interrupt instead.', DeprecationWarning)
         self.interrupt()
 
@@ -1318,7 +1317,7 @@ class OhmPi(object):
             else:
                 self.exec_logger.warning(f'Unable to address electrode nr {electrode_nr}')
 
-    def switch_mux_on(self, quadrupole):
+    def switch_mux_on(self, quadrupole, cmd_id=None):
         """Switches on multiplexer relays for given quadrupole.
 
         Parameters
@@ -1335,7 +1334,7 @@ class OhmPi(object):
         else:
             self.exec_logger.error('Not switching MUX : A == B -> short circuit risk detected!')
 
-    def switch_mux_off(self, quadrupole):
+    def switch_mux_off(self, quadrupole, cmd_id=None):
         """Switches off multiplexer relays for given quadrupole.
 
         Parameters
@@ -1407,7 +1406,7 @@ class OhmPi(object):
             assert isinstance(self._sequence, np.ndarray)
         return self._sequence
 
-    def reset_mux(self):
+    def reset_mux(self, cmd_id=None):
         """Switches off all multiplexer relays."""
         if self.on_pi and self.use_mux:
             roles = ['A', 'B', 'M', 'N']
@@ -1425,7 +1424,7 @@ class OhmPi(object):
         warnings.warn('This function is deprecated, use update_settings() instead.', DeprecationWarning)
         self.update_settings(config)
 
-    def update_settings(self, config):
+    def update_settings(self, config:str, cmd_id=None):
         """Updates acquisition settings from a json file or dictionary.
         Parameters can be:
             - nb_electrodes (number of electrode used, if 4, no MUX needed)

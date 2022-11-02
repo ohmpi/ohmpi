@@ -186,7 +186,7 @@ Interface to communicate with the Pi designed for the Internet of Things (IoT). 
 
   {
     "cmd_id": "3fzxv121UITwGjWYgcz4xw",
-    "cmd": "update_settings",
+    "cmd": "update_settings",Depending on the experiment needs, MQTT brokers can be set up locally on the Raspberry Pi, on a master Raspberry Pi or on a local or remote server.
     "kwargs": {
       "config": {
         "nb_meas": 2,
@@ -231,8 +231,8 @@ Interface to communicate with the Pi designed for the Internet of Things (IoT). 
     "cmd": "interrupt",
   }
   
-
-
+A local Mosquitto broker can be set up and enabled to run as a service on the OhmPi using the bash script install_local_mqtt_broker.sh.
+The mqtt messages can be interfaced easily using the third party software `MQTT Explorer <http://mqtt-explorer.com/>`. They can also form part of a browser-based flow editor such as `Node-red <http://mqtt-explorer.com/>` which can help desinging more complex IoT experiments and monitoring systems in which OhmPi is a component. An example of a simple flow incorporating execution commands and data outputs from OhmPi can be found in the OhmPi examples. For more documentation dedicated to node-red, please refer to the Node-red `cookbooks <https://cookbook.nodered.org/>`.
 
 
 

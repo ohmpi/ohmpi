@@ -157,6 +157,7 @@ class MyServer(SimpleHTTPRequestHandler):
                 # we pass the sequence as a list of list as this object is easier to parse for the json.loads()
                 # of ohmpi._process_commands()
                 payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'set_sequence', 'kwargs': {'sequence': sequence}})
+                print('payload ===', payload)
                 publish.single(payload=payload, **publisher_config)
             payload = json.dumps({'cmd_id': cmd_id + '_settings', 'cmd': 'update_settings', 'kwargs': {'config': dic['config']}})
             cdic = dic['config']
