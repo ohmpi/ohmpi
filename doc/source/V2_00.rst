@@ -179,7 +179,7 @@ files (.json and .py).
 
 ***MQTT interface***
 
-Interface to communicate with the Pi designed for the Internet of Things (IoT). This interface enable to control a network of OhmPi remotely through an MQTT broker. An example of MQTT broker that can be used is `Mosquitto <https://mosquitto.org/>`_. Commands are received by ohmpi.py script and processed. All commands are sent in JSON format following the Python API with args and kwargs:
+Interface to communicate with the Pi designed for the Internet of Things (IoT). This interface allows to control a single OhmPi, a network of OhmPis, or auxilliary instruments remotely through an MQTT broker. An example of MQTT broker that can be used is `Mosquitto <https://mosquitto.org/>`_. Depending on the experiment needs, MQTT brokers can be set up locally on the Raspberry Pi, on a master Raspberry Pi or on a local or remote server. Commands are received by ohmpi.py script via the mqtt_interface.py script and further processed. All commands are sent in JSON format following the Python API with args and kwargs:
 
 .. code-block:: json
   :caption: Updating acquisition settings.
@@ -206,7 +206,15 @@ Interface to communicate with the Pi designed for the Internet of Things (IoT). 
     "cmd_id": "3fzxv121UITwGjWYgcz4xw",
     "cmd": "rs_check",
   }
-  
+
+.. code-block:: json
+  :caption: Running a sequence.
+
+  {
+    "cmd_id": "3fzxv121UITwGjWYgcz4Yw",
+    "cmd": "run_sequence",
+  }
+
 .. code-block:: json
   :caption: Running same sequence multiple times (nb_meas).
 
@@ -220,11 +228,10 @@ Interface to communicate with the Pi designed for the Internet of Things (IoT). 
 
   {
     "cmd_id": "3fzxv121UITwGjWYgcz4xw",
-    "cmd": "update_settings",
+    "cmd": "interrupt",
   }
   
 
-   
 
 
 
