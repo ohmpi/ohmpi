@@ -4,7 +4,11 @@ from utils import get_platform
 from paho.mqtt.client import MQTTv31
 
 _, on_pi = get_platform()
-ohmpi_id = '0001'
+if on_pi:
+    ohmpi_id = '0001'
+else:
+    ohmpi_id = 'XXXX'
+
 # mqtt_broker = 'localhost'
 mqtt_broker = 'localhost' if on_pi else 'mg3d-dev.umons.ac.be'
 
@@ -52,8 +56,9 @@ DATA_LOGGING_CONFIG = {
 
 # State of Health logging configuration
 SOH_LOGGING_CONFIG = {
-    'file_name': 'soh.log',
+    'logging_level' : logging.INFO,
     'logging_to_console': True,
+    'file_name': 'soh.log',
     'max_bytes': 16777216,
     'backup_count': 1024,
     'when': 'd',
@@ -74,8 +79,11 @@ MQTT_LOGGING_CONFIG = {
     'transport': 'tcp',
     'client_id': f'{OHMPI_CONFIG["id"]}',
     'exec_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/exec',
+    'exec_logging_level': logging.DEBUG,
     'data_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/data',
-    'soh_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/soh'
+    'data_logging_level': DATA_LOGGING_CONFIG['logging_level'],
+    'soh_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/soh',
+    'soh_logging_level': SOH_LOGGING_CONFIG['logging_level']
 }
 
 # MQTT control configuration parameters

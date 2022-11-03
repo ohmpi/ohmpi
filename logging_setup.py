@@ -52,15 +52,18 @@ def setup_loggers(mqtt=True):
 
     if mqtt:
         mqtt_settings = MQTT_LOGGING_CONFIG.copy()
-        [mqtt_settings.pop(i) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic']]
+        mqtt_exec_logging_level = mqtt_settings.pop('exec_logging_level', logging.DEBUG)
+        [mqtt_settings.pop(i) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic', 'data_logging_level',
+                                        'soh_logging_level']]
         mqtt_settings.update({'topic': MQTT_LOGGING_CONFIG['exec_topic']})
         # TODO: handle the case of MQTT broker down or temporarily unavailable
         try:
             mqtt_exec_handler = MQTTHandler(**mqtt_settings)
-            mqtt_exec_handler.setLevel(EXEC_LOGGING_CONFIG['logging_level'])
+            mqtt_exec_handler.setLevel(mqtt_exec_logging_level)
             mqtt_exec_handler.setFormatter(exec_formatter)
             exec_logger.addHandler(mqtt_exec_handler)
-            msg+=colored(f"\n\u2611 Publishes execution as {MQTT_LOGGING_CONFIG['exec_topic']} topic on the {MQTT_LOGGING_CONFIG['hostname']} broker", 'blue')
+            msg += colored(f"\n\u2611 Publishes execution as {MQTT_LOGGING_CONFIG['exec_topic']} topic on the "
+                           f"{MQTT_LOGGING_CONFIG['hostname']} broker", 'blue')
         except Exception as e:
             msg += colored(f'\nWarning: Unable to connect to exec topic on broker\n{e}', 'yellow')
             mqtt = False
@@ -89,14 +92,17 @@ def setup_loggers(mqtt=True):
 
     if mqtt:
         mqtt_settings = MQTT_LOGGING_CONFIG.copy()
-        [mqtt_settings.pop(i) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic']]
+        mqtt_data_logging_level = mqtt_settings.pop('data_logging_level', logging.INFO)
+        [mqtt_settings.pop(i) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic', 'exec_logging_level',
+                                        'soh_logging_level']]
         mqtt_settings.update({'topic': MQTT_LOGGING_CONFIG['data_topic']})
         try:
             mqtt_data_handler = MQTTHandler(**mqtt_settings)
-            mqtt_data_handler.setLevel(DATA_LOGGING_CONFIG['logging_level'])
+            mqtt_data_handler.setLevel(MQTT_LOGGING_CONFIG['data_logging_level'])
             mqtt_data_handler.setFormatter(data_formatter)
             data_logger.addHandler(mqtt_data_handler)
-            msg += colored(f"\n\u2611 Publishes data as {MQTT_LOGGING_CONFIG['data_topic']} topic on the {MQTT_LOGGING_CONFIG['hostname']} broker", 'blue')
+            msg += colored(f"\n\u2611 Publishes data as {MQTT_LOGGING_CONFIG['data_topic']} topic on the "
+                           f"{MQTT_LOGGING_CONFIG['hostname']} broker", 'blue')
         except Exception as e:
             msg += colored(f'\nWarning: Unable to connect to data topic on broker\n{e}', 'yellow')
             mqtt = False
@@ -118,12 +124,12 @@ def init_logging(exec_logger, data_logger, exec_logging_level, log_path, data_lo
     exec_logger.info('*** NEW SESSION STARTING ***')
     exec_logger.info('****************************')
     exec_logger.info('')
-    exec_logger.debug('Logging level: %s' % exec_logging_level)
+    exec_logger.debug(f'Logging level: {exec_logging_level}')
     try:
         st = statvfs('.')
         available_space = st.f_bavail * st.f_frsize / 1024 / 1024
         exec_logger.info(f'Remaining disk space : {available_space:.1f} MB')
-    except Exception as e:
+    except Exception as e:  # noqa
         exec_logger.debug('Unable to get remaining disk space: {e}')
     exec_logger.info('Saving data log to ' + data_log_filename)
     config_dict = {'execution logging configuration': json.dumps(EXEC_LOGGING_CONFIG, indent=4),
