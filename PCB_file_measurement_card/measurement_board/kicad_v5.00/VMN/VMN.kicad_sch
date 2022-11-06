@@ -3174,11 +3174,5 @@
     (path "/3a1d549c-401c-4ddf-9a51-4b7588f9097f/8c9c8900-1eea-478c-957b-cf165c8f0c97"
       (reference "U5") (unit 1) (value "1115-Adress=0X48") (footprint "1085:1085")
     )
-    (path "/b2026999-6d31-4d17-9f3d-996babd42897/781dd016-2d4f-4bfd-aba3-ef16527d840e"
-      (reference "U?") (unit 1) (value "TL082") (footprint "Package_DIP:DIP-8_W7.62mm")
-    )
-    (path "/b2026999-6d31-4d17-9f3d-996babd42897/90d9cbfc-d722-42cc-af78-3bbe5794eb95"
-      (reference "U?") (unit 3) (value "TL082") (footprint "")
-    )
   )
 )
