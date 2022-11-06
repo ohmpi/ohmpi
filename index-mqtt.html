@@ -153,6 +153,7 @@
         let port = 9001
         let clientId = 'ohmpi_0001_html'
         let message = null
+        let msg = ''
 
         // create client
         client = new Paho.MQTT.Client(hostname, port, clientId);
@@ -182,7 +183,13 @@
                 let payload = message.payloadString
                 if (message.topic == topic_data) {
                     // process data
+                    msg = payload // for accessing the variable from the console
                     console.log('DATA', payload)
+                    let ddic = JSON.parse(payload.split('INFO:')[1])
+
+                    // check cmd_id is any
+                    processData(ddic)
+
                     // usually these don't have a cmd_id so we are not sure when
 
                 } else if (message.topic == topic_exec) {
@@ -463,105 +470,110 @@
         // getData
         function getData() {
             sendCommand(JSON.stringify({
-                'cmd': 'getData',
-                'surveyNames': Object.keys(data).slice(0, -1)
+                'cmd': 'get_data',
+                'survey_names': Object.keys(data).slice(0, -1)
                 // last survey is often partial so we download it again
-            }), function(ddic) {
-                // update status
-                output.innerHTML = 'Status: ' + ddic['status']
+            }), console.log('processData(ddic)')
+            )
+        }
 
-                // update data dic with new data
-                data = { // destructuring assignement (magic! :o)
-                    ...data,
-                    ...ddic['data'] // value from second dic are preferred
-                }
-                
-                // dropdown with number of surveys and +++
-                let surveyNames = Object.keys(data).sort()
+        // processData
+        function processData(ddic) {
+            // update status
+            output.innerHTML = 'Status: ' + ddic['status']
 
-                // remove listener as we will replace the choices
-                surveySelect.removeEventListener('change', surveySelectFunc)
-                surveySelect.innerHTML = ''  // clearing all child nodes
+            // update data dic with new data
+            data = { // destructuring assignement (magic! :o)
+                ...data,
+                ...ddic['data'] // value from second dic are preferred
+            }
+            
+            // dropdown with number of surveys and +++
+            let surveyNames = Object.keys(data).sort()
 
-                // add choices again
-                for (let surveyName of surveyNames) {
+            // remove listener as we will replace the choices
+            surveySelect.removeEventListener('change', surveySelectFunc)
+            surveySelect.innerHTML = ''  // clearing all child nodes
+
+            // add choices again
+            for (let surveyName of surveyNames) {
+                let option = document.createElement('option')
+                option.innerText = surveyName
+                option.value = surveyName
+                surveySelect.appendChild(option)
+            }
+
+            // listener again
+            surveySelect.addEventListener('change', surveySelectFunc)
+            
+            // plot last one by default
+            surveySelect.value = surveyNames[surveyNames.length - 1]
+            
+            // call the function directly
+            // (as progammatically chaging the value does not trigger the event)
+            surveySelectFunc({'target': surveySelect})
+
+            // update list of quadrupoles if any
+            if (quads.length == 0) {
+                console.log('updating list of quadrupoles')
+                let df = data[surveyNames[0]]
+                let quadSelect = document.getElementById('quadSelect')
+                quadSelect.innerHTML = ''
+                for (let i = 0; i < df['a'].length; i++) {
+                    quad = [df['a'][i], df['b'][i], df['m'][i], df['n'][i]]
+                    quads.push(quad)
                     let option = document.createElement('option')
-                    option.innerText = surveyName
-                    option.value = surveyName
-                    surveySelect.appendChild(option)
+                    option.value = quad.join(', ')
+                    option.innerText = quad.join(', ')
+                    quadSelect.appendChild(option)
                 }
+                console.log('quads=', quads)
+            }
 
-                // listener again
-                surveySelect.addEventListener('change', surveySelectFunc)
-                
-                // plot last one by default
-                surveySelect.value = surveyNames[surveyNames.length - 1]
-                
-                // call the function directly
-                // (as progammatically chaging the value does not trigger the event)
-                surveySelectFunc({'target': surveySelect})
+            // update time-serie figure
+            if (squads.length > 0) {
 
-                // update list of quadrupoles if any
-                if (quads.length == 0) {
-                    console.log('updating list of quadrupoles')
-                    let df = data[surveyNames[0]]
-                    let quadSelect = document.getElementById('quadSelect')
-                    quadSelect.innerHTML = ''
-                    for (let i = 0; i < df['a'].length; i++) {
-                        quad = [df['a'][i], df['b'][i], df['m'][i], df['n'][i]]
-                        quads.push(quad)
-                        let option = document.createElement('option')
-                        option.value = quad.join(', ')
-                        option.innerText = quad.join(', ')
-                        quadSelect.appendChild(option)
-                    }
-                    console.log('quads=', quads)
+                // transform all surveyNames to datetime
+                let xt = []
+                for (surveyName of surveyNames) {
+                    let a = surveyName.split('_').slice(-1)[0]
+                    xt.push(a.slice(0, 4) + '-' 
+                        + a.slice(4, 6) + '-' 
+                        + a.slice(6, 8) + ' '
+                        + a.slice(9, 11) + ':'
+                        + a.slice(11, 13) + ':'
+                        + a.slice(13, 15))
                 }
+                //console.log(xt)
 
-                // update time-serie figure
-                if (squads.length > 0) {
-
-                    // transform all surveyNames to datetime
-                    let xt = []
-                    for (surveyName of surveyNames) {
-                        let a = surveyName.split('_').slice(-1)[0]
-                        xt.push(a.slice(0, 4) + '-' 
-                            + a.slice(4, 6) + '-' 
-                            + a.slice(6, 8) + ' '
-                            + a.slice(9, 11) + ':'
-                            + a.slice(11, 13) + ':'
-                            + a.slice(13, 15))
-                    }
-                    //console.log(xt)
-
-                    // create one new trace per selected quadrupole
-                    for (let k = 0; k < squads.length; k++) {
-                        squad = squads[k]
-                        let x = []
-                        let y = []
-                        for (let i = 0; i < surveyNames.length; i++) {
-                            df = data[surveyNames[i]]
-                            for (let j = 0; j < df['a'].length; j++) {
-                                if (df['a'][j] == squad[0]
-                                && df['b'][j] == squad[1]
-                                && df['m'][j] == squad[2]
-                                && df['n'][j] == squad[3]) {
-                                    y.push(df['rho'][j])
-                                    x.push(xt[i])
-                                    break
-                                }
+                // create one new trace per selected quadrupole
+                for (let k = 0; k < squads.length; k++) {
+                    squad = squads[k]
+                    let x = []
+                    let y = []
+                    for (let i = 0; i < surveyNames.length; i++) {
+                        df = data[surveyNames[i]]
+                        for (let j = 0; j < df['a'].length; j++) {
+                            if (df['a'][j] == squad[0]
+                            && df['b'][j] == squad[1]
+                            && df['m'][j] == squad[2]
+                            && df['n'][j] == squad[3]) {
+                                y.push(df['rho'][j])
+                                x.push(xt[i])
+                                break
                             }
                         }
-
-                        // update trace dictionnary
-                        tdata[k]['x'] = x
-                        tdata[k]['y'] = y
                     }
-                    //console.log(tdata)
-                    Plotly.redraw('ts')
+
+                    // update trace dictionnary
+                    tdata[k]['x'] = x
+                    tdata[k]['y'] = y
                 }
-            })
+                //console.log(tdata)
+                Plotly.redraw('ts')
+            }
         }
+
         let getDataBtn = document.getElementById('getDataBtn')
         getDataBtn.addEventListener('click', getData)
         
