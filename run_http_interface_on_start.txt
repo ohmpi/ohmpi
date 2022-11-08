@@ -1,6 +1,6 @@
 # to automatically start the webserver on start, you need to place the
 # following line just before the line with 'exit 0' in the /etc/rc.local.
 
-(cd /home/pi/OhmPi; bash run.sh > startup.log) &
+(cd /home/pi/OhmPi; bash run_http_interface.sh > startup.log) &
 
 
