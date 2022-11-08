@@ -1,6 +1,0 @@
-(fp_lib_table
-  (lib (name "1085")(type "KiCad")(uri "C:/Users/reclement/Downloads/1085")(options "")(descr ""))
-  (lib (name "THD_15-1222N")(type "KiCad")(uri "C:/Users/reclement/Downloads/THD_15-1222N")(options "")(descr ""))
-  (lib (name "AQY211EH")(type "KiCad")(uri "C:/Users/reclement/Downloads/LIB_AQY211EH/AQY211EH/KiCad")(options "")(descr ""))
-  (lib (name "THD_15-1221N")(type "KiCad")(uri "C:/Users/reclement/Downloads/LIB_THD_15-1211N/THD_15-1211N/KiCad")(options "")(descr ""))
-)

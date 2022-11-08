@@ -1152,6 +1152,55 @@ class OhmPi(object):
             if quadrupole[i] > 0:
                 self._switch_mux(quadrupole[i], 'off', roles[i])
 
+    def test_mux(self, activation_time=1.0, address=0x70):
+        """Interactive method to test the multiplexer.
+
+        Parameters
+        ----------
+        activation_time : float, optional
+            Time in seconds during which the relays are activated.
+        address : hex, optional
+            Address of the multiplexer board to test (e.g. 0x70, 0x71, ...).
+        """
+        self.use_mux = True
+        self.reset_mux()
+
+        # choose with MUX board
+        tca = adafruit_tca9548a.TCA9548A(self.i2c, address)
+
+        # ask use some details on how to proceed
+        a = input(' if vous want try 1 channel choose 1, if you want try all channel choose 2!') 
+        if a == '1':
+            print("run channel by channel test") 
+            electrode = int(input('Choose your electrode number (integer):')) 
+            electrodes = [electrode]
+        elif a == '2':
+            electrodes = range(1, 65)
+        else:
+            print ("Wrong choice !")
+            return 
+        
+        # run the test
+        for electrode_nr in electrodes:
+            # find I2C address of the electrode and corresponding relay
+            # considering that one MCP23017 can cover 16 electrodes
+            i2c_address = 7 - (electrode_nr - 1) // 16  # quotient without rest of the division
+            relay_nr = electrode_nr - (electrode_nr // 16) * 16 + 1
+
+            if i2c_address is not None:
+                # select the MCP23017 of the selected MUX board
+                mcp2 = MCP23017(tca[i2c_address])
+                mcp2.get_pin(relay_nr - 1).direction = digitalio.Direction.OUTPUT
+
+                # activate relay for given time    
+                mcp2.get_pin(relay_nr - 1).value = True
+                print('electrode:', electrode_nr, ' activated...', end='', flush=True) 
+                time.sleep(activation_time) 
+                mcp2.get_pin(relay_nr - 1).value = False
+                print(' deactivated' ) 
+                time.sleep(activation_time) 
+        print('Test finished.')
+
     def reset_mux(self, cmd_id=None):
         """Switches off all multiplexer relays."""
         if self.on_pi and self.use_mux:
