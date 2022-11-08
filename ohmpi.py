@@ -15,7 +15,6 @@ from copy import deepcopy
 import numpy as np
 import csv
 import time
-from io import StringIO
 from datetime import datetime
 from termcolor import colored
 import threading
@@ -35,7 +34,8 @@ try:
     import digitalio  # noqa
     from digitalio import Direction  # noqa
     from gpiozero import CPUTemperature  # noqa
-    import minimalmodbus # noqa
+    import minimalmodbus  # noqa
+
     arm64_imports = True
 except ImportError as error:
     if EXEC_LOGGING_CONFIG['logging_level'] == DEBUG:
@@ -130,13 +130,13 @@ class OhmPi(object):
             # current injection module
             if self.idps:
                 self.DPS = minimalmodbus.Instrument(port='/dev/ttyUSB0', slaveaddress=1)  # port name, address (decimal)
-                self.DPS.serial.baudrate = 9600                      # Baud rate 9600 as listed in doc
-                self.DPS.serial.bytesize = 8                         #
-                self.DPS.serial.timeout = 1                         # greater than 0.5 for it to work
-                self.DPS.debug = False                               #
-                self.DPS.serial.parity = 'N'                       # No parity
-                self.DPS.mode = minimalmodbus.MODE_RTU    # RTU mode
-                self.DPS.write_register(0x0001, 40, 0)   # max current allowed (36 mA for relays)
+                self.DPS.serial.baudrate = 9600  # Baud rate 9600 as listed in doc
+                self.DPS.serial.bytesize = 8  #
+                self.DPS.serial.timeout = 1  # greater than 0.5 for it to work
+                self.DPS.debug = False  #
+                self.DPS.serial.parity = 'N'  # No parity
+                self.DPS.mode = minimalmodbus.MODE_RTU  # RTU mode
+                self.DPS.write_register(0x0001, 40, 0)  # max current allowed (36 mA for relays)
                 # (last number) 0 is for mA, 3 is for A
 
             # injection courant and measure (TODO check if it works, otherwise back in run_measurement())
@@ -157,7 +157,7 @@ class OhmPi(object):
                                    f" on {MQTT_CONTROL_CONFIG['hostname']} broker")
 
             def connect_mqtt() -> mqtt_client:
-                def on_connect(client, userdata, flags, rc):
+                def on_connect(mqttclient, userdata, flags, rc):
                     if rc == 0:
                         self.exec_logger.debug(f"Successfully connected to control broker:"
                                                f" {MQTT_CONTROL_CONFIG['hostname']}")
@@ -170,6 +170,7 @@ class OhmPi(object):
                 client.on_connect = on_connect
                 client.connect(MQTT_CONTROL_CONFIG['hostname'], MQTT_CONTROL_CONFIG['port'])
                 return client
+
             try:
                 self.exec_logger.debug(f"Connecting to control broker: {MQTT_CONTROL_CONFIG['hostname']}")
                 self.controller = connect_mqtt()
@@ -209,6 +210,7 @@ class OhmPi(object):
 
         Parameters
         ----------
+        cmd_id
         filename : str
             filename to save the last measurement dataframe
         last_measurement : dict
@@ -305,8 +307,8 @@ class OhmPi(object):
         time.sleep(best_tx_injtime)  # inject for given tx time
 
         # autogain
-        self.ads_current = ads.ADS1115(self.i2c, gain=2/3, data_rate=860, address=self.ads_current_address)
-        self.ads_voltage = ads.ADS1115(self.i2c, gain=2/3, data_rate=860, address=self.ads_voltage_address)
+        self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_current_address)
+        self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_voltage_address)
         # print('current P0', AnalogIn(self.ads_current, ads.P0).voltage)
         # print('voltage P0', AnalogIn(self.ads_voltage, ads.P0).voltage)
         # print('voltage P2', AnalogIn(self.ads_voltage, ads.P2).voltage)
@@ -320,8 +322,8 @@ class OhmPi(object):
 
         # we measure the voltage on both A0 and A2 to guess the polarity
         I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt  # noqa measure current
-        U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.  # measure voltage
-        U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.
+        U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.  # noqa measure voltage
+        U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.  # noqa
         # print('I (mV)', I*50*self.r_shunt)
         # print('I (mA)', I)
         # print('U0 (mV)', U0)
@@ -337,7 +339,7 @@ class OhmPi(object):
 
         # compute constant
         c = vmn / I
-        Rab = (volt * 1000.) / I
+        Rab = (volt * 1000.) / I  # noqa
 
         self.exec_logger.debug(f'Rab = {Rab:.2f} Ohms')
 
@@ -444,6 +446,7 @@ class OhmPi(object):
 
         Parameters
         ----------
+        cmd_id
         filename : str
             Path of the .csv or .txt file with A, B, M and N electrodes.
             Electrode index start at 1.
@@ -546,8 +549,6 @@ class OhmPi(object):
                 except Exception as e:
                     self.exec_logger.error(
                         f"Unable to execute {cmd}({str(kwargs) if kwargs is not None else ''}): {e}")
-                        # f"Unable to execute {cmd}({str(args) + ', ' if args is not None else ''}"
-                        # f"{str(kwargs) if kwargs is not None else ''}): {e}")
                     status = False
         except Exception as e:
             self.exec_logger.warning(f'Unable to decode command {message}: {e}')
@@ -699,7 +700,7 @@ class OhmPi(object):
                 self.pin1.value = False
 
                 # one stack = 2 half-cycles (one positive, one negative)
-                pinMN = 0 if polarity > 0 else 2
+                pinMN = 0 if polarity > 0 else 2  # noqa
 
                 # sampling for each stack at the end of the injection
                 sampling_interval = 10  # ms
@@ -752,7 +753,7 @@ class OhmPi(object):
                     end_delay = time.time()
 
                     # truncate the meas array if we didn't fill the last samples
-                    meas = meas[:k+1]
+                    meas = meas[:k + 1]
 
                     # measurement of current i and voltage u during off time
                     measpp = np.zeros((meas.shape[0], 3)) * np.nan
@@ -779,13 +780,13 @@ class OhmPi(object):
                     end_delay = time.time()
 
                     # truncate the meas array if we didn't fill the last samples
-                    measpp = measpp[:k+1]
+                    measpp = measpp[:k + 1]
 
                     # we alternate on which ADS1115 pin we measure because of sign of voltage
                     if pinMN == 0:
-                        pinMN = 2
+                        pinMN = 2  # noqa
                     else:
-                        pinMN = 0
+                        pinMN = 0  # noqa
 
                     # store data for full wave form
                     fulldata.append(meas)
@@ -799,8 +800,8 @@ class OhmPi(object):
                     # take average from the samples per stack, then sum them all
                     # average for the last third of the stacked values
                     #  is done outside the loop
-                    sum_i = sum_i + (np.mean(meas[-int(meas.shape[0]//3):, 0]))
-                    vmn1 = np.mean(meas[-int(meas.shape[0]//3), 1])
+                    sum_i = sum_i + (np.mean(meas[-int(meas.shape[0] // 3):, 0]))
+                    vmn1 = np.mean(meas[-int(meas.shape[0] // 3), 1])
                     if (n % 2) == 0:
                         sum_vmn = sum_vmn - vmn1
                         sum_ps = sum_ps + vmn1
@@ -872,119 +873,6 @@ class OhmPi(object):
 
         return d
 
-    def run_multiple_sequences(self, sequence_delay=None, nb_meas=None, **kwargs):
-        """Runs multiple sequences in a separate thread for monitoring mode.
-           Can be stopped by 'OhmPi.interrupt()'.
-           Additional arguments are passed to run_measurement().
-
-        Parameters
-        ----------
-        sequence_delay : int, optional
-            Number of seconds at which the sequence must be started from each others.
-        nb_meas : int, optional
-            Number of time the sequence must be repeated.
-        kwargs : dict, optional
-            See help(k.run_measurement) for more info.
-        """
-        # self.run = True
-        if sequence_delay is None:
-            sequence_delay = self.settings['sequence_delay']
-        sequence_delay = int(sequence_delay)
-        if nb_meas is None:
-            nb_meas = self.settings['nb_meas']
-        self.status = 'running'
-        self.exec_logger.debug(f'Status: {self.status}')
-        self.exec_logger.debug(f'Measuring sequence: {self.sequence}')
-
-        def func():
-            for g in range(0, nb_meas):  # for time-lapse monitoring
-                if self.status == 'stopping':
-                    self.exec_logger.warning('Data acquisition interrupted')
-                    break
-                t0 = time.time()
-                self.run_sequence(**kwargs)
-
-                # sleeping time between sequence
-                dt = sequence_delay - (time.time() - t0)
-                if dt < 0:
-                    dt = 0
-                if nb_meas > 1:
-                    time.sleep(dt)  # waiting for next measurement (time-lapse)
-            self.status = 'idle'
-        self.thread = threading.Thread(target=func)
-        self.thread.start()
-
-    def run_sequence(self, **kwargs):
-        """Runs sequence synchronously (=blocking on main thread).
-           Additional arguments are passed to run_measurement().
-        """
-        self.status = 'running'
-        self.exec_logger.debug(f'Status: {self.status}')
-        self.exec_logger.debug(f'Measuring sequence: {self.sequence}')
-        t0 = time.time()
-
-        # create filename with timestamp
-        filename = self.settings["export_path"].replace('.csv',
-                                                        f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
-        self.exec_logger.debug(f'Saving to {filename}')
-
-        # make sure all multiplexer are off
-        self.reset_mux()
-
-        # measure all quadrupole of the sequence
-        if self.sequence is None:
-            n = 1
-        else:
-            n = self.sequence.shape[0]
-        for i in range(0, n):
-            if self.sequence is None:
-                quad = np.array([0, 0, 0, 0])
-            else:
-                quad = self.sequence[i, :]  # quadrupole
-            if self.status == 'stopping':
-                break
-
-            # call the switch_mux function to switch to the right electrodes
-            self.switch_mux_on(quad)
-
-            # run a measurement
-            if self.on_pi:
-                acquired_data = self.run_measurement(quad, **kwargs)
-            else:  # for testing, generate random data
-                acquired_data = {
-                    'A': [quad[0]], 'B': [quad[1]], 'M': [quad[2]], 'N': [quad[3]],
-                    'R [ohm]': np.abs(np.random.randn(1))
-                }
-
-            # switch mux off
-            self.switch_mux_off(quad)
-
-            # add command_id in dataset
-            # acquired_data.update({'cmd_id': cmd_id}) // in run_measurement()
-            # log data to the data logger
-            # self.data_logger.info(f'{acquired_data}') // in run_measurement()
-            # save data and print in a text file
-            self.append_and_save(filename, acquired_data)
-            self.exec_logger.debug(f'quadrupole {i + 1:d}/{n:d}')
-
-        self.status = 'idle'
-
-    def run_sequence_async(self, cmd_id=None, **kwargs):
-        """Runs the sequence in a separate thread. Can be stopped by 'OhmPi.interrupt()'.
-            Additional arguments are passed to run_measurement().
-
-            Parameters
-            ----------
-            cmd_id:
-        """
-
-        def func():
-            self.run_sequence(**kwargs)
-
-        self.thread = threading.Thread(target=func)
-        self.thread.start()
-        self.status = 'idle'
-
     def run_multiple_sequences(self, cmd_id=None, sequence_delay=None, nb_meas=None, **kwargs):
         """Runs multiple sequences in a separate thread for monitoring mode.
            Can be stopped by 'OhmPi.interrupt()'.
@@ -1026,6 +914,7 @@ class OhmPi(object):
                 if nb_meas > 1:
                     time.sleep(dt)  # waiting for next measurement (time-lapse)
             self.status = 'idle'
+
         self.thread = threading.Thread(target=func)
         self.thread.start()
 
@@ -1077,7 +966,7 @@ class OhmPi(object):
             # add command_id in dataset
             acquired_data.update({'cmd_id': cmd_id})
             # log data to the data logger
-            # self.data_logger.info(f'{acquired_data}')  # already in run_measurement()
+            # self.data_logger.info(f'{acquired_data}')
             # save data and print in a text file
             self.append_and_save(filename, acquired_data)
             self.exec_logger.debug(f'quadrupole {i + 1:d}/{n:d}')
@@ -1147,8 +1036,8 @@ class OhmPi(object):
                 # print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} kOhm'.format(
                 #    current, voltage, resist))
                 msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, ' \
-                          f'V: {voltage :>10.3f} mV, ' \
-                          f'R: {resist :>10.3f} kOhm'
+                      f'V: {voltage :>10.3f} mV, ' \
+                      f'R: {resist :>10.3f} kOhm'
 
                 self.exec_logger.debug(msg)
 
@@ -1169,96 +1058,11 @@ class OhmPi(object):
         else:
             pass
         self.status = 'idle'
+
     #
     #         # TODO if interrupted, we would need to restore the values
     #         # TODO or we offer the possibility in 'run_measurement' to have rs_check each time?
 
-    def set_sequence(self, sequence=None):
-        try:
-            self.sequence = np.array(sequence)
-            #self.sequence = np.loadtxt(StringIO(sequence)).astype('uint32')
-            status = True
-        except Exception as e:
-            self.exec_logger.warning(f'Unable to set sequence: {e}')
-            status = False
-
-    def stop(self):
-        warnings.warn('This function is deprecated. Use interrupt instead.', DeprecationWarning)
-        self.interrupt()
-
-    def _switch_mux(self, electrode_nr, state, role):
-        """Selects the right channel for the multiplexer cascade for a given electrode.
-
-        Parameters
-        ----------
-        electrode_nr : int
-            Electrode index to be switched on or off.
-        state : str
-            Either 'on' or 'off'.
-        role : str
-            Either 'A', 'B', 'M' or 'N', so we can assign it to a MUX board.
-        """
-        if not self.use_mux or not self.on_pi:
-            if not self.on_pi:
-                self.exec_logger.warning('Cannot reset mux while in simulation mode...')
-            else:
-                self.exec_logger.warning('You cannot use the multiplexer because use_mux is set to False.'
-                                         ' Set use_mux to True to use the multiplexer...')
-        elif self.sequence is None:
-            self.exec_logger.warning('Unable to switch MUX without a sequence')
-        else:
-            # choose with MUX board
-            tca = adafruit_tca9548a.TCA9548A(self.i2c, self.board_addresses[role])
-
-            # find I2C address of the electrode and corresponding relay
-            # considering that one MCP23017 can cover 16 electrodes
-            i2c_address = 7 - (electrode_nr - 1) // 16  # quotient without rest of the division
-            relay_nr = electrode_nr - (electrode_nr // 16) * 16 + 1
-
-            if i2c_address is not None:
-                # select the MCP23017 of the selected MUX board
-                mcp2 = MCP23017(tca[i2c_address])
-                mcp2.get_pin(relay_nr - 1).direction = digitalio.Direction.OUTPUT
-
-                if state == 'on':
-                    mcp2.get_pin(relay_nr - 1).value = True
-                else:
-                    mcp2.get_pin(relay_nr - 1).value = False
-
-                self.exec_logger.debug(f'Switching relay {relay_nr} '
-                                       f'({str(hex(self.board_addresses[role]))}) {state} for electrode {electrode_nr}')
-            else:
-                self.exec_logger.warning(f'Unable to address electrode nr {electrode_nr}')
-
-    def switch_mux_on(self, quadrupole):
-        """Switches on multiplexer relays for given quadrupole.
-
-        Parameters
-        ----------
-        quadrupole : list of 4 int
-            List of 4 integers representing the electrode numbers.
-        """
-        roles = ['A', 'B', 'M', 'N']
-        # another check to be sure A != B
-        if quadrupole[0] != quadrupole[1]:
-            for i in range(0, 4):
-                if quadrupole[i] > 0:
-                    self._switch_mux(quadrupole[i], 'on', roles[i])
-        else:
-            self.exec_logger.error('Not switching MUX : A == B -> short circuit risk detected!')
-
-    def switch_mux_off(self, quadrupole):
-        """Switches off multiplexer relays for given quadrupole.
-
-        Parameters
-        ----------
-        quadrupole : list of 4 int
-            List of 4 integers representing the electrode numbers.
-        """
-        roles = ['A', 'B', 'M', 'N']
-        for i in range(0, 4):
-            if quadrupole[i] > 0:
-                self._switch_mux(quadrupole[i], 'off', roles[i])
     def set_sequence(self, sequence=None, cmd_id=None):
         try:
             self.sequence = np.array(sequence).astype(int)
@@ -1268,9 +1072,9 @@ class OhmPi(object):
             self.exec_logger.warning(f'Unable to set sequence: {e}')
             status = False
 
-    def stop(self, cmd_id=None):
+    def stop(self, **kwargs):
         warnings.warn('This function is deprecated. Use interrupt instead.', DeprecationWarning)
-        self.interrupt()
+        self.interrupt(**kwargs)
 
     def _switch_mux(self, electrode_nr, state, role):
         """Selects the right channel for the multiplexer cascade for a given electrode.
@@ -1321,6 +1125,7 @@ class OhmPi(object):
 
         Parameters
         ----------
+        cmd_id
         quadrupole : list of 4 int
             List of 4 integers representing the electrode numbers.
         """
@@ -1338,6 +1143,7 @@ class OhmPi(object):
 
         Parameters
         ----------
+        cmd_id
         quadrupole : list of 4 int
             List of 4 integers representing the electrode numbers.
         """
@@ -1345,65 +1151,6 @@ class OhmPi(object):
         for i in range(0, 4):
             if quadrupole[i] > 0:
                 self._switch_mux(quadrupole[i], 'off', roles[i])
-
-    def reset_mux(self):
-        """Switches off all multiplexer relays."""
-        if self.on_pi and self.use_mux:
-            roles = ['A', 'B', 'M', 'N']
-            for i in range(0, 4):
-                for j in range(1, self.max_elec + 1):
-                    self._switch_mux(j, 'off', roles[i])
-            self.exec_logger.debug('All MUX switched off.')
-        elif not self.on_pi:
-            self.exec_logger.warning('Cannot reset mux while in simulation mode...')
-        else:
-            self.exec_logger.warning('You cannot use the multiplexer because use_mux is set to False.'
-                                     ' Set use_mux to True to use the multiplexer...')
-
-    def _update_acquisition_settings(self, config):
-        warnings.warn('This function is deprecated, use update_settings() instead.', DeprecationWarning)
-        self.update_settings(config)
-
-    def update_settings(self, config):
-        """Updates acquisition settings from a json file or dictionary.
-        Parameters can be:
-            - nb_electrodes (number of electrode used, if 4, no MUX needed)
-            - injection_duration (in seconds)
-            - nb_meas (total number of times the sequence will be run)
-            - sequence_delay (delay in second between each sequence run)
-            - nb_stack (number of stack for each quadrupole measurement)
-            - export_path (path where to export the data, timestamp will be added to filename)
-
-        Parameters
-        ----------
-        config : str, dict
-            Path to the .json settings file or dictionary of settings.
-        """
-        status = False
-        if config is not None:
-            try:
-                if isinstance(config, dict):
-                    self.settings.update(config)
-                else:
-                    with open(config) as json_file:
-                        dic = json.load(json_file)
-                    self.settings.update(dic)
-                self.exec_logger.info('Acquisition parameters updated: ' + str(self.settings))
-                status = True
-            except Exception as e:
-                self.exec_logger.warning('Unable to update settings.')
-                status = False
-        else:
-            self.exec_logger.warning('Settings are missing...')
-        return status
-
-    # Properties
-    @property
-    def sequence(self):
-        """Gets sequence"""
-        if self._sequence is not None:
-            assert isinstance(self._sequence, np.ndarray)
-        return self._sequence
 
     def reset_mux(self, cmd_id=None):
         """Switches off all multiplexer relays."""
@@ -1421,9 +1168,9 @@ class OhmPi(object):
 
     def _update_acquisition_settings(self, config):
         warnings.warn('This function is deprecated, use update_settings() instead.', DeprecationWarning)
-        self.update_settings(config)
+        self.update_settings(settings=config)
 
-    def update_settings(self, config:str, cmd_id=None):
+    def update_settings(self, settings: str, cmd_id=None):
         """Updates acquisition settings from a json file or dictionary.
         Parameters can be:
             - nb_electrodes (number of electrode used, if 4, no MUX needed)
@@ -1435,21 +1182,22 @@ class OhmPi(object):
 
         Parameters
         ----------
-        config : str, dict
+        cmd_id
+        settings : str, dict
             Path to the .json settings file or dictionary of settings.
         """
         status = False
-        if config is not None:
+        if settings is not None:
             try:
-                if isinstance(config, dict):
-                    self.settings.update(config)
+                if isinstance(settings, dict):
+                    self.settings.update(settings)
                 else:
-                    with open(config) as json_file:
+                    with open(settings) as json_file:
                         dic = json.load(json_file)
                     self.settings.update(dic)
                 self.exec_logger.debug('Acquisition parameters updated: ' + str(self.settings))
                 status = True
-            except Exception as e:
+            except Exception as e: # noqa
                 self.exec_logger.warning('Unable to update settings.')
                 status = False
         else:

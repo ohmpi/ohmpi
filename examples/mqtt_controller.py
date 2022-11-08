@@ -22,13 +22,13 @@ settings = {
         }
 
 cmd_id = uuid.uuid4().hex
-payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'update_settings', 'args': settings})
+payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'update_settings', 'kwargs': {'settings' : settings}})
 print(f'Update settings setup message: {payload} to {publisher_config["topic"]} with config {publisher_config}')
 publish.single(payload=payload, **publisher_config)
 
 sequence = [[1, 2, 3, 4]]
 cmd_id = uuid.uuid4().hex
-payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'set_sequence', 'args': sequence})
+payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'set_sequence', 'kwargs': {'sequence': sequence}})
 print(f'Set sequence message: {payload} to {publisher_config["topic"]} with config {publisher_config}')
 publish.single(payload=payload, **publisher_config)
 cmd_id = uuid.uuid4().hex
@@ -38,7 +38,7 @@ publish.single(payload=payload, **publisher_config)
 
 for i in range(4):
     cmd_id = uuid.uuid4().hex
-    payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'start'})
+    payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'run_sequence_async'})
     print(f'Publishing message {i}: {payload} to {publisher_config["topic"]} with config {publisher_config}')
     publish.single(payload=payload, **publisher_config)
     time.sleep(1)
