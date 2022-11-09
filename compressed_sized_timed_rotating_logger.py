@@ -5,11 +5,10 @@ import zipfile
 
 
 class CompressedSizedTimedRotatingFileHandler(handlers.TimedRotatingFileHandler):
-    """
-    Handler for logging to a set of files, which switches from one file
+    """Handler for logging to a set of files, which switches from one file
     to the next when the current file reaches a certain size, or at certain
-    timed intervals
-    """
+    timed intervals"""
+
     def __init__(self, filename, max_bytes=0, backup_count=0, encoding=None,
                  delay=0, when='h', interval=1, utc=False, zip_mode=zipfile.ZIP_DEFLATED):
         handlers.TimedRotatingFileHandler.__init__(self, filename=filename, when=when, interval=interval, utc=utc,
@@ -18,11 +17,10 @@ class CompressedSizedTimedRotatingFileHandler(handlers.TimedRotatingFileHandler)
         self.zip_mode = zip_mode
 
     def shouldRollover(self, record):
-        """
-        Determine if rollover should occur.
-        Basically, see if the supplied record would cause the file to exceed
-        the size limit we have.
-        """
+        """Determines if rollover should occur.
+        Basically, sees if the supplied record would cause the file to exceed
+        the size limit we have."""
+
         if self.stream is None:                 # delay was set...
             self.stream = self._open()
         if self.maxBytes > 0:                   # are we rolling over?
@@ -36,6 +34,8 @@ class CompressedSizedTimedRotatingFileHandler(handlers.TimedRotatingFileHandler)
         return False
 
     def find_last_rotated_file(self):
+        """Looks for the last rotated file and returns it"""
+
         dir_name, base_name = os.path.split(self.baseFilename)
         file_names = os.listdir(dir_name)
         result = []
@@ -47,6 +47,8 @@ class CompressedSizedTimedRotatingFileHandler(handlers.TimedRotatingFileHandler)
         return os.path.join(dir_name, result[0])
 
     def doRollover(self):
+        """Does the roll-over by compressing the current file then deleting the uncompressed file"""
+
         super(CompressedSizedTimedRotatingFileHandler, self).doRollover()
 
         dfn = self.find_last_rotated_file()

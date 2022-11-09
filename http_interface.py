@@ -7,6 +7,8 @@ from termcolor import colored
 import pandas as pd
 import shutil
 import time
+import numpy as np
+from io import StringIO
 import threading
 import paho.mqtt.client as mqtt_client
 import paho.mqtt.publish as publish
@@ -28,7 +30,7 @@ rdic = {}
 
 
 # set controller globally as __init__ seem to be called for each request and so we subscribe again each time (=overhead)
-controller = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)  # create new instance
+controller = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_interface_http", clean_session=False)  # create new instance
 print(colored(f"Connecting to control topic {MQTT_CONTROL_CONFIG['ctrl_topic']} on {MQTT_CONTROL_CONFIG['hostname']} broker", 'blue'))
 trials = 0
 trials_max = 10
@@ -121,12 +123,10 @@ class MyServer(SimpleHTTPRequestHandler):
         received = False
         cmd_id = uuid.uuid4().hex
         dic = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
-        #print('++', dic, cmd_id)
         rdic = {} # response dictionary
         if dic['cmd'] == 'run_multiple_sequences':
             payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'run_multiple_sequences'})
             publish.single(payload=payload, **publisher_config)
-
         elif dic['cmd'] == 'interrupt':
             payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'interrupt'})
             publish.single(payload=payload, **publisher_config)
@@ -151,13 +151,15 @@ class MyServer(SimpleHTTPRequestHandler):
             shutil.rmtree('data')
             os.mkdir('data')
         elif dic['cmd'] == 'update_settings':
-            # ohmpi.stop()
             if 'sequence' in dic['config'].keys() and dic['config']['sequence'] is not None:
-                sequence = dic['config']['sequence']
-                dic['config'].pop('sequence', None)
-                payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'set_sequence', 'args': sequence})
+                sequence = dic['config'].pop('sequence', None)
+                sequence = np.loadtxt(StringIO(sequence)).astype(int).tolist()  # list of list
+                # we pass the sequence as a list of list as this object is easier to parse for the json.loads()
+                # of ohmpi._process_commands()
+                payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'set_sequence', 'kwargs': {'sequence': sequence}})
+                print('payload ===', payload)
                 publish.single(payload=payload, **publisher_config)
-            payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'update_settings', 'args': dic['config']})
+            payload = json.dumps({'cmd_id': cmd_id + '_settings', 'cmd': 'update_settings', 'kwargs': {'config': dic['config']}})
             cdic = dic['config']
             publish.single(payload=payload, **publisher_config)
         elif dic['cmd'] == 'invert':
@@ -165,15 +167,19 @@ class MyServer(SimpleHTTPRequestHandler):
         elif dic['cmd'] == 'getResults':
             pass
         elif dic['cmd'] == 'rsCheck':
-            # ohmpi.rs_check()
             payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'rs_check'})
             publish.single(payload=payload, **publisher_config)
+
+        elif dic['cmd'] == 'getRsCheck':
             fnames = sorted([fname for fname in os.listdir('data/') if fname[-7:] == '_rs.csv'])
-            df = pd.read_csv('data/' + fnames[-1])
-            ddic = {
-                'AB': (df['A'].astype('str') + '-' + df['B'].astype(str)).tolist(),
-                'res': df['RS [kOhm]'].tolist()
-            }
+            if len(fnames) > 0:
+                df = pd.read_csv('data/' + fnames[-1])
+                ddic = {
+                    'AB': (df['A'].astype('str') + '-' + df['B'].astype(str)).tolist(),
+                    'res': df['RS [kOhm]'].tolist()
+                }
+            else:
+                ddic = {}
             rdic['data'] = ddic
         elif dic['cmd'] == 'download':
             shutil.make_archive('data', 'zip', 'data')
