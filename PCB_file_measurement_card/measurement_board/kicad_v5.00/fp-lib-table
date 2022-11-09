@@ -1,6 +1,0 @@
-(fp_lib_table
-  (lib (name "1085")(type "KiCad")(uri "${KIPRJMOD}/VMN/1085")(options "")(descr ""))
-  (lib (name "AQY211EH")(type "KiCad")(uri "${KIPRJMOD}/VMN/AQY211EH")(options "")(descr ""))
-  (lib (name "THD_15-1211N")(type "KiCad")(uri "${KIPRJMOD}/VMN/THD_15-1211N")(options "")(descr ""))
-  (lib (name "THD_15-1222N")(type "KiCad")(uri "${KIPRJMOD}/VMN/THD_15-1222N")(options "")(descr ""))
-)

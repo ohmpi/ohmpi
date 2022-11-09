@@ -81,6 +81,16 @@ Interfaces and applications
 
 Different interfaces can be used to communicated with the OhmPi.
 
+.. figure:: img/interfaces.png
+	   
+     Usable interfaces to control an OhmPi.
+     
+Available interfaces:
+- Web interface (=HTTP interface): run in bash: `bash run_http_interface.sh`
+- Python API: import the OhmPi class from Python script: `from ohmpi import OhmPi`
+- MQTT broker (see interface below)
+
+
 **Web interface**
 
 The raspberrypi of the OhmPi is used as a Wifi Access Point (AP) and run
@@ -91,7 +101,7 @@ interface, upload sequence, change parameters, run sequence and download data.
 To configure the Raspberry Pi to act as an access point and run
 the webserver automatically on start, see instructions on `raspap.com <https://raspap.com/>`_ and in 'runOnStart.sh'.
 
-Once configure, the webserver should start by itself on start and once
+Once configured, the webserver should start by itself on start and once
 connected to the Pi, the user can go to `10.3.141.1:8080 <http://10.3.141.1:8080>`_
 to access the interface.
  
