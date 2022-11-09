@@ -490,7 +490,7 @@ class OhmPi(object):
 
     def measure(self, **kwargs):
         warnings.warn('This function is deprecated. Use run_multiple_sequences() instead.', DeprecationWarning)
-        self.run_multiple_sequences(self, **kwargs)
+        self.run_multiple_sequences(**kwargs)
 
     def _process_commands(self, message: str):
         """Processes commands received from the controller(s)
