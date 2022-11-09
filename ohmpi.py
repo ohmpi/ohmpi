@@ -1114,7 +1114,6 @@ class OhmPi(object):
         except Exception as e:
             self.exec_logger.warning(f'Unable to set sequence: {e}')
             status = False
-<<<<<<< HEAD
 
     def stop(self, **kwargs):
         warnings.warn('This function is deprecated. Use interrupt instead.', DeprecationWarning)
@@ -1122,15 +1121,7 @@ class OhmPi(object):
 
     def _switch_mux(self, electrode_nr, state, role):
         """Selects the right channel for the multiplexer cascade for a given electrode.
-=======
-
-    def stop(self, **kwargs):
-        warnings.warn('This function is deprecated. Use interrupt instead.', DeprecationWarning)
-        self.interrupt(**kwargs)
-
-    def _switch_mux(self, electrode_nr, state, role):
-        """Selects the right channel for the multiplexer cascade for a given electrode.
-
+        
         Parameters
         ----------
         electrode_nr : int
