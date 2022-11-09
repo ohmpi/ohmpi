@@ -85,6 +85,7 @@ Different interfaces can be used to communicated with the OhmPi.
 	   
      Usable interfaces to control an OhmPi.
      
+
 Available interfaces:
 - Web interface (=HTTP interface): run in bash: `bash run_http_interface.sh`
 - Python API: import the OhmPi class from Python script: `from ohmpi import OhmPi`
