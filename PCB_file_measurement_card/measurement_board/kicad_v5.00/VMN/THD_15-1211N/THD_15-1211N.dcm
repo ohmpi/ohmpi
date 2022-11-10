@@ -1,9 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP THD_15-1211N
-D 15 Watt DC/DC converter, industrial, 2:1 input, encapsulated, DIP-24
-K
-F https://tracopower.com/thd15n-datasheet/
-$ENDCMP
-#
-#End Doc Library
