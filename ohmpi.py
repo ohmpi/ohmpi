@@ -15,6 +15,7 @@ from copy import deepcopy
 import numpy as np
 import csv
 import time
+import shutil
 from datetime import datetime
 from termcolor import colored
 import threading
@@ -431,6 +432,42 @@ class OhmPi(object):
         self.exec_logger.debug(f'Setting gain to {gain}')
         return gain
 
+    def get_data(self, survey_names=[], cmd_id=None):
+        """Get available data.
+        
+        Parameters
+        ----------
+        survey_names : list of str, optional
+            List of filenames already available from the html interface. So
+            their content won't be returned again. Only files not in the list
+            will be read.
+        """
+        # get all .csv file in data folder
+        fnames = [fname for fname in os.listdir('data/') if fname[-4:] == '.csv']
+        ddic = {}
+        if cmd_id is None:
+            cmd_id = 'unknown'
+        for fname in fnames:
+            if ((fname != 'readme.txt')
+                and ('_rs' not in fname)
+                and (fname.replace('.csv', '') not in survey_names)):
+                try:
+                    data = np.loadtxt('data/' + fname, delimiter=',',
+                                      skiprows=1, usecols=(1,2,3,4,8))
+                    data = data[None, :] if len(data.shape) == 1 else data
+                    ddic[fname.replace('.csv', '')] = {
+                        'a': data[:, 0].astype(int).tolist(),
+                        'b': data[:, 1].astype(int).tolist(),
+                        'm': data[:, 2].astype(int).tolist(),
+                        'n': data[:, 3].astype(int).tolist(),
+                        'rho': data[:, 4].tolist(),
+                    }
+                except Exception as e:
+                    print(fname, ':', e)
+        rdic = {'cmd_id': cmd_id, 'data': ddic}
+        self.data_logger.info(json.dumps(rdic))
+        return ddic
+
     def interrupt(self, cmd_id=None):
         """Interrupts the acquisition. """
         self.status = 'stopping'
@@ -490,7 +527,7 @@ class OhmPi(object):
 
     def measure(self, **kwargs):
         warnings.warn('This function is deprecated. Use run_multiple_sequences() instead.', DeprecationWarning)
-        self.run_multiple_sequences(self, **kwargs)
+        self.run_multiple_sequences(**kwargs)
 
     def _process_commands(self, message: str):
         """Processes commands received from the controller(s)
@@ -583,6 +620,12 @@ class OhmPi(object):
     def read_quad(self, **kwargs):
         warnings.warn('This function is deprecated. Use load_sequence instead.', DeprecationWarning)
         self.load_sequence(**kwargs)
+
+    def remove_data(self, **kwargs):
+        """Remove all data in the data/ folder.
+        """
+        shutil.rmtree('data')
+        os.mkdir('data')
 
     def restart(self, cmd_id=None):
         self.exec_logger.info('Restarting pi...')
@@ -1078,7 +1121,7 @@ class OhmPi(object):
 
     def _switch_mux(self, electrode_nr, state, role):
         """Selects the right channel for the multiplexer cascade for a given electrode.
-
+        
         Parameters
         ----------
         electrode_nr : int
@@ -1151,6 +1194,55 @@ class OhmPi(object):
         for i in range(0, 4):
             if quadrupole[i] > 0:
                 self._switch_mux(quadrupole[i], 'off', roles[i])
+
+    def test_mux(self, activation_time=1.0, address=0x70):
+        """Interactive method to test the multiplexer.
+
+        Parameters
+        ----------
+        activation_time : float, optional
+            Time in seconds during which the relays are activated.
+        address : hex, optional
+            Address of the multiplexer board to test (e.g. 0x70, 0x71, ...).
+        """
+        self.use_mux = True
+        self.reset_mux()
+
+        # choose with MUX board
+        tca = adafruit_tca9548a.TCA9548A(self.i2c, address)
+
+        # ask use some details on how to proceed
+        a = input(' if vous want try 1 channel choose 1, if you want try all channel choose 2!') 
+        if a == '1':
+            print("run channel by channel test") 
+            electrode = int(input('Choose your electrode number (integer):')) 
+            electrodes = [electrode]
+        elif a == '2':
+            electrodes = range(1, 65)
+        else:
+            print ("Wrong choice !")
+            return 
+        
+        # run the test
+        for electrode_nr in electrodes:
+            # find I2C address of the electrode and corresponding relay
+            # considering that one MCP23017 can cover 16 electrodes
+            i2c_address = 7 - (electrode_nr - 1) // 16  # quotient without rest of the division
+            relay_nr = electrode_nr - (electrode_nr // 16) * 16 + 1
+
+            if i2c_address is not None:
+                # select the MCP23017 of the selected MUX board
+                mcp2 = MCP23017(tca[i2c_address])
+                mcp2.get_pin(relay_nr - 1).direction = digitalio.Direction.OUTPUT
+
+                # activate relay for given time    
+                mcp2.get_pin(relay_nr - 1).value = True
+                print('electrode:', electrode_nr, ' activated...', end='', flush=True) 
+                time.sleep(activation_time) 
+                mcp2.get_pin(relay_nr - 1).value = False
+                print(' deactivated' ) 
+                time.sleep(activation_time) 
+        print('Test finished.')
 
     def reset_mux(self, cmd_id=None):
         """Switches off all multiplexer relays."""
