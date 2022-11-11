@@ -468,6 +468,28 @@ class OhmPi(object):
         self.data_logger.info(json.dumps(rdic))
         return ddic
 
+    def get_rs_check(self, cmd_id=None):
+        """Get results from RS check.
+        """
+        if cmd_id is None:
+            cmd_id = 'unknown'
+        ddic = {}
+        fnames = sorted([fname for fname in os.listdir('data/') if fname[-7:] == '_rs.csv'])
+        if len(fnames) > 0:
+            fname = fnames[-1]
+            try:
+                data = np.loadtxt('data/' + fname, delimiter=',',
+                                    skiprows=1)
+                data = data[None, :] if len(data.shape) == 1 else data
+                ddic[fname.replace('.csv', '')] = {
+                    'AB': [str(int(a)) + '-' + str(int(b)) for a, b in zip(data[:, 0], data[:, 1])],
+                    'res': data[:, 2].astype(float).tolist(),
+                }
+            except Exception as e:
+                print(fname, ':', e)
+        rdic = {'cmd_id': cmd_id, 'rsdata': ddic}
+        self.data_logger.info(json.dumps(rdic))
+
     def interrupt(self, cmd_id=None):
         """Interrupts the acquisition. """
         self.status = 'stopping'
@@ -952,10 +974,14 @@ class OhmPi(object):
 
                 # sleeping time between sequence
                 dt = sequence_delay - (time.time() - t0)
-                if dt < 0:
-                    dt = 0
+                dt = 0 if dt < 0 else dt
                 if nb_meas > 1:
-                    time.sleep(dt)  # waiting for next measurement (time-lapse)
+                    tt0 = time.time()
+                    while time.time() < tt0 + dt:  # infinite loop :o
+                        if self.status == 'stopping':
+                            break  # break the while, enter the for and break the for
+                        time.sleep(0.5)
+                    # time.sleep(dt)  # waiting for next measurement (time-lapse)
             self.status = 'idle'
 
         self.thread = threading.Thread(target=func)
@@ -965,9 +991,6 @@ class OhmPi(object):
         """Runs sequence synchronously (=blocking on main thread).
            Additional arguments are passed to run_measurement().
         """
-        self.status = 'running'
-        self.exec_logger.debug(f'Status: {self.status}')
-        self.exec_logger.debug(f'Measuring sequence: {self.sequence}')
         t0 = time.time()
 
         # create filename with timestamp
@@ -1014,8 +1037,6 @@ class OhmPi(object):
             self.append_and_save(filename, acquired_data)
             self.exec_logger.debug(f'quadrupole {i + 1:d}/{n:d}')
 
-        self.status = 'idle'
-
     def run_sequence_async(self, cmd_id=None, **kwargs):
         """Runs the sequence in a separate thread. Can be stopped by 'OhmPi.interrupt()'.
             Additional arguments are passed to run_measurement().
@@ -1024,7 +1045,10 @@ class OhmPi(object):
             ----------
             cmd_id:
         """
-
+        self.status = 'running'
+        self.exec_logger.debug(f'Status: {self.status}')
+        self.exec_logger.debug(f'Measuring sequence: {self.sequence}')
+        
         def func():
             self.run_sequence(**kwargs)
 
@@ -1287,7 +1311,7 @@ class OhmPi(object):
                     with open(settings) as json_file:
                         dic = json.load(json_file)
                     self.settings.update(dic)
-                self.exec_logger.debug('Acquisition parameters updated: ' + str(self.settings))
+                self.exec_logger.info('Acquisition parameters updated: ' + str(self.settings))
                 status = True
             except Exception as e: # noqa
                 self.exec_logger.warning('Unable to update settings.')

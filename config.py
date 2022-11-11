@@ -28,7 +28,7 @@ OHMPI_CONFIG = {
     'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},
     # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
     'settings': 'ohmpi_settings.json',
-    'board_version': '22.10'
+    'board_version': '22.11'
 }  # TODO: add a dictionary with INA models and associated gain values
 
 # Execution logging configuration

@@ -151,16 +151,16 @@ class MyServer(SimpleHTTPRequestHandler):
             shutil.rmtree('data')
             os.mkdir('data')
         elif dic['cmd'] == 'update_settings':
-            if 'sequence' in dic['config'].keys() and dic['config']['sequence'] is not None:
-                sequence = dic['config'].pop('sequence', None)
+            if 'sequence' in dic['settings'].keys() and dic['settings']['sequence'] is not None:
+                sequence = dic['settings'].pop('sequence', None)
                 sequence = np.loadtxt(StringIO(sequence)).astype(int).tolist()  # list of list
                 # we pass the sequence as a list of list as this object is easier to parse for the json.loads()
                 # of ohmpi._process_commands()
                 payload = json.dumps({'cmd_id': cmd_id, 'cmd': 'set_sequence', 'kwargs': {'sequence': sequence}})
                 print('payload ===', payload)
                 publish.single(payload=payload, **publisher_config)
-            payload = json.dumps({'cmd_id': cmd_id + '_settings', 'cmd': 'update_settings', 'kwargs': {'config': dic['config']}})
-            cdic = dic['config']
+            payload = json.dumps({'cmd_id': cmd_id + '_settings', 'cmd': 'update_settings', 'kwargs': {'settings': dic['settings']}})
+            cdic = dic['settings']
             publish.single(payload=payload, **publisher_config)
         elif dic['cmd'] == 'invert':
             pass

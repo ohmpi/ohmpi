@@ -204,7 +204,7 @@
             function settingsCallback() {
                 sendCommand(JSON.stringify({
                     'cmd': 'update_settings',
-                    'config': formVals
+                    'settings': formVals
                 }), function(x) {
                     console.log('update_settings', x)
                 })
