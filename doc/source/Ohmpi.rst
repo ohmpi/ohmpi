@@ -49,7 +49,7 @@ OhmPi project
 -------------------
 
 .. warning::
-	**Ohmpi is a participative project open to all, it requires skills in electronics and to respect the safety rules. Ohmpi must be assembled in a professional context and by people competent in electronics. The Ohmpi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The Ohmpi team cannot be held responsible if the equipment does not work after assembly.**
+	**Ohmpi is a participative project open to all, it requires skills in electronics and to respect the safety rules. Ohmpi must be assembled in a professional context and by people competent in electronics. The Ohmpi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The Ohmpi team cannot be held responsible if the equipment does not work after assembly. You may redistribute and modify this documentation and make products using it under the terms of the CERN-OHL-P v2 (https:/cern.ch/cern-ohl). This documentation is distributed WITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF MERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A PARTICULAR PURPOSE. Please see the CERN-OHL-P v2 for applicable conditions   **
 
 
 
