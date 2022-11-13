@@ -4,7 +4,6 @@ Development of a low-cost multi-electrodes resistivity meter for electrical resi
 
 ## Installation
 
-
 All dependencies are specified in *requirements.txt*
 
 **Note:** all instructions below should be typed in the terminal
@@ -21,6 +20,13 @@ We strongly recommend users to create a virtual environment to run the code and 
    `source ohmpy/bin/activate`
 *  you should run you code within the virtual environment
 *  to leave the virtual environment simply type: `deactivate`
+
+## First run with four electrodes
+
+In the examples folder, you will find the code "simple_measurement.py".
+
+Running this code, in Thonny (IDE) or in the terminal, will allow you to make a simple 4 electrodes measurement A B M N.
+
 
 ## Citing Ohmpi
 
