@@ -4,21 +4,21 @@ Development of a low-cost multi-electrodes resistivity meter for electrical resi
 
 ## Installation
 
+
 All dependencies are specified in *requirements.txt*
 
 **Note:** all instructions below should be typed in the terminal
 
-It is first necessary to ensure that the libatlas-base-dev library is installed:
-`sudo apt-get install libatlas-base-dev`
+It is first necessary to create an OhmPi virtual environment and install all dependancies
+`.create_ohmpi_virtual_envrinment.sh`
 
-We strongly recommend users to create a virtual environment to run the code and installed all required dependencies. It can be done either in a directory gathering all virtual environments used on the computer or within the ohmpy directory.
-*  create the virtual environment:
-   `python3 -m venv ohmpy`
+When the installation is completed check that requirements are met using 
+`pip list`
+
+
+We strongly recommend users to create a virtual environment to run the code and installed all required dependencies:
 *  activate it using the following command:
    `source ohmpy/bin/activate`
-*  install packages within the virtual environment. Installing the following package should be sufficient to meet dependencies:
-`pip install RPi.GPIO adafruit-blinka numpy adafruit-circuitpython-ads1x15 pandas`
-*  check that requirements are met using `pip list`
 *  you should run you code within the virtual environment
 *  to leave the virtual environment simply type: `deactivate`
 
