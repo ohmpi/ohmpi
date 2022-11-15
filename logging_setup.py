@@ -3,8 +3,8 @@ from config import EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, MQTT_LOGGING_CONFIG
 from os import path, mkdir, statvfs
 from time import gmtime
 import logging
-from mqtt_logger import MQTTHandler
-from compressed_sized_timed_rotating_logger import CompressedSizedTimedRotatingFileHandler
+from mqtt_handler import MQTTHandler
+from compressed_sized_timed_rotating_handler import CompressedSizedTimedRotatingFileHandler
 import sys
 from termcolor import colored
 

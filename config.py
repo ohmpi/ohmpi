@@ -4,29 +4,28 @@ from utils import get_platform
 from paho.mqtt.client import MQTTv31
 
 _, on_pi = get_platform()
-ohmpi_id = '0001'
-# mqtt_broker = 'localhost'
-mqtt_broker = 'localhost' if on_pi else 'mg3d-dev.umons.ac.be'
-
+# DEFINE THE ID OF YOUR OhmPi
+ohmpi_id = '0001' if on_pi else 'XXXX'
+# DEFINE YOUR MQTT BROKER (DEFAULT: 'localhost')
+mqtt_broker = 'localhost' if on_pi else 'NAME_YOUR_BROKER_WHEN_IN_SIMULATION_MODE_HERE'
+# DEFINE THE SUFFIX TO ADD TO YOUR LOGS FILES
 logging_suffix = ''
+
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': ohmpi_id,  # Unique identifier of the OhmPi board (string)
     'R_shunt': 2,  # Shunt resistance in Ohms
     'Imax': 4800 / 50 / 2,  # Maximum current
     'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
-    #    'coef_p3': 2.50,  # slope for current conversion for ADS.P3, measurement in V/V
-    #    'offset_p2': 0,
-    #    'offset_p3': 0,
     'nb_samples': 2,  # Max value 10 # was named integer before...
     'version': 2,  # Is this still needed?
     'max_elec': 64,
-    'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},
-    # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
-    'settings': 'ohmpi_settings.json',
+    'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # CHECK IF YOUR BOARDS HAVE THESE ADDRESSES
+    'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
     'board_version': '22.10'
 }  # TODO: add a dictionary with INA models and associated gain values
 
+# SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
@@ -50,9 +49,9 @@ DATA_LOGGING_CONFIG = {
     'interval': 1
 }
 
-# State of Health logging configuration
+# State of Health logging configuration (For a future release)
 SOH_LOGGING_CONFIG = {
-    'logging_level' : logging.INFO,
+    'logging_level': logging.INFO,
     'logging_to_console': True,
     'file_name': 'soh.log',
     'max_bytes': 16777216,
