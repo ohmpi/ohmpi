@@ -27,9 +27,9 @@ OhmPi V 2.00 (64 electrodes and 12V)
 The philosophy of Ohmpi 2 
 ==========================
 
-The philosophy of Ohmpi V2.00 is to offer a new DIY multielectrode resistivity meter. It is a resistivity meter with 64 electrodes , which can be upgraded to 128 electrodes. 
-It is limited to low-current injection,but suitable for small laboratory experiments and small field time-lapse monitoring.
-Ohmpi, is developed by a team that seeks to share all its experience and wishes to improve and offer a more and more robust tool to the community.Ohmpi V2.00 is a completely different version from the previous one. 
+The philosophy of Ohmpi V2.00 is to offer a new DIY multielectrode resistivity meter. It is a resistivity meter with 64 electrodes, which can be upgraded to 128 electrodes. 
+It is limited to low-current injection, but suitable for small laboratory experiments and small field time-lapse monitoring.
+Ohmpi is developed by a team that seeks to share its experience and wishes to improve and offer a more and more robust tool to the community. Ohmpi V2.00 is completely different version from the previous one. 
 We will stop the development on the previous version, to dedicate our efforts on this new version.
 	
 =============================================================================================================================================================
@@ -54,13 +54,13 @@ Technical data
 +-------------------------------+-----------------------+-----------+-----------------------+-----------+
 |Current                        |0 to 40                |mA         |0 to 40                |mA         |
 +-------------------------------+-----------------------+-----------+-----------------------+-----------+
-|Min pulse duration             |150                    |mS         |150                    |mS         |
+|Min pulse duration             |150                    |mS         |150                    |ms         |
 +-------------------------------+-----------------------+-----------+-----------------------+-----------+
-|Input impedance                |80                     |Mohm       |80                     |Mohm       |
+|Input impedance                |80                     |Mohm       |80                     |MOhm       |
 +-------------------------------+-----------------------+-----------+-----------------------+-----------+
 |Data storage                   |micro SD card          |           |micro SD card          |           |
 +-------------------------------+-----------------------+-----------+-----------------------+-----------+
-|Resolution                     |0.01                   |ohm        |0.01                   |ohm        |
+|Resolution                     |0.01                   |ohm        |0.01                   |Ohm        |
 +-------------------------------+-----------------------+-----------+-----------------------+-----------+
 
 Ohmpi 2 step by step
@@ -94,10 +94,10 @@ Available interfaces:
 
 **Web interface**
 
-The raspberrypi of the OhmPi is used as a Wifi Access Point (AP) and run
+The raspberrypi of the OhmPi is used as a Wifi Access Point (AP) and runs
 a small webserver to serve the 'index.html' interface. Using a laptop or
 a mobile phone connected to the wifi of the Raspberry Pi, one can see this
-interface, upload sequence, change parameters, run sequence and download data.
+interface, upload sequences, change parameters, run a sequence and download data.
 
 To configure the Raspberry Pi to act as an access point and run
 the webserver automatically on start, see instructions on `raspap.com <https://raspap.com/>`_ and in 'runOnStart.sh'.
@@ -124,8 +124,8 @@ to access the interface.
 
 **Python interface**
 
-By importing the `OhmPi` class from the ohmpi.py, one can controle the OhmPi using interactive IPython.
-Typically, it involves using the Thonny on the Raspberry Pi or the Terminal. Once can also connect using 
+By importing the `OhmPi` class from the ohmpi.py, one can control the OhmPi using interactive IPython.
+Typically, it involves using the terminal or an Python IDE such as Thonny on the Raspberry Pi. One can also connect using 
 ssh and run the Python interface (see PuTTY on Windows or ssh command on macOS/Linux).
 
 To access the Python API, make sure the file ohmpi.py is in the same
@@ -190,14 +190,14 @@ files (.json and .py).
 
 ***MQTT interface***
 
-Interface to communicate with the Pi designed for the Internet of Things (IoT). This interface allows to control a single OhmPi, a network of OhmPis, or auxilliary instruments remotely through an MQTT broker. An example of MQTT broker that can be used is `Mosquitto <https://mosquitto.org/>`_. Depending on the experiment needs, MQTT brokers can be set up locally on the Raspberry Pi, on a master Raspberry Pi or on a local or remote server. Commands are received by ohmpi.py script via the mqtt_interface.py script and further processed. All commands are sent in JSON format following the Python API with args and kwargs:
+Interface to communicate with the Pi designed for the Internet of Things (IoT). This interface allows to control a single OhmPi, a network of OhmPis, as well as auxilliary instruments remotely through an MQTT broker. An example of MQTT broker that can be used is `Mosquitto <https://mosquitto.org/>`_. Depending on the experiment needs, an MQTT broker can be set up locally on the Raspberry Pi, or on a local or remote server. Commands are received by ohmpi.py script via the mqtt_interface.py script and further processed. All commands are sent in JSON format following the Python API with args and kwargs:
 
 .. code-block:: json
   :caption: Updating acquisition settings.
 
   {
     "cmd_id": "3fzxv121UITwGjWYgcz4xw",
-    "cmd": "update_settings",Depending on the experiment needs, MQTT brokers can be set up locally on the Raspberry Pi, on a master Raspberry Pi or on a local or remote server.
+    "cmd": "update_settings", Depending on the experiment needs, MQTT brokers can be set up locally on the Raspberry Pi or on a local or remote server.
     "kwargs": {
       "config": {
         "nb_meas": 2,
@@ -244,7 +244,3 @@ Interface to communicate with the Pi designed for the Internet of Things (IoT). 
   
 A local Mosquitto broker can be set up and enabled to run as a service on the OhmPi using the bash script install_local_mqtt_broker.sh.
 The mqtt messages can be interfaced easily using the third party software `MQTT Explorer <http://mqtt-explorer.com/>`_. They can also form part of a browser-based flow editor such as `Node-red <http://mqtt-explorer.com/>`_ which can help desinging more complex IoT experiments and monitoring systems in which OhmPi is a component. An example of a simple flow incorporating execution commands and data outputs from OhmPi can be found in the OhmPi examples. For more documentation dedicated to node-red, please refer to the Node-red `cookbooks <https://cookbook.nodered.org/>`_.
-
-
-
-

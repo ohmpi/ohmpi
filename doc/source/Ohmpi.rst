@@ -66,4 +66,4 @@ to the near surface scientific community.
  
 
 .. note:: 
-   Everyone willing to get involved is  welcome in OhmPi Project!.
+   Everyone willing to get involved is welcome in the OhmPi Project!.
