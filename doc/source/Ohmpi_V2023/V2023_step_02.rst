@@ -3,11 +3,11 @@
 ****************************************************
 
 .. warning::
-	**Ohmpi is a participative project open to all, it requires skills in electronics and to respect the safety rules. Ohmpi must be assembled in a professional context and by people competent in electronics. The Ohmpi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The Ohmpi team cannot be held responsible if the equipment does not work after assembly.**
+    **Ohmpi is a participative project open to all, it requires skills in electronics and to respect the safety rules. OhmPi must be assembled in a professional context and by people competent in electronics. The OhmPi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The OhmPi team cannot be held responsible if the equipment does not work after assembly.**
 
 
 
-**PART A** Assembly of measurement board
+**PART A** Assembly of the measurement board
 ======================================================
 
 
@@ -15,17 +15,17 @@ Required components
 ----------------------------------------------------
 
 .. figure:: step_n_2/a/00_mes_board_components.jpg       
-	   :width: 600px
-	   :align: center
-	   :height: 450px
-	   :alt: alternate text
-	   :figclass: align-center 
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center 
 
 
 
 
 .. csv-table:: List of components
-   :file: step_n_2/a/Mesure_board_list_2_xx.csv
+   :file: step_n_2/a/measure_board_list_2_xx.csv
    :widths: 30, 70, 70, 70, 70, 35, 35
    :header-rows: 1
    
@@ -33,11 +33,11 @@ Description
 ------------------  
 
 .. figure:: step_n_2/a/schema_measurement_board.jpg       
-	   :width: 600px
-	   :align: center
-	   :height: 450px
-	   :alt: alternate text
-	   :figclass: align-center 
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center 
 
 Figure  shows the general schematics for the electronic measurement board developed.
 We have developed a complete "plug and play" measurement board. To measure electrical resistivity with Raspberry Pi. 
@@ -54,7 +54,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/a/01_mes_board.jpg                   |
    |      1 +------------------------------------------------------------+
-   |        | Installation of female header, 1 by10  pins, for ADS1115   | 
+   |        | Installation of female header, 1 by 10  pins, for ADS1115  | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
    
@@ -113,7 +113,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/a/07_mes_board.jpg                   |
    |7       +------------------------------------------------------------+
-   |        | Four screw terminals for 12V inpout et 5V outpout          | 
+   |        | Four screw terminals for 12V inpout et 5V output           |
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
    
@@ -158,8 +158,8 @@ which allows to realize precise current measurement around a shunt resistor. The
    +---------+------------------------------------------------------------+
 
 .. warning::
-	 
-	 In this version, We used a shunt resistor of 2 ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor.Change the shunt value in the code.
+     
+     In this version, We used a shunt resistor of 2 ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor.Change the shunt value in the code.
 
 
    
@@ -188,7 +188,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/a/14_mes_board.jpg                   |
    |14       +------------------------------------------------------------+
-   |         | 1 Mohms resistors                                          | 
+   |         | 1 MOhm resistors                                          |
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+  
    
@@ -198,7 +198,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/a/15_mes_board.jpg                   |
    |15       +------------------------------------------------------------+
-   |         | Soldering tow 1 Kohms resistors                            | 
+   |         | Soldering tow 1 kOhm resistors                            |
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
    
@@ -208,7 +208,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/a/16_mes_board.jpg                   |
    |16       +------------------------------------------------------------+
-   |         | Soldering tow 1.5Kohms resistors                           | 
+   |         | Soldering two 1.5 kOhm resistors                           |
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
 .. table::
@@ -217,7 +217,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/a/17_mes_board.jpg                   |
    |17       +------------------------------------------------------------+
-   |         | Soldering tow 1.5Kohms resistors                           | 
+   |         | Soldering two 1.5 kOhms resistors                          |
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
    
@@ -267,7 +267,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/a/22_mes_board.jpg                   |
    |22       +------------------------------------------------------------+
-   |         | Mounting LM158 operational amplificator                    | 
+   |         | Mounting LM158 operational amplifier                       |
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
 
@@ -341,7 +341,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/b/003.jpg                            |
    |4       +------------------------------------------------------------+
-   |        | Mounting the Ohmpi's measurement board on the Raspberry Pi | 
+   |        | Mounting the OhmPi's measurement board on the Raspberry Pi | 
    |        |                                                            |                                                                       
    +--------+------------------------------------------------------------+
 
@@ -351,7 +351,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/b/004.jpg                            |
    |5       +------------------------------------------------------------+
-   |        | Mounting the Ohmpi's measurement board on the Raspberry Pi | 
+   |        | Mounting the OhmPi's measurement board on the Raspberry Pi | 
    |        |                                                            |
    +--------+------------------------------------------------------------+   
 
@@ -373,7 +373,7 @@ which allows to realize precise current measurement around a shunt resistor. The
 
  .. code-block:: python
 
-	 i2cdetect -y 1
+     i2cdetect -y 1
 
 .. table::
    :align: center
@@ -388,8 +388,8 @@ which allows to realize precise current measurement around a shunt resistor. The
 
 
 Setting up an equivalent electronic circuit, for this you will need: 
- * 4 1kohm resistor (R2)
- * 1 220 ohm resistor (R1)
+ * 4 1kOhm resistor (R2)
+ * 1 220 Ohm resistor (R1)
  * 1 small padboard
  * Spool of solder
  
@@ -460,7 +460,7 @@ Setting up an equivalent electronic circuit, for this you will need:
    +--------+------------------------------------------------------------+
    |        |   .. image:: step_n_2/c/thonny_first_interface.jpg         |
    |7       +------------------------------------------------------------+
-   |        | Run Tonny Interpreter                                      |                    
+   |        | Run the Thonny Interpreter                                 |                    
    |        |                                                            |
    +--------+------------------------------------------------------------+   
 
@@ -472,5 +472,5 @@ Setting up an equivalent electronic circuit, for this you will need:
    |        |   .. image:: step_n_2/c/20211206_144334.jpg                |
    |7       +------------------------------------------------------------+
    |        | Run Ohmpi_4elec.py, if everything works you should         |                    
-   |        | get the following result (220 ohm)                         |
+   |        | get the following result (220 Ohm)                         |
    +--------+------------------------------------------------------------+ 

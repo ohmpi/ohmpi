@@ -213,11 +213,12 @@ class OhmPi(object):
 
         Parameters
         ----------
-        cmd_id
         filename : str
             filename to save the last measurement dataframe
         last_measurement : dict
             Last measurement taken in the form of a python dictionary
+        cmd_id : str, optional
+            Unique command identifier
         """
         last_measurement = deepcopy(last_measurement)
         if 'fulldata' in last_measurement:
@@ -434,7 +435,7 @@ class OhmPi(object):
         self.exec_logger.debug(f'Setting gain to {gain}')
         return gain
 
-    def get_data(self, survey_names=[], cmd_id=None):
+    def get_data(self, survey_names=None, cmd_id=None):
         """Get available data.
         
         Parameters
@@ -443,19 +444,23 @@ class OhmPi(object):
             List of filenames already available from the html interface. So
             their content won't be returned again. Only files not in the list
             will be read.
+        cmd_id : str, optional
+            Unique command identifier
         """
         # get all .csv file in data folder
+        if survey_names is None:
+            survey_names = []
         fnames = [fname for fname in os.listdir('data/') if fname[-4:] == '.csv']
         ddic = {}
         if cmd_id is None:
             cmd_id = 'unknown'
         for fname in fnames:
             if ((fname != 'readme.txt')
-                and ('_rs' not in fname)
-                and (fname.replace('.csv', '') not in survey_names)):
+                    and ('_rs' not in fname)
+                    and (fname.replace('.csv', '') not in survey_names)):
                 try:
                     data = np.loadtxt('data/' + fname, delimiter=',',
-                                      skiprows=1, usecols=(1,2,3,4,8))
+                                      skiprows=1, usecols=(1, 2, 3, 4, 8))
                     data = data[None, :] if len(data.shape) == 1 else data
                     ddic[fname.replace('.csv', '')] = {
                         'a': data[:, 0].astype(int).tolist(),
@@ -471,7 +476,13 @@ class OhmPi(object):
         return ddic
 
     def interrupt(self, cmd_id=None):
-        """Interrupts the acquisition. """
+        """Interrupts the acquisition
+
+        Parameters
+        ----------
+        cmd_id : str, optional
+            Unique command identifier
+        """
         self.status = 'stopping'
         if self.thread is not None:
             self.thread.join()
@@ -485,10 +496,11 @@ class OhmPi(object):
 
         Parameters
         ----------
-        cmd_id
         filename : str
             Path of the .csv or .txt file with A, B, M and N electrodes.
             Electrode index start at 1.
+        cmd_id : str, optional
+            Unique command identifier
 
         Returns
         -------
@@ -597,10 +609,16 @@ class OhmPi(object):
             reply = json.dumps(reply)
             self.exec_logger.debug(f'Execution report: {reply}')
 
-    @staticmethod
     def quit(self, cmd_id=None):
-        """Quits OhmPi"""
+        """Quits OhmPi
 
+        Parameters
+        ----------
+        cmd_id : str, optional
+            Unique command identifier
+        """
+
+        self.exec_logger.debug(f'Quitting ohmpi.py following command {cmd_id}')
         exit()
 
     def _read_hardware_config(self):
@@ -623,15 +641,32 @@ class OhmPi(object):
         warnings.warn('This function is deprecated. Use load_sequence instead.', DeprecationWarning)
         self.load_sequence(**kwargs)
 
-    def remove_data(self, **kwargs):
-        """Remove all data in the data/ folder.
+    def remove_data(self, cmd_id=None):
+        """Remove all data in the data folder
+
+        Parameters
+        ----------
+        cmd_id : str, optional
+            Unique command identifier
         """
+        self.exec_logger.debug(f'Removing all data following command {cmd_id}')
         shutil.rmtree('data')
         os.mkdir('data')
 
     def restart(self, cmd_id=None):
-        self.exec_logger.info('Restarting pi...')
-        os.system('reboot')
+        """Restarts the Raspberry Pi
+
+        Parameters
+        ----------
+        cmd_id : str, optional
+            Unique command identifier
+        """
+
+        if self.on_pi:
+            self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
+            os.system('reboot')
+        else:
+            self.exec_logger.warning('Not on Raspberry Pi, skipping reboot...')
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None,
                         autogain=True, strategy='constant', tx_volt=5, best_tx_injtime=0.1,
@@ -663,8 +698,8 @@ class OhmPi(object):
             measurement will be taken and values will be NaN.
         best_tx_injtime : float, optional
             (V3.0 only) Injection time in seconds used for finding the best voltage.
-        cmd_id :
-
+        cmd_id : str, optional
+            Unique command identifier
         """
         self.exec_logger.debug('Starting measurement')
         self.exec_logger.debug('Waiting for data')
@@ -925,8 +960,8 @@ class OhmPi(object):
 
         Parameters
         ----------
-        cmd_id :
-
+        cmd_id : str, optional
+            Unique command identifier
         sequence_delay : int, optional
             Number of seconds at which the sequence must be started from each others.
         nb_meas : int, optional
@@ -966,6 +1001,11 @@ class OhmPi(object):
     def run_sequence(self, cmd_id=None, **kwargs):
         """Runs sequence synchronously (=blocking on main thread).
            Additional arguments are passed to run_measurement().
+
+        Parameters
+        ----------
+        cmd_id : str, optional
+            Unique command identifier
         """
         self.status = 'running'
         self.exec_logger.debug(f'Status: {self.status}')
@@ -1022,9 +1062,10 @@ class OhmPi(object):
         """Runs the sequence in a separate thread. Can be stopped by 'OhmPi.interrupt()'.
             Additional arguments are passed to run_measurement().
 
-            Parameters
-            ----------
-            cmd_id:
+        Parameters
+        ----------
+        cmd_id : str, optional
+            Unique command identifier
         """
 
         def func():
@@ -1034,8 +1075,16 @@ class OhmPi(object):
         self.thread.start()
         self.status = 'idle'
 
-    def rs_check(self, tx_volt=12, cmd_id=None):
-        """Checks contact resistances"""
+    def rs_check(self, tx_volt=12., cmd_id=None):
+        """Checks contact resistances
+
+        Parameters
+        ----------
+        tx_volt : float
+            Voltage of the injection
+        cmd_id : str, optional
+            Unique command identifier
+        """
         # create custom sequence where MN == AB
         # we only check the electrodes which are in the sequence (not all might be connected)
         if self.sequence is None or not self.use_mux:
@@ -1109,6 +1158,15 @@ class OhmPi(object):
     #         # TODO or we offer the possibility in 'run_measurement' to have rs_check each time?
 
     def set_sequence(self, sequence=None, cmd_id=None):
+        """Sets the sequence to acquire
+
+        Parameters
+        ----------
+        sequence : list, str
+            sequence of quadrupoles
+        cmd_id: str, optional
+            Unique command identifier
+        """
         try:
             self.sequence = np.array(sequence).astype(int)
             # self.sequence = np.loadtxt(StringIO(sequence)).astype('uint32')
@@ -1170,7 +1228,8 @@ class OhmPi(object):
 
         Parameters
         ----------
-        cmd_id
+        cmd_id : str, optional
+            Unique command identifier
         quadrupole : list of 4 int
             List of 4 integers representing the electrode numbers.
         """
@@ -1188,7 +1247,8 @@ class OhmPi(object):
 
         Parameters
         ----------
-        cmd_id
+        cmd_id : str, optional
+            Unique command identifier
         quadrupole : list of 4 int
             List of 4 integers representing the electrode numbers.
         """
@@ -1214,18 +1274,18 @@ class OhmPi(object):
         tca = adafruit_tca9548a.TCA9548A(self.i2c, address)
 
         # ask use some details on how to proceed
-        a = input(' if vous want try 1 channel choose 1, if you want try all channel choose 2!') 
+        a = input('If you want try 1 channel choose 1, if you want try all channels choose 2!')
         if a == '1':
-            print("run channel by channel test") 
-            electrode = int(input('Choose your electrode number (integer):')) 
+            print('run channel by channel test')
+            electrode = int(input('Choose your electrode number (integer):'))
             electrodes = [electrode]
         elif a == '2':
             electrodes = range(1, 65)
         else:
-            print ("Wrong choice !")
-            return 
-        
-        # run the test
+            print('Wrong choice !')
+            return
+
+            # run the test
         for electrode_nr in electrodes:
             # find I2C address of the electrode and corresponding relay
             # considering that one MCP23017 can cover 16 electrodes
@@ -1239,15 +1299,21 @@ class OhmPi(object):
 
                 # activate relay for given time    
                 mcp2.get_pin(relay_nr - 1).value = True
-                print('electrode:', electrode_nr, ' activated...', end='', flush=True) 
-                time.sleep(activation_time) 
+                print('electrode:', electrode_nr, ' activated...', end='', flush=True)
+                time.sleep(activation_time)
                 mcp2.get_pin(relay_nr - 1).value = False
-                print(' deactivated' ) 
-                time.sleep(activation_time) 
+                print(' deactivated')
+                time.sleep(activation_time)
         print('Test finished.')
 
     def reset_mux(self, cmd_id=None):
-        """Switches off all multiplexer relays."""
+        """Switches off all multiplexer relays.
+
+        Parameters
+        ----------
+        cmd_id : str, optional
+            Unique command identifier
+        """
         if self.on_pi and self.use_mux:
             roles = ['A', 'B', 'M', 'N']
             for i in range(0, 4):
@@ -1276,9 +1342,10 @@ class OhmPi(object):
 
         Parameters
         ----------
-        cmd_id
         settings : str, dict
             Path to the .json settings file or dictionary of settings.
+        cmd_id : str, optional
+            Unique command identifier
         """
         status = False
         if settings is not None:
@@ -1291,7 +1358,7 @@ class OhmPi(object):
                     self.settings.update(dic)
                 self.exec_logger.debug('Acquisition parameters updated: ' + str(self.settings))
                 status = True
-            except Exception as e: # noqa
+            except Exception as e:  # noqa
                 self.exec_logger.warning('Unable to update settings.')
                 status = False
         else:

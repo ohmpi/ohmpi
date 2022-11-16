@@ -58,4 +58,4 @@ class MQTTHandler(logging.Handler):
                        will=self.will, auth=self.auth, tls=self.tls,
                        protocol=self.protocol, transport=self.transport)
         except Exception as e:
-            pass # TODO log in exec ?
+            pass  # TODO log in exec ?

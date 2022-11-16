@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-OHMPI: Open source and open hardware resitivity-meter 
-===================================================== 
+OHMPI: Open source and open hardware resistivity-meter
+======================================================
 
 
 
@@ -13,13 +13,13 @@ OHMPI: Open source and open hardware resitivity-meter
     :Release: |release|
     :Date: |today|
     :Date start: July 2016	
-    :Authors: **Rémi CLEMENT, Nicolas FORQUET, Yannick FARGIER, Vivien DUBOIS, Hélène GUYARD, Olivier KAUFMANN, Guillaume Blanchy**
+    :Authors: **Rémi CLEMENT, Nicolas FORQUET, Yannick FARGIER, Vivien DUBOIS, Hélène GUYARD, Olivier KAUFMANN, Guillaume Blanchy, Arnaud WATLET**
     :Target: users, researchers and developers 
     :status: some mature, some in progress
 
 .. topic:: OhmPi Document Center
 
-    * OhmPi offcial documents
+    * OhmPi official documents
     * Release guidelines
     * General tutorials
 
