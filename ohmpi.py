@@ -759,22 +759,31 @@ class OhmPi(object):
 
             if not out_of_range:  # we found a Vab in the range so we measure
                 if autogain:
-                    # compute autogain
-                    self.pin0.value = True
-                    self.pin1.value = False
-                    time.sleep(injection_duration)
-                    gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
-                    if polarity > 0:
-                        gain_voltage = self._gain_auto(AnalogIn(self.ads_voltage, ads.P0))
-                    else:
-                        gain_voltage = self._gain_auto(AnalogIn(self.ads_voltage, ads.P2))
-                    self.pin0.value = False
-                    self.pin1.value = False
-                    self.exec_logger.debug(f'Gain current: {gain_current:.3f}, gain voltage: {gain_voltage:.3f}')
-                    self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860,
-                                                   address=self.ads_current_address, mode=0)
-                    self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860,
-                                                   address=self.ads_voltage_address, mode=0)
+                    if self.board_version == '22.11':
+                        # compute autogain
+                        self.pin0.value = True
+                        self.pin1.value = False
+                        time.sleep(injection_duration)
+                        gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
+                        if polarity > 0:
+                            gain_voltage = self._gain_auto(AnalogIn(self.ads_voltage, ads.P0))
+                        else:
+                            gain_voltage = self._gain_auto(AnalogIn(self.ads_voltage, ads.P2))
+                        self.pin0.value = False
+                        self.pin1.value = False
+                        self.exec_logger.debug(f'Gain current: {gain_current:.3f}, gain voltage: {gain_voltage:.3f}')
+                        self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860,
+                                                    address=self.ads_current_address, mode=0)
+                        self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860,
+                                                    address=self.ads_voltage_address, mode=0)
+                    elif self.board_version == '22.10':
+                        gain_current = 2 / 3
+                        gain_voltage = 2 / 3
+                        self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860,
+                                                    address=self.ads_current_address, mode=0)
+                        self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860,
+                                                    address=self.ads_voltage_address, mode=0)                       
+
 
                 self.pin0.value = False
                 self.pin1.value = False
@@ -1206,7 +1215,7 @@ class OhmPi(object):
             # find I2C address of the electrode and corresponding relay
             # considering that one MCP23017 can cover 16 electrodes
             i2c_address = 7 - (electrode_nr - 1) // 16  # quotient without rest of the division
-            relay_nr = electrode_nr - (electrode_nr // 16) * 16 + 1
+            relay_nr = (electrode_nr-1) - ((electrode_nr-1) // 16) * 16
 
             if i2c_address is not None:
                 # select the MCP23017 of the selected MUX board
