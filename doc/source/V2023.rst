@@ -246,7 +246,7 @@ An example of MQTT broker that can be used is `Mosquitto <https://mosquitto.org/
 
 MQTT messages include logging messages from the OhmPi and commands sent to the OhmPi. These messages can be examined easily using a third party software such as `MQTT Explorer <http://mqtt-explorer.com/>`_.
 
-Commands send on the broker are received by the ohmpi.py script that runs on the OhmPi (make sure ohmpi.py starts on reboot) and further processed.
+Commands sent on the broker are received by the ohmpi.py script that runs on the OhmPi (make sure ohmpi.py starts on reboot) and further processed.
 MQTT commands are sent in JSON format following the Python API with kwargs as illustrated below:
 
 .. code-block:: json
@@ -302,10 +302,21 @@ MQTT commands are sent in JSON format following the Python API with kwargs as il
 Custom processing of messages and tailor-made dashboards for monitoring experiments may be designed using a browser-based flow editor such as `Node-red <http://mqtt-explorer.com/>`_.
 This may help designing complex IoT experiments and monitoring systems in which OhmPi is a component. 
 
-An example of a simple flow incorporating execution commands and data outputs from OhmPi can be found in the OhmPi examples.
+Examples incorporating execution commands and data outputs from OhmPi can be found in the OhmPi examples. Once Node-RED is installed on the OhmPi, these examples can be accessed separately by running a command in the console such as :
+
+.. code-block:: console
+node-red basic_ohmpi_flows_node-red.json
+
+These examples may require installing some additional node packages in order to work properly. This can be done in the `Palette Manager <https://nodered.org/docs/user-guide/editor/palette/manager> within Node-RED.
 
 .. figure:: img/node-red-flow.png
 
      Example flow in node-red to interact with an OhmPi.
+
+
+.. figure:: img/node-red-interface-ui.png
+
+     Example of a dashboard UI created with node-red to interact with an OhmPi.
+
 
 For more documentation dedicated to node-red, please refer to the Node-red `cookbooks <https://cookbook.nodered.org/>`_.
