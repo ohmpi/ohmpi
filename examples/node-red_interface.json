@@ -514,26 +514,6 @@
         "order": 3
     },
     {
-        "id": "ee5c899fd6c21c26",
-        "type": "ui_spacer",
-        "z": "753d1cb452ebd76e",
-        "name": "spacer",
-        "group": "142ad6ae.d55e29",
-        "order": 1,
-        "width": 2,
-        "height": 1
-    },
-    {
-        "id": "3815328eac2780f2",
-        "type": "ui_spacer",
-        "z": "753d1cb452ebd76e",
-        "name": "spacer",
-        "group": "142ad6ae.d55e29",
-        "order": 4,
-        "width": 2,
-        "height": 1
-    },
-    {
         "id": "5719585211dfe472",
         "type": "ui_group",
         "name": "Operating commands",
@@ -545,27 +525,27 @@
         "className": ""
     },
     {
-        "id": "767ffbbb662556c3",
+        "id": "1eec2080f96e5173",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "5719585211dfe472",
         "order": 1,
-        "width": 8,
-        "height": 1
+        "width": "8",
+        "height": "1"
     },
     {
-        "id": "5d3796147af02744",
+        "id": "95ddd6737dafe2a9",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "5719585211dfe472",
         "order": 4,
-        "width": 8,
-        "height": 1
+        "width": "8",
+        "height": "1"
     },
     {
-        "id": "c7b2be461926f73a",
+        "id": "0c2ea823ae91ebee",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -575,7 +555,7 @@
         "height": 1
     },
     {
-        "id": "6147cf00447eec22",
+        "id": "8ff142c0908285a2",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -585,7 +565,7 @@
         "height": 1
     },
     {
-        "id": "cc01c939aaadd7d1",
+        "id": "d8e82bdc688ec296",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -595,7 +575,7 @@
         "height": 1
     },
     {
-        "id": "b71492bae3e55727",
+        "id": "39db56203da1df8c",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -605,7 +585,7 @@
         "height": 1
     },
     {
-        "id": "48825c209ad67af9",
+        "id": "d98b0dbbdb298175",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -615,7 +595,7 @@
         "height": 1
     },
     {
-        "id": "26c2b66b0782e5c7",
+        "id": "ffbeef7d63cdca4c",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -625,7 +605,7 @@
         "height": 1
     },
     {
-        "id": "b8574c9809a42e1e",
+        "id": "301a0ff615cd7889",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -635,7 +615,7 @@
         "height": 1
     },
     {
-        "id": "b085a4b9efe2ab69",
+        "id": "d4e2a1e33d6d3d8d",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -645,7 +625,7 @@
         "height": 1
     },
     {
-        "id": "b519f248e1e53c94",
+        "id": "89dedbd3926cfdfb",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -655,7 +635,7 @@
         "height": 1
     },
     {
-        "id": "6f6cdaba90007ba2",
+        "id": "53af5a741386fee7",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -665,7 +645,7 @@
         "height": 1
     },
     {
-        "id": "da59a79748b0b77b",
+        "id": "c1981a4d6c9d959f",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -675,7 +655,7 @@
         "height": 1
     },
     {
-        "id": "e83aeaa7ec6fd3a5",
+        "id": "d1359c73fcd3a2a5",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -685,7 +665,7 @@
         "height": 1
     },
     {
-        "id": "ebb552458e0add8f",
+        "id": "c92d320326331d56",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -695,7 +675,7 @@
         "height": 1
     },
     {
-        "id": "7e76f03ac9838b7a",
+        "id": "24758628620b77e2",
         "type": "ui_spacer",
         "z": "4489e1d51c9522f3",
         "name": "spacer",
@@ -1497,7 +1477,7 @@
         "height": 4,
         "gtype": "gage",
         "title": "Latest measured voltage",
-        "label": "R [Ohm]",
+        "label": "Vmn [mV]",
         "format": "{{value}}",
         "min": "-1500",
         "max": "1500",
@@ -1543,7 +1523,7 @@
         "height": 4,
         "gtype": "gage",
         "title": "Latest applied current",
-        "label": "R [Ohm]",
+        "label": "I [mA]",
         "format": "{{value}}",
         "min": 0,
         "max": "50",
@@ -2706,7 +2686,7 @@
         ],
         "outputs": 1,
         "cts": true,
-        "x": 1140,
+        "x": 1160,
         "y": 140,
         "wires": [
             []
