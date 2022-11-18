@@ -685,6 +685,26 @@
         "height": 1
     },
     {
+        "id": "7a4e901e7faedf6c",
+        "type": "ui_spacer",
+        "z": "b19c51e9d4d25a33",
+        "name": "spacer",
+        "group": "142ad6ae.d55e29",
+        "order": 1,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "d0da538df7da49b5",
+        "type": "ui_spacer",
+        "z": "b19c51e9d4d25a33",
+        "name": "spacer",
+        "group": "142ad6ae.d55e29",
+        "order": 4,
+        "width": 2,
+        "height": 1
+    },
+    {
         "id": "71f435fecd185ab7",
         "type": "join",
         "z": "c3dbd6595b0256a9",
@@ -844,7 +864,7 @@
         "z": "c3dbd6595b0256a9",
         "name": "",
         "group": "142ad6ae.d55e29",
-        "order": 12,
+        "order": 11,
         "width": 0,
         "height": 0,
         "passthru": false,
@@ -878,7 +898,7 @@
         "tooltip": "",
         "place": "Select option",
         "group": "142ad6ae.d55e29",
-        "order": 10,
+        "order": 9,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -925,7 +945,7 @@
         "label": "kwargs",
         "tooltip": "",
         "group": "142ad6ae.d55e29",
-        "order": 11,
+        "order": 10,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -998,7 +1018,7 @@
         "type": "ui_text",
         "z": "c3dbd6595b0256a9",
         "group": "142ad6ae.d55e29",
-        "order": 9,
+        "order": 8,
         "width": 0,
         "height": 0,
         "name": "",
@@ -1152,7 +1172,7 @@
         "name": "",
         "label": "Settings",
         "group": "142ad6ae.d55e29",
-        "order": 5,
+        "order": 12,
         "width": 0,
         "height": 0,
         "options": [
@@ -1563,7 +1583,7 @@
         "type": "mqtt out",
         "z": "4489e1d51c9522f3",
         "name": "MQTT ctrl",
-        "topic": "ohmpi_XXXX/ctrl",
+        "topic": "ohmpi_0001/ctrl",
         "qos": "2",
         "retain": "false",
         "respTopic": "",
@@ -1600,8 +1620,7 @@
         "y": 540,
         "wires": [
             [
-                "6efab6f30d54c251",
-                "adb2ae9f61f9ee82"
+                "6efab6f30d54c251"
             ]
         ]
     },
@@ -1629,27 +1648,9 @@
         "y": 600,
         "wires": [
             [
-                "6efab6f30d54c251",
-                "adb2ae9f61f9ee82"
+                "6efab6f30d54c251"
             ]
         ]
-    },
-    {
-        "id": "adb2ae9f61f9ee82",
-        "type": "ui_text",
-        "z": "4489e1d51c9522f3",
-        "group": "b0990b3c5ff3c09a",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "name": "",
-        "label": "Command sent",
-        "format": "{{msg.payload}}",
-        "layout": "col-center",
-        "className": "",
-        "x": 720,
-        "y": 500,
-        "wires": []
     },
     {
         "id": "e0f21bb5ada6c4d7",
@@ -2023,7 +2024,7 @@
         "label": "Filename",
         "tooltip": "",
         "group": "142ad6ae.d55e29",
-        "order": 7,
+        "order": 6,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -2047,7 +2048,7 @@
         "z": "753d1cb452ebd76e",
         "name": "",
         "group": "142ad6ae.d55e29",
-        "order": 8,
+        "order": 7,
         "width": 0,
         "height": 0,
         "passthru": false,
@@ -2247,8 +2248,8 @@
         "type": "ui_text",
         "z": "753d1cb452ebd76e",
         "group": "142ad6ae.d55e29",
-        "order": 6,
-        "width": 4,
+        "order": 5,
+        "width": 8,
         "height": 1,
         "name": "",
         "label": "<font size = 4.5>Load sequence",
@@ -2264,14 +2265,14 @@
         "type": "mqtt in",
         "z": "b19c51e9d4d25a33",
         "name": "",
-        "topic": "ohmpi_XXXX/exec",
+        "topic": "ohmpi_0001/exec",
         "qos": "2",
         "datatype": "auto-detect",
         "broker": "5a09c1ee2a3419c3",
         "nl": false,
         "rap": false,
         "inputs": 0,
-        "x": 330,
+        "x": 320,
         "y": 40,
         "wires": [
             [
@@ -2284,14 +2285,14 @@
         "type": "mqtt in",
         "z": "b19c51e9d4d25a33",
         "name": "",
-        "topic": "ohmpi_XXXX/data",
+        "topic": "ohmpi_0001/data",
         "qos": "2",
         "datatype": "auto",
         "broker": "5a09c1ee2a3419c3",
         "nl": false,
         "rap": false,
         "inputs": 0,
-        "x": 330,
+        "x": 320,
         "y": 140,
         "wires": [
             [
@@ -2307,7 +2308,7 @@
         "type": "mqtt out",
         "z": "b19c51e9d4d25a33",
         "name": "MQTT ctrl",
-        "topic": "ohmpi_XXXX/ctrl",
+        "topic": "ohmpi_0001/ctrl",
         "qos": "2",
         "retain": "false",
         "respTopic": "",
@@ -2325,7 +2326,7 @@
         "type": "mqtt in",
         "z": "b19c51e9d4d25a33",
         "name": "",
-        "topic": "ohmpi_xxxx/soh",
+        "topic": "ohmpi_0001/soh",
         "qos": "2",
         "datatype": "auto",
         "broker": "5a09c1ee2a3419c3",
@@ -2403,7 +2404,7 @@
         "group": "b0990b3c5ff3c09a",
         "order": 3,
         "width": 18,
-        "height": 6,
+        "height": 7,
         "name": "MQTT exec",
         "label": "Execution",
         "format": "{{msg.payload}}",

@@ -309,14 +309,18 @@ node-red basic_ohmpi_flows_node-red.json
 
 These examples may require installing some additional node packages in order to work properly. This can be done in the `Palette Manager <https://nodered.org/docs/user-guide/editor/palette/manager> within Node-RED.
 
-.. figure:: img/node-red-flow.png
+.. figure:: img/node-red_flow.png
 
      Example flow in node-red to interact with an OhmPi.
 
 
-.. figure:: img/node-red-interface-ui.png
+.. figure:: img/node-red_interface_control.png
 
-     Example of a dashboard UI created with node-red to interact with an OhmPi.
+     Example of a dashboard UI created with node-red to interact with an OhmPi - control tab.
+     
+.. figure:: img/node-red_interface_data.png
+
+     Example of a dashboard UI created with node-red to interact with an OhmPi - data visualization tab.
 
 
 For more documentation dedicated to node-red, please refer to the Node-red `cookbooks <https://cookbook.nodered.org/>`_.
