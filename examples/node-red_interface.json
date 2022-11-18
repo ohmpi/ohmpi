@@ -275,13 +275,36 @@
         }
     },
     {
+        "id": "753d1cb452ebd76e",
+        "type": "subflow",
+        "name": "Set_sequence",
+        "info": "",
+        "category": "",
+        "in": [],
+        "out": [
+            {
+                "x": 1100,
+                "y": 180,
+                "wires": [
+                    {
+                        "id": "8e435b914e061d45",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
         "id": "142ad6ae.d55e29",
         "type": "ui_group",
-        "name": "Controller",
+        "name": "Commands",
         "tab": "5d888f29.07334",
         "order": 1,
         "disp": true,
-        "width": 8,
+        "width": "8",
         "collapse": false,
         "className": ""
     },
@@ -395,9 +418,9 @@
     {
         "id": "5a09c1ee2a3419c3",
         "type": "mqtt-broker",
-        "name": "ohmpi_local",
+        "name": "ohmpi_local_broker",
         "broker": "127.0.0.1",
-        "port": "1883",
+        "port": "1880",
         "clientid": "",
         "autoConnect": true,
         "usetls": false,
@@ -435,9 +458,9 @@
         "type": "ui_group",
         "name": "Messages",
         "tab": "5d888f29.07334",
-        "order": 3,
+        "order": 2,
         "disp": true,
-        "width": 16,
+        "width": 18,
         "collapse": true,
         "className": ""
     },
@@ -464,7 +487,7 @@
         "type": "ui_group",
         "name": "Sequence",
         "tab": "32170516a52092f8",
-        "order": 2,
+        "order": 3,
         "disp": true,
         "width": 20,
         "collapse": false,
@@ -477,14 +500,23 @@
         "tab": "5d888f29.07334",
         "order": 3,
         "disp": true,
-        "width": "24",
+        "width": "26",
         "collapse": false,
         "className": ""
     },
     {
-        "id": "2ea9e102cdb2b8bc",
+        "id": "65037a21a4930ac3",
+        "type": "ui_link",
+        "name": "HTTP interface",
+        "link": "http://localhost:8080",
+        "icon": "open_in_browser",
+        "target": "iframe",
+        "order": 3
+    },
+    {
+        "id": "ee5c899fd6c21c26",
         "type": "ui_spacer",
-        "z": "b19c51e9d4d25a33",
+        "z": "753d1cb452ebd76e",
         "name": "spacer",
         "group": "142ad6ae.d55e29",
         "order": 1,
@@ -492,9 +524,9 @@
         "height": 1
     },
     {
-        "id": "9726d2db53670a2f",
+        "id": "3815328eac2780f2",
         "type": "ui_spacer",
-        "z": "b19c51e9d4d25a33",
+        "z": "753d1cb452ebd76e",
         "name": "spacer",
         "group": "142ad6ae.d55e29",
         "order": 4,
@@ -502,9 +534,40 @@
         "height": 1
     },
     {
-        "id": "8604d2895bcb450c",
+        "id": "5719585211dfe472",
+        "type": "ui_group",
+        "name": "Operating commands",
+        "tab": "32170516a52092f8",
+        "order": 1,
+        "disp": true,
+        "width": "20",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "767ffbbb662556c3",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
+        "name": "spacer",
+        "group": "5719585211dfe472",
+        "order": 1,
+        "width": 8,
+        "height": 1
+    },
+    {
+        "id": "5d3796147af02744",
+        "type": "ui_spacer",
+        "z": "4489e1d51c9522f3",
+        "name": "spacer",
+        "group": "5719585211dfe472",
+        "order": 4,
+        "width": 8,
+        "height": 1
+    },
+    {
+        "id": "c7b2be461926f73a",
+        "type": "ui_spacer",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 1,
@@ -512,9 +575,9 @@
         "height": 1
     },
     {
-        "id": "7043dcaa8b77a1ee",
+        "id": "6147cf00447eec22",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 3,
@@ -522,9 +585,9 @@
         "height": 1
     },
     {
-        "id": "a97edf86754fb6d6",
+        "id": "cc01c939aaadd7d1",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 4,
@@ -532,9 +595,9 @@
         "height": 1
     },
     {
-        "id": "20893cc8683fd811",
+        "id": "b71492bae3e55727",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 5,
@@ -542,9 +605,9 @@
         "height": 1
     },
     {
-        "id": "f1e2260223be3173",
+        "id": "48825c209ad67af9",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 6,
@@ -552,9 +615,9 @@
         "height": 1
     },
     {
-        "id": "efb0652208c0e313",
+        "id": "26c2b66b0782e5c7",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 7,
@@ -562,9 +625,9 @@
         "height": 1
     },
     {
-        "id": "3f9ed5d50127d447",
+        "id": "b8574c9809a42e1e",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 8,
@@ -572,9 +635,9 @@
         "height": 1
     },
     {
-        "id": "a3ccc2e4e8da4bf9",
+        "id": "b085a4b9efe2ab69",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 9,
@@ -582,9 +645,9 @@
         "height": 1
     },
     {
-        "id": "a186e41072c92e53",
+        "id": "b519f248e1e53c94",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 10,
@@ -592,9 +655,9 @@
         "height": 1
     },
     {
-        "id": "94601de256407651",
+        "id": "6f6cdaba90007ba2",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 11,
@@ -602,9 +665,9 @@
         "height": 1
     },
     {
-        "id": "e3212dc1f098fb0e",
+        "id": "da59a79748b0b77b",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 12,
@@ -612,9 +675,9 @@
         "height": 1
     },
     {
-        "id": "6e9c8fe4a83d80bb",
+        "id": "e83aeaa7ec6fd3a5",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 13,
@@ -622,9 +685,9 @@
         "height": 1
     },
     {
-        "id": "fce3dd5095e58052",
+        "id": "ebb552458e0add8f",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 14,
@@ -632,23 +695,14 @@
         "height": 1
     },
     {
-        "id": "8ca07c19d93e4907",
+        "id": "7e76f03ac9838b7a",
         "type": "ui_spacer",
-        "z": "b6b050428bd78f42",
+        "z": "4489e1d51c9522f3",
         "name": "spacer",
         "group": "df2cbd8c9c9960e1",
         "order": 16,
         "width": 8,
         "height": 1
-    },
-    {
-        "id": "bd7e9f8b229fdb1a",
-        "type": "ui_link",
-        "name": "HTTP interface",
-        "link": "http://localhost:8080",
-        "icon": "open_in_browser",
-        "target": "newtab",
-        "order": 3
     },
     {
         "id": "71f435fecd185ab7",
@@ -810,7 +864,7 @@
         "z": "c3dbd6595b0256a9",
         "name": "",
         "group": "142ad6ae.d55e29",
-        "order": 8,
+        "order": 12,
         "width": 0,
         "height": 0,
         "passthru": false,
@@ -844,7 +898,7 @@
         "tooltip": "",
         "place": "Select option",
         "group": "142ad6ae.d55e29",
-        "order": 6,
+        "order": 10,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -891,7 +945,7 @@
         "label": "kwargs",
         "tooltip": "",
         "group": "142ad6ae.d55e29",
-        "order": 7,
+        "order": 11,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -964,7 +1018,7 @@
         "type": "ui_text",
         "z": "c3dbd6595b0256a9",
         "group": "142ad6ae.d55e29",
-        "order": 5,
+        "order": 9,
         "width": 0,
         "height": 0,
         "name": "",
@@ -1118,7 +1172,7 @@
         "name": "",
         "label": "Settings",
         "group": "142ad6ae.d55e29",
-        "order": 9,
+        "order": 5,
         "width": 0,
         "height": 0,
         "options": [
@@ -1445,7 +1499,7 @@
         "title": "Latest measured voltage",
         "label": "R [Ohm]",
         "format": "{{value}}",
-        "min": -1500,
+        "min": "-1500",
         "max": "1500",
         "colors": [
             "#00b500",
@@ -1523,6 +1577,99 @@
                 "035c20e764a1f057"
             ]
         ]
+    },
+    {
+        "id": "6efab6f30d54c251",
+        "type": "mqtt out",
+        "z": "4489e1d51c9522f3",
+        "name": "MQTT ctrl",
+        "topic": "ohmpi_XXXX/ctrl",
+        "qos": "2",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "5a09c1ee2a3419c3",
+        "x": 720,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "3725a076feb38906",
+        "type": "ui_button",
+        "z": "4489e1d51c9522f3",
+        "name": "Run sequence",
+        "group": "5719585211dfe472",
+        "order": 2,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "Run",
+        "tooltip": "run sequence",
+        "color": "red",
+        "bgcolor": "lightgrey",
+        "className": "",
+        "icon": "play_circle_fill",
+        "payload": "{\"cmd_id\" :\"0\", \"cmd\":\"run_sequence_async\"}",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 200,
+        "y": 540,
+        "wires": [
+            [
+                "6efab6f30d54c251",
+                "adb2ae9f61f9ee82"
+            ]
+        ]
+    },
+    {
+        "id": "6ef5acf43be3c8f9",
+        "type": "ui_button",
+        "z": "4489e1d51c9522f3",
+        "name": "Interrupt",
+        "group": "5719585211dfe472",
+        "order": 3,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "Stop",
+        "tooltip": "interrupt sequence",
+        "color": "black",
+        "bgcolor": "lightgrey",
+        "className": "",
+        "icon": "stop",
+        "payload": "{\"cmd_id\" :\"0\", \"cmd\":\"interrupt\"}",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 180,
+        "y": 600,
+        "wires": [
+            [
+                "6efab6f30d54c251",
+                "adb2ae9f61f9ee82"
+            ]
+        ]
+    },
+    {
+        "id": "adb2ae9f61f9ee82",
+        "type": "ui_text",
+        "z": "4489e1d51c9522f3",
+        "group": "b0990b3c5ff3c09a",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Command sent",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 720,
+        "y": 500,
+        "wires": []
     },
     {
         "id": "e0f21bb5ada6c4d7",
@@ -1622,7 +1769,7 @@
         "z": "b6b050428bd78f42",
         "group": "df2cbd8c9c9960e1",
         "name": "Latest readings",
-        "order": 18,
+        "order": 17,
         "width": 20,
         "height": 11,
         "columns": [
@@ -1808,11 +1955,11 @@
         "z": "b6b050428bd78f42",
         "name": "",
         "group": "7792ecc419ecbb59",
-        "order": 7,
+        "order": 4,
         "width": 0,
         "height": 0,
         "passthru": false,
-        "label": "clear",
+        "label": "Clear table",
         "tooltip": "clear all table data",
         "color": "",
         "bgcolor": "",
@@ -1822,7 +1969,7 @@
         "payloadType": "date",
         "topic": "",
         "topicType": "str",
-        "x": 390,
+        "x": 410,
         "y": 220,
         "wires": [
             [
@@ -1870,14 +2017,277 @@
         "icon": "font-awesome/fa-table"
     },
     {
+        "id": "a646103fce176d34",
+        "type": "function",
+        "z": "753d1cb452ebd76e",
+        "name": "set kwargs",
+        "func": "var newMsg = {\n    payload: {\n        \"kwargs\": { \"filename\": msg.payload}}}\nglobal.set(\"kwargs_sequence\", newMsg)\nreturn global.get(\"kwargs_sequence\");",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 360,
+        "wires": [
+            [
+                "24edf8b8e8cc4fe9"
+            ]
+        ]
+    },
+    {
+        "id": "fc325307f9b71ad7",
+        "type": "ui_text_input",
+        "z": "753d1cb452ebd76e",
+        "name": "",
+        "label": "Filename",
+        "tooltip": "",
+        "group": "142ad6ae.d55e29",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": "250",
+        "topic": "filename",
+        "sendOnBlur": false,
+        "className": "",
+        "topicType": "str",
+        "x": 180,
+        "y": 360,
+        "wires": [
+            [
+                "a646103fce176d34"
+            ]
+        ]
+    },
+    {
+        "id": "6a463bf900cbcb18",
+        "type": "ui_button",
+        "z": "753d1cb452ebd76e",
+        "name": "",
+        "group": "142ad6ae.d55e29",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Load sequence",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 180,
+        "y": 220,
+        "wires": [
+            [
+                "f7179af84070f140",
+                "60f30b88fa0fd1a5",
+                "a91347161001f3b5",
+                "c32e7279d6c9a272"
+            ]
+        ]
+    },
+    {
+        "id": "c32e7279d6c9a272",
+        "type": "function",
+        "z": "753d1cb452ebd76e",
+        "name": "set kwargs",
+        "func": "return global.get(\"kwargs_sequence\");",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 280,
+        "wires": [
+            [
+                "8e435b914e061d45"
+            ]
+        ]
+    },
+    {
+        "id": "8e435b914e061d45",
+        "type": "join",
+        "z": "753d1cb452ebd76e",
+        "name": "",
+        "mode": "custom",
+        "build": "merged",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": true,
+        "timeout": "",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 950,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "009df2f988c7e6ba",
+        "type": "change",
+        "z": "753d1cb452ebd76e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "complete",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 690,
+        "y": 200,
+        "wires": [
+            [
+                "8e435b914e061d45"
+            ]
+        ]
+    },
+    {
+        "id": "ad9caa24ea8df8c7",
+        "type": "function",
+        "z": "753d1cb452ebd76e",
+        "name": "set cmd_id",
+        "func": "var newMsg = { payload: {\"cmd_id\": msg.payload }};\nreturn newMsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 160,
+        "wires": [
+            [
+                "8e435b914e061d45"
+            ]
+        ]
+    },
+    {
+        "id": "a91347161001f3b5",
+        "type": "function",
+        "z": "753d1cb452ebd76e",
+        "name": "set cmd",
+        "func": "return { payload: { \"cmd\": \"load_sequence\" } };",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 240,
+        "wires": [
+            [
+                "8e435b914e061d45"
+            ]
+        ]
+    },
+    {
+        "id": "60f30b88fa0fd1a5",
+        "type": "delay",
+        "z": "753d1cb452ebd76e",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "250",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 490,
+        "y": 200,
+        "wires": [
+            [
+                "009df2f988c7e6ba"
+            ]
+        ]
+    },
+    {
+        "id": "f7179af84070f140",
+        "type": "uuid",
+        "z": "753d1cb452ebd76e",
+        "uuidVersion": "v1",
+        "namespaceType": "",
+        "namespace": "",
+        "namespaceCustom": "",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "x": 410,
+        "y": 160,
+        "wires": [
+            [
+                "ad9caa24ea8df8c7"
+            ]
+        ]
+    },
+    {
+        "id": "24edf8b8e8cc4fe9",
+        "type": "debug",
+        "z": "753d1cb452ebd76e",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "f0e1c3fb6491d3de",
+        "type": "ui_text",
+        "z": "753d1cb452ebd76e",
+        "group": "142ad6ae.d55e29",
+        "order": 6,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "<font size = 4.5>Load sequence",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 210,
+        "y": 300,
+        "wires": []
+    },
+    {
         "id": "0f23781293c4b819",
         "type": "mqtt in",
         "z": "b19c51e9d4d25a33",
         "name": "",
-        "topic": "ohmpi_0001/exec",
+        "topic": "ohmpi_XXXX/exec",
         "qos": "2",
         "datatype": "auto-detect",
-        "broker": "6ae7e77e.04c64",
+        "broker": "5a09c1ee2a3419c3",
         "nl": false,
         "rap": false,
         "inputs": 0,
@@ -1885,7 +2295,7 @@
         "y": 40,
         "wires": [
             [
-                "f4b6096e60252b62"
+                "a5740258089c58ac"
             ]
         ]
     },
@@ -1894,14 +2304,14 @@
         "type": "mqtt in",
         "z": "b19c51e9d4d25a33",
         "name": "",
-        "topic": "ohmpi_0001/data",
+        "topic": "ohmpi_XXXX/data",
         "qos": "2",
         "datatype": "auto",
-        "broker": "6ae7e77e.04c64",
+        "broker": "5a09c1ee2a3419c3",
         "nl": false,
         "rap": false,
         "inputs": 0,
-        "x": 320,
+        "x": 330,
         "y": 140,
         "wires": [
             [
@@ -1917,7 +2327,7 @@
         "type": "mqtt out",
         "z": "b19c51e9d4d25a33",
         "name": "MQTT ctrl",
-        "topic": "ohmpi_0001/ctrl",
+        "topic": "ohmpi_XXXX/ctrl",
         "qos": "2",
         "retain": "false",
         "respTopic": "",
@@ -1925,7 +2335,7 @@
         "userProps": "",
         "correl": "",
         "expiry": "",
-        "broker": "6ae7e77e.04c64",
+        "broker": "5a09c1ee2a3419c3",
         "x": 820,
         "y": 400,
         "wires": []
@@ -1935,19 +2345,17 @@
         "type": "mqtt in",
         "z": "b19c51e9d4d25a33",
         "name": "",
-        "topic": "ohmpi_0001/soh",
+        "topic": "ohmpi_xxxx/soh",
         "qos": "2",
         "datatype": "auto",
-        "broker": "6ae7e77e.04c64",
+        "broker": "5a09c1ee2a3419c3",
         "nl": false,
         "rap": false,
         "inputs": 0,
         "x": 320,
         "y": 240,
         "wires": [
-            [
-                "6d9397b8b510b4b8"
-            ]
+            []
         ]
     },
     {
@@ -2014,12 +2422,12 @@
         "z": "b19c51e9d4d25a33",
         "group": "b0990b3c5ff3c09a",
         "order": 3,
-        "width": 16,
-        "height": 3,
+        "width": 18,
+        "height": 6,
         "name": "MQTT exec",
         "label": "Execution",
         "format": "{{msg.payload}}",
-        "layout": "row-spread",
+        "layout": "col-center",
         "className": "",
         "x": 830,
         "y": 40,
@@ -2031,32 +2439,15 @@
         "z": "b19c51e9d4d25a33",
         "group": "b0990b3c5ff3c09a",
         "order": 4,
-        "width": 16,
-        "height": 3,
+        "width": 18,
+        "height": 4,
         "name": "MQTT Data",
         "label": "Data",
         "format": "{{msg.payload}}",
-        "layout": "row-spread",
+        "layout": "col-center",
         "className": "",
         "x": 830,
         "y": 140,
-        "wires": []
-    },
-    {
-        "id": "6d9397b8b510b4b8",
-        "type": "ui_text",
-        "z": "b19c51e9d4d25a33",
-        "group": "b0990b3c5ff3c09a",
-        "order": 5,
-        "width": 0,
-        "height": 0,
-        "name": "MQTT SOH",
-        "label": "SOH",
-        "format": "{{msg.payload}}",
-        "layout": "row-spread",
-        "className": "",
-        "x": 830,
-        "y": 240,
         "wires": []
     },
     {
@@ -2085,8 +2476,7 @@
             [
                 "f6075b441607acc4",
                 "f4b6096e60252b62",
-                "649dbc02e71571e2",
-                "6d9397b8b510b4b8"
+                "649dbc02e71571e2"
             ]
         ]
     },
@@ -2129,7 +2519,7 @@
         "name": "",
         "label": "Command sent",
         "format": "{{msg.payload}}",
-        "layout": "row-spread",
+        "layout": "col-center",
         "className": "",
         "x": 840,
         "y": 300,
@@ -2366,11 +2756,11 @@
         "z": "b19c51e9d4d25a33",
         "name": "",
         "group": "6e40c7571e22771c",
-        "order": 7,
+        "order": 2,
         "width": 0,
         "height": 0,
         "passthru": false,
-        "label": "clear",
+        "label": "Clear table",
         "tooltip": "clear all table data",
         "color": "",
         "bgcolor": "",
@@ -2380,7 +2770,7 @@
         "payloadType": "date",
         "topic": "",
         "topicType": "str",
-        "x": 990,
+        "x": 950,
         "y": 220,
         "wires": [
             [
@@ -2407,5 +2797,38 @@
             ]
         ],
         "info": "# clear data\n\nunfortunately this command (currently) do not send a promise back! So we have to pass it directly to the table handler"
+    },
+    {
+        "id": "a5740258089c58ac",
+        "type": "function",
+        "z": "b19c51e9d4d25a33",
+        "name": "function 7",
+        "func": "var exec_log = flow.get('exec_log') || [];\nexec_log.push(msg.payload);\nflow.set(\"exec_log\", exec_log);\nvar log = exec_log.slice(-10,).join(\"<br>\")\nmsg.payload = log;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 40,
+        "wires": [
+            [
+                "f4b6096e60252b62"
+            ]
+        ]
+    },
+    {
+        "id": "521b0d9b132502a5",
+        "type": "subflow:753d1cb452ebd76e",
+        "z": "b19c51e9d4d25a33",
+        "name": "",
+        "x": 330,
+        "y": 480,
+        "wires": [
+            [
+                "649dbc02e71571e2",
+                "16b2937ad25f25d2"
+            ]
+        ]
     }
 ]
