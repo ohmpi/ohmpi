@@ -47,8 +47,6 @@ except ImportError as error:
 except Exception as error:
     print(colored(f'Unexpected error: {error}', 'red'))
     arm64_imports = None
-    exit()
-
 
 class OhmPi(object):
     """ OhmPi class.
@@ -1049,10 +1047,26 @@ class OhmPi(object):
             if self.on_pi:
                 acquired_data = self.run_measurement(quad, **kwargs)
             else:  # for testing, generate random data
+                sum_vmn = np.random.rand(1)[0] * 1000.
+                sum_i = np.random.rand(1)[0] * 100.
+                cmd_id = np.random.randint(1000)
                 acquired_data = {
-                    'A': [quad[0]], 'B': [quad[1]], 'M': [quad[2]], 'N': [quad[3]],
-                    'R [ohm]': np.abs(np.random.randn(1))
+                    "time": datetime.now().isoformat(),
+                    "A": quad[0],
+                    "B": quad[1],
+                    "M": quad[2],
+                    "N": quad[3],
+                    "inj time [ms]": self.settings['injection_duration'] * 1000.,
+                    "Vmn [mV]": sum_vmn,
+                    "I [mA]": sum_i,
+                    "R [ohm]": sum_vmn / sum_i,
+                    "Ps [mV]": np.random.randn(1)[0] * 100.,
+                    "nbStack": self.settings['nb_stack'],
+                    "Tx [V]": np.random.randn(1)[0] * 5.,
+                    "CPU temp [degC]": np.random.randn(1)[0] * 50.,
+                    "Nb samples [-]": self.nb_samples,
                 }
+                self.data_logger.info(acquired_data)
 
             # switch mux off
             self.switch_mux_off(quad)
