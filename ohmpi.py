@@ -922,23 +922,42 @@ class OhmPi(object):
                 np.array([[]])
 
             # create a dictionary and compute averaged values from all stacks
-            d = {
-                "time": datetime.now().isoformat(),
-                "A": quad[0],
-                "B": quad[1],
-                "M": quad[2],
-                "N": quad[3],
-                "inj time [ms]": (end_delay - start_delay) * 1000. if not out_of_range else 0.,
-                "Vmn [mV]": sum_vmn / (2 * nb_stack),
-                "I [mA]": sum_i / (2 * nb_stack),
-                "R [ohm]": sum_vmn / sum_i,
-                "Ps [mV]": sum_ps / (2 * nb_stack),
-                "nbStack": nb_stack,
-                "Tx [V]": tx_volt if not out_of_range else 0.,
-                "CPU temp [degC]": CPUTemperature().temperature,
-                "Nb samples [-]": self.nb_samples,
-                "fulldata": fulldata,
-            }
+            if self.board_version == '22.11':
+                d = {
+                    "time": datetime.now().isoformat(),
+                    "A": quad[0],
+                    "B": quad[1],
+                    "M": quad[2],
+                    "N": quad[3],
+                    "inj time [ms]": (end_delay - start_delay) * 1000. if not out_of_range else 0.,
+                    "Vmn [mV]": sum_vmn / (2 * nb_stack),
+                    "I [mA]": sum_i / (2 * nb_stack),
+                    "R [ohm]": sum_vmn / sum_i,
+                    "Ps [mV]": sum_ps / (2 * nb_stack),
+                    "nbStack": nb_stack,
+                    "Tx [V]": tx_volt if not out_of_range else 0.,
+                    "CPU temp [degC]": CPUTemperature().temperature,
+                    "Nb samples [-]": self.nb_samples,
+                    "fulldata": fulldata,
+                }
+            elif self.board_version == '22.10':
+                d = {
+                    "time": datetime.now().isoformat(),
+                    "A": quad[0],
+                    "B": quad[1],
+                    "M": quad[2],
+                    "N": quad[3],
+                    "inj time [ms]": (end_delay - start_delay) * 1000. if not out_of_range else 0.,
+                    "Vmn [mV]": sum_vmn / (2 * nb_stack),
+                    "I [mA]": sum_i / (2 * nb_stack),
+                    "R [ohm]": sum_vmn / sum_i,
+                    "Ps [mV]": sum_ps / (2 * nb_stack),
+                    "nbStack": nb_stack,
+                    "Tx [V]": tx_volt if not out_of_range else 0.,
+                    "CPU temp [degC]": CPUTemperature().temperature,
+                    "Nb samples [-]": self.nb_samples,
+                }
+
 
         else:  # for testing, generate random data
             d = {'time': datetime.now().isoformat(), 'A': quad[0], 'B': quad[1], 'M': quad[2], 'N': quad[3],
