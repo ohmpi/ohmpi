@@ -101,7 +101,7 @@ Loggers
 -------
 
 Loggers have been introduced in this release. They use the excellent logging python package.
-Specific handlers have been implemented for running with ohmpi.py (one for logging to an mqtt broker (see `MQTT interface`_ for more details) and one for creating zipped rotated logs on disk.
+Specific handlers have been implemented for running with ohmpi.py (one for logging to an mqtt broker (see `MQTT interface`_ for more details) and one for creating zipped rotated logs on disk).
 
 Two loggers have been defined. The first one is dedicated to log operations execution. It is named exec_logger. The second one, named data_logger, is dedicated to log data. A third one is planned to log the state of health (SOH) of the system in a future version.
 
@@ -138,9 +138,9 @@ Web interface
 
 This is a user friendly graphical interface for new users as well as running quick and easy acquisitions.
 
-The raspberrypi of the OhmPi is used as a Wifi Access Point (AP) and runs
+The Raspberry Pi of the OhmPi is used as a Wi-Fi Access Point (AP) and runs
 a small webserver to serve the 'index.html' interface. Using a laptop or
-a mobile phone connected to the wifi of the Raspberry Pi, one can see this
+a mobile phone connected to the Wi-Fi of the Raspberry Pi, one can see this
 interface, upload sequences, change parameters, run a sequence and download data.
 
 To configure the Raspberry Pi to act as an access point and run
@@ -305,7 +305,7 @@ This may help designing complex IoT experiments and monitoring systems in which 
 Examples incorporating execution commands and data outputs from OhmPi can be found in the OhmPi examples. Once Node-RED is installed on the OhmPi, these examples can be accessed separately by running a command in the console such as :
 
 .. code-block:: console
-node-red basic_ohmpi_flows_node-red.json
+     node-red basic_ohmpi_flows_node-red.json
 
 These examples may require installing some additional node packages in order to work properly. This can be done in the `Palette Manager <https://nodered.org/docs/user-guide/editor/palette/manager> within Node-RED.
 
