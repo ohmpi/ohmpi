@@ -159,7 +159,7 @@ which allows to realize precise current measurement around a shunt resistor. The
 
 .. warning::
      
-     In this version, We used a shunt resistor of 2 ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor.Change the shunt value in the code.
+     In this version, we used a shunt resistor of 2 ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor. Don't forget to change the shunt value in the config.py file (value associated to key 'R_shunt' in the OHMPI_CONFIG dict).
 
 
    
