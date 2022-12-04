@@ -5653,7 +5653,7 @@
   (gr_text "GND" (at 60 113) (layer "F.SilkS") (tstamp 7ff6fb4c-46ca-4049-b29b-9c63a3bbb318)
     (effects (font (size 4 4) (thickness 0.5)))
   )
-  (gr_text "Ohmpi version 22/11 - https://gitlab.irstea.fr/reversaal/OhmPi" (at 256 110 90) (layer "F.SilkS") (tstamp 86a3ff82-cef0-4a96-978d-424b294b4e28)
+  (gr_text "Ohmpi version mb.2024.0.0 - https://gitlab.irstea.fr/reversaal/OhmPi" (at 256 110 90) (layer "F.SilkS") (tstamp 86a3ff82-cef0-4a96-978d-424b294b4e28)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_text "+12V" (at 59 96) (layer "F.SilkS") (tstamp bc15a3ac-90ee-4a7a-a00e-717054880355)
