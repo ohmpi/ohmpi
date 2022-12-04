@@ -417,7 +417,7 @@
     (property "Arrow Part Number" "" (id 10) (at 128.27 134.62 0)
       (effects (font (size 1.27 1.27)) (justify left) hide)
     )
-    (property "Arrow Price/Stock" "" (id 11) (at 128.27 137.16 0)
+    (property "Arrow Price/Stock" "https://www.mouser.fr/ProductDetail/TRACO-Power/THD-15-1211N?qs=ckJk83FOD0X2IyoEoPcnmg%3D%3D" (id 11) (at 128.27 137.16 0)
       (effects (font (size 1.27 1.27)) (justify left) hide)
     )
     (pin "1" (uuid cf7ed32a-49ad-4d88-98a3-93c0d530e425))

@@ -1,36 +1,41 @@
-"Source:","C:\Users\reclement\Documents\39_ohmpi\OhmPi\PCB_file_measurement_card\measurement_board\kicad_v5.00\VMN\VMN.kicad_sch"
-"Date:","28/10/2022 21:44:23"
-"Tool:","Eeschema (6.0.5)"
-"Generator:","C:\Program Files\KiCad\6.0\bin\scripting\plugins/bom_csv_grouped_by_value_with_fp.py"
-"Component Count:","56"
-"Ref","Qnty","Value","Cmp name","Footprint","Description","Vendor"
-"Alim_5V_Digital_rasp_iso1540_mcp23008_current_7_click1, ","1","THD_15-1211N","THD_15-1211N_1","THD_15-1211N:THD151211N","15 Watt DC/DC converter, industrial, 2:1 input, encapsulated, DIP-24",""
-"Alim_5V_I2C_isolator_Vmn_measurement1, ","1","THD_15-1211N","THD_15-1211N","THD_15-1211N:THD151211N","15 Watt DC/DC converter, industrial, 2:1 input, encapsulated, DIP-24",""
-"Alim_analog_Vmn_measurement_ina128P_lm158, ","1","THD_15-1222N","THD_15-1222N","THD_15-1222N:CONV_THD_15-1222N","",""
-"C1, C4, C5, C7, C8, ","5","100nF","C_Small","Capacitor_THT:C_Disc_D8.0mm_W2.5mm_P5.00mm","Unpolarized capacitor, small symbol",""
-"C2, C3, C6, C9, C10, ","5","10uF","C_Polarized_Small","Capacitor_THT:CP_Radial_D6.3mm_P2.50mm","Polarized capacitor, small symbol",""
-"D1, D2, ","2","1N4001","1N4001","Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal","50V 1A General Purpose Rectifier Diode, DO-41",""
-"D3, D4, D5, D6, ","4","BAT86","BAT86","Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal","50V 0.2A Small Signal Schottky Diode, DO-35",""
-"J1, ","1","DSP_out_12v_GND","Screw_Terminal_01x02","TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal","Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)",""
-"J2, ","1","DPS5005_input_0_to_50V","Screw_Terminal_01x02","TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal","Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)",""
-"J3, ","1","Screw_Terminal_AB","Screw_Terminal_01x02","TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal","Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)",""
-"J4, J6, J12, J15, ","4","Conn_01x08_Female","Conn_01x08_Female","Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical","Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)",""
-"J5, ","1","Conn_01x04_Female","Conn_01x04_Female","Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical","Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)",""
-"J7, ","1","Raspberry_Pi_2_3","Raspberry_Pi_2_3","Connector_PinSocket_2.54mm:PinSocket_2x20_P2.54mm_Vertical","expansion header for Raspberry Pi 2 & 3",""
-"J8, ","1","Connector_I2C_for_mux_or_tools","Conn_02x03_Top_Bottom","Connector_IDC:IDC-Header_2x03_P2.54mm_Vertical","Generic connector, double row, 02x03, top/bottom pin numbering scheme (row 1: 1...pins_per_row, row2: pins_per_row+1 ... num_pins), script generated (kicad-library-utils/schlib/autogen/connector/)",""
-"J9, ","1","TX_bat","Screw_Terminal_01x02","TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal","Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)",""
-"J10, ","1","A/B","Screw_Terminal_01x02","TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal","Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)",""
-"J11, ","1","Screw_Terminal_VMN","Screw_Terminal_01x02","TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal","Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)",""
-"J13, J14, ","2","Conn_01x02_Female","Conn_01x02_Female","Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical","Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)",""
-"J16, ","1","RX_bat","Screw_Terminal_01x02","TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal","Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)",""
-"K1, K2, ","2","G5LE-1","G5LE-1","Relay_THT:Relay_SPDT_Omron-G5LE-1","Omron G5LE relay, Miniature Single Pole, SPDT, 10A",""
-"K3, K4, K5, K6, ","4","AQY212EH","AQY211EH","AQY211EH:DIP762W47P254L478H340Q4N","Relay",""
-"Q1, Q2, ","2","ZVN4206ASTZ","ZVN4206ASTZ","Package_TO_SOT_THT:TO-92L_Inline","N-Channel 60 V 600mA (Ta) 700mW (Ta) Through Hole E-Line (TO-92 compatible)",""
-"R1, R2, ","2","100k","R","Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal","Resistor",""
-"R3, R4, R5, R6, R7, ","5","1k","R","Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal","Resistor",""
-"R8, ","1","2","R","Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P20.32mm_Horizontal","Resistor",""
-"U1, ","1","MCP23008-xP","MCP23008-xP","Package_DIP:DIP-18_W7.62mm","8-bit I/O expander, I2C, interrupts, PDIP-18",""
-"U2, ","1","INA128","INA128","Package_DIP:DIP-8_W7.62mm","Precision, Low Power Instrumentation Amplifier G = 1 + 50kOhm/Rg, DIP-8/SOIC-8",""
-"U3, ","1","LM358","LM358","Package_DIP:DIP-8_W7.62mm","Low-Power, Dual Operational Amplifiers, DIP-8/SOIC-8/TO-99-8",""
-"U4, ","1","1115-Adress=0X49","1085","1085:1085","Data Conversion IC Development Tools ADS1115 16-Bit ADC - 4 Channel with Programmable Gain Amplifier",""
-"U5, ","1","1115-Adress=0X48","1085_1","1085:1085","Data Conversion IC Development Tools ADS1115 16-Bit ADC - 4 Channel with Programmable Gain Amplifier",""
+"Id";"Référence";"Boîtier";"Quantité";"Désignation";"Fournisseur et réf";
+1;"R14,R9";"R_Axial_DIN0411_L9.9mm_D3.6mm_P12.70mm_Horizontal";2;"4K7";;;
+2;"RV2,RV3,RV1";"Potentiometer_Bourns_3296W_Vertical";3;"10K";;;
+3;"J1";"TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal";1;"DSP_out_12v_GND";;;
+4;"R1,R2";"R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal";2;"100k";;;
+5;"J9";"TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal";1;"TX_bat";;;
+6;"D10-OHMPI-MEASURE1,D9-OHMPI-RUN-WAITING1,D11-OHMPI-STACK1,D12-LOW-TX-BATTERY1";"LED_D4.0mm";4;"LED";;;
+7;"K1,K2";"Relay_SPDT_Omron-G5LE-1";2;"G5LE-1";;;
+8;"J18,J19";"PinHeader_1x01_P2.54mm_Vertical";2;"Conn_01x01";;;
+9;"J20";"PinHeader_1x01_P2.54mm_Vertical";1;"shunt +";;;
+10;",,,";"";4;"";;;
+11;"R9";"R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal";1;"20 Mohms";;;
+12;"K3,K5,K6,K4";"DIP762W47P254L478H340Q4N";4;"AQY212EH";;;
+13;"D8,D7,D5,D6,D3,D4";"D_DO-35_SOD27_P7.62mm_Horizontal";6;"BAT86";;;
+14;"C7,C13,C5,C8,C4,C11,C1";"C_Disc_D8.0mm_W2.5mm_P5.00mm";7;"100nF";;;
+15;"R12,R10,R11";"R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal";3;"330 ohms";;;
+16;"J4,J6,J12,J15";"PinHeader_1x08_P2.54mm_Vertical";4;"Conn_01x08_Female";;;
+17;"R13";"R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal";1;"330 Ohms";;;
+18;"J5";"PinHeader_1x04_P2.54mm_Vertical";1;"Conn_01x04_Female";;;
+19;"U4";"1085";1;"1115-Adress=0X49";;;
+20;"U1";"DIP-18_W7.62mm";1;"MCP23008-xP";;;
+21;"Alim_analog_Vmn_measurement_ina128P_lm158";"CONV_THD_15-1222N";1;"THD_15-1222N";;;
+22;"J8";"IDC-Header_2x03_P2.54mm_Vertical";1;"Connector_I2C_for_mux_or_tools";;;
+23;"U3";"DIP-8_W7.62mm";1;"24LC02";;;
+24;"R5,R6,R4,R7,R3";"R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal";5;"1k";;;
+25;"J14";"PinHeader_1x02_P2.54mm_Vertical";1;"Conn_01x02_Female";;;
+26;"J3";"TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal";1;"Screw_Terminal_AB";;;
+27;"Q1,Q2";"TO-92L_Inline";2;"ZVN4206ASTZ";;;
+28;"C10,C2,C9,C3,C6,C14,C12";"CP_Radial_D6.3mm_P2.50mm";7;"10uF";;;
+29;"J2";"TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal";1;"DPS5005_input_0_to_50V";;;
+30;"U6,U7,U2";"DIP-8_W7.62mm";3;"OP07";;;
+31;"U5";"1085";1;"1115-Adress=0X48";;;
+32;"Alim_5V_I2C_isolator_Vmn_measurement1,Alim_5V_Digital_rasp_iso1540_mcp23008_current_7_click1";"THD151211N";2;"THD_15-1211N";;;
+33;"D2,D1";"D_DO-41_SOD81_P10.16mm_Horizontal";2;"1N4001";;;
+34;"J17";"PinHeader_1x01_P2.54mm_Vertical";1;"DSP GND";;;
+35;"J10";"PinHeader_1x01_P2.54mm_Vertical";1;"DSP+";;;
+36;"J21";"PinHeader_1x01_P2.54mm_Vertical";1;"shunt -";;;
+37;"J16";"TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal";1;"RX_bat";;;
+38;"R8";"R_Axial_DIN0414_L11.9mm_D4.5mm_P20.32mm_Horizontal";1;"2 ohms";;;
+39;"J11";"TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal";1;"Screw_Terminal_VMN";;;
+40;"J7";"PinSocket_2x20_P2.54mm_Vertical";1;"Raspberry_Pi_2_3";;;
