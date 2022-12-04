@@ -3771,10 +3771,10 @@
       (reference "K6") (unit 1) (value "AQY212EH") (footprint "AQY211EH:DIP762W47P254L478H340Q4N")
     )
     (path "/433fb79c-38b7-4d80-8278-5eb2a5e83393/92938389-37f0-4201-924e-11ebc19fb72a"
-      (reference "Q1") (unit 1) (value "ZVN4206ASTZ") (footprint "Package_TO_SOT_THT:TO-92L_Inline")
+      (reference "Q1") (unit 1) (value "ZVN4206ASTZ") (footprint "Package_TO_SOT_THT:TO-92L_Wide")
     )
     (path "/433fb79c-38b7-4d80-8278-5eb2a5e83393/060799f9-4862-4d23-bdf8-852551aea41a"
-      (reference "Q2") (unit 1) (value "ZVN4206ASTZ") (footprint "Package_TO_SOT_THT:TO-92L_Inline")
+      (reference "Q2") (unit 1) (value "ZVN4206ASTZ") (footprint "Package_TO_SOT_THT:TO-92L_Wide")
     )
     (path "/433fb79c-38b7-4d80-8278-5eb2a5e83393/bf65823b-7346-4847-801a-83d228fb104f"
       (reference "R1") (unit 1) (value "100k") (footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal")
