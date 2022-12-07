@@ -1,0 +1,41 @@
+Id;Référence;Boîtier;Quantité;Désignation;Fournisseur et réf
+16;U4;1085;1;1115-Adress=0X49;https://www.mouser.fr/ProductDetail/Adafruit/1085?qs=GURawfaeGuCW8oufi8WauA%3D%3D
+29;U5;1085;1;1115-Adress=0X48;https://www.mouser.fr/ProductDetail/Adafruit/1085?qs=GURawfaeGuCW8oufi8WauA%3D%3D
+12;C7,C13,C5,C8,C4,C11,C1;C_Disc_D8.0mm_W2.5mm_P5.00mm;7;100nF;https://www.mouser.fr/ProductDetail/Vishay-BC-Components/K104K15X7RF5UL2?qs=sGAEpiMZZMukHu%252BjC5l7YfNV3vKmwSLbJWgT278cX8E%3D
+18;Alim_analog_Vmn_measurement_ina128P_lm158;CONV_THD_15-1222N;1;THD_15-1222N;https://www.mouser.fr/ProductDetail/TRACO-Power/THD-15-1222N?qs=ckJk83FOD0UVycxQxcHQFw%3D%3D
+25;C10,C2,C9,C3,C6,C14,C12;CP_Radial_D6.3mm_P2.50mm;7;10uF;https://www.mouser.fr/ProductDetail/Panasonic/EEU-FC1H100L?qs=y21It3NrCcwTwLLc39Q8Gg%3D%3D
+11;D8,D7,D5,D6,D3,D4;D_DO-35_SOD27_P7.62mm_Horizontal;6;BAT86;https://www.mouser.fr/ProductDetail/Nexperia/BAT86133?qs=me8TqzrmIYXIdlxjf3qXVQ%3D%3D
+31;D2,D1;D_DO-41_SOD81_P10.16mm_Horizontal;2;1N4001;https://www.mouser.fr/ProductDetail/Diotec-Semiconductor/1N4001?qs=OlC7AqGiEDlll8NA510wmA%3D%3D
+17;U1;DIP-18_W7.62mm;1;MCP23008-xP;https://www.mouser.fr/ProductDetail/Microchip-Technology-Atmel/MCP23008-E-P?qs=8FMarzwez060sofcCmNWdQ%3D%3D
+10;K3,K5,K6,K4;DIP762W47P254L478H340Q4N;4;AQY212EH;https://www.mouser.fr/ProductDetail/Panasonic-Industrial-Devices/AQY212EH?qs=QdPAKMqHa0l92TyHfW77%252BA%3D%3D
+20;U3;DIP-8_W7.62mm;1;24LC02;https://www.mouser.fr/ProductDetail/Microchip-Technology/24LC024-P?qs=caJrvSDHBA%252BcXybatOSbdw%3D%3D
+27;U6,U7,U2;DIP-8_W7.62mm;3;OP07;https://www.mouser.fr/ProductDetail/Texas-Instruments/OP07CP?qs=sGAEpiMZZMutXGli8Ay4kFdjrLDa6%252BArT%252BOT0khS3m0%3D
+19;J8;IDC-Header_2x03_P2.54mm_Vertical;1;Connector_I2C_for_mux_or_tools;https://www.conrad.com/p/bkl-electronic-10120550-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-6-no-of-rows-2-1-pcs-741435
+5;D10-OHMPI-MEASURE1,D9-OHMPI-RUN-WAITING1,D11-OHMPI-STACK1,D12-LOW-TX-BATTERY1;LED_D4.0mm;4;LED;https://www.mouser.fr/ProductDetail/Cree-LED/C4SMA-RGY-CS4V1BB1?qs=7D1LtPJG0i08%2Fw1qRIcnyw%3D%3D
+7;J18;PinHeader_1x01_P2.54mm_Vertical;4;ELEC_M;https://www.mouser.fr/ProductDetail/TE-Connectivity/826629-8?qs=sGAEpiMZZMvlX3nhDDO4AJlL8FhFhKH9P8KKyNVqu9w%3D
+8;J20;PinHeader_1x01_P2.54mm_Vertical;;shunt +;
+28;J19;PinHeader_1x01_P2.54mm_Vertical;;ELEC_N;
+32;J17;PinHeader_1x01_P2.54mm_Vertical;;DSP GND;
+34;J10;PinHeader_1x01_P2.54mm_Vertical;;DSP+;
+35;J21;PinHeader_1x01_P2.54mm_Vertical;;shunt -;
+22;J14;PinHeader_1x02_P2.54mm_Vertical;;Conn_01x02_Female;https://www.mouser.fr/ProductDetail/TE-Connectivity/215297-2?qs=O3N86PA0UL818w3O25RZDw%3D%3D
+15;J5;PinHeader_1x04_P2.54mm_Vertical;;Conn_01x04_Female;https://www.mouser.fr/ProductDetail/TE-Connectivity/215297-4?qs=O3N86PA0UL8PhTSpjWp22A%3D%3D
+14;J4,J6,J12,J15;PinHeader_1x08_P2.54mm_Vertical;;Conn_01x08_Female;https://www.mouser.fr/ProductDetail/TE-Connectivity/215297-8?qs=O3N86PA0UL%252BQmjts6PlPhg%3D%3D
+39;J7;PinSocket_2x20_P2.54mm_Vertical;1;Raspberry_Pi_2_3;2-534206-0 TE Connectivity | Mouser France
+1;RV2,RV3,RV1;Potentiometer_Bourns_3296W_Vertical;3;10K;https://www.mouser.fr/ProductDetail/Bourns/3296W-1-103LF?qs=CL3xLxiry19Id6AEaxYcng%3D%3D
+33;R14,R9;R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal;2;4K7;PR02000204701JR500 Vishay / BC Components | Mouser France
+3;R1,R2;R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal;2;100k;MBA02040C1003FRP00 Vishay / Beyschlag | Mouser France
+13;R12,R13,R10,R11;R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal;4;330 ohms;AC03000903300JBM00 Vishay | Mouser France
+21;R5,R6,R4,R7,R3;R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal;5;1k;LR1F1K0 TE Connectivity / Holsworthy | Mouser France
+37;R8;R_Axial_DIN0414_L11.9mm_D4.5mm_P20.32mm_Horizontal;1;2 ohms;https://www.mouser.fr/ProductDetail/Vishay-Dale/CPF22R0000FKRE5?qs=sGAEpiMZZMsPqMdJzcrNwgeoblKzsoEAqXIIwX%2F1ukM%3D
+6;K1,K2;Relay_SPDT_Omron-G5LE-1;2;G5LE-1;https://www.mouser.fr/ProductDetail/Omron-Electronics/G5LE-1A-CF-DC5?qs=2K1uG8uKHjlvxgGSVi%252BlzQ%3D%3D
+2;J1;TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal;1;DSP_out_12v_GND;https://www.mouser.fr/ProductDetail/Phoenix-Contact/1711725?qs=F79NelsxgYFLEb9U5DotcA%3D%3D
+4;J9;TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal;1;TX_bat;https://www.mouser.fr/ProductDetail/Phoenix-Contact/1711725?qs=F79NelsxgYFLEb9U5DotcA%3D%3D
+23;J3;TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal;1;Screw_Terminal_AB;https://www.mouser.fr/ProductDetail/Phoenix-Contact/1711725?qs=F79NelsxgYFLEb9U5DotcA%3D%3D
+26;J2;TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal;1;DPS5005_input_0_to_50V;https://www.mouser.fr/ProductDetail/Phoenix-Contact/1711725?qs=F79NelsxgYFLEb9U5DotcA%3D%3D
+36;J16;TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal;1;RX_bat;https://www.mouser.fr/ProductDetail/Phoenix-Contact/1711725?qs=F79NelsxgYFLEb9U5DotcA%3D%3D
+38;J11;TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal;1;Screw_Terminal_VMN;https://www.mouser.fr/ProductDetail/Phoenix-Contact/1711725?qs=F79NelsxgYFLEb9U5DotcA%3D%3D
+30;Alim_5V_I2C_isolator_Vmn_measurement1,Alim_5V_Digital_rasp_iso1540_mcp23008_current_7_click1;THD151211N;2;THD_15-1211N;https://www.mouser.fr/ProductDetail/TRACO-Power/THD-15-1211N?qs=ckJk83FOD0X2IyoEoPcnmg%3D%3D
+24;Q1,Q2;TO-92L_Wide;2;ZVN4206ASTZ;https://www.mouser.fr/ProductDetail/Diodes-Incorporated/ZVN4206ASTZ?qs=OlC7AqGiEDlGIiNe7stL%252BQ%3D%3D
+40;isolator click;;;isolator click mikroe;https://www.mouser.fr/ProductDetail/Mikroe/MIKROE-1878?qs=k5OWtXsTJao5L2rHk53Deg%3D%3D
+41;current 7 click;;;current 7 click mikreo;https://www.mikroe.com/current-7-click
