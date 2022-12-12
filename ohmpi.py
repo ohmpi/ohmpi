@@ -632,7 +632,7 @@ class OhmPi(object):
         self.version = OHMPI_CONFIG['version']  # hardware version
         self.max_elec = OHMPI_CONFIG['max_elec']  # maximum number of electrodes
         self.board_addresses = OHMPI_CONFIG['board_addresses']
-        self.board_version = OHMPI_CONFIG['board_version']
+        self.board_version = OHMPI_CONFIG['measurement board_version']
         self.exec_logger.debug(f'OHMPI_CONFIG = {str(OHMPI_CONFIG)}')
 
     def read_quad(self, **kwargs):
@@ -774,7 +774,7 @@ class OhmPi(object):
                                                     address=self.ads_current_address, mode=0)
                         self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860,
                                                     address=self.ads_voltage_address, mode=0)
-                    elif self.board_version == '22.10':
+                    elif self.board_version == 'mb.2023.0.0':
                         gain_current = 2 / 3
                         gain_voltage = 2 / 3
                         self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860,
@@ -824,7 +824,7 @@ class OhmPi(object):
                                 meas[k, 1] = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000
                             else:
                                 meas[k, 1] = -AnalogIn(self.ads_voltage, ads.P2).voltage * 1000
-                        elif self.board_version == '22.10':
+                        elif self.board_version == 'mb.2023.0.0':
                             meas[k, 1] = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * self.coef_p2 * 1000
                         # else:
                         #    self.exec_logger.debug('Unknown board')
@@ -854,7 +854,7 @@ class OhmPi(object):
                                 measpp[k, 1] = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.
                             else:
                                 measpp[k, 1] = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000. * -1
-                        elif self.board_version == '22.10':
+                        elif self.board_version == 'mb.2023.0.0':
                             measpp[k, 1] = -AnalogIn(self.ads_voltage, ads.P0, ads.P1).voltage * self.coef_p2 * 1000.
                         else:
                             self.exec_logger.debug('unknown board')
@@ -938,7 +938,7 @@ class OhmPi(object):
                     "Nb samples [-]": self.nb_samples,
                     "fulldata": fulldata,
                 }
-            elif self.board_version == '22.10':
+            elif self.board_version == 'mb.2023.0.0':
                 d = {
                     "time": datetime.now().isoformat(),
                     "A": quad[0],
