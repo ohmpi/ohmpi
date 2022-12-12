@@ -1,3 +1,15 @@
+"""
+created on January 6, 2020.
+Updates dec 2022.
+Hardware: Licensed under CERN-OHL-S v2 or any later version
+Software: Licensed under the GNU General Public License v3.0
+confi.py is a parameter file for OhmPi that has been developed by
+Rémi CLEMENT (INRAE), Vivien DUBOIS (INRAE), Hélène GUYARD (IGE), Nicolas FORQUET (INRAE), Yannick FARGIER (IFSTTAR)
+Olivier KAUFMANN (UMONS), Arnaud WATLET (UMONS) and Guillaume BLANCHY (FNRS/ULiege).
+"""
+
+
+
 import logging
 from utils import get_platform
 
