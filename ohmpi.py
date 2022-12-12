@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 created on January 6, 2020.
-Updates May 2022, Oct 2022.
+Updates dec 2022.
 Hardware: Licensed under CERN-OHL-S v2 or any later version
 Software: Licensed under the GNU General Public License v3.0
 Ohmpi.py is a program to control a low-cost and open hardware resistivity meter OhmPi that has been developed by
