@@ -11,7 +11,7 @@ OhmPi V2023 (64 electrodes and 12V)
      :width: 400px
      :align: center
      :height: 350px
-     :alt: OhmPi V2023
+     :alt: OhmPi V: 2023.0.0-rc1
      :figclass: align-center
 
 .. note:: 
