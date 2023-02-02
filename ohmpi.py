@@ -283,12 +283,12 @@ class OhmPi(object):
         voltage_max = 4500.
         current_min = voltage_min / (self.r_shunt * 50)  # mA
         current_max = voltage_max / (self.r_shunt * 50)
-        tx_max = 40.  # volt
+        tx_max = 50.  # volt
 
         # check of volt
         volt = tx_volt
         if volt > tx_max:
-            self.exec_logger.warning('Sorry, cannot inject more than 40 V, set it back to 5 V')
+            self.exec_logger.warning('Sorry, cannot inject more than 50 V, set it back to 5 V')
             volt = 5.
 
         # redefined the pin of the mcp (needed when relays are connected)
@@ -346,6 +346,17 @@ class OhmPi(object):
         self.exec_logger.debug(f'Rab = {Rab:.2f} Ohms')
 
         # implement different strategy
+        if strategy == 'vmax_rc':
+            factor_I = current_max / I
+            factor_vmn = voltage_max / Vmn   
+            factor= factor_I
+            if factor_I > factor_vmn:
+                factor = factor_vmn
+            Vab = factor * tx_volt
+            if Vab > tx_max:
+                Vab=tx_max
+
+
         if strategy == 'vmax':
             vmn_max = c * current_max
             if voltage_max > vmn_max > voltage_min:
