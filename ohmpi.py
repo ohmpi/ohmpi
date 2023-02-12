@@ -302,43 +302,56 @@ class OhmPi(object):
         # select a polarity to start with
         self.pin0.value = True
         self.pin1.value = False
+        I=0 
+        vmn=0
+        count=0
 
-        # set voltage for test
-        self.DPS.write_register(0x0000, volt, 2)
-        self.DPS.write_register(0x09, 1)  # DPS5005 on
-        time.sleep(best_tx_injtime)  # inject for given tx time
+        while I < 1 or abs(vmn)<5 :  # I supérieur à 1 mA et Vmn surpérieur 
+            if count >0 :
+                volt = volt + 2 
+            count=count+1
+            if volt > 50:
+                break
+            # set voltage for test
+            self.DPS.write_register(0x0000, volt, 2)
+            self.DPS.write_register(0x09, 1)  # DPS5005 on
+            time.sleep(best_tx_injtime)  # inject for given tx time
 
-        # autogain
-        self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_current_address)
-        self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_voltage_address)
-        # print('current P0', AnalogIn(self.ads_current, ads.P0).voltage)
-        # print('voltage P0', AnalogIn(self.ads_voltage, ads.P0).voltage)
-        # print('voltage P2', AnalogIn(self.ads_voltage, ads.P2).voltage)
-        gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
-        gain_voltage0 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P0))
-        gain_voltage2 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P2))
-        gain_voltage = np.min([gain_voltage0, gain_voltage2])
-        # print('gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
-        self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=self.ads_current_address)
-        self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=self.ads_voltage_address)
+            # autogain
+            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_current_address)
+            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_voltage_address)
+            gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
+            gain_voltage0 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P0))
+            gain_voltage2 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P2))
+            gain_voltage = np.min([gain_voltage0, gain_voltage2])
+            # print('gain current: {:.3f}, gain voltage: {:.3f}'.format(gain_current, gain_voltage))
+            self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=self.ads_current_address)
+            self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=self.ads_voltage_address)
 
-        # we measure the voltage on both A0 and A2 to guess the polarity
-        I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt  # noqa measure current
-        U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.  # noqa measure voltage
-        U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.  # noqa
-        # print('I (mV)', I*50*self.r_shunt)
-        # print('I (mA)', I)
-        # print('U0 (mV)', U0)
-        # print('U2 (mV)', U2)
+            # we measure the voltage on both A0 and A2 to guess the polarity
+            I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt  # noqa measure current
+            U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.  # noqa measure voltage
+            U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.  # noqa
+            
+            self.DPS.write_register(0x09, 0) # DPS5005 off
+            
+            
+            # print('I (mV)', I*50*self.r_shunt)
+            # print('I (mA)', I)
+            # print('U0 (mV)', U0)
+            # print('U2 (mV)', U2)
 
-        # check polarity
-        polarity = 1  # by default, we guessed it right
-        vmn = U0
-        if U0 < 0:  # we guessed it wrong, let's use a correction factor
-            polarity = -1
-            vmn = U2
+            # check polarity
+            polarity = 1  # by default, we guessed it right
+            vmn = U0
+            if U0 < 0:  # we guessed it wrong, let's use a correction factor
+                polarity = -1
+                vmn = U2
+
+
         # print('polarity', polarity)
-
+        self.pin0.value = False
+        self.pin1.value = False
         # compute constant
         c = vmn / I
         Rab = (volt * 1000.) / I  # noqa
