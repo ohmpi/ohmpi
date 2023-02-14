@@ -744,7 +744,7 @@ class OhmPi(object):
             self.pin7.value = False
             
                 
-            if self.sequence == None :
+            if self.sequence is None :
                 self.pin2 = self.mcp.get_pin(2) # dsp +
                 self.pin2.direction = Direction.OUTPUT
                 self.pin2.value = True
@@ -761,9 +761,9 @@ class OhmPi(object):
             self.pin7 = self.mcp.get_pin(7) #IHM on mesaurement
             self.pin7.direction = Direction.OUTPUT
             self.pin7.value = False           
-            
-            if self.DPS.read_register(0x05,2) < 11:
-                self.pin7.value = True# max current allowed (100 mA for relays) #voltage
+            if self.idps: 
+                if self.DPS.read_register(0x05,2) < 11:
+                    self.pin7.value = True# max current allowed (100 mA for relays) #voltage
             
             # get best voltage to inject AND polarity
             if self.idps:
@@ -996,6 +996,7 @@ class OhmPi(object):
                     "Tx [V]": tx_volt if not out_of_range else 0.,
                     "CPU temp [degC]": CPUTemperature().temperature,
                     "Nb samples [-]": self.nb_samples,
+                    "fulldata": fulldata,
                 }
 
 
@@ -1019,7 +1020,7 @@ class OhmPi(object):
         dd['cmd_id'] = str(cmd_id)
         self.data_logger.info(dd)
         self.pin5.value = False #IHM led on measurement off 
-        if self.sequence == None :
+        if self.sequence is None :
             self.pin2.value = False # DSP + off
             self.pin3.value = False # DSP - off
         return d
@@ -1304,12 +1305,12 @@ class OhmPi(object):
             if i2c_address is not None:
                 # select the MCP23017 of the selected MUX board
                 mcp2 = MCP23017(tca[i2c_address])
-                mcp2.get_pin(relay_nr - 1).direction = digitalio.Direction.OUTPUT
+                mcp2.get_pin(relay_nr).direction = digitalio.Direction.OUTPUT
 
                 if state == 'on':
-                    mcp2.get_pin(relay_nr - 1).value = True
+                    mcp2.get_pin(relay_nr).value = True
                 else:
-                    mcp2.get_pin(relay_nr - 1).value = False
+                    mcp2.get_pin(relay_nr).value = False
 
                 self.exec_logger.debug(f'Switching relay {relay_nr} '
                                        f'({str(hex(self.board_addresses[role]))}) {state} for electrode {electrode_nr}')
