@@ -384,7 +384,7 @@ class OhmPi(object):
             factor = factor_I
             if factor_I > factor_vmn:
                 factor = factor_vmn
-            vab = factor * volt * 0.95
+            vab = factor * volt * 0.9
             if vab > tx_max:
                 vab = tx_max
             

@@ -1,15 +1,3 @@
-"""
-created on January 6, 2020.
-Updates dec 2022.
-Hardware: Licensed under CERN-OHL-S v2 or any later version
-Software: Licensed under the GNU General Public License v3.0
-confi.py is a parameter file for OhmPi that has been developed by
-Rémi CLEMENT (INRAE), Vivien DUBOIS (INRAE), Hélène GUYARD (IGE), Nicolas FORQUET (INRAE), Yannick FARGIER (IFSTTAR)
-Olivier KAUFMANN (UMONS), Arnaud WATLET (UMONS) and Guillaume BLANCHY (FNRS/ULiege).
-"""
-
-
-
 import logging
 from utils import get_platform
 
@@ -29,12 +17,12 @@ OHMPI_CONFIG = {
     'R_shunt': 2,  # Shunt resistance in Ohms
     'Imax': 4800 / 50 / 2,  # Maximum current
     'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
-    'nb_samples': 2,  # Max value 10 # was named integer before...
+    'nb_samples': 20,  # Max value 10 # was named integer before...
     'version': 2,  # Is this still needed?
     'max_elec': 64,
     'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # CHECK IF YOUR BOARDS HAVE THESE ADDRESSES
     'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
-    'measurement board_version': 'mb.2023.0.0'
+    'board_version': 'mb.2023.0.0'
 }  # TODO: add a dictionary with INA models and associated gain values
 
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
