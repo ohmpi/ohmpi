@@ -139,7 +139,7 @@ class OhmPi(object):
                 self.pin3 = self.mcp.get_pin(3) # dsp -
                 self.pin3.direction = Direction.OUTPUT
                 self.pin3.value = True
-                time.sleep(3)
+                time.sleep(4)
                 self.DPS = minimalmodbus.Instrument(port='/dev/ttyUSB0', slaveaddress=1)  # port name, address (decimal)
                 self.DPS.serial.baudrate = 9600  # Baud rate 9600 as listed in doc
                 self.DPS.serial.bytesize = 8  #
@@ -147,7 +147,7 @@ class OhmPi(object):
                 self.DPS.debug = False  #
                 self.DPS.serial.parity = 'N'  # No parity
                 self.DPS.mode = minimalmodbus.MODE_RTU  # RTU mode
-                self.DPS.write_register(0x0001, 100, 0)  # max current allowed (100 mA for relays)
+                self.DPS.write_register(0x0001, 1000, 0)  # max current allowed (100 mA for relays)
                 print(self.DPS.read_register(0x05,2 ))  # max current allowed (100 mA for relays) #voltage
                 
                 self.pin2.value = False
@@ -319,7 +319,7 @@ class OhmPi(object):
         vmn=0
         count=0
 
-        while I < 3 or abs(vmn) < 10 :  # I supérieur à 1 mA et Vmn surpérieur 
+        while I < 3 or abs(vmn) < 20 :  # I supérieur à 1 mA et Vmn surpérieur 
             if count >0 :
                 volt = volt + 2 
             count=count+1
@@ -350,21 +350,22 @@ class OhmPi(object):
             if U0 < 0:  # we guessed it wrong, let's use a correction factor
                 polarity = -1
                 vmn = U2
-            if abs(vmn)>4500 or I> 45 :
-                 volt = volt - 2
-                 self.DPS.write_register(0x0000, volt, 2)
-                 self.DPS.write_register(0x09, 1)  # DPS5005 on
-                 time.sleep(best_tx_injtime)
-                 I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt
-                 U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.
-                 U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.
-                 
-                 polarity = 1  # by default, we guessed it right
-                 vmn = U0
-                 if U0 < 0:  # we guessed it wrong, let's use a correction factor
-                    polarity = -1
-                    vmn = U2
-                 break
+            if strategy == 'vmax':
+                if abs(vmn)>4500 or I> 45 :
+                     volt = volt - 2
+                     self.DPS.write_register(0x0000, volt, 2)
+                     self.DPS.write_register(0x09, 1)  # DPS5005 on
+                     time.sleep(best_tx_injtime)
+                     I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt
+                     U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.
+                     U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.
+                     
+                     polarity = 1  # by default, we guessed it right
+                     vmn = U0
+                     if U0 < 0:  # we guessed it wrong, let's use a correction factor
+                        polarity = -1
+                        vmn = U2
+                     break
                 
 
         self.DPS.write_register(0x09, 0) # DPS5005 off
@@ -384,7 +385,7 @@ class OhmPi(object):
             factor = factor_I
             if factor_I > factor_vmn:
                 factor = factor_vmn
-            vab = factor * volt * 0.9
+            vab = factor * volt * 0.8
             if vab > tx_max:
                 vab = tx_max
             
@@ -745,12 +746,13 @@ class OhmPi(object):
             
                 
             if self.sequence is None :
-                self.pin2 = self.mcp.get_pin(2) # dsp +
-                self.pin2.direction = Direction.OUTPUT
-                self.pin2.value = True
-                self.pin3 = self.mcp.get_pin(3) # dsp -
-                self.pin3.direction = Direction.OUTPUT
-                self.pin3.value = True
+                if self.idps:
+                    self.pin2 = self.mcp.get_pin(2) # dsp +
+                    self.pin2.direction = Direction.OUTPUT
+                    self.pin2.value = True
+                    self.pin3 = self.mcp.get_pin(3) # dsp -
+                    self.pin3.direction = Direction.OUTPUT
+                    self.pin3.value = True
                 
             self.pin5 = self.mcp.get_pin(5) #IHM on mesaurement
             self.pin5.direction = Direction.OUTPUT
@@ -787,7 +789,7 @@ class OhmPi(object):
                 if not np.isnan(tx_volt):
                     self.DPS.write_register(0x0000, tx_volt, 2)  # set tx voltage in V
                     self.DPS.write_register(0x09, 1)  # DPS5005 on
-                    time.sleep(0.05)
+                    time.sleep(0.3)
                 else:
                     self.exec_logger.debug('No best voltage found, will not take measurement')
                     out_of_range = True
