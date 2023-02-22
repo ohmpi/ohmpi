@@ -1009,16 +1009,19 @@ class OhmPi(object):
                     "CPU temp [degC]": CPUTemperature().temperature,
                     "Nb samples [-]": self.nb_samples,
                     "fulldata": fulldata,
-                    "I_stack [mA]": np.mean(i_stack)
-                    "I_std [mA]": np.std(i_stack)
-                    "I_per_stack [mA]": np.mean(i_stack,axis=1)
-                    "Vmn_stack [mA]": np.mean(vmn_stack)
-                    "Vmn_std [mA]": np.std(vmn_stack)
-                    "Vmn_per_stack [mA]": np.mean(vmn_stack, axis=1)
-                    "R_stack [ohm]": np.mean(vmn_stack) / np.mean(i_stack)
-                    "R_std [ohm]": np.std(vmn_stack) / np.std(i_stack)    ### TODO: check if this is statistically right
-                    "R_per_stack [Ohm]": np.mean(vmn_stack, axis=1)/np.mean(i_stack, axis=1)
+                    "I_stack [mA]": np.mean(i_stack),
+                    "I_std [mA]": np.mean(np.array([np.std(i_stack[::2]),np.std(i_stack[1::2])])),
+                    "I_per_stack [mA]": np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
+                    "Vmn_stack [mV]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]),
+                    "Vmn_std [mV]": np.mean([np.std(vmn_stack[::2]),np.std(vmn_stack[1::2])]),
+                    "Vmn_per_stack [mV]": np.array([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1))[0] / 2 for i in range(nb_stack)]),
+                    "R_stack [ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.mean(i_stack),
+                    "R_std [ohm]":  np.mean([np.std(vmn_stack[::2]),np.std(vmn_stack[1::2])]) / np.std(i_stack),    ### TODO: modify formula
+                    "R_per_stack [Ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
+                    "PS_per_stack [mV]":  np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]),
+                    "PS_stack [mV]": np.mean(np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]))
                 }
+                # print(np.array([(vmn_stack[i*2:i*2+2]) for i in range(nb_stack)]))
             elif self.board_version == '22.10':
                 d = {
                     "time": datetime.now().isoformat(),
@@ -1156,7 +1159,7 @@ class OhmPi(object):
             self.pin3 = self.MCPIHM.get_pin(3) # dsp -
             self.pin3.direction = Direction.OUTPUT
             self.pin3.value = True
-            time.sleep (4)
+            time.sleep (5)
 
             # run a measurement
             if self.on_pi:
@@ -1337,7 +1340,7 @@ class OhmPi(object):
             else:
                 self.exec_logger.warning('You cannot use the multiplexer because use_mux is set to False.'
                                          ' Set use_mux to True to use the multiplexer...')
-        elif self.sequence is None:
+        elif self.sequence is None and not self.use_mux:
             self.exec_logger.warning('Unable to switch MUX without a sequence')
         else:
             # choose with MUX board
