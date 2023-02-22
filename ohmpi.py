@@ -319,54 +319,69 @@ class OhmPi(object):
         vmn=0
         count=0
 
-        while I < 3 or abs(vmn) < 20 :  # I supérieur à 1 mA et Vmn surpérieur 
-            if count >0 :
-                volt = volt + 2 
-            count=count+1
-            if volt > 50:
-                break
-            # set voltage for test
-            self.DPS.write_register(0x0000, volt, 2)
-            self.DPS.write_register(0x09, 1)  # DPS5005 on
-            time.sleep(best_tx_injtime)  # inject for given tx time
-            
-            # autogain
-            self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_current_address)
-            self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_voltage_address)
-            gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
-            gain_voltage0 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P0))
-            gain_voltage2 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P2))
-            gain_voltage = np.min([gain_voltage0, gain_voltage2])
-            self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=self.ads_current_address)
-            self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=self.ads_voltage_address)
-            # we measure the voltage on both A0 and A2 to guess the polarity
-            I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt  # noqa measure current
-            U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.  # noqa measure voltage
-            U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.  # noqa
-            
-            # check polarity
-            polarity = 1  # by default, we guessed it right
-            vmn = U0
-            if U0 < 0:  # we guessed it wrong, let's use a correction factor
-                polarity = -1
-                vmn = U2
-            if strategy == 'vmax':
-                if abs(vmn)>4500 or I> 45 :
-                     volt = volt - 2
-                     self.DPS.write_register(0x0000, volt, 2)
-                     self.DPS.write_register(0x09, 1)  # DPS5005 on
-                     time.sleep(best_tx_injtime)
-                     I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt
-                     U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.
-                     U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.
-                     
-                     polarity = 1  # by default, we guessed it right
-                     vmn = U0
-                     if U0 < 0:  # we guessed it wrong, let's use a correction factor
-                        polarity = -1
-                        vmn = U2
-                     break
-                
+        # implement different strategy
+        if strategy == 'vmax':
+            while I < 3 or abs(vmn) < 20 :  # I supérieur à 1 mA et Vmn surpérieur
+                if count >0 :
+                    volt = volt + 2
+                count=count+1
+                if volt > 50:
+                    break
+                # set voltage for test
+                self.DPS.write_register(0x0000, volt, 2)
+                self.DPS.write_register(0x09, 1)  # DPS5005 on
+                time.sleep(best_tx_injtime)  # inject for given tx time
+
+                # autogain
+                self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_current_address)
+                self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_voltage_address)
+                gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
+                gain_voltage0 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P0))
+                gain_voltage2 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P2))
+                gain_voltage = np.min([gain_voltage0, gain_voltage2])
+                self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=self.ads_current_address)
+                self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=self.ads_voltage_address)
+                # we measure the voltage on both A0 and A2 to guess the polarity
+                I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt  # noqa measure current
+                U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.  # noqa measure voltage
+                U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.  # noqa
+
+                # check polarity
+                polarity = 1  # by default, we guessed it right
+                vmn = U0
+                if U0 < 0:  # we guessed it wrong, let's use a correction factor
+                    polarity = -1
+                    vmn = U2
+                if strategy == 'vmax':
+                    if abs(vmn)>4500 or I> 45 :
+                         volt = volt - 2
+                         self.DPS.write_register(0x0000, volt, 2)
+                         self.DPS.write_register(0x09, 1)  # DPS5005 on
+                         time.sleep(best_tx_injtime)
+                         I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt
+                         U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.
+                         U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.
+
+                         polarity = 1  # by default, we guessed it right
+                         vmn = U0
+                         if U0 < 0:  # we guessed it wrong, let's use a correction factor
+                            polarity = -1
+                            vmn = U2
+                         break
+
+            factor_I = (current_max) / I
+            factor_vmn = voltage_max / vmn
+            factor = factor_I
+            if factor_I > factor_vmn:
+                factor = factor_vmn
+            vab = factor * volt * 0.8
+            if vab > tx_max:
+                vab = tx_max
+
+        elif strategy == 'constant':
+            vab = volt
+        else:
+            vab = 5
 
         self.DPS.write_register(0x09, 0) # DPS5005 off
         # print('polarity', polarity)
@@ -377,22 +392,6 @@ class OhmPi(object):
         Rab = (volt * 1000.) / I  # noqa
 
         self.exec_logger.debug(f'Rab = {Rab:.2f} Ohms')
-
-        # implement different strategy
-        if strategy == 'vmax':
-            factor_I = (current_max) / I
-            factor_vmn = voltage_max / vmn
-            factor = factor_I
-            if factor_I > factor_vmn:
-                factor = factor_vmn
-            vab = factor * volt * 0.8
-            if vab > tx_max:
-                vab = tx_max
-            
-        elif strategy == 'constant':
-            vab = volt
-        else:
-            vab = 5
 
         # self.DPS.write_register(0x09, 0) # DPS5005 off
         self.pin0.value = False
