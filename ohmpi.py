@@ -948,10 +948,17 @@ class OhmPi(object):
                 # TODO send a message on SOH stating the battery level
 
                 # let's do some calculation (out of the stacking loop)
+                i_stack = np.empty((2 * nb_stack, int(meas.shape[0] // 3))) * np.nan
+                vmn_stack = np.empty((2 * nb_stack, int(meas.shape[0] // 3))) * np.nan
+                # ps_stack = np.empty((2 * nb_stack, int(meas.shape[0] // 3))) * np.nan
                 for n, meas in enumerate(fulldata[::2]):
                     # take average from the samples per stack, then sum them all
                     # average for the last third of the stacked values
                     #  is done outside the loop
+                    i_stack[n] = (np.mean(meas[-int(meas.shape[0] // 3):, 0]))
+                    vmn_stack[n] = (np.mean(meas[-int(meas.shape[0] // 3):, 1]))
+                    # ps_stack[n] = (np.mean(meas[-int(meas.shape[0] // 3):, 0]))
+
                     sum_i = sum_i + (np.mean(meas[-int(meas.shape[0] // 3):, 0]))
                     vmn1 = np.mean(meas[-int(meas.shape[0] // 3), 1])
                     if (n % 2) == 0:
@@ -1002,6 +1009,15 @@ class OhmPi(object):
                     "CPU temp [degC]": CPUTemperature().temperature,
                     "Nb samples [-]": self.nb_samples,
                     "fulldata": fulldata,
+                    "I_stack [mA]": np.mean(i_stack)
+                    "I_std [mA]": np.std(i_stack)
+                    "I_per_stack [mA]": np.mean(i_stack,axis=1)
+                    "Vmn_stack [mA]": np.mean(vmn_stack)
+                    "Vmn_std [mA]": np.std(vmn_stack)
+                    "Vmn_per_stack [mA]": np.mean(vmn_stack, axis=1)
+                    "R_stack [ohm]": np.mean(vmn_stack) / np.mean(i_stack)
+                    "R_std [ohm]": np.std(vmn_stack) / np.std(i_stack)    ### TODO: check if this is statistically right
+                    "R_per_stack [Ohm]": np.mean(vmn_stack, axis=1)/np.mean(i_stack, axis=1)
                 }
             elif self.board_version == '22.10':
                 d = {
