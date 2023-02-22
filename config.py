@@ -1,34 +1,37 @@
 import logging
+from utils import get_platform
+
 from paho.mqtt.client import MQTTv31
 
-mqtt_broker = 'localhost'
+_, on_pi = get_platform()
+# DEFINE THE ID OF YOUR OhmPi
+ohmpi_id = '0001' if on_pi else 'XXXX'
+# DEFINE YOUR MQTT BROKER (DEFAULT: 'localhost')
+mqtt_broker = 'localhost' if on_pi else 'NAME_YOUR_BROKER_WHEN_IN_SIMULATION_MODE_HERE'
+# DEFINE THE SUFFIX TO ADD TO YOUR LOGS FILES
+logging_suffix = ''
+
 # OhmPi configuration
 OHMPI_CONFIG = {
-    'id': '0001',  # Unique identifier of the OhmPi board (string)
+    'id': ohmpi_id,  # Unique identifier of the OhmPi board (string)
     'R_shunt': 2,  # Shunt resistance in Ohms
-    'Imax': 4800/50/2,  # Maximum current
+    'Imax': 4800 / 50 / 2,  # Maximum current
     'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
-    'coef_p3': 2.50,  # slope for current conversion for ADS.P3, measurement in V/V
-    'offset_p2': 0,
-    'offset_p3': 0,
-    'integer': 2,  # Max value 10 # TODO: Explain what this is...
-    'version': 2,
+    'nb_samples': 20,  # Max value 10 # was named integer before...
+    'version': 2,  # Is this still needed?
     'max_elec': 64,
-    'board_address': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
-     #'board_address': {'A': 0x70, 'B': 0x71, 'M': 0x72, 'N': 0x73},  # def. {'A': 0x76, 'B': 0x71, 'M': 0x74, 'N': 0x70}
-    'settings': 'ohmpi_settings.json',
-    'board_version': '22.10',
+    'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # CHECK IF YOUR BOARDS HAVE THESE ADDRESSES
+    'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
+    'board_version': '22.10'
 }  # TODO: add a dictionary with INA models and associated gain values
 
-CONTROL_CONFIG = {
-    'tcp_port': 5555,
-    'interface': 'http_interface.py' # 'mqtt_interface'
-}
+# SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
-    'logging_level': logging.DEBUG,
+    'logging_level': logging.INFO,
+    'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
-    'file_name': 'exec.log',
+    'file_name': f'exec{logging_suffix}.log',
     'max_bytes': 262144,
     'backup_count': 30,
     'when': 'd',
@@ -39,17 +42,18 @@ EXEC_LOGGING_CONFIG = {
 DATA_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
     'logging_to_console': True,
-    'file_name': 'data.log',
+    'file_name': f'data{logging_suffix}.log',
     'max_bytes': 16777216,
     'backup_count': 1024,
     'when': 'd',
     'interval': 1
 }
 
-# State of Health logging configuration
+# State of Health logging configuration (For a future release)
 SOH_LOGGING_CONFIG = {
-    'file_name': 'soh.log',
+    'logging_level': logging.INFO,
     'logging_to_console': True,
+    'file_name': 'soh.log',
     'max_bytes': 16777216,
     'backup_count': 1024,
     'when': 'd',
@@ -64,14 +68,17 @@ MQTT_LOGGING_CONFIG = {
     'retain': False,
     'keepalive': 60,
     'will': None,
-    'auth': { 'username': 'mqtt_user', 'password': 'mqtt_password' },
+    'auth': {'username': 'mqtt_user', 'password': 'mqtt_password'},
     'tls': None,
     'protocol': MQTTv31,
     'transport': 'tcp',
     'client_id': f'{OHMPI_CONFIG["id"]}',
     'exec_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/exec',
+    'exec_logging_level': logging.DEBUG,
     'data_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/data',
-    'soh_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/soh'
+    'data_logging_level': DATA_LOGGING_CONFIG['logging_level'],
+    'soh_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/soh',
+    'soh_logging_level': SOH_LOGGING_CONFIG['logging_level']
 }
 
 # MQTT control configuration parameters
@@ -82,7 +89,7 @@ MQTT_CONTROL_CONFIG = {
     'retain': False,
     'keepalive': 60,
     'will': None,
-    'auth': { 'username': 'mqtt_user', 'password': 'mqtt_password' },
+    'auth': {'username': 'mqtt_user', 'password': 'mqtt_password'},
     'tls': None,
     'protocol': MQTTv31,
     'transport': 'tcp',
