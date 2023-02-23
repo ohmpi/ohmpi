@@ -992,7 +992,7 @@ class OhmPi(object):
                 np.array([[]])
 
             vmn_stack_mean = np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)])
-            vmn_std = np.mean([np.std(vmn_stack[::2]), np.std(vmn_stack[1::2])])
+            vmn_std = np.sqrt(([np.std(vmn_stack[::2])**2, np.std(vmn_stack[1::2])])**2)
             i_stack_mean = np.mean(i_stack)
             i_std = np.mean(np.array([np.std(i_stack[::2]), np.std(i_stack[1::2])]))
             r_stack_mean = vmn_stack_mean / i_stack_mean
