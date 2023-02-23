@@ -991,56 +991,63 @@ class OhmPi(object):
             else:
                 np.array([[]])
 
-            # create a dictionary and compute averaged values from all stacks
-            if self.board_version == 'mb.2023.0.0':
-                d = {
-                    "time": datetime.now().isoformat(),
-                    "A": quad[0],
-                    "B": quad[1],
-                    "M": quad[2],
-                    "N": quad[3],
-                    "inj time [ms]": (end_delay - start_delay) * 1000. if not out_of_range else 0.,
-                    "Vmn [mV]": sum_vmn / (2 * nb_stack),
-                    "I [mA]": sum_i / (2 * nb_stack),
-                    "R [ohm]": sum_vmn / sum_i,
-                    "Ps [mV]": sum_ps / (2 * nb_stack),
-                    "nbStack": nb_stack,
-                    "Tx [V]": tx_volt if not out_of_range else 0.,
-                    "CPU temp [degC]": CPUTemperature().temperature,
-                    "Nb samples [-]": self.nb_samples,
-                    "fulldata": fulldata,
-                    "I_stack [mA]": np.mean(i_stack),
-                    "I_std [mA]": np.mean(np.array([np.std(i_stack[::2]),np.std(i_stack[1::2])])),
-                    "I_per_stack [mA]": np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
-                    "Vmn_stack [mV]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]),
-                    "Vmn_std [mV]": np.mean([np.std(vmn_stack[::2]),np.std(vmn_stack[1::2])]),
-                    "Vmn_per_stack [mV]": np.array([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1))[0] / 2 for i in range(nb_stack)]),
-                    "R_stack [ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.mean(i_stack),
-                    "R_std [ohm]":  np.mean([np.std(vmn_stack[::2]),np.std(vmn_stack[1::2])]) / np.std(i_stack),    ### TODO: modify formula
-                    "R_per_stack [Ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
-                    "PS_per_stack [mV]":  np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]),
-                    "PS_stack [mV]": np.mean(np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]))
-                }
-                # print(np.array([(vmn_stack[i*2:i*2+2]) for i in range(nb_stack)]))
-            elif self.board_version == '22.10':
-                d = {
-                    "time": datetime.now().isoformat(),
-                    "A": quad[0],
-                    "B": quad[1],
-                    "M": quad[2],
-                    "N": quad[3],
-                    "inj time [ms]": (end_delay - start_delay) * 1000. if not out_of_range else 0.,
-                    "Vmn [mV]": sum_vmn / (2 * nb_stack),
-                    "I [mA]": sum_i / (2 * nb_stack),
-                    "R [ohm]": sum_vmn / sum_i,
-                    "Ps [mV]": sum_ps / (2 * nb_stack),
-                    "nbStack": nb_stack,
-                    "Tx [V]": tx_volt if not out_of_range else 0.,
-                    "CPU temp [degC]": CPUTemperature().temperature,
-                    "Nb samples [-]": self.nb_samples,
-                    "fulldata": fulldata,
-                }
+            vmn_stack_mean = np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)])
+            vmn_std = np.mean([np.std(vmn_stack[::2]), np.std(vmn_stack[1::2])])
+            i_stack_mean = np.mean(i_stack)
+            i_std = np.mean(np.array([np.std(i_stack[::2]), np.std(i_stack[1::2])]))
+            r_stack_mean = vmn_stack_mean / i_stack_mean
+            r_stack_std = np.sqrt((vmn_std/vmn_stack_mean)**2 + (i_std/i_stack_mean)**2) * r_stack_mean
+            ps_stack_mean = np.mean(np.array([np.mean(np.mean(vmn_stack[i * 2:i * 2 + 2], axis=1)) for i in range(nb_stack)]))
 
+            # create a dictionary and compute averaged values from all stacks
+            # if self.board_version == 'mb.2023.0.0':
+            d = {
+                "time": datetime.now().isoformat(),
+                "A": quad[0],
+                "B": quad[1],
+                "M": quad[2],
+                "N": quad[3],
+                "inj time [ms]": (end_delay - start_delay) * 1000. if not out_of_range else 0.,
+                "Vmn [mV]": sum_vmn / (2 * nb_stack),
+                "I [mA]": sum_i / (2 * nb_stack),
+                "R [ohm]": sum_vmn / sum_i,
+                "Ps [mV]": sum_ps / (2 * nb_stack),
+                "nbStack": nb_stack,
+                "Tx [V]": tx_volt if not out_of_range else 0.,
+                "CPU temp [degC]": CPUTemperature().temperature,
+                "Nb samples [-]": self.nb_samples,
+                "fulldata": fulldata,
+                "I_stack [mA]": i_stack_mean,
+                "I_std [mA]": i_std,
+                "I_per_stack [mA]": np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
+                "Vmn_stack [mV]": vmn_stack_mean,
+                "Vmn_std [mV]": vmn_std,
+                "Vmn_per_stack [mV]": np.array([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1))[0] / 2 for i in range(nb_stack)]),
+                "R_stack [ohm]": r_stack_mean,
+                "R_std [ohm]": r_stack_std,
+                "R_per_stack [Ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
+                "PS_per_stack [mV]":  np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]),
+                "PS_stack [mV]": ps_stack_mean
+            }
+                # print(np.array([(vmn_stack[i*2:i*2+2]) for i in range(nb_stack)]))
+            # elif self.board_version == '22.10':
+            #     d = {
+            #         "time": datetime.now().isoformat(),
+            #         "A": quad[0],
+            #         "B": quad[1],
+            #         "M": quad[2],
+            #         "N": quad[3],
+            #         "inj time [ms]": (end_delay - start_delay) * 1000. if not out_of_range else 0.,
+            #         "Vmn [mV]": sum_vmn / (2 * nb_stack),
+            #         "I [mA]": sum_i / (2 * nb_stack),
+            #         "R [ohm]": sum_vmn / sum_i,
+            #         "Ps [mV]": sum_ps / (2 * nb_stack),
+            #         "nbStack": nb_stack,
+            #         "Tx [V]": tx_volt if not out_of_range else 0.,
+            #         "CPU temp [degC]": CPUTemperature().temperature,
+            #         "Nb samples [-]": self.nb_samples,
+            #         "fulldata": fulldata,
+            #     }
 
         else:  # for testing, generate random data
             d = {'time': datetime.now().isoformat(), 'A': quad[0], 'B': quad[1], 'M': quad[2], 'N': quad[3],
