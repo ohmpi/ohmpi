@@ -844,7 +844,8 @@ class OhmPi(object):
                         self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860,
                                                     address=self.ads_voltage_address, mode=0)                       
 
-
+                print('gain_voltage', gain_voltage)
+                print('gain_current', gain_current)
                 self.pin0.value = False
                 self.pin1.value = False
 
@@ -955,8 +956,8 @@ class OhmPi(object):
                     # take average from the samples per stack, then sum them all
                     # average for the last third of the stacked values
                     #  is done outside the loop
-                    i_stack[n] = (np.mean(meas[-int(meas.shape[0] // 3):, 0]))
-                    vmn_stack[n] = (np.mean(meas[-int(meas.shape[0] // 3):, 1]))
+                    i_stack[n] = meas[-int(meas.shape[0] // 3):, 0]
+                    vmn_stack[n] = meas[-int(meas.shape[0] // 3):, 1]
                     # ps_stack[n] = (np.mean(meas[-int(meas.shape[0] // 3):, 0]))
 
                     sum_i = sum_i + (np.mean(meas[-int(meas.shape[0] // 3):, 0]))
@@ -990,9 +991,9 @@ class OhmPi(object):
                 fulldata = a
             else:
                 np.array([[]])
-
+            
             vmn_stack_mean = np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)])
-            vmn_std = np.sqrt(([np.std(vmn_stack[::2])**2, np.std(vmn_stack[1::2])])**2)
+            vmn_std =np.sqrt((np.std(vmn_stack[::2])**2 + np.std(vmn_stack[1::2]))**2) # np.sum([np.std(vmn_stack[::2]),np.std(vmn_stack[1::2])]) # np.sqrt((np.std(vmn_stack[::2])**2 + np.std(vmn_stack[1::2]))**2)
             i_stack_mean = np.mean(i_stack)
             i_std = np.mean(np.array([np.std(i_stack[::2]), np.std(i_stack[1::2])]))
             r_stack_mean = vmn_stack_mean / i_stack_mean
