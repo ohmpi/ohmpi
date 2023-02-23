@@ -819,18 +819,29 @@ class OhmPi(object):
                 if autogain:
                     if self.board_version == 'mb.2023.0.0':
                         # compute autogain
-                        self.pin0.value = True
-                        self.pin1.value = False
-                        self.pin6.value = True # IHM current injection led on
-                        time.sleep(injection_duration)
-                        gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
-                        if polarity > 0:
-                            gain_voltage = self._gain_auto(AnalogIn(self.ads_voltage, ads.P0))
-                        else:
-                            gain_voltage = self._gain_auto(AnalogIn(self.ads_voltage, ads.P2))
-                        self.pin0.value = False
-                        self.pin1.value = False
-                        self.pin6.value = False # IHM current injection led off
+                        gain_voltage_tmp, gain_current_tmp = [], []
+                        for n in [0,1]:
+                            if n == 0:
+                                self.pin0.value = True
+                                self.pin1.value = False
+                                self.pin6.value = True # IHM current injection led on
+                            else:
+                                self.pin0.value = False
+                                self.pin1.value = True  # current injection nr2
+                                self.pin6.value = True # IHM current injection led on
+
+                            time.sleep(injection_duration)
+                            gain_current_tmp.append(self._gain_auto(AnalogIn(self.ads_current, ads.P0)))
+                            if polarity > 0:
+                                gain_voltage_tmp.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)))
+                            else:
+                                gain_voltage_tmp.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)))
+                            self.pin0.value = False
+                            self.pin1.value = False
+                            self.pin6.value = False # IHM current injection led off
+                        
+                        gain_voltage = np.min(gain_voltage_tmp)
+                        gain_current = np.min(gain_current_tmp)
                         self.exec_logger.debug(f'Gain current: {gain_current:.3f}, gain voltage: {gain_voltage:.3f}')
                         self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860,
                                                     address=self.ads_current_address, mode=0)
@@ -844,8 +855,8 @@ class OhmPi(object):
                         self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860,
                                                     address=self.ads_voltage_address, mode=0)                       
 
-                print('gain_voltage', gain_voltage)
-                print('gain_current', gain_current)
+                #print('gain_voltage', gain_voltage)
+                #print('gain_current', gain_current)
                 self.pin0.value = False
                 self.pin1.value = False
 
@@ -949,16 +960,18 @@ class OhmPi(object):
                 # TODO send a message on SOH stating the battery level
 
                 # let's do some calculation (out of the stacking loop)
-                i_stack = np.empty((2 * nb_stack, int(meas.shape[0] // 3))) * np.nan
-                vmn_stack = np.empty((2 * nb_stack, int(meas.shape[0] // 3))) * np.nan
-                # ps_stack = np.empty((2 * nb_stack, int(meas.shape[0] // 3))) * np.nan
+
+                # i_stack = np.empty(2 * nb_stack, dtype=object)
+                # vmn_stack = np.empty(2 * nb_stack, dtype=object)
+                i_stack, vmn_stack = [], []
+                # select appropriate window length to average the readings
+                window = int(np.min([f.shape[0] for f in fulldata[::2]]) // 3)
                 for n, meas in enumerate(fulldata[::2]):
                     # take average from the samples per stack, then sum them all
                     # average for the last third of the stacked values
                     #  is done outside the loop
-                    i_stack[n] = meas[-int(meas.shape[0] // 3):, 0]
-                    vmn_stack[n] = meas[-int(meas.shape[0] // 3):, 1]
-                    # ps_stack[n] = (np.mean(meas[-int(meas.shape[0] // 3):, 0]))
+                    i_stack.append(meas[-int(window):, 0])
+                    vmn_stack.append(meas[-int(window):, 1])
 
                     sum_i = sum_i + (np.mean(meas[-int(meas.shape[0] // 3):, 0]))
                     vmn1 = np.mean(meas[-int(meas.shape[0] // 3), 1])
@@ -991,9 +1004,9 @@ class OhmPi(object):
                 fulldata = a
             else:
                 np.array([[]])
-            
+
             vmn_stack_mean = np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)])
-            vmn_std =np.sqrt((np.std(vmn_stack[::2])**2 + np.std(vmn_stack[1::2]))**2) # np.sum([np.std(vmn_stack[::2]),np.std(vmn_stack[1::2])]) # np.sqrt((np.std(vmn_stack[::2])**2 + np.std(vmn_stack[1::2]))**2)
+            vmn_std =np.sqrt(np.std(vmn_stack[::2])**2 + np.std(vmn_stack[1::2])**2) # np.sum([np.std(vmn_stack[::2]),np.std(vmn_stack[1::2])])
             i_stack_mean = np.mean(i_stack)
             i_std = np.mean(np.array([np.std(i_stack[::2]), np.std(i_stack[1::2])]))
             r_stack_mean = vmn_stack_mean / i_stack_mean
