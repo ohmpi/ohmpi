@@ -383,6 +383,11 @@ class OhmPi(object):
             else:
                 vab = 5
 
+            # set voltage for test
+            self.DPS.write_register(0x0000, volt, 2)
+            self.DPS.write_register(0x09, 1)  # DPS5005 on
+            time.sleep(best_tx_injtime)  # inject for given tx time
+
             # autogain
             self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_current_address)
             self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_voltage_address)
@@ -418,7 +423,7 @@ class OhmPi(object):
         self.pin0.value = False
         self.pin1.value = False
 
-        return vab, polarity
+        return vab, polarity, Rab
 
     @staticmethod
     def _find_identical_in_line(quads):
@@ -790,18 +795,18 @@ class OhmPi(object):
             
             # get best voltage to inject AND polarity
             if self.idps:
-                tx_volt, polarity = self._compute_tx_volt(
+                tx_volt, polarity, Rab = self._compute_tx_volt(
                     best_tx_injtime=best_tx_injtime, strategy=strategy, tx_volt=tx_volt)
                 self.exec_logger.debug(f'Best vab found is {tx_volt:.3f}V')
             else:
                 polarity = 1
+                Rab = None
 
             # first reset the gain to 2/3 before trying to find best gain (mode 0 is continuous)
             self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860,
                                            address=self.ads_current_address, mode=0)
             self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860,
                                            address=self.ads_voltage_address, mode=0)
-
             # turn on the power supply
             start_delay = None
             end_delay = None
@@ -1041,7 +1046,8 @@ class OhmPi(object):
                 "R_std [ohm]": r_stack_std,
                 "R_per_stack [Ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
                 "PS_per_stack [mV]":  np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]),
-                "PS_stack [mV]": ps_stack_mean
+                "PS_stack [mV]": ps_stack_mean,
+                "R_ab [ohm]": Rab
             }
                 # print(np.array([(vmn_stack[i*2:i*2+2]) for i in range(nb_stack)]))
             # elif self.board_version == '22.10':
