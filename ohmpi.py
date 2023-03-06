@@ -867,7 +867,7 @@ class OhmPi(object):
                 if autogain:
 
                     # compute autogain
-                    gain_voltage_tmp, gain_current_tmp = [], []
+                    gain_voltage = []
                     for n in [0,1]:  # make short cycle for gain computation
                         if n == 0:
                             self.pin0.value = True
@@ -883,28 +883,19 @@ class OhmPi(object):
                         time.sleep(injection_duration)
                         gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
                         if polarity > 0:
-                            gain_voltage_tmp.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)))
+                            gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)))
                         else:
-                            gain_voltage_tmp.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)))
+                            gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)))
                         self.pin0.value = False
                         self.pin1.value = False
                         if self.board_version == 'mb.2023.0.0':
                             self.pin6.value = False # IHM current injection led off
 
-                    self.exec_logger.debug(f'Gain current: {gain_current:.3f}, gain voltage: {gain_voltage:.3f}')
+                    self.exec_logger.debug(f'Gain current: {gain_current:.3f}, gain voltage: {gain_voltage[0]:.3f}, '
+                                           f'{gain_voltage[1]:.3f}')
                     self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860,
                                                 address=self.ads_current_address, mode=0)
 
-                else :
-                    gain_current = 2 / 3
-                    gain_voltage = 2 / 3
-                    self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860,
-                                                address=self.ads_current_address, mode=0)
-                    self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860,
-                                                address=self.ads_voltage_address, mode=0)
-
-                #print('gain_voltage', gain_voltage)
-                #print('gain_current', gain_current)
                 self.pin0.value = False
                 self.pin1.value = False
 
@@ -935,7 +926,7 @@ class OhmPi(object):
                         self.pin0.value = False
                         self.pin1.value = True  # current injection nr2
                         if autogain: # select gain computed on first half cycle
-                            self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage[0], data_rate=860,
+                            self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage[1], data_rate=860,
                                                            address=self.ads_voltage_address, mode=0)
                     self.exec_logger.debug(f'Stack {n} {self.pin0.value} {self.pin1.value}')
                     if self.board_version == 'mb.2023.0.0':
