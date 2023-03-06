@@ -321,7 +321,7 @@ class OhmPi(object):
             I=0
             vmn=0
             count=0
-            while I < 3 or abs(vmn) < 20 :  # I supérieur à 1 mA et Vmn surpérieur
+            while I < 3 or abs(vmn) < 20 :
                 if count >0 :
                     volt = volt + 2
                 count=count+1
@@ -338,7 +338,7 @@ class OhmPi(object):
                 gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
                 gain_voltage0 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P0))
                 gain_voltage2 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P2))
-                gain_voltage = np.min([gain_voltage0, gain_voltage2])
+                gain_voltage = np.min([gain_voltage0, gain_voltage2])  #TODO: separate gain for P0 and P2
                 self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=self.ads_current_address)
                 self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=self.ads_voltage_address)
                 # we measure the voltage on both A0 and A2 to guess the polarity
@@ -353,7 +353,7 @@ class OhmPi(object):
                     polarity = -1
                     vmn = U2
                 if strategy == 'vmax':
-                    if abs(vmn)>4500 or I> 45 :
+                    if abs(vmn)>4500 or I> 45 :  #TODO: while loop?
                          volt = volt - 2
                          self.DPS.write_register(0x0000, volt, 2)
                          self.DPS.write_register(0x09, 1)  # DPS5005 on
@@ -822,43 +822,50 @@ class OhmPi(object):
 
             if not out_of_range:  # we found a Vab in the range so we measure
                 if autogain:
-                    if self.board_version == 'mb.2023.0.0':
-                        # compute autogain
-                        gain_voltage_tmp, gain_current_tmp = [], []
-                        for n in [0,1]:
-                            if n == 0:
-                                self.pin0.value = True
-                                self.pin1.value = False
+
+                    # compute autogain
+                    gain_voltage_tmp, gain_current_tmp = [], []
+                    for n in [0,1]:
+                        if n == 0:
+                            self.pin0.value = True
+                            self.pin1.value = False
+                            if self.board_version == 'mb.2023.0.0':
                                 self.pin6.value = True # IHM current injection led on
-                            else:
-                                self.pin0.value = False
-                                self.pin1.value = True  # current injection nr2
+                        else:
+                            self.pin0.value = False
+                            self.pin1.value = True  # current injection nr2
+                            if self.board_version == 'mb.2023.0.0':
                                 self.pin6.value = True # IHM current injection led on
 
-                            time.sleep(injection_duration)
-                            gain_current_tmp.append(self._gain_auto(AnalogIn(self.ads_current, ads.P0)))
-                            if polarity > 0:
-                                gain_voltage_tmp.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)))
-                            else:
-                                gain_voltage_tmp.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)))
-                            self.pin0.value = False
-                            self.pin1.value = False
+                        time.sleep(injection_duration)
+                        gain_current_tmp.append(self._gain_auto(AnalogIn(self.ads_current, ads.P0)))
+                        # gain_voltage_dict = {'P0': self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)),
+                        #                      'P2': self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)),
+                        #                      "polarity": polarity}
+                        # TODO: separate gain for PO and P2
+                        if polarity > 0:
+                            gain_voltage_tmp.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)))
+                        else:
+                            gain_voltage_tmp.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)))
+                        self.pin0.value = False
+                        self.pin1.value = False
+                        if self.board_version == 'mb.2023.0.0':
                             self.pin6.value = False # IHM current injection led off
-                        
-                        gain_voltage = np.min(gain_voltage_tmp)
-                        gain_current = np.min(gain_current_tmp)
-                        self.exec_logger.debug(f'Gain current: {gain_current:.3f}, gain voltage: {gain_voltage:.3f}')
-                        self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860,
-                                                    address=self.ads_current_address, mode=0)
-                        self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860,
-                                                    address=self.ads_voltage_address, mode=0)
-                    elif self.board_version == '22.10':
-                        gain_current = 2 / 3
-                        gain_voltage = 2 / 3
-                        self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860,
-                                                    address=self.ads_current_address, mode=0)
-                        self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860,
-                                                    address=self.ads_voltage_address, mode=0)                       
+
+                    gain_voltage = np.min(gain_voltage_tmp)
+                    gain_current = np.min(gain_current_tmp)
+                    self.exec_logger.debug(f'Gain current: {gain_current:.3f}, gain voltage: {gain_voltage:.3f}')
+                    self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860,
+                                                address=self.ads_current_address, mode=0)
+                    self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860,
+                                                address=self.ads_voltage_address, mode=0)
+                else :
+                    gain_current = 2 / 3
+                    gain_voltage = 2 / 3
+                    self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860,
+                                                address=self.ads_current_address, mode=0)
+                    self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860,
+                                                address=self.ads_voltage_address, mode=0)
 
                 #print('gain_voltage', gain_voltage)
                 #print('gain_current', gain_current)
@@ -869,8 +876,8 @@ class OhmPi(object):
                 pinMN = 0 if polarity > 0 else 2  # noqa
 
                 # sampling for each stack at the end of the injection
-                sampling_interval = 10  # ms
-                self.nb_samples = int(injection_duration * 1000 // sampling_interval) + 1
+                sampling_interval = 10  # ms    # TODO: make this a config option
+                self.nb_samples = int(injection_duration * 1000 // sampling_interval) + 1  #TODO: check this strategy
 
                 # full data for waveform
                 fulldata = []
@@ -913,7 +920,9 @@ class OhmPi(object):
                         dt = time.time() - start_delay  # real injection time (s)
                         meas[k, 2] = time.time() - start_time
                         if dt > (injection_duration - 0 * sampling_interval / 1000.):
+
                             break
+
 
                     # stop current injection
                     self.pin0.value = False
@@ -921,7 +930,7 @@ class OhmPi(object):
                     self.pin6.value = False# IHM current injection led on
                     end_delay = time.time()
 
-                    # truncate the meas array if we didn't fill the last samples
+                    # truncate the meas array if we didn't fill the last samples  #TODO: check why
                     meas = meas[:k + 1]
 
                     # measurement of current i and voltage u during off time
