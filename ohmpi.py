@@ -388,8 +388,6 @@ class OhmPi(object):
             vab = factor * volt * 0.8
             if vab > tx_max:
                 vab = tx_max
-            print(factor_I, factor_vmn, 'factor!!')
-
 
         elif strategy == 'vmin':
             # implement different strategy
@@ -865,10 +863,11 @@ class OhmPi(object):
 
             if not out_of_range:  # we found a Vab in the range so we measure
                 if autogain:
-
                     # compute autogain
                     gain_voltage = []
                     for n in [0,1]:  # make short cycle for gain computation
+                        self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860,
+                                                       address=self.ads_voltage_address, mode=0)
                         if n == 0:
                             self.pin0.value = True
                             self.pin1.value = False
@@ -882,12 +881,20 @@ class OhmPi(object):
 
                         time.sleep(injection_duration)
                         gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
+
                         if polarity > 0:
-                            gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)))
+                            if n == 0:
+                                gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)))
+                            else:
+                                gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)))
                         else:
-                            gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)))
-                        self.pin0.value = False
-                        self.pin1.value = False
+                            if n == 0:
+                                gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)))
+                            else:
+                                gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)))
+
+                        # self.pin0.value = False
+                        # self.pin1.value = False
                         if self.board_version == 'mb.2023.0.0':
                             self.pin6.value = False # IHM current injection led off
 
