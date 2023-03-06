@@ -868,7 +868,7 @@ class OhmPi(object):
 
                     # compute autogain
                     gain_voltage_tmp, gain_current_tmp = [], []
-                    for n in [0,1]:
+                    for n in [0,1]:  # make short cycle for gain computation
                         if n == 0:
                             self.pin0.value = True
                             self.pin1.value = False
@@ -881,11 +881,7 @@ class OhmPi(object):
                                 self.pin6.value = True # IHM current injection led on
 
                         time.sleep(injection_duration)
-                        gain_current_tmp.append(self._gain_auto(AnalogIn(self.ads_current, ads.P0)))
-                        # gain_voltage_dict = {'P0': self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)),
-                        #                      'P2': self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)),
-                        #                      "polarity": polarity}
-                        # TODO: separate gain for PO and P2
+                        gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
                         if polarity > 0:
                             gain_voltage_tmp.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)))
                         else:
@@ -895,13 +891,10 @@ class OhmPi(object):
                         if self.board_version == 'mb.2023.0.0':
                             self.pin6.value = False # IHM current injection led off
 
-                    gain_voltage = np.min(gain_voltage_tmp)
-                    gain_current = np.min(gain_current_tmp)
                     self.exec_logger.debug(f'Gain current: {gain_current:.3f}, gain voltage: {gain_voltage:.3f}')
                     self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860,
                                                 address=self.ads_current_address, mode=0)
-                    self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860,
-                                                address=self.ads_voltage_address, mode=0)
+
                 else :
                     gain_current = 2 / 3
                     gain_voltage = 2 / 3
@@ -935,13 +928,18 @@ class OhmPi(object):
                     if (n % 2) == 0:
                         self.pin0.value = True
                         self.pin1.value = False
-                        self.pin6.value = True# IHM current injection led on
+                        if autogain: # select gain computed on first half cycle
+                            self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage[0], data_rate=860,
+                                                           address=self.ads_voltage_address, mode=0)
                     else:
                         self.pin0.value = False
                         self.pin1.value = True  # current injection nr2
-                        self.pin6.value = True# IHM current injection led on
+                        if autogain: # select gain computed on first half cycle
+                            self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage[0], data_rate=860,
+                                                           address=self.ads_voltage_address, mode=0)
                     self.exec_logger.debug(f'Stack {n} {self.pin0.value} {self.pin1.value}')
-
+                    if self.board_version == 'mb.2023.0.0':
+                        self.pin6.value = True  # IHM current injection led on
                     # measurement of current i and voltage u during injection
                     meas = np.zeros((self.nb_samples, 3)) * np.nan
                     start_delay = time.time()  # stating measurement time
@@ -963,9 +961,7 @@ class OhmPi(object):
                         dt = time.time() - start_delay  # real injection time (s)
                         meas[k, 2] = time.time() - start_time
                         if dt > (injection_duration - 0 * sampling_interval / 1000.):
-
                             break
-
 
                     # stop current injection
                     self.pin0.value = False
