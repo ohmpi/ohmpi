@@ -52,7 +52,7 @@ class OhmPi(object):
     """ OhmPi class.
     """
 
-    def __init__(self, settings=None, sequence=None, use_mux=False, mqtt=True, onpi=None, idps=False):
+    def __init__(self, settings=None, sequence=None, use_mux=None, mqtt=True, onpi=None, idps=None):
         """Constructs the ohmpi object
 
         Parameters
@@ -110,7 +110,16 @@ class OhmPi(object):
         if sequence is not None:
             self.load_sequence(sequence)
 
+        #Use MUX by default on mb.2023.0.0 version
+        if self.use_mux is None:
+            if self.board_version == "mb.2023.0.0":
+                self.use_mux = True
+
         self.idps = idps  # flag to use dps for injection or not
+        #Use IDPS by default on mb.2023.0.0 version
+        if self.idps is None:
+            if self.board_version == "mb.2023.0.0":
+                self.idps = True
 
         # connect to components on the OhmPi board
         if self.on_pi:
@@ -326,20 +335,18 @@ class OhmPi(object):
             vmn=0
             count=0
             while I < 3 or abs(vmn) < 20 :  #TODO: hardware related - place in config
-            
                 if count > 0 :
-                    print('o', volt)
                     volt = volt + 2
-                    print('>', volt)
-                count=count+1
+                count = count + 1
                 if volt > 50:
                     break
         
                 # set voltage for test
+                self.DPS.write_register(0x0000, volt, 2)
                 if count==1:
                     self.DPS.write_register(0x09, 1)  # DPS5005 on
-                    time.sleep(best_tx_injtime)  # inject for given tx time
-                self.DPS.write_register(0x0000, volt, 2)
+                time.sleep(best_tx_injtime)  # inject for given tx time
+
                 # autogain
                 self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_current_address)
                 self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_voltage_address)
@@ -360,7 +367,7 @@ class OhmPi(object):
                 if U0 < 0:  # we guessed it wrong, let's use a correction factor
                     polarity = -1
                     vmn = U2
-            
+
             n = 0
             while (abs(vmn) > voltage_max or I > current_max) and volt>0:  #If starting voltage is too high, need to lower it down
                 # print('we are out of range! so decreasing volt')
@@ -385,7 +392,9 @@ class OhmPi(object):
             factor = factor_I
             if factor_I > factor_vmn:
                 factor = factor_vmn
-            vab = factor * volt * 0.8
+            #print('factor', factor_I, factor_vmn)
+            vab = factor * volt #* 0.8
+            print(factor, volt, vab)
             if vab > tx_max:
                 vab = tx_max
 
@@ -397,7 +406,6 @@ class OhmPi(object):
             while I > 10 or abs(vmn) > 300 :  #TODO: hardware related - place in config
                 if count > 0 :
                     volt = volt - 2
-                print(volt, count)
                 count=count+1
                 if volt > 50:
                     break
@@ -1063,7 +1071,8 @@ class OhmPi(object):
             r_stack_mean = vmn_stack_mean / i_stack_mean
             r_stack_std = np.sqrt((vmn_std/vmn_stack_mean)**2 + (i_std/i_stack_mean)**2) * r_stack_mean
             ps_stack_mean = np.mean(np.array([np.mean(np.mean(vmn_stack[i * 2:i * 2 + 2], axis=1)) for i in range(nb_stack)]))
-
+            if Rab is None:
+                Rab = 'None'
             # create a dictionary and compute averaged values from all stacks
             # if self.board_version == 'mb.2023.0.0':
             d = {
@@ -1084,14 +1093,14 @@ class OhmPi(object):
                 "fulldata": fulldata,
                 "I_stack [mA]": i_stack_mean,
                 "I_std [mA]": i_std,
-                "I_per_stack [mA]": np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
+                "I_per_stack [mA]": [np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)],
                 "Vmn_stack [mV]": vmn_stack_mean,
                 "Vmn_std [mV]": vmn_std,
-                "Vmn_per_stack [mV]": np.array([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1))[0] / 2 for i in range(nb_stack)]),
+                "Vmn_per_stack [mV]": [np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1))[0] / 2 for i in range(nb_stack)],
                 "R_stack [ohm]": r_stack_mean,
                 "R_std [ohm]": r_stack_std,
-                "R_per_stack [Ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
-                "PS_per_stack [mV]":  np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]),
+                "R_per_stack [Ohm]": list(np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)])),
+                "PS_per_stack [mV]":  list(np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)])),
                 "PS_stack [mV]": ps_stack_mean,
                 "R_ab [ohm]": Rab
             }
@@ -1232,7 +1241,7 @@ class OhmPi(object):
             self.pin3 = self.MCPIHM.get_pin(3) # dsp -
             self.pin3.direction = Direction.OUTPUT
             self.pin3.value = True
-            time.sleep (5)
+            time.sleep(4)
 
             # run a measurement
             if self.on_pi:
