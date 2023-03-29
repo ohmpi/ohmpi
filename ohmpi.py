@@ -118,8 +118,8 @@ class OhmPi(object):
             self.i2c = busio.I2C(board.SCL, board.SDA)  # noqa
 
             # I2C connexion to MCP23008, for current injection
-            self.MCPIHM = MCP23008(self.i2c, address=0x24)
-            self.pin4 = self.MCPIHM.get_pin(4) # Ohmpi_run
+            self.mcp_board = MCP23008(self.i2c, address=self.mcp_board_address)
+            self.pin4 = self.mcp_board.get_pin(4) # Ohmpi_run
             self.pin4.direction = Direction.OUTPUT
             self.pin4.value = True
 
@@ -133,10 +133,10 @@ class OhmPi(object):
 
             # current injection module
             if self.idps:
-                self.pin2 = self.MCPIHM.get_pin(2) # dsp +
+                self.pin2 = self.mcp_board.get_pin(2) # dsp +
                 self.pin2.direction = Direction.OUTPUT
                 self.pin2.value = True
-                self.pin3 = self.MCPIHM.get_pin(3) # dsp -
+                self.pin3 = self.mcp_board.get_pin(3) # dsp -
                 self.pin3.direction = Direction.OUTPUT
                 self.pin3.value = True
                 time.sleep(4)
@@ -155,10 +155,10 @@ class OhmPi(object):
                 # (last number) 0 is for mA, 3 is for A
 
             # injection courant and measure (TODO check if it works, otherwise back in run_measurement())
-            self.pin0 = self.MCPIHM.get_pin(0)
+            self.pin0 = self.mcp_board.get_pin(0)
             self.pin0.direction = Direction.OUTPUT
             self.pin0.value = False
-            self.pin1 = self.MCPIHM.get_pin(1)
+            self.pin1 = self.mcp_board.get_pin(1)
             self.pin1.direction = Direction.OUTPUT
             self.pin1.value = False
 
@@ -305,10 +305,10 @@ class OhmPi(object):
             volt = 5.
 
         # redefined the pin of the mcp (needed when relays are connected)
-        self.pin0 = self.MCPIHM.get_pin(0)
+        self.pin0 = self.mcp_board.get_pin(0)
         self.pin0.direction = Direction.OUTPUT
         self.pin0.value = False
-        self.pin1 = self.MCPIHM.get_pin(1)
+        self.pin1 = self.mcp_board.get_pin(1)
         self.pin1.direction = Direction.OUTPUT
         self.pin1.value = False
 
@@ -716,6 +716,7 @@ class OhmPi(object):
         self.max_elec = OHMPI_CONFIG['max_elec']  # maximum number of electrodes
         self.board_addresses = OHMPI_CONFIG['board_addresses']
         self.board_version = OHMPI_CONFIG['board_version']
+        self.mcp_board_address = OHMPI_CONFIG['mcp_board_address']
         self.exec_logger.debug(f'OHMPI_CONFIG = {str(OHMPI_CONFIG)}')
 
     def read_quad(self, **kwargs):
@@ -803,33 +804,33 @@ class OhmPi(object):
             # as it's run in another thread, it doesn't consider these
             # and this can lead to short circuit!
             
-            self.pin0 = self.MCPIHM.get_pin(0)
+            self.pin0 = self.mcp_board.get_pin(0)
             self.pin0.direction = Direction.OUTPUT
             self.pin0.value = False
-            self.pin1 = self.MCPIHM.get_pin(1)
+            self.pin1 = self.mcp_board.get_pin(1)
             self.pin1.direction = Direction.OUTPUT
             self.pin1.value = False
-            self.pin7 = self.MCPIHM.get_pin(7) #IHM on mesaurement
+            self.pin7 = self.mcp_board.get_pin(7) #IHM on mesaurement
             self.pin7.direction = Direction.OUTPUT
             self.pin7.value = False
             
             if self.sequence is None :
                 if self.idps:
-                    self.pin2 = self.MCPIHM.get_pin(2) # dsp +
+                    self.pin2 = self.mcp_board.get_pin(2) # dsp +
                     self.pin2.direction = Direction.OUTPUT
                     self.pin2.value = True
-                    self.pin3 = self.MCPIHM.get_pin(3) # dsp -
+                    self.pin3 = self.mcp_board.get_pin(3) # dsp -
                     self.pin3.direction = Direction.OUTPUT
                     self.pin3.value = True
                     time.sleep(5)
                     
-            self.pin5 = self.MCPIHM.get_pin(5) #IHM on mesaurement
+            self.pin5 = self.mcp_board.get_pin(5) #IHM on mesaurement
             self.pin5.direction = Direction.OUTPUT
             self.pin5.value = True
-            self.pin6 = self.MCPIHM.get_pin(6) #IHM on mesaurement
+            self.pin6 = self.mcp_board.get_pin(6) #IHM on mesaurement
             self.pin6.direction = Direction.OUTPUT
             self.pin6.value = False
-            self.pin7 = self.MCPIHM.get_pin(7) #IHM on mesaurement
+            self.pin7 = self.mcp_board.get_pin(7) #IHM on mesaurement
             self.pin7.direction = Direction.OUTPUT
             self.pin7.value = False           
             if self.idps: 
@@ -1218,11 +1219,11 @@ class OhmPi(object):
 
             # call the switch_mux function to switch to the right electrodes
             self.switch_mux_on(quad)
-            self.mcp = MCP23008(self.i2c, address=0x24)
-            self.pin2 = self.MCPIHM.get_pin(2) # dsp -
+            self.mcp_board = MCP23008(self.i2c, address=self.mcp_board_address)
+            self.pin2 = self.mcp_board.get_pin(2) # dsp -
             self.pin2.direction = Direction.OUTPUT
             self.pin2.value = True
-            self.pin3 = self.MCPIHM.get_pin(3) # dsp -
+            self.pin3 = self.mcp_board.get_pin(3) # dsp -
             self.pin3.direction = Direction.OUTPUT
             self.pin3.value = True
             time.sleep (5)
