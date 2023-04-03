@@ -1476,9 +1476,9 @@ class OhmPi(object):
             state : str
                 'on', 'off'
             """
-        self.pin2 = self.MCP_board.get_pin(2) # dsp -
+        self.pin2 = self.mcp_board.get_pin(2) # dsp -
         self.pin2.direction = Direction.OUTPUT
-        self.pin3 = self.MCP_board.get_pin(3) # dsp -
+        self.pin3 = self.mcp_board.get_pin(3) # dsp -
         self.pin3.direction = Direction.OUTPUT
         if state == 'on':
             self.pin2.value = True
