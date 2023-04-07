@@ -354,9 +354,9 @@ class OhmPi(object):
             while I < 3 or abs(vmn) < 20 :  #TODO: hardware related - place in config
             
                 if count > 0 :
-                    print('o', volt)
+                    #print('o', volt)
                     volt = volt + 2
-                    print('>', volt)
+                   # print('>', volt)
                 count=count+1
                 if volt > 50:
                     break
@@ -381,7 +381,6 @@ class OhmPi(object):
                     U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.  # noqa measure voltage
                     U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.  # noqa
                     time.sleep(best_tx_injtime)
-                    print(U0,U2,I)
 
                 # check polarity
                 polarity = 1  # by default, we guessed it right
@@ -537,13 +536,13 @@ class OhmPi(object):
         """
 
         gain = 2 / 3
-        if (abs(channel.voltage) < 2.040) and (abs(channel.voltage) >= 1.023):
+        if (abs(channel.voltage) < 2.040) and (abs(channel.voltage) >= 1.0):
             gain = 2
-        elif (abs(channel.voltage) < 1.023) and (abs(channel.voltage) >= 0.508):
+        elif (abs(channel.voltage) < 1.0) and (abs(channel.voltage) >= 0.500):
             gain = 4
-        elif (abs(channel.voltage) < 0.508) and (abs(channel.voltage) >= 0.250):
+        elif (abs(channel.voltage) < 0.500) and (abs(channel.voltage) >= 0.250):
             gain = 8
-        elif abs(channel.voltage) < 0.256:
+        elif abs(channel.voltage) < 0.250:
             gain = 16
         self.exec_logger.debug(f'Setting gain to {gain}')
         return gain
@@ -857,7 +856,7 @@ class OhmPi(object):
                     self.pin3 = self.mcp_board.get_pin(3) # dsp -
                     self.pin3.direction = Direction.OUTPUT
                     self.pin3.value = True
-                    time.sleep(5)
+                    time.sleep(4)
                     
             self.pin5 = self.mcp_board.get_pin(5) #IHM on mesaurement
             self.pin5.direction = Direction.OUTPUT
@@ -905,6 +904,8 @@ class OhmPi(object):
                     # compute autogain
                     gain_voltage = []
                     for n in [0,1]:  # make short cycle for gain computation
+                        self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860,
+                                                       address=self.ads_voltage_address, mode=0)
                         if n == 0:
                             self.pin0.value = True
                             self.pin1.value = False
@@ -918,12 +919,25 @@ class OhmPi(object):
 
                         time.sleep(injection_duration)
                         gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
+                        
                         if polarity > 0:
-                            gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)))
+                            if n == 0:
+                                gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)))
+                            else:
+                                gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)))
                         else:
-                            gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)))
+                            if n == 0:
+                                gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)))
+                            else:
+                                gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)))
+
                         self.pin0.value = False
                         self.pin1.value = False
+                        time.sleep(injection_duration)
+                        if n == 0:
+                            gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P0)))
+                        else:
+                            gain_voltage.append(self._gain_auto(AnalogIn(self.ads_voltage, ads.P2)))                        
                         if self.board_version == 'mb.2023.0.0':
                             self.pin6.value = False # IHM current injection led off
 
@@ -956,13 +970,13 @@ class OhmPi(object):
                         self.pin0.value = True
                         self.pin1.value = False
                         if autogain: # select gain computed on first half cycle
-                            self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage[0], data_rate=860,
+                            self.ads_voltage = ads.ADS1115(self.i2c, gain=np.min(gain_voltage), data_rate=860,
                                                            address=self.ads_voltage_address, mode=0)
                     else:
                         self.pin0.value = False
                         self.pin1.value = True  # current injection nr2
                         if autogain: # select gain computed on first half cycle
-                            self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage[1], data_rate=860,
+                            self.ads_voltage = ads.ADS1115(self.i2c, gain=np.min(gain_voltage),data_rate=860,
                                                            address=self.ads_voltage_address, mode=0)
                     self.exec_logger.debug(f'Stack {n} {self.pin0.value} {self.pin1.value}')
                     if self.board_version == 'mb.2023.0.0':
@@ -993,6 +1007,9 @@ class OhmPi(object):
                     # stop current injection
                     self.pin0.value = False
                     self.pin1.value = False
+#                     if autogain: # select gain computed on first half cycle
+#                             self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage[2],data_rate=860,
+#                                                            address=self.ads_voltage_address, mode=0)
                     self.pin6.value = False# IHM current injection led on
                     end_delay = time.time()
 
@@ -1251,21 +1268,21 @@ class OhmPi(object):
                 quad = self.sequence[i, :]  # quadrupole
             if self.status == 'stopping':
                 break
+            if i == 0:
+                # call the switch_mux function to switch to the right electrodes
+                # switch on DPS
+                self.mcp_board = MCP23008(self.i2c, address=self.mcp_board_address)
+                self.pin2 = self.mcp_board.get_pin(2) # dsp -
+                self.pin2.direction = Direction.OUTPUT
+                self.pin2.value = True
+                self.pin3 = self.mcp_board.get_pin(3) # dsp -
+                self.pin3.direction = Direction.OUTPUT
+                self.pin3.value = True
+                time.sleep (4)
 
-            # call the switch_mux function to switch to the right electrodes
+                #self.switch_dps('on')
+            time.sleep(.6)
             self.switch_mux_on(quad)
-            # switch on DPS
-            self.mcp_board = MCP23008(self.i2c, address=self.mcp_board_address)
-            self.pin2 = self.mcp_board.get_pin(2) # dsp -
-            self.pin2.direction = Direction.OUTPUT
-            self.pin2.value = True
-            self.pin3 = self.mcp_board.get_pin(3) # dsp -
-            self.pin3.direction = Direction.OUTPUT
-            self.pin3.value = True
-            time.sleep (4)
-
-            #self.switch_dps('on')
-
             # run a measurement
             if self.on_pi:
                 acquired_data = self.run_measurement(quad, **kwargs)
