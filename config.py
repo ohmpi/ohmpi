@@ -14,17 +14,41 @@ logging_suffix = ''
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': ohmpi_id,  # Unique identifier of the OhmPi board (string)
-    'R_shunt': 2,  # Shunt resistance in Ohms
-    'Imax': 4800 / 50 / 2,  # Maximum current
-    'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
-    'nb_samples': 20,  # Max value 10 # was named integer before...
-    'version': 2,  # Is this still needed?
-    'max_elec': 64,
-    'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # CHECK IF YOUR BOARDS HAVE THESE ADDRESSES
+    # 'R_shunt': 2,  # Shunt resistance in Ohms
+    # 'Imax': 4800 / 50 / 2,  # Maximum current
+    # 'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
+    # 'nb_samples': 20,  # Max value 10 # was named integer before...
+    # 'version': 2,  # Is this still needed?
+    # 'max_elec': 64,
+    # 'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # CHECK IF YOUR BOARDS HAVE THESE ADDRESSES
     'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
-    'board_version': 'mb.2023.0.0',#,'22.10',
-    'mcp_board_address': 0x20
+    # 'board_version': 'mb.2023.0.0',#,'22.10',
+    # 'mcp_board_address': 0x20
 }  # TODO: add a dictionary with INA models and associated gain values
+
+HARDWARE_CONFIG = {
+    {'Controller': {'model' : 'raspberry_pi_3'
+                    }
+     },
+    {'TX' : {'model' : 'mb_2024_rev_0_0',
+             'mcp_board_address': 0x20,
+             'Imax': 4800 / 50 / 2,  # Maximum current
+             'R_shunt': 2  # Shunt resistance in Ohms
+             }
+     },
+    {'RX' : {'model': 'mb_2024_rev_0_0',
+             'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
+             'nb_samples': 20,  # Max value 10 # was named integer before...
+             }
+     },
+    {'MUX': {'model' : 'mux_2021',
+             'max_elec': 64,
+             'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # CHECK IF YOUR BOARDS HAVE THESE ADDRESSES
+             'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
+             'nb_samples': 20  # Max value 10 # was named integer before...
+             }
+     }
+}
 
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
