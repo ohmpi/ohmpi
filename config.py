@@ -27,21 +27,21 @@ OHMPI_CONFIG = {
 }  # TODO: add a dictionary with INA models and associated gain values
 
 HARDWARE_CONFIG = {
-    {'Controller': {'model' : 'raspberry_pi_3'
+    {'controller': {'model' : 'raspberry_pi_3'
                     }
      },
-    {'TX' : {'model' : 'mb_2024_rev_0_0',
+    {'tx' : {'model' : 'mb_2024_rev_0_0',
              'mcp_board_address': 0x20,
              'Imax': 4800 / 50 / 2,  # Maximum current
              'R_shunt': 2  # Shunt resistance in Ohms
              }
      },
-    {'RX' : {'model': 'mb_2024_rev_0_0',
+    {'rx' : {'model': 'mb_2024_rev_0_0',
              'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
              'nb_samples': 20,  # Max value 10 # was named integer before...
              }
      },
-    {'MUX': {'model' : 'mux_2021',
+    {'mux': {'model' : 'mux_2021',
              'max_elec': 64,
              'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # CHECK IF YOUR BOARDS HAVE THESE ADDRESSES
              'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
@@ -78,7 +78,7 @@ DATA_LOGGING_CONFIG = {
 SOH_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
     'logging_to_console': True,
-    'file_name': 'soh.log',
+    'file_name': f'soh{logging_suffix}.log',
     'max_bytes': 16777216,
     'backup_count': 1024,
     'when': 'd',

@@ -152,7 +152,7 @@ class OhmPi(object):
                 # (last number) 0 is for mA, 3 is for A
 
                 #self.soh_logger.debug(f'Battery voltage: {self.DPS.read_register(0x05,2 ):.3f}') TODO: SOH logger
-                print(self.DPS.read_register(0x05,2 ))
+                print(self.DPS.read_register(0x05,2))
                 self.switch_dps('off')
 
 
@@ -783,7 +783,7 @@ class OhmPi(object):
             self.exec_logger.warning('Not on Raspberry Pi, skipping reboot...')
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None,
-                        autogain=True, strategy='constant', tx_volt=5, best_tx_injtime=0.1,
+                        autogain=True, strategy='constant', tx_volt=5., best_tx_injtime=0.1,
                         cmd_id=None):
         """Measures on a quadrupole and returns transfer resistance.
 
@@ -875,7 +875,7 @@ class OhmPi(object):
             if self.idps:
                 tx_volt, polarity, Rab = self._compute_tx_volt(
                     best_tx_injtime=best_tx_injtime, strategy=strategy, tx_volt=tx_volt)
-                self.exec_logger.debug(f'Best vab found is {tx_volt:.3f}V')
+                self.exec_logger.debug(f'Best VAB found is {tx_volt:.3f}V')
             else:
                 polarity = 1
                 Rab = None
@@ -1245,8 +1245,6 @@ class OhmPi(object):
         self.exec_logger.debug(f'Measuring sequence: {self.sequence}')
         t0 = time.time()
         self.reset_mux()
-        
-        
         
         # create filename with timestamp
         filename = self.settings["export_path"].replace('.csv',
