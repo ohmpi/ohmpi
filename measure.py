@@ -1,5 +1,6 @@
 import importlib
 from time import gmtime
+import numpy as np
 import sys
 import logging
 from config import OHMPI_CONFIG
@@ -9,13 +10,14 @@ rx_module = importlib.import_module(f'{OHMPI_CONFIG["hardware"]["rx"]["model"]}'
 mux_module = importlib.import_module(f'{OHMPI_CONFIG["hardware"]["mux"]["model"]}')
 TX_CONFIG = tx_module.TX_CONFIG
 RX_CONFIG = rx_module.RX_CONFIG
+MUX_CONFIG = mux_module.MUX_CONFIG
 
-class OhmPiHardware():
+current_max = np.min([TX_CONFIG['current_max'], MUX_CONFIG['current_max']])
+voltage_max = np.min([TX_CONFIG['voltage_max'], MUX_CONFIG['voltage_max']])
+voltage_min = RX_CONFIG['voltage_min']
+
+class OhmPiHardware:
     def __init__(self, **kwargs):
-        self.tx = kwargs.pop('controller', tx_module.Controller())
-        self.rx = kwargs.pop('tx', tx_module.Rx())
-        self.tx = kwargs.pop('rx', tx_module.Tx())
-        self.rx = kwargs.pop('mux', tx_module.Mux())
         self.exec_logger = kwargs.pop('exec_logger', None)
         self.data_logger = kwargs.pop('exec_logger', None)
         self.soh_logger = kwargs.pop('soh_logger', None)
@@ -49,8 +51,35 @@ class OhmPiHardware():
             soh_handler.setFormatter(soh_formatter)
             self.soh_logger.addHandler(soh_handler)
             self.soh_logger.setLevel('debug')
+        self.controller = kwargs.pop('controller',
+                                     controller_module.Controller({'exec_logger' : self.exec_logger,
+                                                                   'data_logger': self.data_logger,
+                                                                   'soh_logger': self.soh_logger}))
+        self.rx = kwargs.pop('tx', tx_module.Rx({'exec_logger' : self.exec_logger,
+                                                 'data_logger': self.data_logger,
+                                                 'soh_logger': self.soh_logger}))
+        self.tx = kwargs.pop('rx', tx_module.Tx({'exec_logger' : self.exec_logger,
+                                                 'data_logger': self.data_logger,
+                                                 'soh_logger': self.soh_logger}))
+        self.mux = kwargs.pop('mux', mux_module.Mux({'exec_logger' : self.exec_logger,
+                                                     'data_logger': self.data_logger,
+                                                     'soh_logger': self.soh_logger}))
+    def _vab_pulse(self, vab, length, polarity=None):
+        """ Gets VMN and IAB from a single voltage pulse
+        """
+        if polarity is not None and polarity != self.tx.polarity:
+            self.tx.polarity = polarity
+        self.tx.voltage = vab
+        self.tx.voltage_pulse(length=length)
+        # set gains automatically
+        self.tx.adc_gain_auto()
+        self.rx.adc_gain_auto()
+        iab = self.tx.current  # measure current
+        vmn = self.rx.voltage
+        return vmn, iab
 
-    def _compute_tx_volt(self, best_tx_injtime=0.1, strategy='vmax', tx_volt=5):
+    def _compute_tx_volt(self, best_tx_injtime=0.1, strategy='vmax', tx_volt=5,
+                         vab_max=voltage_max, vmn_min=voltage_min):
         """Estimates best Tx voltage based on different strategies.
         At first a half-cycle is made for a short duration with a fixed
         known voltage. This gives us Iab and Rab. We also measure Vmn.
@@ -68,177 +97,52 @@ class OhmPiHardware():
             Time in milliseconds for the half-cycle used to compute Rab.
         strategy : str, optional
             Either:
-            - vmax : compute Vab to reach a maximum Iab and Vmn
+            - vmax : compute Vab to reach a maximum Iab without exceeding vab_max
+            - vmin : compute Vab to reach at least vmn_min
             - constant : apply given Vab
         tx_volt : float, optional
             Voltage to apply for guessing the best voltage. 5 V applied
             by default. If strategy "constant" is chosen, constant voltage
             to applied is "tx_volt".
+        vab_max : float, optional
+            Maximum injection voltage to apply to tx (used by all strategies)
+        vmn_min : float, optional
+            Minimum voltage target for rx (used by vmin strategy)
 
         Returns
         -------
         vab : float
             Proposed Vab according to the given strategy.
-        polarity : int
-            Either 1 or -1 to know on which pin of the ADS the Vmn is measured.
+        polarity:
+            Polarity of VMN relative to polarity of VAB
+        rab : float
+            Resistance between injection electrodes
         """
 
-
+        vab_max = np.abs(vab_max)
+        vmn_min = np.abs(vmn_min)
+        vab = np.min(np.abs(tx_volt), vab_max)
         self.tx.polarity = 1
         self.tx.turn_on()
-        if strategy == 'constant':
-            vab = tx_volt
-            self.tx.voltage = vab
-            self.tx.voltage_pulse(length=best_tx_injtime)
-            # set gains automatically
-            self.tx.adc_gain_auto()
-            self.rx.adc_gain_auto()
-            I = self.tx.current  # measure current
-            vmn = self.rx.voltage
-
-        elif strategy == 'vmax':
-            """
+        vmn, iab = self._vab_pulse(vab=vab, length=best_tx_injtime)
+        if strategy == 'vmax':
             # implement different strategies
-            I = 0
-            vmn = 0
-            count = 0
-            while I < TX_CONFIG['current_max'] or abs(vmn) < RX_CONFIG['?']:  # TODO: hardware related - place in config
-
-                if count > 0:
-                    # print('o', volt)
-                    volt = volt + 2
-                # print('>', volt)
-                count = count + 1
-                if volt > 50:
-                    break
-
-                # set voltage for test
-                if count == 1:
-                    self.DPS.write_register(0x09, 1)  # DPS5005 on
-                    time.sleep(best_tx_injtime)  # inject for given tx time
-                self.DPS.write_register(0x0000, volt, 2)
-                # autogain
-                self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_current_address)
-                self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_voltage_address)
-                gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
-                gain_voltage0 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P0))
-                gain_voltage2 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P2))
-                gain_voltage = np.min([gain_voltage0, gain_voltage2])  # TODO: separate gain for P0 and P2
-                self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=self.ads_current_address)
-                self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=self.ads_voltage_address)
-                # we measure the voltage on both A0 and A2 to guess the polarity
-                for i in range(10):
-                    I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt  # noqa measure current
-                    U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.  # noqa measure voltage
-                    U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.  # noqa
-                    time.sleep(best_tx_injtime)
-
-                # check polarity
-                polarity = 1  # by default, we guessed it right
-                vmn = U0
-                if U0 < 0:  # we guessed it wrong, let's use a correction factor
-                    polarity = -1
-                    vmn = U2
-
-            n = 0
-            while (
-                    abs(vmn) > voltage_max or I > current_max) and volt > 0:  # If starting voltage is too high, need to lower it down
-                # print('we are out of range! so decreasing volt')
-                volt = volt - 2
-                self.DPS.write_register(0x0000, volt, 2)
-                # self.DPS.write_register(0x09, 1)  # DPS5005 on
-                I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt
-                U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.
-                U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.
-                polarity = 1  # by default, we guessed it right
-                vmn = U0
-                if U0 < 0:  # we guessed it wrong, let's use a correction factor
-                    polarity = -1
-                    vmn = U2
-                n += 1
-                if n > 25:
-                    break
-
-            factor_I = (current_max) / I
-            factor_vmn = voltage_max / vmn
-            factor = factor_I
-            if factor_I > factor_vmn:
-                factor = factor_vmn
-            # print('factor', factor_I, factor_vmn)
-            vab = factor * volt * 0.9
-            if vab > tx_max:
-                vab = tx_max
-            print(factor_I, factor_vmn, 'factor!!')"""
-            pass
-
+            if vab < vab_max and iab < current_max :
+                vab = vab * np.min([0.9 * vab_max / vab, 0.9 * current_max / iab])  # TODO: check if setting at 90% of max as a safety margin is OK
+            self.tx.exec_logger.debug(f'vmax strategy: setting VAB to {vab} V.')
         elif strategy == 'vmin':
-            """# implement different strategy
-            I = 20
-            vmn = 400
-            count = 0
-            while I > 10 or abs(vmn) > 300:  # TODO: hardware related - place in config
-                if count > 0:
-                    volt = volt - 2
-                print(volt, count)
-                count = count + 1
-                if volt > 50:
-                    break
-
-                # set voltage for test
-                self.DPS.write_register(0x0000, volt, 2)
-                if count == 1:
-                    self.DPS.write_register(0x09, 1)  # DPS5005 on
-                time.sleep(best_tx_injtime)  # inject for given tx time
-
-                # autogain
-                self.ads_current = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_current_address)
-                self.ads_voltage = ads.ADS1115(self.i2c, gain=2 / 3, data_rate=860, address=self.ads_voltage_address)
-                gain_current = self._gain_auto(AnalogIn(self.ads_current, ads.P0))
-                gain_voltage0 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P0))
-                gain_voltage2 = self._gain_auto(AnalogIn(self.ads_voltage, ads.P2))
-                gain_voltage = np.min([gain_voltage0, gain_voltage2])  # TODO: separate gain for P0 and P2
-                self.ads_current = ads.ADS1115(self.i2c, gain=gain_current, data_rate=860, address=self.ads_current_address)
-                self.ads_voltage = ads.ADS1115(self.i2c, gain=gain_voltage, data_rate=860, address=self.ads_voltage_address)
-                # we measure the voltage on both A0 and A2 to guess the polarity
-                I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt  # noqa measure current
-                U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.  # noqa measure voltage
-                U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.  # noqa
-
-                # check polarity
-                polarity = 1  # by default, we guessed it right
-                vmn = U0
-                if U0 < 0:  # we guessed it wrong, let's use a correction factor
-                    polarity = -1
-                    vmn = U2
-
-            n = 0
-            while (
-                    abs(vmn) < voltage_min or I < current_min) and volt > 0:  # If starting voltage is too high, need to lower it down
-                # print('we are out of range! so increasing volt')
-                volt = volt + 2
-                print(volt)
-                self.DPS.write_register(0x0000, volt, 2)
-                # self.DPS.write_register(0x09, 1)  # DPS5005 on
-                # time.sleep(best_tx_injtime)
-                I = AnalogIn(self.ads_current, ads.P0).voltage * 1000. / 50 / self.r_shunt
-                U0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.
-                U2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.
-                polarity = 1  # by default, we guessed it right
-                vmn = U0
-                if U0 < 0:  # we guessed it wrong, let's use a correction factor
-                    polarity = -1
-                    vmn = U2
-                n += 1
-                if n > 25:
-                    break
-
-            vab = volt"""
-            pass
-
+            if vab < vab_max and iab < current_max:
+                vab = vab * np.min([0.9 * vab_max / vab, vmn_min / np.abs(vmn), 0.9 * current_max / iab])  # TODO: check if setting at 90% of max as a safety margin is OK
+        elif strategy != 'constant':
+            self.tx.exec_logger.warning(f'Unknown strategy {strategy} for setting VAB! Using {vab} V')
+        else:
+            self.tx.exec_logger.debug(f'Constant strategy for setting VAB, using {vab} V')
         self.tx.turn_off()
         self.tx.polarity = 0
-        rab = (vab * 1000.) / I  # noqa
-
+        rab = (np.abs(vab) * 1000.) / iab
         self.exec_logger.debug(f'RAB = {rab:.2f} Ohms')
-
-        return vab, rab
+        if vmn < 0:
+            polarity = -1  # TODO: check if we really need to return polarity
+        else:
+            polarity = 1
+        return vab, polarity, rab

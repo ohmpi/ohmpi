@@ -167,6 +167,11 @@ class Tx(TxAbstract):
             self.exec_logger.warning(f'Sorry, cannot inject more than {TX_CONFIG["voltage_max"]} V, '
                                      f'set it back to {TX_CONFIG["default_voltage"]} V (default value).')
             value = TX_CONFIG['default_voltage']
+        if value < 0.:
+            self.exec_logger.warning(f'Voltage should be given as a positive number. '
+                                     f'Set polarity to -1 to reverse voltage...')
+            value = np.abs(value)
+
         self.DPS.write_register(0x0000, value, 2)
 
     def turn_off(self):
@@ -240,5 +245,6 @@ class Rx(RxAbstract):
         """
         u0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.
         u2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.
-        self.exec_logger.debug(f'Reading voltages {u0} V and {u2} V on RX. Returning {np.max([u0, u2])} V')
-        return np.max([u0,u2])
+        u = np.max([u0,u2]) * (np.heaviside(u0-u2, 1.) * 2 - 1.) # gets the max between u0 & u2 and set the sign
+        self.exec_logger.debug(f'Reading voltages {u0} V and {u2} V on RX. Returning {u} V')
+        return u
