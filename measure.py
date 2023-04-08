@@ -1,8 +1,6 @@
 import importlib
-from time import gmtime
 import numpy as np
-import sys
-import logging
+from logging_setup import create_default_logger
 from config import OHMPI_CONFIG
 controller_module = importlib.import_module(f'{OHMPI_CONFIG["hardware"]["controller"]["model"]}')
 tx_module = importlib.import_module(f'{OHMPI_CONFIG["hardware"]["tx"]["model"]}')
@@ -18,39 +16,9 @@ voltage_min = RX_CONFIG['voltage_min']
 
 class OhmPiHardware:
     def __init__(self, **kwargs):
-        self.exec_logger = kwargs.pop('exec_logger', None)
-        self.data_logger = kwargs.pop('exec_logger', None)
-        self.soh_logger = kwargs.pop('soh_logger', None)
-        if self.exec_logger is None:
-            self.exec_logger = logging.getLogger('exec_logger')
-            log_format = '%(asctime)-15s | exec | %(levelname)s: %(message)s'
-            exec_formatter = logging.Formatter(log_format)
-            exec_formatter.converter = gmtime
-            exec_formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
-            exec_handler = logging.StreamHandler(sys.stdout)
-            exec_handler.setFormatter(exec_formatter)
-            self.exec_logger.addHandler(exec_handler)
-            self.exec_logger.setLevel('debug')
-        if self.data_logger is None:
-            self.data_logger = logging.getLogger('data_logger')
-            log_format = '%(asctime)-15s | data | %(levelname)s: %(message)s'
-            data_formatter = logging.Formatter(log_format)
-            data_formatter.converter = gmtime
-            data_formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
-            data_handler = logging.StreamHandler(sys.stdout)
-            data_handler.setFormatter(data_formatter)
-            self.data_logger.addHandler(data_handler)
-            self.data_logger.setLevel('debug')
-        if self.soh_logger is None:
-            self.soh_logger = logging.getLogger('soh_logger')
-            log_format = '%(asctime)-15s | soh | %(levelname)s: %(message)s'
-            soh_formatter = logging.Formatter(log_format)
-            soh_formatter.converter = gmtime
-            soh_formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
-            soh_handler = logging.StreamHandler(sys.stdout)
-            soh_handler.setFormatter(soh_formatter)
-            self.soh_logger.addHandler(soh_handler)
-            self.soh_logger.setLevel('debug')
+        self.exec_logger = kwargs.pop('exec_logger', create_default_logger('exec'))
+        self.data_logger = kwargs.pop('exec_logger', create_default_logger('data'))
+        self.soh_logger = kwargs.pop('soh_logger', create_default_logger('soh'))
         self.controller = kwargs.pop('controller',
                                      controller_module.Controller({'exec_logger' : self.exec_logger,
                                                                    'data_logger': self.data_logger,

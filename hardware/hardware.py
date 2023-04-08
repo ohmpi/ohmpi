@@ -1,8 +1,6 @@
 from abc import ABC
 import os
-import sys
-from time import gmtime
-import logging
+from ..logging_setup import create_default_logger
 
 class ControllerAbstract(ABC):
     def __init__(self, **kwargs):
@@ -15,28 +13,8 @@ class TxAbstract(ABC):
     def __init__(self, **kwargs):
         polarity = kwargs.pop('polarity', 1)
         inj_time = kwargs.pop('inj_time', 1.)
-        self.exec_logger = kwargs.pop('exec_logger', None)
-        self.soh_logger = kwargs.pop('soh_logger', None)
-        if self.exec_logger is None:
-            self.exec_logger = logging.getLogger('exec_logger')
-            log_format = '%(asctime)-15s | exec | %(levelname)s: %(message)s'
-            exec_formatter = logging.Formatter(log_format)
-            exec_formatter.converter = gmtime
-            exec_formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
-            exec_handler = logging.StreamHandler(sys.stdout)
-            exec_handler.setFormatter(exec_formatter)
-            self.exec_logger.addHandler(exec_handler)
-            self.exec_logger.setLevel('debug')
-        if self.soh_logger is None:
-            self.soh_logger = logging.getLogger('soh_logger')
-            log_format = '%(asctime)-15s | soh | %(levelname)s: %(message)s'
-            soh_formatter = logging.Formatter(log_format)
-            soh_formatter.converter = gmtime
-            soh_formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
-            soh_handler = logging.StreamHandler(sys.stdout)
-            soh_handler.setFormatter(soh_formatter)
-            self.soh_logger.addHandler(soh_handler)
-            self.soh_logger.setLevel('debug')
+        self.exec_logger = kwargs.pop('exec_logger', create_default_logger('exec'))
+        self.soh_logger = kwargs.pop('soh_logger', create_default_logger('soh'))
         self._polarity = None
         self._inj_time = None
         self._dps_state = 'off'
@@ -115,8 +93,8 @@ class TxAbstract(ABC):
 
 class RxAbstract(ABC):
     def __init__(self, **kwargs):
-        self.exec_logger = kwargs.pop('exec_logger', None)
-        self.soh_logger = kwargs.pop('soh_logger', None)
+        self.exec_logger = kwargs.pop('exec_logger', create_default_logger('exec'))
+        self.soh_logger = kwargs.pop('soh_logger', create_default_logger('soh'))
         self.board_name = os.path.basename(__file__)
         self.exec_logger.debug(f'RX {self.board_name} initialization')
 

@@ -8,6 +8,17 @@ from compressed_sized_timed_rotating_handler import CompressedSizedTimedRotating
 import sys
 from termcolor import colored
 
+def create_default_logger(name):
+    logger = logging.getLogger(f'{name}_logger')
+    log_format = f'%(asctime)-15s | {name} | %(levelname)s: %(message)s'
+    formatter = logging.Formatter(log_format)
+    formatter.converter = gmtime
+    formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel('debug')
+    return logger
 
 def setup_loggers(mqtt=True):
     msg = ''
