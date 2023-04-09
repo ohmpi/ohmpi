@@ -1,11 +1,11 @@
 import importlib
 import numpy as np
-from OhmPi.logging_setup import create_default_logger
-from OhmPi.config import OHMPI_CONFIG
-controller_module = importlib.import_module(f'OhmPi.{OHMPI_CONFIG["hardware"]["controller"]["model"]}')
-tx_module = importlib.import_module(f'OhmPi.{OHMPI_CONFIG["hardware"]["tx"]["model"]}')
-rx_module = importlib.import_module(f'OhmPi.{OHMPI_CONFIG["hardware"]["rx"]["model"]}')
-mux_module = importlib.import_module(f'OhmPi.{OHMPI_CONFIG["hardware"]["mux"]["model"]}')
+from OhmPi.logging_setup import create_stdout_logger
+from OhmPi.config import HARDWARE_CONFIG
+controller_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["controller"]["model"]}')
+tx_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["tx"]["model"]}')
+rx_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["rx"]["model"]}')
+mux_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["mux"]["model"]}')
 TX_CONFIG = tx_module.TX_CONFIG
 RX_CONFIG = rx_module.RX_CONFIG
 MUX_CONFIG = mux_module.MUX_CONFIG
@@ -16,22 +16,28 @@ voltage_min = RX_CONFIG['voltage_min']
 
 class OhmPiHardware:
     def __init__(self, **kwargs):
-        self.exec_logger = kwargs.pop('exec_logger', create_default_logger('exec'))
-        self.data_logger = kwargs.pop('exec_logger', create_default_logger('data'))
-        self.soh_logger = kwargs.pop('soh_logger', create_default_logger('soh'))
+        self.exec_logger = kwargs.pop('exec_logger', None)
+        if self.exec_logger is None:
+            self.exec_logger = create_stdout_logger('exec')
+        self.data_logger = kwargs.pop('exec_logger', None)
+        if self.data_logger is None:
+            self.data_logger = create_stdout_logger('data')
+        self.soh_logger = kwargs.pop('soh_logger', None)
+        if self.soh_logger is None:
+            self.soh_logger = create_stdout_logger('soh')
         self.controller = kwargs.pop('controller',
-                                     controller_module.Controller({'exec_logger' : self.exec_logger,
-                                                                   'data_logger': self.data_logger,
-                                                                   'soh_logger': self.soh_logger}))
-        self.rx = kwargs.pop('tx', tx_module.Rx({'exec_logger' : self.exec_logger,
-                                                 'data_logger': self.data_logger,
-                                                 'soh_logger': self.soh_logger}))
-        self.tx = kwargs.pop('rx', tx_module.Tx({'exec_logger' : self.exec_logger,
-                                                 'data_logger': self.data_logger,
-                                                 'soh_logger': self.soh_logger}))
-        self.mux = kwargs.pop('mux', mux_module.Mux({'exec_logger' : self.exec_logger,
-                                                     'data_logger': self.data_logger,
-                                                     'soh_logger': self.soh_logger}))
+                                     controller_module.Controller(exec_logger=self.exec_logger,
+                                                                   data_logger=self.data_logger,
+                                                                   soh_logger= self.soh_logger))
+        self.rx = kwargs.pop('rx', rx_module.Rx(exec_logger=self.exec_logger,
+                                                 data_logger=self.data_logger,
+                                                 soh_logger=self.soh_logger))
+        self.tx = kwargs.pop('tx', tx_module.Tx(exec_logger=self.exec_logger,
+                                                 data_logger=self.data_logger,
+                                                 soh_logger=self.soh_logger))
+        self.mux = kwargs.pop('mux', mux_module.Mux(exec_logger=self.exec_logger,
+                                                    data_logger=self.data_logger,
+                                                    soh_logger=self.soh_logger))
     def _vab_pulse(self, vab, length, polarity=None):
         """ Gets VMN and IAB from a single voltage pulse
         """

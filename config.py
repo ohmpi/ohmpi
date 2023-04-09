@@ -26,7 +26,7 @@ OHMPI_CONFIG = {
     # 'mcp_board_address': 0x20
 }  # TODO: add a dictionary with INA models and associated gain values
 
-HARDWARE_CONFIG = {
+"""HARDWARE_CONFIG = {
     'controller': {'model' : 'raspberry_pi_3'
                    },
     'tx' : {'model' : 'mb_2024_rev_0_0',
@@ -44,8 +44,23 @@ HARDWARE_CONFIG = {
              'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
              'nb_samples': 20  # Max value 10 # was named integer before...
             }
-}
+}"""
 
+HARDWARE_CONFIG = {
+    'controller': {'model' : 'dummy_controller'
+                   },
+    'tx' : {'model' : 'dummy_tx',
+             'Imax': 4800 / 50 / 2,  # Maximum current
+             'R_shunt': 2  # Shunt resistance in Ohms
+            },
+    'rx' : {'model': 'dummy_rx',
+            },
+    'mux': {'model' : 'dummy_mux',
+             'max_elec': 64,
+             'voltage_max' : 100,
+             'current_max' : 3
+            }
+}
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {

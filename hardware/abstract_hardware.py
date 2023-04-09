@@ -1,20 +1,25 @@
 from abc import ABC, abstractmethod
-from OhmPi.logging_setup import create_default_logger
+from OhmPi.logging_setup import create_stdout_logger
 
 class ControllerAbstract(ABC):
     def __init__(self, **kwargs):
         self.bus = None
 
 class MuxAbstract(ABC):
-    pass
+    def __init__(self, **kwargs):
+        pass
 
 class TxAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown TX hardware')
         polarity = kwargs.pop('polarity', 1)
         inj_time = kwargs.pop('inj_time', 1.)
-        self.exec_logger = kwargs.pop('exec_logger', create_default_logger('exec_tx'))
-        self.soh_logger = kwargs.pop('soh_logger', create_default_logger('soh_tx'))
+        self.exec_logger = kwargs.pop('exec_logger', None)
+        if self.exec_logger is None:
+            self.exec_logger = create_stdout_logger('exec_tx')
+        self.soh_logger = kwargs.pop('soh_logger', None)
+        if self.soh_logger is None:
+            self.soh_logger = create_stdout_logger('soh_tx')
         self._polarity = None
         self._inj_time = None
         self._dps_state = 'off'
@@ -118,8 +123,10 @@ class TxAbstract(ABC):
 
 class RxAbstract(ABC):
     def __init__(self, **kwargs):
-        self.exec_logger = kwargs.pop('exec_logger', create_default_logger('exec'))
-        self.soh_logger = kwargs.pop('soh_logger', create_default_logger('soh'))
+        self.exec_logger = kwargs.pop('exec_logger', None)
+        if self.exec_logger is None:
+            self.exec_logger = create_stdout_logger('exec_tx')
+        self.soh_logger = kwargs.pop('soh_logger', None)
         self.board_name = kwargs.pop('board_name', 'unknown RX hardware')
         self.exec_logger.debug(f'{self.board_name} RX initialization')
         self._adc_gain = 1.

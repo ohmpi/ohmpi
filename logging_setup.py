@@ -8,7 +8,7 @@ from OhmPi.compressed_sized_timed_rotating_handler import CompressedSizedTimedRo
 import sys
 from termcolor import colored
 
-def create_default_logger(name):
+def create_stdout_logger(name):
     logger = logging.getLogger(f'{name}_logger')
     log_format = f'%(asctime)-15s | {name} | %(levelname)s: %(message)s'
     formatter = logging.Formatter(log_format)

@@ -77,7 +77,7 @@ class Tx(TxAbstract):
             self.exec_logger.warning(f'Voltage should be given as a positive number. '
                                      f'Set polarity to -1 to reverse voltage...')
             value = np.abs(value)
-
+        self._voltage=value
 
     @property
     def tx_bat(self):
