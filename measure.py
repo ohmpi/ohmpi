@@ -1,11 +1,11 @@
 import importlib
 import numpy as np
-from logging_setup import create_default_logger
-from config import OHMPI_CONFIG
-controller_module = importlib.import_module(f'{OHMPI_CONFIG["hardware"]["controller"]["model"]}')
-tx_module = importlib.import_module(f'{OHMPI_CONFIG["hardware"]["tx"]["model"]}')
-rx_module = importlib.import_module(f'{OHMPI_CONFIG["hardware"]["rx"]["model"]}')
-mux_module = importlib.import_module(f'{OHMPI_CONFIG["hardware"]["mux"]["model"]}')
+from OhmPi.logging_setup import create_default_logger
+from OhmPi.config import OHMPI_CONFIG
+controller_module = importlib.import_module(f'OhmPi.{OHMPI_CONFIG["hardware"]["controller"]["model"]}')
+tx_module = importlib.import_module(f'OhmPi.{OHMPI_CONFIG["hardware"]["tx"]["model"]}')
+rx_module = importlib.import_module(f'OhmPi.{OHMPI_CONFIG["hardware"]["rx"]["model"]}')
+mux_module = importlib.import_module(f'OhmPi.{OHMPI_CONFIG["hardware"]["mux"]["model"]}')
 TX_CONFIG = tx_module.TX_CONFIG
 RX_CONFIG = rx_module.RX_CONFIG
 MUX_CONFIG = mux_module.MUX_CONFIG

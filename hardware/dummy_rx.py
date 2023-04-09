@@ -1,0 +1,38 @@
+from OhmPi.config import HARDWARE_CONFIG
+import numpy as np
+import os
+from OhmPi.hardware import RxAbstract
+RX_CONFIG = HARDWARE_CONFIG['rx']
+
+# hardware limits
+voltage_min = 10.  # mV
+voltage_max = 4500.
+RX_CONFIG['voltage_min'] = voltage_min  # mV
+RX_CONFIG['voltage_max'] = voltage_max
+
+class Rx(RxAbstract):
+    def __init__(self, **kwargs):
+        kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
+        super().__init__(**kwargs)
+        self._adc_gain = 1.
+
+    @property
+    def adc_gain(self):
+        return self._adc_gain
+
+    @adc_gain.setter
+    def adc_gain(self, value):
+        self.exec_logger.debug(f'Setting RX ADC gain to {value}')
+
+    def adc_gain_auto(self):
+        gain = 1
+        self.exec_logger.debug(f'Setting TX ADC gain automatically to {gain}')
+        self.adc_gain = gain
+
+    @property
+    def voltage(self):
+        """ Gets the voltage VMN in Volts
+        """
+        u = np.random.uniform(-.200,.200) # gets the max between u0 & u2 and set the sign
+        self.exec_logger.debug(f'Reading random voltage on RX. Returning {u} V')
+        return u

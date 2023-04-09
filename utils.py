@@ -1,6 +1,5 @@
 import io
 
-
 def get_platform():
     """Gets platform name and checks if it is a raspberry pi
 

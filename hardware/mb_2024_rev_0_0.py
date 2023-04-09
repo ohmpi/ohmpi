@@ -1,5 +1,5 @@
 import importlib
-from ..config import OHMPI_CONFIG
+from OhmPi.config import OHMPI_CONFIG
 import adafruit_ads1x15.ads1115 as ads  # noqa
 from adafruit_ads1x15.analog_in import AnalogIn  # noqa
 from adafruit_mcp230xx.mcp23008 import MCP23008  # noqa
@@ -7,11 +7,12 @@ from digitalio import Direction  # noqa
 import minimalmodbus  # noqa
 import time
 import numpy as np
-from hardware import TxAbstract, RxAbstract
+import os
+from OhmPi.hardware import TxAbstract, RxAbstract
 controller_module = importlib.import_module(f'{OHMPI_CONFIG["hardware"]["controller"]["model"]}')
 
-TX_CONFIG = OHMPI_CONFIG['hardware']['TX']
-RX_CONFIG = OHMPI_CONFIG['hardware']['RX']
+TX_CONFIG = OHMPI_CONFIG['rx']
+RX_CONFIG = OHMPI_CONFIG['tx']
 
 # hardware limits
 voltage_min = 10.  # mV
@@ -51,6 +52,7 @@ def _gain_auto(channel):
 
 class Tx(TxAbstract):
     def __init__(self, **kwargs):
+        kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         self._voltage = kwargs.pop('voltage', TX_CONFIG['default_voltage'])
         self.controller = kwargs.pop('controller', controller_module.Controller())
@@ -60,9 +62,9 @@ class Tx(TxAbstract):
 
         # ADS1115 for current measurement (AB)
         self._adc_gain = 2/3
-        self.ads_current_address = 0x48
-        self.ads_current = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
-                                       address=self.ads_current_address)
+        self._ads_current_address = 0x48
+        self._ads_current = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
+                                        address=self._ads_current_address)
 
         # Relays for pulse polarity
         self.pin0 = self.mcp_board.get_pin(0)
@@ -85,7 +87,7 @@ class Tx(TxAbstract):
         self.DPS.debug = False  #
         self.DPS.serial.parity = 'N'  # No parity
         self.DPS.mode = minimalmodbus.MODE_RTU  # RTU mode
-        self.DPS.write_register(0x0001, 1000, 0)  # max current allowed (100 mA for relays)
+        self.DPS.write_register(0x0001, 1000, 0)  # max current allowed (100 mA for relays) :
         # (last number) 0 is for mA, 3 is for A
 
         # I2C connexion to MCP23008, for current injection
@@ -93,12 +95,7 @@ class Tx(TxAbstract):
         self.pin4.direction = Direction.OUTPUT
         self.pin4.value = True
 
-        tx_bat = self.DPS.read_register(0x05, 2)
-        if self.exec_logger is not None:
-            self.exec_logger.info(f'TX battery: {tx_bat:.1f} V')
-        if tx_bat < 12.:
-            if self.soh_logger is not None:
-                self.soh_logger.debug(f'Low TX Battery: {tx_bat:.1f} V')  # TODO: SOH logger
+        self.exec_logger.info(f'TX battery: {self.tx_bat:.1f} V')
         self.turn_off()
 
     @property
@@ -109,12 +106,12 @@ class Tx(TxAbstract):
     def adc_gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self.ads_current = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
-                                       address=self.ads_current_address)
+        self._ads_current = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
+                                        address=self._ads_current_address)
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
 
     def adc_gain_auto(self):
-        gain = _gain_auto(AnalogIn(self.ads_current, ads.P0))
+        gain = _gain_auto(AnalogIn(self._ads_current, ads.P0))
         self.exec_logger.debug(f'Setting TX ADC gain automatically to {gain}')
         self.adc_gain = gain
 
@@ -126,7 +123,7 @@ class Tx(TxAbstract):
     def current(self):
         """ Gets the current IAB in Amps
         """
-        return AnalogIn(self.ads_current, ads.P0).voltage * 1000. / (50 * TX_CONFIG['R_shunt'])  # noqa measure current
+        return AnalogIn(self._ads_current, ads.P0).voltage * 1000. / (50 * TX_CONFIG['R_shunt'])  # noqa measure current
 
     @ current.setter
     def current(self, value):
@@ -184,6 +181,13 @@ class Tx(TxAbstract):
         self.pin2.value = True
         self.pin3.value = True
 
+    @property
+    def tx_bat(self):
+        tx_bat = self.DPS.read_register(0x05, 2)
+        if tx_bat < 12.:
+            self.soh_logger.debug(f'Low TX Battery: {tx_bat:.1f} V')
+        return tx_bat
+
     def voltage_pulse(self, voltage=TX_CONFIG['default_voltage'], length=None, polarity=None):
         """ Generates a square voltage pulse
 
@@ -210,31 +214,30 @@ class Tx(TxAbstract):
 
 class Rx(RxAbstract):
     def __init__(self, **kwargs):
-        self.controller = kwargs.pop('controller', controller_module.Controller())
-        self._adc_gain = [2/3, 2/3]
+        kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
-        self.ads_voltage_address = 0x49
-        # ADS1115 for voltage measurement (MN)
-        self.ads_voltage = ads.ADS1115(self.controller.bus, gain=2/3, data_rate=860, address=self.ads_voltage_address)
+        self.controller = kwargs.pop('controller', controller_module.Controller())
 
+        # ADS1115 for voltage measurement (MN)
+        self._ads_voltage_address = 0x49
+        self._adc_gain = 2/3
+        self._ads_voltage = ads.ADS1115(self.controller.bus, gain=self._adc_gain, data_rate=860, address=self._ads_voltage_address)
 
     @property
     def adc_gain(self):
         return self._adc_gain
 
-
     @adc_gain.setter
     def adc_gain(self, value):
-        assert value in [2 / 3, 2, 4, 8, 16]
+        assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self.ads_voltage = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
-                                       address=self.ads_voltage_address)
+        self._ads_voltage = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
+                                        address=self._ads_voltage_address)
         self.exec_logger.debug(f'Setting RX ADC gain to {value}')
 
-
     def adc_gain_auto(self):
-        gain_0 = _gain_auto(AnalogIn(self.ads_voltage, ads.P0))
-        gain_2 = _gain_auto(AnalogIn(self.ads_voltage, ads.P2))
+        gain_0 = _gain_auto(AnalogIn(self._ads_voltage, ads.P0))
+        gain_2 = _gain_auto(AnalogIn(self._ads_voltage, ads.P2))
         gain = np.min([gain_0, gain_2])[0]
         self.exec_logger.debug(f'Setting TX ADC gain automatically to {gain}')
         self.adc_gain = gain
@@ -243,8 +246,8 @@ class Rx(RxAbstract):
     def voltage(self):
         """ Gets the voltage VMN in Volts
         """
-        u0 = AnalogIn(self.ads_voltage, ads.P0).voltage * 1000.
-        u2 = AnalogIn(self.ads_voltage, ads.P2).voltage * 1000.
+        u0 = AnalogIn(self._ads_voltage, ads.P0).voltage * 1000.
+        u2 = AnalogIn(self._ads_voltage, ads.P2).voltage * 1000.
         u = np.max([u0,u2]) * (np.heaviside(u0-u2, 1.) * 2 - 1.) # gets the max between u0 & u2 and set the sign
         self.exec_logger.debug(f'Reading voltages {u0} V and {u2} V on RX. Returning {u} V')
         return u

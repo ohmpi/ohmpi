@@ -1,5 +1,5 @@
 import logging
-from utils import get_platform
+from OhmPi.utils import get_platform
 
 from paho.mqtt.client import MQTTv31
 
@@ -27,27 +27,23 @@ OHMPI_CONFIG = {
 }  # TODO: add a dictionary with INA models and associated gain values
 
 HARDWARE_CONFIG = {
-    {'controller': {'model' : 'raspberry_pi_3'
-                    }
-     },
-    {'tx' : {'model' : 'mb_2024_rev_0_0',
+    'controller': {'model' : 'raspberry_pi_3'
+                   },
+    'tx' : {'model' : 'mb_2024_rev_0_0',
              'mcp_board_address': 0x20,
              'Imax': 4800 / 50 / 2,  # Maximum current
              'R_shunt': 2  # Shunt resistance in Ohms
-             }
-     },
-    {'rx' : {'model': 'mb_2024_rev_0_0',
+            },
+    'rx' : {'model': 'mb_2024_rev_0_0',
              'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
              'nb_samples': 20,  # Max value 10 # was named integer before...
-             }
-     },
-    {'mux': {'model' : 'mux_2021',
+            },
+    'mux': {'model' : 'mux_2021',
              'max_elec': 64,
              'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # CHECK IF YOUR BOARDS HAVE THESE ADDRESSES
              'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
              'nb_samples': 20  # Max value 10 # was named integer before...
-             }
-     }
+            }
 }
 
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS

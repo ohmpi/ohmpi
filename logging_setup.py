@@ -1,10 +1,10 @@
 import json
-from config import EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, MQTT_LOGGING_CONFIG, MQTT_CONTROL_CONFIG
+from OhmPi.config import EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, MQTT_LOGGING_CONFIG, MQTT_CONTROL_CONFIG
 from os import path, mkdir, statvfs
 from time import gmtime
 import logging
-from mqtt_handler import MQTTHandler
-from compressed_sized_timed_rotating_handler import CompressedSizedTimedRotatingFileHandler
+from OhmPi.mqtt_handler import MQTTHandler
+from OhmPi.compressed_sized_timed_rotating_handler import CompressedSizedTimedRotatingFileHandler
 import sys
 from termcolor import colored
 
@@ -17,7 +17,7 @@ def create_default_logger(name):
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    logger.setLevel('debug')
+    logger.setLevel(logging.DEBUG)
     return logger
 
 def setup_loggers(mqtt=True):

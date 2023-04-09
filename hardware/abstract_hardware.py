@@ -1,6 +1,5 @@
-from abc import ABC
-import os
-from ..logging_setup import create_default_logger
+from abc import ABC, abstractmethod
+from OhmPi.logging_setup import create_default_logger
 
 class ControllerAbstract(ABC):
     def __init__(self, **kwargs):
@@ -11,31 +10,49 @@ class MuxAbstract(ABC):
 
 class TxAbstract(ABC):
     def __init__(self, **kwargs):
+        self.board_name = kwargs.pop('board_name', 'unknown TX hardware')
         polarity = kwargs.pop('polarity', 1)
         inj_time = kwargs.pop('inj_time', 1.)
-        self.exec_logger = kwargs.pop('exec_logger', create_default_logger('exec'))
-        self.soh_logger = kwargs.pop('soh_logger', create_default_logger('soh'))
+        self.exec_logger = kwargs.pop('exec_logger', create_default_logger('exec_tx'))
+        self.soh_logger = kwargs.pop('soh_logger', create_default_logger('soh_tx'))
         self._polarity = None
         self._inj_time = None
         self._dps_state = 'off'
+        self._adc_gain = 1.
         self.polarity = polarity
         self.inj_time = inj_time
-        self.board_name = os.path.basename(__file__)
-        self.exec_logger.debug(f'TX {self.board_name} initialization')
+        self.exec_logger.debug(f'{self.board_name} TX initialization')
 
     @property
+    def adc_gain(self):
+        return self._adc_gain
+
+    @adc_gain.setter
+    def adc_gain(self, value):
+        self._adc_gain = value
+        self.exec_logger.debug(f'Setting TX ADC gain to {value}')
+
+    @abstractmethod
+    def adc_gain_auto(self):
+        pass
+
+    @property
+    @abstractmethod
     def current(self):
         # add actions to read the DPS current and return it
         return None
 
     @current.setter
+    @abstractmethod
     def current(self, value, **kwargs):
         # add actions to set the DPS current
         pass
 
+    @abstractmethod
     def current_pulse(self, **kwargs):
         pass
 
+    @abstractmethod
     def inject(self, state='on'):
         assert state in ['on', 'off']
 
@@ -67,15 +84,23 @@ class TxAbstract(ABC):
         self._dps_state = 'on'
 
     @property
+    @abstractmethod
     def voltage(self):
         # add actions to read the DPS voltage and return it
         return None
 
     @voltage.setter
+    @abstractmethod
     def voltage(self, value, **kwargs):
         # add actions to set the DPS voltage
         pass
 
+    @property
+    @abstractmethod
+    def tx_bat(self):
+        pass
+
+    @abstractmethod
     def voltage_pulse(self, voltage, length, polarity):
         """ Generates a square voltage pulse
 
@@ -95,6 +120,27 @@ class RxAbstract(ABC):
     def __init__(self, **kwargs):
         self.exec_logger = kwargs.pop('exec_logger', create_default_logger('exec'))
         self.soh_logger = kwargs.pop('soh_logger', create_default_logger('soh'))
-        self.board_name = os.path.basename(__file__)
-        self.exec_logger.debug(f'RX {self.board_name} initialization')
+        self.board_name = kwargs.pop('board_name', 'unknown RX hardware')
+        self.exec_logger.debug(f'{self.board_name} RX initialization')
+        self._adc_gain = 1.
 
+    @property
+    def adc_gain(self):
+        return self._adc_gain
+
+
+    @adc_gain.setter
+    def adc_gain(self, value):
+        self._adc_gain = value
+        self.exec_logger.debug(f'Setting RX ADC gain to {value}')
+
+    @abstractmethod
+    def adc_gain_auto(self):
+        pass
+
+    @property
+    @abstractmethod
+    def voltage(self):
+        """ Gets the voltage VMN in Volts
+        """
+        pass
