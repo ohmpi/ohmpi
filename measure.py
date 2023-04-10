@@ -95,7 +95,7 @@ class OhmPiHardware:
 
         vab_max = np.abs(vab_max)
         vmn_min = np.abs(vmn_min)
-        vab = np.min(np.abs(tx_volt), vab_max)
+        vab = np.min([np.abs(tx_volt), vab_max])
         self.tx.polarity = 1
         self.tx.turn_on()
         vmn, iab = self._vab_pulse(vab=vab, length=best_tx_injtime)
