@@ -139,7 +139,9 @@ class Tx(TxAbstract):
     def current(self):
         """ Gets the current IAB in Amps
         """
-        return AnalogIn(self._ads_current, ads.P0).voltage * 1000. / (50 * TX_CONFIG['r_shunt'])  # noqa measure current
+        iab = AnalogIn(self._ads_current, ads.P0).voltage * 1000. / (50 * TX_CONFIG['r_shunt'])  # measure current
+        self.exec_logger.debug(f'Reading TX current:  {iab} mA')
+        return iab
 
     @ current.setter
     def current(self, value):
