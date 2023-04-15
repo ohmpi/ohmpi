@@ -45,7 +45,7 @@ class OhmPiHardware:
                                                     soh_logger=self.soh_logger))
 
 
-    def _vab_pulse(self, vab, length, polarity=None):
+    def _vab_pulse(self, vab, length, sampling_rate=10., polarity=None):
         """ Gets VMN and IAB from a single voltage pulse
         """
         def inject(duration):
@@ -53,14 +53,18 @@ class OhmPiHardware:
             self.tx.voltage_pulse(length=duration)
             self.tx_sync.clear()
 
-        def read_values():
+        def read_values(sampling_rate):
             _readings = []
             self.tx_sync.wait()
             start_time = time.gmtime()
             while self.tx_sync.is_set():
+                cur_time=start_time
                 _readings.append([time.gmtime() - start_time, self.tx.current, self.rx.voltage])
+                time.sleep(cur_time+sampling_rate-time.gmtime())
             return np.array(_readings)
 
+        if sampling_rate is None:
+            sampling_rate = RX_CONFIG['sampling_rate']
         if polarity is not None and polarity != self.tx.polarity:
             self.tx.polarity = polarity
         self.tx.voltage = vab
