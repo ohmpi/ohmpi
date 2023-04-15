@@ -73,7 +73,7 @@ class OhmPiHardware:
         if polarity is not None and polarity != self.tx.polarity:
             self.tx.polarity = polarity
         self.tx.voltage = vab
-        data = np.ndarray()
+        data = None
         injection = Thread(target=inject, args=[self], kwargs={'duration':length})
         readings = Thread(target=read_values, args=[self, data], kwargs={'sampling_rate': sampling_rate})
         # set gains automatically
