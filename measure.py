@@ -60,7 +60,7 @@ class OhmPiHardware:
             while self.tx_sync.is_set():
                 cur_time=start_time
                 _readings.append([time.gmtime() - start_time, self.tx.current, self.rx.voltage])
-                time.sleep(cur_time+sampling_rate-time.gmtime())
+                time.sleep(cur_time+sampling_rate/1000.-time.gmtime())
             return np.array(_readings)
 
         if sampling_rate is None:
