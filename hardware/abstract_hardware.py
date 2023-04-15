@@ -29,7 +29,6 @@ class TxAbstract(ABC):
         self._inj_time = None
         self._dps_state = 'off'
         self._adc_gain = 1.
-        self.polarity = polarity
         self.inj_time = inj_time
         self.exec_logger.debug(f'{self.board_name} TX initialization')
 
