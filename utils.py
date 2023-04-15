@@ -21,14 +21,14 @@ def get_platform():
     return platform, on_pi
 
 def change_config(config_file, verbose=True):
-    cwd = os.getcwd()
+    pwd = os.path.dirname(os.path.abspath(__file__))
     try:
-        shutil.copyfile(f'{cwd}/OhmPi/config.py', f'{cwd}/OhmPi/config_tmp.py')
-        shutil.copyfile(f'{cwd}/OhmPi/{config_file}', f'{cwd}/OhmPi/config.py')
+        shutil.copyfile(f'{pwd}/config.py', f'{pwd}/config_tmp.py')
+        shutil.copyfile(f'{pwd}/{config_file}', f'{pwd}/config.py')
         if verbose:
-            print(f'Changed to {cwd}/OhmPi/{config_file}:\n')
-            with open(f'{cwd}/OhmPi/config.py', mode='r') as f:
+            print(f'Changed to {pwd}/{config_file}:\n')
+            with open(f'{pwd}/config.py', mode='r') as f:
                 print(f.read())
 
     except Exception as error:
-        print(f'Could not change config file to {cwd}/OhmPi/{config_file}:\n{error}')
+        print(f'Could not change config file to {pwd}/{config_file}:\n{error}')
