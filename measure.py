@@ -48,6 +48,7 @@ class OhmPiHardware:
         self.mux = kwargs.pop('mux', mux_module.Mux(exec_logger=self.exec_logger,
                                                     data_logger=self.data_logger,
                                                     soh_logger=self.soh_logger))
+        self.readings=np.array([])
 
     def _inject(self, duration):
             self.tx_sync.set()
@@ -86,9 +87,6 @@ class OhmPiHardware:
         injection.start()
         readings.join()
         injection.join()
-        iab = self.tx.current  # measure current
-        vmn = self.rx.voltage
-        return iab, vmn
 
     def _compute_tx_volt(self, best_tx_injtime=0.1, strategy='vmax', tx_volt=5,
                          vab_max=voltage_max, vmn_min=voltage_min):
@@ -136,7 +134,13 @@ class OhmPiHardware:
         vab = np.min([np.abs(tx_volt), vab_max])
         self.tx.polarity = 1
         self.tx.turn_on()
-        vmn, iab = self._vab_pulse(vab=vab, length=best_tx_injtime)
+        if self.rx.sampling_rate*1000 > best_tx_injtime:
+            sampling_rate = best_tx_injtime
+        else:
+            sampling_rate = self.tx.sampling_rate
+        self._vab_pulse(vab=vab, length=best_tx_injtime, sampling_rate=sampling_rate)
+        vmn = np.mean(self.readings[:,2])
+        iab = np.mean(self.readings[:,1])
         # if np.abs(vmn) is too small (smaller than voltage_min), strategy is not constant and vab < vab_max ,
         # then we could call _compute_tx_volt with a tx_volt increased to np.min([vab_max, tx_volt*2.]) for example
         if strategy == 'vmax':

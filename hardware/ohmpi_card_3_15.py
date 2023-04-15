@@ -214,6 +214,7 @@ class Rx(RxAbstract):
         self._ads_voltage_address = 0x49
         self._adc_gain = 2/3
         self._ads_voltage = ads.ADS1115(self.controller.bus, gain=self._adc_gain, data_rate=860, address=self._ads_voltage_address)
+        self._sampling_rate = kwargs.pop('sampling_rate', sampling_rate)
 
     @property
     def adc_gain(self):

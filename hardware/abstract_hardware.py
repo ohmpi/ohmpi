@@ -150,6 +150,7 @@ class RxAbstract(ABC):
             self.exec_logger = create_stdout_logger('exec_tx')
         self.soh_logger = kwargs.pop('soh_logger', None)
         self.board_name = kwargs.pop('board_name', 'unknown RX hardware')
+        self._sampling_rate = kwargs.pop('sampling_rate', 1)
         self.exec_logger.debug(f'{self.board_name} RX initialization')
         self._adc_gain = 1.
 
@@ -166,6 +167,16 @@ class RxAbstract(ABC):
     @abstractmethod
     def adc_gain_auto(self):
         pass
+
+    @property
+    def sampling_rate(self):
+        return self._sampling_rate
+
+    @sampling_rate.setter
+    def sampling_rate(self, value):
+        assert value > 0.
+        self._sampling_rate = value
+        self.exec_logger.debug(f'Sampling rate set to {value}')
 
     @property
     @abstractmethod
