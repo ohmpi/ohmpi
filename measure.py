@@ -27,13 +27,13 @@ class OhmPiHardware:
     def __init__(self, **kwargs):
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
-            self.exec_logger = create_stdout_logger('exec')
+            self.exec_logger = create_stdout_logger('exec_hw')
         self.data_logger = kwargs.pop('exec_logger', None)
         if self.data_logger is None:
-            self.data_logger = create_stdout_logger('data')
+            self.data_logger = create_stdout_logger('data_hw')
         self.soh_logger = kwargs.pop('soh_logger', None)
         if self.soh_logger is None:
-            self.soh_logger = create_stdout_logger('soh')
+            self.soh_logger = create_stdout_logger('soh_hw')
         self.tx_sync = Event()
         self.controller = kwargs.pop('controller',
                                      controller_module.Controller(exec_logger=self.exec_logger,
