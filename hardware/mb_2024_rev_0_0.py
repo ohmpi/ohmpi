@@ -18,7 +18,7 @@ RX_CONFIG = OHMPI_CONFIG['tx']
 # *** RX ***
 # ADC for voltage
 voltage_adc_voltage_min = 10.  # mV
-voltage_adc_voltage_max = 4500.
+voltage_adc_voltage_max = 4500.  # mV
 
 RX_CONFIG['voltage_min'] = np.min([voltage_adc_voltage_min, RX_CONFIG.pop('voltage_min', np.inf)])  # mV
 RX_CONFIG['voltage_max'] = np.min([voltage_adc_voltage_max, RX_CONFIG.pop('voltage_max', np.inf)])  # mV

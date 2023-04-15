@@ -1,5 +1,5 @@
 import importlib
-from OhmPi.config import OHMPI_CONFIG
+from OhmPi.config import HARDWARE_CONFIG
 import adafruit_ads1x15.ads1115 as ads  # noqa
 from adafruit_ads1x15.analog_in import AnalogIn  # noqa
 from adafruit_mcp230xx.mcp23008 import MCP23008  # noqa
@@ -9,16 +9,16 @@ import time
 import numpy as np
 import os
 from OhmPi.hardware import TxAbstract, RxAbstract
-controller_module = importlib.import_module(f'OhmPi.{OHMPI_CONFIG["hardware"]["controller"]["model"]}')
+controller_module = importlib.import_module(f'OhmPi.{HARDWARE_CONFIG["controller"]["model"]}')
 
-TX_CONFIG = OHMPI_CONFIG['rx']
-RX_CONFIG = OHMPI_CONFIG['tx']
+TX_CONFIG = HARDWARE_CONFIG['rx']
+RX_CONFIG = HARDWARE_CONFIG['tx']
 
 # hardware characteristics and limitations
 # *** RX ***
 # ADC for voltage
 voltage_adc_voltage_min = 10.  # mV
-voltage_adc_voltage_max = 4500.
+voltage_adc_voltage_max = 4500.  # mV
 
 RX_CONFIG['voltage_min'] = np.min([voltage_adc_voltage_min, RX_CONFIG.pop('voltage_min', np.inf)])  # mV
 RX_CONFIG['voltage_max'] = np.min([voltage_adc_voltage_max, RX_CONFIG.pop('voltage_max', np.inf)])  # mV
