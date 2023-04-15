@@ -73,7 +73,7 @@ class Tx(TxAbstract):
         self.mcp_board = MCP23008(self.controller.bus, address=TX_CONFIG['mcp_board_address'])
 
         # ADS1115 for current measurement (AB)
-        self._adc_gain = 2/3
+        self.adc_gain = 2/3
         self._ads_current_address = 0x48
         self._ads_current = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_current_address)
