@@ -59,9 +59,9 @@ class OhmPiHardware:
 
     def _read_values(self, sampling_rate):  # noqa
         _readings = []
+        sample = 0
         self.tx_sync.wait()
         start_time = datetime.datetime.utcnow()
-        sample=0
         while self.tx_sync.is_set():
             lap = datetime.datetime.utcnow()
             _readings.append([elapsed_seconds(start_time), self.tx.current, self.rx.voltage])
