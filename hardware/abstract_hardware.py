@@ -48,7 +48,7 @@ class TxAbstract(ABC):
     @property
     @abstractmethod
     def current(self):
-        # add actions to read the DPS current and return it
+        # add actions to read the TX current and return it
         return None
 
     @current.setter
