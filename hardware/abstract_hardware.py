@@ -16,6 +16,7 @@ class TxAbstract(ABC):
         polarity = kwargs.pop('polarity', 1)
         if polarity is None:
             polarity = 0
+        self._polarity = polarity
         print(f'polarity: {polarity}')  # TODO: delete me
         inj_time = kwargs.pop('inj_time', 1.)
         self.exec_logger = kwargs.pop('exec_logger', None)
