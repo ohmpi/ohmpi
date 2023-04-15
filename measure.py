@@ -54,16 +54,18 @@ class OhmPiHardware:
             self.tx_sync.clear()
 
         def read_values():
-            current = []
+            readings = []
             self.tx_sync.wait()
             start_time = time.gmtime()
             while self.tx_sync.is_set():
-                current.append([time.gmtime() - start_time, self.tx.current, self.rx.voltage])
+                readings.append([time.gmtime() - start_time, self.tx.current, self.rx.voltage])
+            return np.array(readings)
 
         if polarity is not None and polarity != self.tx.polarity:
             self.tx.polarity = polarity
         self.tx.voltage = vab
-        injection = Thread(target=self.tx.voltage_pulse, kwargs={'length':length})
+        injection = Thread(target=inject, kwargs={'length':length})
+        readings = Thread(target=read_values)
         # set gains automatically
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
