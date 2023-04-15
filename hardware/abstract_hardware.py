@@ -24,10 +24,10 @@ class TxAbstract(ABC):
         self.soh_logger = kwargs.pop('soh_logger', None)
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_tx')
-        self._polarity = None
+        #self._polarity = polarity
         self._inj_time = None
         self._dps_state = 'off'
-        self._adc_gain = 1.
+        self.adc_gain = 1.
         self.polarity = polarity
         self.inj_time = inj_time
         self.exec_logger.debug(f'{self.board_name} TX initialization')
@@ -131,7 +131,7 @@ class TxAbstract(ABC):
         self.exec_logger.debug(f'Voltage pulse of {polarity * voltage:.3f} V for {length:.3f} s')
         self.inject(state='on')
         time.sleep(length)
-        self.tx_sync.clear()
+        # self.tx_sync.clear()
         self.inject(state='off')
 
 
