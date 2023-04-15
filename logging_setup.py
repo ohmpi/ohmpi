@@ -10,7 +10,7 @@ from termcolor import colored
 
 def create_stdout_logger(name):
     logger = logging.getLogger(f'{name}_logger')
-    log_format = f'%(asctime)-15s | {name[:4]:4s} | %(levelname)s: %(message)s'
+    log_format = f'%(asctime)-15s | {name[:8]:8s} | %(levelname)s: %(message)s'
     formatter = logging.Formatter(log_format)
     formatter.converter = gmtime
     formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'

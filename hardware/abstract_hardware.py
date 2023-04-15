@@ -6,10 +6,18 @@ class ControllerAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown Controller hardware')
         self.bus = None
+        self.exec_logger = kwargs.pop('exec_logger', None)
+        if self.exec_logger is None:
+            self.exec_logger = create_stdout_logger('exec_ctl')
+        self.exec_logger.debug(f'{self.board_name} Controller initialization')
 
 class MuxAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown MUX hardware')
+        self.exec_logger = kwargs.pop('exec_logger', None)
+        if self.exec_logger is None:
+            self.exec_logger = create_stdout_logger('exec_mux')
+        self.exec_logger.debug(f'{self.board_name} MUX initialization')
 
 class TxAbstract(ABC):
     def __init__(self, **kwargs):
