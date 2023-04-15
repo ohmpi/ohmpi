@@ -147,7 +147,7 @@ class Tx(TxAbstract):
         self.exec_logger.warning(f'Current pulse is not implemented for the {TX_CONFIG["model"]} board')
 
     def inject(self, state='on'):
-        super().inject(state=state)
+        TxAbstract.inject(self, state=state)
         if state=='on':
             self.DPS.write_register(0x09, 1)  # DPS5005 on
         else:
@@ -159,7 +159,7 @@ class Tx(TxAbstract):
 
     @polarity.setter
     def polarity(self, value):
-        super().polarity = value
+        TxAbstract.polarity.fset(self, value)
         if value==1:
             self.pin0.value = True
             self.pin1.value = False
