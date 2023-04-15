@@ -159,7 +159,7 @@ class Tx(TxAbstract):
 
     @polarity.setter
     def polarity(self, value):
-        super().polarity(value)
+        super().polarity = value
         if value==1:
             self.pin0.value = True
             self.pin1.value = False
