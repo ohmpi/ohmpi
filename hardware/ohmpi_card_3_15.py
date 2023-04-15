@@ -234,5 +234,5 @@ class Rx(RxAbstract):
         u0 = AnalogIn(self._ads_voltage, ads.P0).voltage * 1000.
         u2 = AnalogIn(self._ads_voltage, ads.P2).voltage * 1000.
         u = np.max([u0,u2]) * (np.heaviside(u0-u2, 1.) * 2 - 1.) # gets the max between u0 & u2 and set the sign
-        self.exec_logger.debug(f'Reading voltages {u0} V and {u2} V on RX. Returning {u} V')
+        self.exec_logger.debug(f'Reading voltages {u0} mV and {u2} mV on RX. Returning {u} mV')
         return u
