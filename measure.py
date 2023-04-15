@@ -73,9 +73,14 @@ class OhmPiHardware:
         # set gains automatically
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
-        iab = self.tx.current  # measure current
-        vmn = self.rx.voltage
-        return vmn, iab
+        # iab = self.tx.current  # measure current
+        # vmn = self.rx.voltage
+        data = readings.start()
+        injection.start()
+        readings.join()
+        injection.join()
+        print(data)
+        return data
 
     def _compute_tx_volt(self, best_tx_injtime=0.1, strategy='vmax', tx_volt=5,
                          vab_max=voltage_max, vmn_min=voltage_min):
