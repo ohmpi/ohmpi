@@ -21,7 +21,7 @@ voltage_min = RX_CONFIG['voltage_min']
 
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
-    return lap.seconds + 0.001 * (lap.microseconds//1000)
+    return lap.total_seconds()
 
 class OhmPiHardware:
     def __init__(self, **kwargs):
@@ -59,12 +59,14 @@ class OhmPiHardware:
         _readings = []
         self.tx_sync.wait()
         start_time = datetime.datetime.utcnow()
+        sample=0
         while self.tx_sync.is_set():
             lap = datetime.datetime.utcnow()
             _readings.append([elapsed_seconds(start_time), self.tx.current, self.rx.voltage])
-            sleep_time = sampling_rate / 1000. - elapsed_seconds(lap)
-            print(f'sleep_time: {sleep_time}')
-            time.sleep(np.min([sleep_time, np.abs(sleep_time)]))
+            sample+=1
+            sleep_time = start_time + datetime.timedelta(seconds = sample * sampling_rate / 1000) - lap
+            print(f'sleep_time: {sleep_time.total_seconds()} seconds')
+            time.sleep(sleep_time.total_seconds())
         self.readings = np.array(_readings)
 
     def _vab_pulse(self, vab, length, sampling_rate=None, polarity=None):
