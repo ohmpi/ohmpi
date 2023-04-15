@@ -4,11 +4,12 @@ import time
 
 class ControllerAbstract(ABC):
     def __init__(self, **kwargs):
+        self.board_name = kwargs.pop('board_name', 'unknown Controller hardware')
         self.bus = None
 
 class MuxAbstract(ABC):
     def __init__(self, **kwargs):
-        pass
+        self.board_name = kwargs.pop('board_name', 'unknown MUX hardware')
 
 class TxAbstract(ABC):
     def __init__(self, **kwargs):
