@@ -73,8 +73,8 @@ class OhmPiHardware:
         if polarity is not None and polarity != self.tx.polarity:
             self.tx.polarity = polarity
         self.tx.voltage = vab
-        injection = Thread(target=inject, args=self, kwargs={'duration':length})
-        readings = Thread(target=read_values, args=self, kwargs={'sampling_rate': sampling_rate})
+        injection = Thread(target=inject, args=[self], kwargs={'duration':length})
+        readings = Thread(target=read_values, args=[self], kwargs={'sampling_rate': sampling_rate})
         # set gains automatically
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
