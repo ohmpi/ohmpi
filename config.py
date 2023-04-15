@@ -29,7 +29,7 @@ HARDWARE_CONFIG = {
              'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
              'nb_samples': 20,  # Max value 10 # was named integer before...
             },
-    'mux': {'model' : 'ohmpi_i2c_mux64_v1.01',
+    'mux': {'model' : 'dummy_mux', # 'ohmpi_i2c_mux64_v1.01',
              'max_elec': 64,
              'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # CHECK IF YOUR BOARDS HAVE THESE ADDRESSES
              'voltage_max': 100,
