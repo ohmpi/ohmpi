@@ -224,7 +224,7 @@ class Tx(TxAbstract):
         if polarity is None:
             polarity = self.polarity
         self.polarity = polarity
-        self.voltage(voltage)
+        self.voltage = voltage
         self.exec_logger.debug(f'Voltage pulse of {polarity*voltage:.3f} V for {length:.3f} s')
         self.inject(state='on')
         time.sleep(length)
