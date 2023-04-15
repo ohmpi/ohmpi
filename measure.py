@@ -1,4 +1,5 @@
 import importlib
+import datetime
 import time
 
 import numpy as np
@@ -17,6 +18,10 @@ MUX_CONFIG = mux_module.MUX_CONFIG
 current_max = np.min([TX_CONFIG['current_max'], MUX_CONFIG['current_max']])
 voltage_max = np.min([TX_CONFIG['voltage_max'], MUX_CONFIG['voltage_max']])
 voltage_min = RX_CONFIG['voltage_min']
+
+def elapsed_seconds(start_time):
+    lap = datetime.datetime.utcnow() - start_time
+    return lap.seconds + 0.001 * (lap.microseconds//1000)
 
 class OhmPiHardware:
     def __init__(self, **kwargs):
@@ -53,14 +58,14 @@ class OhmPiHardware:
             self.tx.voltage_pulse(length=duration)
             self.tx_sync.clear()
 
-        def read_values(sampling_rate):
+        def read_values(sampling_rate): # noqa
             _readings = []
             self.tx_sync.wait()
-            start_time = time.gmtime()
+            start_time = datetime.datetime.utcnow()
             while self.tx_sync.is_set():
-                cur_time=start_time
-                _readings.append([time.gmtime() - start_time, self.tx.current, self.rx.voltage])
-                time.sleep(cur_time+sampling_rate/1000.-time.gmtime())
+                lap = datetime.datetime.utcnow()
+                _readings.append([elapsed_seconds(start_time), self.tx.current, self.rx.voltage])
+                time.sleep(sampling_rate/1000.-elapsed_seconds(lap))
             return np.array(_readings)
 
         if sampling_rate is None:
@@ -73,14 +78,14 @@ class OhmPiHardware:
         # set gains automatically
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
-        # iab = self.tx.current  # measure current
-        # vmn = self.rx.voltage
         data = readings.start()
         injection.start()
         readings.join()
         injection.join()
         print(data)
-        return data
+        iab = self.tx.current  # measure current
+        vmn = self.rx.voltage
+        return iab, vmn
 
     def _compute_tx_volt(self, best_tx_injtime=0.1, strategy='vmax', tx_volt=5,
                          vab_max=voltage_max, vmn_min=voltage_min):
