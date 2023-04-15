@@ -27,6 +27,7 @@ RX_CONFIG['voltage_max'] = np.min([voltage_adc_voltage_max, RX_CONFIG.pop('volta
 # ADC for current
 current_adc_voltage_min = 10.  # mV
 current_adc_voltage_max = 4500. # mV
+tx_mcp_board_address = 0x20  #
 dps_voltage_max = 12.  # V
 dps_default_voltage = 12.  # V
 dps_switch_on_warmup = 0.  # seconds
@@ -36,6 +37,7 @@ TX_CONFIG['current_max'] = np.min([current_adc_voltage_max / (TX_CONFIG['r_shunt
 TX_CONFIG['voltage_max'] = np.min([dps_voltage_max, TX_CONFIG.pop('voltage_max', np.inf)])  # V
 TX_CONFIG['default_voltage'] = np.min([TX_CONFIG.pop('default_voltage', dps_default_voltage), TX_CONFIG['voltage_max']])  # V
 TX_CONFIG['dps_switch_on_warm_up'] = TX_CONFIG.pop('dps_switch_on_warmup', dps_switch_on_warmup)
+TX_CONFIG['mcp_board_address'] = TX_CONFIG.pop('mcp_board_address', tx_mcp_board_address)
 
 def _gain_auto(channel):
     """Automatically sets the gain on a channel
