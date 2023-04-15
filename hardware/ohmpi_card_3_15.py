@@ -225,7 +225,7 @@ class Rx(RxAbstract):
     def adc_gain_auto(self):
         gain_0 = _gain_auto(AnalogIn(self._ads_voltage, ads.P0))
         gain_2 = _gain_auto(AnalogIn(self._ads_voltage, ads.P2))
-        gain = np.min([gain_0, gain_2])[0]
+        gain = np.min([gain_0, gain_2])
         self.exec_logger.debug(f'Setting TX ADC gain automatically to {gain}')
         self.adc_gain = gain
 
