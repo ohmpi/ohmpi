@@ -50,34 +50,35 @@ class OhmPiHardware:
                                                     soh_logger=self.soh_logger))
 
 
-    def _vab_pulse(self, vab, length, sampling_rate=None, polarity=None):
-        """ Gets VMN and IAB from a single voltage pulse
-        """
-        def inject(self, duration):
+    def _inject(self, duration):
             self.tx_sync.set()
             self.tx.voltage_pulse(length=duration)
             self.tx_sync.clear()
 
-        def read_values(self, data, sampling_rate): # noqa
-            _readings = []
-            self.tx_sync.wait()
-            start_time = datetime.datetime.utcnow()
-            while self.tx_sync.is_set():
-                lap = datetime.datetime.utcnow()
-                _readings.append([elapsed_seconds(start_time), self.tx.current, self.rx.voltage])
-                sleep_time = sampling_rate/1000.-elapsed_seconds(lap)
-                print(f'sleep_time: {sleep_time}')
-                time.sleep(np.min([sleep_time, np.abs(sleep_time)]))
-            data = np.array(_readings)
+    def _read_values(self, sampling_rate):  # noqa
+        _readings = []
+        self.tx_sync.wait()
+        start_time = datetime.datetime.utcnow()
+        while self.tx_sync.is_set():
+            lap = datetime.datetime.utcnow()
+            _readings.append([elapsed_seconds(start_time), self.tx.current, self.rx.voltage])
+            sleep_time = sampling_rate / 1000. - elapsed_seconds(lap)
+            print(f'sleep_time: {sleep_time}')
+            time.sleep(np.min([sleep_time, np.abs(sleep_time)]))
+        self.readings = np.array(_readings)
+
+    def _vab_pulse(self, vab, length, sampling_rate=None, polarity=None):
+        """ Gets VMN and IAB from a single voltage pulse
+        """
+
 
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
         if polarity is not None and polarity != self.tx.polarity:
             self.tx.polarity = polarity
         self.tx.voltage = vab
-        data = None
-        injection = Thread(target=inject, args=[self], kwargs={'duration':length})
-        readings = Thread(target=read_values, args=[self, data], kwargs={'sampling_rate': sampling_rate})
+        injection = Thread(target=self._inject, kwargs={'duration':length})
+        readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate})
         # set gains automatically
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
@@ -85,7 +86,6 @@ class OhmPiHardware:
         injection.start()
         readings.join()
         injection.join()
-        print(data)
         iab = self.tx.current  # measure current
         vmn = self.rx.voltage
         return iab, vmn
