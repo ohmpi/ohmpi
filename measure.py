@@ -48,6 +48,7 @@ class OhmPiHardware:
         self.mux = kwargs.pop('mux', mux_module.Mux(exec_logger=self.exec_logger,
                                                     data_logger=self.data_logger,
                                                     soh_logger=self.soh_logger))
+        self.exec_logger.debug(f'TX: {self.tx.board_name}, RX: {self.rx.board_name}, MUX: {self.mux.board_name}, Controller: {self.controller}')
 
 
     def _inject(self, duration):
