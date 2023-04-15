@@ -48,18 +48,18 @@ class OhmPiHardware:
     def _vab_pulse(self, vab, length, polarity=None):
         """ Gets VMN and IAB from a single voltage pulse
         """
-        def inject(length):
+        def inject(duration):
             self.tx_sync.set()
-            self.tx.voltage_pulse(length=length)
+            self.tx.voltage_pulse(length=duration)
             self.tx_sync.clear()
 
         def read_values():
-            readings = []
+            _readings = []
             self.tx_sync.wait()
             start_time = time.gmtime()
             while self.tx_sync.is_set():
-                readings.append([time.gmtime() - start_time, self.tx.current, self.rx.voltage])
-            return np.array(readings)
+                _readings.append([time.gmtime() - start_time, self.tx.current, self.rx.voltage])
+            return np.array(_readings)
 
         if polarity is not None and polarity != self.tx.polarity:
             self.tx.polarity = polarity

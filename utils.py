@@ -1,5 +1,6 @@
 import io
-
+import os
+import shutil
 def get_platform():
     """Gets platform name and checks if it is a raspberry pi
 
@@ -18,3 +19,11 @@ def get_platform():
     except FileNotFoundError:
         pass
     return platform, on_pi
+
+def change_config(config_file):
+    cwd = os.getcwd()
+    try:
+        shutil.copyfile(f'{cwd}/OhmPi/config.py', f'{cwd}/OhmPi/config_tmp.py')
+        shutil.copyfile(f'{cwd}/OhmPi/{config_file}', f'{cwd}/OhmPi/config.py')
+    except Exception as error:
+        print(f'Could not change config file to {cwd}/OhmPi/{config_file}:\n{error}')
