@@ -19,7 +19,6 @@ RX_CONFIG = HARDWARE_CONFIG['rx']
 # ADC for voltage
 voltage_adc_voltage_min = 10.  # mV
 voltage_adc_voltage_max = 4500.  # mV
-
 RX_CONFIG['voltage_min'] = np.min([voltage_adc_voltage_min, RX_CONFIG.pop('voltage_min', np.inf)])  # mV
 RX_CONFIG['voltage_max'] = np.min([voltage_adc_voltage_max, RX_CONFIG.pop('voltage_max', np.inf)])  # mV
 
@@ -75,7 +74,6 @@ class Tx(TxAbstract):
         self.mcp_board = MCP23008(self.controller.bus, address=TX_CONFIG['mcp_board_address'])
 
         # ADS1115 for current measurement (AB)
-        self.adc_gain = 2/3
         self._ads_current_address = 0x48
         self._ads_current = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_current_address)
@@ -86,6 +84,8 @@ class Tx(TxAbstract):
         self.pin1 = self.mcp_board.get_pin(1)
         self.pin1.direction = Direction.OUTPUT
         self.polarity = 0
+
+        self.adc_gain = 2 / 3
 
         # DPH 5005 Digital Power Supply
         self.turn_on()
