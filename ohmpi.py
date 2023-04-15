@@ -10,7 +10,7 @@ Olivier KAUFMANN (UMONS), Arnaud WATLET (UMONS) and Guillaume BLANCHY (FNRS/ULie
 """
 
 import os
-from utils import get_platform
+from OhmPi.utils import get_platform
 import json
 import warnings
 from copy import deepcopy
@@ -21,8 +21,8 @@ import shutil
 from datetime import datetime
 from termcolor import colored
 import threading
-from logging_setup import setup_loggers
-from config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
+from OhmPi.logging_setup import setup_loggers
+from OhmPi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 from logging import DEBUG
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)

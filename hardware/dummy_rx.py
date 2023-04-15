@@ -4,11 +4,13 @@ import os
 from OhmPi.hardware import RxAbstract
 RX_CONFIG = HARDWARE_CONFIG['rx']
 
-# hardware limits
-voltage_min = 10.  # mV
-voltage_max = 4500.
-RX_CONFIG['voltage_min'] = voltage_min  # mV
-RX_CONFIG['voltage_max'] = voltage_max
+# hardware characteristics and limitations
+# ADC for voltage
+voltage_adc_voltage_min = 10.  # mV
+voltage_adc_voltage_max = 4500.
+
+RX_CONFIG['voltage_min'] = np.min([voltage_adc_voltage_min, RX_CONFIG.pop('voltage_min', np.inf)])  # mV
+RX_CONFIG['voltage_max'] = np.min([voltage_adc_voltage_max, RX_CONFIG.pop('voltage_max', np.inf)])  # mV
 
 class Rx(RxAbstract):
     def __init__(self, **kwargs):
@@ -25,8 +27,8 @@ class Rx(RxAbstract):
         self.exec_logger.debug(f'Setting RX ADC gain to {value}')
 
     def adc_gain_auto(self):
-        gain = 1
-        self.exec_logger.debug(f'Setting TX ADC gain automatically to {gain}')
+        gain = 1.
+        self.exec_logger.debug(f'Setting RX ADC gain automatically to {gain}')
         self.adc_gain = gain
 
     @property

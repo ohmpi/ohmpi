@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from OhmPi.logging_setup import create_stdout_logger
+import time
 
 class ControllerAbstract(ABC):
     def __init__(self, **kwargs):
@@ -13,6 +14,8 @@ class TxAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown TX hardware')
         polarity = kwargs.pop('polarity', 1)
+        if polarity is None:
+            polarity = 0
         inj_time = kwargs.pop('inj_time', 1.)
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
@@ -24,6 +27,7 @@ class TxAbstract(ABC):
         self._inj_time = None
         self._dps_state = 'off'
         self._adc_gain = 1.
+        print(f'polarity : {polarity}')
         self.polarity = polarity
         self.inj_time = inj_time
         self.exec_logger.debug(f'{self.board_name} TX initialization')
@@ -105,8 +109,8 @@ class TxAbstract(ABC):
     def tx_bat(self):
         pass
 
-    @abstractmethod
-    def voltage_pulse(self, voltage, length, polarity):
+
+    def voltage_pulse(self, voltage=0., length=None, polarity=None):
         """ Generates a square voltage pulse
 
         Parameters
@@ -118,7 +122,17 @@ class TxAbstract(ABC):
         polarity: 1,0,-1
             Polarity of the pulse
         """
-        pass
+        if length is None:
+            length = self.inj_time
+        if polarity is None:
+            polarity = self.polarity
+        self.polarity = polarity
+        self.voltage = voltage
+        self.exec_logger.debug(f'Voltage pulse of {polarity * voltage:.3f} V for {length:.3f} s')
+        self.inject(state='on')
+        time.sleep(length)
+        self.tx_sync.clear()
+        self.inject(state='off')
 
 
 class RxAbstract(ABC):

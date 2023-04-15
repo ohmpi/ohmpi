@@ -1,7 +1,11 @@
 import importlib
+import time
+
 import numpy as np
 from OhmPi.logging_setup import create_stdout_logger
 from OhmPi.config import HARDWARE_CONFIG
+from threading import Thread, Event
+
 controller_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["controller"]["model"]}')
 tx_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["tx"]["model"]}')
 rx_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["rx"]["model"]}')
@@ -25,6 +29,7 @@ class OhmPiHardware:
         self.soh_logger = kwargs.pop('soh_logger', None)
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh')
+        self.tx_sync = Event()
         self.controller = kwargs.pop('controller',
                                      controller_module.Controller(exec_logger=self.exec_logger,
                                                                    data_logger=self.data_logger,
@@ -38,13 +43,27 @@ class OhmPiHardware:
         self.mux = kwargs.pop('mux', mux_module.Mux(exec_logger=self.exec_logger,
                                                     data_logger=self.data_logger,
                                                     soh_logger=self.soh_logger))
+
+
     def _vab_pulse(self, vab, length, polarity=None):
         """ Gets VMN and IAB from a single voltage pulse
         """
+        def inject(length):
+            self.tx_sync.set()
+            self.tx.voltage_pulse(length=length)
+            self.tx_sync.clear()
+
+        def read_values():
+            current = []
+            self.tx_sync.wait()
+            start_time = time.gmtime()
+            while self.tx_sync.is_set():
+                current.append([time.gmtime() - start_time, self.tx.current, self.rx.voltage])
+
         if polarity is not None and polarity != self.tx.polarity:
             self.tx.polarity = polarity
         self.tx.voltage = vab
-        self.tx.voltage_pulse(length=length)
+        injection = Thread(target=self.tx.voltage_pulse, kwargs={'length':length})
         # set gains automatically
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
@@ -99,13 +118,15 @@ class OhmPiHardware:
         self.tx.polarity = 1
         self.tx.turn_on()
         vmn, iab = self._vab_pulse(vab=vab, length=best_tx_injtime)
+        # if np.abs(vmn) is too small (smaller than voltage_min), strategy is not constant and vab < vab_max ,
+        # then we could call _compute_tx_volt with a tx_volt increased to np.min([vab_max, tx_volt*2.]) for example
         if strategy == 'vmax':
             # implement different strategies
             if vab < vab_max and iab < current_max :
                 vab = vab * np.min([0.9 * vab_max / vab, 0.9 * current_max / iab])  # TODO: check if setting at 90% of max as a safety margin is OK
             self.tx.exec_logger.debug(f'vmax strategy: setting VAB to {vab} V.')
         elif strategy == 'vmin':
-            if vab < vab_max and iab < current_max:
+            if vab <= vab_max and iab < current_max:
                 vab = vab * np.min([0.9 * vab_max / vab, vmn_min / np.abs(vmn), 0.9 * current_max / iab])  # TODO: check if setting at 90% of max as a safety margin is OK
         elif strategy != 'constant':
             self.tx.exec_logger.warning(f'Unknown strategy {strategy} for setting VAB! Using {vab} V')

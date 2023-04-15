@@ -29,17 +29,15 @@ current_adc_voltage_min = 10.  # mV
 current_adc_voltage_max = 4500. # mV
 
 # DPS
-dps_voltage_max = 50.  # V
-dps_default_voltage = 5.  # V
-dps_switch_on_warmup = 4.  # seconds
-tx_low_battery = 12. # V
+dps_voltage_max = 12.  # V
+dps_default_voltage = 12.  # V
+dps_switch_on_warmup = 0.  # seconds
 
 TX_CONFIG['current_min'] = np.min([current_adc_voltage_min / (TX_CONFIG['r_shunt'] * 50), TX_CONFIG.pop('current_min', np.inf)])  # mA
 TX_CONFIG['current_max'] = np.min([current_adc_voltage_max / (TX_CONFIG['r_shunt'] * 50), TX_CONFIG.pop(['current_max'], np.inf)])  # mA
 TX_CONFIG['voltage_max'] = np.min([dps_voltage_max, TX_CONFIG.pop('voltage_max', np.inf)])  # V
 TX_CONFIG['default_voltage'] = np.min([TX_CONFIG.pop('default_voltage', dps_default_voltage), TX_CONFIG['voltage_max']])  # V
 TX_CONFIG['dps_switch_on_warm_up'] = TX_CONFIG.pop('dps_switch_on_warmup', dps_switch_on_warmup)
-TX_CONFIG['low_battery'] = TX_CONFIG.pop('low_battery', tx_low_battery)
 
 def _gain_auto(channel):
     """Automatically sets the gain on a channel
@@ -90,21 +88,9 @@ class Tx(TxAbstract):
         self.polarity = 0
 
         # DPH 5005 Digital Power Supply
-        self.pin2 = self.mcp_board.get_pin(2)  # dps +
-        self.pin2.direction = Direction.OUTPUT
-        self.pin3 = self.mcp_board.get_pin(3)  # dps -
-        self.pin3.direction = Direction.OUTPUT
         self.turn_on()
         time.sleep(TX_CONFIG['dps_switch_on_warm_up'])
-        self.DPS = minimalmodbus.Instrument(port='/dev/ttyUSB0', slaveaddress=1)  # port name, address (decimal)
-        self.DPS.serial.baudrate = 9600  # Baud rate 9600 as listed in doc
-        self.DPS.serial.bytesize = 8  #
-        self.DPS.serial.timeout = 1.  # greater than 0.5 for it to work
-        self.DPS.debug = False  #
-        self.DPS.serial.parity = 'N'  # No parity
-        self.DPS.mode = minimalmodbus.MODE_RTU  # RTU mode
-        self.DPS.write_register(0x0001, 1000, 0)  # max current allowed (100 mA for relays) :
-        # (last number) 0 is for mA, 3 is for A
+        self.DPS = None
 
         # I2C connexion to MCP23008, for current injection
         self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
@@ -176,33 +162,19 @@ class Tx(TxAbstract):
         return self._voltage
     @voltage.setter
     def voltage(self, value):
-        if value > TX_CONFIG['voltage_max']:
-            self.exec_logger.warning(f'Sorry, cannot inject more than {TX_CONFIG["voltage_max"]} V, '
-                                     f'set it back to {TX_CONFIG["default_voltage"]} V (default value).')
-            value = TX_CONFIG['default_voltage']
-        if value < 0.:
-            self.exec_logger.warning(f'Voltage should be given as a positive number. '
-                                     f'Set polarity to -1 to reverse voltage...')
-            value = np.abs(value)
-
-        self.DPS.write_register(0x0000, value, 2)
+            self.exec_logger.warning(f'Voltage cannot be set on {self.board_name}...')
 
     def turn_off(self):
-        super().turn_off()
-        self.pin2.value = False
-        self.pin3.value = False
+        pass
 
     def turn_on(self):
-        super().turn_on()
-        self.pin2.value = True
-        self.pin3.value = True
+        pass
 
     @property
     def tx_bat(self):
-        tx_bat = self.DPS.read_register(0x05, 2)
-        if tx_bat < TX_CONFIG['low_battery']:
-            self.soh_logger.warning(f'Low TX Battery: {tx_bat:.1f} V')
-        return tx_bat
+        self.soh_logger.warning(f'Cannot get battery voltage on {self.board_name}')
+        self.exec_logger.debug(f'{self.board_name} cannot read battery voltage. Returning default battery voltage.')
+        return TX_CONFIG['low_battery']
 
     def voltage_pulse(self, voltage=TX_CONFIG['default_voltage'], length=None, polarity=None):
         """ Generates a square voltage pulse

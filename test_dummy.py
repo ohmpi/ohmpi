@@ -11,4 +11,3 @@ print('\nCreating TX...')
 tx = Tx(exec_logger= exec_logger, soh_logger= soh_logger)
 print('\nCreating RX...')
 rx = Rx(exec_logger= exec_logger, soh_logger= soh_logger)
-

@@ -50,8 +50,9 @@ HARDWARE_CONFIG = {
     'controller': {'model' : 'dummy_controller'
                    },
     'tx' : {'model' : 'dummy_tx',
-             'Imax': 4800 / 50 / 2,  # Maximum current
-             'R_shunt': 2  # Shunt resistance in Ohms
+             'current_max': 4800 / 50 / 2,  # Maximum current mA
+             'r_shunt': 2,  # Shunt resistance in Ohms
+             'low_battery': 12.  # Volts
             },
     'rx' : {'model': 'dummy_rx',
             },

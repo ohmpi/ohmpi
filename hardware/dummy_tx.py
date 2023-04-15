@@ -6,15 +6,22 @@ from OhmPi.hardware import TxAbstract
 
 TX_CONFIG = HARDWARE_CONFIG['tx']
 
-# hardware limits
-voltage_min = 10.  # mV
-voltage_max = 4500.
+# ADC for current
+current_adc_voltage_min = 10.  # mV
+current_adc_voltage_max = 4500. # mV
 
-TX_CONFIG['current_min'] = voltage_min / (TX_CONFIG['R_shunt'] * 50)  # mA
-TX_CONFIG['current_max'] = voltage_max / (TX_CONFIG['R_shunt'] * 50)
-TX_CONFIG['default_voltage'] = 5.  # V
-TX_CONFIG['voltage_max'] = 50.  # V
-TX_CONFIG['dps_switch_on_warm_up'] = 4. # 4 seconds
+# DPS
+dps_voltage_max = 50.  # V
+dps_default_voltage = 5.  # V
+dps_switch_on_warmup = 4.  # seconds
+tx_low_battery = 12. # V
+
+TX_CONFIG['current_min'] = np.min([current_adc_voltage_min / (TX_CONFIG['r_shunt'] * 50), TX_CONFIG.pop('current_min', np.inf)])  # mA
+TX_CONFIG['current_max'] = np.min([current_adc_voltage_max / (TX_CONFIG['r_shunt'] * 50), TX_CONFIG.pop(['current_max'], np.inf)])  # mA
+TX_CONFIG['voltage_max'] = np.min([dps_voltage_max, TX_CONFIG.pop('voltage_max', np.inf)])  # V
+TX_CONFIG['default_voltage'] = np.min([TX_CONFIG.pop('default_voltage', dps_default_voltage), TX_CONFIG['voltage_max']])  # V
+TX_CONFIG['dps_switch_on_warm_up'] = TX_CONFIG.pop('dps_switch_on_warmup', dps_switch_on_warmup)
+TX_CONFIG['low_battery'] = TX_CONFIG.pop('low_battery', tx_low_battery)
 
 class Tx(TxAbstract):
     def inject(self, state='on'):
@@ -25,13 +32,14 @@ class Tx(TxAbstract):
         super().__init__(**kwargs)
         self._voltage = kwargs.pop('voltage', TX_CONFIG['default_voltage'])
 
-        self._adc_gain = 1
+        self._adc_gain = 1.
 
         self.polarity = 0
         self.turn_on()
         time.sleep(TX_CONFIG['dps_switch_on_warm_up'])
         self.exec_logger.info(f'TX battery: {self.tx_bat:.1f} V')
         self.turn_off()
+
 
     @property
     def adc_gain(self):
@@ -98,14 +106,9 @@ class Tx(TxAbstract):
         polarity: 1,0,-1
             Polarity of the pulse
         """
+        kwargs = locals()
+        kwargs.pop('self')
+        kwargs.pop('__class__')
+        print(kwargs)
+        super().voltage_pulse(**kwargs)
 
-        if length is None:
-            length = self.inj_time
-        if polarity is None:
-            polarity = self.polarity
-        self.polarity = polarity
-        self.voltage = voltage
-        self.exec_logger.debug(f'Voltage pulse of {polarity*voltage:.3f} V for {length:.3f} s')
-        self.inject(state='on')
-        time.sleep(length)
-        self.inject(state='off')
