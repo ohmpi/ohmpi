@@ -11,8 +11,8 @@ import os
 from OhmPi.hardware import TxAbstract, RxAbstract
 controller_module = importlib.import_module(f'OhmPi.hardware.raspberry_pi_3')
 
-TX_CONFIG = HARDWARE_CONFIG['rx']
-RX_CONFIG = HARDWARE_CONFIG['tx']
+TX_CONFIG = HARDWARE_CONFIG['tx']
+RX_CONFIG = HARDWARE_CONFIG['rx']
 
 # hardware characteristics and limitations
 # *** RX ***
