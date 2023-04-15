@@ -65,7 +65,7 @@ class OhmPiHardware:
             _readings.append([elapsed_seconds(start_time), self.tx.current, self.rx.voltage])
             sample+=1
             sleep_time = start_time + datetime.timedelta(seconds = sample * sampling_rate / 1000) - lap
-            print(f'sleep_time: {sleep_time.total_seconds()} seconds')
+            print(f'start_time: {start_time}, lap: {lap}, sample: {sample}, sleep_time: {sleep_time.total_seconds()} seconds')
             time.sleep(np.min([0, np.abs(sleep_time.total_seconds())]))
         self.readings = np.array(_readings)
 
