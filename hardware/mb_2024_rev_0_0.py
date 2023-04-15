@@ -155,7 +155,7 @@ class Tx(TxAbstract):
 
     @property
     def polarity(self):
-        return super().polarity
+        return TxAbstract.polarity.fget(self)
 
     @polarity.setter
     def polarity(self, value):
