@@ -14,35 +14,27 @@ logging_suffix = ''
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': ohmpi_id,  # Unique identifier of the OhmPi board (string)
-    # 'R_shunt': 2,  # Shunt resistance in Ohms
-    # 'Imax': 4800 / 50 / 2,  # Maximum current
-    # 'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
-    # 'nb_samples': 20,  # Max value 10 # was named integer before...
-    # 'version': 2,  # Is this still needed?
-    # 'max_elec': 64,
-    # 'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # CHECK IF YOUR BOARDS HAVE THESE ADDRESSES
     'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
-    # 'board_version': 'mb.2023.0.0',#,'22.10',
-    # 'mcp_board_address': 0x20
-}  # TODO: add a dictionary with INA models and associated gain values
+}
 
 HARDWARE_CONFIG = {
     'controller': {'model' : 'raspberry_pi'
                    },
-    'tx' : {'model' : 'ohmpi_card_3.15',
+    'tx' : {'model' : 'ohmpi_card_3_15',
              'mcp_board_address': 0x20,
              'current_max': 4800 / 50 / 2,  # Maximum current
              'r_shunt': 2  # Shunt resistance in Ohms
             },
-    'rx' : {'model': 'ohmpi_card_3.15',
+    'rx' : {'model': 'ohmpi_card_3_15',
              'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
+             'sampling_rate': 10., # ms
              'nb_samples': 20,  # Max value 10 # was named integer before...
             },
-    'mux': {'model' : 'dummy_mux',
-             'max_elec': 4,
+    'mux': {'model' : 'dummy_mux', # 'ohmpi_i2c_mux64_v1.01',
+             'max_elec': 64,
              'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # CHECK IF YOUR BOARDS HAVE THESE ADDRESSES
-             'voltage_max' : 100,
-             'current_max' : 3
+             'voltage_max': 100,
+             'current_max': 3
             }
 }
 
