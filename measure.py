@@ -45,7 +45,7 @@ class OhmPiHardware:
                                                     soh_logger=self.soh_logger))
 
 
-    def _vab_pulse(self, vab, length, sampling_rate=10., polarity=None):
+    def _vab_pulse(self, vab, length, sampling_rate=None, polarity=None):
         """ Gets VMN and IAB from a single voltage pulse
         """
         def inject(duration):
@@ -69,7 +69,7 @@ class OhmPiHardware:
             self.tx.polarity = polarity
         self.tx.voltage = vab
         injection = Thread(target=inject, kwargs={'length':length})
-        readings = Thread(target=read_values)
+        readings = Thread(target=read_values, kwargs={'sampling_rate': sampling_rate})
         # set gains automatically
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
