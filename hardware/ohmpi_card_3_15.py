@@ -118,7 +118,7 @@ class Tx(TxAbstract):
         self.adc_gain = gain
 
     def current_pulse(self, **kwargs):
-        super().current_pulse(**kwargs)
+        TxAbstract.current_pulse(self, **kwargs)
         self.exec_logger.warning(f'Current pulse is not implemented for the {TX_CONFIG["model"]} board')
 
     @property

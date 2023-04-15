@@ -132,7 +132,7 @@ class Tx(TxAbstract):
         self.adc_gain = gain
 
     def current_pulse(self, **kwargs):
-        super().current_pulse(**kwargs)
+        TxAbstract.current_pulse(self, **kwargs)
         self.exec_logger.warning(f'Current pulse is not implemented for the {TX_CONFIG["model"]} board')
 
     @property
@@ -188,12 +188,12 @@ class Tx(TxAbstract):
         self.DPS.write_register(0x0000, value, 2)
 
     def turn_off(self):
-        super().turn_off()
+        TxAbstract.turn_off(self)
         self.pin2.value = False
         self.pin3.value = False
 
     def turn_on(self):
-        super().turn_on()
+        TxAbstract.turn_on(self)
         self.pin2.value = True
         self.pin3.value = True
 
