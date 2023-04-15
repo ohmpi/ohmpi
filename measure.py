@@ -65,7 +65,9 @@ class OhmPiHardware:
             while self.tx_sync.is_set():
                 lap = datetime.datetime.utcnow()
                 _readings.append([elapsed_seconds(start_time), self.tx.current, self.rx.voltage])
-                time.sleep(sampling_rate/1000.-elapsed_seconds(lap))
+                sleep_time = sampling_rate/1000.-elapsed_seconds(lap)
+                print(f'sleep_time')
+                time.sleep(np.min[sleep_time, np.abs(sleep_time)])
             data = np.array(_readings)
 
         if sampling_rate is None:
