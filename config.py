@@ -18,7 +18,7 @@ OHMPI_CONFIG = {
 }
 
 HARDWARE_CONFIG = {
-    'controller': {'model' : 'raspberry_pi_3'
+    'controller': {'model' : 'raspberry_pi'
                    },
     'tx' : {'model' : 'ohmpi_card_3_15',
              'mcp_board_address': 0x20,
