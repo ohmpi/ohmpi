@@ -65,13 +65,12 @@ class OhmPiHardware:
             sample+=1
             sleep_time = start_time + datetime.timedelta(seconds = sample * sampling_rate / 1000) - lap
             print(f'sleep_time: {sleep_time.total_seconds()} seconds')
-            time.sleep(sleep_time.total_seconds())
+            time.sleep(np.min([0, np.abs(sleep_time.total_seconds())]))
         self.readings = np.array(_readings)
 
     def _vab_pulse(self, vab, length, sampling_rate=None, polarity=None):
         """ Gets VMN and IAB from a single voltage pulse
         """
-
 
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
