@@ -12,8 +12,8 @@ class Mux(MuxAbstract):
     def reset(self):
         pass
 
-    def switch(self, elec_dict, state):
-        pass
+    def switch_one(self, *args):
+        MuxAbstract.switch_one(self, *args)
 
-    def test(self):
-        self.exec_logger.info('MUX test finished.')
+    def test(self, *args):
+        MuxAbstract.test(self, *args)
