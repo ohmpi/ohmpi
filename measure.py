@@ -153,9 +153,11 @@ class OhmPiHardware:
             polarity = 1
         return vab, polarity, rab
 
-    def vab_square_wave(self, vab, length, sampling_rate, cycles=3, polarity=1):
+    def vab_square_wave(self, vab, cycle_length, sampling_rate, cycles=3, polarity=1, append=False):
         self.tx.polarity = polarity
-        self._vab_pulses(vab, [length]*2*cycles, sampling_rate, )
+        lengths = [cycle_length/2]*2*cycles  # TODO: delete me
+        print(f'vab_square_wave lengths: {lengths}')
+        self._vab_pulses(vab, lengths, sampling_rate, append)
 
     def _vab_pulse(self, vab, length, sampling_rate=None, polarity=None, append=False):
         """ Gets VMN and IAB from a single voltage pulse
@@ -176,7 +178,7 @@ class OhmPiHardware:
         readings.join()
         injection.join()
 
-    def _vab_pulses(self, vab, lengths, sampling_rate, polarities=None):
+    def _vab_pulses(self, vab, lengths, sampling_rate, polarities=None, append=False):
         n_pulses = len(lengths)
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
@@ -184,7 +186,8 @@ class OhmPiHardware:
             assert len(polarities)==n_pulses
         else:
             polarities = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(n_pulses)]
-        self._clear_values()
-        print(f'Polarities: {polarities}') # TODO: delete me
+        if not append:
+            self._clear_values()
+        print(f'Polarities: {polarities}, sampling_rate: {sampling_rate}') # TODO: delete me
         for i in range(n_pulses):
             self._vab_pulse(self, length=lengths[i], sampling_rate=sampling_rate, polarity=polarities[i], append=True)
