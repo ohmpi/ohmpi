@@ -48,45 +48,31 @@ class OhmPiHardware:
         self.mux = kwargs.pop('mux', mux_module.Mux(exec_logger=self.exec_logger,
                                                     data_logger=self.data_logger,
                                                     soh_logger=self.soh_logger))
-        self.readings=np.array([])
+        self.readings = np.array([])
+        self.readings_window = (0.3, 1.0)
+
+    def _clear_values(self):
+        self.readings = np.array([])
 
     def _inject(self, duration):
             self.tx_sync.set()
             self.tx.voltage_pulse(length=duration)
             self.tx_sync.clear()
 
-    def _read_values(self, sampling_rate):  # noqa
+    def _read_values(self, sampling_rate, append=False):  # noqa
+        if not append:
+            self._clear_values()
         _readings = []
         sample = 0
         self.tx_sync.wait()
         start_time = datetime.datetime.utcnow()
         while self.tx_sync.is_set():
             lap = datetime.datetime.utcnow()
-            _readings.append([elapsed_seconds(start_time), self.tx.current, self.rx.voltage])
+            _readings.append([elapsed_seconds(start_time), self.tx.current, self.rx.voltage, self.tx.polarity])
             sample+=1
             sleep_time = start_time + datetime.timedelta(seconds = sample * sampling_rate / 1000) - lap
-            # print(f'expected_end_time: {start_time+datetime.timedelta(seconds = sample * sampling_rate / 1000)}, lap: {lap}, sample: {sample}, sleep_time: {sleep_time.total_seconds()} seconds')
             time.sleep(np.min([0, np.abs(sleep_time.total_seconds())]))
         self.readings = np.array(_readings)
-
-    def _vab_pulse(self, vab, length, sampling_rate=None, polarity=None):
-        """ Gets VMN and IAB from a single voltage pulse
-        """
-
-        if sampling_rate is None:
-            sampling_rate = RX_CONFIG['sampling_rate']
-        if polarity is not None and polarity != self.tx.polarity:
-            self.tx.polarity = polarity
-        self.tx.voltage = vab
-        injection = Thread(target=self._inject, kwargs={'duration':length})
-        readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate})
-        # set gains automatically
-        self.tx.adc_gain_auto()
-        self.rx.adc_gain_auto()
-        readings.start()
-        injection.start()
-        readings.join()
-        injection.join()
 
     def _compute_tx_volt(self, best_tx_injtime=0.1, strategy='vmax', tx_volt=5,
                          vab_max=voltage_max, vmn_min=voltage_min):
@@ -164,3 +150,37 @@ class OhmPiHardware:
         else:
             polarity = 1
         return vab, polarity, rab
+
+    def vab_square_wave(self, vab, length, sampling_rate, cycles=3):
+        self._vab_pulses(self, vab, [length]*cycles, sampling_rate)
+
+    def _vab_pulse(self, vab, length, sampling_rate=None, polarity=None, append=False):
+        """ Gets VMN and IAB from a single voltage pulse
+        """
+
+        if sampling_rate is None:
+            sampling_rate = RX_CONFIG['sampling_rate']
+        if polarity is not None and polarity != self.tx.polarity:
+            self.tx.polarity = polarity
+        self.tx.voltage = vab
+        injection = Thread(target=self._inject, kwargs={'duration':length})
+        readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
+        # set gains automatically
+        self.tx.adc_gain_auto()
+        self.rx.adc_gain_auto()
+        readings.start()
+        injection.start()
+        readings.join()
+        injection.join()
+
+    def _vab_pulses(self, vab, lengths, sampling_rate, polarities=None):
+        n_pulses = len(lengths)
+        if sampling_rate is None:
+            sampling_rate = RX_CONFIG['sampling_rate']
+        if polarities is not None:
+            assert len(polarities)==n_pulses
+        else:
+            polarities = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(n_pulses)]
+        self._clear_values()
+        for i in range(n_pulses):
+            self._vab_pulse(self, length=lengths[i], sampling_rate=sampling_rate, polarity=polarities[i], append=True)

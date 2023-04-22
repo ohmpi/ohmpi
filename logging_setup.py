@@ -1,5 +1,6 @@
 import json
-from OhmPi.config import EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, MQTT_LOGGING_CONFIG, MQTT_CONTROL_CONFIG
+from OhmPi.config import EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, SOH_LOGGING_CONFIG,\
+    MQTT_LOGGING_CONFIG, MQTT_CONTROL_CONFIG
 from os import path, mkdir, statvfs
 from time import gmtime
 import logging
@@ -27,10 +28,50 @@ def setup_loggers(mqtt=True):
     if not path.isdir(log_path):
         mkdir(log_path)
     exec_log_filename = path.join(log_path, EXEC_LOGGING_CONFIG['file_name'])
+    soh_log_filename = path.join(log_path, SOH_LOGGING_CONFIG['file_name'])
+
     exec_logger = logging.getLogger('exec_logger')
+    soh_logger = logging.getLogger('soh_logger')
 
     # SOH logging setup
-    # TODO: Add state of health logging here
+    # Set message logging format and level
+    log_format = '%(asctime)-15s | %(process)d | %(levelname)s: %(message)s'
+    logging_to_console = SOH_LOGGING_CONFIG['logging_to_console']
+    soh_handler = CompressedSizedTimedRotatingFileHandler(soh_log_filename,
+                                                           max_bytes=SOH_LOGGING_CONFIG['max_bytes'],
+                                                           backup_count=SOH_LOGGING_CONFIG['backup_count'],
+                                                           when=SOH_LOGGING_CONFIG['when'],
+                                                           interval=SOH_LOGGING_CONFIG['interval'])
+    soh_formatter = logging.Formatter(log_format)
+    soh_formatter.converter = gmtime
+    soh_formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
+    soh_handler.setFormatter(soh_formatter)
+    soh_logger.addHandler(soh_handler)
+    soh_logger.setLevel(SOH_LOGGING_CONFIG['log_file_logging_level'])
+
+    if logging_to_console:
+        console_soh_handler = logging.StreamHandler(sys.stdout)
+        console_soh_handler.setLevel(SOH_LOGGING_CONFIG['logging_level'])
+        console_soh_handler.setFormatter(soh_formatter)
+        soh_logger.addHandler(console_soh_handler)
+
+    if mqtt:
+        mqtt_settings = MQTT_LOGGING_CONFIG.copy()
+        mqtt_soh_logging_level = mqtt_settings.pop('soh_logging_level', logging.DEBUG)
+        [mqtt_settings.pop(i) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic', 'data_logging_level',
+                                        'soh_logging_level']]
+        mqtt_settings.update({'topic': MQTT_LOGGING_CONFIG['soh_topic']})
+        # TODO: handle the case of MQTT broker down or temporarily unavailable
+        try:
+            mqtt_soh_handler = MQTTHandler(**mqtt_settings)
+            mqtt_soh_handler.setLevel(mqtt_soh_logging_level)
+            mqtt_soh_handler.setFormatter(soh_formatter)
+            soh_logger.addHandler(mqtt_soh_handler)
+            msg += colored(f"\n\u2611 Publishes execution as {MQTT_LOGGING_CONFIG['soh_topic']} topic on the "
+                           f"{MQTT_LOGGING_CONFIG['hostname']} broker", 'blue')
+        except Exception as e:
+            msg += colored(f'\nWarning: Unable to connect to soh topic on broker\n{e}', 'yellow')
+            mqtt = False
 
     # Data logging setup
     base_path = path.dirname(__file__)
@@ -119,14 +160,16 @@ def setup_loggers(mqtt=True):
             mqtt = False
 
     try:
-        init_logging(exec_logger, data_logger, EXEC_LOGGING_CONFIG['logging_level'], log_path, data_log_filename)
+        init_logging(exec_logger, data_logger, soh_logger, EXEC_LOGGING_CONFIG['logging_level'],
+                     SOH_LOGGING_CONFIG['logging_level'], log_path, data_log_filename)
     except Exception as err:
         msg += colored(f'\n\u26A0 ERROR: Could not initialize logging!\n{err}', 'red')
     finally:
-        return exec_logger, exec_log_filename, data_logger, data_log_filename, EXEC_LOGGING_CONFIG['logging_level'], msg
+        return exec_logger, exec_log_filename, data_logger, data_log_filename, soh_logger, soh_log_filename,\
+            EXEC_LOGGING_CONFIG['logging_level'], msg
 
 
-def init_logging(exec_logger, data_logger, exec_logging_level, log_path, data_log_filename):
+def init_logging(exec_logger, data_logger, soh_logger, exec_logging_level, soh_logging_level, log_path, data_log_filename):
     """ This is the init sequence for the logging system """
 
     init_logging_status = True
@@ -135,7 +178,8 @@ def init_logging(exec_logger, data_logger, exec_logging_level, log_path, data_lo
     exec_logger.info('*** NEW SESSION STARTING ***')
     exec_logger.info('****************************')
     exec_logger.info('')
-    exec_logger.debug(f'Logging level: {exec_logging_level}')
+    exec_logger.debug(f'Execution logging level: {exec_logging_level}')
+    exec_logger.debug(f'State of health logging level: {soh_logging_level}')
     try:
         st = statvfs('.')
         available_space = st.f_bavail * st.f_frsize / 1024 / 1024
@@ -144,6 +188,7 @@ def init_logging(exec_logger, data_logger, exec_logging_level, log_path, data_lo
         exec_logger.debug('Unable to get remaining disk space: {e}')
     exec_logger.info('Saving data log to ' + data_log_filename)
     config_dict = {'execution logging configuration': json.dumps(EXEC_LOGGING_CONFIG, indent=4),
+                   'state of health logging configuration': json.dumps(SOH_LOGGING_CONFIG, indent=4),
                    'data logging configuration': json.dumps(DATA_LOGGING_CONFIG, indent=4),
                    'mqtt logging configuration': json.dumps(MQTT_LOGGING_CONFIG, indent=4),
                    'mqtt control configuration': json.dumps(MQTT_CONTROL_CONFIG, indent=4)}
