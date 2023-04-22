@@ -153,7 +153,7 @@ class OhmPiHardware:
 
     def vab_square_wave(self, vab, length, sampling_rate, cycles=3, polarity=1):
         self.tx.polarity = polarity
-        self._vab_pulses(vab, [length]*cycles, sampling_rate)
+        self._vab_pulses(vab, [length]*2*cycles, sampling_rate)
 
     def _vab_pulse(self, vab, length, sampling_rate=None, polarity=None, append=False):
         """ Gets VMN and IAB from a single voltage pulse
@@ -183,5 +183,6 @@ class OhmPiHardware:
         else:
             polarities = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(n_pulses)]
         self._clear_values()
+        print(f'Polarities: {polarities}') # TODO: delete me
         for i in range(n_pulses):
             self._vab_pulse(self, length=lengths[i], sampling_rate=sampling_rate, polarity=polarities[i], append=True)
