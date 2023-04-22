@@ -152,7 +152,7 @@ class OhmPiHardware:
         return vab, polarity, rab
 
     def vab_square_wave(self, vab, length, sampling_rate, cycles=3):
-        self._vab_pulses(self, vab, [length]*cycles, sampling_rate)
+        self._vab_pulses(vab, [length]*cycles, sampling_rate)
 
     def _vab_pulse(self, vab, length, sampling_rate=None, polarity=None, append=False):
         """ Gets VMN and IAB from a single voltage pulse
