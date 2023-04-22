@@ -20,5 +20,5 @@ print(f'Mean resistance: {np.mean(r):.3f} Ohms, Dev. {100*np.std(r)/np.mean(r):.
 print(f'sampling rate: {k.rx.sampling_rate:.1f} ms, mean sample spacing: {np.mean(np.diff(k.readings[:,0]))*1000.:.1f} ms')
 print(r)
 print(f'length of array: {len(r)}, expected length{6000./k.rx.sampling_rate}')
-
+print(k.readings)
 change_config('config_default.py', verbose=False)
