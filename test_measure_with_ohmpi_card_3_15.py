@@ -18,5 +18,7 @@ k.vab_square_wave(vab=12, length=1., sampling_rate=k.rx.sampling_rate, cycles=3)
 r = k.readings[:,2]/k.readings[:,1]
 print(f'Mean resistance: {np.mean(r):.3f} Ohms, Dev. {100*np.std(r)/np.mean(r):.1f} %')
 print(f'sampling rate: {k.rx.sampling_rate:.1f} ms, mean sample spacing: {np.mean(np.diff(k.readings[:,0]))*1000.:.1f} ms')
+print(r)
+print(f'length of array: {len(r)}, expected length{6000./k.rx.sampling_rate}')
 
 change_config('config_default.py', verbose=False)
