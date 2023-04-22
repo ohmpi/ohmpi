@@ -62,9 +62,7 @@ class OhmPiHardware:
     def _read_values(self, sampling_rate, append=False):  # noqa
         if not append:
             self._clear_values()
-            _readings = []
-        else:
-            _readings = self.readings.tolist()
+        _readings = []
         sample = 0
         self.tx_sync.wait()
         start_time = datetime.datetime.utcnow()
@@ -74,7 +72,7 @@ class OhmPiHardware:
             sample+=1
             sleep_time = start_time + datetime.timedelta(seconds = sample * sampling_rate / 1000) - lap
             time.sleep(np.min([0, np.abs(sleep_time.total_seconds())]))
-        self.readings = np.array(_readings)
+        self.readings = np.hstack([self.readings, np.array(_readings)])
 
     def _compute_tx_volt(self, best_tx_injtime=0.1, strategy='vmax', tx_volt=5,
                          vab_max=voltage_max, vmn_min=voltage_min):
@@ -157,7 +155,7 @@ class OhmPiHardware:
         self.tx.polarity = polarity
         lengths = [cycle_length/2]*2*cycles  # TODO: delete me
         print(f'vab_square_wave lengths: {lengths}')
-        self._vab_pulses(vab, lengths, sampling_rate, append)
+        self._vab_pulses(vab, lengths, sampling_rate, append=append)
 
     def _vab_pulse(self, vab, length, sampling_rate=None, polarity=None, append=False):
         """ Gets VMN and IAB from a single voltage pulse
