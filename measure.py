@@ -106,7 +106,7 @@ class OhmPiHardware:
                 mean_iab.append(np.mean(self.readings[self.readings[:, 1] == i, 3]))
             mean_vmn = np.array(mean_vmn)
             mean_iab = np.array(mean_iab)
-            print(f'Vmn: {mean_vmn}, Iab: {mean_iab}')
+            # print(f'Vmn: {mean_vmn}, Iab: {mean_iab}')  # TODO: delete me
             sp = np.mean(mean_vmn[np.ix_(polarity==1)] - mean_vmn[np.ix_(polarity==-1)]) / 2
             return sp
 

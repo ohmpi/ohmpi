@@ -1,11 +1,13 @@
 from OhmPi.hardware import ControllerAbstract
 import board  # noqa
 import busio  # noqa
+import os
 from OhmPi.utils import get_platform
 from gpiozero import CPUTemperature
 
 class Controller(ControllerAbstract):
     def __init__(self, **kwargs):
+        kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         self.bus = busio.I2C(board.SCL, board.SDA)  # noqa
         platform, on_pi = get_platform()
