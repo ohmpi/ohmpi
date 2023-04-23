@@ -27,9 +27,9 @@ k.vab_square_wave(vab=12, cycle_length=cycle_length, sampling_rate=k.rx.sampling
 r = k.readings[:,4]/k.readings[:,3]
 print(f'Mean resistance: {np.mean(r):.3f} Ohms, Dev. {100*np.std(r)/np.mean(r):.1f} %')
 print(f'sampling rate: {k.rx.sampling_rate:.1f} ms, mean sample spacing: {np.mean(np.diff(k.readings[:,0]))*1000.:.1f} ms')
-print(r)
-print(f'length of array: {len(r)}, expected length: {cycle_length*cycles/k.rx.sampling_rate}')
-print(k.readings)
+print(f'length of array: {len(r)}, expected length: {cycle_length*cycles*1000./k.rx.sampling_rate}')
+
+# Plot graphs
 fig, ax = plt.subplots()
 ax.plot(k.readings[:,0], k.readings[:,3], '-r', marker='.', label='iab')
 ax.set_ylabel('Iab [mA]')
@@ -38,14 +38,13 @@ ax2.plot(k.readings[:,0], k.readings[:,2]*k.readings[:,4], '-b', marker='.', lab
 ax2.set_ylabel('Vmn [mV]')
 fig.legend()
 plt.show()
-# compute resistances corrected for SP
+
+# Compute resistances corrected for SP
 print(f'SP: {k.sp} mV')
 r = ((k.readings[:,4]-k.readings[:,2]*k.sp)/k.readings[:,3])
 print(f'Mean resistance with sp correction : {np.mean(r):.3f} Ohms, Dev. {100*np.std(r)/np.mean(r):.1f} %')
 print('\nTesting with pulses')
 r = [np.abs((k.pulses[i]['polarity']*k.pulses[i]['vmn']-k.sp)/k.pulses[i]['iab']) for i in k.pulses.keys()]
-print(r)
 for i in range(len(r)):
     print(f'Mean resistance with sp correction for pulse{i}: {np.mean(r[i]):.3f} Ohms, Dev. {100*np.std(r[i])/np.mean(r[i]):.1f} %')
 change_config('config_default.py', verbose=False)
-

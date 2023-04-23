@@ -132,7 +132,6 @@ class TxAbstract(ABC):
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_tx')
         self.controller = kwargs.pop('controller', None)
-        #self._polarity = polarity
         self._inj_time = None
         self._dps_state = 'off'
         self._adc_gain = 1.
