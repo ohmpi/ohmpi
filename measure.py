@@ -82,6 +82,25 @@ class OhmPiHardware:
         self.readings = np.array(_readings)
         self._pulse += 1
 
+    @property
+    def sp(self):
+        if len(self.readings[self.readings[:,2]==1, :]) < 1 or len(self.readings[self.readings[:,2]==-1, :]) < 1:
+            self.exec_logger.warning('Unable to compute sp: readings should at least contain one positive and one negative pulse')
+            return 0.
+        else:
+            n_pulses = int(np.max(self.readings[:, 1]))
+            polarity = np.array([np.mean(self.readings[self.readings[:, 1] == i, 2]) for i in range(n_pulses + 1)])
+            mean_vmn = []
+            mean_iab = []
+            for i in range(n_pulses + 1):
+                mean_vmn.append(np.mean(self.readings[self.readings[:, 1] == i, 4]))
+                mean_iab.append(np.mean(self.readings[self.readings[:, 1] == i, 3]))
+            mean_vmn = np.array(mean_vmn)
+            mean_iab = np.array(mean_iab)
+            print(f'Vmn: {mean_vmn}, Iab: {mean_iab}')
+            sp = np.mean(mean_vmn[np.ix_(polarity==1)] - mean_vmn[np.ix_(polarity==-1)]) / 2
+            return sp
+
     def _compute_tx_volt(self, best_tx_injtime=0.1, strategy='vmax', tx_volt=5,
                          vab_max=voltage_max, vmn_min=voltage_min):
         """Estimates best Tx voltage based on different strategies.
