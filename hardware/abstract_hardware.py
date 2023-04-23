@@ -39,7 +39,11 @@ class MuxAbstract(ABC):
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_mux')
+        self.soh_logger = kwargs.pop('soh_logger', None)
+        if self.soh_logger is None:
+            self.soh_logger = create_stdout_logger('soh_mux')
         self.exec_logger.debug(f'{self.board_name} MUX initialization')
+        self.controller = kwargs.pop('controller', None)
 
     @abstractmethod
     def reset(self):
