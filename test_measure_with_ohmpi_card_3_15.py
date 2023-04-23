@@ -36,19 +36,9 @@ ax2.plot(k.readings[:,0], k.readings[:,2]*k.readings[:,4], '-b', marker='.', lab
 ax2.set_ylabel('Vmn [mV]')
 fig.legend()
 plt.show()
-# compote mean voltages inside pulses
-pulses = k.readings[:,1]
-mean_vmn=[]
-mean_iab=[]
-for i in range(int(np.min(pulses)), int(np.max(pulses))+1):
-    mean_vmn.append(np.mean(k.readings[k.readings[:,1]==i, 4]))
-    mean_iab.append(np.mean(k.readings[k.readings[:,1]==i, 3]))
-mean_vmn = np.array(mean_vmn)
-mean_iab = np.array(mean_iab)
-print(f'Vmn: {mean_vmn}, Iab: {mean_iab}')
-sp = np.mean(mean_vmn[np.ix_([0,2,4])]-mean_vmn[np.ix_([1,3,5])])/2
-print(f'SP: {sp} mV, sp property: {k.sp}')
-r = ((k.readings[:,4]-k.readings[:,2]*sp)/k.readings[:,3])
+# compute resistances corrected for SP
+print(f'SP: {k.sp} mV')
+r = ((k.readings[:,4]-k.sp)/k.readings[:,3])
 print(f'Mean resistance with sp correction : {np.mean(r):.3f} Ohms, Dev. {100*np.std(r)/np.mean(r):.1f} %')
 change_config('config_default.py', verbose=False)
 
