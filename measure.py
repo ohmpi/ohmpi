@@ -62,6 +62,15 @@ class OhmPiHardware:
             self.tx.voltage_pulse(length=duration)
             self.tx_sync.clear()
 
+    @property
+    def pulses(self):
+        pulses = {}
+        for i in np.unique(self.readings[:,1]):
+            r = self.readings[self.readings[:, 1] == i, :]
+            assert np.all(np.isclose(r[:,2], r[0, 2]))  # Polarity cannot change within a pulse
+            pulses.update({i: {'polarity': int(r[0, 2]), 'iab': r[:,3], 'vmn' : r[:,4]}})  # TODO: check how to generalize in case of multi-channel RX
+        return pulses
+
     def _read_values(self, sampling_rate, append=False):  # noqa
         if not append:
             self._clear_values()
