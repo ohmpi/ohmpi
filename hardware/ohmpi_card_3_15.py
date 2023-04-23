@@ -73,7 +73,8 @@ class Tx(TxAbstract):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         self._voltage = kwargs.pop('voltage', TX_CONFIG['default_voltage'])
-        self.controller = kwargs.pop('controller', controller_module.Controller())
+        if self.controller is None:
+            self.controller = controller_module.Controller()
 
         # I2C connexion to MCP23008, for current injection
         self.mcp_board = MCP23008(self.controller.bus, address=TX_CONFIG['mcp_board_address'])
@@ -208,7 +209,8 @@ class Rx(RxAbstract):
     def __init__(self, **kwargs):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
-        self.controller = kwargs.pop('controller', controller_module.Controller())
+        if self.controller is None:
+            self.controller = controller_module.Controller()
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = 0x49

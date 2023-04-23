@@ -38,11 +38,11 @@ class OhmPiHardware:
         self.controller = kwargs.pop('controller',
                                      controller_module.Controller(exec_logger=self.exec_logger,
                                                                    data_logger=self.data_logger,
-                                                                   soh_logger= self.soh_logger))
+                                                                   soh_logger=self.soh_logger))
         self.rx = kwargs.pop('rx', rx_module.Rx(exec_logger=self.exec_logger,
                                                  data_logger=self.data_logger,
                                                  soh_logger=self.soh_logger,
-                                                 controller = self.controller))
+                                                 controller=self.controller))
         self.tx = kwargs.pop('tx', tx_module.Tx(exec_logger=self.exec_logger,
                                                  data_logger=self.data_logger,
                                                  soh_logger=self.soh_logger,

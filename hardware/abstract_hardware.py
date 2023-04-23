@@ -127,6 +127,7 @@ class TxAbstract(ABC):
         self.soh_logger = kwargs.pop('soh_logger', None)
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_tx')
+        self.controller = kwargs.pop('controller', None)
         #self._polarity = polarity
         self._inj_time = None
         self._dps_state = 'off'
@@ -241,8 +242,11 @@ class RxAbstract(ABC):
     def __init__(self, **kwargs):
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
-            self.exec_logger = create_stdout_logger('exec_tx')
+            self.exec_logger = create_stdout_logger('exec_rx')
         self.soh_logger = kwargs.pop('soh_logger', None)
+        if self.soh_logger is None:
+            self.soh_logger = create_stdout_logger('soh_rx')
+        self.controller = kwargs.pop('controller', None)
         self.board_name = kwargs.pop('board_name', 'unknown RX hardware')
         self._sampling_rate = kwargs.pop('sampling_rate', 1)
         self.exec_logger.debug(f'{self.board_name} RX initialization')

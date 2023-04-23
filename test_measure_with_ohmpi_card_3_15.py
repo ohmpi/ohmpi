@@ -13,7 +13,7 @@ k._vab_pulse(vab=12, length=1., sampling_rate=k.rx.sampling_rate, polarity=1)
 r = k.readings[:,4]/k.readings[:,3]
 print(f'Mean resistance: {np.mean(r):.3f} Ohms, Dev. {100*np.std(r)/np.mean(r):.1f} %')
 print(f'sampling rate: {k.rx.sampling_rate:.1f} ms, mean sample spacing: {np.mean(np.diff(k.readings[:,0]))*1000.:.1f} ms')
-print('Testing negative _vab_pulse')
+print('\nTesting negative _vab_pulse')
 k._vab_pulse(vab=12, length=1., sampling_rate=k.rx.sampling_rate, polarity=-1)
 r = k.readings[:,4]/k.readings[:,3]
 print(f'Mean resistance: {np.mean(r):.3f} Ohms, Dev. {100*np.std(r)/np.mean(r):.1f} %')
