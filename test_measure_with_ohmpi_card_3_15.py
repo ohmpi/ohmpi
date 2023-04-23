@@ -21,12 +21,14 @@ print(f'sampling rate: {k.rx.sampling_rate:.1f} ms, mean sample spacing: {np.mea
 
 # Test #2:
 print('\n\nTesting vab_square_wave')
-k.vab_square_wave(vab=12, cycle_length=1., sampling_rate=k.rx.sampling_rate, cycles=3)
+cycles=3
+cycle_length = 1.
+k.vab_square_wave(vab=12, cycle_length=cycle_length, sampling_rate=k.rx.sampling_rate, cycles=cycles)
 r = k.readings[:,4]/k.readings[:,3]
 print(f'Mean resistance: {np.mean(r):.3f} Ohms, Dev. {100*np.std(r)/np.mean(r):.1f} %')
 print(f'sampling rate: {k.rx.sampling_rate:.1f} ms, mean sample spacing: {np.mean(np.diff(k.readings[:,0]))*1000.:.1f} ms')
 print(r)
-print(f'length of array: {len(r)}, expected length: {6000./k.rx.sampling_rate}')
+print(f'length of array: {len(r)}, expected length: {cycle_length*cycles/k.rx.sampling_rate}')
 print(k.readings)
 fig, ax = plt.subplots()
 ax.plot(k.readings[:,0], k.readings[:,3], '-r', marker='.', label='iab')
