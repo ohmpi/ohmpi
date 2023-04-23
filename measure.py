@@ -53,6 +53,7 @@ class OhmPiHardware:
 
     def _clear_values(self):
         self.readings = np.array([])
+        self._start_time = None
 
     def _inject(self, duration):
             self.tx_sync.set()
