@@ -50,10 +50,12 @@ class OhmPiHardware:
                                                     soh_logger=self.soh_logger))
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
+        self._pulse = 0  # pulse number
 
     def _clear_values(self):
         self.readings = np.array([])
         self._start_time = None
+        self._pulse = 0
 
     def _inject(self, duration):
             self.tx_sync.set()
@@ -72,11 +74,13 @@ class OhmPiHardware:
             self._start_time = datetime.datetime.utcnow()
         while self.tx_sync.is_set():
             lap = datetime.datetime.utcnow()
-            _readings.append([elapsed_seconds(self._start_time), self.tx.current, self.rx.voltage, self.tx.polarity])
+            _readings.append([elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, self.tx.current,
+                              self.rx.voltage])
             sample+=1
             sleep_time = self._start_time + datetime.timedelta(seconds = sample * sampling_rate / 1000) - lap
             time.sleep(np.min([0, np.abs(sleep_time.total_seconds())]))
         self.readings = np.array(_readings)
+        self._pulse += 1
 
     def _compute_tx_volt(self, best_tx_injtime=0.1, strategy='vmax', tx_volt=5,
                          vab_max=voltage_max, vmn_min=voltage_min):
@@ -129,8 +133,8 @@ class OhmPiHardware:
         else:
             sampling_rate = self.tx.sampling_rate
         self._vab_pulse(vab=vab, length=best_tx_injtime, sampling_rate=sampling_rate)
-        vmn = np.mean(self.readings[:,2])
-        iab = np.mean(self.readings[:,1])
+        vmn = np.mean(self.readings[:,4])
+        iab = np.mean(self.readings[:,3])
         # if np.abs(vmn) is too small (smaller than voltage_min), strategy is not constant and vab < vab_max ,
         # then we could call _compute_tx_volt with a tx_volt increased to np.min([vab_max, tx_volt*2.]) for example
         if strategy == 'vmax':
