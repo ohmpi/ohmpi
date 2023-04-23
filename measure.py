@@ -48,8 +48,8 @@ class OhmPiHardware:
         self.mux = kwargs.pop('mux', mux_module.Mux(exec_logger=self.exec_logger,
                                                     data_logger=self.data_logger,
                                                     soh_logger=self.soh_logger))
-        self.readings = np.array([])
-        self.readings_window = (0.3, 1.0)
+        self.readings = np.array([])  # time series of acquired data
+        self._start_time = None  # time of the beginning of a readings acquisition
 
     def _clear_values(self):
         self.readings = np.array([])
@@ -67,12 +67,13 @@ class OhmPiHardware:
             _readings = self.readings.tolist()
         sample = 0
         self.tx_sync.wait()
-        start_time = datetime.datetime.utcnow()
+        if not append or self._start_time is None:
+            self._start_time = datetime.datetime.utcnow()
         while self.tx_sync.is_set():
             lap = datetime.datetime.utcnow()
-            _readings.append([elapsed_seconds(start_time), self.tx.current, self.rx.voltage, self.tx.polarity])
+            _readings.append([elapsed_seconds(self._start_time), self.tx.current, self.rx.voltage, self.tx.polarity])
             sample+=1
-            sleep_time = start_time + datetime.timedelta(seconds = sample * sampling_rate / 1000) - lap
+            sleep_time = self._start_time + datetime.timedelta(seconds = sample * sampling_rate / 1000) - lap
             time.sleep(np.min([0, np.abs(sleep_time.total_seconds())]))
         self.readings = np.array(_readings)
 
