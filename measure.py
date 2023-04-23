@@ -41,13 +41,16 @@ class OhmPiHardware:
                                                                    soh_logger= self.soh_logger))
         self.rx = kwargs.pop('rx', rx_module.Rx(exec_logger=self.exec_logger,
                                                  data_logger=self.data_logger,
-                                                 soh_logger=self.soh_logger))
+                                                 soh_logger=self.soh_logger,
+                                                 controller = self.controller))
         self.tx = kwargs.pop('tx', tx_module.Tx(exec_logger=self.exec_logger,
                                                  data_logger=self.data_logger,
-                                                 soh_logger=self.soh_logger))
+                                                 soh_logger=self.soh_logger,
+                                                 controller=self.controller))
         self.mux = kwargs.pop('mux', mux_module.Mux(exec_logger=self.exec_logger,
                                                     data_logger=self.data_logger,
-                                                    soh_logger=self.soh_logger))
+                                                    soh_logger=self.soh_logger,
+                                                    controller=self.controller))
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
         self._pulse = 0  # pulse number

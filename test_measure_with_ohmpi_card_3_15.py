@@ -43,7 +43,8 @@ print(f'SP: {k.sp} mV')
 r = ((k.readings[:,4]-k.readings[:,2]*k.sp)/k.readings[:,3])
 print(f'Mean resistance with sp correction : {np.mean(r):.3f} Ohms, Dev. {100*np.std(r)/np.mean(r):.1f} %')
 print('\nTesting with pulses')
-r = np.array([np.abs((k.pulses[i]['polarity']*k.pulses[i]['vmn']-k.sp)/k.pulses[i]['iab']) for i in k.pulses.keys()])
+r = [np.abs((k.pulses[i]['polarity']*k.pulses[i]['vmn']-k.sp)/k.pulses[i]['iab']) for i in k.pulses.keys()]
+print(r)
 for i in range(len(r)):
     print(f'Mean resistance with sp correction for pulse{i}: {np.mean(r[i]):.3f} Ohms, Dev. {100*np.std(r[i])/np.mean(r[i]):.1f} %')
 change_config('config_default.py', verbose=False)
