@@ -1,6 +1,6 @@
 from OhmPi.config import HARDWARE_CONFIG
 import os
-from OhmPi.hardware import ControllerAbstract
+from OhmPi.hardware_components import ControllerAbstract
 CONTROLLER_CONFIG = HARDWARE_CONFIG['controller']
 
 

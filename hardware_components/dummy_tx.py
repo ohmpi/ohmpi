@@ -2,7 +2,7 @@ from OhmPi.config import HARDWARE_CONFIG
 import time
 import os
 import numpy as np
-from OhmPi.hardware import TxAbstract
+from OhmPi.hardware_components import TxAbstract
 
 TX_CONFIG = HARDWARE_CONFIG['tx']
 

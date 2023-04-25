@@ -8,7 +8,7 @@ import minimalmodbus  # noqa
 import time
 import numpy as np
 import os
-from OhmPi.hardware import TxAbstract, RxAbstract
+from OhmPi.hardware_components import TxAbstract, RxAbstract
 controller_name = HARDWARE_CONFIG['controller'].pop('board_name', 'raspberry_pi')
 controller_module = importlib.import_module(f'OhmPi.hardware.{controller_name}')
 

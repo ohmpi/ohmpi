@@ -8,7 +8,7 @@ import minimalmodbus  # noqa
 import time
 import numpy as np
 import os
-from OhmPi.hardware import TxAbstract, RxAbstract
+from OhmPi.hardware_components import TxAbstract, RxAbstract
 controller_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["hardware"]["controller"]["model"]}')
 
 TX_CONFIG = HARDWARE_CONFIG['tx']

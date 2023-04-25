@@ -1,6 +1,6 @@
 from OhmPi.config import HARDWARE_CONFIG
 import os
-from OhmPi.hardware import MuxAbstract
+from OhmPi.hardware_components import MuxAbstract
 MUX_CONFIG = HARDWARE_CONFIG['mux']
 
 class Mux(MuxAbstract):

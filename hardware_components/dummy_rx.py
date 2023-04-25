@@ -1,7 +1,7 @@
 from OhmPi.config import HARDWARE_CONFIG
 import numpy as np
 import os
-from OhmPi.hardware import RxAbstract
+from OhmPi.hardware_components import RxAbstract
 RX_CONFIG = HARDWARE_CONFIG['rx']
 
 # hardware characteristics and limitations

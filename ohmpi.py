@@ -24,7 +24,7 @@ import threading
 from OhmPi.logging_setup import setup_loggers
 from OhmPi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 from logging import DEBUG
-from measure import OhmPiHardware
+from hardware_system import OhmPiHardware
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
 try:

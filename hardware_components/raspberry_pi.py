@@ -1,4 +1,4 @@
-from OhmPi.hardware import ControllerAbstract
+from OhmPi.hardware_components import ControllerAbstract
 import board  # noqa
 import busio  # noqa
 import os
