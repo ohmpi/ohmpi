@@ -11,11 +11,11 @@ class Mux(MuxAbstract):
     def __init__(self, **kwargs):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
-        print(f'addresses: {self.addresses}')
+        self.exec_logger.debug(f'configuration: {MUX_CONFIG}')
         self.max_elec = MUX_CONFIG['max_elec']
         if self.addresses is None and 'addresses' in MUX_CONFIG.keys():
             self._get_addresses(MUX_CONFIG['addresses'])
-            self.debug(f'Using {MUX_CONFIG["addresses"]} for {self.board_name}...')
+            self.exec_logger.debug(f'Using {MUX_CONFIG["addresses"]} for {self.board_name}...')
 
     def reset(self):
         pass
