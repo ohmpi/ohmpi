@@ -112,8 +112,8 @@ class Mux(MuxAbstract):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         self.exec_logger.debug(f'configuration: {MUX_CONFIG}')
-        self._tca_address = kwargs.pop('tca_address', None)
-        self._tca_channel = kwargs.pop('tca_channel', 0)
+        tca_address = kwargs.pop('tca_address', None)
+        tca_channel = kwargs.pop('tca_channel', 0)
         self._roles = kwargs.pop('roles', None)
         if self._roles is None:
             self._roles = {'X': 'A', 'Y': 'B', 'XX': 'M', 'YY': 'N'}
@@ -124,18 +124,23 @@ class Mux(MuxAbstract):
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.board_name}: {self._roles} !')
             self._mode = ''
+        if tca_address is None:
+            self._tca = self.controller.bus
+        else:
+            self._tca = adafruit_tca9548a.TCA9548A(self.controller.bus, tca_address)[tca_channel]
         self._mcp = [0, 0]
-        self._mcp[0] = int(kwargs.pop('mcp_0', '0x22'), 16)  # TODO add assert on valid addresses..
-        self._mcp[1] = int(kwargs.pop('mcp_1', '0x23'), 16)
+        self._mcp[0] = MCP23017(self._tca, address=int(kwargs.pop('mcp_0', '0x22'), 16))  # TODO add assert on valid addresses..
+        self._mcp[1] = MCP23017(self._tca, address=int(kwargs.pop('mcp_1', '0x23'), 16))
         if self.addresses is None:
             self._get_addresses()
         self.exec_logger.debug(f'addresses: {self.addresses}')
+
 
     def _get_addresses(self):
         d = inner_cabling[self._mode]
         self.addresses = {}
         for k, v in d.items():
-            self.addresses.update({(k[0], self._roles[k[1]]): v.update({'MCP': self._mcp[v['MCP']]})})
+            self.addresses.update({(k[0], self._roles[k[1]]): v})
         print(f'addresses: {self.addresses}')
 
     # def _get_addresses(self, addresses_file):  TODO : delete me
@@ -164,17 +169,12 @@ class Mux(MuxAbstract):
             pin_enable.value = state
 
         d = self.addresses[elec, role]
-        if d['TCA_address'] is None:
-            tca = self.controller.bus
-        else:
-            tca = adafruit_tca9548a.TCA9548A(self.controller.bus, d['TCA_address'])[d['TCA_channel']]
-        mcp = MCP23017(tca, address=d['MCP_address'])
         self.exec_logger.debug(f'switching {state} electrode {elec} with role {role} on TCA {d["TCA_address"]}, channel '
                                f'{d["TCA_channel"]}, MCP {d["MCP_address"]}, gpio {d["MCP_GPIO"]}')
         if state == 'on':
-            set_relay_state(mcp, d['MCP_GPIO'], True)
+            set_relay_state(self._mcp[d['MCP']], d['MCP_GPIO'], True)
         if state == 'off':
-            set_relay_state(mcp, d['MCP_GPIO'], False)
+            set_relay_state(self._mcp[d['MCP']], d['MCP_GPIO'], False)
 
     def test(self, *args):
         MuxAbstract.test(self, *args)
