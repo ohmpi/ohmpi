@@ -17,6 +17,7 @@ class Mux(MuxAbstract):
         if self.addresses is None and 'addresses' in MUX_CONFIG.keys():
             self._get_addresses(MUX_CONFIG['addresses'])
             self.exec_logger.debug(f'Using {MUX_CONFIG["addresses"]} for {self.board_name}...')
+        self.exec_logger.debug(f'addresses: {self.addresses}')
 
     def _get_addresses(self, addresses_file):
         with open(addresses_file, 'r') as f:
