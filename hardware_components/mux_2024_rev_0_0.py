@@ -125,15 +125,15 @@ class Mux(MuxAbstract):
             self.exec_logger.error(f'Invalid role assignment for {self.board_name}: {self._roles} !')
             self._mode = ''
         self._mcp = [0, 0]
-        self._mcp[0] = kwargs.pop('mcp_0', 34)  # TODO add assert on valid addresses..
-        self._mcp[1] = kwargs.pop('mcp_1', 35)
+        self._mcp[0] = int(kwargs.pop('mcp_0', '0x22'), 16)  # TODO add assert on valid addresses..
+        self._mcp[1] = int(kwargs.pop('mcp_1', '0x23'), 16)
         if self.addresses is None:
             self._get_addresses()
         self.exec_logger.debug(f'addresses: {self.addresses}')
 
     def _get_addresses(self):
         d = inner_cabling[self._mode]
-        for k, v in self.addresses.items():
+        for k, v in d.items():
             d[(k[0], self._roles[k[1]])] = v.update({'MCP': self._mcp[v['MCP']]})
         self.addresses = d
         print(f'addresses: {self.addresses}')
