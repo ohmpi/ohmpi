@@ -47,7 +47,7 @@ class MuxAbstract(ABC):
         self.addresses = kwargs.pop('addresses', None)
 
     @abstractmethod
-    def _get_addresses(self, addresses_file):
+    def _get_addresses(self):
         pass
 
     @abstractmethod

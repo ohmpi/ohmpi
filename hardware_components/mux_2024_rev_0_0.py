@@ -112,10 +112,6 @@ class Mux(MuxAbstract):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         self.exec_logger.debug(f'configuration: {MUX_CONFIG}')
-        if self.addresses is None or 'addresses' in MUX_CONFIG.keys():
-            self._get_addresses(MUX_CONFIG['addresses'])
-            self.exec_logger.debug(f'Using {MUX_CONFIG["addresses"]} for {self.board_name}...')
-        self.exec_logger.debug(f'addresses: {self.addresses}')
         self._tca_address = kwargs.pop('tca_address', None)
         self._tca_channel = kwargs.pop('tca_channel', 0)
         self._roles = kwargs.pop(('roles', {'X': 'A', 'Y': 'B', 'XX': 'M', 'YY': 'N'}))
@@ -129,8 +125,11 @@ class Mux(MuxAbstract):
         self._mcp = [0, 0]
         self._mcp[0] = kwargs.pop('mcp_0', 34)  # TODO add assert on valid addresses..
         self._mcp[1] = kwargs.pop('mcp_1', 35)
+        if self.addresses is None:
+            self._get_addresses()
+        self.exec_logger.debug(f'addresses: {self.addresses}')
 
-    def _get_addresses(self, addresses_file):
+    def _get_addresses(self):
         d = inner_cabling[self._mode]
         for k, v in self.addresses.items():
             d[(k[0], self._roles[k[1]])] = v.update({'MCP': self._mcp[v['MCP']]})
