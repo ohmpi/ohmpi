@@ -27,6 +27,8 @@ class Mux(MuxAbstract):
         self.addresses = {}
         for k in x.keys():
             y = k.strip('(').strip(')').split(', ')
+            x[k]['TCA_address'] = int(x[k]['TCA_address'], 16)
+            x[k]['MCP_address'] = int(x[k]['MCP_address'], 16)
             self.addresses.update({(int(y[0]), y[1]): x[k]})
 
     def reset(self):
