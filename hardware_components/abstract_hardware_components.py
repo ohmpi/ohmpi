@@ -1,14 +1,14 @@
 from abc import ABC, abstractmethod
 
 import numpy as np
-
+import json
 from OhmPi.logging_setup import create_stdout_logger
 import time
 
 class ControllerAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown Controller hardware')
-        self.bus = None
+        self.bus = None # TODO: allow for several buses
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_ctl')
@@ -35,7 +35,7 @@ class ControllerAbstract(ABC):
 
 class MuxAbstract(ABC):
     def __init__(self, **kwargs):
-        self.board_name = kwargs.pop('board_name', 'unknown MUX hardware')  # TODO: introduce MUX boards that take part to a MUX system (could be the same for RX boards that take part to an RX system (e.g. different channels)
+        self.board_name = kwargs.pop('board_name', 'unknown MUX hardware')  # TODO: introduce MUX boards that are part of a MUX system (could be the same for RX boards that take part to an RX system (e.g. different channels)
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_mux')
@@ -44,6 +44,17 @@ class MuxAbstract(ABC):
             self.soh_logger = create_stdout_logger('soh_mux')
         self.exec_logger.debug(f'{self.board_name} MUX initialization')
         self.controller = kwargs.pop('controller', None)
+        self.addresses = kwargs.pop('addresses', None)
+
+    def _get_addresses(self, addresses_file):
+        with open(addresses_file, 'r') as f:
+            x = json.load(f)
+
+        self.addresses = {}
+        for k in x.keys():
+            y = k.strip('(').strip(')').split(', ')
+            x[k]['TCA']
+            self.addresses.update({(int(y[0]), y[1]): x[k]})
 
     @abstractmethod
     def reset(self):
@@ -91,7 +102,7 @@ class MuxAbstract(ABC):
             self.exec_logger.warning(f'Missing argument for {self.board_name}.switch: elec_dict is None.')
 
     @abstractmethod
-    def switch_one(self, elec, role, state):
+    def switch_one(self, elec=None, role=None, state=None):
         pass
 
     def test(self, elec_dict, activation_time=1.):

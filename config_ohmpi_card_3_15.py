@@ -30,9 +30,9 @@ HARDWARE_CONFIG = {
              'sampling_rate': 10., # ms
              'nb_samples': 20,  # Max value 10 # was named integer before...
             },
-    'mux': {'model' : 'dummy_mux', # 'ohmpi_i2c_mux64_v1.01',
+    'mux': {'model' : 'mux_2024_rev_0_0', # 'ohmpi_i2c_mux64_v1.01',
              'max_elec': 64,
-             'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # CHECK IF YOUR BOARDS HAVE THESE ADDRESSES
+             'addresses': './hardware_components/mux_2024_22_23_4_roles_addressing_table.json',
              'voltage_max': 100,
              'current_max': 3
             }

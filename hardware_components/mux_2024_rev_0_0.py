@@ -11,9 +11,9 @@ class Mux(MuxAbstract):
     def __init__(self, **kwargs):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
+        print(f'addresses: {self.addresses}')
         self.max_elec = MUX_CONFIG['max_elec']
-        print(os.path.curdir)
-        if self._addresses is None and 'addresses' in MUX_CONFIG.keys():
+        if self.addresses is None and 'addresses' in MUX_CONFIG.keys():
             self._get_addresses(MUX_CONFIG['addresses'])
 
     def reset(self):
@@ -27,7 +27,7 @@ class Mux(MuxAbstract):
             pin_enable.direction = Direction.OUTPUT
             pin_enable.value = state
 
-        d = self._addresses[elec, role]
+        d = self.addresses[elec, role]
         if d['TCA_address'] is None:
             tca = self.controller.bus
         else:
