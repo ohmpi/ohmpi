@@ -25,11 +25,13 @@ class Mux(MuxAbstract):
             x = json.load(f)
 
         self.addresses = {}
-        for k in x.keys():
+        for k, v in x.items():
             y = k.strip('(').strip(')').split(', ')
-            x[k]['TCA_address'] = int(x[k]['TCA_address'], 16)
-            x[k]['MCP_address'] = int(x[k]['MCP_address'], 16)
-            self.addresses.update({(int(y[0]), y[1]): x[k]})
+            if v['TCA_address'] is not None:
+                v['TCA_address'] = int(v['TCA_address'], 16)
+            if v['MCP_address'] is not None:
+                v['MCP_address'] = int(x[k]['MCP_address'], 16)
+            self.addresses.update({(int(y[0]), y[1]): v})
 
     def reset(self):
         pass
