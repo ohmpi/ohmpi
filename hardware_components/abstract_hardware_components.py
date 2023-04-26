@@ -46,15 +46,9 @@ class MuxAbstract(ABC):
         self.controller = kwargs.pop('controller', None)
         self.addresses = kwargs.pop('addresses', None)
 
+    @abstractmethod
     def _get_addresses(self, addresses_file):
-        with open(addresses_file, 'r') as f:
-            x = json.load(f)
-
-        self.addresses = {}
-        for k in x.keys():
-            y = k.strip('(').strip(')').split(', ')
-            x[k]['TCA']
-            self.addresses.update({(int(y[0]), y[1]): x[k]})
+        pass
 
     @abstractmethod
     def reset(self):

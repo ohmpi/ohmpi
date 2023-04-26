@@ -1,5 +1,6 @@
 from OhmPi.config import HARDWARE_CONFIG
 import os
+import json
 from OhmPi.hardware_components import MuxAbstract
 import adafruit_tca9548a  # noqa
 from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
@@ -16,6 +17,15 @@ class Mux(MuxAbstract):
         if self.addresses is None and 'addresses' in MUX_CONFIG.keys():
             self._get_addresses(MUX_CONFIG['addresses'])
             self.exec_logger.debug(f'Using {MUX_CONFIG["addresses"]} for {self.board_name}...')
+
+    def _get_addresses(self, addresses_file):
+        with open(addresses_file, 'r') as f:
+            x = json.load(f)
+
+        self.addresses = {}
+        for k in x.keys():
+            y = k.strip('(').strip(')').split(', ')
+            self.addresses.update({(int(y[0]), y[1]): x[k]})
 
     def reset(self):
         pass
