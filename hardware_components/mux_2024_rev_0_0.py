@@ -20,6 +20,7 @@ class Mux(MuxAbstract):
         self.exec_logger.debug(f'addresses: {self.addresses}')
 
     def _get_addresses(self, addresses_file):
+        self.exec_logger.debug('Getting addresses...')
         with open(addresses_file, 'r') as f:
             x = json.load(f)
 
