@@ -50,11 +50,9 @@ class Mux(MuxAbstract):
         else:
             tca = adafruit_tca9548a.TCA9548A(self.controller.bus, d['TCA_address'])[d['TCA_channel']]
         mcp = MCP23017(tca, address=d['MCP_address'])
+        self.exec_logger.debug(f'switching {state} electrode {elec} with role {role} on TCA {d["TCA_address"]}, channel '
+                               f'{d["TCA_channel"]}, MCP {d["MCP_address"]}, gpio {d["MCP_GPIO"]}')
         if state == 'on':
-            print('opening gpio nr', d['MCP_GPIO'])
-            print('opening electrode nr', elec)
-            print('opening role', role)
-            print('opening MCP', d['MCP_address'])
             set_relay_state(mcp, d['MCP_GPIO'], True)
         if state == 'off':
             set_relay_state(mcp, d['MCP_GPIO'], False)
