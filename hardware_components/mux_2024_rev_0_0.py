@@ -133,9 +133,9 @@ class Mux(MuxAbstract):
 
     def _get_addresses(self):
         d = inner_cabling[self._mode]
+        self.addresses = {}
         for k, v in d.items():
-            d[(k[0], self._roles[k[1]])] = v.update({'MCP': self._mcp[v['MCP']]})
-        self.addresses = d
+            self.addresses.update({(k[0], self._roles[k[1]]): v.update({'MCP': self._mcp[v['MCP']]})})
         print(f'addresses: {self.addresses}')
 
     # def _get_addresses(self, addresses_file):  TODO : delete me
