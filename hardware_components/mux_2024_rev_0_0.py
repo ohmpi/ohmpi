@@ -112,7 +112,6 @@ class Mux(MuxAbstract):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         self.exec_logger.debug(f'configuration: {MUX_CONFIG}')
-        self.max_elec = MUX_CONFIG['max_elec']
         if self.addresses is None or 'addresses' in MUX_CONFIG.keys():
             self._get_addresses(MUX_CONFIG['addresses'])
             self.exec_logger.debug(f'Using {MUX_CONFIG["addresses"]} for {self.board_name}...')
