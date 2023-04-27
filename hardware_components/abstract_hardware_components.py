@@ -51,7 +51,7 @@ class MuxAbstract(ABC):
         self.cabling = {}
         if cabling is not None:
             for k, v in cabling:
-                print('{v[0]}, {self.board_id}')
+                print(f'{v}, {self.board_id}')  # TODO: delete me
                 if v[0]==self.board_id:
                     self.cabling.update({k: v[1]})
         self.addresses = kwargs.pop('addresses', None)
