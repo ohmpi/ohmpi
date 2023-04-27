@@ -86,7 +86,7 @@ class Mux(MuxAbstract):
         tca_channel = kwargs.pop('tca_channel', 0)
         self._roles = kwargs.pop('roles', None)
         if self._roles is None:
-            self._roles = {'X': 'A', 'Y': 'B', 'XX': 'M', 'YY': 'N'}
+            self._roles = {'A': 'X', 'B': 'Y', 'M' : 'XX', 'N' : 'YY'}
         if np.alltrue([j in self._roles for j in set([i[1] for i in list(inner_cabling['4_roles'].keys())])]):
             self._mode = '4_roles'
         elif np.alltrue([j in self._roles for j in set([i[1] for i in list(inner_cabling['2_roles'].keys())])]):
