@@ -113,7 +113,7 @@ class MuxAbstract(ABC):
         self.reset()
 
         for role in elec_dict.keys():
-            for elec in elec_dict['role']:
+            for elec in elec_dict[role]:
                 self.switch_one(elec, role, 'on')
                 self.exec_logger.debug(f'electrode: {elec} activated.')
                 time.sleep(activation_time)

@@ -111,7 +111,7 @@ class Mux(MuxAbstract):
 
     def reset(self):
         self._mcp[0] = MCP23017(self._tca, address=int(self._mcp_addresses[0], 16))
-        self._mcp[1] = MCP23017(self._tca, address=int(self._mcp_addresses[0], 16))
+        self._mcp[1] = MCP23017(self._tca, address=int(self._mcp_addresses[1], 16))
 
     def switch_one(self, elec=None, role=None, state=None):
         MuxAbstract.switch_one(self, elec=elec, role=role, state=state)
