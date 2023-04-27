@@ -7,7 +7,7 @@ from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
 from digitalio import Direction  # noqa
 
 MUX_CONFIG = HARDWARE_CONFIG['mux']
-MUX_CONFIG['default_mux_cabling': {(i, j) : ('mux_1', i) for j in ['A', 'B', 'M', 'N'] for i in range(1,9)}] # 4 roles cabling electrodes from 1 to 8
+MUX_CONFIG['default_mux_cabling'] = {(i, j) : ('mux_1', i) for j in ['A', 'B', 'M', 'N'] for i in range(1,9)} # 4 roles cabling electrodes from 1 to 8
 
 inner_cabling ={'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0},
                  (2, 'X'): {'MCP': 0, 'MCP_GPIO': 1},
