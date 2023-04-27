@@ -13,5 +13,6 @@ mux.switch({'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='on')
 time.sleep(8)
 #mux.switch({'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
 mux.reset()
-mux.test({'A': [1, 2, 3, 4], 'B': [4, 5, 6, 7], 'M': [2, 3, 4, 5], 'N': [3, 4, 5, 6]})
+mux.test({'A': [1, 2, 3, 4, 5, 6, 7, 8], 'B': [1, 2, 3, 4, 5, 6, 7, 8],
+          'M': [1, 2, 3, 4, 5, 6, 7, 8], 'N': [1, 2, 3, 4, 5, 6, 7, 8]})
 change_config('config_default.py', verbose=False)
