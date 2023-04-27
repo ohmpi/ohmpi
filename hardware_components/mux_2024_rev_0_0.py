@@ -111,7 +111,6 @@ class Mux(MuxAbstract):
         self.addresses = {}
         for k, v in d.items():
             self.addresses.update({self.cabling[(k[0], self._roles[k[1]])]: v})
-        print(f'addresses: {self.addresses}')
 
     def reset(self):
         self._mcp[0] = MCP23017(self._tca, address=int(self._mcp_addresses[0], 16))
