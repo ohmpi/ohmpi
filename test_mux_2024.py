@@ -8,9 +8,9 @@ MUX_CONFIG['controller'] = controller_module.Controller()
 MUX_CONFIG['id'] = 'mux_1'
 MUX_CONFIG['default_mux_cabling'] = {(i+8, j) : ('mux_1', i) for j in ['A', 'B', 'M', 'N'] for i in range(1,9)}
 mux = Mux(**MUX_CONFIG)
-mux.switch_one(elec=1, role='M', state='on')
+mux.switch_one(elec=9, role='M', state='on')
 time.sleep(2)
-mux.switch_one(elec=1, role='M', state='off')
+mux.switch_one(elec=9, role='M', state='off')
 mux.switch({'A': [9], 'B': [12], 'M': [10], 'N': [11]}, state='on')
 time.sleep(8)
 #mux.switch({'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
