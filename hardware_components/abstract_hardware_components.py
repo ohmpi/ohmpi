@@ -50,7 +50,7 @@ class MuxAbstract(ABC):
         print(f'cabling: {cabling}')
         self.cabling = {}
         if cabling is not None:
-            for k, v in cabling:
+            for k, v in cabling.items():
                 print(f'{v}, {self.board_id}')  # TODO: delete me
                 if v[0]==self.board_id:
                     self.cabling.update({k: v[1]})
