@@ -47,8 +47,8 @@ class MuxAbstract(ABC):
         self.exec_logger.debug(f'MUX {self.board_id} ({self.board_name}) initialization')
         self.controller = kwargs.pop('controller', None)
         cabling = kwargs.pop('cabling', None)
+        self._cabling = {}
         if cabling is not None:
-            self._cabling = {}
             for k, v in cabling:
                 if v[0]==self.board_id:
                     self._cabling.update({k: v[1]})
