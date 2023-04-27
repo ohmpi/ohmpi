@@ -110,8 +110,8 @@ class Mux(MuxAbstract):
         d = inner_cabling[self._mode]
         self.addresses = {}
         for k, v in d.items():
-            print(f'self._cabling: {self._cabling}, k: {k}, self._roles: {self._roles}')
-            self.addresses.update({(self._cabling[k[0]], self._roles[k[1]]): v})
+            print(f'self.cabling: {self.cabling}, k: {k}, self._roles: {self._roles}')
+            self.addresses.update({(self.cabling[k[0]], self._roles[k[1]]): v})
         print(f'addresses: {self.addresses}')
 
     def reset(self):

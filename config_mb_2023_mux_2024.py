@@ -30,7 +30,7 @@ HARDWARE_CONFIG = {
              'sampling_rate': 10., # ms
              'nb_samples': 20,  # Max value 10 # was named integer before...
             },
-    'mux': {'mux_1':{'model' : 'mux_2024_rev_0_0', # 'ohmpi_i2c_mux64_v1.01',
+    'mux': {'mux_1': {'model' : 'mux_2024_rev_0_0', # 'ohmpi_i2c_mux64_v1.01',
              'tca_address': None,  # TODO: This should be part of the system config (cabling of several mux boards)
              'tca_channel': 0,  # TODO: This should be part of the system config (cabling of several mux boards)
              'mcp_0' : '0x22',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)

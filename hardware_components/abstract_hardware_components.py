@@ -48,11 +48,12 @@ class MuxAbstract(ABC):
         self.controller = kwargs.pop('controller', None)
         cabling = kwargs.pop('cabling', None)
         print(f'cabling: {cabling}')
-        self._cabling = {}
+        self.cabling = {}
         if cabling is not None:
             for k, v in cabling:
+                print('{v[0]}, {self.board_id}')
                 if v[0]==self.board_id:
-                    self._cabling.update({k: v[1]})
+                    self.cabling.update({k: v[1]})
         self.addresses = kwargs.pop('addresses', None)
 
     @abstractmethod
