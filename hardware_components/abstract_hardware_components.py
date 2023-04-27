@@ -34,7 +34,7 @@ class ControllerAbstract(ABC):
 
 class MuxAbstract(ABC):
     def __init__(self, **kwargs):
-        self.board_name = kwargs.pop('board_name', 'unknown MUX hardware')  # TODO: introduce MUX boards that are part of a MUX system (could be the same for RX boards that take part to an RX system (e.g. different channels)
+        self.board_name = kwargs.pop('board_name', 'unknown MUX hardware')
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_mux')
@@ -51,7 +51,6 @@ class MuxAbstract(ABC):
         self.cabling = {}
         if cabling is not None:
             for k, v in cabling.items():
-                print(f'{v}, {self.board_id}')  # TODO: delete me
                 if v[0]==self.board_id:
                     self.cabling.update({k: (v[1], k[1])})
         self.addresses = kwargs.pop('addresses', None)
@@ -80,7 +79,7 @@ class MuxAbstract(ABC):
             # check to prevent A == B (SHORT-CIRCUIT)
             if 'A' in elec_dict.keys() and 'B' in elec_dict.keys():
                 out = np.in1d(elec_dict['A'], elec_dict['B'])
-                if out.any() and state=='on':
+                if out.any() and state=='on':  # noqa
                     self.exec_logger.error('Trying to switch on some electrodes with both A and B roles. '
                                            'This would create a short-circuit! Switching aborted.')
                     return
@@ -89,10 +88,10 @@ class MuxAbstract(ABC):
             # as to prevent burning the MN part which cannot take
             # the full voltage of the DPS
             if 'A' in elec_dict.keys() and 'B' in elec_dict.keys() and 'M' in elec_dict.keys() and 'N' in elec_dict.keys():
-                if (np.in1d(elec_dict['M'], elec_dict['A']).any()
-                        or np.in1d(elec_dict['M'], elec_dict['B']).any()
-                        or np.in1d(elec_dict['N'], elec_dict['A']).any()
-                        or np.in1d(elec_dict['N'], elec_dict['B']).any()) and state=='on':
+                if (np.in1d(elec_dict['M'], elec_dict['A']).any()  # noqa
+                        or np.in1d(elec_dict['M'], elec_dict['B']).any()  # noqa
+                        or np.in1d(elec_dict['N'], elec_dict['A']).any()  # noqa
+                        or np.in1d(elec_dict['N'], elec_dict['B']).any()) and state=='on':  # noqa
                     self.exec_logger.error('Trying to switch on some electrodes with both M or N role and A or B role. '
                                            'This could create an over-voltage in the RX! Switching aborted.')
                     return
