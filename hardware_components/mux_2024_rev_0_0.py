@@ -111,7 +111,7 @@ class Mux(MuxAbstract):
         self.addresses = {}
         d = {}
         for k, v in self.cabling.items():
-            d.update({k: ic[(v[1], self._roles[k[1]])]})
+            d.update({k: ic[(v[0], self._roles[k[1]])]})
         self.addresses = d
         print(self.addresses)
 
