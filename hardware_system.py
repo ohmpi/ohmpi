@@ -113,7 +113,6 @@ class OhmPiHardware:
                 mean_iab.append(np.mean(self.readings[self.readings[:, 1] == i, 3]))
             mean_vmn = np.array(mean_vmn)
             mean_iab = np.array(mean_iab)
-            # print(f'Vmn: {mean_vmn}, Iab: {mean_iab}')  # TODO: delete me
             sp = np.mean(mean_vmn[np.ix_(polarity==1)] - mean_vmn[np.ix_(polarity==-1)]) / 2
             return sp
 
@@ -196,8 +195,7 @@ class OhmPiHardware:
 
     def vab_square_wave(self, vab, cycle_length, sampling_rate, cycles=3, polarity=1, append=False):
         self.tx.polarity = polarity
-        lengths = [cycle_length/2]*2*cycles  # TODO: delete me
-        print(f'vab_square_wave lengths: {lengths}')
+        lengths = [cycle_length/2]*2*cycles
         self._vab_pulses(vab, lengths, sampling_rate, append=append)
 
     def _vab_pulse(self, vab, length, sampling_rate=None, polarity=None, append=False):
@@ -229,6 +227,5 @@ class OhmPiHardware:
             polarities = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(n_pulses)]
         if not append:
             self._clear_values()
-        print(f'Polarities: {polarities}, sampling_rate: {sampling_rate}') # TODO: delete me
         for i in range(n_pulses):
             self._vab_pulse(self, length=lengths[i], sampling_rate=sampling_rate, polarity=polarities[i], append=True)
