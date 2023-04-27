@@ -122,7 +122,6 @@ class Mux(MuxAbstract):
             pin_enable.value = state
 
         d = self.addresses[elec, role]
-        self.exec_logger.debug(f'switching {state} electrode {elec} with role {role}')
         if state == 'on':
             set_relay_state(self._mcp[d['MCP']], d['MCP_GPIO'], True)
         if state == 'off':

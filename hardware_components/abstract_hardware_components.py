@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
 import numpy as np
-import json
 from OhmPi.logging_setup import create_stdout_logger
 import time
 
@@ -97,7 +96,7 @@ class MuxAbstract(ABC):
 
     @abstractmethod
     def switch_one(self, elec=None, role=None, state=None):
-        pass
+        self.exec_logger.debug(f'switching {state} electrode {elec} with role {role}')
 
     def test(self, elec_dict, activation_time=1.):
         """Method to test the multiplexer.
@@ -115,10 +114,8 @@ class MuxAbstract(ABC):
         for role in elec_dict.keys():
             for elec in elec_dict[role]:
                 self.switch_one(elec, role, 'on')
-                self.exec_logger.debug(f'electrode: {elec} activated.')
                 time.sleep(activation_time)
                 self.switch_one(elec, role, 'off')
-                self.exec_logger.debug(f'electrode: {elec} deactivated.')
                 time.sleep(activation_time)
         self.exec_logger.debug('Test finished.')
 
