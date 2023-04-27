@@ -41,8 +41,17 @@ class MuxAbstract(ABC):
         self.soh_logger = kwargs.pop('soh_logger', None)
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_mux')
-        self.exec_logger.debug(f'{self.board_name} MUX initialization')
+        self.board_id = kwargs.pop('id', None)
+        if self.board_id is None:
+            self.exec_logger.error(f'MUX {self.board_name} should have an id !')
+        self.exec_logger.debug(f'MUX {self.board_id} ({self.board_name}) initialization')
         self.controller = kwargs.pop('controller', None)
+        cabling = kwargs.pop('cabling', None)
+        if cabling is not None:
+            self._cabling = {}
+            for k, v in cabling:
+                if v[0]==self.board_id:
+                    self._cabling.update({k: v[1]})
         self.addresses = kwargs.pop('addresses', None)
 
     @abstractmethod
@@ -82,8 +91,8 @@ class MuxAbstract(ABC):
                         or np.in1d(elec_dict['M'], elec_dict['B']).any()
                         or np.in1d(elec_dict['N'], elec_dict['A']).any()
                         or np.in1d(elec_dict['N'], elec_dict['B']).any()) and state=='on':
-                    self.exec_logger.error('Trying to switch on some electrodes with both M or N roles and A or B roles.'
-                                           'This would create an over-voltage in the RX! Switching aborted.')
+                    self.exec_logger.error('Trying to switch on some electrodes with both M or N role and A or B role. '
+                                           'This could create an over-voltage in the RX! Switching aborted.')
                     return
 
             # if all ok, then switch the electrodes
@@ -208,7 +217,7 @@ class TxAbstract(ABC):
 
     @voltage.setter
     @abstractmethod
-    def voltage(self, value, **kwargs):
+    def voltage(self, value):
         # add actions to set the DPS voltage
         pass
 

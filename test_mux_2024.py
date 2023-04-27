@@ -1,6 +1,6 @@
 import time
 from utils import change_config
-change_config('config_ohmpi_card_3_15.py', verbose=False)
+change_config('config_mb_2023_mux_2024.py', verbose=False)
 from OhmPi.hardware_components.mux_2024_rev_0_0 import Mux, MUX_CONFIG
 from OhmPi.hardware_components import raspberry_pi as controller_module
 

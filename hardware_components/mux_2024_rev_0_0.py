@@ -103,10 +103,11 @@ class Mux(MuxAbstract):
         self.exec_logger.debug(f'addresses: {self.addresses}')
 
     def _get_addresses(self):
+        """ Converts inner cabling addressing into (electrodes, role) addressing """
         d = inner_cabling[self._mode]
         self.addresses = {}
         for k, v in d.items():
-            self.addresses.update({(k[0], self._roles[k[1]]): v})
+            self.addresses.update({(self._cabling(k[0], self._roles[k[1]])): v})
         print(f'addresses: {self.addresses}')
 
     def reset(self):

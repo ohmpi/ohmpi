@@ -19,6 +19,8 @@ current_max = np.min([TX_CONFIG['current_max'], MUX_CONFIG['current_max']])
 voltage_max = np.min([TX_CONFIG['voltage_max'], MUX_CONFIG['voltage_max']])
 voltage_min = RX_CONFIG['voltage_min']
 
+default_mux_cabling = {(i, j) : ('mux_1', i) for j in ['A', 'B', 'M', 'N'] for i in range(1,9)}
+
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
     return lap.total_seconds()
@@ -47,10 +49,12 @@ class OhmPiHardware:
                                                  data_logger=self.data_logger,
                                                  soh_logger=self.soh_logger,
                                                  controller=self.controller))
-        self.mux = kwargs.pop('mux', mux_module.Mux(exec_logger=self.exec_logger,
+        self._cabling = kwargs.pop('cabling', default_mux_cabling)
+        self.mux = kwargs.pop('mux', {'mux_1': mux_module.Mux(exec_logger=self.exec_logger,
                                                     data_logger=self.data_logger,
                                                     soh_logger=self.soh_logger,
-                                                    controller=self.controller))
+                                                    controller=self.controller,
+                                                    cabling = self._cabling)})
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
         self._pulse = 0  # pulse number
