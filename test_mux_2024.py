@@ -6,14 +6,15 @@ from OhmPi.hardware_components import raspberry_pi as controller_module
 
 MUX_CONFIG['controller'] = controller_module.Controller()
 MUX_CONFIG['id'] = 'mux_1'
+MUX_CONFIG['default_mux_cabling'] = {(i+8, j) : ('mux_1', i) for j in ['A', 'B', 'M', 'N'] for i in range(1,9)}
 mux = Mux(**MUX_CONFIG)
 mux.switch_one(elec=1, role='M', state='on')
 time.sleep(2)
 mux.switch_one(elec=1, role='M', state='off')
-mux.switch({'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='on')
+mux.switch({'A': [9], 'B': [12], 'M': [10], 'N': [11]}, state='on')
 time.sleep(8)
 #mux.switch({'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
 mux.reset()
-mux.test({'A': [1, 2, 3, 4, 5, 6, 7, 8], 'B': [1, 2, 3, 4, 5, 6, 7, 8],
-          'M': [1, 2, 3, 4, 5, 6, 7, 8], 'N': [1, 2, 3, 4, 5, 6, 7, 8]})
+mux.test({'A': [9, 10, 11, 12, 13, 14, 15, 16], 'B': [9, 10, 11, 12, 13, 14, 15, 16],
+          'M': [9, 10, 11, 12, 13, 14, 15, 16], 'N': [9, 10, 11, 12, 13, 14, 15, 16]})
 change_config('config_default.py', verbose=False)
