@@ -103,7 +103,7 @@ class Mux(MuxAbstract):
         self.reset()
         if self.addresses is None:
             self._get_addresses()
-        self.exec_logger.debug(f'addresses: {self.addresses}')
+        self.exec_logger.debug(f'{self.board_id} addresses: {self.addresses}')
 
     def _get_addresses(self):
         """ Converts inner cabling addressing into (electrodes, role) addressing """
