@@ -52,6 +52,7 @@ class MuxAbstract(ABC):
             for k, v in cabling.items():
                 if v[0]==self.board_id:
                     self.cabling.update({k: (v[1], k[1])})
+        self.exec_logger.debug(f'{self.board_id} cabling: {self.cabling}')
         self.addresses = kwargs.pop('addresses', None)
 
     @abstractmethod
