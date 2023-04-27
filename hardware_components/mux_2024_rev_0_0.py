@@ -107,11 +107,13 @@ class Mux(MuxAbstract):
 
     def _get_addresses(self):
         """ Converts inner cabling addressing into (electrodes, role) addressing """
-        d = inner_cabling[self._mode]
+        ic = inner_cabling[self._mode]
         self.addresses = {}
-        for k, v in d.items():
-
-            self.addresses.update({self.cabling[(k[0], self._roles[k[1]])]: v})
+        d = {}
+        for k, v in self.cabling.items():
+            d.update({k: ic[(v[1], self._roles[k[1]])]})
+        self.addresses = d
+        print(self.addresses)
 
     def reset(self):
         self._mcp[0] = MCP23017(self._tca, address=int(self._mcp_addresses[0], 16))
