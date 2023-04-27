@@ -95,13 +95,12 @@ class Mux(MuxAbstract):
             self._tca = self.controller.bus
         else:
             self._tca = adafruit_tca9548a.TCA9548A(self.controller.bus, tca_address)[tca_channel]
-        self._mcp = [0, 0]
-        self._mcp[0] = MCP23017(self._tca, address=int(kwargs.pop('mcp_0', '0x22'), 16))  # TODO add assert on valid addresses..
-        self._mcp[1] = MCP23017(self._tca, address=int(kwargs.pop('mcp_1', '0x23'), 16))
+        self._mcp_addresses = (kwargs.pop('mcp_0', '0x22'), kwargs.pop('mcp_1', '0x23'))  # TODO add assert on valid addresses..
+        self._mcp = (None, None)
+        self.reset()
         if self.addresses is None:
             self._get_addresses()
         self.exec_logger.debug(f'addresses: {self.addresses}')
-
 
     def _get_addresses(self):
         d = inner_cabling[self._mode]
@@ -110,22 +109,9 @@ class Mux(MuxAbstract):
             self.addresses.update({(k[0], self._roles[k[1]]): v})
         print(f'addresses: {self.addresses}')
 
-    # def _get_addresses(self, addresses_file):  TODO : delete me
-    #     self.exec_logger.debug('Getting addresses...')
-    #     with open(addresses_file, 'r') as f:
-    #         x = json.load(f)
-    #
-    #     self.addresses = {}
-    #     for k, v in x.items():
-    #         y = k.strip('(').strip(')').split(', ')
-    #         if v['TCA_address'] is not None:
-    #             v['TCA_address'] = int(v['TCA_address'], 16)
-    #         if v['MCP_address'] is not None:
-    #             v['MCP_address'] = int(x[k]['MCP_address'], 16)
-    #         self.addresses.update({(int(y[0]), y[1]): v})
-
     def reset(self):
-        pass
+        self._mcp[0] = MCP23017(self._tca, address=int(self._mcp_addresses[0], 16))
+        self._mcp[1] = MCP23017(self._tca, address=int(self._mcp_addresses[0], 16))
 
     def switch_one(self, elec=None, role=None, state=None):
         MuxAbstract.switch_one(self, elec=elec, role=role, state=state)
