@@ -47,6 +47,7 @@ class MuxAbstract(ABC):
         self.exec_logger.debug(f'MUX {self.board_id} ({self.board_name}) initialization')
         self.controller = kwargs.pop('controller', None)
         cabling = kwargs.pop('cabling', None)
+        print(f'cabling: {cabling}')
         self._cabling = {}
         if cabling is not None:
             for k, v in cabling:
