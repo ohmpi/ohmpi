@@ -113,7 +113,7 @@ class Mux(MuxAbstract):
             #print(f'self.cabling: {self.cabling}, k: {k}, self._roles: {self._roles}, d: {d}')
             print(f'self.cabling[k[0]]: {self.cabling[(k[0], self._roles[k[1]])]}')
             print(f'self._roles[k[1]]: {self._roles[k[1]]}')
-            self.addresses.update({(self.cabling[k[0]], self._roles[k[1]]): v})
+            self.addresses.update({self.cabling[(k[0], self._roles[k[1]])]: v})
         print(f'addresses: {self.addresses}')
 
     def reset(self):
