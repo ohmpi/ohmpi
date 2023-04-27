@@ -78,6 +78,8 @@ inner_cabling ={'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0},
 class Mux(MuxAbstract):
     def __init__(self, **kwargs):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
+        if 'cabling' not in kwargs.keys():
+            kwargs.update({'cabling': MUX_CONFIG['default_muc_cabling']})
         super().__init__(**kwargs)
         self.exec_logger.debug(f'configuration: {MUX_CONFIG}')
         tca_address = kwargs.pop('tca_address', None)
