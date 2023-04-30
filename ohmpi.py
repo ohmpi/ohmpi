@@ -1231,7 +1231,7 @@ print('Version:', VERSION)
 platform, on_pi = get_platform()
 
 if on_pi:
-    print(colored(f'\u2611 Running on {platform} platform', 'green'))
+    print(colored(f'\u2611 Running on {platform}', 'green'))
     # TODO: check model for compatible platforms (exclude Raspberry Pi versions that are not supported...)
     #       and emit a warning otherwise
     if not arm64_imports:

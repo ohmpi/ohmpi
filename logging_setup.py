@@ -59,7 +59,7 @@ def setup_loggers(mqtt=True):
         mqtt_settings = MQTT_LOGGING_CONFIG.copy()
         mqtt_soh_logging_level = mqtt_settings.pop('soh_logging_level', logging.DEBUG)
         [mqtt_settings.pop(i, None) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic', 'data_logging_level',
-                                        'soh_logging_level']]
+                                        'exec_logging_level']]
         mqtt_settings.update({'topic': MQTT_LOGGING_CONFIG['soh_topic']})
         # TODO: handle the case of MQTT broker down or temporarily unavailable
         try:
