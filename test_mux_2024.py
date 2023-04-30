@@ -32,8 +32,8 @@ if part_of_hardware_system:
 
     # Test mux switching
     k.reset_mux()
-    k.switch_mux(electrodes=[9,10,11,12], roles=['A', 'B', 'M', 'N'], state='on')
+    k.switch_mux(electrodes=[1,4,2,3], roles=['A', 'B', 'M', 'N'], state='on')
     time.sleep(1.)
-    k.switch_mux(electrodes=[9,10,11,12], roles=['A', 'B', 'M', 'N'], state='off')
+    k.switch_mux(electrodes=[1,4,2,3], roles=['A', 'B', 'M', 'N'], state='off')
 
 change_config('config_default.py', verbose=False)
