@@ -12,7 +12,7 @@ tx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG
 rx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
 MUX_CONFIG = {}
 mux_boards = []
-print(f"HARDWARE_CONFIG['mux']['boards']: {HARDWARE_CONFIG['mux']['boards']}")
+
 for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
     mux_module = importlib.import_module(f'OhmPi.hardware_components.{mux_config["model"]}')
     MUX_CONFIG[mux_id] = mux_module.MUX_CONFIG
@@ -68,7 +68,6 @@ class OhmPiHardware:
             mux.barrier = self.mux_barrier
             for k, v in mux.cabling.items():
                 update_dict(self._cabling, {k: (mux_id, k[0])})
-        print(self._cabling)
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
         self._pulse = 0  # pulse number
