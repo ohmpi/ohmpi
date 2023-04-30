@@ -325,7 +325,7 @@ class OhmPiHardware:
             time.sleep(activation_time)
             self.switch_mux(electrodes,roles, state='off')
         else:
-            for c in self._cabling.keys:
+            for c in self._cabling.keys():
                 self.switch_mux(electrodes=c[0],roles=c[1],state='on')
                 time.sleep(activation_time)
                 self.switch_mux(electrodes=c[0], roles=c[1], state='off')
