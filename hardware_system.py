@@ -310,25 +310,20 @@ class OhmPiHardware:
         self.reset_mux()
 
         if channel is not None:
-            if channel =='':
-                electrodes = [1]
-                roles = ['A']
-            else:
-                try:
-                    channel = channel.lstrip('(').rstrip(')').split(',')
-                    electrodes = [int(channel[0])]
-                    roles = [channel[1]]
-                except Exception as e:
-                    self.exec_logger.error(f'Unable to parse your answer: {e}')
-                    return
+            try:
+                electrodes = [int(channel[0])]
+                roles = [channel[1]]
+            except Exception as e:
+                self.exec_logger.error(f'Unable to parse channel: {e}')
+                return
             self.switch_mux(electrodes,roles,state='on')
             time.sleep(activation_time)
             self.switch_mux(electrodes,roles, state='off')
         else:
             for c in self._cabling.keys():
-                self.switch_mux(electrodes=c[0],roles=c[1],state='on')
+                self.switch_mux(electrodes=[c[0]],roles=[c[1]],state='on')
                 time.sleep(activation_time)
-                self.switch_mux(electrodes=c[0], roles=c[1], state='off')
+                self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='off')
         self.exec_logger.info('Test finished.')
 
     def reset_mux(self):
