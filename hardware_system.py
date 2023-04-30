@@ -11,15 +11,18 @@ controller_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWAR
 tx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
 rx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
 MUX_CONFIG = {}
+mux_boards = []
 for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
     mux_module = importlib.import_module(f'OhmPi.hardware_components.{mux_config["model"]}')
     MUX_CONFIG[mux_id] = mux_module.MUX_CONFIG
-    MUX_CONFIG.update(mux_config)
+    MUX_CONFIG[mux_id].update(mux_config)
+    MUX_CONFIG[mux_id].update({'id': mux_id})
+    mux_boards.append(mux_id)
 TX_CONFIG = tx_module.TX_CONFIG
 RX_CONFIG = rx_module.RX_CONFIG
 
-current_max = np.min([TX_CONFIG['current_max'], MUX_CONFIG['current_max']])
-voltage_max = np.min([TX_CONFIG['voltage_max'], MUX_CONFIG['voltage_max']])
+current_max = np.min([TX_CONFIG['current_max'], np.min([MUX_CONFIG[i].pop('current_max', np.inf) for i in mux_boards])])
+voltage_max = np.min([TX_CONFIG['voltage_max'], np.min([MUX_CONFIG[i].pop('voltage_max', np.inf) for i in mux_boards])])
 voltage_min = RX_CONFIG['voltage_min']
 
 default_mux_cabling = MUX_CONFIG.pop('default_mux_cabling', None)
