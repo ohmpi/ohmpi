@@ -72,6 +72,7 @@ DATA_LOGGING_CONFIG = {
 SOH_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
     'logging_to_console': True,
+    'log_file_logging_level': logging.DEBUG,
     'file_name': f'soh{logging_suffix}.log',
     'max_bytes': 16777216,
     'backup_count': 1024,
