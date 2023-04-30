@@ -22,11 +22,7 @@ mux.test({'A': [9, 10, 11, 12, 13, 14, 15, 16], 'B': [9, 10, 11, 12, 13, 14, 15,
           'M': [9, 10, 11, 12, 13, 14, 15, 16], 'N': [9, 10, 11, 12, 13, 14, 15, 16]})
 
 # mux as part of a OhmPiHardware system
-
-from utils import change_config
-change_config('config_mb_2023_mux_2024.py', verbose=False)
 from OhmPi.hardware_system import OhmPiHardware
-
 print('Starting test of mux as part of a OhmPiHardware system.')
 k = OhmPiHardware()
 k.exec_logger.setLevel(logging.INFO)

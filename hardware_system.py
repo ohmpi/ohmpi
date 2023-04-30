@@ -56,7 +56,8 @@ class OhmPiHardware:
                                                  soh_logger=self.soh_logger,
                                                  controller=self.controller))
         self._cabling = kwargs.pop('cabling', default_mux_cabling)
-        self.mux_boards = kwargs.pop('mux', {'mux_1': mux_module.Mux(exec_logger=self.exec_logger,
+        self.mux_boards = kwargs.pop('mux', {'mux_1': mux_module.Mux(id='mux_1',
+                                                                     exec_logger=self.exec_logger,
                                                                      data_logger=self.data_logger,
                                                                      soh_logger=self.soh_logger,
                                                                      controller=self.controller,
