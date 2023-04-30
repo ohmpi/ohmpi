@@ -65,10 +65,12 @@ class OhmPiHardware:
                                                                      soh_logger=self.soh_logger,
                                                                      controller=self.controller,
                                                                      cabling = self._cabling)})
+        self.mux_barrier = Barrier(len(self.mux_boards) + 1)
+        for _, mux in self.mux_boards.items():
+            mux.barrier = self.mux_barrier
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
         self._pulse = 0  # pulse number
-        self.mux_barrier = Barrier(len(self.mux_boards)+1)
 
     def _clear_values(self):
         self.readings = np.array([])
