@@ -17,6 +17,7 @@ import numpy as np
 import csv
 import time
 import shutil
+from inspect import getmembers, isfunction
 from datetime import datetime
 from termcolor import colored
 import threading
@@ -152,13 +153,12 @@ class OhmPi(object):
                 self.controller = None
                 self.exec_logger.warning('No connection to control broker.'
                                          ' Use python/ipython to interact with OhmPi object...')
+            self.get_deprecated_methods()
 
-    def __getattr__(self, name):
-        if not hasattr(self, name):
-            if hasattr(deprecated, name):
-                return getattr(deprecated, name)
-        else:
-            return getattr(self, name)
+    def get_deprecated_methods(self):
+        for i in getmembers(deprecated, isfunction):
+            self.exec_logger.debug(f'Adding deprecated method {i[0]}.')
+            self.__setattr__(i[0], i[1])
 
     @staticmethod
     def append_and_save(filename: str, last_measurement: dict, cmd_id=None):
