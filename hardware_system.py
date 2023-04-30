@@ -281,13 +281,14 @@ class OhmPiHardware:
             elec_dict = {i: [] for i in roles}
             for i in range(len(electrodes)):
                 elec_dict[roles[i]].append(electrodes[i])
+            print(f'parties: {self.mux_barrier.parties}')
             mux_workers = []
             for _, mux in self.mux_boards.items():
                 # start a new thread to perform some work
                 mux_workers.append(Thread(target=mux.switch, kwargs={'elec_dict': elec_dict}))
             for mux_worker in mux_workers:
                 mux_worker.start()
-            self.exec_logger.debug(f'Waiting: {self.mux_barrier.n_waiting}')
+            self.exec_logger.debug(f'Waiting: {self.mux_barrier.n_waiting}/{self.mux_barrier.parties}')
             self.mux_barrier.wait()
             for mux_worker in mux_workers:
                 mux_worker.join()
