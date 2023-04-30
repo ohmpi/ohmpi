@@ -1039,7 +1039,7 @@ class OhmPi(object):
 
         if self.on_pi:
             # make sure all mux are off to start with
-            self._hw.mux.reset_mux()
+            self._hw.mux_boards.reset_mux()
 
             # measure all quad of the RS sequence
             for i in range(0, quads.shape[0]):
@@ -1157,7 +1157,7 @@ class OhmPi(object):
         if mux is None:
             self._hw.test_mux(activation_time)
         else:
-            self._hw.mux[mux].test_mux()
+            self._hw.mux_boards[mux].test_mux()
 
 
     def reset_mux(self, cmd_id=None):

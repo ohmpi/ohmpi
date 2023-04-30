@@ -13,9 +13,8 @@ rx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG
 MUX_CONFIG = {}
 for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
     mux_module = importlib.import_module(f'OhmPi.hardware_components.{mux_config["model"]}')
-    update_dict(MUX_CONFIG[mux_id], mux_module.MUX_CONFIG)
-    update_dict(MUX_CONFIG, mux_config)
-    update_dict(MUX_CONFIG[mux_id], HARDWARE_CONFIG['mux']['common'])
+    MUX_CONFIG[mux_id] = mux_module.MUX_CONFIG
+    MUX_CONFIG.update(mux_config)
 TX_CONFIG = tx_module.TX_CONFIG
 RX_CONFIG = rx_module.RX_CONFIG
 
@@ -54,11 +53,11 @@ class OhmPiHardware:
                                                  soh_logger=self.soh_logger,
                                                  controller=self.controller))
         self._cabling = kwargs.pop('cabling', default_mux_cabling)
-        self.mux = kwargs.pop('mux', {'mux_1': mux_module.Mux(exec_logger=self.exec_logger,
-                                                    data_logger=self.data_logger,
-                                                    soh_logger=self.soh_logger,
-                                                    controller=self.controller,
-                                                    cabling = self._cabling)})
+        self.mux_boards = kwargs.pop('mux', {'mux_1': mux_module.Mux(exec_logger=self.exec_logger,
+                                                                     data_logger=self.data_logger,
+                                                                     soh_logger=self.soh_logger,
+                                                                     controller=self.controller,
+                                                                     cabling = self._cabling)})
 
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
@@ -75,8 +74,8 @@ class OhmPiHardware:
             self.tx_sync.clear()
 
     def _set_mux_barrier(self):
-        self.mux_barrier = Barrier(len(self.mux)+1)
-        for mux in self.mux:
+        self.mux_barrier = Barrier(len(self.mux_boards) + 1)
+        for mux in self.mux_boards:
             mux.barrier = self.mux_barrier
 
     @property
@@ -276,7 +275,7 @@ class OhmPiHardware:
             for i in range(len(electrodes)):
                 elec_dict[roles[i]].append(electrodes[i])
             mux_workers = []
-            for mux in self.mux:
+            for mux in self.mux_boards:
                 # start a new thread to perform some work
                 mux_workers.append(Thread(target=mux.switch, kwargs={'elec_dict': elec_dict}))
             for mux_worker in mux_workers:
@@ -347,5 +346,5 @@ class OhmPiHardware:
         """
 
         self.exec_logger.debug('Resetting all mux boards ...')
-        for mux in self.mux:
+        for mux in self.mux_boards:
             mux.reset()
