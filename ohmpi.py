@@ -153,12 +153,12 @@ class OhmPi(object):
                 self.controller = None
                 self.exec_logger.warning('No connection to control broker.'
                                          ' Use python/ipython to interact with OhmPi object...')
-            self.get_deprecated_methods()
 
-    def get_deprecated_methods(self):
+    @classmethod
+    def get_deprecated_methods(cls):
         for i in getmembers(deprecated, isfunction):
-            self.exec_logger.debug(f'Adding deprecated method {i[0]}.')
-            setattr(self, i[0], i[1])
+            print(f'Adding {i[0]} (deprecated)')
+            setattr(cls, i[0], i[1])
 
     @staticmethod
     def append_and_save(filename: str, last_measurement: dict, cmd_id=None):
@@ -1243,6 +1243,7 @@ print(f'local date and time : {current_time.strftime("%Y-%m-%d %H:%M:%S")}')
 
 # for testing
 if __name__ == "__main__":
+    OhmPi.get_deprecated_methods()
     ohmpi = OhmPi(settings=OHMPI_CONFIG['settings'])
     if ohmpi.controller is not None:
         ohmpi.controller.loop_forever()
