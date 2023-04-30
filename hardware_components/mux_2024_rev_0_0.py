@@ -1,3 +1,5 @@
+import time
+
 from OhmPi.config import HARDWARE_CONFIG
 import os
 import numpy as np
@@ -51,7 +53,8 @@ class Mux(MuxAbstract):
     def __init__(self, **kwargs):
         if 'id' in kwargs.keys():
             print(f'\nMUX_CONFIG {kwargs["id"]}: {MUX_CONFIG}\n\n')
-            MUX_CONFIG.update(MUX_CONFIG['boards'][kwargs['id']])
+            time.sleep(1.)
+            MUX_CONFIG.update(HARDWARE_CONFIG['mux']['boards'][kwargs['id']])
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         if 'cabling' not in kwargs.keys():
             kwargs.update({'cabling': MUX_CONFIG['default_mux_cabling']})
