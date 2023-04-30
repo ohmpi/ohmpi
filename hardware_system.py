@@ -353,4 +353,5 @@ class OhmPiHardware:
 
         self.exec_logger.debug('Resetting all mux boards ...')
         for mux in self.mux_boards:
+            print(mux)
             mux.reset()
