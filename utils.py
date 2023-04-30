@@ -1,6 +1,31 @@
 import io
 import os
 import shutil
+import collections.abc
+
+def update_dict(d, u):
+    """Updates a dictionary by adding elements to collection items associated to existing keys
+
+    Parameters
+    ----------
+    d: dict
+        Dictionary that will be updated
+    u: dict
+        Dictionary that is used to update d
+
+    Returns
+    -------
+    dict
+        The updated dictionary
+    """
+
+    for k, v in u.items():
+        if isinstance(v, collections.abc.Mapping):
+            d[k] = update_dict(d.get(k, {}), v)
+        else:
+            d[k] = v
+    return d
+
 def get_platform():
     """Gets platform name and checks if it is a raspberry pi
 

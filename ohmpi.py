@@ -1107,52 +1107,7 @@ class OhmPi(object):
         warnings.warn('This function is deprecated. Use interrupt instead.', DeprecationWarning)
         self.interrupt(**kwargs)
 
-    def _switch_mux(self, electrode_nr, state, role):
-        """Selects the right channel for the multiplexer cascade for a given electrode.
-        
-        Parameters
-        ----------
-        electrode_nr : int
-            Electrode index to be switched on or off.
-        state : str
-            Either 'on' or 'off'.
-        role : str
-            Either 'A', 'B', 'M' or 'N', so we can assign it to a MUX board.
-        """
-
-        if not self.use_mux or not self.on_pi:
-            if not self.on_pi:
-                self.exec_logger.warning('Cannot reset mux while in simulation mode...')
-            else:
-                self.exec_logger.warning('You cannot use the multiplexer because use_mux is set to False.'
-                                         ' Set use_mux to True to use the multiplexer...')
-        elif self.sequence is None and not self.use_mux:
-            self.exec_logger.warning('Unable to switch MUX without a sequence')
-        else:
-            # choose with MUX board
-            tca = adafruit_tca9548a.TCA9548A(self.i2c, self.board_addresses[role])
-
-            # find I2C address of the electrode and corresponding relay
-            # considering that one MCP23017 can cover 16 electrodes
-            i2c_address = 7 - (electrode_nr - 1) // 16  # quotient without rest of the division
-            relay_nr = (electrode_nr-1) - ((electrode_nr-1) // 16) * 16
-
-            if i2c_address is not None:
-                # select the MCP23017 of the selected MUX board
-                mcp2 = MCP23017(tca[i2c_address])
-                mcp2.get_pin(relay_nr).direction = digitalio.Direction.OUTPUT
-
-                if state == 'on':
-                    mcp2.get_pin(relay_nr).value = True
-                else:
-                    mcp2.get_pin(relay_nr).value = False
-
-                self.exec_logger.debug(f'Switching relay {relay_nr} '
-                                       f'({str(hex(self.board_addresses[role]))}) {state} for electrode {electrode_nr}')
-            else:
-                self.exec_logger.warning(f'Unable to address electrode nr {electrode_nr}')
-
-    def switch_dps(self,state='off'):
+    def switch_dps(self, state='off'):
         """Switches DPS on or off.
 
             Parameters
@@ -1160,20 +1115,7 @@ class OhmPi(object):
             state : str
                 'on', 'off'
             """
-        self.pin2 = self.mcp_board.get_pin(2) # dsp -
-        self.pin2.direction = Direction.OUTPUT
-        self.pin3 = self.mcp_board.get_pin(3) # dsp -
-        self.pin3.direction = Direction.OUTPUT
-        if state == 'on':
-            self.pin2.value = True
-            self.pin3.value = True
-            self.exec_logger.debug(f'Switching DPS on')
-            time.sleep(4)
-        elif state == 'off':
-            self.pin2.value = False
-            self.pin3.value = False
-            self.exec_logger.debug(f'Switching DPS off')
-
+        self._hw.switch_dps(state=state)
 
     def switch_mux_on(self, quadrupole, cmd_id=None):
         """Switches on multiplexer relays for given quadrupole.
@@ -1185,14 +1127,8 @@ class OhmPi(object):
         quadrupole : list of 4 int
             List of 4 integers representing the electrode numbers.
         """
-        roles = ['A', 'B', 'M', 'N']
-        # another check to be sure A != B
-        if quadrupole[0] != quadrupole[1]:
-            for i in range(0, 4):
-                if quadrupole[i] > 0:
-                    self._switch_mux(quadrupole[i], 'on', roles[i])
-        else:
-            self.exec_logger.error('Not switching MUX : A == B -> short circuit risk detected!')
+
+        self._hw.switch_mux_on(electrodes=quadrupole, state='on')
 
     def switch_mux_off(self, quadrupole, cmd_id=None):
         """Switches off multiplexer relays for given quadrupole.
@@ -1204,59 +1140,25 @@ class OhmPi(object):
         quadrupole : list of 4 int
             List of 4 integers representing the electrode numbers.
         """
-        roles = ['A', 'B', 'M', 'N']
-        for i in range(0, 4):
-            if quadrupole[i] > 0:
-                self._switch_mux(quadrupole[i], 'off', roles[i])
 
-    # def test_mux(self, activation_time=1.0, address=0x70):  TODO: add this in the MUX code
-    #     """Interactive method to test the multiplexer.
-    #
-    #     Parameters
-    #     ----------
-    #     activation_time : float, optional
-    #         Time in seconds during which the relays are activated.
-    #     address : hex, optional
-    #         Address of the multiplexer board to test (e.g. 0x70, 0x71, ...).
-    #     """
-    #     self.use_mux = True
-    #     self.reset_mux()
-    #
-    #     # choose with MUX board
-    #     tca = adafruit_tca9548a.TCA9548A(self.i2c, address)
-    #
-    #     # ask use some details on how to proceed
-    #     a = input('If you want try 1 channel choose 1, if you want try all channels choose 2!')
-    #     if a == '1':
-    #         print('run channel by channel test')
-    #         electrode = int(input('Choose your electrode number (integer):'))
-    #         electrodes = [electrode]
-    #     elif a == '2':
-    #         electrodes = range(1, 65)
-    #     else:
-    #         print('Wrong choice !')
-    #         return
-    #
-    #         # run the test
-    #     for electrode_nr in electrodes:
-    #         # find I2C address of the electrode and corresponding relay
-    #         # considering that one MCP23017 can cover 16 electrodes
-    #         i2c_address = 7 - (electrode_nr - 1) // 16  # quotient without rest of the division
-    #         relay_nr = electrode_nr - (electrode_nr // 16) * 16 + 1
-    #
-    #         if i2c_address is not None:
-    #             # select the MCP23017 of the selected MUX board
-    #             mcp2 = MCP23017(tca[i2c_address])
-    #             mcp2.get_pin(relay_nr - 1).direction = digitalio.Direction.OUTPUT
-    #
-    #             # activate relay for given time
-    #             mcp2.get_pin(relay_nr - 1).value = True
-    #             print('electrode:', electrode_nr, ' activated...', end='', flush=True)
-    #             time.sleep(activation_time)
-    #             mcp2.get_pin(relay_nr - 1).value = False
-    #             print(' deactivated')
-    #             time.sleep(activation_time)
-    #     print('Test finished.')
+        self._hw.switch_mux(electrodes=quadrupole, state='off')
+
+    def test_mux(self, activation_time=1.0, mux=None): # TODO: add this in the MUX code
+        """Interactive method to test the multiplexer boards.
+
+        Parameters
+        ----------
+        activation_time : float, optional
+            Time in seconds during which the relays are activated.
+        address : hex, optional
+            Address of the multiplexer board to test (e.g. 0x70, 0x71, ...).
+        """
+        self.reset_mux() # All muxes should be reset even if we only want to test one otherwise we might create a shortcut
+        if mux is None:
+            self._hw.test_mux(activation_time)
+        else:
+            self._hw.mux[mux].test_mux()
+
 
     def reset_mux(self, cmd_id=None):
         """Switches off all multiplexer relays.
@@ -1266,17 +1168,7 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier
         """
-        if self.on_pi and self.use_mux:
-            roles = ['A', 'B', 'M', 'N']
-            for i in range(0, 4):
-                for j in range(1, self.max_elec + 1):
-                    self._switch_mux(j, 'off', roles[i])
-            self.exec_logger.debug('All MUX switched off.')
-        elif not self.on_pi:
-            self.exec_logger.warning('Cannot reset mux while in simulation mode...')
-        else:
-            self.exec_logger.warning('You cannot use the multiplexer because use_mux is set to False.'
-                                     ' Set use_mux to True to use the multiplexer...')
+        self._hw.reset_mux()
 
     def _update_acquisition_settings(self, config):
         warnings.warn('This function is deprecated, use update_settings() instead.', DeprecationWarning)

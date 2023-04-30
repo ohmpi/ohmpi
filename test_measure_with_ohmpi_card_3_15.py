@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 import logging
 import matplotlib.pyplot as plt
@@ -7,7 +9,12 @@ from OhmPi.hardware_system import OhmPiHardware
 
 k = OhmPiHardware()
 k.exec_logger.setLevel(logging.INFO)
-# Test #1:
+
+# Test mux switching
+k.reset_mux()
+k.switch_mux(electrodes=[9,10,11,12], roles=['A', 'B', 'M', 'N'], state='on')
+
+# Test _vab_pulse:
 print('Testing positive _vab_pulse')
 k._vab_pulse(vab=12, length=1., sampling_rate=k.rx.sampling_rate, polarity=1)
 r = k.readings[:,4]/k.readings[:,3]
@@ -19,7 +26,7 @@ r = k.readings[:,4]/k.readings[:,3]
 print(f'Mean resistance: {np.mean(r):.3f} Ohms, Dev. {100*np.std(r)/np.mean(r):.1f} %')
 print(f'sampling rate: {k.rx.sampling_rate:.1f} ms, mean sample spacing: {np.mean(np.diff(k.readings[:,0]))*1000.:.1f} ms')
 
-# Test #2:
+# Test vab_square_wave:
 print('\n\nTesting vab_square_wave')
 cycles=3
 cycle_length = 1.
@@ -47,5 +54,8 @@ print('\nTesting with pulses')
 r = [np.abs((k.pulses[i]['polarity']*k.pulses[i]['vmn']-k.sp)/k.pulses[i]['iab']) for i in k.pulses.keys()]
 for i in range(len(r)):
     print(f'Mean resistance with sp correction for pulse{i}: {np.mean(r[i]):.3f} Ohms, Dev. {100*np.std(r[i])/np.mean(r[i]):.1f} %')
+
+k.switch_mux(electrodes=[9,10,11,12], roles=['A', 'B', 'M', 'N'], state='off')
+k.reset_mux()
 change_config('config_default.py', verbose=False)
 

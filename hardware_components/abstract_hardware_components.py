@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 from OhmPi.logging_setup import create_stdout_logger
 import time
+from threading import Barrier
 
 class ControllerAbstract(ABC):
     def __init__(self, **kwargs):
@@ -54,6 +55,7 @@ class MuxAbstract(ABC):
                     self.cabling.update({k: (v[1], k[1])})
         self.exec_logger.debug(f'{self.board_id} cabling: {self.cabling}')
         self.addresses = kwargs.pop('addresses', None)
+        self.barrier = kwargs.pop('barrier', None)
 
     @abstractmethod
     def _get_addresses(self):
@@ -62,6 +64,15 @@ class MuxAbstract(ABC):
     @abstractmethod
     def reset(self):
         pass
+
+    @property
+    def barrier(self):
+        return self.barrier
+
+    @barrier.setter
+    def barrier(self, value):
+        assert isinstance(value, Barrier)
+        self.barrier = value
 
     def switch(self, elec_dict=None, state='on'):
         """Switch a given list of electrodes with different roles.
@@ -96,11 +107,19 @@ class MuxAbstract(ABC):
                                            'This could create an over-voltage in the RX! Switching aborted.')
                     return
 
-            # if all ok, then switch the electrodes
+            # if all ok, then wait for the barrier to open, then switch the electrodes
+            if self.barrier is not None:
+                self.exec_logger.debug(f'{self.board_id} waiting to switch.')
+                self.barrier.wait()
             for role in elec_dict:
                 for elec in elec_dict[role]:
-                    if elec > 0:
-                        self.switch_one(elec, role, state)
+                    if elec > 0:  # Is this condition related to electrodes to infinity?
+                        if (elec, role) in self.cabling.keys():
+                            self.switch_one(elec, role, state)
+                        else:
+                            self.exec_logger.debug(f'{self.board_id} skipping switching {(elec, role)} because it is'
+                                                   f'is not in board cabling')
+            self.exec_logger.debug(f'{self.board_id} switching done.')
         else:
             self.exec_logger.warning(f'Missing argument for {self.board_name}.switch: elec_dict is None.')
 

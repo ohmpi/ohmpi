@@ -1,11 +1,10 @@
 import importlib
 import datetime
 import time
-
 import numpy as np
 from OhmPi.logging_setup import create_stdout_logger
 from OhmPi.config import HARDWARE_CONFIG
-from threading import Thread, Event
+from threading import Thread, Event, Barrier
 
 controller_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["controller"]["model"]}')
 tx_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["tx"]["model"]}')
@@ -55,6 +54,7 @@ class OhmPiHardware:
                                                     soh_logger=self.soh_logger,
                                                     controller=self.controller,
                                                     cabling = self._cabling)})
+
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
         self._pulse = 0  # pulse number
@@ -68,6 +68,11 @@ class OhmPiHardware:
             self.tx_sync.set()
             self.tx.voltage_pulse(length=duration)
             self.tx_sync.clear()
+
+    def _set_mux_barrier(self):
+        self.mux_barrier = Barrier(len(self.mux)+1)
+        for mux in self.mux:
+            mux.barrier = self.mux_barrier
 
     @property
     def pulses(self):
@@ -229,3 +234,113 @@ class OhmPiHardware:
             self._clear_values()
         for i in range(n_pulses):
             self._vab_pulse(self, length=lengths[i], sampling_rate=sampling_rate, polarity=polarities[i], append=True)
+
+    # _______________________________________________
+    def switch_dps(self, state='off'):
+        """Switches DPS on or off.
+
+            Parameters
+            ----------
+            state : str
+                'on', 'off'
+            """
+        if state == 'on':
+            self.tx.turn_on()
+        else:
+            self.tx.turn_off()
+            if state != 'off':
+                self.exec_logger.warning(f'Unknown state {state} for DPS switching. switching off...')
+
+    def switch_mux(self, electrodes, roles=None, state='off'):
+        """Switches on multiplexer relays for given quadrupole.
+
+        Parameters
+        ----------
+        electrodes : list
+            List of integers representing the electrode ids.
+        roles : list, optional
+            List of roles of electrodes, optional
+        state : str, optional
+            Either 'on' or 'off'.
+        """
+        if roles is None:
+            roles = ['A', 'B', 'M', 'N']
+        if len(electrodes) == len(roles):
+            # TODO: Check that we don't set incompatible roles to the same electrode
+            elec_dict = {i: [] for i in roles}
+            for i in range(len(electrodes)):
+                elec_dict[roles[i]].append(electrodes[i])
+            mux_workers = []
+            for mux in self.mux:
+                # start a new thread to perform some work
+                mux_workers.append(Thread(target=mux.switch, kwargs={'elec_dict': elec_dict}))
+            for mux_worker in mux_workers:
+                mux_worker.start()
+            self.mux_barrier.wait()
+            for mux_worker in mux_workers:
+                mux_worker.join()
+        else:
+            self.exec_logger.error(
+                'Unable to switch electrodes: number of electrodes and number of roles do not match!')
+
+    def test_mux(self, activation_time=1.0, channel=None, bypass_check=False):
+        """Interactive method to test the multiplexer.
+
+        Parameters
+        ----------
+        activation_time : float, optional
+            Time in seconds during which the relays are activated.
+        channel : tuple, optional
+            (electrode_nr, role) to test.
+        bypass_check : bool, optional
+            if True, test will be conducted even if several mux boards are connected to the same electrode with the same role
+        """
+        self.reset_mux()
+
+        if channel is None:
+            pass
+        else:
+            pass
+        # choose with MUX board
+        # tca = adafruit_tca9548a.TCA9548A(self.i2c, address)
+        #
+        # # ask use some details on how to proceed
+        # a = input('If you want try 1 channel choose 1, if you want try all channels choose 2!')
+        # if a == '1':
+        #     print('run channel by channel test')
+        #     electrode = int(input('Choose your electrode number (integer):'))
+        #     electrodes = [electrode]
+        # elif a == '2':
+        #     electrodes = range(1, 65)
+        # else:
+        #     print('Wrong choice !')
+        #     return
+        #
+        #     # run the test
+        # for electrode_nr in electrodes:
+        #     # find I2C address of the electrode and corresponding relay
+        #     # considering that one MCP23017 can cover 16 electrodes
+        #     i2c_address = 7 - (electrode_nr - 1) // 16  # quotient without rest of the division
+        #     relay_nr = electrode_nr - (electrode_nr // 16) * 16 + 1
+        #
+        #     if i2c_address is not None:
+        #         # select the MCP23017 of the selected MUX board
+        #         mcp2 = MCP23017(tca[i2c_address])
+        #         mcp2.get_pin(relay_nr - 1).direction = digitalio.Direction.OUTPUT
+        #
+        #         # activate relay for given time
+        #         mcp2.get_pin(relay_nr - 1).value = True
+        #         print('electrode:', electrode_nr, ' activated...', end='', flush=True)
+        #         time.sleep(activation_time)
+        #         mcp2.get_pin(relay_nr - 1).value = False
+        #         print(' deactivated')
+        #         time.sleep(activation_time)
+        # print('Test finished.')
+
+    def reset_mux(self):
+        """Switches off all multiplexer relays.
+        """
+
+        self.exec_logger.debug('Resetting all mux boards ...')
+        for mux in self.mux:
+            mux.reset()
