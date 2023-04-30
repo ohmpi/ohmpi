@@ -30,6 +30,8 @@ default_mux_cabling = {}
 for mux in mux_boards:
     update_dict(default_mux_cabling, MUX_CONFIG[mux].pop('default_mux_cabling', {}))
 
+print(f'default_mux_cabling: {default_mux_cabling}')
+
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
     return lap.total_seconds()
