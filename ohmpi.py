@@ -1240,10 +1240,10 @@ else:
 
 current_time = datetime.now()
 print(f'local date and time : {current_time.strftime("%Y-%m-%d %H:%M:%S")}')
+OhmPi.get_deprecated_methods()
 
 # for testing
 if __name__ == "__main__":
-    OhmPi.get_deprecated_methods()
     ohmpi = OhmPi(settings=OHMPI_CONFIG['settings'])
     if ohmpi.controller is not None:
         ohmpi.controller.loop_forever()
