@@ -64,7 +64,6 @@ class OhmPiHardware:
                                                                      soh_logger=self.soh_logger,
                                                                      controller=self.controller,
                                                                      cabling = self._cabling)})
-
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
         self._pulse = 0  # pulse number
@@ -352,6 +351,6 @@ class OhmPiHardware:
         """
 
         self.exec_logger.debug('Resetting all mux boards ...')
-        for mux in self.mux_boards:
-            print(mux)
-            mux.reset()
+        for mux_id, mux in self.mux_boards.items:
+            self.exec_logger.debug(f'Resetting {mux_id}.')
+            self.mux_boards[mux].reset()
