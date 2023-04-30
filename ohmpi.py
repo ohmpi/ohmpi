@@ -158,7 +158,7 @@ class OhmPi(object):
     def get_deprecated_methods(self):
         for i in getmembers(deprecated, isfunction):
             self.exec_logger.debug(f'Adding deprecated method {i[0]}.')
-            self.__setattr__(i[0], i[1])
+            self.__setattr__(self, i[0], i[1])
 
     @staticmethod
     def append_and_save(filename: str, last_measurement: dict, cmd_id=None):
