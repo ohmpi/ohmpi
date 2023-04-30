@@ -154,10 +154,8 @@ class OhmPi(object):
                                          ' Use python/ipython to interact with OhmPi object...')
 
     def __getattr__(self, name):
-        if hasattr(deprecated, name):
+        if not hasattr(self, name) and hasattr(deprecated, name):
             return getattr(deprecated, name)
-        else:
-            return self.__getattr__(name)
 
     @staticmethod
     def append_and_save(filename: str, last_measurement: dict, cmd_id=None):

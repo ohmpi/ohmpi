@@ -145,7 +145,7 @@ def setup_loggers(mqtt=True):
     if mqtt:
         mqtt_settings = MQTT_LOGGING_CONFIG.copy()
         mqtt_data_logging_level = mqtt_settings.pop('data_logging_level', logging.INFO)
-        [mqtt_settings.pop(i) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic', 'exec_logging_level',
+        [mqtt_settings.pop(i, None) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic', 'exec_logging_level',
                                         'soh_logging_level']]
         mqtt_settings.update({'topic': MQTT_LOGGING_CONFIG['data_topic']})
         try:
