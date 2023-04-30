@@ -10,10 +10,6 @@ from OhmPi.hardware_system import OhmPiHardware
 k = OhmPiHardware()
 k.exec_logger.setLevel(logging.INFO)
 
-# Test mux switching
-k.reset_mux()
-k.switch_mux(electrodes=[9,10,11,12], roles=['A', 'B', 'M', 'N'], state='on')
-
 # Test _vab_pulse:
 print('Testing positive _vab_pulse')
 k._vab_pulse(vab=12, length=1., sampling_rate=k.rx.sampling_rate, polarity=1)
@@ -55,7 +51,5 @@ r = [np.abs((k.pulses[i]['polarity']*k.pulses[i]['vmn']-k.sp)/k.pulses[i]['iab']
 for i in range(len(r)):
     print(f'Mean resistance with sp correction for pulse{i}: {np.mean(r[i]):.3f} Ohms, Dev. {100*np.std(r[i])/np.mean(r[i]):.1f} %')
 
-k.switch_mux(electrodes=[9,10,11,12], roles=['A', 'B', 'M', 'N'], state='off')
-k.reset_mux()
 change_config('config_default.py', verbose=False)
 
