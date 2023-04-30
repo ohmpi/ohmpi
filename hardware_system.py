@@ -18,6 +18,7 @@ for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
     MUX_CONFIG[mux_id].update(mux_config)
     MUX_CONFIG[mux_id].update({'id': mux_id})
     mux_boards.append(mux_id)
+
 TX_CONFIG = tx_module.TX_CONFIG
 RX_CONFIG = rx_module.RX_CONFIG
 
@@ -351,6 +352,6 @@ class OhmPiHardware:
         """
 
         self.exec_logger.debug('Resetting all mux boards ...')
-        for mux_id, mux in self.mux_boards.items:
+        for mux_id, mux in self.mux_boards.items():
             self.exec_logger.debug(f'Resetting {mux_id}.')
             self.mux_boards[mux].reset()
