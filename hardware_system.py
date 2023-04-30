@@ -3,16 +3,21 @@ import datetime
 import time
 import numpy as np
 from OhmPi.logging_setup import create_stdout_logger
+from OhmPi.utils import update_dict
 from OhmPi.config import HARDWARE_CONFIG
 from threading import Thread, Event, Barrier
 
 controller_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["controller"]["model"]}')
 tx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
 rx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
-mux_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["mux"]["model"]}')
+MUX_CONFIG = {}
+for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
+    mux_module = importlib.import_module(f'OhmPi.hardware_components.{mux_config["model"]}')
+    update_dict(MUX_CONFIG[mux_id], mux_module.MUX_CONFIG)
+    update_dict(MUX_CONFIG, mux_config)
+    update_dict(MUX_CONFIG[mux_id], HARDWARE_CONFIG['mux']['common'])
 TX_CONFIG = tx_module.TX_CONFIG
 RX_CONFIG = rx_module.RX_CONFIG
-MUX_CONFIG = mux_module.MUX_CONFIG
 
 current_max = np.min([TX_CONFIG['current_max'], MUX_CONFIG['current_max']])
 voltage_max = np.min([TX_CONFIG['voltage_max'], MUX_CONFIG['voltage_max']])

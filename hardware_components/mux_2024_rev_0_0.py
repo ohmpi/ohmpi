@@ -6,10 +6,12 @@ import adafruit_tca9548a  # noqa
 from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
 from digitalio import Direction  # noqa
 
-MUX_CONFIG = HARDWARE_CONFIG['mux']
-MUX_CONFIG['default_mux_cabling'] = {(elec, role) : ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1,9)} # 4 roles cabling electrodes from 1 to 8
+MUX_CONFIG = HARDWARE_CONFIG['mux'].pop('default', {})
+MUX_CONFIG.update({'voltage_max': 50., 'current_max': 3.})  # board default values that overwrite system default values
+default_mux_cabling = {(elec, role) : ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1,9)} # 4 roles cabling electrodes from 1 to 8
 
-inner_cabling ={'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MCP': 0, 'MCP_GPIO': 8},
+
+inner_cabling = {'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MCP': 0, 'MCP_GPIO': 8},
                              (2, 'X'): {'MCP': 0, 'MCP_GPIO': 1}, (2, 'Y'): {'MCP': 0, 'MCP_GPIO': 9},
                              (3, 'X'): {'MCP': 0, 'MCP_GPIO': 2}, (3, 'Y'): {'MCP': 0, 'MCP_GPIO': 10},
                              (4, 'X'): {'MCP': 0, 'MCP_GPIO': 3}, (4, 'Y'): {'MCP': 0, 'MCP_GPIO': 11},
@@ -25,7 +27,8 @@ inner_cabling ={'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MC
                              (6, 'XX'): {'MCP': 1, 'MCP_GPIO': 2}, (6, 'YY'): {'MCP': 1, 'MCP_GPIO': 10},
                              (7, 'XX'): {'MCP': 1, 'MCP_GPIO': 1}, (7, 'YY'): {'MCP': 1, 'MCP_GPIO': 9},
                              (8, 'XX'): {'MCP': 1, 'MCP_GPIO': 0}, (8, 'YY'): {'MCP': 1, 'MCP_GPIO': 8}},
-                '2_roles':  {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MCP': 0, 'MCP_GPIO': 8}, # TODO: WARNING check 2_roles table, it has not been verified yet !!!
+                '2_roles': # TODO: WARNING check 2_roles table, it has not been verified yet !!!
+                            {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MCP': 0, 'MCP_GPIO': 8},
                              (2, 'X'): {'MCP': 0, 'MCP_GPIO': 1}, (2, 'Y'): {'MCP': 0, 'MCP_GPIO': 9},
                              (3, 'X'): {'MCP': 0, 'MCP_GPIO': 2}, (3, 'Y'): {'MCP': 0, 'MCP_GPIO': 10},
                              (4, 'X'): {'MCP': 0, 'MCP_GPIO': 3}, (4, 'Y'): {'MCP': 0, 'MCP_GPIO': 11},
@@ -46,6 +49,8 @@ inner_cabling ={'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MC
 
 class Mux(MuxAbstract):
     def __init__(self, **kwargs):
+        if 'id' in kwargs.keys():
+            MUX_CONFIG.update(MUX_CONFIG[kwargs['id']])
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         if 'cabling' not in kwargs.keys():
             kwargs.update({'cabling': MUX_CONFIG['default_mux_cabling']})
@@ -67,7 +72,7 @@ class Mux(MuxAbstract):
             self._tca = self.controller.bus
         else:
             self._tca = adafruit_tca9548a.TCA9548A(self.controller.bus, tca_address)[tca_channel]
-        self._mcp_addresses = (kwargs.pop('mcp_0', '0x22'), kwargs.pop('mcp_1', '0x23'))  # TODO add assert on valid addresses..
+        self._mcp_addresses = (kwargs.pop('mcp_0', '0x22'), kwargs.pop('mcp_1', '0x23'))  # TODO: add assert on valid addresses..
         self._mcp = [None, None]
         self.reset()
         if self.addresses is None:
@@ -90,16 +95,13 @@ class Mux(MuxAbstract):
     def switch_one(self, elec=None, role=None, state=None):
         MuxAbstract.switch_one(self, elec=elec, role=role, state=state)
 
-        def set_relay_state(mcp, mcp_pin, state=True):
+        def activate_relay(mcp, mcp_pin, value=True):
             pin_enable = mcp.get_pin(mcp_pin)
             pin_enable.direction = Direction.OUTPUT
-            pin_enable.value = state
+            pin_enable.value = value
 
         d = self.addresses[elec, role]
         if state == 'on':
-            set_relay_state(self._mcp[d['MCP']], d['MCP_GPIO'], True)
+            activate_relay(self._mcp[d['MCP']], d['MCP_GPIO'], True)
         if state == 'off':
-            set_relay_state(self._mcp[d['MCP']], d['MCP_GPIO'], False)
-
-    def test(self, *args):
-        MuxAbstract.test(self, *args)
+            activate_relay(self._mcp[d['MCP']], d['MCP_GPIO'], False)
