@@ -116,8 +116,8 @@ class MuxAbstract(ABC):
                         if (elec, role) in self.cabling.keys():
                             self.switch_one(elec, role, state)
                         else:
-                            self.exec_logger.debug(f'{self.board_id} skipping switching {(elec, role)} because it is'
-                                                   f'is not in board cabling')
+                            self.exec_logger.debug(f'{self.board_id} skipping switching {(elec, role)} because it'
+                                                   f'is not in board cabling {self.cabling}')
             self.exec_logger.debug(f'{self.board_id} switching done.')
         else:
             self.exec_logger.warning(f'Missing argument for {self.board_name}.switch: elec_dict is None.')
