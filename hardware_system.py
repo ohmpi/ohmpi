@@ -6,10 +6,10 @@ from OhmPi.logging_setup import create_stdout_logger
 from OhmPi.config import HARDWARE_CONFIG
 from threading import Thread, Event, Barrier
 
-controller_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["controller"]["model"]}')
-tx_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["tx"]["model"]}')
-rx_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["rx"]["model"]}')
-mux_module = importlib.import_module(f'OhmPi.hardware.{HARDWARE_CONFIG["mux"]["model"]}')
+controller_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["controller"]["model"]}')
+tx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
+rx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
+mux_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["mux"]["model"]}')
 TX_CONFIG = tx_module.TX_CONFIG
 RX_CONFIG = rx_module.RX_CONFIG
 MUX_CONFIG = mux_module.MUX_CONFIG
