@@ -22,6 +22,7 @@ from termcolor import colored
 import threading
 from OhmPi.logging_setup import setup_loggers
 from OhmPi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
+import OhmPi.deprecated as deprecated
 from logging import DEBUG
 from OhmPi.hardware_system import OhmPiHardware
 
@@ -152,7 +153,12 @@ class OhmPi(object):
                 self.exec_logger.warning('No connection to control broker.'
                                          ' Use python/ipython to interact with OhmPi object...')
 
-    from OhmPi.deprecated import *
+    def __getattr__(self, name):
+        if not hasattr(self, name):
+            if hasattr(deprecated, name):
+                return getattr(deprecated, name)
+        else:
+            return getattr(self, name)
 
     @staticmethod
     def append_and_save(filename: str, last_measurement: dict, cmd_id=None):
