@@ -281,7 +281,7 @@ class OhmPiHardware:
             for i in range(len(electrodes)):
                 elec_dict[roles[i]].append(electrodes[i])
             mux_workers = []
-            for mux in self.mux_boards:
+            for _, mux in self.mux_boards.items():
                 # start a new thread to perform some work
                 mux_workers.append(Thread(target=mux.switch, kwargs={'elec_dict': elec_dict}))
             for mux_worker in mux_workers:
