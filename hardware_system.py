@@ -320,6 +320,7 @@ class OhmPiHardware:
             self.switch_mux(electrodes,roles, state='off')
         else:
             for c in self._cabling.keys():
+                self.exec_logger.info(f'Testing electrode {c[0]} with role {c[1]}.')
                 self.switch_mux(electrodes=[c[0]],roles=[c[1]],state='on')
                 time.sleep(activation_time)
                 self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='off')

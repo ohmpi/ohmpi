@@ -157,7 +157,6 @@ class OhmPi(object):
     @classmethod
     def get_deprecated_methods(cls):
         for i in getmembers(deprecated, isfunction):
-            print(f'Adding {i[0]} (deprecated)')
             setattr(cls, i[0], i[1])
 
     @staticmethod
