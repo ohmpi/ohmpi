@@ -69,6 +69,7 @@ DATA_LOGGING_CONFIG = {
 # State of Health logging configuration (For a future release)
 SOH_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
+    'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
     'file_name': f'soh{logging_suffix}.log',
     'max_bytes': 16777216,
