@@ -28,7 +28,7 @@ if part_of_hardware_system:
     from OhmPi.hardware_system import OhmPiHardware
     print('Starting test of mux as part of a OhmPiHardware system.')
     k = OhmPiHardware()
-    k.exec_logger.setLevel(logging.INFO)
+    k.exec_logger.setLevel(logging.DEBUG)
 
     # Test mux switching
     k.reset_mux()
