@@ -66,7 +66,7 @@ class OhmPiHardware:
         self._cabling={}
         for _, mux in self.mux_boards.items():
             mux.barrier = self.mux_barrier
-            for k, v in mux.cabling.items:
+            for k, v in mux.cabling.items():
                 update_dict(self._cabling, (mux_id, k[0]))
         print(self._cabling)
         self.readings = np.array([])  # time series of acquired data
