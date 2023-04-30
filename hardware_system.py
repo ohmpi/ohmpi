@@ -25,7 +25,9 @@ current_max = np.min([TX_CONFIG['current_max'], np.min([MUX_CONFIG[i].pop('curre
 voltage_max = np.min([TX_CONFIG['voltage_max'], np.min([MUX_CONFIG[i].pop('voltage_max', np.inf) for i in mux_boards])])
 voltage_min = RX_CONFIG['voltage_min']
 
-default_mux_cabling = MUX_CONFIG.pop('default_mux_cabling', None)
+default_mux_cabling = {}
+for mux in mux_boards:
+    update_dict(default_mux_cabling, MUX_CONFIG[mux].pop('default_mux_cabling', {}))
 
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
