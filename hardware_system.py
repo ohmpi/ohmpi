@@ -29,7 +29,8 @@ voltage_min = RX_CONFIG['voltage_min']
 
 default_mux_cabling = {}
 for mux in mux_boards:
-    update_dict(default_mux_cabling, MUX_CONFIG[mux].pop('default_mux_cabling', {}))
+    if 'default_mux_cabling' in MUX_CONFIG[mux]:
+        update_dict(default_mux_cabling, MUX_CONFIG[mux]['default_mux_cabling'])
 
 print(f'default_mux_cabling: {default_mux_cabling}')
 
