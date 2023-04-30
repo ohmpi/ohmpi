@@ -1,30 +1,30 @@
 # -*- coding: utf-8 -*-
 """
 created on January 6, 2020.
-Updates dec 2022.
+Updates dec 2023; in-depth refactoring May 2023.
 Hardware: Licensed under CERN-OHL-S v2 or any later version
 Software: Licensed under the GNU General Public License v3.0
-Ohmpi.py is a program to control a low-cost and open hardware resistivity meter OhmPi that is developed by
+Ohmpi.py is a program to control a low-cost and open hardware resistivity meters within the OhmPi project by
 Rémi CLEMENT (INRAE), Vivien DUBOIS (INRAE), Hélène GUYARD (IGE), Nicolas FORQUET (INRAE), Yannick FARGIER (IFSTTAR)
 Olivier KAUFMANN (UMONS), Arnaud WATLET (UMONS) and Guillaume BLANCHY (FNRS/ULiege).
 """
 
 import os
-from OhmPi.utils import get_platform
 import json
 from copy import deepcopy
 import numpy as np
 import csv
 import time
-import shutil
+from shutil import rmtree
+from threading import Thread
 from inspect import getmembers, isfunction
 from datetime import datetime
 from termcolor import colored
-import threading
+from logging import DEBUG
+from OhmPi.utils import get_platform
 from OhmPi.logging_setup import setup_loggers
 from OhmPi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import OhmPi.deprecated as deprecated
-from logging import DEBUG
 from OhmPi.hardware_system import OhmPiHardware
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
@@ -37,6 +37,8 @@ except ImportError as error:
 except Exception as error:
     print(colored(f'Unexpected error: {error}', 'red'))
     arm64_imports = None
+
+VERSION = '2.2.0-alpha'
 
 class OhmPi(object):
     """ OhmPi class.
@@ -70,9 +72,7 @@ class OhmPi(object):
         self.thread = None  # contains the handle for the thread taking the measurement
 
         # set loggers
-        config_exec_logger, _, config_data_logger, _, config_soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
-        self.exec_logger = config_exec_logger
-        self.soh_logger = config_soh_logger
+        self.exec_logger, _, self.data_logger, _, self.soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
         print(msg)
 
         # read in hardware parameters (config.py)
@@ -430,7 +430,7 @@ class OhmPi(object):
             Unique command identifier
         """
         self.exec_logger.debug(f'Removing all data following command {cmd_id}')
-        shutil.rmtree('data')
+        rmtree('data')
         os.mkdir('data')
 
     def restart(self, cmd_id=None):
@@ -895,7 +895,7 @@ class OhmPi(object):
                     time.sleep(dt)  # waiting for next measurement (time-lapse)
             self.status = 'idle'
 
-        self.thread = threading.Thread(target=func)
+        self.thread = Thread(target=func)
         self.thread.start()
 
     def run_sequence(self, cmd_id=None, **kwargs):
@@ -1000,7 +1000,7 @@ class OhmPi(object):
         def func():
             self.run_sequence(**kwargs)
 
-        self.thread = threading.Thread(target=func)
+        self.thread = Thread(target=func)
         self.thread.start()
         self.status = 'idle'
 
@@ -1218,8 +1218,6 @@ class OhmPi(object):
             assert isinstance(sequence, np.ndarray)
         self._sequence = sequence
 
-
-VERSION = '2.2.0-alpha'
 
 print(colored(r' ________________________________' + '\n' +
               r'|  _  | | | ||  \/  || ___ \_   _|' + '\n' +
