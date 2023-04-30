@@ -50,7 +50,7 @@ inner_cabling = {'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'M
 class Mux(MuxAbstract):
     def __init__(self, **kwargs):
         if 'id' in kwargs.keys():
-            MUX_CONFIG.update(MUX_CONFIG[kwargs['id']])
+            MUX_CONFIG.update(MUX_CONFIG['boards'][kwargs['id']])
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         if 'cabling' not in kwargs.keys():
             kwargs.update({'cabling': MUX_CONFIG['default_mux_cabling']})
