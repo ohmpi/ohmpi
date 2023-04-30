@@ -19,7 +19,7 @@ time.sleep(8)
 #mux.switch({'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
 mux.reset()
 mux.test({'A': [9, 10, 11, 12, 13, 14, 15, 16], 'B': [9, 10, 11, 12, 13, 14, 15, 16],
-          'M': [9, 10, 11, 12, 13, 14, 15, 16], 'N': [9, 10, 11, 12, 13, 14, 15, 16]})
+          'M': [9, 10, 11, 12, 13, 14, 15, 16], 'N': [9, 10, 11, 12, 13, 14, 15, 16]}, activation_time=.25)
 
 # mux as part of a OhmPiHardware system
 from OhmPi.hardware_system import OhmPiHardware
