@@ -27,12 +27,6 @@ current_max = np.min([TX_CONFIG['current_max'], np.min([MUX_CONFIG[i].pop('curre
 voltage_max = np.min([TX_CONFIG['voltage_max'], np.min([MUX_CONFIG[i].pop('voltage_max', np.inf) for i in mux_boards])])
 voltage_min = RX_CONFIG['voltage_min']
 
-default_mux_cabling = {}
-for mux in mux_boards:
-   update_dict(default_mux_cabling, MUX_CONFIG[mux].pop('default_mux_cabling', {}))
-
-print(f'default_mux_cabling: {default_mux_cabling}')
-
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
     return lap.total_seconds()
@@ -61,7 +55,7 @@ class OhmPiHardware:
                                                  data_logger=self.data_logger,
                                                  soh_logger=self.soh_logger,
                                                  controller=self.controller))
-        self._cabling = kwargs.pop('cabling', default_mux_cabling)
+        self._cabling = kwargs.pop('cabling', {})
         self.mux_boards = kwargs.pop('mux', {'mux_1': mux_module.Mux(id='mux_1',
                                                                      exec_logger=self.exec_logger,
                                                                      data_logger=self.data_logger,
