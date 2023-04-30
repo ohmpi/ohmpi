@@ -12,7 +12,6 @@ Olivier KAUFMANN (UMONS), Arnaud WATLET (UMONS) and Guillaume BLANCHY (FNRS/ULie
 import os
 from OhmPi.utils import get_platform
 import json
-import warnings
 from copy import deepcopy
 import numpy as np
 import csv
@@ -23,8 +22,9 @@ from termcolor import colored
 import threading
 from OhmPi.logging_setup import setup_loggers
 from OhmPi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
+import OhmPi.deprecated as deprecated
 from logging import DEBUG
-from hardware_system import OhmPiHardware
+from OhmPi.hardware_system import OhmPiHardware
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
 try:
@@ -75,7 +75,7 @@ class OhmPi(object):
         print(msg)
 
         # read in hardware parameters (config.py)
-        self._hw = OhmPiHardware({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+        self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                   'soh_logger': self.soh_logger})
         self.exec_logger.info('Hardware configured...')
         # default acquisition settings
@@ -152,6 +152,12 @@ class OhmPi(object):
                 self.controller = None
                 self.exec_logger.warning('No connection to control broker.'
                                          ' Use python/ipython to interact with OhmPi object...')
+
+    def __getattr__(self, name):
+        if hasattr(deprecated, name):
+            return getattr(deprecated, name)
+        else:
+            return self.__getattr__(name)
 
     @staticmethod
     def append_and_save(filename: str, last_measurement: dict, cmd_id=None):
@@ -320,10 +326,6 @@ class OhmPi(object):
             self.exec_logger.warning(f'Unable to load sequence {filename}')
         self.sequence = sequence
 
-    def measure(self, **kwargs):
-        warnings.warn('This function is deprecated. Use run_multiple_sequences() instead.', DeprecationWarning)
-        self.run_multiple_sequences(**kwargs)
-
     def _process_commands(self, message: str):
         """Processes commands received from the controller(s)
 
@@ -417,10 +419,6 @@ class OhmPi(object):
         self.board_version = OHMPI_CONFIG['board_version']
         self.mcp_board_address = OHMPI_CONFIG['mcp_board_address']
         self.exec_logger.debug(f'OHMPI_CONFIG = {str(OHMPI_CONFIG)}')
-
-    def read_quad(self, **kwargs):
-        warnings.warn('This function is deprecated. Use load_sequence instead.', DeprecationWarning)
-        self.load_sequence(**kwargs)
 
     def remove_data(self, cmd_id=None):
         """Remove all data in the data folder
@@ -779,35 +777,35 @@ class OhmPi(object):
 
             # create a dictionary and compute averaged values from all stacks
             # if self.board_version == 'mb.2023.0.0':
-            d = {
-                "time": datetime.now().isoformat(),
-                "A": quad[0],
-                "B": quad[1],
-                "M": quad[2],
-                "N": quad[3],
-                "inj time [ms]": (end_delay - start_delay) * 1000. if not out_of_range else 0.,
-                "Vmn [mV]": sum_vmn / (2 * nb_stack),
-                "I [mA]": sum_i / (2 * nb_stack),
-                "R [ohm]": sum_vmn / sum_i,
-                "Ps [mV]": sum_ps / (2 * nb_stack),
-                "nbStack": nb_stack,
-                "Tx [V]": tx_volt if not out_of_range else 0.,
-                "CPU temp [degC]": self._hw.cpu_temperature,
-                "Nb samples [-]": self.nb_samples,
-                "fulldata": fulldata,
-                "I_stack [mA]": i_stack_mean,
-                "I_std [mA]": i_std,
-                "I_per_stack [mA]": np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
-                "Vmn_stack [mV]": vmn_stack_mean,
-                "Vmn_std [mV]": vmn_std,
-                "Vmn_per_stack [mV]": np.array([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1))[0] / 2 for i in range(nb_stack)]),
-                "R_stack [ohm]": r_stack_mean,
-                "R_std [ohm]": r_stack_std,
-                "R_per_stack [Ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
-                "PS_per_stack [mV]":  np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]),
-                "PS_stack [mV]": ps_stack_mean,
-                "R_ab [ohm]": Rab
-            }
+            # d = {
+            #     "time": datetime.now().isoformat(),
+            #     "A": quad[0],
+            #     "B": quad[1],
+            #     "M": quad[2],
+            #     "N": quad[3],
+            #     "inj time [ms]": (end_delay - start_delay) * 1000. if not out_of_range else 0.,
+            #     "Vmn [mV]": sum_vmn / (2 * nb_stack),
+            #     "I [mA]": sum_i / (2 * nb_stack),
+            #     "R [ohm]": sum_vmn / sum_i,
+            #     "Ps [mV]": sum_ps / (2 * nb_stack),
+            #     "nbStack": nb_stack,
+            #     "Tx [V]": tx_volt if not out_of_range else 0.,
+            #     "CPU temp [degC]": self._hw.cpu_temperature,
+            #     "Nb samples [-]": self.nb_samples,
+            #     "fulldata": fulldata,
+            #     "I_stack [mA]": i_stack_mean,
+            #     "I_std [mA]": i_std,
+            #     "I_per_stack [mA]": np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
+            #     "Vmn_stack [mV]": vmn_stack_mean,
+            #     "Vmn_std [mV]": vmn_std,
+            #     "Vmn_per_stack [mV]": np.array([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1))[0] / 2 for i in range(nb_stack)]),
+            #     "R_stack [ohm]": r_stack_mean,
+            #     "R_std [ohm]": r_stack_std,
+            #     "R_per_stack [Ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
+            #     "PS_per_stack [mV]":  np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]),
+            #     "PS_stack [mV]": ps_stack_mean,
+            #     "R_ab [ohm]": Rab
+            # }
                 # print(np.array([(vmn_stack[i*2:i*2+2]) for i in range(nb_stack)]))
             # elif self.board_version == '22.10':
             #     d = {
@@ -827,6 +825,7 @@ class OhmPi(object):
             #         "Nb samples [-]": self.nb_samples,
             #         "fulldata": fulldata,
             #     }
+            d = {}
 
         else:  # for testing, generate random data
             d = {'time': datetime.now().isoformat(), 'A': quad[0], 'B': quad[1], 'M': quad[2], 'N': quad[3],
@@ -1103,10 +1102,6 @@ class OhmPi(object):
             self.exec_logger.warning(f'Unable to set sequence: {e}')
             status = False
 
-    def stop(self, **kwargs):
-        warnings.warn('This function is deprecated. Use interrupt instead.', DeprecationWarning)
-        self.interrupt(**kwargs)
-
     def switch_dps(self, state='off'):
         """Switches DPS on or off.
 
@@ -1128,7 +1123,7 @@ class OhmPi(object):
             List of 4 integers representing the electrode numbers.
         """
 
-        self._hw.switch_mux_on(electrodes=quadrupole, state='on')
+        self._hw.switch_mux(electrodes=quadrupole, state='on')
 
     def switch_mux_off(self, quadrupole, cmd_id=None):
         """Switches off multiplexer relays for given quadrupole.
@@ -1143,21 +1138,23 @@ class OhmPi(object):
 
         self._hw.switch_mux(electrodes=quadrupole, state='off')
 
-    def test_mux(self, activation_time=1.0, mux=None): # TODO: add this in the MUX code
+    def test_mux(self, activation_time=1.0, mux_id=None, cmd_id=None): # TODO: add this in the MUX code
         """Interactive method to test the multiplexer boards.
 
         Parameters
         ----------
         activation_time : float, optional
             Time in seconds during which the relays are activated.
-        address : hex, optional
-            Address of the multiplexer board to test (e.g. 0x70, 0x71, ...).
+        mux_id : str, optional
+            id of the mux_board to test
+        cmd_id : str, optional
+            Unique command identifier
         """
-        self.reset_mux() # All muxes should be reset even if we only want to test one otherwise we might create a shortcut
-        if mux is None:
+        self.reset_mux() # All mux boards should be reset even if we only want to test one otherwise we might create a shortcut
+        if mux_id is None:
             self._hw.test_mux(activation_time)
         else:
-            self._hw.mux_boards[mux].test_mux()
+            self._hw.mux_boards[mux_id].test(activation_time=activation_time)
 
 
     def reset_mux(self, cmd_id=None):
@@ -1169,10 +1166,6 @@ class OhmPi(object):
             Unique command identifier
         """
         self._hw.reset_mux()
-
-    def _update_acquisition_settings(self, config):
-        warnings.warn('This function is deprecated, use update_settings() instead.', DeprecationWarning)
-        self.update_settings(settings=config)
 
     def update_settings(self, settings: str, cmd_id=None):
         """Updates acquisition settings from a json file or dictionary.
@@ -1222,13 +1215,10 @@ class OhmPi(object):
         """Sets sequence"""
         if sequence is not None:
             assert isinstance(sequence, np.ndarray)
-            self.use_mux = True
-        else:
-            self.use_mux = False
         self._sequence = sequence
 
 
-VERSION = '2.1.5'
+VERSION = '2.2.0-alpha'
 
 print(colored(r' ________________________________' + '\n' +
               r'|  _  | | | ||  \/  || ___ \_   _|' + '\n' +

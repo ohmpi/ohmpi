@@ -3,7 +3,7 @@ import board  # noqa
 import busio  # noqa
 import os
 from OhmPi.utils import get_platform
-from gpiozero import CPUTemperature
+from gpiozero import CPUTemperature  # noqa
 
 class Controller(ControllerAbstract):
     def __init__(self, **kwargs):
