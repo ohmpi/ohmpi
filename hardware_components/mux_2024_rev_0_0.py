@@ -54,7 +54,7 @@ class Mux(MuxAbstract):
         if 'id' in kwargs.keys():
             MUX_CONFIG.update(HARDWARE_CONFIG['mux']['boards'][kwargs['id']])
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
-        if 'cabling' not in kwargs.keys() or kwargs['cabling'] is None:
+        if 'cabling' not in kwargs.keys() or kwargs['cabling']=={}:
             kwargs.update({'cabling': default_mux_cabling})
         super().__init__(**kwargs)
         self.exec_logger.debug(f'configuration: {MUX_CONFIG}')
