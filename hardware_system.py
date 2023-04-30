@@ -64,8 +64,9 @@ class OhmPiHardware:
                                                                      cabling = self._cabling)})
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
         self._cabling={}
-        for mux_id, mux in self.mux_boards.items():
+        for _, mux in self.mux_boards.items():
             mux.barrier = self.mux_barrier
+            print(mux.cabling)
             update_dict(self._cabling, mux.cabling)
         print(self._cabling)
         self.readings = np.array([])  # time series of acquired data
@@ -308,16 +309,15 @@ class OhmPiHardware:
         """
         self.reset_mux()
 
-        if channel is None:
-            a = input('Which channel do you want to test? (1,A)')
-            if a =='':
+        if channel is not None:
+            if channel =='':
                 electrodes = [1]
                 roles = ['A']
             else:
                 try:
-                    a = a.lstrip('(').rstrip(')').split(',')
-                    electrodes = [int(a[0])]
-                    roles = [a[1]]
+                    channel = channel.lstrip('(').rstrip(')').split(',')
+                    electrodes = [int(channel[0])]
+                    roles = [channel[1]]
                 except Exception as e:
                     self.exec_logger.error(f'Unable to parse your answer: {e}')
                     return
