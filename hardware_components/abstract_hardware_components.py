@@ -55,7 +55,7 @@ class MuxAbstract(ABC):
                     self.cabling.update({k: (v[1], k[1])})
         self.exec_logger.debug(f'{self.board_id} cabling: {self.cabling}')
         self.addresses = kwargs.pop('addresses', None)
-        self.barrier = kwargs.pop('barrier', None)
+        self.barrier = kwargs.pop('barrier', Barrier(1))
 
     @abstractmethod
     def _get_addresses(self):
@@ -108,9 +108,8 @@ class MuxAbstract(ABC):
                     return
 
             # if all ok, then wait for the barrier to open, then switch the electrodes
-            if self.barrier is not None:
-                self.exec_logger.debug(f'{self.board_id} waiting to switch.')
-                self.barrier.wait()
+            self.exec_logger.debug(f'{self.board_id} waiting to switch.')
+            self.barrier.wait()
             for role in elec_dict:
                 for elec in elec_dict[role]:
                     if elec > 0:  # Is this condition related to electrodes to infinity?
