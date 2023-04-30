@@ -55,7 +55,7 @@ class MuxAbstract(ABC):
                     self.cabling.update({k: (v[1], k[1])})
         self.exec_logger.debug(f'{self.board_id} cabling: {self.cabling}')
         self.addresses = kwargs.pop('addresses', None)
-        self.barrier = kwargs.pop('barrier', Barrier(1))
+        self._barrier = kwargs.pop('barrier', Barrier(1))
 
     @abstractmethod
     def _get_addresses(self):
@@ -67,12 +67,12 @@ class MuxAbstract(ABC):
 
     @property
     def barrier(self):
-        return self.barrier
+        return self._barrier
 
     @barrier.setter
     def barrier(self, value):
         assert isinstance(value, Barrier)
-        self.barrier = value
+        self._barrier = value
 
     def switch(self, elec_dict=None, state='on'):
         """Switch a given list of electrodes with different roles.
