@@ -10,7 +10,7 @@ import numpy as np
 import os
 from OhmPi.hardware_components import TxAbstract, RxAbstract
 controller_name = HARDWARE_CONFIG['controller'].pop('board_name', 'raspberry_pi')
-controller_module = importlib.import_module(f'OhmPi.hardware.{controller_name}')
+controller_module = importlib.import_module(f'OhmPi.hardware_components.{controller_name}')
 
 TX_CONFIG = HARDWARE_CONFIG['tx']
 RX_CONFIG = HARDWARE_CONFIG['rx']
