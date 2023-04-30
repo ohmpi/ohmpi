@@ -1122,7 +1122,7 @@ class OhmPi(object):
         quadrupole : list of 4 int
             List of 4 integers representing the electrode numbers.
         """
-
+        assert len(quadrupole) == 4
         self._hw.switch_mux(electrodes=quadrupole, state='on')
 
     def switch_mux_off(self, quadrupole, cmd_id=None):
@@ -1135,7 +1135,7 @@ class OhmPi(object):
         quadrupole : list of 4 int
             List of 4 integers representing the electrode numbers.
         """
-
+        assert len(quadrupole) == 4
         self._hw.switch_mux(electrodes=quadrupole, state='off')
 
     def test_mux(self, activation_time=1.0, mux_id=None, cmd_id=None): # TODO: add this in the MUX code
