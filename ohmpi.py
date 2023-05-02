@@ -665,7 +665,7 @@ class OhmPi(object):
         """
         # create custom sequence where MN == AB
         # we only check the electrodes which are in the sequence (not all might be connected)
-        if self.sequence is None or not self.use_mux:
+        if self.sequence is None:
             quads = np.array([[1, 2, 1, 2]], dtype=np.uint32)
         else:
             elec = np.sort(np.unique(self.sequence.flatten()))  # assumed order
