@@ -292,7 +292,7 @@ class OhmPiHardware:
                     if mux not in mux_workers:
                         mux_workers.append(mux)
                 except KeyError:
-                    self.exec_logger.warning(f'({elec}, {roles[idx]}) is not in cabling. It will be ignored...')
+                    self.exec_logger.warning(f'Unable to switch {state} ({elec}, {roles[idx]}): not in cabling and will be ignored...')
             mux_workers = list(set(mux_workers))
             b = Barrier(len(mux_workers)+1)
             self.mux_barrier = b
@@ -306,7 +306,7 @@ class OhmPiHardware:
                 mux_worker.join()
         else:
             self.exec_logger.error(
-                'Unable to switch electrodes: number of electrodes and number of roles do not match!')
+                f'Unable to switch {state} electrodes: number of electrodes and number of roles do not match!')
 
     def test_mux(self, channel=None, activation_time=1.0):
         """Interactive method to test the multiplexer.
