@@ -118,7 +118,7 @@ class OhmPiHardware:
 
     @property
     def sp(self):
-        if len(self.readings[self.readings[:,2]==1, :]) < 1 or len(self.readings[self.readings[:,2]==-1, :]) < 1:
+        if self.readings.shape == (0,) or len(self.readings[self.readings[:,2]==1, :]) < 1 or len(self.readings[self.readings[:,2]==-1, :]) < 1:
             self.exec_logger.warning('Unable to compute sp: readings should at least contain one positive and one negative pulse')
             return 0.
         else:
