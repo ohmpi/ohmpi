@@ -211,7 +211,7 @@ class OhmPiHardware:
             polarity = 1
         return vab, polarity, rab
 
-    def vab_square_wave(self, vab, cycle_length, sampling_rate, cycles=3, polarity=1, append=False):
+    def vab_square_wave(self, vab, cycle_length, sampling_rate=None, cycles=3, polarity=1, append=False):
         self.tx.polarity = polarity
         lengths = [cycle_length/2]*2*cycles
         self._vab_pulses(vab, lengths, sampling_rate, append=append)

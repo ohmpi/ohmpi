@@ -2,6 +2,7 @@ import importlib
 from OhmPi.config import HARDWARE_CONFIG
 import adafruit_ads1x15.ads1115 as ads  # noqa
 from adafruit_ads1x15.analog_in import AnalogIn  # noqa
+from adafruit_ads1x15.ads1x15 import Mode  # noqa
 from adafruit_mcp230xx.mcp23008 import MCP23008  # noqa
 from digitalio import Direction  # noqa
 import minimalmodbus  # noqa
@@ -83,6 +84,7 @@ class Tx(TxAbstract):
         self._ads_current_address = 0x48
         self._ads_current = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_current_address)
+        self._ads_current.mode = Mode.CONTINUOUS
 
         # Relays for pulse polarity
         self.pin0 = self.mcp_board.get_pin(0)
@@ -216,6 +218,7 @@ class Rx(RxAbstract):
         self._ads_voltage_address = 0x49
         self._adc_gain = 2/3
         self._ads_voltage = ads.ADS1115(self.controller.bus, gain=self._adc_gain, data_rate=860, address=self._ads_voltage_address)
+        self._ads_voltage.mode = Mode.CONTINUOUS
         self._sampling_rate = kwargs.pop('sampling_rate', sampling_rate)
 
     @property
