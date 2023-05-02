@@ -169,7 +169,7 @@ class Tx(TxAbstract):
         return self._voltage
     @voltage.setter
     def voltage(self, value):
-            self.exec_logger.warning(f'Voltage cannot be set on {self.board_name}...')
+            self.exec_logger.debug(f'Voltage cannot be set on {self.board_name}...')
 
     def turn_off(self):
         pass
