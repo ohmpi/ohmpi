@@ -210,7 +210,7 @@ class Tx(TxAbstract):
     @voltage.setter
     def voltage(self, value):
         assert isinstance(value, float)
-        value = np.max([TX_CONFIG['voltage_min'], np.min(value, TX_CONFIG['voltage_max'])])
+        value = np.max([TX_CONFIG['voltage_min'], np.min([value, TX_CONFIG['voltage_max']])])
         super().voltage = value
 
 class Rx(RxAbstract):
