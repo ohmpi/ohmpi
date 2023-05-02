@@ -74,6 +74,8 @@ class Tx(TxAbstract):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         self._voltage = kwargs.pop('voltage', TX_CONFIG['default_voltage'])
+        self.voltage_adjustable = False
+        self.current_adjustable = False
         if self.controller is None:
             self.controller = controller_module.Controller()
 
@@ -164,13 +166,6 @@ class Tx(TxAbstract):
             self.pin1.value = False
         #time.sleep(0.001) # TODO: check max switching time of relays
 
-    @property
-    def voltage(self):
-        return self._voltage
-    @voltage.setter
-    def voltage(self, value):
-            self.exec_logger.debug(f'Voltage cannot be set on {self.board_name}...')
-
     def turn_off(self):
         pass
 
@@ -206,6 +201,16 @@ class Tx(TxAbstract):
         self.inject(state='on')
         time.sleep(length)
         self.inject(state='off')
+
+
+    @property
+    def voltage(self):
+        return self._voltage
+    @voltage.setter
+    def voltage(self, value):
+        assert isinstance(value, float)
+        value = np.max(TX_CONFIG['voltage_min'], np.min(value, TX_CONFIG['voltage_max']))
+        super().voltage = value
 
 class Rx(RxAbstract):
     def __init__(self, **kwargs):

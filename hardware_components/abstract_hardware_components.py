@@ -18,6 +18,7 @@ class ControllerAbstract(ABC):
         self.exec_logger.debug(f'{self.board_name} Controller initialization')
         self._cpu_temp_available = False
         self.max_cpu_temp = np.inf
+
     @property
     def cpu_temperature(self):
         if not self._cpu_temp_available:
@@ -167,6 +168,9 @@ class TxAbstract(ABC):
         self._dps_state = 'off'
         self._adc_gain = 1.
         self.inj_time = inj_time
+        self._voltage = 0.
+        self.voltage_adjustable = True
+        self._current_adjustable = False
         self.exec_logger.debug(f'{self.board_name} TX initialization')
 
     @property
@@ -230,16 +234,17 @@ class TxAbstract(ABC):
         self._dps_state = 'on'
 
     @property
-    @abstractmethod
     def voltage(self):
-        # add actions to read the DPS voltage and return it
-        return None
+        return self._voltage
 
     @voltage.setter
-    @abstractmethod
     def voltage(self, value):
-        # add actions to set the DPS voltage
-        pass
+        assert isinstance(value, float)
+        if not self.voltage_adjustable:
+            self.exec_logger.warning(f'Voltage cannot be set on {self.board_name}...')
+        else:
+            self._voltage = value
+        # Add specifics to set DPS voltage
 
     @property
     @abstractmethod

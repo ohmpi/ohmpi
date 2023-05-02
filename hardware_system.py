@@ -224,7 +224,10 @@ class OhmPiHardware:
             sampling_rate = RX_CONFIG['sampling_rate']
         if polarity is not None and polarity != self.tx.polarity:
             self.tx.polarity = polarity
-        self.tx.voltage = vab
+        if self.tx.voltage_adjustable:
+            self.tx.voltage = vab
+        else:
+            vab = self.tx.voltage
         injection = Thread(target=self._inject, kwargs={'duration':length})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
         # set gains automatically
@@ -289,7 +292,7 @@ class OhmPiHardware:
                     if mux not in mux_workers:
                         mux_workers.append(mux)
                 except KeyError:
-                    self.exec_logger.warning(f'({elec}, {roles[idx]} is not in cabling. It will be ignored...')
+                    self.exec_logger.warning(f'({elec}, {roles[idx]}) is not in cabling. It will be ignored...')
             mux_workers = list(set(mux_workers))
             b = Barrier(len(mux_workers)+1)
             self.mux_barrier = b

@@ -22,7 +22,8 @@ HARDWARE_CONFIG = {
                    },
     'tx' : {'model' : 'ohmpi_card_3_15',
              'mcp_board_address': 0x20,
-             'current_max': 4800 / 50 / 2,  # Maximum current
+             'voltage_max': 12, # Maximum voltage [V]
+             'current_max': 4800 / 50 / 2,  # Maximum current [mA]
              'r_shunt': 2  # Shunt resistance in Ohms
             },
     'rx' : {'model': 'ohmpi_card_3_15',
