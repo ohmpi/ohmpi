@@ -29,8 +29,8 @@ class ControllerAbstract(ABC):
                 self.soh_logger.warning(f'CPU temperature of {self.board_name} is over the limit!')
         return cpu_temp
 
-    @abstractmethod
     @property
+    @abstractmethod
     def _cpu_temp(self):
         pass
 
