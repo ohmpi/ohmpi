@@ -281,14 +281,20 @@ class OhmPiHardware:
         if len(electrodes) == len(roles):
             # TODO: Check that we don't set incompatible roles to the same electrode
             elec_dict = {i: [] for i in roles}
-            for i in range(len(electrodes)):
-                elec_dict[roles[i]].append(electrodes[i])
             mux_workers = []
-            for _, mux in self.mux_boards.items():
-                # start a new thread to perform some work
-                mux_workers.append(Thread(target=mux.switch, kwargs={'elec_dict': elec_dict}))
-            for mux_worker in mux_workers:
-                mux_worker.start()
+            for idx, elec in enumerate(electrodes):
+                elec_dict[roles[idx]].append(elec)
+                mux = self._cabling[(elec, roles[idx])][0]
+                if mux not in mux_workers:
+                    mux_workers.append(mux)
+            mux_workers = list(set(mux_workers))
+            b = Barrier(len(mux_workers)+1)
+            self.mux_barrier = b
+            for idx, mux in enumerate(mux_workers):
+                # Create a new thread to perform some work
+                self.mux_boards[mux].barrier = b
+                mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs={'elec_dict': elec_dict})
+                mux_workers[idx].start()
             self.mux_barrier.wait()
             for mux_worker in mux_workers:
                 mux_worker.join()

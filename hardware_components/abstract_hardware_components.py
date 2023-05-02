@@ -62,10 +62,6 @@ class MuxAbstract(ABC):
     def _get_addresses(self):
         pass
 
-    @abstractmethod
-    def reset(self):
-        pass
-
     @property
     def barrier(self):
         return self._barrier
@@ -78,6 +74,7 @@ class MuxAbstract(ABC):
     @abstractmethod
     def reset(self):
         pass
+
     def switch(self, elec_dict=None, state='on'): # TODO: generalize for other roles
         """Switch a given list of electrodes with different roles.
         Electrodes with a value of 0 will be ignored.
