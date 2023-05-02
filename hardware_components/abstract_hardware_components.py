@@ -74,6 +74,9 @@ class MuxAbstract(ABC):
         assert isinstance(value, Barrier)
         self._barrier = value
 
+    @abstractmethod
+    def reset(self):
+        pass
     def switch(self, elec_dict=None, state='on'):
         """Switch a given list of electrodes with different roles.
         Electrodes with a value of 0 will be ignored.

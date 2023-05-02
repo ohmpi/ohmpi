@@ -202,7 +202,7 @@ class OhmPi(object):
     @staticmethod
     def _find_identical_in_line(quads):
         """Finds quadrupole where A and B are identical.
-        If A and B are connected to the same electrode, the Pi burns (short-circuit).
+        If A and B were connected to the same electrode, we would create a short-circuit.
 
         Parameters
         ----------
@@ -292,7 +292,7 @@ class OhmPi(object):
 
         Returns
         -------
-        sequence : numpy.array
+        sequence : numpy.ndarray
             Array of shape (number quadrupoles * 4).
         """
         self.exec_logger.debug(f'Loading sequence {filename}')
@@ -312,12 +312,10 @@ class OhmPi(object):
             for i in range(len(test_index_elec[0, :])):
                 self.exec_logger.error(f'An electrode index at line {str(test_index_elec[0, i] + 1)} '
                                        f'exceeds the maximum number of electrodes')
-            # sys.exit(1)
             sequence = None
         elif len(test_same_elec) != 0:
             for i in range(len(test_same_elec)):
                 self.exec_logger.error(f'An electrode index A == B detected at line {str(test_same_elec[i] + 1)}')
-            # sys.exit(1)
             sequence = None
 
         if sequence is not None:
@@ -341,39 +339,12 @@ class OhmPi(object):
             self.exec_logger.debug(f'Decoded message {decoded_message}')
             cmd_id = decoded_message.pop('cmd_id', None)
             cmd = decoded_message.pop('cmd', None)
-            # args = decoded_message.pop('args', None)
-            # if args is not None:
-            #    if len(args) != 0:
-            #        if args[0] != '[':
-            #            args = f'["{args}"]'
-            #        self.exec_logger.debug(f'args to decode: {args}')
-            #        args = json.loads(args) if args != '[]' else None
-            #        self.exec_logger.debug(f'Decoded args {args}')
-            #    else:
-            #        args = None
             kwargs = decoded_message.pop('kwargs', None)
-            # if kwargs is not None:
-            #     if len(kwargs) != 0:
-            #         if kwargs[0] != '{':
-            #             kwargs = '{"' + kwargs + '"}'
-            #         self.exec_logger.debug(f'kwargs to decode: {kwargs}')
-            #         kwargs = json.loads(kwargs) if kwargs != '' else None
-            #         self.exec_logger.debug(f'Decoded kwargs {kwargs}')
-            #     else:
-            #         kwargs = None
             self.exec_logger.debug(f"Calling method {cmd}({str(kwargs) if kwargs is not None else ''})")
-            # self.exec_logger.debug(f"Calling method {cmd}({str(args) + ', ' if args is not None else ''}"
-            #                        f"{str(kwargs) if kwargs is not None else ''})")
             if cmd_id is None:
                 self.exec_logger.warning('You should use a unique identifier for cmd_id')
             if cmd is not None:
                 try:
-                    # if args is None:
-                    #     if kwargs is None:
-                    #         output = getattr(self, cmd)()
-                    #     else:
-                    #         output = getattr(self, cmd)(**kwargs)
-                    # else:
                     if kwargs is None:
                         output = getattr(self, cmd)()
                     else:
@@ -408,16 +379,16 @@ class OhmPi(object):
         """
         self.exec_logger.debug('Getting hardware config')
         self.id = OHMPI_CONFIG['id']  # ID of the OhmPi
-        self.r_shunt = OHMPI_CONFIG['R_shunt']  # reference resistance value in ohm
-        self.Imax = OHMPI_CONFIG['Imax']  # maximum current
-        self.exec_logger.debug(f'The maximum current cannot be higher than {self.Imax} mA')
-        self.coef_p2 = OHMPI_CONFIG['coef_p2']  # slope for current conversion for ads.P2, measurement in V/V
-        self.nb_samples = OHMPI_CONFIG['nb_samples']  # number of samples measured for each stack
-        self.version = OHMPI_CONFIG['version']  # hardware version
-        self.max_elec = OHMPI_CONFIG['max_elec']  # maximum number of electrodes
-        self.board_addresses = OHMPI_CONFIG['board_addresses']
-        self.board_version = OHMPI_CONFIG['board_version']
-        self.mcp_board_address = OHMPI_CONFIG['mcp_board_address']
+        # self.r_shunt = OHMPI_CONFIG['R_shunt']  # reference resistance value in ohm
+        # self.Imax = OHMPI_CONFIG['Imax']  # maximum current
+        # self.exec_logger.debug(f'The maximum current cannot be higher than {self.Imax} mA')
+        # self.coef_p2 = OHMPI_CONFIG['coef_p2']  # slope for current conversion for ads.P2, measurement in V/V
+        # self.nb_samples = OHMPI_CONFIG['nb_samples']  # number of samples measured for each stack
+        # self.version = OHMPI_CONFIG['version']  # hardware version
+        # self.max_elec = OHMPI_CONFIG['max_elec']  # maximum number of electrodes
+        # self.board_addresses = OHMPI_CONFIG['board_addresses']
+        # self.board_version = OHMPI_CONFIG['board_version']
+        # self.mcp_board_address = OHMPI_CONFIG['mcp_board_address']
         self.exec_logger.debug(f'OHMPI_CONFIG = {str(OHMPI_CONFIG)}')
 
     def remove_data(self, cmd_id=None):
