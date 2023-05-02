@@ -211,7 +211,10 @@ class Tx(TxAbstract):
     def voltage(self, value):
         assert isinstance(value, float)
         value = np.max([TX_CONFIG['voltage_min'], np.min([value, TX_CONFIG['voltage_max']])])
-        super().voltage.fset(self, value)
+        if not self.voltage_adjustable:
+            self.exec_logger.warning(f'Voltage cannot be set on {self.board_name}...')
+        else:
+            self._voltage = value
 
 class Rx(RxAbstract):
     def __init__(self, **kwargs):
