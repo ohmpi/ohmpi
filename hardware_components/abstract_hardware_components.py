@@ -24,13 +24,14 @@ class ControllerAbstract(ABC):
             self.exec_logger.warning(f'CPU temperature reading is not available for {self.board_name}')
             cpu_temp = np.nan
         else:
-            cpu_temp = self._get_cpu_temp()
+            cpu_temp = self._cpu_temp
             if cpu_temp > self.max_cpu_temp:
                 self.soh_logger.warning(f'CPU temperature of {self.board_name} is over the limit!')
         return cpu_temp
 
     @abstractmethod
-    def _get_cpu_temp(self):
+    @property
+    def _cpu_temp(self):
         pass
 
 class MuxAbstract(ABC):

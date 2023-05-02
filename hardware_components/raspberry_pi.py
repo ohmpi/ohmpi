@@ -17,5 +17,5 @@ class Controller(ControllerAbstract):
         self.max_cpu_temp = 85. # °C
 
     @property
-    def _get_cpu_temp(self):
+    def _cpu_temp(self):
         return CPUTemperature().temperature
