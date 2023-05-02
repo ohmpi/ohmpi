@@ -41,7 +41,7 @@ if within_ohmpi:
     from OhmPi.ohmpi import OhmPi
     print('Starting test of mux within OhmPi.')
     k = OhmPi()
-    k.switch_mux((1,'A'), state='on')
+    k.switch_mux_on([1,4,2,3])
     time.sleep(1.)
     k.reset_mux()
 
