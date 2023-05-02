@@ -5,13 +5,13 @@ change_config('config_mb_2023_mux_2024.py', verbose=False)
 from OhmPi.hardware_components.mux_2024_rev_0_0 import Mux, MUX_CONFIG
 from OhmPi.hardware_components import raspberry_pi as controller_module
 
-stand_alone_mux = False
-part_of_hardware_system = True
+stand_alone_mux = True
+part_of_hardware_system = False
 # Stand alone mux
 if stand_alone_mux:
     MUX_CONFIG['controller'] = controller_module.Controller()
     MUX_CONFIG['id'] = 'mux_1'
-    MUX_CONFIG['default_mux_cabling'] = {(i+8, j) : ('mux_1', i) for j in ['A', 'B', 'M', 'N'] for i in range(1,9)}
+    MUX_CONFIG['cabling'] = {(i+8, j) : ('mux_1', i) for j in ['A', 'B', 'M', 'N'] for i in range(1,9)}
     mux = Mux(**MUX_CONFIG)
     mux.switch_one(elec=9, role='M', state='on')
     time.sleep(2)
