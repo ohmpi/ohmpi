@@ -686,48 +686,44 @@ class OhmPi(object):
         # perform RS check
         self.status = 'running'
 
-        if self.on_pi:
-            # make sure all mux are off to start with
-            self._hw.mux_boards.reset_mux()
+        self.reset_mux()
 
-            # measure all quad of the RS sequence
-            for i in range(0, quads.shape[0]):
-                quad = quads[i, :]  # quadrupole
-                self.switch_mux_on(quad)  # put before raising the pins (otherwise conflict i2c)
-                d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=0.2, tx_volt=tx_volt, autogain=False)
+        # measure all quad of the RS sequence
+        for i in range(0, quads.shape[0]):
+            quad = quads[i, :]  # quadrupole
+            self.switch_mux_on(quad)  # put before raising the pins (otherwise conflict i2c)
+            d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=0.2, tx_volt=tx_volt, autogain=False)
 
-                if self.idps:
-                    voltage = tx_volt * 1000.  # imposed voltage on dps5005
-                else:
-                    voltage = d['Vmn [mV]']
-                current = d['I [mA]']
+            if self.tx.voltage_adjustable:
+                voltage = self.tx.voltage  # imposed voltage on dps
+            else:
+                voltage = d['Vmn [mV]']
+            current = d['I [mA]']
 
-                # compute resistance measured (= contact resistance)
-                resist = abs(voltage / current) / 1000.
-                # print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} kOhm'.format(
-                #    current, voltage, resist))
-                msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, ' \
-                      f'V: {voltage :>10.3f} mV, ' \
-                      f'R: {resist :>10.3f} kOhm'
+            # compute resistance measured (= contact resistance)
+            resist = abs(voltage / current) / 1000.
+            # print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} kOhm'.format(
+            #    current, voltage, resist))
+            msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, ' \
+                  f'V: {voltage :>10.3f} mV, ' \
+                  f'R: {resist :>10.3f} kOhm'
 
-                self.exec_logger.debug(msg)
+            self.exec_logger.debug(msg)
 
-                # if contact resistance = 0 -> we have a short circuit!!
-                if resist < 1e-5:
-                    msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {resist:.3f} kOhm'
-                    self.exec_logger.warning(msg)
+            # if contact resistance = 0 -> we have a short circuit!!
+            if resist < 1e-5:
+                msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {resist:.3f} kOhm'
+                self.exec_logger.warning(msg)
 
-                # save data in a text file
-                self.append_and_save(export_path_rs, {
-                    'A': quad[0],
-                    'B': quad[1],
-                    'RS [kOhm]': resist,
-                })
+            # save data in a text file
+            self.append_and_save(export_path_rs, {
+                'A': quad[0],
+                'B': quad[1],
+                'RS [kOhm]': resist,
+            })
 
-                # close mux path and put pin back to GND
-                self.switch_mux_off(quad)
-        else:
-            pass
+            # close mux path and put pin back to GND
+            self.switch_mux_off(quad)
         self.status = 'idle'
 
     #
