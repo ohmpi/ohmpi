@@ -284,9 +284,12 @@ class OhmPiHardware:
             mux_workers = []
             for idx, elec in enumerate(electrodes):
                 elec_dict[roles[idx]].append(elec)
-                mux = self._cabling[(elec, roles[idx])][0]
-                if mux not in mux_workers:
-                    mux_workers.append(mux)
+                try:
+                    mux = self._cabling[(elec, roles[idx])][0]
+                    if mux not in mux_workers:
+                        mux_workers.append(mux)
+                except KeyError:
+                    self.exec_logger.warning(f'({elec}, {roles[idx]} is not in cabling. It will be ignored...')
             mux_workers = list(set(mux_workers))
             b = Barrier(len(mux_workers)+1)
             self.mux_barrier = b
