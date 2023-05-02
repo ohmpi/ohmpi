@@ -5,8 +5,9 @@ change_config('config_mb_2023_mux_2024.py', verbose=False)
 from OhmPi.hardware_components.mux_2024_rev_0_0 import Mux, MUX_CONFIG
 from OhmPi.hardware_components import raspberry_pi as controller_module
 
-stand_alone_mux = True
+stand_alone_mux = False
 part_of_hardware_system = False
+within_ohmpi = True
 # Stand alone mux
 if stand_alone_mux:
     MUX_CONFIG['controller'] = controller_module.Controller()
@@ -35,5 +36,13 @@ if part_of_hardware_system:
     k.switch_mux(electrodes=[1,4,2,3], roles=['A', 'B', 'M', 'N'], state='on')
     time.sleep(1.)
     k.switch_mux(electrodes=[1,4,2,3], roles=['A', 'B', 'M', 'N'], state='off')
+
+if within_ohmpi:
+    from OhmPi import OhmPi
+    print('Starting test of mux within OhmPi.')
+    k = OhmPi()
+    k.switch_mux((1,'A'), state='on')
+    time.sleep(1.)
+    k.reset_mux()
 
 change_config('config_default.py', verbose=False)
