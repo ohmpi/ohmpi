@@ -38,7 +38,7 @@ if part_of_hardware_system:
     k.switch_mux(electrodes=[1,4,2,3], roles=['A', 'B', 'M', 'N'], state='off')
 
 if within_ohmpi:
-    from OhmPi import OhmPi
+    from OhmPi.ohmpi import OhmPi
     print('Starting test of mux within OhmPi.')
     k = OhmPi()
     k.switch_mux((1,'A'), state='on')
