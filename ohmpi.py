@@ -38,7 +38,7 @@ except Exception as error:
     print(colored(f'Unexpected error: {error}', 'red'))
     arm64_imports = None
 
-VERSION = '2.2.0-alpha'
+VERSION = '3.0.0-alpha'
 
 class OhmPi(object):
     """ OhmPi class.
@@ -301,19 +301,10 @@ class OhmPi(object):
         if sequence is not None:
             self.exec_logger.debug(f'Sequence of {sequence.shape[0]:d} quadrupoles read.')
 
-        # locate lines where the electrode index exceeds the maximum number of electrodes
-        test_index_elec = np.array(np.where(sequence > self.max_elec))
-
         # locate lines where electrode A == electrode B
         test_same_elec = self._find_identical_in_line(sequence)
 
-        # if statement with exit cases (TODO rajouter un else if pour le deuxième cas du ticket #2)
-        if test_index_elec.size != 0:
-            for i in range(len(test_index_elec[0, :])):
-                self.exec_logger.error(f'An electrode index at line {str(test_index_elec[0, i] + 1)} '
-                                       f'exceeds the maximum number of electrodes')
-            sequence = None
-        elif len(test_same_elec) != 0:
+        if len(test_same_elec) != 0:
             for i in range(len(test_same_elec)):
                 self.exec_logger.error(f'An electrode index A == B detected at line {str(test_same_elec[i] + 1)}')
             sequence = None
