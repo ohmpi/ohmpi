@@ -10,6 +10,7 @@ from digitalio import Direction  # noqa
 
 MUX_CONFIG = HARDWARE_CONFIG['mux'].pop('default', {})
 MUX_CONFIG.update({'voltage_max': 50., 'current_max': 3.})  # board default values that overwrite system default values
+MUX_CONFIG.update({'activation_delay': 10., 'release_delay': 5.}) # ms
 default_mux_cabling = {(elec, role) : ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1,9)} # defaults to 4 roles cabling electrodes from 1 to 8
 
 
@@ -105,5 +106,7 @@ class Mux(MuxAbstract):
         d = self.addresses[elec, role]
         if state == 'on':
             activate_relay(self._mcp[d['MCP']], d['MCP_GPIO'], True)
+            time.sleep(MUX_CONFIG['activation_delay'])
         if state == 'off':
             activate_relay(self._mcp[d['MCP']], d['MCP_GPIO'], False)
+            time.sleep(MUX_CONFIG['release_delay'])
