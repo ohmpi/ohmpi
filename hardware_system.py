@@ -2,6 +2,10 @@ import importlib
 import datetime
 import time
 import numpy as np
+try:
+    import matplotlib.pyplot as plt
+except Exception:
+    pass
 from OhmPi.logging_setup import create_stdout_logger
 from OhmPi.utils import update_dict
 from OhmPi.config import HARDWARE_CONFIG
@@ -117,7 +121,7 @@ class OhmPiHardware:
         self._pulse += 1
 
     @property
-    def sp(self):
+    def sp(self):  # TODO: use a time window within pulses
         if self.readings.shape == (0,) or len(self.readings[self.readings[:,2]==1, :]) < 1 or len(self.readings[self.readings[:,2]==-1, :]) < 1:
             self.exec_logger.warning('Unable to compute sp: readings should at least contain one positive and one negative pulse')
             return 0.
@@ -210,6 +214,17 @@ class OhmPiHardware:
         else:
             polarity = 1
         return vab, polarity, rab
+
+    def _plot_readings(self):
+        # Plot graphs
+        fig, ax = plt.subplots()
+        ax.plot(self.readings[:, 0], self.readings[:, 3], '-r', marker='.', label='iab')
+        ax.set_ylabel('Iab [mA]')
+        ax2 = ax.twinx()
+        ax2.plot(self.readings[:, 0], self.readings[:, 2] * self.readings[:, 4], '-b', marker='.', label='vmn')
+        ax2.set_ylabel('Vmn [mV]')
+        fig.legend()
+        plt.show()
 
     def vab_square_wave(self, vab, cycle_length, sampling_rate=None, cycles=3, polarity=1, append=False):
         self.tx.polarity = polarity
