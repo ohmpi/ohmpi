@@ -16,8 +16,7 @@ rx = Rx(exec_logger= exec_logger, soh_logger= soh_logger)
 print(f'TX current: {tx.current:.3f} mA')
 print(f'RX voltage: {rx.voltage:.3f} mV')
 
-tx.polarity = 1
-tx.inject(state='on')
+tx.inject(state='on', polarity=1)
 tx.adc_gain_auto()
 rx.adc_gain_auto()
 r = []

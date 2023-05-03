@@ -101,7 +101,7 @@ class Tx(TxAbstract):
         # DPH 5005 Digital Power Supply
         self.turn_on()
         time.sleep(TX_CONFIG['dps_switch_on_warm_up'])
-        self.DPS = None
+        self.pwr = None
 
         # I2C connexion to MCP23008, for current injection
         self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
@@ -145,33 +145,28 @@ class Tx(TxAbstract):
         assert TX_CONFIG['current_min'] <= value <= TX_CONFIG['current_max']
         self.exec_logger.warning(f'Current pulse is not implemented for the {TX_CONFIG["model"]} board')
 
-    def inject(self, state='on'):
-        TxAbstract.inject(self, state=state)
-        # Add specifics here...
-
-    @property
-    def polarity(self):
-        return TxAbstract.polarity.fget(self)
-
-    @polarity.setter
-    def polarity(self, value):
-        TxAbstract.polarity.fset(self, value)
-        if value==1:
+    def inject(self, polarity=1, inj_time=None):
+        assert polarity in [-1,0,1]
+        if polarity==1:
             self.pin0.value = True
             self.pin1.value = False
-        elif value==-1:
+            time.sleep(0.005) # Max turn on time of 211EH relays = 5ms
+        elif polarity==-1:
             self.pin0.value = False
             self.pin1.value = True
+            time.sleep(0.005) # Max turn on time of 211EH relays = 5ms
         else:
             self.pin0.value = False
             self.pin1.value = False
-        #time.sleep(0.001) # TODO: check max switching time of relays
+            time.sleep(0.001) # Max turn off time of 211EH relays = 1ms
+        TxAbstract.inject(self, polarity=polarity, inj_time=None)
+
 
     def turn_off(self):
-        pass
+        self.pwr.turn_off(self)
 
     def turn_on(self):
-        pass
+        self.pwr.turn_on(self)
 
     @property
     def tx_bat(self):
@@ -179,7 +174,7 @@ class Tx(TxAbstract):
         self.exec_logger.debug(f'{self.board_name} cannot read battery voltage. Returning default battery voltage.')
         return TX_CONFIG['low_battery']
 
-    def voltage_pulse(self, voltage=TX_CONFIG['default_voltage'], length=None, polarity=None):
+    def voltage_pulse(self, voltage=TX_CONFIG['default_voltage'], length=None, polarity=1):
         """ Generates a square voltage pulse
 
         Parameters
@@ -194,27 +189,10 @@ class Tx(TxAbstract):
 
         if length is None:
             length = self.inj_time
-        if polarity is None:
-            polarity = self.polarity
-        self.polarity = polarity
-        self.voltage = voltage
-        self.exec_logger.debug(f'Voltage pulse of {polarity*voltage:.3f} V for {length:.3f} s')
-        self.inject(state='on')
-        time.sleep(length)
-        self.inject(state='off')
+        self.pwr.voltage = voltage
+        self.exec_logger.debug(f'Voltage pulse of {polarity*self.pwr.voltage:.3f} V for {length:.3f} s')
+        self.inject(polarity=polarity, inj_time=length)
 
-
-    @property
-    def voltage(self):
-        return self._voltage
-    @voltage.setter
-    def voltage(self, value):
-        assert isinstance(value, float)
-        value = np.max([TX_CONFIG['voltage_min'], np.min([value, TX_CONFIG['voltage_max']])])
-        if not self.voltage_adjustable:
-            self.exec_logger.warning(f'Voltage cannot be set on {self.board_name}...')
-        else:
-            self._voltage = value
 
 class Rx(RxAbstract):
     def __init__(self, **kwargs):

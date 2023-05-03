@@ -19,4 +19,4 @@ DPS.serial.parity   = 'N'                       # No parity
 DPS.mode            = minimalmodbus.MODE_RTU    # RTU mode
 
 DPS.write_register(0x0001, 40, 0)  # (last number) 0 is for mA, 3 is for A
-DPS.write_register(0x0000, 5, 0)  self.DPS.write_register(0x0000, tx_volt, 2)
+DPS.write_register(0x0000, 5, 0)  self.pwr.write_register(0x0000, tx_volt, 2)

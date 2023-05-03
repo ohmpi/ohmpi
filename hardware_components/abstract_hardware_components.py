@@ -35,6 +35,58 @@ class ControllerAbstract(ABC):
     def _cpu_temp(self):
         pass
 
+class PwrAbstract(ABC):
+    def __init__(self, **kwargs):
+        self.board_name = kwargs.pop('board_name', 'unknown Pwr hardware')
+        self.exec_logger = kwargs.pop('exec_logger', None)
+        if self.exec_logger is None:
+            self.exec_logger = create_stdout_logger('exec_mux')
+        self.soh_logger = kwargs.pop('soh_logger', None)
+        if self.soh_logger is None:
+            self.soh_logger = create_stdout_logger('soh_mux')
+        self.voltage_adjustable = kwargs.pop('voltage_adjustable', False)
+        self._voltage = np.nan
+        self._current_adjustable = kwargs.pop('current_adjustable', False)
+        self._current = np.nan
+        self._state = 'off'
+
+    @property
+    @abstractmethod
+    def current(self):
+        # add actions to read the DPS current
+        return self._current
+
+    @current.setter
+    @abstractmethod
+    def current(self, value, **kwargs):
+        # add actions to set the DPS current
+        pass
+    @abstractmethod
+    def turn_off(self):
+        self.exec_logger.debug(f'Switching {self.board_name} off')
+        self._state = 'off'
+
+    @abstractmethod
+    def turn_on(self):
+        self.exec_logger.debug(f'Switching {self.board_name} on')
+        self._state = 'on'
+
+    @property
+    @abstractmethod
+    def voltage(self):
+        # add actions to read the DPS voltage
+        return self._voltage
+
+    @voltage.setter
+    @abstractmethod
+    def voltage(self, value):
+        assert isinstance(value, float)
+        if not self.voltage_adjustable:
+            self.exec_logger.warning(f'Voltage cannot be set on {self.board_name}...')
+        else:
+            # add actions to set the DPS voltage
+            self._voltage = value
+
 class MuxAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown MUX hardware')
@@ -159,10 +211,6 @@ class MuxAbstract(ABC):
 class TxAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown TX hardware')
-        polarity = kwargs.pop('polarity', 1)
-        if polarity is None:
-            polarity = 0
-        self._polarity = polarity
         inj_time = kwargs.pop('inj_time', 1.)
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
@@ -171,13 +219,10 @@ class TxAbstract(ABC):
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_tx')
         self.controller = kwargs.pop('controller', None)
+        self.pwr = kwargs.pop('pwr', None)
         self._inj_time = None
-        self._dps_state = 'off'
         self._adc_gain = 1.
         self.inj_time = inj_time
-        self._voltage = 0.
-        self.voltage_adjustable = True
-        self._current_adjustable = False
         self.exec_logger.debug(f'{self.board_name} TX initialization')
 
     @property
@@ -193,25 +238,22 @@ class TxAbstract(ABC):
     def adc_gain_auto(self):
         pass
 
-    @property
-    @abstractmethod
-    def current(self):
-        # add actions to read the TX current and return it
-        return None
-
-    @current.setter
-    @abstractmethod
-    def current(self, value, **kwargs):
-        # add actions to set the DPS current
-        pass
-
     @abstractmethod
     def current_pulse(self, **kwargs):
         pass
 
     @abstractmethod
-    def inject(self, state='on'):
-        assert state in ['on', 'off']
+    def inject(self, polarity=1, inj_time=None):
+        assert polarity in [-1,0,1]
+        if inj_time is None:
+            inj_time = self._inj_time
+        if np.abs(polarity) > 0:
+            self.pwr.turn_on()
+            time.sleep(inj_time)
+            self.pwr.turn_off()
+        else:
+            self.pwr.turn_off()
+            time.sleep(inj_time)
 
     @property
     def inj_time(self):
@@ -223,43 +265,12 @@ class TxAbstract(ABC):
         self._inj_time = value
 
     @property
-    def polarity(self):
-        return self._polarity
-
-    @polarity.setter
-    def polarity(self, value):
-        assert value in [-1,0,1]
-        self._polarity = value
-        # add actions to set the polarity (switch relays)
-
-    def turn_off(self):
-        self.exec_logger.debug(f'Switching DPS off')
-        self._dps_state = 'off'
-
-    def turn_on(self):
-        self.exec_logger.debug(f'Switching DPS on')
-        self._dps_state = 'on'
-
-    @property
-    def voltage(self):
-        return self._voltage
-
-    @voltage.setter
-    def voltage(self, value):
-        assert isinstance(value, float)
-        if not self.voltage_adjustable:
-            self.exec_logger.warning(f'Voltage cannot be set on {self.board_name}...')
-        else:
-            self._voltage = value
-        # Add specifics to set DPS voltage
-
-    @property
     @abstractmethod
     def tx_bat(self):
         pass
 
 
-    def voltage_pulse(self, voltage=0., length=None, polarity=None):
+    def voltage_pulse(self, voltage=0., length=None, polarity=1):
         """ Generates a square voltage pulse
 
         Parameters
@@ -273,15 +284,9 @@ class TxAbstract(ABC):
         """
         if length is None:
             length = self.inj_time
-        if polarity is None:
-            polarity = self.polarity
-        self.polarity = polarity
-        self.voltage = voltage
-        self.exec_logger.debug(f'Voltage pulse of {polarity * voltage:.3f} V for {length:.3f} s')
-        self.inject(state='on')
-        time.sleep(length)
-        # self.tx_sync.clear()
-        self.inject(state='off')
+        self.pwr.voltage = voltage
+        self.exec_logger.debug(f'Voltage pulse of {polarity * self.pwr.voltage:.3f} V for {length:.3f} s')
+        self.inject(polarity=polarity, inj_time=length)
 
 
 class RxAbstract(ABC):

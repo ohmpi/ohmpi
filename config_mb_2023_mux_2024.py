@@ -18,12 +18,13 @@ OHMPI_CONFIG = {
 }
 
 HARDWARE_CONFIG = {
-    'controller': {'model' : 'raspberry_pi'
+    'controller': {'model' : 'raspberry_pi_i2c'
                    },
+    'pwr': {'model' : 'pwr_batt', 'voltage': 12.},
     'tx' : {'model' : 'ohmpi_card_3_15',
              'mcp_board_address': 0x20,
-             'voltage_max': 12., # Maximum voltage [V]
-             'current_max': 4800 / 50 / 2,  # Maximum current [mA]
+             'voltage_max': 12., # Maximum voltage supported by the TX board [V]
+             'current_max': 4800 / 50 / 2,  # Maximum current supported by the TX board [mA]
              'r_shunt': 2  # Shunt resistance in Ohms
             },
     'rx' : {'model': 'ohmpi_card_3_15',

@@ -3,7 +3,7 @@ from utils import change_config
 import logging
 change_config('config_mb_2023_mux_2024.py', verbose=False)
 from OhmPi.hardware_components.mux_2024_rev_0_0 import Mux, MUX_CONFIG
-from OhmPi.hardware_components import raspberry_pi as controller_module
+from OhmPi.hardware_components import raspberry_pi_i2c as controller_module
 
 stand_alone_mux = False
 part_of_hardware_system = False

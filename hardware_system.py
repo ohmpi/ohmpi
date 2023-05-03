@@ -12,6 +12,7 @@ from OhmPi.config import HARDWARE_CONFIG
 from threading import Thread, Event, Barrier
 
 controller_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["controller"]["model"]}')
+pwr_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
 tx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
 rx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
 MUX_CONFIG = {}
@@ -55,10 +56,15 @@ class OhmPiHardware:
                                                  data_logger=self.data_logger,
                                                  soh_logger=self.soh_logger,
                                                  controller=self.controller))
+        self.pwr = kwargs.pop('pwr', pwr_module.Pwr(exec_logger=self.exec_logger,
+                                                 data_logger=self.data_logger,
+                                                 soh_logger=self.soh_logger,
+                                                 controller=self.controller))
         self.tx = kwargs.pop('tx', tx_module.Tx(exec_logger=self.exec_logger,
                                                  data_logger=self.data_logger,
                                                  soh_logger=self.soh_logger,
                                                  controller=self.controller))
+        self.tx.pwr = self.pwr
         self._cabling = kwargs.pop('cabling', {})
         self.mux_boards = kwargs.pop('mux', {'mux_1': mux_module.Mux(id='mux_1',
                                                                      exec_logger=self.exec_logger,
@@ -127,12 +133,12 @@ class OhmPiHardware:
             return 0.
         else:
             n_pulses = int(np.max(self.readings[:, 1]))
-            polarity = np.array([np.mean(self.readings[self.readings[:, 1] == i, 2]) for i in range(n_pulses + 1)])
+            polarity = np.array([np.median(self.readings[self.readings[:, 1]==i, 2]) for i in range(n_pulses + 1)])
             mean_vmn = []
             mean_iab = []
             for i in range(n_pulses + 1):
-                mean_vmn.append(np.mean(self.readings[self.readings[:, 1] == i, 4]))
-                mean_iab.append(np.mean(self.readings[self.readings[:, 1] == i, 3]))
+                mean_vmn.append(np.mean(self.readings[self.readings[:, 1]==i, 4]))
+                mean_iab.append(np.mean(self.readings[self.readings[:, 1]==i, 3]))
             mean_vmn = np.array(mean_vmn)
             mean_iab = np.array(mean_iab)
             sp = np.mean(mean_vmn[np.ix_(polarity==1)] - mean_vmn[np.ix_(polarity==-1)]) / 2
@@ -182,13 +188,12 @@ class OhmPiHardware:
         vab_max = np.abs(vab_max)
         vmn_min = np.abs(vmn_min)
         vab = np.min([np.abs(tx_volt), vab_max])
-        self.tx.polarity = 1
         self.tx.turn_on()
         if self.rx.sampling_rate*1000 > best_tx_injtime:
             sampling_rate = best_tx_injtime  # TODO: check this...
         else:
             sampling_rate = self.tx.sampling_rate
-        self._vab_pulse(vab=vab, length=best_tx_injtime, sampling_rate=sampling_rate)
+        self._vab_pulse(vab=vab, length=best_tx_injtime, sampling_rate=sampling_rate) # TODO: use a square wave pulse?
         vmn = np.mean(self.readings[:,4])
         iab = np.mean(self.readings[:,3])
         # if np.abs(vmn) is too small (smaller than voltage_min), strategy is not constant and vab < vab_max ,
@@ -206,7 +211,6 @@ class OhmPiHardware:
         else:
             self.tx.exec_logger.debug(f'Constant strategy for setting VAB, using {vab} V')
         self.tx.turn_off()
-        self.tx.polarity = 0
         rab = (np.abs(vab) * 1000.) / iab
         self.exec_logger.debug(f'RAB = {rab:.2f} Ohms')
         if vmn < 0:
