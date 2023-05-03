@@ -87,6 +87,7 @@ class MuxAbstract(ABC):
         state : str, optional
             Either 'on' or 'off'.
         """
+        status = True
         if elec_dict is not None:
             self.exec_logger.debug(f'Switching {self.board_name} ')
             # check to prevent A == B (SHORT-CIRCUIT)
@@ -95,7 +96,8 @@ class MuxAbstract(ABC):
                 if out.any() and state=='on':  # noqa
                     self.exec_logger.error('Trying to switch on some electrodes with both A and B roles. '
                                            'This would create a short-circuit! Switching aborted.')
-                    return
+                    status = False
+                    return status
 
             # check that none of M or N are the same as A or B
             # as to prevent burning the MN part which cannot take
@@ -107,7 +109,8 @@ class MuxAbstract(ABC):
                         or np.in1d(elec_dict['N'], elec_dict['B']).any()) and state=='on':  # noqa
                     self.exec_logger.error('Trying to switch on some electrodes with both M or N role and A or B role. '
                                            'This could create an over-voltage in the RX! Switching aborted.')
-                    return
+                    status = False
+                    return status
 
             # if all ok, then wait for the barrier to open, then switch the electrodes
             self.exec_logger.debug(f'{self.board_id} waiting to switch.')
@@ -117,12 +120,16 @@ class MuxAbstract(ABC):
                     if elec > 0:  # Is this condition related to electrodes to infinity?
                         if (elec, role) in self.cabling.keys():
                             self.switch_one(elec, role, state)
+                            status &= True
                         else:
                             self.exec_logger.warning(f'{self.board_id} skipping switching {(elec, role)} because it '
                                                    f'is not in board cabling.')
+                            status = False
             self.exec_logger.debug(f'{self.board_id} switching done.')
         else:
             self.exec_logger.warning(f'Missing argument for {self.board_name}.switch: elec_dict is None.')
+            status = False
+        return status
 
     @abstractmethod
     def switch_one(self, elec=None, role=None, state=None):

@@ -302,11 +302,14 @@ class OhmPiHardware:
                 mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs={'elec_dict': elec_dict})
                 mux_workers[idx].start()
             self.mux_barrier.wait()
+            status = True
             for mux_worker in mux_workers:
-                mux_worker.join()
+                status &= mux_worker.join()
         else:
             self.exec_logger.error(
                 f'Unable to switch {state} electrodes: number of electrodes and number of roles do not match!')
+            status = False
+        return status
 
     def test_mux(self, channel=None, activation_time=1.0):
         """Interactive method to test the multiplexer.

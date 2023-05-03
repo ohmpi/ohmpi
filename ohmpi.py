@@ -450,8 +450,11 @@ class OhmPi(object):
                 injection_duration = self.settings['injection_duration']
         tx_volt = float(tx_volt)
 
-        self.switch_mux_on(quad, cmd_id)
-        self._hw.vab_square_wave(tx_volt, cycle_length=injection_duration*2, cycles=nb_stack)
+        status = self.switch_mux_on(quad, cmd_id)
+        if status:
+            self._hw.vab_square_wave(tx_volt, cycle_length=injection_duration*2, cycles=nb_stack)
+        else:
+            self.exec_logger.info('Skipping {quad}')
         self.switch_mux_off(quad, cmd_id)
 
         d = {
@@ -694,8 +697,8 @@ class OhmPi(object):
             self.switch_mux_on(quad)  # put before raising the pins (otherwise conflict i2c)
             d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=0.2, tx_volt=tx_volt, autogain=False)
 
-            if self.tx.voltage_adjustable:
-                voltage = self.tx.voltage  # imposed voltage on dps
+            if self._hw.tx.voltage_adjustable:
+                voltage = self._hw.tx.voltage  # imposed voltage on dps
             else:
                 voltage = d['Vmn [mV]']
             current = d['I [mA]']
@@ -769,7 +772,7 @@ class OhmPi(object):
             List of 4 integers representing the electrode numbers.
         """
         assert len(quadrupole) == 4
-        self._hw.switch_mux(electrodes=quadrupole, state='on')
+        return self._hw.switch_mux(electrodes=quadrupole, state='on')
 
     def switch_mux_off(self, quadrupole, cmd_id=None):
         """Switches off multiplexer relays for given quadrupole.
@@ -782,7 +785,7 @@ class OhmPi(object):
             List of 4 integers representing the electrode numbers.
         """
         assert len(quadrupole) == 4
-        self._hw.switch_mux(electrodes=quadrupole, state='off')
+        return self._hw.switch_mux(electrodes=quadrupole, state='off')
 
     def test_mux(self, activation_time=1.0, mux_id=None, cmd_id=None): # TODO: add this in the MUX code
         """Interactive method to test the multiplexer boards.
