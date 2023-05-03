@@ -450,8 +450,8 @@ class OhmPi(object):
                 injection_duration = self.settings['injection_duration']
         tx_volt = float(tx_volt)
 
-        status = self.switch_mux_on(quad, cmd_id)
-        if status:
+
+        if self.switch_mux_on(quad, cmd_id):
             self._hw.vab_square_wave(tx_volt, cycle_length=injection_duration*2, cycles=nb_stack)
         else:
             self.exec_logger.info('Skipping {quad}')
@@ -772,7 +772,7 @@ class OhmPi(object):
             List of 4 integers representing the electrode numbers.
         """
         assert len(quadrupole) == 4
-        return self._hw.switch_mux(electrodes=quadrupole, state='on')
+        return  self._hw.switch_mux(electrodes=quadrupole, state='on')
 
     def switch_mux_off(self, quadrupole, cmd_id=None):
         """Switches off multiplexer relays for given quadrupole.

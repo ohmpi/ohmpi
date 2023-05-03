@@ -279,6 +279,7 @@ class OhmPiHardware:
         state : str, optional
             Either 'on' or 'off'.
         """
+        status = True
         if roles is None:
             roles = ['A', 'B', 'M', 'N']
         if len(electrodes) == len(roles):
@@ -293,18 +294,19 @@ class OhmPiHardware:
                         mux_workers.append(mux)
                 except KeyError:
                     self.exec_logger.debug(f'Unable to switch {state} ({elec}, {roles[idx]}): not in cabling and will be ignored...')
-            mux_workers = list(set(mux_workers))
-            b = Barrier(len(mux_workers)+1)
-            self.mux_barrier = b
-            for idx, mux in enumerate(mux_workers):
-                # Create a new thread to perform some work
-                self.mux_boards[mux].barrier = b
-                mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs={'elec_dict': elec_dict})
-                mux_workers[idx].start()
-            self.mux_barrier.wait()
-            status = True
-            for mux_worker in mux_workers:
-                status &= mux_worker.join()
+                    status = False
+            if status:
+                mux_workers = list(set(mux_workers))
+                b = Barrier(len(mux_workers)+1)
+                self.mux_barrier = b
+                for idx, mux in enumerate(mux_workers):
+                    # Create a new thread to perform some work
+                    self.mux_boards[mux].barrier = b
+                    mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs={'elec_dict': elec_dict})
+                    mux_workers[idx].start()
+                self.mux_barrier.wait()
+                for mux_worker in mux_workers:
+                    mux_worker.join()
         else:
             self.exec_logger.error(
                 f'Unable to switch {state} electrodes: number of electrodes and number of roles do not match!')
