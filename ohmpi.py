@@ -443,66 +443,63 @@ class OhmPi(object):
         # check arguments
         if quad is None:
             quad = [0, 0, 0, 0]
-
         if nb_stack is None:
             nb_stack = self.settings['nb_stack']
         if injection_duration is None:
                 injection_duration = self.settings['injection_duration']
         tx_volt = float(tx_volt)
-
-
+        d = {}
         if self.switch_mux_on(quad, cmd_id):
             self._hw.vab_square_wave(tx_volt, cycle_length=injection_duration*2, cycles=nb_stack)
+            d = {
+                "time": datetime.now().isoformat(),
+                "A": quad[0],
+                "B": quad[1],
+                "M": quad[2],
+                "N": quad[3],
+                "inj time [ms]": injection_duration,  # NOTE: check this
+                # "Vmn [mV]": sum_vmn / (2 * nb_stack),
+                # "I [mA]": sum_i / (2 * nb_stack),
+                # "R [ohm]": sum_vmn / sum_i,
+                "Ps [mV]": self._hw.sp,
+                "nbStack": nb_stack,
+                "Tx [V]": tx_volt,
+                "CPU temp [degC]": self._hw.controller.cpu_temperature,
+                "Nb samples [-]": len(self._hw.readings),  # TODO: use only samples after a delay in each pulse
+                "fulldata": self._hw.readings[:, [0, -2, -1]],
+                # "I_stack [mA]": i_stack_mean,
+                # "I_std [mA]": i_std,
+                # "I_per_stack [mA]": np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
+                # "Vmn_stack [mV]": vmn_stack_mean,
+                # "Vmn_std [mV]": vmn_std,
+                # "Vmn_per_stack [mV]": np.array([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1))[0] / 2 for i in range(nb_stack)]),
+                # "R_stack [ohm]": r_stack_mean,
+                # "R_std [ohm]": r_stack_std,
+                # "R_per_stack [Ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
+                # "PS_per_stack [mV]":  np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]),
+                # "PS_stack [mV]": ps_stack_mean,
+                # "R_ab [ohm]": Rab
+            }
+
+            # to the data logger
+            dd = d.copy()
+            dd.pop('fulldata')  # too much for logger
+            dd.update({'A': str(dd['A'])})
+            dd.update({'B': str(dd['B'])})
+            dd.update({'M': str(dd['M'])})
+            dd.update({'N': str(dd['N'])})
+
+            # round float to 2 decimal
+            for key in dd.keys():  # Check why this is applied on keys and not values...
+                if isinstance(dd[key], float):
+                    dd[key] = np.round(dd[key], 3)
+
+            dd['cmd_id'] = str(cmd_id)
+            self.data_logger.info(dd)
+
         else:
-            self.exec_logger.info('Skipping {quad}')
+            self.exec_logger.info(f'Skipping {quad}')
         self.switch_mux_off(quad, cmd_id)
-
-        d = {
-            "time": datetime.now().isoformat(),
-            "A": quad[0],
-            "B": quad[1],
-            "M": quad[2],
-            "N": quad[3],
-            "inj time [ms]": injection_duration,  # NOTE: check this
-            # "Vmn [mV]": sum_vmn / (2 * nb_stack),
-            # "I [mA]": sum_i / (2 * nb_stack),
-            # "R [ohm]": sum_vmn / sum_i,
-            "Ps [mV]": self._hw.sp,
-            "nbStack": nb_stack,
-            "Tx [V]": tx_volt,
-            "CPU temp [degC]": self._hw.controller.cpu_temperature,
-            "Nb samples [-]": len(self._hw.readings),  # TODO: use only samples after a delay in each pulse
-            "fulldata": self._hw.readings[:,[0,-2,-1]],
-            # "I_stack [mA]": i_stack_mean,
-            # "I_std [mA]": i_std,
-            # "I_per_stack [mA]": np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
-            # "Vmn_stack [mV]": vmn_stack_mean,
-            # "Vmn_std [mV]": vmn_std,
-            # "Vmn_per_stack [mV]": np.array([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1))[0] / 2 for i in range(nb_stack)]),
-            # "R_stack [ohm]": r_stack_mean,
-            # "R_std [ohm]": r_stack_std,
-            # "R_per_stack [Ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
-            # "PS_per_stack [mV]":  np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]),
-            # "PS_stack [mV]": ps_stack_mean,
-            # "R_ab [ohm]": Rab
-        }
-
-        # to the data logger
-        dd = d.copy()
-        dd.pop('fulldata')  # too much for logger
-        dd.update({'A': str(dd['A'])})
-        dd.update({'B': str(dd['B'])})
-        dd.update({'M': str(dd['M'])})
-        dd.update({'N': str(dd['N'])})
-
-        # round float to 2 decimal
-        for key in dd.keys():  # Check why this is applied on keys and not values...
-            if isinstance(dd[key], float):
-                dd[key] = np.round(dd[key], 3)
-
-        dd['cmd_id'] = str(cmd_id)
-        self.data_logger.info(dd)
-
         return d
 
     def run_multiple_sequences(self, cmd_id=None, sequence_delay=None, nb_meas=None, **kwargs):
