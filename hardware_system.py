@@ -87,9 +87,9 @@ class OhmPiHardware:
         self._start_time = None
         self._pulse = 0
 
-    def _inject(self, duration):
+    def _inject(self, polarity=1, inj_time=None):
             self.tx_sync.set()
-            self.tx.voltage_pulse(length=duration)
+            self.tx.voltage_pulse(length=inj_time, polarity=polarity)
             self.tx_sync.clear()
 
     def _set_mux_barrier(self):
@@ -234,7 +234,7 @@ class OhmPiHardware:
         lengths = [cycle_length/2]*2*cycles
         self._vab_pulses(vab, lengths, sampling_rate, append=append)
 
-    def _vab_pulse(self, vab, length, sampling_rate=None, polarity=None, append=False):
+    def _vab_pulse(self, vab, length, sampling_rate=None, polarity=1, append=False):
         """ Gets VMN and IAB from a single voltage pulse
         """
 
@@ -242,8 +242,8 @@ class OhmPiHardware:
             sampling_rate = RX_CONFIG['sampling_rate']
         if polarity is not None and polarity != self.tx.polarity:
             self.tx.polarity = polarity
-        if self.tx.voltage_adjustable:
-            self.tx.voltage = vab
+        if self.tx.pwr.voltage_adjustable:
+            self.tx.pwr.voltage = vab
         else:
             vab = self.tx.voltage
         injection = Thread(target=self._inject, kwargs={'duration':length})
@@ -263,27 +263,11 @@ class OhmPiHardware:
         if polarities is not None:
             assert len(polarities)==n_pulses
         else:
-            polarities = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(n_pulses)]
+            polarities = [-1 * np.heaviside(i % 2, -1.) for i in range(n_pulses)]
         if not append:
             self._clear_values()
         for i in range(n_pulses):
             self._vab_pulse(self, length=lengths[i], sampling_rate=sampling_rate, polarity=polarities[i], append=True)
-
-    # _______________________________________________
-    def switch_dps(self, state='off'):
-        """Switches DPS on or off.
-
-            Parameters
-            ----------
-            state : str
-                'on', 'off'
-            """
-        if state == 'on':
-            self.tx.turn_on()
-        else:
-            self.tx.turn_off()
-            if state != 'off':
-                self.exec_logger.warning(f'Unknown state {state} for DPS switching. switching off...')
 
     def switch_mux(self, electrodes, roles=None, state='off'):
         """Switches on multiplexer relays for given quadrupole.
