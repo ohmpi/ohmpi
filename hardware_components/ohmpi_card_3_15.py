@@ -98,18 +98,12 @@ class Tx(TxAbstract):
 
         self.adc_gain = 2 / 3
 
-        # DPH 5005 Digital Power Supply
-        self.turn_on()
-        time.sleep(TX_CONFIG['dps_switch_on_warm_up'])
         self.pwr = None
 
         # I2C connexion to MCP23008, for current injection
         self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
         self.pin4.direction = Direction.OUTPUT
         self.pin4.value = True
-
-        self.exec_logger.info(f'TX battery: {self.tx_bat:.1f} V')
-        self.turn_off()
 
     @property
     def adc_gain(self):
