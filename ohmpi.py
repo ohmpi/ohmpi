@@ -420,7 +420,7 @@ class OhmPi(object):
             Quadrupole to measure, just for labelling. Only switch_mux_on/off
             really create the route to the electrodes.
         nb_stack : int, optional
-            Number of stacks. A stack is considered two half-cycles (one
+            Number of stacks. A stack is considered two pulses (one
             positive, one negative).
         injection_duration : int, optional
             Injection time in seconds.
@@ -502,7 +502,7 @@ class OhmPi(object):
         self.switch_mux_off(quad, cmd_id)
         return d
 
-    def run_multiple_sequences(self, cmd_id=None, sequence_delay=None, nb_meas=None, **kwargs):
+    def run_multiple_sequences(self, cmd_id=None, sequence_delay=None, nb_meas=None, **kwargs):  # NOTE : could be renamed repeat_sequence
         """Runs multiple sequences in a separate thread for monitoring mode.
            Can be stopped by 'OhmPi.interrupt()'.
            Additional arguments are passed to run_measurement().

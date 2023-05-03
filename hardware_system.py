@@ -181,7 +181,7 @@ class OhmPiHardware:
         self.tx.polarity = 1
         self.tx.turn_on()
         if self.rx.sampling_rate*1000 > best_tx_injtime:
-            sampling_rate = best_tx_injtime
+            sampling_rate = best_tx_injtime  # TODO: check this...
         else:
             sampling_rate = self.tx.sampling_rate
         self._vab_pulse(vab=vab, length=best_tx_injtime, sampling_rate=sampling_rate)
