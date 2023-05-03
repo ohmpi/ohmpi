@@ -217,12 +217,11 @@ class OhmPiHardware:
 
     def _plot_readings(self):
         # Plot graphs
-        fig, ax = plt.subplots()
-        ax.plot(self.readings[:, 0], self.readings[:, 3], '-r', marker='.', label='iab')
-        ax.set_ylabel('Iab [mA]')
-        ax2 = ax.twinx()
-        ax2.plot(self.readings[:, 0], self.readings[:, 2] * self.readings[:, 4], '-b', marker='.', label='vmn')
-        ax2.set_ylabel('Vmn [mV]')
+        fig, ax = plt.subplots(nrows=2, sharex=True)
+        ax[0].plot(self.readings[:, 0], self.readings[:, 3], '-r', marker='.', label='iab')
+        ax[0].set_ylabel('Iab [mA]')
+        ax[1].plot(self.readings[:, 0], self.readings[:, 2] * self.readings[:, 4], '-b', marker='.', label='vmn')
+        ax[1].set_ylabel('Vmn [mV]')
         fig.legend()
         plt.show()
 
