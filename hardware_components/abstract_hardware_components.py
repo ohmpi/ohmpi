@@ -76,7 +76,7 @@ class MuxAbstract(ABC):
     def reset(self):
         pass
 
-    def switch(self, elec_dict=None, state='on'): # TODO: generalize for other roles
+    def switch(self, elec_dict=None, state='off'): # TODO: generalize for other roles
         """Switch a given list of electrodes with different roles.
         Electrodes with a value of 0 will be ignored.
 

@@ -64,7 +64,7 @@ class OhmPi(object):
             _, onpi = get_platform()
         elif onpi:
             assert get_platform()[1] == True  # Checks that the system actually runs on a pi if onpi is True
-        self.on_pi = onpi  # True if run from the RaspberryPi with the hardware, otherwise False for random data
+        self.on_pi = onpi  # True if runs from the RaspberryPi with the hardware, otherwise False for random data # TODO : replace with dummy hardware?
 
         self._sequence = sequence
         self.nb_samples = 0

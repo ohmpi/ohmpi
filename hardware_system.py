@@ -302,7 +302,7 @@ class OhmPiHardware:
                 for idx, mux in enumerate(mux_workers):
                     # Create a new thread to perform some work
                     self.mux_boards[mux].barrier = b
-                    mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs={'elec_dict': elec_dict})
+                    mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs={'elec_dict': elec_dict, 'state': state})
                     mux_workers[idx].start()
                 self.mux_barrier.wait()
                 for mux_worker in mux_workers:
