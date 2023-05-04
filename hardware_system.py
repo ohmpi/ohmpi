@@ -240,13 +240,11 @@ class OhmPiHardware:
 
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
-        if polarity is not None and polarity != self.tx.polarity:
-            self.tx.polarity = polarity
         if self.tx.pwr.voltage_adjustable:
             self.tx.pwr.voltage = vab
         else:
             vab = self.tx.pwr.voltage
-        injection = Thread(target=self._inject, kwargs={'duration':length})
+        injection = Thread(target=self._inject, kwargs={'inj_time':length, 'polarity': polarity})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
         # set gains automatically
         self.tx.adc_gain_auto()
