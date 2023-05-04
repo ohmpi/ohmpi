@@ -61,13 +61,13 @@ def _gain_auto(channel):
     """
 
     gain = 2 / 3
-    if (abs(channel.voltage) < 2.040) and (abs(channel.voltage) >= 1.0):
+    if (abs(channel.voltage) < 2.048) and (abs(channel.voltage) >= 1.024):
         gain = 2
-    elif (abs(channel.voltage) < 1.0) and (abs(channel.voltage) >= 0.500):
+    elif (abs(channel.voltage) < 1.024) and (abs(channel.voltage) >= 0.512):
         gain = 4
-    elif (abs(channel.voltage) < 0.500) and (abs(channel.voltage) >= 0.250):
+    elif (abs(channel.voltage) < 0.512) and (abs(channel.voltage) >= 0.256):
         gain = 8
-    elif abs(channel.voltage) < 0.250:
+    elif abs(channel.voltage) < 0.256:
         gain = 16
     return gain
 
