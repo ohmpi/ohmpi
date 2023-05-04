@@ -27,8 +27,9 @@ OHMPI_CONFIG = {
 }  # TODO: add a dictionary with INA models and associated gain values
 
 HARDWARE_CONFIG = {
-    'controller': {'model' : 'dummy_controller'
+    'ctl': {'model' : 'dummy_ctl'
                    },
+    'pwr' : {'model': 'dummy_pwr'},
     'tx' : {'model' : 'dummy_tx',
              'current_max': 4800 / 50 / 2,  # Maximum current
              'R_shunt': 2  # Shunt resistance in Ohms

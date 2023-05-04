@@ -9,7 +9,7 @@ import time
 import numpy as np
 import os
 from OhmPi.hardware_components import TxAbstract, RxAbstract
-controller_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["hardware"]["controller"]["model"]}')
+ctl_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["hardware"]["ctl"]["model"]}')
 
 TX_CONFIG = HARDWARE_CONFIG['tx']
 RX_CONFIG = HARDWARE_CONFIG['rx']
@@ -71,15 +71,15 @@ class Tx(TxAbstract):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         self._voltage = kwargs.pop('voltage', TX_CONFIG['default_voltage'])
-        self.controller = kwargs.pop('controller', controller_module.Controller())
+        self.ctl = kwargs.pop('controller', ctl_module.Ctl())
 
         # I2C connexion to MCP23008, for current injection
-        self.mcp_board = MCP23008(self.controller.bus, address=TX_CONFIG['mcp_board_address'])
+        self.mcp_board = MCP23008(self.ctl.bus, address=TX_CONFIG['mcp_board_address'])
 
         # ADS1115 for current measurement (AB)
         self._adc_gain = 2/3
         self._ads_current_address = 0x48
-        self._ads_current = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
+        self._ads_current = ads.ADS1115(self.ctl.bus, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_current_address)
 
         # Relays for pulse polarity
@@ -122,7 +122,7 @@ class Tx(TxAbstract):
     def adc_gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self._ads_current = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
+        self._ads_current = ads.ADS1115(self.ctl.bus, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_current_address)
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
 
@@ -148,12 +148,13 @@ class Tx(TxAbstract):
         assert TX_CONFIG['current_min'] <= value <= TX_CONFIG['current_max']
         self.exec_logger.warning(f'Current pulse is not implemented for the {TX_CONFIG["model"]} board')
 
-    def inject(self, state='on'):
-        TxAbstract.inject(self, state=state)
-        if state=='on':
-            self.DPS.write_register(0x09, 1)  # DPS5005 on
-        else:
-            self.DPS.write_register(0x09, 0)  # DPS5005 off
+    def inject(self, polarity=1, inj_time=None):
+        TxAbstract.inject(self, polarity=polarity, inj_time=inj_time)
+        # move this part in DPS5005
+        # if state=='on':
+        #     self.DPS.write_register(0x09, 1)  # DPS5005 on
+        # else:
+        #     self.DPS.write_register(0x09, 0)  # DPS5005 off
 
     @property
     def polarity(self):
@@ -234,12 +235,12 @@ class Rx(RxAbstract):
     def __init__(self, **kwargs):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
-        self.controller = kwargs.pop('controller', controller_module.Controller())
+        self.ctl = kwargs.pop('controller', ctl_module.Ctl())
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = 0x49
         self._adc_gain = 2/3
-        self._ads_voltage = ads.ADS1115(self.controller.bus, gain=self._adc_gain, data_rate=860, address=self._ads_voltage_address)
+        self._ads_voltage = ads.ADS1115(self.ctl.bus, gain=self._adc_gain, data_rate=860, address=self._ads_voltage_address)
 
     @property
     def adc_gain(self):
@@ -249,7 +250,7 @@ class Rx(RxAbstract):
     def adc_gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self._ads_voltage = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
+        self._ads_voltage = ads.ADS1115(self.ctl.bus, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_voltage_address)
         self.exec_logger.debug(f'Setting RX ADC gain to {value}')
 

@@ -18,7 +18,7 @@ OHMPI_CONFIG = {
 }
 
 HARDWARE_CONFIG = {
-    'controller': {'model' : 'raspberry_pi_i2c'
+    'ctl': {'model' : 'raspberry_pi_i2c'
                    },
     'pwr': {'model' : 'pwr_batt', 'voltage': 12.},
     'tx' : {'model' : 'ohmpi_card_3_15',

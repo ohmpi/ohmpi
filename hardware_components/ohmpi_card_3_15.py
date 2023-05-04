@@ -10,8 +10,8 @@ import time
 import numpy as np
 import os
 from OhmPi.hardware_components import TxAbstract, RxAbstract
-controller_name = HARDWARE_CONFIG['controller'].pop('board_name', 'raspberry_pi_i2c')
-controller_module = importlib.import_module(f'OhmPi.hardware_components.{controller_name}')
+ctl_name = HARDWARE_CONFIG['ctl'].pop('board_name', 'raspberry_pi_i2c')
+ctl_module = importlib.import_module(f'OhmPi.hardware_components.{ctl_name}')
 
 TX_CONFIG = HARDWARE_CONFIG['tx']
 RX_CONFIG = HARDWARE_CONFIG['rx']
@@ -32,16 +32,17 @@ current_adc_voltage_min = 10.  # mV
 current_adc_voltage_max = 4500. # mV
 low_battery = 12. # V (conventional value as it is not measured on this board)
 tx_mcp_board_address = 0x20  #
-dps_voltage_max = 12.  # V
-dps_default_voltage = 12.  # V
-dps_switch_on_warmup = 0.  # seconds
+# pwr_voltage_max = 12.  # V
+# pwr_default_voltage = 12.  # V
+# pwr_switch_on_warmup = 0.  # seconds
 
 TX_CONFIG['current_min'] = np.min([current_adc_voltage_min / (TX_CONFIG['r_shunt'] * 50), TX_CONFIG.pop('current_min', np.inf)])  # mA
 TX_CONFIG['current_max'] = np.min([current_adc_voltage_max / (TX_CONFIG['r_shunt'] * 50), TX_CONFIG.pop('current_max', np.inf)])  # mA
-TX_CONFIG['voltage_max'] = np.min([dps_voltage_max, TX_CONFIG.pop('voltage_max', np.inf)])  # V
+# TX_CONFIG['voltage_max'] = np.min([pwr_voltage_max, TX_CONFIG.pop('voltage_max', np.inf)])  # V
+TX_CONFIG['voltage_max'] = TX_CONFIG.pop('voltage_max', np.inf)  # V
 TX_CONFIG['voltage_min'] = -TX_CONFIG['voltage_max']  # V
-TX_CONFIG['default_voltage'] = np.min([TX_CONFIG.pop('default_voltage', dps_default_voltage), TX_CONFIG['voltage_max']])  # V
-TX_CONFIG['dps_switch_on_warm_up'] = TX_CONFIG.pop('dps_switch_on_warmup', dps_switch_on_warmup)
+# TX_CONFIG['default_voltage'] = np.min([TX_CONFIG.pop('default_voltage', pwr_default_voltage), TX_CONFIG['voltage_max']])  # V
+# TX_CONFIG['pwr_switch_on_warm_up'] = TX_CONFIG.pop('pwr_switch_on_warmup', pwr_switch_on_warmup)
 TX_CONFIG['mcp_board_address'] = TX_CONFIG.pop('mcp_board_address', tx_mcp_board_address)
 TX_CONFIG['low_battery'] = TX_CONFIG.pop('low_battery', low_battery)
 
@@ -77,15 +78,15 @@ class Tx(TxAbstract):
         self._voltage = kwargs.pop('voltage', TX_CONFIG['default_voltage'])
         self.voltage_adjustable = False
         self.current_adjustable = False
-        if self.controller is None:
-            self.controller = controller_module.Controller()
+        if self.ctl is None:
+            self.ctl = ctl_module.Ctl()
 
         # I2C connexion to MCP23008, for current injection
-        self.mcp_board = MCP23008(self.controller.bus, address=TX_CONFIG['mcp_board_address'])
+        self.mcp_board = MCP23008(self.ctl.bus, address=TX_CONFIG['mcp_board_address'])
 
         # ADS1115 for current measurement (AB)
         self._ads_current_address = 0x48
-        self._ads_current = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
+        self._ads_current = ads.ADS1115(self.ctl.bus, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_current_address)
         self._ads_current.mode = Mode.CONTINUOUS
 
@@ -113,7 +114,7 @@ class Tx(TxAbstract):
     def adc_gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self._ads_current = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
+        self._ads_current = ads.ADS1115(self.ctl.bus, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_current_address)
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
 
@@ -192,13 +193,13 @@ class Rx(RxAbstract):
     def __init__(self, **kwargs):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
-        if self.controller is None:
-            self.controller = controller_module.Controller()
+        if self.ctl is None:
+            self.ctl = ctl_module.Ctl()
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = 0x49
         self._adc_gain = 2/3
-        self._ads_voltage = ads.ADS1115(self.controller.bus, gain=self._adc_gain, data_rate=860, address=self._ads_voltage_address)
+        self._ads_voltage = ads.ADS1115(self.ctl.bus, gain=self._adc_gain, data_rate=860, address=self._ads_voltage_address)
         self._ads_voltage.mode = Mode.CONTINUOUS
         self._sampling_rate = kwargs.pop('sampling_rate', sampling_rate)
 
@@ -210,7 +211,7 @@ class Rx(RxAbstract):
     def adc_gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self._ads_voltage = ads.ADS1115(self.controller.bus, gain=self.adc_gain, data_rate=860,
+        self._ads_voltage = ads.ADS1115(self.ctl.bus, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_voltage_address)
         self.exec_logger.debug(f'Setting RX ADC gain to {value}')
 

@@ -5,9 +5,9 @@ from OhmPi.logging_setup import create_stdout_logger
 import time
 from threading import Barrier
 
-class ControllerAbstract(ABC):
+class CtlAbstract(ABC):
     def __init__(self, **kwargs):
-        self.board_name = kwargs.pop('board_name', 'unknown Controller hardware')
+        self.board_name = kwargs.pop('board_name', 'unknown CTL hardware')
         self.bus = None # TODO: allow for several buses
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
@@ -15,7 +15,7 @@ class ControllerAbstract(ABC):
         self.soh_logger = kwargs.pop('soh_logger', None)
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_ctl')
-        self.exec_logger.debug(f'{self.board_name} Controller initialization')
+        self.exec_logger.debug(f'{self.board_name} Ctl initialization')
         self._cpu_temp_available = False
         self.max_cpu_temp = np.inf
 
@@ -37,7 +37,7 @@ class ControllerAbstract(ABC):
 
 class PwrAbstract(ABC):
     def __init__(self, **kwargs):
-        self.board_name = kwargs.pop('board_name', 'unknown Pwr hardware')
+        self.board_name = kwargs.pop('board_name', 'unknown PWR hardware')
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_mux')
@@ -100,7 +100,7 @@ class MuxAbstract(ABC):
         if self.board_id is None:
             self.exec_logger.error(f'MUX {self.board_name} should have an id !')
         self.exec_logger.debug(f'MUX {self.board_id} ({self.board_name}) initialization')
-        self.controller = kwargs.pop('controller', None)
+        self.ctl = kwargs.pop('ctl', None)
         cabling = kwargs.pop('cabling', None)
         self.cabling = {}
         if cabling is not None:
@@ -218,7 +218,7 @@ class TxAbstract(ABC):
         self.soh_logger = kwargs.pop('soh_logger', None)
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_tx')
-        self.controller = kwargs.pop('controller', None)
+        self.ctl = kwargs.pop('ctl', None)
         self.pwr = kwargs.pop('pwr', None)
         self._inj_time = None
         self._adc_gain = 1.
@@ -297,7 +297,7 @@ class RxAbstract(ABC):
         self.soh_logger = kwargs.pop('soh_logger', None)
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_rx')
-        self.controller = kwargs.pop('controller', None)
+        self.ctl = kwargs.pop('ctl', None)
         self.board_name = kwargs.pop('board_name', 'unknown RX hardware')
         self._sampling_rate = kwargs.pop('sampling_rate', 1)
         self.exec_logger.debug(f'{self.board_name} RX initialization')

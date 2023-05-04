@@ -18,8 +18,10 @@ OHMPI_CONFIG = {
 }
 
 HARDWARE_CONFIG = {
-    'controller': {'model' : 'raspberry_pi'
+    'ctl': {'model' : 'raspberry_pi_i2c'
                    },
+    'pwr': {'model' : 'DPS_5005',
+            'voltage_adjustable': True},
     'tx' : {'model' : 'mb_2024_rev_0_0',
              'mcp_board_address': 0x20,
              'current_max': 4800 / 50 / 2,  # Maximum current

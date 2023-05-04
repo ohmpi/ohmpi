@@ -18,7 +18,7 @@ OHMPI_CONFIG = {
 }
 
 HARDWARE_CONFIG = {
-    'controller': {'model' : 'dummy_controller'
+    'ctl': {'model' : 'dummy_ctl'
                    },
     'tx' : {'model' : 'dummy_tx',
              'current_max': 4800 / 50 / 2,  # Maximum current mA

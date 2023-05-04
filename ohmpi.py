@@ -464,7 +464,7 @@ class OhmPi(object):
                 "Ps [mV]": self._hw.sp,
                 "nbStack": nb_stack,
                 "Tx [V]": tx_volt,
-                "CPU temp [degC]": self._hw.controller.cpu_temperature,
+                "CPU temp [degC]": self._hw.ctl.cpu_temperature,
                 "Nb samples [-]": len(self._hw.readings),  # TODO: use only samples after a delay in each pulse
                 "fulldata": self._hw.readings[:, [0, -2, -1]],
                 # "I_stack [mA]": i_stack_mean,

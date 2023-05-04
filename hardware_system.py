@@ -11,7 +11,7 @@ from OhmPi.utils import update_dict
 from OhmPi.config import HARDWARE_CONFIG
 from threading import Thread, Event, Barrier
 
-controller_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["controller"]["model"]}')
+ctl_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
 pwr_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
 tx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
 rx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
@@ -48,29 +48,28 @@ class OhmPiHardware:
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_hw')
         self.tx_sync = Event()
-        self.controller = kwargs.pop('controller',
-                                     controller_module.Controller(exec_logger=self.exec_logger,
-                                                                   data_logger=self.data_logger,
-                                                                   soh_logger=self.soh_logger))
+        self.ctl = kwargs.pop('ctl', ctl_module.Ctl(exec_logger=self.exec_logger,
+                                                    data_logger=self.data_logger,
+                                                    soh_logger=self.soh_logger))
         self.rx = kwargs.pop('rx', rx_module.Rx(exec_logger=self.exec_logger,
-                                                 data_logger=self.data_logger,
-                                                 soh_logger=self.soh_logger,
-                                                 controller=self.controller))
+                                                data_logger=self.data_logger,
+                                                soh_logger=self.soh_logger,
+                                                ctl=self.ctl))
         self.pwr = kwargs.pop('pwr', pwr_module.Pwr(exec_logger=self.exec_logger,
-                                                 data_logger=self.data_logger,
-                                                 soh_logger=self.soh_logger,
-                                                 controller=self.controller))
+                                                    data_logger=self.data_logger,
+                                                    soh_logger=self.soh_logger,
+                                                    ctl=self.ctl))
         self.tx = kwargs.pop('tx', tx_module.Tx(exec_logger=self.exec_logger,
-                                                 data_logger=self.data_logger,
-                                                 soh_logger=self.soh_logger,
-                                                 controller=self.controller))
+                                                data_logger=self.data_logger,
+                                                soh_logger=self.soh_logger,
+                                                ctl=self.ctl))
         self.tx.pwr = self.pwr
         self._cabling = kwargs.pop('cabling', {})
         self.mux_boards = kwargs.pop('mux', {'mux_1': mux_module.Mux(id='mux_1',
                                                                      exec_logger=self.exec_logger,
                                                                      data_logger=self.data_logger,
                                                                      soh_logger=self.soh_logger,
-                                                                     controller=self.controller,
+                                                                     ctl=self.ctl,
                                                                      cabling = self._cabling)})
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
         self._cabling={}

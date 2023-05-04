@@ -1,11 +1,11 @@
-from OhmPi.hardware_components import ControllerAbstract
+from OhmPi.hardware_components import CtlAbstract
 import board  # noqa
 import busio  # noqa
 import os
 from OhmPi.utils import get_platform
 from gpiozero import CPUTemperature  # noqa
 
-class Controller(ControllerAbstract):
+class Ctl(CtlAbstract):
     def __init__(self, **kwargs):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
