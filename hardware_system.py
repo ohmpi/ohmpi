@@ -245,7 +245,7 @@ class OhmPiHardware:
         if self.tx.pwr.voltage_adjustable:
             self.tx.pwr.voltage = vab
         else:
-            vab = self.tx.voltage
+            vab = self.tx.pwr.voltage
         injection = Thread(target=self._inject, kwargs={'duration':length})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
         # set gains automatically
