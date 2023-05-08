@@ -86,6 +86,11 @@ class OhmPiHardware:
         self._start_time = None
         self._pulse = 0
 
+    def _gain_auto(self):
+        self.tx_sync.wait()
+        self.tx.adc_gain_auto()
+        self.rx.adc_gain_auto()
+
     def _inject(self, polarity=1, inj_time=None):
             self.tx_sync.set()
             self.tx.voltage_pulse(length=inj_time, polarity=polarity)
@@ -243,11 +248,14 @@ class OhmPiHardware:
             self.tx.pwr.voltage = vab
         else:
             vab = self.tx.pwr.voltage
+        # set gains automatically
+        gain_auto = Thread(target=self._gain_auto)
+        injection = Thread(target=self._inject, kwargs={'inj_time': 0.2, 'polarity': polarity})
+        gain_auto.start()
+        injection.start()
+        # reads current and voltage during the pulse
         injection = Thread(target=self._inject, kwargs={'inj_time':length, 'polarity': polarity})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
-        # set gains automatically
-        self.tx.adc_gain_auto()
-        self.rx.adc_gain_auto()
         readings.start()
         injection.start()
         readings.join()
@@ -347,6 +355,6 @@ class OhmPiHardware:
         """
 
         self.exec_logger.debug('Resetting all mux boards ...')
-        for mux_id, mux in self.mux_boards.items():
+        for mux_id, mux in self.mux_boards.items():  # noqa
             self.exec_logger.debug(f'Resetting {mux_id}.')
             mux.reset()
