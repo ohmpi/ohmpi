@@ -88,7 +88,7 @@ class Tx(TxAbstract):
         self._ads_current_address = 0x48
         self._ads_current = ads.ADS1115(self.ctl.bus, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_current_address)
-        self._ads_current.mode = Mode.CONTINUOUS
+        self._ads_current.mode = Mode.SINGLE
 
         # Relays for pulse polarity
         self.pin0 = self.mcp_board.get_pin(0)
@@ -200,7 +200,7 @@ class Rx(RxAbstract):
         self._ads_voltage_address = 0x49
         self._adc_gain = 2/3
         self._ads_voltage = ads.ADS1115(self.ctl.bus, gain=self._adc_gain, data_rate=860, address=self._ads_voltage_address)
-        self._ads_voltage.mode = Mode.CONTINUOUS
+        self._ads_voltage.mode = Mode.SINGLE
         self._sampling_rate = kwargs.pop('sampling_rate', sampling_rate)
 
     @property
