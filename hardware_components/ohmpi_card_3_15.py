@@ -226,6 +226,7 @@ class Rx(RxAbstract):
     def voltage(self):
         """ Gets the voltage VMN in Volts
         """
+        print(f'Voltage ads: {self._ads_voltage_address}, {ads.P0}')
         u0 = AnalogIn(self._ads_voltage, ads.P0).voltage * 1000.
         u2 = AnalogIn(self._ads_voltage, ads.P2).voltage * 1000.
         u = np.max([u0,u2]) * (np.heaviside(u0-u2, 1.) * 2 - 1.) # gets the max between u0 & u2 and set the sign
