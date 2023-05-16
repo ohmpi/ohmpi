@@ -1,0 +1,56 @@
+digraph "packages_uml_ohmpi" {
+charset="utf-8"
+rankdir=BT
+"0" [label="ohmpi", shape="box"];
+"1" [label="ohmpi.compressed_sized_timed_rotating_handler", shape="box"];
+"2" [label="ohmpi.config", shape="box"];
+"3" [label="ohmpi.deprecated", shape="box"];
+"4" [label="ohmpi.hardware_components", shape="box"];
+"5" [label="ohmpi.hardware_components.abstract_hardware_components", shape="box"];
+"6" [label="ohmpi.hardware_components.dummy_ctl", shape="box"];
+"7" [label="ohmpi.hardware_components.dummy_mux", shape="box"];
+"8" [label="ohmpi.hardware_components.dummy_rx", shape="box"];
+"9" [label="ohmpi.hardware_components.dummy_tx", shape="box"];
+"10" [label="ohmpi.hardware_components.mb_2024_rev_0_0", shape="box"];
+"11" [label="ohmpi.hardware_components.mux_2024_rev_0_0", shape="box"];
+"12" [label="ohmpi.hardware_components.ohmpi_card_3_15", shape="box"];
+"13" [label="ohmpi.hardware_components.pwr_batt", shape="box"];
+"14" [label="ohmpi.hardware_components.raspberry_pi_i2c", shape="box"];
+"15" [label="ohmpi.hardware_system", shape="box"];
+"16" [label="ohmpi.http_interface", shape="box"];
+"17" [label="ohmpi.logging_setup", shape="box"];
+"18" [label="ohmpi.mqtt_handler", shape="box"];
+"19" [label="ohmpi.ohmpi", shape="box"];
+"20" [label="ohmpi.utils", shape="box"];
+"2" -> "20" [arrowhead="open", arrowtail="none"];
+"4" -> "5" [arrowhead="open", arrowtail="none"];
+"5" -> "17" [arrowhead="open", arrowtail="none"];
+"6" -> "4" [arrowhead="open", arrowtail="none"];
+"6" -> "19" [arrowhead="open", arrowtail="none"];
+"7" -> "4" [arrowhead="open", arrowtail="none"];
+"7" -> "19" [arrowhead="open", arrowtail="none"];
+"8" -> "4" [arrowhead="open", arrowtail="none"];
+"8" -> "19" [arrowhead="open", arrowtail="none"];
+"9" -> "4" [arrowhead="open", arrowtail="none"];
+"9" -> "19" [arrowhead="open", arrowtail="none"];
+"10" -> "4" [arrowhead="open", arrowtail="none"];
+"10" -> "19" [arrowhead="open", arrowtail="none"];
+"11" -> "2" [arrowhead="open", arrowtail="none"];
+"11" -> "4" [arrowhead="open", arrowtail="none"];
+"12" -> "2" [arrowhead="open", arrowtail="none"];
+"12" -> "4" [arrowhead="open", arrowtail="none"];
+"13" -> "5" [arrowhead="open", arrowtail="none"];
+"14" -> "4" [arrowhead="open", arrowtail="none"];
+"14" -> "20" [arrowhead="open", arrowtail="none"];
+"15" -> "2" [arrowhead="open", arrowtail="none"];
+"15" -> "17" [arrowhead="open", arrowtail="none"];
+"15" -> "20" [arrowhead="open", arrowtail="none"];
+"16" -> "2" [arrowhead="open", arrowtail="none"];
+"17" -> "1" [arrowhead="open", arrowtail="none"];
+"17" -> "2" [arrowhead="open", arrowtail="none"];
+"17" -> "18" [arrowhead="open", arrowtail="none"];
+"19" -> "2" [arrowhead="open", arrowtail="none"];
+"19" -> "15" [arrowhead="open", arrowtail="none"];
+"19" -> "17" [arrowhead="open", arrowtail="none"];
+"19" -> "20" [arrowhead="open", arrowtail="none"];
+}
