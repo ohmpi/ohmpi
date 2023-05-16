@@ -1,9 +1,9 @@
 import time
-from utils import change_config
+from ohmpi.utils import change_config
 import logging
 change_config('config_mb_2023_mux_2024.py', verbose=False)
-from OhmPi.hardware_components.mux_2024_rev_0_0 import Mux, MUX_CONFIG
-from OhmPi.hardware_components import raspberry_pi_i2c as ctl_module
+from ohmpi.hardware_components.mux_2024_rev_0_0 import Mux, MUX_CONFIG
+from ohmpi.hardware_components import raspberry_pi_i2c as ctl_module
 
 stand_alone_mux = False
 part_of_hardware_system = False
@@ -26,7 +26,7 @@ if stand_alone_mux:
 
 # mux as part of a OhmPiHardware system
 if part_of_hardware_system:
-    from OhmPi.hardware_system import OhmPiHardware
+    from ohmpi.hardware_system import OhmPiHardware
     print('Starting test of mux as part of a OhmPiHardware system.')
     k = OhmPiHardware()
     k.exec_logger.setLevel(logging.DEBUG)
@@ -38,7 +38,7 @@ if part_of_hardware_system:
     k.switch_mux(electrodes=[1,4,2,3], roles=['A', 'B', 'M', 'N'], state='off')
 
 if within_ohmpi:
-    from OhmPi.ohmpi import OhmPi
+    from ohmpi.ohmpi import OhmPi
     print('Starting test of mux within OhmPi.')
     k = OhmPi()
     k.switch_mux_on([1,4,2,3])

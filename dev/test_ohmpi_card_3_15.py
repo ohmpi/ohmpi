@@ -1,8 +1,8 @@
 # import sys
 # sys.path.extend(['/home/su530201/PycharmProjects/ohmpi_reversaal/OhmPi'])
-from OhmPi.hardware_components.ohmpi_card_3_15 import Tx
-from OhmPi.hardware_components.ohmpi_card_3_15 import Rx
-from OhmPi.logging_setup import create_stdout_logger
+from ohmpi.hardware_components.ohmpi_card_3_15 import Tx
+from ohmpi.hardware_components.ohmpi_card_3_15 import Rx
+from ohmpi.logging_setup import create_stdout_logger
 import numpy as np
 
 exec_logger = create_stdout_logger(name='exec')
