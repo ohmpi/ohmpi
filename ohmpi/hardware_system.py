@@ -12,7 +12,7 @@ from ohmpi.config import HARDWARE_CONFIG
 from threading import Thread, Event, Barrier
 
 ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
-pwr_module = importlib.import_module(f'Ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
+pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
 tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
 rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
 MUX_CONFIG = {}
