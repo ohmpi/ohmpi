@@ -45,4 +45,4 @@ if within_ohmpi:
     time.sleep(1.)
     k.reset_mux()
 
-change_config('config_default.py', verbose=False)
+change_config('../configs/config_default.py', verbose=False)
