@@ -9,7 +9,7 @@ import time
 import numpy as np
 import os
 from ohmpi.hardware_components import TxAbstract, RxAbstract
-ctl_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["hardware"]["ctl"]["model"]}')
+ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["hardware"]["ctl"]["model"]}')
 
 TX_CONFIG = HARDWARE_CONFIG['tx']
 RX_CONFIG = HARDWARE_CONFIG['rx']

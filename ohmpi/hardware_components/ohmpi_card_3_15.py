@@ -11,7 +11,7 @@ import numpy as np
 import os
 from ohmpi.hardware_components import TxAbstract, RxAbstract
 ctl_name = HARDWARE_CONFIG['ctl'].pop('board_name', 'raspberry_pi_i2c')
-ctl_module = importlib.import_module(f'OhmPi.hardware_components.{ctl_name}')
+ctl_module = importlib.import_module(f'ohmpi.hardware_components.{ctl_name}')
 
 TX_CONFIG = HARDWARE_CONFIG['tx']
 RX_CONFIG = HARDWARE_CONFIG['rx']
