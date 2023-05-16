@@ -11,15 +11,15 @@ from ohmpi.utils import update_dict
 from ohmpi.config import HARDWARE_CONFIG
 from threading import Thread, Event, Barrier
 
-ctl_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
-pwr_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
-tx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
-rx_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
+ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
+pwr_module = importlib.import_module(f'Ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
+tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
+rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
 MUX_CONFIG = {}
 mux_boards = []
 
 for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
-    mux_module = importlib.import_module(f'OhmPi.hardware_components.{mux_config["model"]}')
+    mux_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["model"]}')
     MUX_CONFIG[mux_id] = mux_module.MUX_CONFIG
     MUX_CONFIG[mux_id].update(mux_config)
     MUX_CONFIG[mux_id].update({'id': mux_id})
