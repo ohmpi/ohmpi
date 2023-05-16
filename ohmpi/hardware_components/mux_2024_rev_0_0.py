@@ -1,6 +1,6 @@
 import time
 
-from ohmpi.ohmpi.config import HARDWARE_CONFIG
+from ohmpi.config import HARDWARE_CONFIG
 import os
 import numpy as np
 from ohmpi.hardware_components import MuxAbstract
