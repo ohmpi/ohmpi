@@ -5,6 +5,7 @@ from ohmpi.logging_setup import create_stdout_logger
 import time
 from threading import Barrier
 
+
 class CtlAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown CTL hardware')
