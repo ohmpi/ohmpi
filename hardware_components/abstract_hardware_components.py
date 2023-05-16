@@ -220,6 +220,7 @@ class TxAbstract(ABC):
             self.soh_logger = create_stdout_logger('soh_tx')
         self.ctl = kwargs.pop('ctl', None)
         self.pwr = kwargs.pop('pwr', None)
+        self._polarity = 0
         self._inj_time = None
         self._adc_gain = 1.
         self.inj_time = inj_time
@@ -265,10 +266,19 @@ class TxAbstract(ABC):
         self._inj_time = value
 
     @property
+    def polarity(self):
+        return self._polarity
+
+    @polarity.setter
+    @abstractmethod
+    def polarity(self, polarity):
+        assert polarity in [-1, 0, 1]
+        self._polarity = polarity
+
+    @property
     @abstractmethod
     def tx_bat(self):
         pass
-
 
     def voltage_pulse(self, voltage=0., length=None, polarity=1):
         """ Generates a square voltage pulse

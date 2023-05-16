@@ -241,7 +241,7 @@ class OhmPiHardware:
     def _vab_pulse(self, vab, length, sampling_rate=None, polarity=1, append=False):
         """ Gets VMN and IAB from a single voltage pulse
         """
-
+        self.tx.polarity = polarity
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
         if self.tx.pwr.voltage_adjustable:
@@ -268,7 +268,7 @@ class OhmPiHardware:
         if polarities is not None:
             assert len(polarities)==n_pulses
         else:
-            polarities = [-1 * np.heaviside(i % 2, -1.) for i in range(n_pulses)]
+            polarities = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(n_pulses)]
         if not append:
             self._clear_values()
         for i in range(n_pulses):

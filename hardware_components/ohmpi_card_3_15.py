@@ -95,8 +95,7 @@ class Tx(TxAbstract):
         self.pin0.direction = Direction.OUTPUT
         self.pin1 = self.mcp_board.get_pin(1)
         self.pin1.direction = Direction.OUTPUT
-        # self.polarity = 0
-
+        self.polarity = 0
         self.adc_gain = 2 / 3
 
         self.pwr = None
@@ -141,21 +140,29 @@ class Tx(TxAbstract):
         self.exec_logger.warning(f'Current pulse is not implemented for the {TX_CONFIG["model"]} board')
 
     def inject(self, polarity=1, inj_time=None):
-        assert polarity in [-1,0,1]
-        if polarity==1:
+        self.polarity = polarity
+        TxAbstract.inject(self, polarity=polarity, inj_time=None)
+
+    @property
+    def polarity(self):
+        return self._polarity
+
+    @polarity.setter
+    def polarity(self, polarity):
+        assert polarity in [-1, 0, 1]
+        self._polarity = polarity
+        if polarity == 1:
             self.pin0.value = True
             self.pin1.value = False
-            time.sleep(0.005) # Max turn on time of 211EH relays = 5ms
-        elif polarity==-1:
+            time.sleep(0.005)  # Max turn on time of 211EH relays = 5ms
+        elif polarity == -1:
             self.pin0.value = False
             self.pin1.value = True
-            time.sleep(0.005) # Max turn on time of 211EH relays = 5ms
+            time.sleep(0.005)  # Max turn on time of 211EH relays = 5ms
         else:
             self.pin0.value = False
             self.pin1.value = False
-            time.sleep(0.001) # Max turn off time of 211EH relays = 1ms
-        TxAbstract.inject(self, polarity=polarity, inj_time=None)
-
+            time.sleep(0.001)  # Max turn off time of 211EH relays = 1ms
 
     def turn_off(self):
         self.pwr.turn_off(self)
