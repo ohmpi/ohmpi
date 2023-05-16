@@ -21,11 +21,11 @@ from inspect import getmembers, isfunction
 from datetime import datetime
 from termcolor import colored
 from logging import DEBUG
-from OhmPi.utils import get_platform
-from OhmPi.logging_setup import setup_loggers
-from OhmPi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
-import OhmPi.deprecated as deprecated
-from OhmPi.hardware_system import OhmPiHardware
+from ohmpi.utils import get_platform
+from ohmpi.logging_setup import setup_loggers
+from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
+import ohmpi.deprecated as deprecated
+from ohmpi.hardware_system import OhmPiHardware
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
 try:
@@ -39,6 +39,7 @@ except Exception as error:
     arm64_imports = None
 
 VERSION = '3.0.0-alpha'
+
 
 class OhmPi(object):
     """ OhmPi class.
@@ -63,7 +64,7 @@ class OhmPi(object):
         if onpi is None:
             _, onpi = get_platform()
         elif onpi:
-            assert get_platform()[1] == True  # Checks that the system actually runs on a pi if onpi is True
+            assert get_platform()[1]  # Checks that the system actually runs on a pi if onpi is True
         self.on_pi = onpi  # True if runs from the RaspberryPi with the hardware, otherwise False for random data # TODO : replace with dummy hardware?
 
         self._sequence = sequence
@@ -424,6 +425,8 @@ class OhmPi(object):
             positive, one negative).
         injection_duration : int, optional
             Injection time in seconds.
+        best_tx_injtime: float, optional
+            ???
         autogain : bool, optional
             If True, will adapt the gain of the ADS1115 to maximize the
             resolution of the reading.
@@ -653,7 +656,10 @@ class OhmPi(object):
         self.thread.start()
         self.status = 'idle'
 
-    def rs_check(self, tx_volt=12., cmd_id=None): # TODO: we could build a smarter RS-Check by selecting adjacent electrodes based on their locations and try to isolate electrodes that are responsible for high resistances (ex: AB high, AC low, BC high -> might be a problem at B (cf what we did with WofE)
+    # TODO: we could build a smarter RS-Check by selecting adjacent electrodes based on their locations and try to
+    #  isolate electrodes that are responsible for high resistances (ex: AB high, AC low, BC high
+    #  -> might be a problem at B (cf what we did with WofE)
+    def rs_check(self, tx_volt=12., cmd_id=None):
         """Checks contact resistances
 
         Parameters
@@ -747,16 +753,6 @@ class OhmPi(object):
         except Exception as e:
             self.exec_logger.warning(f'Unable to set sequence: {e}')
             status = False
-
-    def switch_dps(self, state='off'):
-        """Switches DPS on or off.
-
-            Parameters
-            ----------
-            state : str
-                'on', 'off'
-            """
-        self._hw.switch_dps(state=state)
 
     def switch_mux_on(self, quadrupole, cmd_id=None):
         """Switches on multiplexer relays for given quadrupole.

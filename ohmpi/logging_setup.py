@@ -1,13 +1,14 @@
 import json
-from OhmPi.config import EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, SOH_LOGGING_CONFIG,\
+from ohmpi.config import EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, SOH_LOGGING_CONFIG,\
     MQTT_LOGGING_CONFIG, MQTT_CONTROL_CONFIG
 from os import path, mkdir, statvfs
 from time import gmtime
 import logging
-from OhmPi.mqtt_handler import MQTTHandler
-from OhmPi.compressed_sized_timed_rotating_handler import CompressedSizedTimedRotatingFileHandler
+from ohmpi.mqtt_handler import MQTTHandler
+from ohmpi.compressed_sized_timed_rotating_handler import CompressedSizedTimedRotatingFileHandler
 import sys
 from termcolor import colored
+
 
 def create_stdout_logger(name):
     logger = logging.getLogger(f'{name}_logger')
@@ -20,6 +21,7 @@ def create_stdout_logger(name):
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
     return logger
+
 
 def setup_loggers(mqtt=True):
     msg = ''
@@ -58,8 +60,8 @@ def setup_loggers(mqtt=True):
     if mqtt:
         mqtt_settings = MQTT_LOGGING_CONFIG.copy()
         mqtt_soh_logging_level = mqtt_settings.pop('soh_logging_level', logging.DEBUG)
-        [mqtt_settings.pop(i, None) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic', 'data_logging_level',
-                                        'exec_logging_level']]
+        [mqtt_settings.pop(i, None) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic',
+                                              'data_logging_level', 'exec_logging_level']]
         mqtt_settings.update({'topic': MQTT_LOGGING_CONFIG['soh_topic']})
         # TODO: handle the case of MQTT broker down or temporarily unavailable
         try:
@@ -145,8 +147,8 @@ def setup_loggers(mqtt=True):
     if mqtt:
         mqtt_settings = MQTT_LOGGING_CONFIG.copy()
         mqtt_data_logging_level = mqtt_settings.pop('data_logging_level', logging.INFO)
-        [mqtt_settings.pop(i, None) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic', 'exec_logging_level',
-                                        'soh_logging_level']]
+        [mqtt_settings.pop(i, None) for i in ['client_id', 'exec_topic', 'data_topic', 'soh_topic',
+                                              'exec_logging_level', 'soh_logging_level']]
         mqtt_settings.update({'topic': MQTT_LOGGING_CONFIG['data_topic']})
         try:
             mqtt_data_handler = MQTTHandler(**mqtt_settings)
@@ -169,7 +171,7 @@ def setup_loggers(mqtt=True):
             EXEC_LOGGING_CONFIG['logging_level'], msg
 
 
-def init_logging(exec_logger, data_logger, soh_logger, exec_logging_level, soh_logging_level, log_path, data_log_filename):
+def init_logging(exec_logger, data_logger, soh_logger, exec_logging_level, soh_logging_level, log_path, data_log_filename):  # noqa
     """ This is the init sequence for the logging system """
 
     init_logging_status = True

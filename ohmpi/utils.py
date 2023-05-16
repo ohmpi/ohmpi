@@ -3,6 +3,7 @@ import os
 import shutil
 import collections.abc
 
+
 def update_dict(d, u):
     """Updates a dictionary by adding elements to collection items associated to existing keys
 
@@ -26,6 +27,7 @@ def update_dict(d, u):
             d[k] = v
     return d
 
+
 def get_platform():
     """Gets platform name and checks if it is a raspberry pi
 
@@ -44,6 +46,7 @@ def get_platform():
     except FileNotFoundError:
         pass
     return platform, on_pi
+
 
 def change_config(config_file, verbose=True):
     pwd = os.path.dirname(os.path.abspath(__file__))

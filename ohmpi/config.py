@@ -1,5 +1,5 @@
 import logging
-from OhmPi.utils import get_platform
+from ohmpi.utils import get_platform
 
 from paho.mqtt.client import MQTTv31
 

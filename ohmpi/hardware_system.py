@@ -6,9 +6,9 @@ try:
     import matplotlib.pyplot as plt
 except Exception:
     pass
-from OhmPi.logging_setup import create_stdout_logger
-from OhmPi.utils import update_dict
-from OhmPi.config import HARDWARE_CONFIG
+from ohmpi.logging_setup import create_stdout_logger
+from ohmpi.utils import update_dict
+from ohmpi.config import HARDWARE_CONFIG
 from threading import Thread, Event, Barrier
 
 ctl_module = importlib.import_module(f'OhmPi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
@@ -32,9 +32,11 @@ current_max = np.min([TX_CONFIG['current_max'], np.min([MUX_CONFIG[i].pop('curre
 voltage_max = np.min([TX_CONFIG['voltage_max'], np.min([MUX_CONFIG[i].pop('voltage_max', np.inf) for i in mux_boards])])
 voltage_min = RX_CONFIG['voltage_min']
 
+
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
     return lap.total_seconds()
+
 
 class OhmPiHardware:
     def __init__(self, **kwargs):
@@ -70,9 +72,9 @@ class OhmPiHardware:
                                                                      data_logger=self.data_logger,
                                                                      soh_logger=self.soh_logger,
                                                                      ctl=self.ctl,
-                                                                     cabling = self._cabling)})
+                                                                     cabling=self._cabling)})
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
-        self._cabling={}
+        self._cabling = {}
         for _, mux in self.mux_boards.items():
             mux.barrier = self.mux_barrier
             for k, v in mux.cabling.items():
@@ -92,9 +94,9 @@ class OhmPiHardware:
         self.rx.adc_gain_auto()
 
     def _inject(self, polarity=1, inj_time=None):
-            self.tx_sync.set()
-            self.tx.voltage_pulse(length=inj_time, polarity=polarity)
-            self.tx_sync.clear()
+        self.tx_sync.set()
+        self.tx.voltage_pulse(length=inj_time, polarity=polarity)
+        self.tx_sync.clear()
 
     def _set_mux_barrier(self):
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
@@ -104,10 +106,11 @@ class OhmPiHardware:
     @property
     def pulses(self):
         pulses = {}
-        for i in np.unique(self.readings[:,1]):
+        for i in np.unique(self.readings[:, 1]):
             r = self.readings[self.readings[:, 1] == i, :]
-            assert np.all(np.isclose(r[:,2], r[0, 2]))  # Polarity cannot change within a pulse
-            pulses.update({i: {'polarity': int(r[0, 2]), 'iab': r[:,3], 'vmn' : r[:,4]}})  # TODO: check how to generalize in case of multi-channel RX
+            assert np.all(np.isclose(r[:, 2], r[0, 2]))  # Polarity cannot change within a pulse
+            # TODO: check how to generalize in case of multi-channel RX
+            pulses.update({i: {'polarity': int(r[0, 2]), 'iab': r[:, 3], 'vmn': r[:, 4]}})
         return pulses
 
     def _read_values(self, sampling_rate, append=False):  # noqa
@@ -124,20 +127,22 @@ class OhmPiHardware:
             lap = datetime.datetime.utcnow()
             _readings.append([elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, self.tx.current,
                               self.rx.voltage])
-            sample+=1
-            sleep_time = self._start_time + datetime.timedelta(seconds = sample * sampling_rate / 1000) - lap
+            sample += 1
+            sleep_time = self._start_time + datetime.timedelta(seconds=sample * sampling_rate / 1000) - lap
             time.sleep(np.max([0, sleep_time.total_seconds()]))
         self.readings = np.array(_readings)
         self._pulse += 1
 
     @property
     def sp(self):  # TODO: use a time window within pulses
-        if self.readings.shape == (0,) or len(self.readings[self.readings[:,2]==1, :]) < 1 or len(self.readings[self.readings[:,2]==-1, :]) < 1:
-            self.exec_logger.warning('Unable to compute sp: readings should at least contain one positive and one negative pulse')
+        if self.readings.shape == (0,) or len(self.readings[self.readings[:, 2] == 1, :]) < 1 or \
+                len(self.readings[self.readings[:, 2] == -1, :]) < 1:
+            self.exec_logger.warning('Unable to compute sp: readings should at least contain one positive and one '
+                                     'negative pulse')
             return 0.
         else:
             n_pulses = int(np.max(self.readings[:, 1]))
-            polarity = np.array([np.median(self.readings[self.readings[:, 1]==i, 2]) for i in range(n_pulses + 1)])
+            polarity = np.array([np.median(self.readings[self.readings[:, 1] == i, 2]) for i in range(n_pulses + 1)])
             mean_vmn = []
             mean_iab = []
             for i in range(n_pulses + 1):

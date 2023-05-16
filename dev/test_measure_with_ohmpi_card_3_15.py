@@ -1,9 +1,9 @@
 import numpy as np
 import logging
 import matplotlib.pyplot as plt
-from utils import change_config
+from ohmpi.utils import change_config
 change_config('config_mb_2023_mux_2024.py', verbose=False)
-from OhmPi.hardware_system import OhmPiHardware
+from ohmpi.hardware_system import OhmPiHardware
 
 k = OhmPiHardware()
 k.exec_logger.setLevel(logging.INFO)
