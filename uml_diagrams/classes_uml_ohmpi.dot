@@ -1,0 +1,37 @@
+digraph "classes_uml_ohmpi" {
+charset="utf-8"
+rankdir=BT
+"0" [label="{CompressedSizedTimedRotatingFileHandler|maxBytes : int\lstream\lzip_mode : int\l|doRollover()\lfind_last_rotated_file()\lshouldRollover(record)\l}", shape="record"];
+"1" [label="{Ctl|board_name : str\lbus : I2C\lmax_cpu_temp : float\l|}", shape="record"];
+"2" [label="{Ctl|bus : NoneType\l|}", shape="record"];
+"3" [label="{CtlAbstract|board_name\lbus : NoneType\lcpu_temperature\lexec_logger : NoneType, RootLogger\lmax_cpu_temp\lsoh_logger : RootLogger, NoneType\l|}", shape="record"];
+"4" [label="{MQTTHandler|auth : NoneType\lclient_id : str\lhostname\lkeepalive : int\lport : int\lprotocol\lqos : int\lretain : bool\ltls : NoneType\ltopic\ltransport : str\lwill : NoneType\l|emit(record)\l}", shape="record"];
+"5" [label="{Mux|\l|reset()\lswitch_one()\ltest()\l}", shape="record"];
+"6" [label="{Mux|addresses : dict\l|reset()\lswitch_one(elec, role, state)\l}", shape="record"];
+"7" [label="{MuxAbstract|addresses\lbarrier\lboard_id\lboard_name\lcabling : dict\lctl\lexec_logger : RootLogger, NoneType\lsoh_logger : RootLogger, NoneType\l|reset()\lswitch(elec_dict, state)\lswitch_one(elec, role, state)\ltest(elec_dict, activation_time)\l}", shape="record"];
+"8" [label="{MyServer|\l|do_POST()\l}", shape="record"];
+"9" [label="{OhmPi|cmd_id : NoneType\lcontroller : NoneType\ldata_logger : RootLogger, NoneType\lexec_logger : NoneType, RootLogger\lid : str\lmqtt : bool\lnb_samples : int\lon_pi : bool, NoneType\lsequence\lsequence : ndarray, NoneType\lsettings : dict\lsoh_logger : RootLogger, NoneType\lstatus : str\lthread : NoneType, Thread\l|append_and_save(filename, last_measurement, cmd_id)\lget_data(survey_names, cmd_id)\lget_deprecated_methods(cls)\linterrupt(cmd_id)\lload_sequence(filename, cmd_id)\lquit(cmd_id)\lremove_data(cmd_id)\lreset_mux(cmd_id)\lrestart(cmd_id)\lrs_check(tx_volt, cmd_id)\lrun_measurement(quad, nb_stack, injection_duration, autogain, strategy, tx_volt, best_tx_injtime, cmd_id)\lrun_multiple_sequences(cmd_id, sequence_delay, nb_meas)\lrun_sequence(cmd_id)\lrun_sequence_async(cmd_id)\lset_sequence(sequence, cmd_id)\lswitch_mux_off(quadrupole, cmd_id)\lswitch_mux_on(quadrupole, cmd_id)\ltest_mux(activation_time, mux_id, cmd_id)\lupdate_settings(settings, cmd_id)\l}", shape="record"];
+"10" [label="{OhmPiHardware|ctl\ldata_logger : NoneType, RootLogger\lexec_logger : RootLogger, NoneType\lmux_barrier : Barrier\lmux_boards\lpulses\lpwr\lreadings : ndarray\lrx\lsoh_logger : RootLogger, NoneType\lsp\ltx\ltx_sync : Event\l|reset_mux()\lswitch_mux(electrodes, roles, state)\ltest_mux(channel, activation_time)\lvab_square_wave(vab, cycle_length, sampling_rate, cycles, polarity, append)\l}", shape="record"];
+"11" [label="{Pwr|current\lvoltage\lvoltage_adjustable : bool\l|turn_off()\lturn_on()\l}", shape="record"];
+"12" [label="{PwrAbstract|board_name\lcurrent\lexec_logger : RootLogger, NoneType\lsoh_logger : NoneType, RootLogger\lvoltage\lvoltage_adjustable\l|turn_off()\lturn_on()\l}", shape="record"];
+"13" [label="{Rx|adc_gain\ladc_gain : float\lvoltage\l|adc_gain_auto()\l}", shape="record"];
+"14" [label="{Rx|adc_gain\ladc_gain\lctl\lvoltage\l|adc_gain_auto()\l}", shape="record"];
+"15" [label="{Rx|adc_gain\ladc_gain\lctl\lvoltage\l|adc_gain_auto()\l}", shape="record"];
+"16" [label="{RxAbstract|adc_gain\lboard_name\lctl\lexec_logger : RootLogger, NoneType\lsampling_rate\lsoh_logger : NoneType, RootLogger\lvoltage\l|adc_gain_auto()\l}", shape="record"];
+"17" [label="{Tx|adc_gain\ladc_gain : int, float\lctl\lcurrent\lcurrent_adjustable : bool\lmcp_board : MCP23008\lpin0 : DigitalInOut\lpin1 : DigitalInOut\lpin4 : DigitalInOut\lpolarity\lpolarity : int\lpwr : NoneType\ltx_bat\lvoltage_adjustable : bool\l|adc_gain_auto()\lcurrent_pulse()\linject(polarity, inj_time)\lturn_off()\lturn_on()\lvoltage_pulse(voltage, length, polarity)\l}", shape="record"];
+"18" [label="{Tx|adc_gain\ladc_gain : float\lcurrent\lpolarity : int\ltx_bat\lvoltage\l|adc_gain_auto()\lcurrent_pulse()\linject(state)\lvoltage_pulse(voltage, length, polarity)\l}", shape="record"];
+"19" [label="{Tx|DPS\ladc_gain\ladc_gain : float, int\lctl\lcurrent\lmcp_board : MCP23008\lpin0 : DigitalInOut\lpin1 : DigitalInOut\lpin2 : DigitalInOut\lpin3 : DigitalInOut\lpin4 : DigitalInOut\lpolarity\lpolarity : NoneType, int\ltx_bat\lvoltage\lvoltage\l|adc_gain_auto()\lcurrent_pulse()\linject(polarity, inj_time)\lturn_off()\lturn_on()\lvoltage_pulse(voltage, length, polarity)\l}", shape="record"];
+"20" [label="{TxAbstract|adc_gain\lboard_name\lctl\lexec_logger : RootLogger, NoneType\linj_time\linj_time\lpolarity\lpwr\lsoh_logger : NoneType, RootLogger\ltx_bat\l|adc_gain_auto()\lcurrent_pulse()\linject(polarity, inj_time)\lvoltage_pulse(voltage, length, polarity)\l}", shape="record"];
+"1" -> "3" [arrowhead="empty", arrowtail="none"];
+"2" -> "3" [arrowhead="empty", arrowtail="none"];
+"5" -> "7" [arrowhead="empty", arrowtail="none"];
+"6" -> "7" [arrowhead="empty", arrowtail="none"];
+"11" -> "12" [arrowhead="empty", arrowtail="none"];
+"13" -> "16" [arrowhead="empty", arrowtail="none"];
+"14" -> "16" [arrowhead="empty", arrowtail="none"];
+"15" -> "16" [arrowhead="empty", arrowtail="none"];
+"17" -> "20" [arrowhead="empty", arrowtail="none"];
+"18" -> "20" [arrowhead="empty", arrowtail="none"];
+"19" -> "20" [arrowhead="empty", arrowtail="none"];
+"10" -> "9" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="_hw", style="solid"];
+}
