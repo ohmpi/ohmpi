@@ -129,7 +129,7 @@ class OhmPiHardware:
                               self.rx.voltage])
             sample += 1
             sleep_time = self._start_time + datetime.timedelta(seconds=sample * sampling_rate / 1000) - lap
-            time.sleep(np.max([0, sleep_time.total_seconds()]))
+            time.sleep(np.max([0.001, sleep_time.total_seconds()]))
         self.readings = np.array(_readings)
         self._pulse += 1
 
