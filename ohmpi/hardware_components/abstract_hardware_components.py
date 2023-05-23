@@ -36,6 +36,7 @@ class CtlAbstract(ABC):
     def _cpu_temp(self):
         pass
 
+
 class PwrAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown PWR hardware')
@@ -88,6 +89,7 @@ class PwrAbstract(ABC):
             # add actions to set the DPS voltage
             self._voltage = value
 
+
 class MuxAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown MUX hardware')
@@ -129,7 +131,7 @@ class MuxAbstract(ABC):
     def reset(self):
         pass
 
-    def switch(self, elec_dict=None, state='off'): # TODO: generalize for other roles
+    def switch(self, elec_dict=None, state='off'):  # TODO: generalize for other roles
         """Switch a given list of electrodes with different roles.
         Electrodes with a value of 0 will be ignored.
 

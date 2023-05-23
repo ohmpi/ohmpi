@@ -243,7 +243,7 @@ class OhmPiHardware:
         lengths = [cycle_length/2]*2*cycles
         self._vab_pulses(vab, lengths, sampling_rate, append=append)
 
-    def _vab_pulse(self, vab, length, sampling_rate=None, polarity=1, append=False):
+    def _vab_pulse(self, vab, length, sampling_rate=None, polarity=1, auto_gain = False, append=False):
         """ Gets VMN and IAB from a single voltage pulse
         """
         self.tx.polarity = polarity
@@ -253,11 +253,12 @@ class OhmPiHardware:
             self.tx.pwr.voltage = vab
         else:
             vab = self.tx.pwr.voltage
-        # set gains automatically
-        gain_auto = Thread(target=self._gain_auto)
-        injection = Thread(target=self._inject, kwargs={'inj_time': 0.2, 'polarity': polarity})
-        gain_auto.start()
-        injection.start()
+        if auto_gain:
+            # set gains automatically
+            gain_auto = Thread(target=self._gain_auto)
+            injection = Thread(target=self._inject, kwargs={'inj_time': 0.2, 'polarity': polarity})
+            gain_auto.start()
+            injection.start()
         # reads current and voltage during the pulse
         injection = Thread(target=self._inject, kwargs={'inj_time':length, 'polarity': polarity})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
@@ -271,13 +272,14 @@ class OhmPiHardware:
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
         if polarities is not None:
-            assert len(polarities)==n_pulses
+            assert len(polarities) == n_pulses
         else:
             polarities = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(n_pulses)]
         if not append:
             self._clear_values()
         for i in range(n_pulses):
-            self._vab_pulse(self, length=lengths[i], sampling_rate=sampling_rate, polarity=polarities[i], append=True)
+            self._vab_pulse(self, length=lengths[i], sampling_rate=sampling_rate, polarity=polarities[i],
+                            auto_gain=(i == 0), append=True)
 
     def switch_mux(self, electrodes, roles=None, state='off'):
         """Switches on multiplexer relays for given quadrupole.
