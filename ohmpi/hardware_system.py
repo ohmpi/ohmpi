@@ -88,12 +88,12 @@ class OhmPiHardware:
         self._start_time = None
         self._pulse = 0
 
-    def _gain_auto(self):
+    def _gain_auto(self):  # TODO: improve _gain_auto
         self.tx_sync.wait()
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
 
-    def _inject(self, polarity=1, inj_time=None):
+    def _inject(self, polarity=1, inj_time=None): # TODO: deal with voltage or current pulse
         self.tx_sync.set()
         self.tx.voltage_pulse(length=inj_time, polarity=polarity)
         self.tx_sync.clear()
@@ -241,9 +241,14 @@ class OhmPiHardware:
     def vab_square_wave(self, vab, cycle_length, sampling_rate=None, cycles=3, polarity=1, append=False):
         self.tx.polarity = polarity
         lengths = [cycle_length/2]*2*cycles
+        # set gains automatically
+        gain_auto = Thread(target=self._gain_auto)
+        injection = Thread(target=self._inject, kwargs={'inj_time': 0.2, 'polarity': polarity})
+        gain_auto.start()
+        injection.start()
         self._vab_pulses(vab, lengths, sampling_rate, append=append)
 
-    def _vab_pulse(self, vab, length, sampling_rate=None, polarity=1, auto_gain = False, append=False):
+    def _vab_pulse(self, vab, length, sampling_rate=None, polarity=1, append=False):
         """ Gets VMN and IAB from a single voltage pulse
         """
         self.tx.polarity = polarity
@@ -253,12 +258,6 @@ class OhmPiHardware:
             self.tx.pwr.voltage = vab
         else:
             vab = self.tx.pwr.voltage
-        if auto_gain:
-            # set gains automatically
-            gain_auto = Thread(target=self._gain_auto)
-            injection = Thread(target=self._inject, kwargs={'inj_time': 0.2, 'polarity': polarity})
-            gain_auto.start()
-            injection.start()
         # reads current and voltage during the pulse
         injection = Thread(target=self._inject, kwargs={'inj_time':length, 'polarity': polarity})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
@@ -279,7 +278,7 @@ class OhmPiHardware:
             self._clear_values()
         for i in range(n_pulses):
             self._vab_pulse(self, length=lengths[i], sampling_rate=sampling_rate, polarity=polarities[i],
-                            auto_gain=(i == 0), append=True)
+                            append=True)
 
     def switch_mux(self, electrodes, roles=None, state='off'):
         """Switches on multiplexer relays for given quadrupole.
