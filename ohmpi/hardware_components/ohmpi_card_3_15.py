@@ -73,6 +73,7 @@ def _gain_auto(channel):
         gain = 16
     return gain
 
+
 class Tx(TxAbstract):
     def __init__(self, **kwargs):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
@@ -82,7 +83,7 @@ class Tx(TxAbstract):
         self.current_adjustable = False
         if self.ctl is None:
             self.ctl = ctl_module.Ctl()
-        elif self.ctl is isinstance(dict):
+        elif isinstance(self.ctl, dict):
             self.ctl = ctl_module.Ctl(dict)
 
         # I2C connexion to MCP23008, for current injection
@@ -206,7 +207,7 @@ class Rx(RxAbstract):
         super().__init__(**kwargs)
         if self.ctl is None:
             self.ctl = ctl_module.Ctl()
-        elif self.ctl is isinstance(dict):
+        elif isinstance(self.ctl, dict):
             self.ctl = ctl_module.Ctl(dict)
 
         # ADS1115 for voltage measurement (MN)
