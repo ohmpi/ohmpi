@@ -9,7 +9,7 @@ from threading import Barrier
 class CtlAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown CTL hardware')
-        self.bus = None # TODO: allow for several buses
+        self.bus = None  # TODO: allow for several buses
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_ctl')
