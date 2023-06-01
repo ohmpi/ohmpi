@@ -55,20 +55,27 @@ class OhmPiHardware:
                                        'soh_logger': self.soh_logger})
         self.ctl = kwargs.pop('ctl', ctl_module.Ctl(**HARDWARE_CONFIG['ctl']))
 
-        self.rx = kwargs.pop('rx', rx_module.Rx(exec_logger=self.exec_logger,
-                                                data_logger=self.data_logger,
-                                                soh_logger=self.soh_logger,
-                                                ctl=self.ctl))
-        self.pwr = kwargs.pop('pwr', pwr_module.Pwr(exec_logger=self.exec_logger,
-                                                    data_logger=self.data_logger,
-                                                    soh_logger=self.soh_logger,
-                                                    ctl=self.ctl))
-        self.tx = kwargs.pop('tx', tx_module.Tx(exec_logger=self.exec_logger,
-                                                data_logger=self.data_logger,
-                                                soh_logger=self.soh_logger,
-                                                ctl=self.ctl))
+        HARDWARE_CONFIG['rx'].pop('model')
+        HARDWARE_CONFIG['rx'].update(**HARDWARE_CONFIG['rx'])
+        HARDWARE_CONFIG['rx'].update({'ctl':self.ctl})
+        HARDWARE_CONFIG['rx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+                                       'soh_logger': self.soh_logger})
+        self.rx = kwargs.pop('rx', rx_module.Rx(**HARDWARE_CONFIG['rx']))
+        HARDWARE_CONFIG['pwr'].pop('model')
+        HARDWARE_CONFIG['pwr'].update(**HARDWARE_CONFIG['pwr'])
+        HARDWARE_CONFIG['pwr'].update({'ctl':self.ctl})
+        HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+                                      'soh_logger': self.soh_logger})
+        self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
+        HARDWARE_CONFIG['tx'].pop('model')
+        HARDWARE_CONFIG['tx'].update(**HARDWARE_CONFIG['tx'])
+        HARDWARE_CONFIG['tx'].update({'ctl': self.ctl})
+        HARDWARE_CONFIG['tx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+                                      'soh_logger': self.soh_logger})
+        self.tx = kwargs.pop('tx', tx_module.Tx(**HARDWARE_CONFIG['tx']))
         self.tx.pwr = self.pwr
         self._cabling = kwargs.pop('cabling', {})
+
         self.mux_boards = kwargs.pop('mux', {'mux_1': mux_module.Mux(id='mux_1',
                                                                      exec_logger=self.exec_logger,
                                                                      data_logger=self.data_logger,
