@@ -50,9 +50,11 @@ class OhmPiHardware:
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_hw')
         self.tx_sync = Event()
-        self.ctl = kwargs.pop('ctl', ctl_module.Ctl(exec_logger=self.exec_logger,
-                                                    data_logger=self.data_logger,
-                                                    soh_logger=self.soh_logger))
+        HARDWARE_CONFIG['ctl'].pop('model')
+        HARDWARE_CONFIG['ctl'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+                                       'soh_logger': self.soh_logger})
+        self.ctl = kwargs.pop('ctl', ctl_module.Ctl(**HARDWARE_CONFIG['ctl']))
+
         self.rx = kwargs.pop('rx', rx_module.Rx(exec_logger=self.exec_logger,
                                                 data_logger=self.data_logger,
                                                 soh_logger=self.soh_logger,
