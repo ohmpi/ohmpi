@@ -207,6 +207,7 @@ class Rx(RxAbstract):
         if self.ctl is None:
             self.ctl = ctl_module.Ctl()
         elif isinstance(self.ctl, dict):
+            print(ctl_module)
             self.ctl = ctl_module.Ctl(self.ctl)
         print(f'ctl: {self.ctl}, {type(self.ctl)}')  # TODO: delete me!
         # ADS1115 for voltage measurement (MN)
