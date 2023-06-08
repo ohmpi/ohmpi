@@ -26,7 +26,6 @@ for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
     MUX_CONFIG[mux_id] = mux_module.MUX_CONFIG
     MUX_CONFIG[mux_id].update(mux_config)
     MUX_CONFIG[mux_id].update({'id': mux_id})
-    MUX_CONFIG[mux_id].update({'constructor': mux_module.Mux})
     # mux_boards.append(mux_id)
 
 TX_CONFIG = tx_module.TX_CONFIG
@@ -120,7 +119,7 @@ class OhmPiHardware:
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
         self._cabling = {}
         for mux_id, mux in self.mux_boards.items():
-            print(f'{mux_id} CONFIG: {MUX_CONFIG["mux_id"]}')
+            print(f'{mux_id} CONFIG: {MUX_CONFIG}\n {HARDWARE_CONFIG["mux"]["boards"][mux_id]}')
             mux.barrier = self.mux_barrier
             for k, v in mux.cabling.items():
                 update_dict(self._cabling, {k: (mux_id, k[0])})
