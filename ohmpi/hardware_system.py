@@ -108,11 +108,6 @@ class OhmPiHardware:
             mux_config['id'] = mux_id
             print(f'mux_id: {mux_id}, mux_config: {mux_config}')  # TODO: Delete me!
 
-            # mux_config.update(**HARDWARE_CONFIG['tx'])
-            # HARDWARE_CONFIG['tx'].update({'ctl': self.ctl})
-            # HARDWARE_CONFIG['tx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-            #                               'soh_logger': self.soh_logger})
-
             self.mux_boards[mux_id] = mux_module.Mux(**mux_config)
 
         # self.mux_boards = kwargs.pop('mux', {'mux_1': mux_module.Mux(id='mux_1',
@@ -125,10 +120,7 @@ class OhmPiHardware:
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
         self._cabling = {}
         for mux_id, mux in self.mux_boards.items():
-            if isinstance(mux, dict):
-                # self.mux_boards[mux_id] =
-                pass
-            print(f'MUX_CONFIG: {MUX_CONFIG}')
+            print(f'{mux_id} CONFIG: {MUX_CONFIG["mux_id"]}')
             mux.barrier = self.mux_barrier
             for k, v in mux.cabling.items():
                 update_dict(self._cabling, {k: (mux_id, k[0])})
