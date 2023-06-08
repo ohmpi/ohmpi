@@ -105,7 +105,6 @@ class OhmPiHardware:
             assert issubclass(type(mux_config['ctl']), CtlAbstract)
 
             mux_config['id'] = mux_id
-            print(f'mux_id: {mux_id}, mux_config: {mux_config}')  # TODO: Delete me!
 
             self.mux_boards[mux_id] = mux_module.Mux(**mux_config)
 
@@ -119,7 +118,6 @@ class OhmPiHardware:
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
         self._cabling = {}
         for mux_id, mux in self.mux_boards.items():
-            print(f'{mux_id} CONFIG: {MUX_CONFIG}\n {HARDWARE_CONFIG["mux"]["boards"][mux_id]}')
             mux.barrier = self.mux_barrier
             for k, v in mux.cabling.items():
                 update_dict(self._cabling, {k: (mux_id, k[0])})
