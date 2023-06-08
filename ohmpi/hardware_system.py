@@ -101,7 +101,7 @@ class OhmPiHardware:
                 mux_ctl_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["ctl"]["model"]}')
                 ctl = mux_ctl_module.Ctl(**self.ctl)
             mux_config.update({'ctl': ctl})
-            assert issubclass(type(mux_config['ctl'], CtlAbstract))
+            assert issubclass(type(mux_config['ctl']), CtlAbstract)
             mux_config.update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                'soh_logger': self.soh_logger})
             print(f'mux_id: {mux_id}, mux_config: {mux_config}')  # TODO: Delete me!
