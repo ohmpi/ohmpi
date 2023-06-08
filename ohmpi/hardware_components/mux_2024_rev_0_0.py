@@ -58,6 +58,8 @@ class Mux(MuxAbstract):
         if 'cabling' not in kwargs.keys() or kwargs['cabling']=={}:
             kwargs.update({'cabling': default_mux_cabling})
         super().__init__(**kwargs)
+        if isinstance(self.ctl, dict):
+            self.ctl = None  # TODO: How to pass controller to mux board
         self.exec_logger.debug(f'configuration: {MUX_CONFIG}')
         tca_address = kwargs.pop('tca_address', None)
         tca_channel = kwargs.pop('tca_channel', 0)

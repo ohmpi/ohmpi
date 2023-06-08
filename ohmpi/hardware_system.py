@@ -54,6 +54,8 @@ class OhmPiHardware:
         HARDWARE_CONFIG['ctl'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                        'soh_logger': self.soh_logger})
         self.ctl = kwargs.pop('ctl', ctl_module.Ctl(**HARDWARE_CONFIG['ctl']))
+        if isinstance(self.ctl, dict):
+            self.ctl = ctl_module.Ctl(**self.ctl)
 
         HARDWARE_CONFIG['rx'].pop('model')
         HARDWARE_CONFIG['rx'].update(**HARDWARE_CONFIG['rx'])
