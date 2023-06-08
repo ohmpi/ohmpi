@@ -11,12 +11,14 @@ from ohmpi.utils import update_dict
 from ohmpi.config import HARDWARE_CONFIG
 from threading import Thread, Event, Barrier
 
+# Define the default controller, a distinct controller could be defined for each tx, rx or mux board
+# when using a distinct controller, the specific controller definition must be included in the component configuration
 ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
 pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
 tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
 rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
 MUX_CONFIG = {}
-mux_boards = []
+# mux_boards = []
 
 for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
     mux_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["model"]}')
@@ -24,13 +26,13 @@ for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
     MUX_CONFIG[mux_id].update(mux_config)
     MUX_CONFIG[mux_id].update({'id': mux_id})
     MUX_CONFIG[mux_id].update({'constructor': mux_module.Mux})
-    mux_boards.append(mux_id)
+    # mux_boards.append(mux_id)
 
 TX_CONFIG = tx_module.TX_CONFIG
 RX_CONFIG = rx_module.RX_CONFIG
 
-current_max = np.min([TX_CONFIG['current_max'], np.min([MUX_CONFIG[i].pop('current_max', np.inf) for i in mux_boards])])
-voltage_max = np.min([TX_CONFIG['voltage_max'], np.min([MUX_CONFIG[i].pop('voltage_max', np.inf) for i in mux_boards])])
+current_max = np.min([TX_CONFIG['current_max'], np.min([MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])])
+voltage_max = np.min([TX_CONFIG['voltage_max'], np.min([MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])])
 voltage_min = RX_CONFIG['voltage_min']
 
 
@@ -55,12 +57,21 @@ class OhmPiHardware:
         HARDWARE_CONFIG['ctl'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                        'soh_logger': self.soh_logger})
         self.ctl = kwargs.pop('ctl', ctl_module.Ctl(**HARDWARE_CONFIG['ctl']))
+        # use controller as defined in kwargs if present otherwise use controller as defined in config.
         if isinstance(self.ctl, dict):
-            self.ctl = ctl_module.Ctl(**self.ctl)
+            ctl_mod = self.ctl.pop('model', self.ctl)
+            if isinstance(ctl_mod, str):
+                ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
+            self.ctl = ctl_mod.Ctl(**self.ctl)
 
         HARDWARE_CONFIG['rx'].pop('model')
         HARDWARE_CONFIG['rx'].update(**HARDWARE_CONFIG['rx'])
-        HARDWARE_CONFIG['rx'].update({'ctl': self.ctl})
+        HARDWARE_CONFIG['rx'].update({'ctl': HARDWARE_CONFIG['rx'].pop('ctl', self.ctl)})
+        if isinstance(HARDWARE_CONFIG['rx']['ctl'], dict):
+            ctl_mod = HARDWARE_CONFIG['rx']['ctl'].pop('model', self.ctl)
+            if isinstance(ctl_mod, str):
+                ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
+            HARDWARE_CONFIG['rx']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['rx']['ctl'])
         HARDWARE_CONFIG['rx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                        'soh_logger': self.soh_logger})
         self.rx = kwargs.pop('rx', rx_module.Rx(**HARDWARE_CONFIG['rx']))
@@ -78,9 +89,21 @@ class OhmPiHardware:
         self.tx = kwargs.pop('tx', tx_module.Tx(**HARDWARE_CONFIG['tx']))
         if isinstance(self.tx, dict):
             self.tx = tx_module.Tx(**self.tx)
-        print(f'tx.Ctl: {self.tx.ctl}, type: {type(self.tx)}')  # TODO: Delete me!
         self.tx.pwr = self.pwr
         self._cabling = kwargs.pop('cabling', {})
+        self.mux_boards = {}
+        for mux_id, mux_config in HARDWARE_CONFIG['mux'].items():
+            mux_config.pop('model')
+            constructor = mux_config.pop('constructor')
+            ctl = mux_config.pop('ctl', self.ctl)
+            if isinstance(ctl, dict):
+                ctl = mux_config['ctl_module'].Ctl(**self.ctl)
+            mux_config.update({'ctl': ctl})
+            # mux_config.update(**HARDWARE_CONFIG['tx'])
+            # HARDWARE_CONFIG['tx'].update({'ctl': self.ctl})
+            # HARDWARE_CONFIG['tx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+            #                               'soh_logger': self.soh_logger})
+            self.mux_boards[mux_id] = constructor(**mux_config)
 
         self.mux_boards = kwargs.pop('mux', {'mux_1': mux_module.Mux(id='mux_1',
                                                                      exec_logger=self.exec_logger,
@@ -88,6 +111,7 @@ class OhmPiHardware:
                                                                      soh_logger=self.soh_logger,
                                                                      ctl=self.ctl,
                                                                      cabling=self._cabling)})
+
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
         self._cabling = {}
         for mux_id, mux in self.mux_boards.items():

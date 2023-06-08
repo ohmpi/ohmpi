@@ -48,8 +48,8 @@ HARDWARE_CONFIG = {
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': None,
                           'tca_channel': 0,
-                          'mcp_0': '0x23',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
-                          'mcp_1': '0x24',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
+                          'mcp_0': '0x24',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
+                          'mcp_1': '0x25',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
                           'roles': {'A': 'X', 'B': 'Y', 'M' : 'XX', 'N' : 'YY'},
                           'channels': {(i+8, j): ('mux_2', i) for j in ['A', 'B', 'M', 'N'] for i in range(1,9)},
                           'voltage_max': 12.}
