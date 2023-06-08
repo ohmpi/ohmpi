@@ -104,6 +104,7 @@ class OhmPiHardware:
             assert issubclass(type(mux_config['ctl']), CtlAbstract)
             mux_config.update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                'soh_logger': self.soh_logger})
+            mux_config['id'] = mux_id
             print(f'mux_id: {mux_id}, mux_config: {mux_config}')  # TODO: Delete me!
 
             # mux_config.update(**HARDWARE_CONFIG['tx'])
