@@ -89,7 +89,11 @@ class OhmPiHardware:
                                                                      cabling=self._cabling)})
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
         self._cabling = {}
-        for _, mux in self.mux_boards.items():
+        for mux_id, mux in self.mux_boards.items():
+            if isinstance(mux, dict):
+                # self.mux_boards[mux_id] =
+                pass
+            print(f'MUX_CONFIG: {MUX_CONFIG}')
             mux.barrier = self.mux_barrier
             for k, v in mux.cabling.items():
                 update_dict(self._cabling, {k: (mux_id, k[0])})
