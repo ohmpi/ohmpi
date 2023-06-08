@@ -1,10 +1,10 @@
 import time
 from ohmpi.utils import change_config
 import logging
-change_config('../configs/config_mb_2023_2_mux_2024.py', verbose=False)
+change_config('../configs/config_mb_2023_mux_2024.py', verbose=False)
 from ohmpi.hardware_components.mux_2024_rev_0_0 import Mux, MUX_CONFIG
 from ohmpi.hardware_components import raspberry_pi_i2c as ctl_module
-from ohmpi.config import HARDWARE_CONFIG
+# from ohmpi.config import HARDWARE_CONFIG
 
 stand_alone_mux = False
 part_of_hardware_system = False
