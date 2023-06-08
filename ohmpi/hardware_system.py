@@ -6,6 +6,7 @@ try:
     import matplotlib.pyplot as plt
 except Exception:
     pass
+from ohmpi.hardware_components.abstract_hardware_components import CtlAbstract
 from ohmpi.logging_setup import create_stdout_logger
 from ohmpi.utils import update_dict
 from ohmpi.config import HARDWARE_CONFIG
@@ -94,24 +95,30 @@ class OhmPiHardware:
         self.mux_boards = {}
         for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
             print(f'mux_id: {mux_id}, mux_config: {mux_config}')  # TODO: Delete me!
-            mux_config.pop('model', '')
-            constructor = mux_config.pop('constructor')
+            mux_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["model"]}')
             ctl = mux_config.pop('ctl', self.ctl)
             if isinstance(ctl, dict):
-                ctl = mux_config['ctl_module'].Ctl(**self.ctl)
+                mux_ctl_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["ctl"]["model"]}')
+                ctl = mux_ctl_module.Ctl(**self.ctl)
             mux_config.update({'ctl': ctl})
+            assert issubclass(type(mux_config['ctl'], CtlAbstract))
+            mux_config.update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+                               'soh_logger': self.soh_logger})
+            print(f'mux_id: {mux_id}, mux_config: {mux_config}')  # TODO: Delete me!
+
             # mux_config.update(**HARDWARE_CONFIG['tx'])
             # HARDWARE_CONFIG['tx'].update({'ctl': self.ctl})
             # HARDWARE_CONFIG['tx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
             #                               'soh_logger': self.soh_logger})
-            self.mux_boards[mux_id] = constructor(**mux_config)
 
-        self.mux_boards = kwargs.pop('mux', {'mux_1': mux_module.Mux(id='mux_1',
-                                                                     exec_logger=self.exec_logger,
-                                                                     data_logger=self.data_logger,
-                                                                     soh_logger=self.soh_logger,
-                                                                     ctl=self.ctl,
-                                                                     cabling=self._cabling)})
+            self.mux_boards[mux_id] = mux_module.Mux(**mux_config)
+
+        # self.mux_boards = kwargs.pop('mux', {'mux_1': mux_module.Mux(id='mux_1',
+        #                                                              exec_logger=self.exec_logger,
+        #                                                              data_logger=self.data_logger,
+        #                                                              soh_logger=self.soh_logger,
+        #                                                              ctl=self.ctl,
+        #                                                              cabling=self._cabling)})
 
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
         self._cabling = {}
