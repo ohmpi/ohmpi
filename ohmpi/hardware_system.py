@@ -93,6 +93,7 @@ class OhmPiHardware:
         self._cabling = kwargs.pop('cabling', {})
         self.mux_boards = {}
         for mux_id, mux_config in HARDWARE_CONFIG['mux'].items():
+            print(f'mux_id: {mux_id}, mux_config: {mux_config}')  # TODO: Delete me!
             mux_config.pop('model', '')
             constructor = mux_config.pop('constructor')
             ctl = mux_config.pop('ctl', self.ctl)
