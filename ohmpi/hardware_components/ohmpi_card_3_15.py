@@ -84,8 +84,8 @@ class Tx(TxAbstract):
         self.current_adjustable = False
         if self.ctl is None:
             self.ctl = ctl_module.Ctl()
-        elif isinstance(self.ctl, dict):
-            self.ctl = ctl_module.Ctl(**self.ctl)
+        # elif isinstance(self.ctl, dict):
+        #     self.ctl = ctl_module.Ctl(**self.ctl)
 
         # I2C connexion to MCP23008, for current injection
         self.mcp_board = MCP23008(self.ctl.bus, address=TX_CONFIG['mcp_board_address'])
@@ -207,8 +207,8 @@ class Rx(RxAbstract):
         super().__init__(**kwargs)
         if self.ctl is None:
             self.ctl = ctl_module.Ctl()
-        elif isinstance(self.ctl, dict):
-            self.ctl = ctl_module.Ctl(**self.ctl)
+        # elif isinstance(self.ctl, dict):
+        #     self.ctl = ctl_module.Ctl(**self.ctl)
         # print(f'ctl: {self.ctl}, {type(self.ctl)}')  # TODO: delete me!
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = 0x49
