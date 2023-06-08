@@ -23,7 +23,7 @@ from termcolor import colored
 from logging import DEBUG
 from ohmpi.utils import get_platform
 from ohmpi.logging_setup import setup_loggers
-from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG, HARDWARE_CONFIG
+from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import ohmpi.deprecated as deprecated
 from ohmpi.hardware_system import OhmPiHardware
 
@@ -76,9 +76,7 @@ class OhmPi(object):
         self.exec_logger, _, self.data_logger, _, self.soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
         print(msg)
 
-        # read in hardware parameters (config.py)
-        # HARDWARE_CONFIG.update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-        #                           'soh_logger': self.soh_logger})
+        # specify loggers when instancing the hardware
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                     'soh_logger': self.soh_logger})
         self.exec_logger.info('Hardware configured...')

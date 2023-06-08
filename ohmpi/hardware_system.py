@@ -60,13 +60,13 @@ class OhmPiHardware:
 
         HARDWARE_CONFIG['rx'].pop('model')
         HARDWARE_CONFIG['rx'].update(**HARDWARE_CONFIG['rx'])
-        HARDWARE_CONFIG['rx'].update({'ctl':self.ctl})
+        HARDWARE_CONFIG['rx'].update({'ctl': self.ctl})
         HARDWARE_CONFIG['rx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                        'soh_logger': self.soh_logger})
         self.rx = kwargs.pop('rx', rx_module.Rx(**HARDWARE_CONFIG['rx']))
         HARDWARE_CONFIG['pwr'].pop('model')
         HARDWARE_CONFIG['pwr'].update(**HARDWARE_CONFIG['pwr'])
-        HARDWARE_CONFIG['pwr'].update({'ctl':self.ctl})
+        HARDWARE_CONFIG['pwr'].update({'ctl': self.ctl})
         HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                       'soh_logger': self.soh_logger})
         self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
@@ -112,7 +112,7 @@ class OhmPiHardware:
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
 
-    def _inject(self, polarity=1, inj_time=None): # TODO: deal with voltage or current pulse
+    def _inject(self, polarity=1, inj_time=None):  # TODO: deal with voltage or current pulse
         self.tx_sync.set()
         self.tx.voltage_pulse(length=inj_time, polarity=polarity)
         self.tx_sync.clear()
@@ -165,11 +165,11 @@ class OhmPiHardware:
             mean_vmn = []
             mean_iab = []
             for i in range(n_pulses + 1):
-                mean_vmn.append(np.mean(self.readings[self.readings[:, 1]==i, 4]))
-                mean_iab.append(np.mean(self.readings[self.readings[:, 1]==i, 3]))
+                mean_vmn.append(np.mean(self.readings[self.readings[:, 1] == i, 4]))
+                mean_iab.append(np.mean(self.readings[self.readings[:, 1] == i, 3]))
             mean_vmn = np.array(mean_vmn)
             mean_iab = np.array(mean_iab)
-            sp = np.mean(mean_vmn[np.ix_(polarity==1)] - mean_vmn[np.ix_(polarity==-1)]) / 2
+            sp = np.mean(mean_vmn[np.ix_(polarity == 1)] - mean_vmn[np.ix_(polarity == -1)]) / 2
             return sp
 
     def _compute_tx_volt(self, best_tx_injtime=0.1, strategy='vmax', tx_volt=5,
@@ -221,14 +221,14 @@ class OhmPiHardware:
             sampling_rate = best_tx_injtime  # TODO: check this...
         else:
             sampling_rate = self.tx.sampling_rate
-        self._vab_pulse(vab=vab, length=best_tx_injtime, sampling_rate=sampling_rate) # TODO: use a square wave pulse?
-        vmn = np.mean(self.readings[:,4])
-        iab = np.mean(self.readings[:,3])
+        self._vab_pulse(vab=vab, length=best_tx_injtime, sampling_rate=sampling_rate)  # TODO: use a square wave pulse?
+        vmn = np.mean(self.readings[:, 4])
+        iab = np.mean(self.readings[:, 3])
         # if np.abs(vmn) is too small (smaller than voltage_min), strategy is not constant and vab < vab_max ,
         # then we could call _compute_tx_volt with a tx_volt increased to np.min([vab_max, tx_volt*2.]) for example
         if strategy == 'vmax':
             # implement different strategies
-            if vab < vab_max and iab < current_max :
+            if vab < vab_max and iab < current_max:
                 vab = vab * np.min([0.9 * vab_max / vab, 0.9 * current_max / iab])  # TODO: check if setting at 90% of max as a safety margin is OK
             self.tx.exec_logger.debug(f'vmax strategy: setting VAB to {vab} V.')
         elif strategy == 'vmin':
@@ -278,7 +278,7 @@ class OhmPiHardware:
         else:
             vab = self.tx.pwr.voltage
         # reads current and voltage during the pulse
-        injection = Thread(target=self._inject, kwargs={'inj_time':length, 'polarity': polarity})
+        injection = Thread(target=self._inject, kwargs={'inj_time': length, 'polarity': polarity})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
         readings.start()
         injection.start()
@@ -325,7 +325,8 @@ class OhmPiHardware:
                     if mux not in mux_workers:
                         mux_workers.append(mux)
                 except KeyError:
-                    self.exec_logger.debug(f'Unable to switch {state} ({elec}, {roles[idx]}): not in cabling and will be ignored...')
+                    self.exec_logger.debug(f'Unable to switch {state} ({elec}, {roles[idx]})'
+                                           f': not in cabling and will be ignored...')
                     status = False
             if status:
                 mux_workers = list(set(mux_workers))
@@ -334,7 +335,8 @@ class OhmPiHardware:
                 for idx, mux in enumerate(mux_workers):
                     # Create a new thread to perform some work
                     self.mux_boards[mux].barrier = b
-                    mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs={'elec_dict': elec_dict, 'state': state})
+                    mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs={'elec_dict': elec_dict,
+                                                                                          'state': state})
                     mux_workers[idx].start()
                 self.mux_barrier.wait()
                 for mux_worker in mux_workers:
@@ -364,13 +366,13 @@ class OhmPiHardware:
             except Exception as e:
                 self.exec_logger.error(f'Unable to parse channel: {e}')
                 return
-            self.switch_mux(electrodes,roles,state='on')
+            self.switch_mux(electrodes, roles, state='on')
             time.sleep(activation_time)
-            self.switch_mux(electrodes,roles, state='off')
+            self.switch_mux(electrodes, roles, state='off')
         else:
             for c in self._cabling.keys():
                 self.exec_logger.info(f'Testing electrode {c[0]} with role {c[1]}.')
-                self.switch_mux(electrodes=[c[0]],roles=[c[1]],state='on')
+                self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='on')
                 time.sleep(activation_time)
                 self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='off')
         self.exec_logger.info('Test finished.')
