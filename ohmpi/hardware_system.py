@@ -23,6 +23,7 @@ for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
     MUX_CONFIG[mux_id] = mux_module.MUX_CONFIG
     MUX_CONFIG[mux_id].update(mux_config)
     MUX_CONFIG[mux_id].update({'id': mux_id})
+    MUX_CONFIG[mux_id].update({'constructor': mux_module.Mux})
     mux_boards.append(mux_id)
 
 TX_CONFIG = tx_module.TX_CONFIG
@@ -77,7 +78,7 @@ class OhmPiHardware:
         self.tx = kwargs.pop('tx', tx_module.Tx(**HARDWARE_CONFIG['tx']))
         if isinstance(self.tx, dict):
             self.tx = tx_module.Tx(**self.tx)
-        print(f'tx: {self.tx}, type: {type(self.tx)}')  # TODO: Delete me!
+        print(f'tx.Ctl: {self.tx.ctl}, type: {type(self.tx)}')  # TODO: Delete me!
         self.tx.pwr = self.pwr
         self._cabling = kwargs.pop('cabling', {})
 

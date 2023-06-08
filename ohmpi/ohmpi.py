@@ -77,9 +77,10 @@ class OhmPi(object):
         print(msg)
 
         # read in hardware parameters (config.py)
-        HARDWARE_CONFIG.update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-                                  'soh_logger': self.soh_logger})
-        self._hw = OhmPiHardware(**HARDWARE_CONFIG)
+        # HARDWARE_CONFIG.update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+        #                           'soh_logger': self.soh_logger})
+        self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+                                    'soh_logger': self.soh_logger})
         self.exec_logger.info('Hardware configured...')
         # default acquisition settings
         self.settings = {
