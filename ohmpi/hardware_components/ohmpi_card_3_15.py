@@ -206,6 +206,8 @@ class Rx(RxAbstract):
         super().__init__(**kwargs)
         if self.ctl is None:
             self.ctl = ctl_module.Ctl()
+        elif isinstance(self.ctl, dict):
+            self.ctl = ctl_module.Ctl(self.ctl)
         print(f'ctl: {self.ctl}, {type(self.ctl)}')  # TODO: delete me!
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = 0x49
