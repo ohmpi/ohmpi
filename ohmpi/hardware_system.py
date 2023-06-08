@@ -73,6 +73,8 @@ class OhmPiHardware:
         HARDWARE_CONFIG['tx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                       'soh_logger': self.soh_logger})
         self.tx = kwargs.pop('tx', tx_module.Tx(**HARDWARE_CONFIG['tx']))
+        if isinstance(self.tx, dict):
+            self.tx = tx_module.Tx(**self.tx)
         print(f'tx: {self.tx}, type: {type(self.tx)}')  # TODO: Delete me!
         self.tx.pwr = self.pwr
         self._cabling = kwargs.pop('cabling', {})
