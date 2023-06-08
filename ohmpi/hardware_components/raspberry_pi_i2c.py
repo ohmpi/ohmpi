@@ -15,7 +15,7 @@ class Ctl(CtlAbstract):
         assert on_pi
         self.board_name = platform
         self._cpu_temp_available = True
-        self.max_cpu_temp = 85. # °C
+        self.max_cpu_temp = 85.  # °C
 
     @property
     def _cpu_temp(self):
