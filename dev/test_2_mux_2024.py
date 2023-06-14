@@ -43,8 +43,9 @@ if within_ohmpi:
     from ohmpi.ohmpi import OhmPi
     print('Starting test of mux within OhmPi.')
     k = OhmPi()
-    k.switch_mux_on([1, 4, 2, 3])
-    time.sleep(1.)
     k.reset_mux()
-
+    k._hw.switch_mux([1, 4, 2, 3], state='on')
+    k._hw.vab_square_wave(12,1)
+    k._hw.switch_mux([1, 4, 2, 3], state='off')
+    k._hw._plot_readings()
 change_config('../configs/config_default.py', verbose=False)

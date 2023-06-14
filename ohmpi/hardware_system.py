@@ -292,6 +292,8 @@ class OhmPiHardware:
         injection = Thread(target=self._inject, kwargs={'inj_time': 0.2, 'polarity': polarity})
         gain_auto.start()
         injection.start()
+        gain_auto.join()
+        injection.join()
         self._vab_pulses(vab, lengths, sampling_rate, append=append)
 
     def _vab_pulse(self, vab, length, sampling_rate=None, polarity=1, append=False):
