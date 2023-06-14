@@ -279,8 +279,8 @@ class OhmPiHardware:
         ax[0].set_ylabel('Iab [mA]')
         ax[1].plot(self.readings[:, 0], self.readings[:, 2] * self.readings[:, 4], '-b', marker='.', label='vmn')
         ax[1].set_ylabel('Vmn [mV]')
-        ax[1].plot(self.readings[:, 0], self.readings[:, 1], '-g', marker='.', label='pulse')
-        ax[1].set_ylabel('Vmn [mV]')
+        ax[2].plot(self.readings[:, 0], self.readings[:, 1], '-g', marker='.', label='pulse')
+        ax[2].set_ylabel('Vmn [mV]')
         fig.legend()
         plt.show()
 
