@@ -2,6 +2,7 @@ from ohmpi.hardware_components.abstract_hardware_components import PwrAbstract
 import numpy as np
 import os
 
+
 class Pwr(PwrAbstract):
     def __init__(self, **kwargs):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
@@ -11,7 +12,7 @@ class Pwr(PwrAbstract):
         self._voltage = voltage
         self._current_adjustable = False
         self._current = np.nan
-
+        self._state = 'on'
 
     @property
     def current(self):

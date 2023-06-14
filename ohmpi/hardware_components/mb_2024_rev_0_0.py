@@ -1,5 +1,5 @@
 import importlib
-from ohmpi.ohmpi.config import HARDWARE_CONFIG
+from ohmpi.config import HARDWARE_CONFIG
 import adafruit_ads1x15.ads1115 as ads  # noqa
 from adafruit_ads1x15.analog_in import AnalogIn  # noqa
 from adafruit_mcp230xx.mcp23008 import MCP23008  # noqa

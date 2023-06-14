@@ -51,6 +51,10 @@ class PwrAbstract(ABC):
         self._current_adjustable = kwargs.pop('current_adjustable', False)
         self._current = np.nan
         self._state = 'off'
+        self._current_min = kwargs.pop('current_min', 0.)
+        self._current_max = kwargs.pop('current_max', 0.)
+        self._current_min = kwargs.pop('voltage_min', 0.)
+        self._voltage_max = kwargs.pop('voltage_max', 0.)
 
     @property
     @abstractmethod
@@ -63,6 +67,7 @@ class PwrAbstract(ABC):
     def current(self, value, **kwargs):
         # add actions to set the DPS current
         pass
+
     @abstractmethod
     def turn_off(self):
         self.exec_logger.debug(f'Switching {self.board_name} off')
@@ -86,6 +91,7 @@ class PwrAbstract(ABC):
         if not self.voltage_adjustable:
             self.exec_logger.warning(f'Voltage cannot be set on {self.board_name}...')
         else:
+            assert self._voltage_min < value < self._voltage_max
             # add actions to set the DPS voltage
             self._voltage = value
 
@@ -211,6 +217,7 @@ class MuxAbstract(ABC):
                 time.sleep(activation_time)
         self.exec_logger.debug('Test finished.')
 
+
 class TxAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown TX hardware')
@@ -266,6 +273,7 @@ class TxAbstract(ABC):
     @inj_time.setter
     def inj_time(self, value):
         assert isinstance(value, float)
+        assert value > 0.
         self._inj_time = value
 
     @property
