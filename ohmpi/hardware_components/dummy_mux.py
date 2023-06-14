@@ -1,7 +1,8 @@
-from ohmpi.ohmpi.config import HARDWARE_CONFIG
+from ohmpi.config import HARDWARE_CONFIG
 import os
 from ohmpi.hardware_components import MuxAbstract
 MUX_CONFIG = HARDWARE_CONFIG['mux'].pop('default', {})
+
 
 class Mux(MuxAbstract):
     def __init__(self, **kwargs):
