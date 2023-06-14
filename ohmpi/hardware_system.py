@@ -155,12 +155,14 @@ class OhmPiHardware:
             pulses.update({i: {'polarity': int(r[0, 2]), 'iab': r[:, 3], 'vmn': r[:, 4]}})
         return pulses
 
-    def _read_values(self, sampling_rate, append=False):  # noqa
+    def _read_values(self, sampling_rate=None, append=False):  # noqa
         if not append:
             self._clear_values()
             _readings = []
         else:
             _readings = self.readings.tolist()
+        if sampling_rate is None:
+            sampling_rate = self.tx.sampling_rate
         sample = 0
         self.tx_sync.wait()  #
         if not append or self._start_time is None:
