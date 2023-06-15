@@ -172,7 +172,7 @@ class OhmPiHardware:
             _readings.append([elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, self.tx.current,
                               self.rx.voltage])
             sample += 1
-            sleep_time = self._start_time + datetime.timedelta(seconds=sample / sampling_rate * 1000) - lap
+            sleep_time = self._start_time + datetime.timedelta(seconds=sample / sampling_rate) - lap
             if sleep_time.total_seconds() < 0.:
                 _readings.append([elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, np.nan, np.nan])
                 sample += 1
