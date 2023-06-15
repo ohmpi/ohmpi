@@ -164,6 +164,8 @@ class OhmPiHardware:
         if sampling_rate is None:
             sampling_rate = self.tx.sampling_rate
         sample = 0
+        self.exec_logger.info(f'values when starting pulse {self._pulse} : {self.tx.current} mA, {self.rx.voltage} mV')
+        self.rx.voltage
         self.tx_sync.wait()  #
         if not append or self._start_time is None:
             self._start_time = datetime.datetime.utcnow()
