@@ -172,7 +172,7 @@ class OhmPiHardware:
             _readings.append([elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, self.tx.current,
                               self.rx.voltage])
             sample += 1
-            sleep_time = self._start_time + datetime.timedelta(seconds=sample * sampling_rate / 1000) - lap
+            sleep_time = self._start_time + datetime.timedelta(seconds=sample / sampling_rate * 1000) - lap
             if sleep_time.total_seconds() < 0.:
                 _readings.append([elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, np.nan, np.nan])
                 sample += 1
@@ -249,8 +249,8 @@ class OhmPiHardware:
         vmn_min = np.abs(vmn_min)
         vab = np.min([np.abs(tx_volt), vab_max])
         self.tx.turn_on()
-        if self.rx.sampling_rate*1000 > best_tx_injtime:
-            sampling_rate = best_tx_injtime  # TODO: check this...
+        if 1000 / self.rx.sampling_rate > best_tx_injtime:
+            sampling_rate = 1000.0 / best_tx_injtime  # TODO: check this...
         else:
             sampling_rate = self.tx.sampling_rate
         self._vab_pulse(vab=vab, length=best_tx_injtime, sampling_rate=sampling_rate)  # TODO: use a square wave pulse?

@@ -326,7 +326,7 @@ class RxAbstract(ABC):
             self.soh_logger = create_stdout_logger('soh_rx')
         self.ctl = kwargs.pop('ctl', None)
         self.board_name = kwargs.pop('board_name', 'unknown RX hardware')
-        self._sampling_rate = kwargs.pop('sampling_rate', 1)
+        self._sampling_rate = kwargs.pop('sampling_rate', 1)  # ms
         self.exec_logger.debug(f'{self.board_name} RX initialization')
         self._adc_gain = 1.
         self._max_sampling_rate = np.inf

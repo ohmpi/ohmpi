@@ -28,7 +28,7 @@ HARDWARE_CONFIG = {
             },
     'rx':  {'model': 'ohmpi_card_3_15',
              'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
-             'sampling_rate': 40.,  # ms
+             'sampling_rate': 100.,  # Hz
              'nb_samples': 20,  # Max value 10 # was named integer before...
             },
     'mux':  # default properties are system properties that will be
