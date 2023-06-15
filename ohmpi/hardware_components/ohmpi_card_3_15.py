@@ -21,7 +21,7 @@ RX_CONFIG = HARDWARE_CONFIG['rx']
 # ADC for voltage
 voltage_adc_voltage_min = 10.  # mV
 voltage_adc_voltage_max = 4500.  # mV
-sampling_rate = 50.  # Hz
+sampling_rate = 20.  # Hz
 data_rate = 860.  # S/s?
 RX_CONFIG['voltage_min'] = np.min([voltage_adc_voltage_min, RX_CONFIG.pop('voltage_min', np.inf)])  # mV
 RX_CONFIG['voltage_max'] = np.min([voltage_adc_voltage_max, RX_CONFIG.pop('voltage_max', np.inf)])  # mV
