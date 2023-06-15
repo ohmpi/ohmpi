@@ -10,7 +10,7 @@ from digitalio import Direction  # noqa
 
 MUX_CONFIG = HARDWARE_CONFIG['mux'].pop('default', {})
 MUX_CONFIG.update({'voltage_max': 50., 'current_max': 3.})  # board default values that overwrite system default values
-MUX_CONFIG.update({'activation_delay': 0.01, 'release_delay': 0.005}) # s
+MUX_CONFIG.update({'activation_delay': 0.01, 'release_delay': 0.005})  # s
 default_mux_cabling = {(elec, role) : ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1,9)} # defaults to 4 roles cabling electrodes from 1 to 8
 
 
@@ -57,6 +57,10 @@ class Mux(MuxAbstract):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         if 'cabling' not in kwargs.keys() or kwargs['cabling']=={}:
             kwargs.update({'cabling': default_mux_cabling})
+        if 'activation_delay' not in kwargs:
+            kwargs.update({'activation_delay': MUX_CONFIG['activation_delay']})
+        if 'release_delay' not in kwargs:
+            kwargs.update({'release_delay': MUX_CONFIG['release_delay']})
         super().__init__(**kwargs)
         self.exec_logger.debug(f'configuration: {MUX_CONFIG}')
         tca_address = kwargs.pop('tca_address', None)
@@ -106,7 +110,7 @@ class Mux(MuxAbstract):
         d = self.addresses[elec, role]
         if state == 'on':
             activate_relay(self._mcp[d['MCP']], d['MCP_GPIO'], True)
-            time.sleep(MUX_CONFIG['activation_delay'])
+            # time.sleep(MUX_CONFIG['activation_delay'])  # NOTE: moved to MuxAbstract switch
         if state == 'off':
             activate_relay(self._mcp[d['MCP']], d['MCP_GPIO'], False)
-            time.sleep(MUX_CONFIG['release_delay'])
+            # time.sleep(MUX_CONFIG['release_delay'])  # NOTE: moved to MuxAbstract switch

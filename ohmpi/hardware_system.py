@@ -173,7 +173,12 @@ class OhmPiHardware:
                               self.rx.voltage])
             sample += 1
             sleep_time = self._start_time + datetime.timedelta(seconds=sample * sampling_rate / 1000) - lap
-            time.sleep(np.max([0., sleep_time.total_seconds()]))  # TODO set readings to nan if sleep time <0 and skip the sample (sample +=1)
+            if sleep_time < 0.:
+                _readings.append([elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, np.nan, np.nan])  # TODO:
+                sample += 1
+            else:
+                time.sleep(np.max([0., sleep_time.total_seconds()]))  # TODO: set readings to nan if sleep time <0 and skip the sample (sample +=1)
+
         self.exec_logger.warning(f'pulse {self._pulse}: elapsed time {(lap-self._start_time).total_seconds()} s')  # TODO: Set to debug level
         self.exec_logger.warning(f'pulse {self._pulse}: total samples {len(_readings)}')  # TODO: Set to debug level
         self.readings = np.array(_readings)

@@ -119,6 +119,8 @@ class MuxAbstract(ABC):
         self.exec_logger.debug(f'{self.board_id} cabling: {self.cabling}')
         self.addresses = kwargs.pop('addresses', None)
         self._barrier = kwargs.pop('barrier', Barrier(1))
+        self._activation_delay = kwargs.pop('activation_delay', 0.)  # in s
+        self._release_delay = kwargs.pop('release_delay', 0.)  # in s
 
     @abstractmethod
     def _get_addresses(self):
@@ -154,7 +156,7 @@ class MuxAbstract(ABC):
             # check to prevent A == B (SHORT-CIRCUIT)
             if 'A' in elec_dict.keys() and 'B' in elec_dict.keys():
                 out = np.in1d(elec_dict['A'], elec_dict['B'])
-                if out.any() and state=='on':  # noqa
+                if out.any() and state == 'on':  # noqa
                     self.exec_logger.error('Trying to switch on some electrodes with both A and B roles. '
                                            'This would create a short-circuit! Switching aborted.')
                     status = False
@@ -183,13 +185,17 @@ class MuxAbstract(ABC):
                             self.switch_one(elec, role, state)
                             status &= True
                         else:
-                            self.exec_logger.warning(f'{self.board_id} skipping switching {(elec, role)} because it '
+                            self.exec_logger.debug(f'{self.board_id} skipping switching {(elec, role)} because it '
                                                    f'is not in board cabling.')
                             status = False
             self.exec_logger.debug(f'{self.board_id} switching done.')
         else:
             self.exec_logger.warning(f'Missing argument for {self.board_name}.switch: elec_dict is None.')
             status = False
+        if state == 'on':
+            time.sleep(self._activation_delay)
+        elif state == 'off':
+            time.sleep(self._release_delay)
         return status
 
     @abstractmethod
