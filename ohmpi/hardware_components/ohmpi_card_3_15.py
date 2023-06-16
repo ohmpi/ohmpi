@@ -124,9 +124,11 @@ class Tx(TxAbstract):
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
 
     def adc_gain_auto(self):
+        self.exec_logger.event(f'{self.board_name}\tAuto_Gain_TX\tbegin\t{datetime.datetime.utcnow()}')
         gain = _gain_auto(AnalogIn(self._ads_current, ads.P0))
         self.exec_logger.debug(f'Setting TX ADC gain automatically to {gain}')
         self.adc_gain = gain
+        self.exec_logger.event(f'{self.board_name}\tAuto_Gain_TX\tend\t{datetime.datetime.utcnow()}')
 
     def current_pulse(self, **kwargs):
         TxAbstract.current_pulse(self, **kwargs)
@@ -194,12 +196,14 @@ class Tx(TxAbstract):
         polarity: 1,0,-1
             Polarity of the pulse
         """
-
+        self.exec_logger.event(f'{self.board_name}\tVoltage_Pulse_TX\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.info(f'inj_time: {length}')  # TODO: delete me
         if length is None:
             length = self.inj_time
         self.pwr.voltage = voltage
         self.exec_logger.debug(f'Voltage pulse of {polarity*self.pwr.voltage:.3f} V for {length:.3f} s')
         self.inject(polarity=polarity, inj_time=length)
+        self.exec_logger.event(f'{self.board_name}\tVoltage_Pulse_TX\tbegin\t{datetime.datetime.utcnow()}')
 
 
 class Rx(RxAbstract):
