@@ -64,7 +64,6 @@ def change_config(config_file, verbose=True):
 
 
 def parse_log(log):
-    print(log)
     msg_started = False
     msg_tmp = ''
     s = 0
@@ -82,7 +81,7 @@ def parse_log(log):
                 session.append(s)
             elif "{" in line or msg_started:
                 msg_tmp = msg_tmp + line
-                print(msg_tmp)
+                # print(msg_tmp)
                 msg_started = True
                 if "}" in line:
                     msg[-1] = msg[-1] + msg_tmp
