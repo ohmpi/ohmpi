@@ -64,7 +64,7 @@ def change_config(config_file, verbose=True):
 
 
 def parse_log(log):
-    print(os.getcwd())
+    print(log)
     msg_started = False
     msg_tmp = ''
     s = 0
@@ -76,7 +76,6 @@ def parse_log(log):
                 process_id.append(line.split(" | ")[1])
                 msg.append(":".join(line.split(" | ")[2].split(":")[1:]))
                 tag.append(line.split(" | ")[2].split(":")[0])
-                print(tag, i)
                 if tag[i] == 'INFO':
                     if 'NEW SESSION' in msg[i]:
                         s += 1
