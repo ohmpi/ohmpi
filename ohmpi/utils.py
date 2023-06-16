@@ -64,8 +64,9 @@ def change_config(config_file, verbose=True):
 def parse_log(log):
     msg_started = False
     msg_tmp = ''
+    s = 0
     with open(log, "r") as file:
-        time, process_id, msg, tag = [], [], [], []
+        time, process_id, msg, tag, session = [], [], [], [], []
         for i,line in enumerate(file):
             if len(line.split(" | ")) > 1:
                 time.append(line.split(" | ")[0])
@@ -80,9 +81,13 @@ def parse_log(log):
                     msg[-1] = msg[-1] + msg_tmp
                     msg_tmp = ''
                     msg_started = False
+            if tag[i] == 'INFO':
+                if 'NEW SESSION' in msg[i]:
+                    s+=1
+            session.append(s)
     time = np.array(time)
     process_id = np.array(process_id)
     tag = np.array(tag)
     msg = np.array(msg)
-
-    return time, process_id, tag, msg
+    session = np.array(session)
+    return time, process_id, tag, msg, session

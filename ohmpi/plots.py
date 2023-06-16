@@ -4,10 +4,13 @@ from utils import parse_log
 from datetime import datetime
 import matplotlib
 
-def plot_exec_log(exec_log,names=None):
-    time, process_id, tag, msg = parse_log(exec_log)
+def plot_exec_log(exec_log,names=None,last_session=True):
+    time, process_id, tag, msg, session = parse_log(exec_log)
+    print(session)
+    if last_session:
+        time, process_id, tag, msg = time[session==max(session)], process_id[session==max(session)], tag[session==max(session)], msg[session==max(session)]
     events = msg[tag == 'EVENT']
-
+    print(time)
     category, name, state, time = np.empty(events.shape[0]).astype(str), np.empty(events.shape[0]).astype(str), \
         np.empty(events.shape[0]).astype(str), np.empty(events.shape[0]).astype(str)
 
