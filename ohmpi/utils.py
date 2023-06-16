@@ -64,6 +64,7 @@ def change_config(config_file, verbose=True):
 
 
 def parse_log(log):
+    print(os.getcwd())
     msg_started = False
     msg_tmp = ''
     s = 0
