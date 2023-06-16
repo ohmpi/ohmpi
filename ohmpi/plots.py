@@ -3,7 +3,7 @@ import numpy as np
 from ohmpi.utils import parse_log
 import matplotlib
 
-def plot_exec_log(exec_log,names=None,last_session=True):
+def plot_exec_log(exec_log,names=None,last_session=True): #TODO: select session id instead of last session (if -1 : last)
     time, process_id, tag, msg, session = parse_log(exec_log)
     print(session)
     if last_session:
@@ -14,12 +14,10 @@ def plot_exec_log(exec_log,names=None,last_session=True):
         np.empty(events.shape[0]).astype(str), np.empty(events.shape[0]).astype(str)
 
     for i, event in enumerate(events):
-        # print(event.split("\t")[3])
-        # print('o',datetime.strptime('2023-06-16 10:04:54.222336','%Y-%m-%d %H:%M:%S.%f'))
         category[i] = event.split("\t")[0]
         name[i] = event.split("\t")[1]
         state[i] = event.split("\t")[2]
-        time[i] = event.split("\t")[3].replace('\n','') #datetime.strptime(event.split("\t")[3],'%Y-%m-%d %H:%M:%S.%f')
+        time[i] = event.split("\t")[3].replace('\n','')
     time = time.astype(np.datetime64)
     state = state[time.argsort()]
     category = category[time.argsort()]
