@@ -1,5 +1,6 @@
 import time
 from ohmpi.utils import change_config
+from ohmpi.plots import plot_exec_log
 import logging
 change_config('../configs/config_mb_2023_2_mux_2024.py', verbose=False)
 from ohmpi.hardware_components.mux_2024_rev_0_0 import Mux, MUX_CONFIG
@@ -48,4 +49,5 @@ if within_ohmpi:
     k._hw.vab_square_wave(12,1)
     k._hw.switch_mux([1, 4, 2, 3], state='off')
     k._hw._plot_readings()
+    plot_exec_log('../ohmpi/logs/exec.log')
 change_config('../configs/config_default.py', verbose=False)
