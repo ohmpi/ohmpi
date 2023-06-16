@@ -245,10 +245,10 @@ class Rx(RxAbstract):
     def voltage(self):
         """ Gets the voltage VMN in Volts
         """
-        self.exec_logger.event(f'{self.board_name}\Measure_Voltage_RX\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\tMeasure_Voltage_RX\tbegin\t{datetime.datetime.utcnow()}')
         u0 = AnalogIn(self._ads_voltage, ads.P0).voltage * 1000.
         u2 = AnalogIn(self._ads_voltage, ads.P2).voltage * 1000.
         u = np.max([u0, u2]) * (np.heaviside(u0-u2, 1.) * 2 - 1.) # gets the max between u0 & u2 and set the sign
         self.exec_logger.debug(f'Reading voltages {u0} mV and {u2} mV on RX. Returning {u} mV')
-        self.exec_logger.event(f'{self.board_name}\Measure_Voltage_RX\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\tMeasure_Voltage_RX\tend\t{datetime.datetime.utcnow()}')
         return u

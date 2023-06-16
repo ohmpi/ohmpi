@@ -44,6 +44,7 @@ def elapsed_seconds(start_time):
 class OhmPiHardware:
     def __init__(self, **kwargs):
         self.exec_logger = kwargs.pop('exec_logger', None)
+        self.exec_logger.event(f'OhmPiHardware\tInit_OhmPi\tbegin\t{datetime.datetime.utcnow()}')
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_hw')
         self.data_logger = kwargs.pop('exec_logger', None)
@@ -124,6 +125,7 @@ class OhmPiHardware:
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
         self._pulse = 0  # pulse number
+        self.exec_logger.event(f'OhmPiHardware\tInit_OhmPi\tend\t{datetime.datetime.utcnow()}')
 
     def _clear_values(self):
         self.readings = np.array([])
@@ -131,14 +133,18 @@ class OhmPiHardware:
         self._pulse = 0
 
     def _gain_auto(self):  # TODO: improve _gain_auto
+        self.exec_logger.event(f'OhmPiHardware\tGAin_Auto\tbegin\t{datetime.datetime.utcnow()}')
         self.tx_sync.wait()
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
+        self.exec_logger.event(f'OhmPiHardware\tGAin_Auto\tend\t{datetime.datetime.utcnow()}')
 
     def _inject(self, polarity=1, inj_time=None):  # TODO: deal with voltage or current pulse
+        self.exec_logger.event(f'OhmPiHardware\tInject\tbegin\t{datetime.datetime.utcnow()}')
         self.tx_sync.set()
         self.tx.voltage_pulse(length=inj_time, polarity=polarity)
         self.tx_sync.clear()
+        self.exec_logger.event(f'OhmPiHardware\tInject\tend\t{datetime.datetime.utcnow()}')
 
     def _set_mux_barrier(self):
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
@@ -156,6 +162,7 @@ class OhmPiHardware:
         return pulses
 
     def _read_values(self, sampling_rate=None, append=False):  # noqa
+        self.exec_logger.event(f'OhmPiHardware\tRead_Values\tbegin\t{datetime.datetime.utcnow()}')
         if not append:
             self._clear_values()
             _readings = []
@@ -187,6 +194,7 @@ class OhmPiHardware:
         self.exec_logger.warning(f'pulse {self._pulse}: total samples {len(_readings)}')  # TODO: Set to debug level
         self.readings = np.array(_readings)
         self._pulse += 1
+        self.exec_logger.event(f'OhmPiHardware\tRead_Values\tbegin\t{datetime.datetime.utcnow()}')
 
     @property
     def sp(self):  # TODO: use a time window within pulses
@@ -296,6 +304,7 @@ class OhmPiHardware:
         plt.show()
 
     def vab_square_wave(self, vab, cycle_length, sampling_rate=None, cycles=3, polarity=1, append=False):
+        self.exec_logger.event(f'OhmPiHardware\tVab_Square_Wave\tbegin\t{datetime.datetime.utcnow()}')
         self.tx.polarity = polarity
         lengths = [cycle_length/2]*2*cycles
         # set gains automatically
@@ -306,6 +315,7 @@ class OhmPiHardware:
         gain_auto.join()
         injection.join()
         self._vab_pulses(vab, lengths, sampling_rate, append=append)
+        self.exec_logger.event(f'OhmPiHardware\tVab_Square_Wave\tend\t{datetime.datetime.utcnow()}')
 
     def _vab_pulse(self, vab, length, sampling_rate=None, polarity=1, append=False):
         """ Gets VMN and IAB from a single voltage pulse
