@@ -162,7 +162,7 @@ class OhmPiHardware:
         else:
             _readings = self.readings.tolist()
         if sampling_rate is None:
-            sampling_rate = self.tx.sampling_rate
+            sampling_rate = self.rx.sampling_rate
         sample = 0
         self.exec_logger.info(f'values when starting pulse {self._pulse} : {self.tx.current} mA, {self.rx.voltage} mV')
         self.rx.voltage
@@ -291,7 +291,7 @@ class OhmPiHardware:
         ax[1].plot(self.readings[:, 0], self.readings[:, 2] * self.readings[:, 4], '-b', marker='.', label='vmn')
         ax[1].set_ylabel('Vmn [mV]')
         ax[2].plot(self.readings[:, 0], self.readings[:, 1], '-g', marker='.', label='pulse')
-        ax[2].set_ylabel('Vmn [mV]')
+        ax[2].set_ylabel('polarity [-]')
         fig.legend()
         plt.show()
 
