@@ -206,7 +206,7 @@ class Rx(RxAbstract):
     def __init__(self, **kwargs):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
-        self.exec_logger.event(f'Init_RX\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\tInit\tbegin\t{datetime.datetime.utcnow()}')
         if self.ctl is None:
             self.ctl = ctl_module.Ctl()
         # elif isinstance(self.ctl, dict):
