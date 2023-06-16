@@ -49,5 +49,5 @@ if within_ohmpi:
     k._hw.vab_square_wave(12,1)
     k._hw.switch_mux([1, 4, 2, 3], state='off')
     k._hw._plot_readings()
-    plot_exec_log('../ohmpi/logs/exec.log')
+    plot_exec_log('ohmpi/logs/exec.log')
 change_config('../configs/config_default.py', verbose=False)
