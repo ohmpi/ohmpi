@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from utils import parse_log
-from datetime import datetime
+from ohmpi.utils import parse_log
 import matplotlib
 
 def plot_exec_log(exec_log,names=None,last_session=True):
