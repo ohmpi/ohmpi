@@ -2,7 +2,7 @@ import io
 import os
 import shutil
 import collections.abc
-
+import numpy as np
 
 def update_dict(d, u):
     """Updates a dictionary by adding elements to collection items associated to existing keys
@@ -60,3 +60,29 @@ def change_config(config_file, verbose=True):
 
     except Exception as error:
         print(f'Could not change config file to {pwd}/{config_file}:\n{error}')
+
+def parse_log(log):
+    msg_started = False
+    msg_tmp = ''
+    with open(log, "r") as file:
+        time, process_id, msg, tag = [], [], [], []
+        for i,line in enumerate(file):
+            if len(line.split(" | ")) > 1:
+                time.append(line.split(" | ")[0])
+                process_id.append(line.split(" | ")[1])
+                msg.append(":".join(line.split(" | ")[2].split(":")[1:]))
+                tag.append(line.split(" | ")[2].split(":")[0])
+            elif "{" in line or msg_started:
+                msg_tmp = msg_tmp + line
+                print(msg_tmp)
+                msg_started = True
+                if "}" in line:
+                    msg[-1] = msg[-1] + msg_tmp
+                    msg_tmp = ''
+                    msg_started = False
+    time = np.array(time)
+    process_id = np.array(process_id)
+    tag = np.array(tag)
+    msg = np.array(msg)
+
+    return time, process_id, tag, msg
