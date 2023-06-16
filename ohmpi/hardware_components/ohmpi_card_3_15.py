@@ -149,7 +149,7 @@ class Tx(TxAbstract):
 
     def inject(self, polarity=1, inj_time=None):
         self.polarity = polarity
-        TxAbstract.inject(self, polarity=polarity, inj_time=None)
+        TxAbstract.inject(self, polarity=polarity, inj_time=inj_time)
 
     @property
     def polarity(self):
