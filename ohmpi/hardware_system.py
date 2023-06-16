@@ -324,6 +324,7 @@ class OhmPiHardware:
         injection.start()
         readings.join()
         injection.join()
+        self.tx.polarity = 0
 
     def _vab_pulses(self, vab, lengths, sampling_rate, polarities=None, append=False):
         n_pulses = len(lengths)
