@@ -194,7 +194,7 @@ class OhmPiHardware:
         self.exec_logger.warning(f'pulse {self._pulse}: total samples {len(_readings)}')  # TODO: Set to debug level
         self.readings = np.array(_readings)
         self._pulse += 1
-        self.exec_logger.event(f'OhmPiHardware\tRead_Values\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tRead_Values\tend\t{datetime.datetime.utcnow()}')
 
     @property
     def sp(self):  # TODO: use a time window within pulses
