@@ -133,11 +133,11 @@ class OhmPiHardware:
         self._pulse = 0
 
     def _gain_auto(self):  # TODO: improve _gain_auto
-        self.exec_logger.event(f'OhmPiHardware\tGAin_Auto\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tGain_Auto\tbegin\t{datetime.datetime.utcnow()}')
         self.tx_sync.wait()
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
-        self.exec_logger.event(f'OhmPiHardware\tGAin_Auto\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tGain_Auto\tend\t{datetime.datetime.utcnow()}')
 
     def _inject(self, polarity=1, inj_time=None):  # TODO: deal with voltage or current pulse
         self.exec_logger.event(f'OhmPiHardware\tInject\tbegin\t{datetime.datetime.utcnow()}')

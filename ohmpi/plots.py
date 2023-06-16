@@ -7,7 +7,8 @@ import matplotlib
 def plot_exec_log(exec_log,names=None,last_session=True):  # TODO: select session id instead of last session (if -1 : last)
     time, process_id, tag, msg, session = parse_log(exec_log)
     if last_session:
-        time, process_id, tag, msg = time[session==max(session)], process_id[session==max(session)], tag[session==max(session)], msg[session==max(session)]
+        time, process_id, tag, msg = time[session == max(session)], process_id[session == max(session)], \
+            tag[session == max(session)], msg[session == max(session)]
     events = msg[tag == 'EVENT']
     category, name, state, time = np.empty(events.shape[0]).astype(str), np.empty(events.shape[0]).astype(str), \
         np.empty(events.shape[0]).astype(str), np.empty(events.shape[0]).astype(str)
