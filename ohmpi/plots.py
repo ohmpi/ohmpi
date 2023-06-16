@@ -60,5 +60,3 @@ def plot_exec_log(exec_log,names=None,last_session=True): #TODO: select session 
         axarr[i].legend()
     plt.show()
 
-
-plot_exec_log('logs/exec.log')
