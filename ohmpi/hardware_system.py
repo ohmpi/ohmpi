@@ -207,7 +207,7 @@ class OhmPiHardware:
     @property
     def last_dev(self):
         if len(self.readings) > 1:
-            return 100. * np.std(self.readings[:, 2] * self.readings[:, 4] / self.readings[:, 3])/self.last_rho()
+            return 100. * np.std(self.readings[:, 2] * self.readings[:, 4] / self.readings[:, 3])/self.last_rho
         else:
             return np.nan
 
