@@ -207,7 +207,7 @@ class Tx(TxAbstract):
         self.pwr.voltage = voltage
         self.exec_logger.debug(f'Voltage pulse of {polarity*self.pwr.voltage:.3f} V for {length:.3f} s')
         self.inject(polarity=polarity, inj_time=length)
-        self.exec_logger.event(f'{self.board_name}\ttx_voltage_pulse\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\ttx_voltage_pulse\tend\t{datetime.datetime.utcnow()}')
 
 
 class Rx(RxAbstract):
