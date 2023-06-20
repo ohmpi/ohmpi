@@ -28,6 +28,7 @@ RX_CONFIG['voltage_min'] = np.min([voltage_adc_voltage_min, RX_CONFIG.pop('volta
 RX_CONFIG['voltage_max'] = np.min([voltage_adc_voltage_max, RX_CONFIG.pop('voltage_max', np.inf)])  # mV
 RX_CONFIG['sampling_rate'] = RX_CONFIG.pop('sampling_rate', sampling_rate)
 RX_CONFIG['data_rate'] = RX_CONFIG.pop('data_rate', data_rate)
+RX_CONFIG['coef_p2'] = 2.5
 
 # *** TX ***
 # ADC for current
@@ -223,6 +224,7 @@ class Rx(RxAbstract):
         self._ads_voltage = ads.ADS1115(self.ctl.bus, gain=self._adc_gain, data_rate=860,
                                         address=self._ads_voltage_address)
         self._ads_voltage.mode = Mode.CONTINUOUS
+        self._coef_p2 = kwargs.pop('coef_p2', RX_CONFIG['coef_p2'])
         self._sampling_rate = kwargs.pop('sampling_rate', sampling_rate)
         self.exec_logger.event(f'{self.board_name}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -252,10 +254,6 @@ class Rx(RxAbstract):
         """ Gets the voltage VMN in Volts
         """
         self.exec_logger.event(f'{self.board_name}\trx_voltage\tbegin\t{datetime.datetime.utcnow()}')
-        u0 = AnalogIn(self._ads_voltage, ads.P0).voltage * 1000.
-        u2 = AnalogIn(self._ads_voltage, ads.P2).voltage * 1000.
-        self.exec_logger.info(f'u0: {u0} mV, u2: {u2} mV')
-        u = np.max([u0, u2]) * (np.heaviside(u0-u2, 1.) * 2 - 1.)  # gets the max between u0 & u2 and set the sign
-        self.exec_logger.debug(f'Reading voltages {u0} mV and {u2} mV on RX. Returning {u} mV')
+        u = -AnalogIn(self._ads_voltage, ads.P0, ads.P1).voltage * self._coef_p2 * 1000.
         self.exec_logger.event(f'{self.board_name}\trx_voltage\tend\t{datetime.datetime.utcnow()}')
         return u
