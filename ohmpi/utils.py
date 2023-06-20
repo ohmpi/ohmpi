@@ -77,7 +77,7 @@ def parse_log(log):
                 tag.append(line.split(" | ")[2].split(":")[0])
                 print(i, line)
                 if tag[-1] == 'INFO':
-                    if 'NEW SESSION' in msg[i]:
+                    if 'NEW SESSION' in msg[-1]:
                         s += 1
                 session.append(s)
             elif "{" in line or msg_started:
