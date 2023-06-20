@@ -330,6 +330,7 @@ class RxAbstract(ABC):
         self.exec_logger.debug(f'{self.board_name} RX initialization')
         self._adc_gain = 1.
         self._max_sampling_rate = np.inf
+        self._bias = 0.
 
     @property
     def adc_gain(self):
