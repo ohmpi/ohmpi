@@ -196,6 +196,18 @@ class OhmPiHardware:
         self._pulse += 1
         self.exec_logger.event(f'OhmPiHardware\tread_values\tend\t{datetime.datetime.utcnow()}')
 
+    def last_rho(self):
+        if len(self.readings) > 1:
+            return np.mean(self.readings[:, 2] * self.readings[:, 4] / self.readings[:, 3])
+        else:
+            return np.nan
+
+    def last_dev(self):
+        if len(self.readings) > 1:
+            return 100. * np.std(self.readings[:, 2] * self.readings[:, 4] / self.readings[:, 3])/self.last_rho()
+        else:
+            return np.nan
+
     @property
     def sp(self):  # TODO: use a time window within pulses
         if self.readings.shape == (0,) or len(self.readings[self.readings[:, 2] == 1, :]) < 1 or \
