@@ -251,7 +251,7 @@ class Rx(RxAbstract):
     def voltage(self):
         """ Gets the voltage VMN in Volts
         """
-        self.exec_logger.event(f'{self.board_name}\rx_voltage\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\trx_voltage\tbegin\t{datetime.datetime.utcnow()}')
         u0 = AnalogIn(self._ads_voltage, ads.P0).voltage * 1000.
         u2 = AnalogIn(self._ads_voltage, ads.P2).voltage * 1000.
         self.exec_logger.info(f'u0: {u0} mV, u2: {u2} mV')
