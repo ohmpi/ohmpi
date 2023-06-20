@@ -172,7 +172,8 @@ class OhmPiHardware:
             sampling_rate = self.rx.sampling_rate
         sample = 0
         self.exec_logger.info(f'values when starting pulse {self._pulse} : {self.tx.current} mA, {self.rx.voltage} mV')
-        self.rx.voltage
+        _ = self.rx.voltage
+        lap = datetime.datetime.utcnow()  # just in case tx_sync is not set immediately after passing wait
         self.tx_sync.wait()  #
         if not append or self._start_time is None:
             self._start_time = datetime.datetime.utcnow()
@@ -196,12 +197,14 @@ class OhmPiHardware:
         self._pulse += 1
         self.exec_logger.event(f'OhmPiHardware\tread_values\tend\t{datetime.datetime.utcnow()}')
 
+    @property
     def last_rho(self):
         if len(self.readings) > 1:
             return np.mean(self.readings[:, 2] * self.readings[:, 4] / self.readings[:, 3])
         else:
             return np.nan
 
+    @property
     def last_dev(self):
         if len(self.readings) > 1:
             return 100. * np.std(self.readings[:, 2] * self.readings[:, 4] / self.readings[:, 3])/self.last_rho()
