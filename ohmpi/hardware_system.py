@@ -12,6 +12,7 @@ from ohmpi.utils import update_dict
 from ohmpi.config import HARDWARE_CONFIG
 from threading import Thread, Event, Barrier
 
+plt.switch_backend('agg') # for multi-threading...
 # Define the default controller, a distinct controller could be defined for each tx, rx or mux board
 # when using a distinct controller, the specific controller definition must be included in the component configuration
 ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')

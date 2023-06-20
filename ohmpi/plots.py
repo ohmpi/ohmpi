@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from ohmpi.utils import parse_log
 import matplotlib
+plt.switch_backend('agg') # for multi-threading...
 
 
 def plot_exec_log(exec_log,names=None,last_session=True):  # TODO: select session id instead of last session (if -1 : last)
