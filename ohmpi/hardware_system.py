@@ -44,7 +44,7 @@ def elapsed_seconds(start_time):
 class OhmPiHardware:
     def __init__(self, **kwargs):
         self.exec_logger = kwargs.pop('exec_logger', None)
-        self.exec_logger.event(f'OhmPiHardware\tInit_OhmPi\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tinit\tbegin\t{datetime.datetime.utcnow()}')
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_hw')
         self.data_logger = kwargs.pop('exec_logger', None)
@@ -125,7 +125,7 @@ class OhmPiHardware:
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
         self._pulse = 0  # pulse number
-        self.exec_logger.event(f'OhmPiHardware\tInit_OhmPi\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tinit\tend\t{datetime.datetime.utcnow()}')
 
     def _clear_values(self):
         self.readings = np.array([])
@@ -133,11 +133,11 @@ class OhmPiHardware:
         self._pulse = 0
 
     def _gain_auto(self):  # TODO: improve _gain_auto
-        self.exec_logger.event(f'OhmPiHardware\tGain_Auto\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\t_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
         self.tx_sync.wait()
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
-        self.exec_logger.event(f'OhmPiHardware\tGain_Auto\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\t_gain_Auto\tend\t{datetime.datetime.utcnow()}')
 
     def _inject(self, polarity=1, inj_time=None):  # TODO: deal with voltage or current pulse
         self.exec_logger.event(f'OhmPiHardware\tInject\tbegin\t{datetime.datetime.utcnow()}')
@@ -362,6 +362,7 @@ class OhmPiHardware:
         state : str, optional
             Either 'on' or 'off'.
         """
+        self.exec_logger.event(f'OhmPiHardware\tswitch_mux\tbegin\t{datetime.datetime.utcnow()}')
         status = True
         if roles is None:
             roles = ['A', 'B', 'M', 'N']
@@ -396,6 +397,7 @@ class OhmPiHardware:
             self.exec_logger.error(
                 f'Unable to switch {state} electrodes: number of electrodes and number of roles do not match!')
             status = False
+        self.exec_logger.event(f'OhmPiHardware\tswitch_mux\tend\t{datetime.datetime.utcnow()}')
         return status
 
     def test_mux(self, channel=None, activation_time=1.0):
@@ -433,6 +435,8 @@ class OhmPiHardware:
         """
 
         self.exec_logger.debug('Resetting all mux boards ...')
+        self.exec_logger.event(f'OhmPiHardware\treset_mux\tbegin\t{datetime.datetime.utcnow()}')
         for mux_id, mux in self.mux_boards.items():  # noqa
             self.exec_logger.debug(f'Resetting {mux_id}.')
             mux.reset()
+        self.exec_logger.event(f'OhmPiHardware\treset_mux\tend\t{datetime.datetime.utcnow()}')

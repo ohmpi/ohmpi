@@ -32,15 +32,17 @@ RX_CONFIG['data_rate'] = RX_CONFIG.pop('data_rate', data_rate)
 # *** TX ***
 # ADC for current
 current_adc_voltage_min = 10.  # mV
-current_adc_voltage_max = 4500. # mV
-low_battery = 12. # V (conventional value as it is not measured on this board)
+current_adc_voltage_max = 4500.  # mV
+low_battery = 12.  # V (conventional value as it is not measured on this board)
 tx_mcp_board_address = 0x20  #
 # pwr_voltage_max = 12.  # V
 # pwr_default_voltage = 12.  # V
 # pwr_switch_on_warmup = 0.  # seconds
 
-TX_CONFIG['current_min'] = np.min([current_adc_voltage_min / (TX_CONFIG['r_shunt'] * 50), TX_CONFIG.pop('current_min', np.inf)])  # mA
-TX_CONFIG['current_max'] = np.min([current_adc_voltage_max / (TX_CONFIG['r_shunt'] * 50), TX_CONFIG.pop('current_max', np.inf)])  # mA
+TX_CONFIG['current_min'] = np.min([current_adc_voltage_min / (TX_CONFIG['r_shunt'] * 50),
+                                   TX_CONFIG.pop('current_min', np.inf)])  # mA
+TX_CONFIG['current_max'] = np.min([current_adc_voltage_max / (TX_CONFIG['r_shunt'] * 50),
+                                   TX_CONFIG.pop('current_max', np.inf)])  # mA
 # TX_CONFIG['voltage_max'] = np.min([pwr_voltage_max, TX_CONFIG.pop('voltage_max', np.inf)])  # V
 TX_CONFIG['voltage_max'] = TX_CONFIG.pop('voltage_max', np.inf)  # V
 TX_CONFIG['voltage_min'] = -TX_CONFIG['voltage_max']  # V
@@ -78,6 +80,7 @@ def _gain_auto(channel):
 
 class Tx(TxAbstract):
     def __init__(self, **kwargs):
+        self.exec_logger.event(f'{self.board_name}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         self._voltage = kwargs.pop('voltage', TX_CONFIG['default_voltage'])
@@ -110,6 +113,7 @@ class Tx(TxAbstract):
         self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
         self.pin4.direction = Direction.OUTPUT
         self.pin4.value = True
+        self.exec_logger.event(f'{self.board_name}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
     @property
     def adc_gain(self):
@@ -124,11 +128,11 @@ class Tx(TxAbstract):
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
 
     def adc_gain_auto(self):
-        self.exec_logger.event(f'{self.board_name}\tAuto_Gain_TX\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\ttx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
         gain = _gain_auto(AnalogIn(self._ads_current, ads.P0))
         self.exec_logger.debug(f'Setting TX ADC gain automatically to {gain}')
         self.adc_gain = gain
-        self.exec_logger.event(f'{self.board_name}\tAuto_Gain_TX\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\ttx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
     def current_pulse(self, **kwargs):
         TxAbstract.current_pulse(self, **kwargs)
@@ -196,33 +200,31 @@ class Tx(TxAbstract):
         polarity: 1,0,-1
             Polarity of the pulse
         """
-        self.exec_logger.event(f'{self.board_name}\tVoltage_Pulse_TX\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\ttx_voltage_pulse\tbegin\t{datetime.datetime.utcnow()}')
         self.exec_logger.info(f'inj_time: {length}')  # TODO: delete me
         if length is None:
             length = self.inj_time
         self.pwr.voltage = voltage
         self.exec_logger.debug(f'Voltage pulse of {polarity*self.pwr.voltage:.3f} V for {length:.3f} s')
         self.inject(polarity=polarity, inj_time=length)
-        self.exec_logger.event(f'{self.board_name}\tVoltage_Pulse_TX\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\ttx_voltage_pulse\tbegin\t{datetime.datetime.utcnow()}')
 
 
 class Rx(RxAbstract):
     def __init__(self, **kwargs):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
-        self.exec_logger.event(f'{self.board_name}\tInit_RX\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
         if self.ctl is None:
             self.ctl = ctl_module.Ctl()
-        # elif isinstance(self.ctl, dict):
-        #     self.ctl = ctl_module.Ctl(**self.ctl)
-        # print(f'ctl: {self.ctl}, {type(self.ctl)}')  # TODO: delete me!
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = 0x49
         self._adc_gain = 2/3
-        self._ads_voltage = ads.ADS1115(self.ctl.bus, gain=self._adc_gain, data_rate=860, address=self._ads_voltage_address)
+        self._ads_voltage = ads.ADS1115(self.ctl.bus, gain=self._adc_gain, data_rate=860,
+                                        address=self._ads_voltage_address)
         self._ads_voltage.mode = Mode.CONTINUOUS
         self._sampling_rate = kwargs.pop('sampling_rate', sampling_rate)
-        self.exec_logger.event(f'{self.board_name}\tInit_RX\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
     @property
     def adc_gain(self):
@@ -237,22 +239,23 @@ class Rx(RxAbstract):
         self.exec_logger.debug(f'Setting RX ADC gain to {value}')
 
     def adc_gain_auto(self):
-        self.exec_logger.event(f'{self.board_name}\tAuto_Gain_RX\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
         gain_0 = _gain_auto(AnalogIn(self._ads_voltage, ads.P0))
         gain_2 = _gain_auto(AnalogIn(self._ads_voltage, ads.P2))
         gain = np.min([gain_0, gain_2])
         self.exec_logger.debug(f'Setting RX ADC gain automatically to {gain}')
         self.adc_gain = gain
-        self.exec_logger.event(f'{self.board_name}\tAuto_Gain_RX\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
     @property
     def voltage(self):
         """ Gets the voltage VMN in Volts
         """
-        self.exec_logger.event(f'{self.board_name}\tMeasure_Voltage_RX\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\rx_voltage\tbegin\t{datetime.datetime.utcnow()}')
         u0 = AnalogIn(self._ads_voltage, ads.P0).voltage * 1000.
         u2 = AnalogIn(self._ads_voltage, ads.P2).voltage * 1000.
-        u = np.max([u0, u2]) * (np.heaviside(u0-u2, 1.) * 2 - 1.) # gets the max between u0 & u2 and set the sign
+        self.exec_logger.info(f'u0: {u0} mV, u2: {u2} mV')
+        u = np.max([u0, u2]) * (np.heaviside(u0-u2, 1.) * 2 - 1.)  # gets the max between u0 & u2 and set the sign
         self.exec_logger.debug(f'Reading voltages {u0} mV and {u2} mV on RX. Returning {u} mV')
-        self.exec_logger.event(f'{self.board_name}\tMeasure_Voltage_RX\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.board_name}\trx_voltage\tend\t{datetime.datetime.utcnow()}')
         return u
