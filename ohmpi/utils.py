@@ -75,7 +75,6 @@ def parse_log(log):
                 process_id.append(line.split(" | ")[1])
                 msg.append(":".join(line.split(" | ")[2].split(":")[1:]))
                 tag.append(line.split(" | ")[2].split(":")[0])
-                print(i, line)
                 if tag[-1] == 'INFO':
                     if 'NEW SESSION' in msg[-1]:
                         s += 1
