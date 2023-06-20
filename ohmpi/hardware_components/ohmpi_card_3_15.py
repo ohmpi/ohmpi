@@ -80,9 +80,9 @@ def _gain_auto(channel):
 
 class Tx(TxAbstract):
     def __init__(self, **kwargs):
-        self.exec_logger.event(f'{self.board_name}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
+        self.exec_logger.event(f'{self.board_name}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         self._voltage = kwargs.pop('voltage', TX_CONFIG['default_voltage'])
         self.voltage_adjustable = False
         self.current_adjustable = False
