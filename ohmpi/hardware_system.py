@@ -10,7 +10,7 @@ from ohmpi.hardware_components.abstract_hardware_components import CtlAbstract
 from ohmpi.logging_setup import create_stdout_logger
 from ohmpi.utils import update_dict
 from ohmpi.config import HARDWARE_CONFIG
-from threading import Thread, Event, Barrier
+from threading import Thread, Event, Barrier, BrokenBarrierError
 
 # plt.switch_backend('agg')  # for thread safe operations...
 
@@ -408,9 +408,13 @@ class OhmPiHardware:
                     kwargs.update({'elec_dict': elec_dict, 'state': state})
                     mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs=kwargs)
                     mux_workers[idx].start()
-                self.mux_barrier.wait()
-                for mux_worker in mux_workers:
-                    mux_worker.join()
+                try:
+                    self.mux_barrier.wait()
+                    for mux_worker in mux_workers:
+                        mux_worker.join()
+                except BrokenBarrierError:
+                    self.exec_logger.warning('Switching aborted')
+                    status = False
         else:
             self.exec_logger.error(
                 f'Unable to switch {state} electrodes: number of electrodes and number of roles do not match!')
