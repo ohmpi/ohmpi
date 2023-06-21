@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 from ohmpi.logging_setup import create_stdout_logger
 import time
-from threading import Barrier
+from threading import Barrier, BrokenBarrierError
 
 
 class CtlAbstract(ABC):
@@ -168,31 +168,38 @@ class MuxAbstract(ABC):
             # as to prevent burning the MN part which cannot take
             # the full voltage of the DPS
             if 'A' in elec_dict.keys() and 'B' in elec_dict.keys() and 'M' in elec_dict.keys() and 'N' in elec_dict.keys():
-                if not bypass_check and (np.in1d(elec_dict['M'], elec_dict['A']).any()  # noqa
+                if bypass_check:
+                    self.exec_logger.debug('Bypassing switching check')
+                elif (np.in1d(elec_dict['M'], elec_dict['A']).any()  # noqa
                         or np.in1d(elec_dict['M'], elec_dict['B']).any()  # noqa
                         or np.in1d(elec_dict['N'], elec_dict['A']).any()  # noqa
                         or np.in1d(elec_dict['N'], elec_dict['B']).any()) and state=='on':  # noqa
                     self.exec_logger.error('Trying to switch on some electrodes with both M or N role and A or B role. '
                                            'This could create an over-voltage in the RX! Switching aborted.')
+                    self.barrier.abort()
                     status = False
                     return status
-            elif bypass_check:
-                self.exec_logger.debug('Bypassing switching check')
+                elif bypass_check:
+                    self.exec_logger.debug('Bypassing switching check')
 
             # if all ok, then wait for the barrier to open, then switch the electrodes
             self.exec_logger.debug(f'{self.board_id} waiting to switch.')
-            self.barrier.wait()
-            for role in elec_dict:
-                for elec in elec_dict[role]:
-                    if elec > 0:  # Is this condition related to electrodes to infinity?
-                        if (elec, role) in self.cabling.keys():
-                            self.switch_one(elec, role, state)
-                            status &= True
-                        else:
-                            self.exec_logger.debug(f'{self.board_id} skipping switching {(elec, role)} because it '
-                                                   f'is not in board cabling.')
-                            status = False
-            self.exec_logger.debug(f'{self.board_id} switching done.')
+            try:
+                self.barrier.wait()
+                for role in elec_dict:
+                    for elec in elec_dict[role]:
+                        if elec > 0:  # Is this condition related to electrodes to infinity?
+                            if (elec, role) in self.cabling.keys():
+                                self.switch_one(elec, role, state)
+                                status &= True
+                            else:
+                                self.exec_logger.debug(f'{self.board_id} skipping switching {(elec, role)} because it '
+                                                       f'is not in board cabling.')
+                                status = False
+                self.exec_logger.debug(f'{self.board_id} switching done.')
+            except BrokenBarrierError:
+                self.exec_logger.debug(f'Barrier error {self.board_id} switching aborted.')
+                status = False
         else:
             self.exec_logger.warning(f'Missing argument for {self.board_name}.switch: elec_dict is None.')
             status = False
