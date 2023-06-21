@@ -225,6 +225,7 @@ class Rx(RxAbstract):
                                         address=self._ads_voltage_address)
         self._ads_voltage.mode = Mode.CONTINUOUS
         self._coef_p2 = kwargs.pop('coef_p2', RX_CONFIG['coef_p2'])
+        self._voltage_max = kwargs.pop('voltage_max', RX_CONFIG['voltage_max'])
         self._sampling_rate = kwargs.pop('sampling_rate', sampling_rate)
         self.exec_logger.event(f'{self.board_name}\trx_init\tend\t{datetime.datetime.utcnow()}')
 

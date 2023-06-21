@@ -754,7 +754,7 @@ class OhmPi(object):
             self.exec_logger.warning(f'Unable to set sequence: {e}')
             status = False
 
-    def switch_mux_on(self, quadrupole, cmd_id=None):
+    def switch_mux_on(self, quadrupole, bypass_check=False, cmd_id=None):
         """Switches on multiplexer relays for given quadrupole.
 
         Parameters
@@ -763,9 +763,15 @@ class OhmPi(object):
             Unique command identifier
         quadrupole : list of 4 int
             List of 4 integers representing the electrode numbers.
+        bypass_check: bool, optional
+            Bypasses checks for A==M or A==M or B==M or B==N (i.e. used for rs-check)
         """
         assert len(quadrupole) == 4
-        return  self._hw.switch_mux(electrodes=quadrupole, state='on')
+        if self._hw.tx.voltage > self._hw.rx.max_voltage and bypass_check:
+            self.exec_logger.warning('Cannot bypass checking electrode roles because tx voltage is over rx maximum voltage')
+            return False
+        else:
+            return self._hw.switch_mux(electrodes=quadrupole, state='on', bypass_check=bypass_check)
 
     def switch_mux_off(self, quadrupole, cmd_id=None):
         """Switches off multiplexer relays for given quadrupole.

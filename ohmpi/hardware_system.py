@@ -370,7 +370,7 @@ class OhmPiHardware:
             self._vab_pulse(self, length=lengths[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
 
-    def switch_mux(self, electrodes, roles=None, state='off'):
+    def switch_mux(self, electrodes, roles=None, state='off', **kwargs):
         """Switches on multiplexer relays for given quadrupole.
 
         Parameters
@@ -407,8 +407,8 @@ class OhmPiHardware:
                 for idx, mux in enumerate(mux_workers):
                     # Create a new thread to perform some work
                     self.mux_boards[mux].barrier = b
-                    mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs={'elec_dict': elec_dict,
-                                                                                          'state': state})
+                    kwargs.update({'elec_dict': elec_dict, 'state': state})
+                    mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs=kwargs)
                     mux_workers[idx].start()
                 self.mux_barrier.wait()
                 for mux_worker in mux_workers:
