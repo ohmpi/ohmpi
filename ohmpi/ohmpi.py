@@ -697,7 +697,7 @@ class OhmPi(object):
         # measure all quad of the RS sequence
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole
-            self.switch_mux_on(quad)  # put before raising the pins (otherwise conflict i2c)
+            self.switch_mux_on(quad, bypass_check=True)  # put before raising the pins (otherwise conflict i2c)
             d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=0.2, tx_volt=tx_volt, autogain=False)
 
             if self._hw.tx.voltage_adjustable:
