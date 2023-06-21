@@ -53,7 +53,7 @@ class PwrAbstract(ABC):
         self._state = 'off'
         self._current_min = kwargs.pop('current_min', 0.)
         self._current_max = kwargs.pop('current_max', 0.)
-        self._current_min = kwargs.pop('voltage_min', 0.)
+        self._voltage_min = kwargs.pop('voltage_min', 0.)
         self._voltage_max = kwargs.pop('voltage_max', 0.)
 
     @property

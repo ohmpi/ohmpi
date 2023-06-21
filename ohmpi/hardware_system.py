@@ -21,14 +21,12 @@ pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFI
 tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
 rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
 MUX_CONFIG = {}
-# mux_boards = []
 
 for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
     mux_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["model"]}')
     MUX_CONFIG[mux_id] = mux_module.MUX_CONFIG
     MUX_CONFIG[mux_id].update(mux_config)
     MUX_CONFIG[mux_id].update({'id': mux_id})
-    # mux_boards.append(mux_id)
 
 TX_CONFIG = tx_module.TX_CONFIG
 RX_CONFIG = rx_module.RX_CONFIG

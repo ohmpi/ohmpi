@@ -767,7 +767,7 @@ class OhmPi(object):
             Bypasses checks for A==M or A==M or B==M or B==N (i.e. used for rs-check)
         """
         assert len(quadrupole) == 4
-        if self._hw.tx.voltage > self._hw.rx.max_voltage and bypass_check:
+        if self._hw.tx.pwr.voltage > self._hw.rx.max_voltage and bypass_check:
             self.exec_logger.warning('Cannot bypass checking electrode roles because tx voltage is over rx maximum voltage')
             return False
         else:
