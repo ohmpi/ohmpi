@@ -451,7 +451,8 @@ class OhmPi(object):
         if injection_duration is None:
                 injection_duration = self.settings['injection_duration']
         tx_volt = float(tx_volt)
-        if self.switch_mux_on(quad, cmd_id, bypass_check=kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False):
+        bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
+        if self.switch_mux_on(quad, cmd_id, bypass_check=bypass_check):
             self._hw.vab_square_wave(tx_volt, cycle_length=injection_duration*2, cycles=nb_stack)
             d = {
                 "time": datetime.now().isoformat(),
