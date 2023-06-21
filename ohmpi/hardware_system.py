@@ -173,7 +173,7 @@ class OhmPiHardware:
         if sampling_rate is None:
             sampling_rate = self.rx.sampling_rate
         sample = 0
-        self.exec_logger.info(f'values when starting pulse {self._pulse} : {self.tx.current} mA, {self.rx.voltage} mV')
+        # self.exec_logger.info(f'values when starting pulse {self._pulse} : {self.tx.current} mA, {self.rx.voltage} mV')
         _ = self.rx.voltage
         lap = datetime.datetime.utcnow()  # just in case tx_sync is not set immediately after passing wait
         self.tx_sync.wait()  #
@@ -187,8 +187,8 @@ class OhmPiHardware:
             sleep_time = self._start_time + datetime.timedelta(seconds=sample / sampling_rate) - lap
             if sleep_time.total_seconds() < 0.:
                 # for i in range(int(sampling_rate * np.abs(sleep_time.total_seconds()))):
-                    # _readings.append([elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, np.nan, np.nan])
-                    # sample += 1
+                #    _readings.append([elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, np.nan, np.nan])
+                #    sample += 1
                 sample += int(sampling_rate * np.abs(sleep_time.total_seconds()))
             else:
                 time.sleep(np.max([0., sleep_time.total_seconds()]))
