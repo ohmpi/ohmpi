@@ -53,7 +53,7 @@ class PwrAbstract(ABC):
         self._state = 'off'
         self._current_min = kwargs.pop('current_min', 0.)
         self._current_max = kwargs.pop('current_max', 0.)
-        self._current_min = kwargs.pop('voltage_min', 0.)
+        self._voltage_min = kwargs.pop('voltage_min', 0.)
         self._voltage_max = kwargs.pop('voltage_max', 0.)
 
     @property
@@ -139,7 +139,7 @@ class MuxAbstract(ABC):
     def reset(self):
         pass
 
-    def switch(self, elec_dict=None, state='off'):  # TODO: generalize for other roles
+    def switch(self, elec_dict=None, state='off', bypass_check=False):  # TODO: generalize for other roles
         """Switch a given list of electrodes with different roles.
         Electrodes with a value of 0 will be ignored.
 
@@ -149,6 +149,8 @@ class MuxAbstract(ABC):
             Dictionary of the form: {role: [list of electrodes]}.
         state : str, optional
             Either 'on' or 'off'.
+        bypass_check: bool, optional
+            Bypasses checks for A==M or A==M or B==M or B==N (i.e. used for rs-check)
         """
         status = True
         if elec_dict is not None:
@@ -166,7 +168,7 @@ class MuxAbstract(ABC):
             # as to prevent burning the MN part which cannot take
             # the full voltage of the DPS
             if 'A' in elec_dict.keys() and 'B' in elec_dict.keys() and 'M' in elec_dict.keys() and 'N' in elec_dict.keys():
-                if (np.in1d(elec_dict['M'], elec_dict['A']).any()  # noqa
+                if not bypass_check and (np.in1d(elec_dict['M'], elec_dict['A']).any()  # noqa
                         or np.in1d(elec_dict['M'], elec_dict['B']).any()  # noqa
                         or np.in1d(elec_dict['N'], elec_dict['A']).any()  # noqa
                         or np.in1d(elec_dict['N'], elec_dict['B']).any()) and state=='on':  # noqa
@@ -174,6 +176,8 @@ class MuxAbstract(ABC):
                                            'This could create an over-voltage in the RX! Switching aborted.')
                     status = False
                     return status
+            elif bypass_check:
+                self.exec_logger.debug('Bypassing switching check')
 
             # if all ok, then wait for the barrier to open, then switch the electrodes
             self.exec_logger.debug(f'{self.board_id} waiting to switch.')
@@ -328,6 +332,7 @@ class RxAbstract(ABC):
         self.board_name = kwargs.pop('board_name', 'unknown RX hardware')
         self._sampling_rate = kwargs.pop('sampling_rate', 1)  # ms
         self.exec_logger.debug(f'{self.board_name} RX initialization')
+        self._voltage_max = kwargs.pop('voltage_max', 0.)
         self._adc_gain = 1.
         self._max_sampling_rate = np.inf
         self._bias = 0.

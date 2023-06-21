@@ -21,14 +21,12 @@ pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFI
 tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
 rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
 MUX_CONFIG = {}
-# mux_boards = []
 
 for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
     mux_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["model"]}')
     MUX_CONFIG[mux_id] = mux_module.MUX_CONFIG
     MUX_CONFIG[mux_id].update(mux_config)
     MUX_CONFIG[mux_id].update({'id': mux_id})
-    # mux_boards.append(mux_id)
 
 TX_CONFIG = tx_module.TX_CONFIG
 RX_CONFIG = rx_module.RX_CONFIG
@@ -370,7 +368,7 @@ class OhmPiHardware:
             self._vab_pulse(self, length=lengths[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
 
-    def switch_mux(self, electrodes, roles=None, state='off'):
+    def switch_mux(self, electrodes, roles=None, state='off', **kwargs):
         """Switches on multiplexer relays for given quadrupole.
 
         Parameters
@@ -407,8 +405,8 @@ class OhmPiHardware:
                 for idx, mux in enumerate(mux_workers):
                     # Create a new thread to perform some work
                     self.mux_boards[mux].barrier = b
-                    mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs={'elec_dict': elec_dict,
-                                                                                          'state': state})
+                    kwargs.update({'elec_dict': elec_dict, 'state': state})
+                    mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs=kwargs)
                     mux_workers[idx].start()
                 self.mux_barrier.wait()
                 for mux_worker in mux_workers:
