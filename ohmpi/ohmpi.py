@@ -452,7 +452,7 @@ class OhmPi(object):
                 injection_duration = self.settings['injection_duration']
         tx_volt = float(tx_volt)
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
-        if self.switch_mux_on(quad, cmd_id, bypass_check=bypass_check):
+        if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
             self._hw.vab_square_wave(tx_volt, cycle_length=injection_duration*2, cycles=nb_stack)
             d = {
                 "time": datetime.now().isoformat(),
@@ -699,7 +699,7 @@ class OhmPi(object):
             quad = quads[i, :]  # quadrupole
             self.switch_mux_on(quad, bypass_check=True)  # put before raising the pins (otherwise conflict i2c)
             d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=0.2, tx_volt=tx_volt, autogain=False,
-                                     bypass_check = True)
+                                     bypass_check=True)
 
             if self._hw.tx.voltage_adjustable:
                 voltage = self._hw.tx.voltage  # imposed voltage on dps
