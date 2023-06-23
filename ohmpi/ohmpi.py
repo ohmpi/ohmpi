@@ -701,10 +701,12 @@ class OhmPi(object):
             d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=0.2, tx_volt=tx_volt, autogain=False,
                                      bypass_check=True)
 
-            if self._hw.tx.voltage_adjustable:
-                voltage = self._hw.tx.voltage  # imposed voltage on dps
-            else:
-                voltage = self._hw.rx.voltage
+            # if self._hw.tx.voltage_adjustable:
+            #     voltage = self._hw.tx.voltage  # imposed voltage on dps
+            # else:
+            #     voltage = self._hw.rx.voltage
+
+            voltage = self._hw.rx.voltage
             current = self._hw.tx.current
 
             # compute resistance measured (= contact resistance)
@@ -715,7 +717,7 @@ class OhmPi(object):
                   f'V: {voltage :>10.3f} mV, ' \
                   f'R: {resist :>10.3f} kOhm'
 
-            self.exec_logger.debug(msg)
+            self.exec_logger.info(msg)
 
             # if contact resistance = 0 -> we have a short circuit!!
             if resist < 1e-5:
@@ -731,7 +733,7 @@ class OhmPi(object):
 
             # close mux path and put pin back to GND
             self.switch_mux_off(quad)
-            self.exec_logger.info(f'R{quad[0]} {quad[1]}: {resist} kOhm')
+
         self.status = 'idle'
 
     #
