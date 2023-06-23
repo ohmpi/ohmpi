@@ -731,6 +731,7 @@ class OhmPi(object):
 
             # close mux path and put pin back to GND
             self.switch_mux_off(quad)
+            self.exec_logger.info(f'R{quad[0]} {quad[1]}: {resist} kOhm')
         self.status = 'idle'
 
     #
