@@ -589,10 +589,10 @@ class OhmPi(object):
             #     # call the switch_mux function to switch to the right electrodes
             #     # switch on DPS
             #     self.mcp_board = MCP23008(self.i2c, address=self.mcp_board_address)
-            #     self.pin2 = self.mcp_board.get_pin(2) # dsp -
+            #     self.pin2 = self.mcp_board.get_pin(2) # dps -
             #     self.pin2.direction = Direction.OUTPUT
             #     self.pin2.value = True
-            #     self.pin3 = self.mcp_board.get_pin(3) # dsp -
+            #     self.pin3 = self.mcp_board.get_pin(3) # dps -
             #     self.pin3.direction = Direction.OUTPUT
             #     self.pin3.value = True
             #     time.sleep (4)
@@ -808,7 +808,6 @@ class OhmPi(object):
             self._hw.test_mux(activation_time=activation_time)
         else:
             self._hw.mux_boards[mux_id].test(activation_time=activation_time)
-
 
     def reset_mux(self, cmd_id=None):
         """Switches off all multiplexer relays.
