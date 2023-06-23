@@ -704,8 +704,8 @@ class OhmPi(object):
             if self._hw.tx.voltage_adjustable:
                 voltage = self._hw.tx.voltage  # imposed voltage on dps
             else:
-                voltage = d['Vmn [mV]']
-            current = d['I [mA]']
+                voltage = self._hw.rx.voltage
+            current = self._hw.tx.current
 
             # compute resistance measured (= contact resistance)
             resist = abs(voltage / current) / 1000.
