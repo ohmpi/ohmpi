@@ -55,6 +55,7 @@ class PwrAbstract(ABC):
         self._current_max = kwargs.pop('current_max', 0.)
         self._voltage_min = kwargs.pop('voltage_min', 0.)
         self._voltage_max = kwargs.pop('voltage_max', 0.)
+        self.ctl = kwargs.pop('ctl', None)
 
     @property
     @abstractmethod

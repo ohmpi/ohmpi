@@ -77,8 +77,13 @@ class OhmPiHardware:
                                        'soh_logger': self.soh_logger})
         self.rx = kwargs.pop('rx', rx_module.Rx(**HARDWARE_CONFIG['rx']))
         HARDWARE_CONFIG['pwr'].pop('model')
-        HARDWARE_CONFIG['pwr'].update(**HARDWARE_CONFIG['pwr'])
-        HARDWARE_CONFIG['pwr'].update({'ctl': self.ctl})
+        HARDWARE_CONFIG['pwr'].update(**HARDWARE_CONFIG['pwr'])  # NOTE: Explain why this is needed or delete me
+        HARDWARE_CONFIG['pwr'].update({'ctl': HARDWARE_CONFIG['pwr'].pop('ctl', self.ctl)})
+        if isinstance(HARDWARE_CONFIG['pwr']['ctl'], dict):
+            ctl_mod = HARDWARE_CONFIG['pwr']['ctl'].pop('model', self.ctl)
+            if isinstance(ctl_mod, str):
+                ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
+            HARDWARE_CONFIG['pwr']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['pwr']['ctl'])
         HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                       'soh_logger': self.soh_logger})
         self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
