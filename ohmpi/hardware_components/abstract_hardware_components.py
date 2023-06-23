@@ -167,10 +167,9 @@ class MuxAbstract(ABC):
             # check that none of M or N are the same as A or B
             # as to prevent burning the MN part which cannot take
             # the full voltage of the DPS
-            self.exec_logger.warning(f'Bypassing :{bypass_check}')  # TODO: change to debug
             if 'A' in elec_dict.keys() and 'B' in elec_dict.keys() and 'M' in elec_dict.keys() and 'N' in elec_dict.keys():
                 if bypass_check:
-                    self.exec_logger.warning('Bypassing switching check')  # TODO: change to debug
+                    self.exec_logger.debugg(f'Bypassing :{bypass_check}')
                 elif (np.in1d(elec_dict['M'], elec_dict['A']).any()  # noqa
                         or np.in1d(elec_dict['M'], elec_dict['B']).any()  # noqa
                         or np.in1d(elec_dict['N'], elec_dict['A']).any()  # noqa
