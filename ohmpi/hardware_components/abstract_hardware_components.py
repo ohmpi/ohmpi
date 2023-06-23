@@ -169,7 +169,7 @@ class MuxAbstract(ABC):
             # the full voltage of the DPS
             if 'A' in elec_dict.keys() and 'B' in elec_dict.keys() and 'M' in elec_dict.keys() and 'N' in elec_dict.keys():
                 if bypass_check:
-                    self.exec_logger.debugg(f'Bypassing :{bypass_check}')
+                    self.exec_logger.debug(f'Bypassing :{bypass_check}')
                 elif (np.in1d(elec_dict['M'], elec_dict['A']).any()  # noqa
                         or np.in1d(elec_dict['M'], elec_dict['B']).any()  # noqa
                         or np.in1d(elec_dict['N'], elec_dict['A']).any()  # noqa
