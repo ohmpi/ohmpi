@@ -345,7 +345,7 @@ class OhmPiHardware:
         if duty_cycle < 1.:
             durations = [cycle_duration/2 * duty_cycle, cycle_duration/2*(1.-duty_cycle)] * cycles
             pol = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(cycles)]
-            polarities = [0] * (len(cycles) * 2)
+            polarities = [0] * (len(pol) * 2)
             polarities[0::2] = pol
         else:
             durations = [cycle_duration / 2] * 2 * cycles
