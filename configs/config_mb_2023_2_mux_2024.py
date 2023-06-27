@@ -27,8 +27,9 @@ HARDWARE_CONFIG = {
              'r_shunt': 2  # Shunt resistance in Ohms
             },
     'rx':  {'model': 'ohmpi_card_3_15',
-             'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
-             'nb_samples': 20,  # Max value 10 # was named integer before...
+             'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
+             'latency': 0.010  # latency in seconds in continuous mode
+             # 'nb_samples': 20,  # Max value 10 # was named integer before...
             },
     'mux':  # default properties are system properties that will be
             # overwritten by board properties defined at the board level within the board model file

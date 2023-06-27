@@ -29,6 +29,7 @@ RX_CONFIG['voltage_max'] = np.min([voltage_adc_voltage_max, RX_CONFIG.pop('volta
 RX_CONFIG['sampling_rate'] = RX_CONFIG.pop('sampling_rate', sampling_rate)
 RX_CONFIG['data_rate'] = RX_CONFIG.pop('data_rate', data_rate)
 RX_CONFIG['coef_p2'] = RX_CONFIG.pop('coef_p2', 2.5)
+RX_CONFIG['latency'] = RX_CONFIG.pop('latency', 0.01)
 
 # *** TX ***
 # ADC for current
@@ -255,6 +256,6 @@ class Rx(RxAbstract):
         """ Gets the voltage VMN in Volts
         """
         self.exec_logger.event(f'{self.board_name}\trx_voltage\tbegin\t{datetime.datetime.utcnow()}')
-        u = -AnalogIn(self._ads_voltage, ads.P0, ads.P1).voltage * self._coef_p2 * 1000. - self._bias  # TODO:  check if it should be negated
+        u = -AnalogIn(self._ads_voltage, ads.P0, ads.P1).voltage * self._coef_p2 * 1000. - self._bias  # TODO: check if it should be negated
         self.exec_logger.event(f'{self.board_name}\trx_voltage\tend\t{datetime.datetime.utcnow()}')
         return u
