@@ -186,15 +186,16 @@ class OhmPiHardware:
         time.sleep(np.max([self.rx._latency, self.tx._latency]))
         while self.tx_sync.is_set():
             lap = datetime.datetime.utcnow()
-            _readings.append([elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, self.tx.current,
-                              self.rx.voltage])
-            sample += 1
-            sleep_time = self._start_time + datetime.timedelta(seconds=sample / sampling_rate) - lap
-            if sleep_time.total_seconds() < 0.:
-                # TODO: count how many samples were skipped to make a stat that could be used to qualify pulses
-                sample += int(sampling_rate * np.abs(sleep_time.total_seconds())) + 1
+            r = [elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, self.tx.current, self.rx.voltage]
+            if self.tx_sync.is_set():
+                sample += 1
+                _readings.append(r)
                 sleep_time = self._start_time + datetime.timedelta(seconds=sample / sampling_rate) - lap
-            time.sleep(np.max([0., sleep_time.total_seconds()]))
+                if sleep_time.total_seconds() < 0.:
+                    # TODO: count how many samples were skipped to make a stat that could be used to qualify pulses
+                    sample += int(sampling_rate * np.abs(sleep_time.total_seconds())) + 1
+                    sleep_time = self._start_time + datetime.timedelta(seconds=sample / sampling_rate) - lap
+                time.sleep(np.max([0., sleep_time.total_seconds()]))
 
         self.exec_logger.warning(f'pulse {self._pulse}: elapsed time {(lap-self._start_time).total_seconds()} s')  # TODO: Set to debug level
         self.exec_logger.warning(f'pulse {self._pulse}: total samples {len(_readings)}')  # TODO: Set to debug level
