@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 from ohmpi.logging_setup import create_stdout_logger
 import time
-from threading import Barrier, BrokenBarrierError
+from threading import Event, Barrier, BrokenBarrierError
 
 
 class CtlAbstract(ABC):
@@ -115,7 +115,7 @@ class MuxAbstract(ABC):
         self.cabling = {}
         if cabling is not None:
             for k, v in cabling.items():
-                if v[0]==self.board_id:
+                if v[0] == self.board_id:
                     self.cabling.update({k: (v[1], k[1])})
         self.exec_logger.debug(f'{self.board_id} cabling: {self.cabling}')
         self.addresses = kwargs.pop('addresses', None)
@@ -168,7 +168,8 @@ class MuxAbstract(ABC):
             # check that none of M or N are the same as A or B
             # as to prevent burning the MN part which cannot take
             # the full voltage of the DPS
-            if 'A' in elec_dict.keys() and 'B' in elec_dict.keys() and 'M' in elec_dict.keys() and 'N' in elec_dict.keys():
+            if 'A' in elec_dict.keys() and 'B' in elec_dict.keys() and 'M' in elec_dict.keys() \
+                    and 'N' in elec_dict.keys():
                 if bypass_check:
                     self.exec_logger.debug(f'Bypassing :{bypass_check}')
                 elif (np.in1d(elec_dict['M'], elec_dict['A']).any()  # noqa
@@ -250,6 +251,7 @@ class TxAbstract(ABC):
         self._inj_time = None
         self._adc_gain = 1.
         self.inj_time = inj_time
+        self.tx_sync = kwargs.pop('tx_sync', Event())
         self.exec_logger.debug(f'{self.board_name} TX initialization')
 
     @property
@@ -271,16 +273,19 @@ class TxAbstract(ABC):
 
     @abstractmethod
     def inject(self, polarity=1, inj_time=None):
-        assert polarity in [-1,0,1]
+        assert polarity in [-1, 0, 1]
         if inj_time is None:
             inj_time = self._inj_time
         if np.abs(polarity) > 0:
             self.pwr.turn_on()
+            self.tx_sync.set()
             time.sleep(inj_time)
             self.pwr.turn_off()
         else:
+            self.tx_sync.set()
             self.pwr.turn_off()
             time.sleep(inj_time)
+        self.tx_sync.clear()
 
     @property
     def inj_time(self):
@@ -346,7 +351,6 @@ class RxAbstract(ABC):
     @property
     def adc_gain(self):
         return self._adc_gain
-
 
     @adc_gain.setter
     def adc_gain(self, value):

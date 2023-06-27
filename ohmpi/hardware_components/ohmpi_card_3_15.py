@@ -108,7 +108,7 @@ class Tx(TxAbstract):
         self.polarity = 0
         self.adc_gain = 2 / 3
 
-        self.pwr = None
+        self.pwr = None  # TODO: set a list of compatible power system with the tx
 
         # I2C connexion to MCP23008, for current injection
         self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
@@ -202,7 +202,7 @@ class Tx(TxAbstract):
             Polarity of the pulse
         """
         self.exec_logger.event(f'{self.board_name}\ttx_voltage_pulse\tbegin\t{datetime.datetime.utcnow()}')
-        self.exec_logger.info(f'inj_time: {length}')  # TODO: delete me
+        # self.exec_logger.info(f'inj_time: {length}')  # TODO: delete me
         if length is None:
             length = self.inj_time
         self.pwr.voltage = voltage

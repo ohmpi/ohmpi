@@ -89,6 +89,7 @@ class OhmPiHardware:
         self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
         HARDWARE_CONFIG['tx'].pop('model')
         HARDWARE_CONFIG['tx'].update(**HARDWARE_CONFIG['tx'])
+        HARDWARE_CONFIG['tx'].update({'tx_sync': self.tx_sync})
         HARDWARE_CONFIG['tx'].update({'ctl': self.ctl})
         HARDWARE_CONFIG['tx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                       'soh_logger': self.soh_logger})
@@ -146,9 +147,9 @@ class OhmPiHardware:
 
     def _inject(self, polarity=1, inj_time=None):  # TODO: deal with voltage or current pulse
         self.exec_logger.event(f'OhmPiHardware\tinject\tbegin\t{datetime.datetime.utcnow()}')
-        self.tx_sync.set()
+        # self.tx_sync.set()
         self.tx.voltage_pulse(length=inj_time, polarity=polarity)
-        self.tx_sync.clear()
+        # self.tx_sync.clear()
         self.exec_logger.event(f'OhmPiHardware\tinject\tend\t{datetime.datetime.utcnow()}')
 
     def _set_mux_barrier(self):
