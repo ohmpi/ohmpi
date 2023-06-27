@@ -248,6 +248,7 @@ class Rx(RxAbstract):
         self._adc_gain = value
         self._ads_voltage = ads.ADS1115(self.ctl.bus, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_voltage_address)
+        self._ads_voltage.mode = Mode.CONTINUOUS
         self.exec_logger.debug(f'Setting RX ADC gain to {value}')
 
     def adc_gain_auto(self):
