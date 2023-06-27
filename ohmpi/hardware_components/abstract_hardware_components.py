@@ -271,10 +271,10 @@ class TxAbstract(ABC):
     @adc_gain.setter
     def adc_gain(self, value):
         """
-
+        Set gain on RX ADC
         Parameters
         ----------
-        value
+        value: float
         """
         self._adc_gain = value
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
@@ -387,6 +387,12 @@ class RxAbstract(ABC):
 
     @adc_gain.setter
     def adc_gain(self, value):
+        """
+        Sets gain on RX ADC
+        Parameters
+        ----------
+        value: float
+        """
         self._adc_gain = value
         self.exec_logger.debug(f'Setting RX ADC gain to {value}')
 
@@ -400,6 +406,12 @@ class RxAbstract(ABC):
 
     @sampling_rate.setter
     def sampling_rate(self, value):
+        """
+        Sets sampling rate
+        Parameters
+        ----------
+        value: float, in Hz
+        """
         assert value > 0.
         if value > self._max_sampling_rate:
             self.exec_logger.warning(f'{self} maximum sampling rate is {self._max_sampling_rate}. '
