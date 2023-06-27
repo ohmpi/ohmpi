@@ -235,7 +235,7 @@ class OhmPiHardware:
             sp = np.mean(mean_vmn[np.ix_(polarity == 1)] - mean_vmn[np.ix_(polarity == -1)]) / 2
             return sp
 
-    def _compute_tx_volt(self, best_tx_injtime=0.1, strategy='vmax', tx_volt=5,
+    def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5,
                          vab_max=voltage_max, vmn_min=voltage_min):
         """Estimates best Tx voltage based on different strategies.
         At first a half-cycle is made for a short duration with a fixed
@@ -250,8 +250,8 @@ class OhmPiHardware:
 
         Parameters
         ----------
-        best_tx_injtime : float, optional
-            Time in milliseconds for the half-cycle used to compute Rab.
+        pulse_duration : float, optional
+            Time in seconds for the pulse used to compute Rab.
         strategy : str, optional
             Either:
             - vmax : compute Vab to reach a maximum Iab without exceeding vab_max
@@ -280,11 +280,11 @@ class OhmPiHardware:
         vmn_min = np.abs(vmn_min)
         vab = np.min([np.abs(tx_volt), vab_max])
         self.tx.turn_on()
-        if 1000 / self.rx.sampling_rate > best_tx_injtime:
-            sampling_rate = 1000.0 / best_tx_injtime  # TODO: check this...
+        if 1. / self.rx.sampling_rate > pulse_duration:
+            sampling_rate = 1. / pulse_duration  # TODO: check this...
         else:
             sampling_rate = self.tx.sampling_rate
-        self._vab_pulse(vab=vab, duration=best_tx_injtime, sampling_rate=sampling_rate)  # TODO: use a square wave pulse?
+        self._vab_pulse(vab=vab, duration=pulse_duration, sampling_rate=sampling_rate)  # TODO: use a square wave pulse?
         vmn = np.mean(self.readings[:, 4])
         iab = np.mean(self.readings[:, 3])
         # if np.abs(vmn) is too small (smaller than voltage_min), strategy is not constant and vab < vab_max ,
