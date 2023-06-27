@@ -153,9 +153,9 @@ class Tx(TxAbstract):
         assert TX_CONFIG['current_min'] <= value <= TX_CONFIG['current_max']
         self.exec_logger.warning(f'Current pulse is not implemented for the {TX_CONFIG["model"]} board')
 
-    def inject(self, polarity=1, inj_time=None):
+    def inject(self, polarity=1, injection_duration=None):
         self.polarity = polarity
-        TxAbstract.inject(self, polarity=polarity, inj_time=inj_time)
+        TxAbstract.inject(self, polarity=polarity, injection_duration=injection_duration)
 
     @property
     def polarity(self):
@@ -203,12 +203,12 @@ class Tx(TxAbstract):
             Polarity of the pulse
         """
         self.exec_logger.event(f'{self.board_name}\ttx_voltage_pulse\tbegin\t{datetime.datetime.utcnow()}')
-        # self.exec_logger.info(f'inj_time: {length}')  # TODO: delete me
+        # self.exec_logger.info(f'injection_duration: {length}')  # TODO: delete me
         if length is None:
-            length = self.inj_time
+            length = self.injection_duration
         self.pwr.voltage = voltage
         self.exec_logger.debug(f'Voltage pulse of {polarity*self.pwr.voltage:.3f} V for {length:.3f} s')
-        self.inject(polarity=polarity, inj_time=length)
+        self.inject(polarity=polarity, injection_duration=length)
         self.exec_logger.event(f'{self.board_name}\ttx_voltage_pulse\tend\t{datetime.datetime.utcnow()}')
 
 

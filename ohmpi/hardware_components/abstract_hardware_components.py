@@ -238,7 +238,7 @@ class MuxAbstract(ABC):
 class TxAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown TX hardware')
-        inj_time = kwargs.pop('inj_time', 1.)
+        injection_duration = kwargs.pop('injection_duration', 1.)
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_tx')
@@ -248,9 +248,9 @@ class TxAbstract(ABC):
         self.ctl = kwargs.pop('ctl', None)
         self.pwr = kwargs.pop('pwr', None)
         self._polarity = 0
-        self._inj_time = None
+        self._injection_duration = None
         self._adc_gain = 1.
-        self.inj_time = inj_time
+        self.injection_duration = injection_duration
         self._latency = kwargs.pop('latency', 0.)
         self.tx_sync = kwargs.pop('tx_sync', Event())
         self.exec_logger.debug(f'{self.board_name} TX initialization')
@@ -273,30 +273,30 @@ class TxAbstract(ABC):
         pass
 
     @abstractmethod
-    def inject(self, polarity=1, inj_time=None):
+    def inject(self, polarity=1, injection_duration=None):
         assert polarity in [-1, 0, 1]
-        if inj_time is None:
-            inj_time = self._inj_time
+        if injection_duration is None:
+            injection_duration = self._injection_duration
         if np.abs(polarity) > 0:
             self.pwr.turn_on()
             self.tx_sync.set()
-            time.sleep(inj_time)
+            time.sleep(injection_duration)
             self.pwr.turn_off()
         else:
             self.tx_sync.set()
             self.pwr.turn_off()
-            time.sleep(inj_time)
+            time.sleep(injection_duration)
         self.tx_sync.clear()
 
     @property
-    def inj_time(self):
-        return self._inj_time
+    def injection_duration(self):
+        return self._injection_duration
 
-    @inj_time.setter
-    def inj_time(self, value):
+    @injection_duration.setter
+    def injection_duration(self, value):
         assert isinstance(value, float)
         assert value > 0.
-        self._inj_time = value
+        self._injection_duration = value
 
     @property
     def polarity(self):
@@ -326,10 +326,10 @@ class TxAbstract(ABC):
             Polarity of the pulse
         """
         if length is None:
-            length = self.inj_time
+            length = self.injection_duration
         self.pwr.voltage = voltage
         self.exec_logger.debug(f'Voltage pulse of {polarity * self.pwr.voltage:.3f} V for {length:.3f} s')
-        self.inject(polarity=polarity, inj_time=length)
+        self.inject(polarity=polarity, injection_duration=length)
 
 
 class RxAbstract(ABC):

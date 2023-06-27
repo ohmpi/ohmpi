@@ -145,10 +145,10 @@ class OhmPiHardware:
         self.rx.adc_gain_auto()
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tend\t{datetime.datetime.utcnow()}')
 
-    def _inject(self, polarity=1, inj_time=None):  # TODO: deal with voltage or current pulse
+    def _inject(self, polarity=1, injection_duration=None):  # TODO: deal with voltage or current pulse
         self.exec_logger.event(f'OhmPiHardware\tinject\tbegin\t{datetime.datetime.utcnow()}')
         # self.tx_sync.set()
-        self.tx.voltage_pulse(length=inj_time, polarity=polarity)
+        self.tx.voltage_pulse(length=injection_duration, polarity=polarity)
         # self.tx_sync.clear()
         self.exec_logger.event(f'OhmPiHardware\tinject\tend\t{datetime.datetime.utcnow()}')
 
@@ -190,9 +190,7 @@ class OhmPiHardware:
             sample += 1
             sleep_time = self._start_time + datetime.timedelta(seconds=sample / sampling_rate) - lap
             if sleep_time.total_seconds() < 0.:
-                # for i in range(int(sampling_rate * np.abs(sleep_time.total_seconds()))):
-                #    _readings.append([elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, np.nan, np.nan])
-                #    sample += 1
+                # TODO: count how many samples were skipped to make a stat that could be used to qualify pulses
                 sample += int(sampling_rate * np.abs(sleep_time.total_seconds())) + 1
                 sleep_time = self._start_time + datetime.timedelta(seconds=sample / sampling_rate) - lap
             time.sleep(np.max([0., sleep_time.total_seconds()]))
@@ -286,7 +284,7 @@ class OhmPiHardware:
             sampling_rate = 1000.0 / best_tx_injtime  # TODO: check this...
         else:
             sampling_rate = self.tx.sampling_rate
-        self._vab_pulse(vab=vab, length=best_tx_injtime, sampling_rate=sampling_rate)  # TODO: use a square wave pulse?
+        self._vab_pulse(vab=vab, duration=best_tx_injtime, sampling_rate=sampling_rate)  # TODO: use a square wave pulse?
         vmn = np.mean(self.readings[:, 4])
         iab = np.mean(self.readings[:, 3])
         # if np.abs(vmn) is too small (smaller than voltage_min), strategy is not constant and vab < vab_max ,
@@ -327,21 +325,21 @@ class OhmPiHardware:
     def calibrate_rx_bias(self):
         self.rx._bias = (np.mean(self.readings[self.readings[:, 2] == 1, 4]) + np.mean(self.readings[self.readings[:, 2] == -1, 4])) / 2.
 
-    def vab_square_wave(self, vab, cycle_length, sampling_rate=None, cycles=3, polarity=1, append=False):
+    def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, append=False):
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
         self.tx.polarity = polarity
-        lengths = [cycle_length/2]*2*cycles
+        durations = [cycle_duration/2]*2*cycles
         # set gains automatically
         gain_auto = Thread(target=self._gain_auto)
-        injection = Thread(target=self._inject, kwargs={'inj_time': 0.2, 'polarity': polarity})
+        injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': polarity})
         gain_auto.start()
         injection.start()
         gain_auto.join()
         injection.join()
-        self._vab_pulses(vab, lengths, sampling_rate, append=append)
+        self._vab_pulses(vab, durations, sampling_rate, append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
 
-    def _vab_pulse(self, vab, length, sampling_rate=None, polarity=1, append=False):
+    def _vab_pulse(self, vab, duration, sampling_rate=None, polarity=1, append=False):
         """ Gets VMN and IAB from a single voltage pulse
         """
         self.tx.polarity = polarity
@@ -352,7 +350,7 @@ class OhmPiHardware:
         else:
             vab = self.tx.pwr.voltage
         # reads current and voltage during the pulse
-        injection = Thread(target=self._inject, kwargs={'inj_time': length, 'polarity': polarity})
+        injection = Thread(target=self._inject, kwargs={'injection_duration': duration, 'polarity': polarity})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
         readings.start()
         injection.start()
@@ -360,8 +358,8 @@ class OhmPiHardware:
         injection.join()
         self.tx.polarity = 0
 
-    def _vab_pulses(self, vab, lengths, sampling_rate, polarities=None, append=False):
-        n_pulses = len(lengths)
+    def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
+        n_pulses = len(durations)
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
         if polarities is not None:
@@ -371,7 +369,7 @@ class OhmPiHardware:
         if not append:
             self._clear_values()
         for i in range(n_pulses):
-            self._vab_pulse(self, length=lengths[i], sampling_rate=sampling_rate, polarity=polarities[i],
+            self._vab_pulse(self, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
 
     def switch_mux(self, electrodes, roles=None, state='off', **kwargs):

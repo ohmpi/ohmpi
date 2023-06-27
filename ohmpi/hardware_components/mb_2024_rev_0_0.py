@@ -148,8 +148,8 @@ class Tx(TxAbstract):
         assert TX_CONFIG['current_min'] <= value <= TX_CONFIG['current_max']
         self.exec_logger.warning(f'Current pulse is not implemented for the {TX_CONFIG["model"]} board')
 
-    def inject(self, polarity=1, inj_time=None):
-        TxAbstract.inject(self, polarity=polarity, inj_time=inj_time)
+    def inject(self, polarity=1, injection_duration=None):
+        TxAbstract.inject(self, polarity=polarity, injection_duration=injection_duration)
         # move this part in DPS5005
         # if state=='on':
         #     self.DPS.write_register(0x09, 1)  # DPS5005 on
@@ -221,7 +221,7 @@ class Tx(TxAbstract):
         """
 
         if length is None:
-            length = self.inj_time
+            length = self.injection_duration
         if polarity is None:
             polarity = self.polarity
         self.polarity = polarity
