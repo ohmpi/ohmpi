@@ -350,7 +350,7 @@ class OhmPiHardware:
         else:
             durations = [cycle_duration / 2] * 2 * cycles
             polarities = None
-        self._vab_pulses(vab, durations, sampling_rate, polarities=polarities, duty_cycle=duty_cycle,  append=append)
+        self._vab_pulses(vab, durations, sampling_rate, polarities=polarities,  append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
 
     def _vab_pulse(self, vab, duration, sampling_rate=None, polarity=1, append=False):
