@@ -147,9 +147,7 @@ class OhmPiHardware:
 
     def _inject(self, polarity=1, injection_duration=None):  # TODO: deal with voltage or current pulse
         self.exec_logger.event(f'OhmPiHardware\tinject\tbegin\t{datetime.datetime.utcnow()}')
-        # self.tx_sync.set()
         self.tx.voltage_pulse(length=injection_duration, polarity=polarity)
-        # self.tx_sync.clear()
         self.exec_logger.event(f'OhmPiHardware\tinject\tend\t{datetime.datetime.utcnow()}')
 
     def _set_mux_barrier(self):
@@ -177,13 +175,13 @@ class OhmPiHardware:
         if sampling_rate is None:
             sampling_rate = self.rx.sampling_rate
         sample = 0
-        # self.exec_logger.info(f'values when starting pulse {self._pulse} : {self.tx.current} mA, {self.rx.voltage} mV')
         lap = datetime.datetime.utcnow()  # just in case tx_sync is not set immediately after passing wait
         self.tx_sync.wait()  #
         if not append or self._start_time is None:
             self._start_time = datetime.datetime.utcnow()
-        time.sleep(np.max([self.rx._latency, self.tx._latency]))
-        # _ = self.rx.voltage
+            # TODO: Check if replacing the following two options by a reset_buffer method of TX would be OK
+            time.sleep(np.max([self.rx._latency, self.tx._latency])) # if continuous mode
+            # _ = self.rx.voltage # if not continuous mode
 
         while self.tx_sync.is_set():
             lap = datetime.datetime.utcnow()
@@ -198,7 +196,7 @@ class OhmPiHardware:
                     sleep_time = self._start_time + datetime.timedelta(seconds=sample / sampling_rate) - lap
                 time.sleep(np.max([0., sleep_time.total_seconds()]))
 
-        self.exec_logger.warning(f'pulse {self._pulse}: elapsed time {(lap-self._start_time).total_seconds()} s')  # TODO: Set to debug level
+        self.exec_logger.debug(f'pulse {self._pulse}: elapsed time {(lap-self._start_time).total_seconds()} s')
         self.exec_logger.warning(f'pulse {self._pulse}: total samples {len(_readings)}')  # TODO: Set to debug level
         self.readings = np.array(_readings)
         self._pulse += 1
@@ -343,8 +341,8 @@ class OhmPiHardware:
         injection.join()
         assert 0. <= duty_cycle <= 1.
         if duty_cycle < 1.:
-            durations = [cycle_duration/2 * duty_cycle, cycle_duration/2*(1.-duty_cycle)] * cycles
-            pol = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(cycles)]
+            durations = [cycle_duration/2 * duty_cycle, cycle_duration/2*(1.-duty_cycle)] * 2 * cycles
+            pol = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(2 * cycles)]
             polarities = [0] * (len(pol) * 2)
             polarities[0::2] = pol
         else:
@@ -374,6 +372,7 @@ class OhmPiHardware:
 
     def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
         n_pulses = len(durations)
+        self.exec_logger.warning(f'n_pulses: {n_pulses}, {len(durations)}, {len(polarities)}')
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
         if polarities is not None:
