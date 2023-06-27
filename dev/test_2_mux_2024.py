@@ -49,6 +49,8 @@ if within_ohmpi:
     k._hw.vab_square_wave(12,1)
     k._hw.switch_mux([1, 4, 2, 3], state='off')
     k._hw.calibrate_rx_bias()  # electrodes 1 4 2 3 should be connected to a reference circuit
+    print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
+    k._hw._plot_readings()
     k._hw.switch_mux([1, 4, 2, 3], state='on')
     k._hw.vab_square_wave(12,1)
     k._hw.switch_mux([1, 4, 2, 3], state='off')
