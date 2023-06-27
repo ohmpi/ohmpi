@@ -323,7 +323,8 @@ class OhmPiHardware:
         plt.show()
 
     def calibrate_rx_bias(self):
-        self.rx._bias = (np.mean(self.readings[self.readings[:, 2] == 1, 4]) + np.mean(self.readings[self.readings[:, 2] == -1, 4])) / 2.
+        self.rx._bias = (np.mean(self.readings[self.readings[:, 2] == 1, 4])
+                         + np.mean(self.readings[self.readings[:, 2] == -1, 4])) / 2.
 
     def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, append=False):
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
