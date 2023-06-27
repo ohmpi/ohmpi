@@ -133,6 +133,7 @@ class Tx(TxAbstract):
         self._adc_gain = value
         self._ads_current = ads.ADS1115(self.ctl.bus, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_current_address)
+        self._ads_current.mode = Mode.CONTINUOUS
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
 
     def adc_gain_auto(self):
