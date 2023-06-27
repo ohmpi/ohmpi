@@ -234,7 +234,7 @@ class OhmPiHardware:
                 mean_iab.append(np.mean(self.readings[self.readings[:, 1] == i, 3]))
             mean_vmn = np.array(mean_vmn)
             mean_iab = np.array(mean_iab)
-            sp = np.mean(mean_vmn[np.ix_(polarity == 1)] - mean_vmn[np.ix_(polarity == -1)]) / 2
+            sp = np.mean(mean_vmn[np.ix_(polarity == 1)] + mean_vmn[np.ix_(polarity == -1)]) / 2
             return sp
 
     def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5,
