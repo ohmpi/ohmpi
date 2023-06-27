@@ -329,7 +329,8 @@ class OhmPiHardware:
         self.rx._bias += (np.mean(self.readings[self.readings[:, 2] == 1, 4])
                           + np.mean(self.readings[self.readings[:, 2] == -1, 4])) / 2.
 
-    def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, append=False):
+    def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, duty_cycle=1.,
+                        append=False):
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
         self.tx.polarity = polarity
         durations = [cycle_duration/2]*2*cycles
@@ -340,7 +341,16 @@ class OhmPiHardware:
         injection.start()
         gain_auto.join()
         injection.join()
-        self._vab_pulses(vab, durations, sampling_rate, append=append)
+        assert 0. <= duty_cycle <= 1.
+        if duty_cycle < 1.:
+            durations = [cycle_duration/2 * duty_cycle, cycle_duration/2*(1.-duty_cycle)] * cycles
+            pol = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(cycles)]
+            polarities = [0] * (len(cycles) * 2)
+            polarities[0::2] = pol
+        else:
+            durations = [cycle_duration / 2] * 2 * cycles
+            polarities = None
+        self._vab_pulses(vab, durations, sampling_rate, polarities=polarities, duty_cycle=duty_cycle,  append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
 
     def _vab_pulse(self, vab, duration, sampling_rate=None, polarity=1, append=False):
