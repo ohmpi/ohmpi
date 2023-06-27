@@ -28,7 +28,7 @@ RX_CONFIG['voltage_min'] = np.min([voltage_adc_voltage_min, RX_CONFIG.pop('volta
 RX_CONFIG['voltage_max'] = np.min([voltage_adc_voltage_max, RX_CONFIG.pop('voltage_max', np.inf)])  # mV
 RX_CONFIG['sampling_rate'] = RX_CONFIG.pop('sampling_rate', sampling_rate)
 RX_CONFIG['data_rate'] = RX_CONFIG.pop('data_rate', data_rate)
-RX_CONFIG['coef_p2'] = 2.5
+RX_CONFIG['coef_p2'] = RX_CONFIG.pop('coef_p2', 2.5)
 
 # *** TX ***
 # ADC for current

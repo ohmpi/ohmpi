@@ -192,9 +192,9 @@ class OhmPiHardware:
                 # for i in range(int(sampling_rate * np.abs(sleep_time.total_seconds()))):
                 #    _readings.append([elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, np.nan, np.nan])
                 #    sample += 1
-                sample += int(sampling_rate * np.abs(sleep_time.total_seconds()))
-            else:
-                time.sleep(np.max([0., sleep_time.total_seconds()]))
+                sample += int(sampling_rate * np.abs(sleep_time.total_seconds())) + 1
+                sleep_time = self._start_time + datetime.timedelta(seconds=sample / sampling_rate) - lap
+            time.sleep(np.max([0., sleep_time.total_seconds()]))
 
         self.exec_logger.warning(f'pulse {self._pulse}: elapsed time {(lap-self._start_time).total_seconds()} s')  # TODO: Set to debug level
         self.exec_logger.warning(f'pulse {self._pulse}: total samples {len(_readings)}')  # TODO: Set to debug level
