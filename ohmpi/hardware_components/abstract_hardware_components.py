@@ -260,6 +260,7 @@ class TxAbstract(ABC):
         self._inj_time = None
         self._adc_gain = 1.
         self.inj_time = inj_time
+        self._latency = kwargs.pop('latency', 0.)
         self.tx_sync = kwargs.pop('tx_sync', Event())
         self.exec_logger.debug(f'{self.board_name} TX initialization')
 
@@ -377,6 +378,7 @@ class RxAbstract(ABC):
         self._voltage_max = kwargs.pop('voltage_max', 0.)
         self._adc_gain = 1.
         self._max_sampling_rate = np.inf
+        self._latency = kwargs.pop('latency', 0.)
         self._bias = 0.
 
     @property
