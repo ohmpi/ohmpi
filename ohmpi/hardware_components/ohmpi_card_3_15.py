@@ -30,6 +30,8 @@ RX_CONFIG['sampling_rate'] = RX_CONFIG.pop('sampling_rate', sampling_rate)
 RX_CONFIG['data_rate'] = RX_CONFIG.pop('data_rate', data_rate)
 RX_CONFIG['coef_p2'] = RX_CONFIG.pop('coef_p2', 2.5)
 RX_CONFIG['latency'] = RX_CONFIG.pop('latency', 0.01)
+RX_CONFIG['bias'] = RX_CONFIG.pop('bias', 0.)
+
 
 # *** TX ***
 # ADC for current
@@ -52,6 +54,8 @@ TX_CONFIG['default_voltage'] = np.min([TX_CONFIG.pop('default_voltage', np.inf),
 # TX_CONFIG['pwr_switch_on_warm_up'] = TX_CONFIG.pop('pwr_switch_on_warmup', pwr_switch_on_warmup)
 TX_CONFIG['mcp_board_address'] = TX_CONFIG.pop('mcp_board_address', tx_mcp_board_address)
 TX_CONFIG['low_battery'] = TX_CONFIG.pop('low_battery', low_battery)
+TX_CONFIG['latency'] = TX_CONFIG.pop('latency', 0.01)
+TX_CONFIG['bias'] = TX_CONFIG.pop('bias', 0.)
 
 
 def _gain_auto(channel):
@@ -115,6 +119,8 @@ class Tx(TxAbstract):
         self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
         self.pin4.direction = Direction.OUTPUT
         self.pin4.value = True
+        self._latency = kwargs.pop('latency', TX_CONFIG['latency'])
+        self._bias = kwargs.pop('bias', TX_CONFIG['bias'])
         self.exec_logger.event(f'{self.board_name}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
     @property
@@ -228,6 +234,8 @@ class Rx(RxAbstract):
         self._coef_p2 = kwargs.pop('coef_p2', RX_CONFIG['coef_p2'])
         self._voltage_max = kwargs.pop('voltage_max', RX_CONFIG['voltage_max'])
         self._sampling_rate = kwargs.pop('sampling_rate', sampling_rate)
+        self._latency = kwargs.pop('latency', RX_CONFIG['latency'])
+        self._bias = kwargs.pop('bias', RX_CONFIG['bias'])
         self.exec_logger.event(f'{self.board_name}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
     @property
