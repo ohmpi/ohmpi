@@ -211,6 +211,15 @@ class MuxAbstract(ABC):
 
     @abstractmethod
     def switch_one(self, elec=None, role=None, state=None):
+        """Switches one single relay.
+
+        Parameters
+        ----------
+        elec :
+        role :
+        state : str, optional
+            Either 'on' or 'off'.
+        """
         self.exec_logger.debug(f'switching {state} electrode {elec} with role {role}')
 
     def test(self, elec_dict, activation_time=1.):
@@ -260,6 +269,12 @@ class TxAbstract(ABC):
 
     @adc_gain.setter
     def adc_gain(self, value):
+        """
+
+        Parameters
+        ----------
+        value
+        """
         self._adc_gain = value
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
 
@@ -273,6 +288,15 @@ class TxAbstract(ABC):
 
     @abstractmethod
     def inject(self, polarity=1, inj_time=None):
+        """
+        Abstract method to define injection
+        Parameters
+        ----------
+        polarity: int, default 1
+            Injection polarity, can be eiter  1, 0 or -1
+        inj_time: float, default None
+            Injection duration in seconds
+        """
         assert polarity in [-1, 0, 1]
         if inj_time is None:
             inj_time = self._inj_time
@@ -304,6 +328,13 @@ class TxAbstract(ABC):
     @polarity.setter
     @abstractmethod
     def polarity(self, polarity):
+        """
+        Sets polarity value
+        Parameters
+        ----------
+        polarity: int
+            Either -1, 0 or 1.
+        """
         assert polarity in [-1, 0, 1]
         self._polarity = polarity
 
