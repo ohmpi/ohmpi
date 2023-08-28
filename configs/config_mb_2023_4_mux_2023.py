@@ -45,19 +45,19 @@ HARDWARE_CONFIG = {
                           'tca_address': 0x71,
                           'roles': {'B': 'X'},
                           'cabling': {(i, j): ('mux_2', i) for j in ['B'] for i in range(1, 65)},
-                          'voltage_max': 12.}
+                          'voltage_max': 12.},
                      'mux_3':
                          {'model': 'mux_2023_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x72,
                           'roles': {'M': 'X'},
-                          'cabling': {(i, j): ('mux_2', i) for j in ['M'] for i in range(1, 65)},
-                          'voltage_max': 12.}
+                          'cabling': {(i, j): ('mux_3', i) for j in ['M'] for i in range(1, 65)},
+                          'voltage_max': 12.},
                      'mux_4':
                          {'model': 'mux_2023_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x73,
                           'roles': {'N': 'X'},
-                          'cabling': {(i, j): ('mux_2', i) for j in ['N'] for i in range(1, 65)},
-                          'voltage_max': 12.}
+                          'cabling': {(i, j): ('mux_4', i) for j in ['N'] for i in range(1, 65)},
+                          'voltage_max': 12.},
                      },
              'default': {'voltage_max': 100.,
                          'current_max': 3.}

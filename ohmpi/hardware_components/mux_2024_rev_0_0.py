@@ -30,7 +30,7 @@ inner_cabling = {'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'M
                              (6, 'XX'): {'MCP': 1, 'MCP_GPIO': 2}, (6, 'YY'): {'MCP': 1, 'MCP_GPIO': 10},
                              (7, 'XX'): {'MCP': 1, 'MCP_GPIO': 1}, (7, 'YY'): {'MCP': 1, 'MCP_GPIO': 9},
                              (8, 'XX'): {'MCP': 1, 'MCP_GPIO': 0}, (8, 'YY'): {'MCP': 1, 'MCP_GPIO': 8}},
-                '2_roles': # TODO: WARNING check 2_roles table, it has not been verified yet !!!
+                '2_roles':  # TODO: WARNING check 2_roles table, it has not been verified yet !!!
                             {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MCP': 0, 'MCP_GPIO': 8},
                              (2, 'X'): {'MCP': 0, 'MCP_GPIO': 1}, (2, 'Y'): {'MCP': 0, 'MCP_GPIO': 9},
                              (3, 'X'): {'MCP': 0, 'MCP_GPIO': 2}, (3, 'Y'): {'MCP': 0, 'MCP_GPIO': 10},
@@ -67,7 +67,7 @@ class Mux(MuxAbstract):
         tca_channel = kwargs.pop('tca_channel', 0)
         self._roles = kwargs.pop('roles', None)
         if self._roles is None:
-            self._roles = {'A': 'X', 'B': 'Y', 'M' : 'XX', 'N' : 'YY'}  # NOTE: defaults to 4-roles
+            self._roles = {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'}  # NOTE: defaults to 4-roles
         if np.alltrue([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['4_roles'].keys())])]):
             self._mode = '4_roles'
         elif np.alltrue([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['2_roles'].keys())])]):

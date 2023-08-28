@@ -42,7 +42,7 @@ HARDWARE_CONFIG = {
                       'tca_channel': 0,
                       'mcp_0' : '0x22',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
                       'mcp_1' : '0x23',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
-                      'roles' : {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
+                      'roles' : {'M': 'X', 'N': 'Y'},
                       'voltage_max': 12.
                 }},
             'default': {'voltage_max': 100., 'current_max': 3.}}

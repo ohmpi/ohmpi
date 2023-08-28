@@ -28,8 +28,8 @@ HARDWARE_CONFIG = {
             },
     'rx':  {'model': 'ohmpi_card_3_15',
              'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
-             'latency': 0.010  # latency in seconds in continuous mode
-             # 'nb_samples': 20,  # Max value 10 # was named integer before...
+             'latency': 0.010,  # latency in seconds in continuous mode
+             'sampling_rate': 50  # number of samples per second
             },
     'mux':  # default properties are system properties that will be
             # overwritten by board properties defined at the board level within the board model file

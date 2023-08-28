@@ -463,7 +463,7 @@ class OhmPi(object):
                 "inj time [ms]": injection_duration,  # NOTE: check this
                 # "Vmn [mV]": sum_vmn / (2 * nb_stack),
                 # "I [mA]": sum_i / (2 * nb_stack),
-                # "R [ohm]": sum_vmn / sum_i,
+                "R [ohm]": np.mean(self._hw.readings[:, 2]*self._hw.readings[:, 4])/np.median(self._hw.readings[:, 3]),
                 "Ps [mV]": self._hw.sp,
                 "nbStack": nb_stack,
                 "Tx [V]": tx_volt,
