@@ -28,20 +28,21 @@ if stand_alone_mux:
     # mux.switch({'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
     mux.reset()
     mux.test({'A': [i for i in range(1, 17)], 'B': [i for i in range(1, 17)]}, activation_time=.1)
+    mux.reset()
 
 # mux as part of a OhmPiHardware system
 if part_of_hardware_system:
     from ohmpi.hardware_system import OhmPiHardware
     print('Starting test of mux as part of a OhmPiHardware system.')
 
-    k = OhmPiHardware()
-    k.exec_logger.setLevel(logging.DEBUG)
+    h = OhmPiHardware()
+    h.exec_logger.setLevel(logging.DEBUG)
 
     # Test mux switching
-    k.reset_mux()
-    k.switch_mux(electrodes=[1, 4, 2, 3], roles=['A', 'B', 'M', 'N'], state='on')
+    h.reset_mux()
+    h.switch_mux(electrodes=[1, 4], roles=['A', 'B'], state='on')
     time.sleep(1.)
-    k.switch_mux(electrodes=[1, 4, 2, 3], roles=['A', 'B', 'M', 'N'], state='off')
+    h.switch_mux(electrodes=[1, 4], roles=['A', 'B'], state='off')
 
 if within_ohmpi:
     from ohmpi.ohmpi import OhmPi
