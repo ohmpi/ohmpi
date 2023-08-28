@@ -37,12 +37,12 @@ HARDWARE_CONFIG = {
             # both will be overwritten by properties specified in the board dict below. Use with caution...
         {'boards':
                 {'mux_1':
-                     {'model' : 'mux_2024_rev_0_0', # 'ohmpi_i2c_mux64_v1.01',
+                     {'model': 'mux_2024_rev_0_0', # 'ohmpi_i2c_mux64_v1.01',
                       'tca_address': None,
                       'tca_channel': 0,
-                      'mcp_0' : '0x22',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
-                      'mcp_1' : '0x23',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
-                      'roles' : {'A': 'X', 'B': 'Y'},
+                      'mcp_0': '0x22',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
+                      'mcp_1': '0x23',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
+                      'roles': {'A': 'X', 'B': 'Y'},
                       'voltage_max': 12.
                 }},
             'default': {'voltage_max': 100., 'current_max': 3.}}

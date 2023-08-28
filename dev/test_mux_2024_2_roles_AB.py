@@ -12,9 +12,13 @@ within_ohmpi = False  # Testing hardware component as a part of the hardware sys
 update_mux_config = False
 # Stand alone mux
 if stand_alone_mux:
-    # MUX_CONFIG['ctl'] = ctl_module.Ctl()
-    # MUX_CONFIG['id'] = 'mux_1'
-    # MUX_CONFIG['cabling'] = {(i+8, j) : ('mux_1', i) for j in ['A', 'B', 'M', 'N'] for i in range(1,9)}
+    MUX_CONFIG['ctl'] = ctl_module.Ctl()
+    MUX_CONFIG['id'] = 'mux_1'
+    MUX_CONFIG['cabling'] = {(i, j): ('mux_1', i) for j in ['A', 'B'] for i in range(1,17)}
+    MUX_CONFIG['roles'] = {'A': 'X', 'B': 'Y'}
+    MUX_CONFIG['mcp_0'] = '0x26'
+    MUX_CONFIG['mcp_1'] = '0x27'
+
     mux = Mux(**MUX_CONFIG)
     mux.switch_one(elec=2, role='A', state='on')
     time.sleep(2)
