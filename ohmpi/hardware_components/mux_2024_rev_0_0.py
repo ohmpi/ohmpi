@@ -39,14 +39,14 @@ inner_cabling = {'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'M
                              (6, 'X'): {'MCP': 0, 'MCP_GPIO': 5}, (6, 'Y'): {'MCP': 0, 'MCP_GPIO': 13},
                              (7, 'X'): {'MCP': 0, 'MCP_GPIO': 6}, (7, 'Y'): {'MCP': 0, 'MCP_GPIO': 14},
                              (8, 'X'): {'MCP': 0, 'MCP_GPIO': 7}, (8, 'Y'): {'MCP': 0, 'MCP_GPIO': 15},
-                             (9, 'X'): {'MCP': 1, 'MCP_GPIO': 7}, (9, 'Y'): {'MCP': 1, 'MCP_GPIO': 15},
-                             (10, 'X'): {'MCP': 1, 'MCP_GPIO': 6}, (10, 'Y'): {'MCP': 1, 'MCP_GPIO': 14},
-                             (11, 'X'): {'MCP': 1, 'MCP_GPIO': 5}, (11, 'Y'): {'MCP': 1, 'MCP_GPIO': 13},
-                             (12, 'X'): {'MCP': 1, 'MCP_GPIO': 4}, (12, 'Y'): {'MCP': 1, 'MCP_GPIO': 12},
-                             (13, 'X'): {'MCP': 1, 'MCP_GPIO': 3}, (13, 'Y'): {'MCP': 1, 'MCP_GPIO': 11},
-                             (14, 'X'): {'MCP': 1, 'MCP_GPIO': 2}, (14, 'Y'): {'MCP': 1, 'MCP_GPIO': 10},
-                             (15, 'X'): {'MCP': 1, 'MCP_GPIO': 1}, (15, 'Y'): {'MCP': 1, 'MCP_GPIO': 9},
-                             (16, 'X'): {'MCP': 1, 'MCP_GPIO': 0}, (16, 'Y'): {'MCP': 1, 'MCP_GPIO': 8}}
+                             (16, 'X'): {'MCP': 1, 'MCP_GPIO': 7}, (16, 'Y'): {'MCP': 1, 'MCP_GPIO': 15},
+                             (15, 'X'): {'MCP': 1, 'MCP_GPIO': 6}, (15, 'Y'): {'MCP': 1, 'MCP_GPIO': 14},
+                             (14, 'X'): {'MCP': 1, 'MCP_GPIO': 5}, (14, 'Y'): {'MCP': 1, 'MCP_GPIO': 13},
+                             (13, 'X'): {'MCP': 1, 'MCP_GPIO': 4}, (13, 'Y'): {'MCP': 1, 'MCP_GPIO': 12},
+                             (12, 'X'): {'MCP': 1, 'MCP_GPIO': 3}, (12, 'Y'): {'MCP': 1, 'MCP_GPIO': 11},
+                             (11, 'X'): {'MCP': 1, 'MCP_GPIO': 2}, (11, 'Y'): {'MCP': 1, 'MCP_GPIO': 10},
+                             (10, 'X'): {'MCP': 1, 'MCP_GPIO': 1}, (10, 'Y'): {'MCP': 1, 'MCP_GPIO': 9},
+                             (9, 'X'): {'MCP': 1, 'MCP_GPIO': 0}, (9, 'Y'): {'MCP': 1, 'MCP_GPIO': 8}}
                 }
 
 
