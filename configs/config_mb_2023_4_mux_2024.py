@@ -51,7 +51,7 @@ HARDWARE_CONFIG = {
                           'mcp_0': '0x26',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'mcp_1': '0x27',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                          'cabling': {(i, j): ('mux_05', i) for j in ['A', 'B', 'M', 'N'] for i in range(9, 17)},
+                          'cabling': {(i+8, j): ('mux_05', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                           'voltage_max': 12.},
                      'mux_04':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
@@ -60,7 +60,7 @@ HARDWARE_CONFIG = {
                           'mcp_0': '0x24',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'mcp_1': '0x25',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                          'cabling': {(i, j): ('mux_04', i) for j in ['A', 'B', 'M', 'N'] for i in range(17, 25)},
+                          'cabling': {(i+16, j): ('mux_04', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                           'voltage_max': 12.},
                      'mux_03':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
@@ -69,7 +69,7 @@ HARDWARE_CONFIG = {
                           'mcp_0': '0x26',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'mcp_1': '0x27',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                          'cabling': {(i, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(25, 33)},
+                          'cabling': {(i+24, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                           'voltage_max': 12.}
                      },
              'default': {'voltage_max': 100.,
