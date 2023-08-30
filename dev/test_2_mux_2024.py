@@ -8,8 +8,8 @@ from ohmpi.hardware_components import raspberry_pi_i2c as ctl_module
 # from ohmpi.config import HARDWARE_CONFIG
 
 stand_alone_mux = False
-part_of_hardware_system = True
-within_ohmpi = False
+part_of_hardware_system = False
+within_ohmpi = True
 # Stand alone mux
 if stand_alone_mux:
     MUX_CONFIG['ctl'] = ctl_module.Ctl()
