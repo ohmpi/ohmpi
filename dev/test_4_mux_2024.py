@@ -14,21 +14,22 @@ within_ohmpi = False
 
 # Stand alone mux
 if stand_alone_mux:
-    mux_id = 'mux_02'
+    mux_id = 'mux_04'
+    first = 16
     print(MUX_CONFIG)
     MUX_CONFIG.update(HARDWARE_CONFIG['mux']['boards'][mux_id])
     MUX_CONFIG.update({'id': mux_id})
     MUX_CONFIG['ctl'] = ctl_module.Ctl()
     mux = Mux(**MUX_CONFIG)
-    mux.switch_one(elec=1, role='M', state='on')
+    mux.switch_one(elec=1+first, role='M', state='on')
     time.sleep(2)
-    mux.switch_one(elec=1, role='M', state='off')
+    mux.switch_one(elec=1+first, role='M', state='off')
     mux.switch({'A': [1], 'B': [2], 'M': [3], 'N': [4]}, state='on')
     time.sleep(8)
     # mux.switch({'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
     mux.reset()
-    mux.test({'A': [i for i in range(1, 9)], 'B': [i for i in range(1, 9)],
-              'M': [i for i in range(1, 9)], 'N': [i for i in range(1, 9)]}, activation_time=.1)
+    mux.test({'A': [i+first for i in range(1, 9)], 'B': [i+first for i in range(1, 9)],
+              'M': [i+first for i in range(1, 9)], 'N': [i+first for i in range(1, 9)]}, activation_time=.1)
 
 # mux as part of a OhmPiHardware system
 if part_of_hardware_system:
