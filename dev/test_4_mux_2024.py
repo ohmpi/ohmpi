@@ -14,8 +14,8 @@ within_ohmpi = False
 
 # Stand alone mux
 if stand_alone_mux:
-    mux_id = 'mux_04'
-    first = 16
+    mux_id = 'mux_05'
+    first = 8
     print(MUX_CONFIG)
     MUX_CONFIG.update(HARDWARE_CONFIG['mux']['boards'][mux_id])
     MUX_CONFIG.update({'id': mux_id})
