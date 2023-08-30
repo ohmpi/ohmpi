@@ -17,7 +17,7 @@ if stand_alone_mux:
     mux_id = 'mux_02'
     print(MUX_CONFIG)
     MUX_CONFIG.update(HARDWARE_CONFIG['mux']['boards'][mux_id])
-    # MUX_CONFIG['ctl'] = ctl_module.Ctl()
+    MUX_CONFIG['ctl'] = ctl_module.Ctl()
     mux = Mux(**MUX_CONFIG)
     mux.switch_one(elec=1, role='M', state='on')
     time.sleep(2)
