@@ -39,8 +39,8 @@ HARDWARE_CONFIG = {
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x77,
                           'tca_channel': 0,
-                          'mcp_0': '0x20',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
-                          'mcp_1': '0x21',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
+                          'mcp_0': '0x22',  # NOTE: Check pos of jumper on MUX board (refer to doc)
+                          'mcp_1': '0x23',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                           'cabling': {(i, j): ('mux_1', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                           'voltage_max': 12.},
@@ -48,26 +48,26 @@ HARDWARE_CONFIG = {
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x77,
                           'tca_channel': 0,
-                          'mcp_0': '0x22',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
-                          'mcp_1': '0x23',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
+                          'mcp_0': '0x26',  # NOTE: Check pos of jumper on MUX board (refer to doc)
+                          'mcp_1': '0x27',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                           'cabling': {(i, j): ('mux_2', i) for j in ['A', 'B', 'M', 'N'] for i in range(9, 17)},
                           'voltage_max': 12.},
                      'mux_04':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x77,
-                          'tca_channel': 0,
-                          'mcp_0': '0x24',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
-                          'mcp_1': '0x25',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
+                          'tca_channel': 1,
+                          'mcp_0': '0x24',  # NOTE: Check pos of jumper on MUX board (refer to doc)
+                          'mcp_1': '0x25',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                           'cabling': {(i, j): ('mux_2', i) for j in ['A', 'B', 'M', 'N'] for i in range(17, 25)},
                           'voltage_max': 12.},
                      'mux_06':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x77,
-                          'tca_channel': 0,
-                          'mcp_0': '0x26',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
-                          'mcp_1': '0x27',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
+                          'tca_channel': 1,
+                          'mcp_0': '0x26',  # NOTE: Check pos of jumper on MUX board (refer to doc)
+                          'mcp_1': '0x27',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                           'cabling': {(i, j): ('mux_2', i) for j in ['A', 'B', 'M', 'N'] for i in range(25, 33)},
                           'voltage_max': 12.}
