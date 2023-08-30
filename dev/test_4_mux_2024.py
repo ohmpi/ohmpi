@@ -5,7 +5,7 @@ import logging
 change_config('../configs/config_mb_2023_4_mux_2024.py', verbose=False)
 from ohmpi.hardware_components.mux_2024_rev_0_0 import Mux, MUX_CONFIG
 from ohmpi.hardware_components import raspberry_pi_i2c as ctl_module
-# from ohmpi.config import HARDWARE_CONFIG
+from ohmpi.config import HARDWARE_CONFIG
 
 stand_alone_mux = True
 part_of_hardware_system = False
@@ -16,7 +16,7 @@ within_ohmpi = False
 if stand_alone_mux:
     mux_id = 'mux_02'
     print(MUX_CONFIG)
-    MUX_CONFIG = MUX_CONFIG['boards'][mux_id]
+    MUX_CONFIG.update(HARDWARE_CONFIG['mux']['boards'][mux_id])
     # MUX_CONFIG['ctl'] = ctl_module.Ctl()
     mux = Mux(**MUX_CONFIG)
     mux.switch_one(elec=1, role='M', state='on')
