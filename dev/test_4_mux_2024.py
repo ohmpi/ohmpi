@@ -7,8 +7,8 @@ from ohmpi.hardware_components.mux_2024_rev_0_0 import Mux, MUX_CONFIG
 from ohmpi.hardware_components import raspberry_pi_i2c as ctl_module
 from ohmpi.config import HARDWARE_CONFIG
 
-stand_alone_mux = True
-part_of_hardware_system = False
+stand_alone_mux = False
+part_of_hardware_system = True
 within_ohmpi = False
 
 
