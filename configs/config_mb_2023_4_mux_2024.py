@@ -42,7 +42,7 @@ HARDWARE_CONFIG = {
                           'mcp_0': '0x22',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'mcp_1': '0x23',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                          'cabling': {(i, j): ('mux_1', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                          'cabling': {(i, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                           'voltage_max': 12.},
                      'mux_05':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
@@ -51,7 +51,7 @@ HARDWARE_CONFIG = {
                           'mcp_0': '0x26',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'mcp_1': '0x27',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                          'cabling': {(i, j): ('mux_2', i) for j in ['A', 'B', 'M', 'N'] for i in range(9, 17)},
+                          'cabling': {(i, j): ('mux_05', i) for j in ['A', 'B', 'M', 'N'] for i in range(9, 17)},
                           'voltage_max': 12.},
                      'mux_04':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
@@ -60,7 +60,7 @@ HARDWARE_CONFIG = {
                           'mcp_0': '0x24',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'mcp_1': '0x25',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                          'cabling': {(i, j): ('mux_2', i) for j in ['A', 'B', 'M', 'N'] for i in range(17, 25)},
+                          'cabling': {(i, j): ('mux_04', i) for j in ['A', 'B', 'M', 'N'] for i in range(17, 25)},
                           'voltage_max': 12.},
                      'mux_06':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
@@ -69,7 +69,7 @@ HARDWARE_CONFIG = {
                           'mcp_0': '0x26',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'mcp_1': '0x27',  # NOTE: Check pos of jumper on MUX board (refer to doc)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                          'cabling': {(i, j): ('mux_2', i) for j in ['A', 'B', 'M', 'N'] for i in range(25, 33)},
+                          'cabling': {(i, j): ('mux_06', i) for j in ['A', 'B', 'M', 'N'] for i in range(25, 33)},
                           'voltage_max': 12.}
                      },
              'default': {'voltage_max': 100.,
