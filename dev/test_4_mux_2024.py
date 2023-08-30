@@ -10,15 +10,13 @@ from ohmpi.hardware_components import raspberry_pi_i2c as ctl_module
 stand_alone_mux = True
 part_of_hardware_system = False
 within_ohmpi = False
+
+
 # Stand alone mux
 if stand_alone_mux:
-    MUX_CONFIG['ctl'] = ctl_module.Ctl()
-    MUX_CONFIG['id'] = 'mux_02'
-    MUX_CONFIG['cabling'] = {(i, j): ('mux_1', i) for j in ['A', 'B', 'M', 'N'] for i in range(1,9)}
-    MUX_CONFIG['tca_address'] = 0x77
-    MUX_CONFIG['tca_channel'] = 0
-    MUX_CONFIG['mcp_0'] = '0x22'
-    MUX_CONFIG['mcp_1'] = '0x23'
+    mux_id = 'mux_02'
+    MUX_CONFIG = MUX_CONFIG[mux_id]
+    # MUX_CONFIG['ctl'] = ctl_module.Ctl()
     mux = Mux(**MUX_CONFIG)
     mux.switch_one(elec=1, role='M', state='on')
     time.sleep(2)
