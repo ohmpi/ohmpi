@@ -15,7 +15,7 @@ within_ohmpi = False
 # Stand alone mux
 if stand_alone_mux:
     mux_id = 'mux_02'
-    MUX_CONFIG = MUX_CONFIG[mux_id]
+    MUX_CONFIG = MUX_CONFIG['boards'][mux_id]
     # MUX_CONFIG['ctl'] = ctl_module.Ctl()
     mux = Mux(**MUX_CONFIG)
     mux.switch_one(elec=1, role='M', state='on')
