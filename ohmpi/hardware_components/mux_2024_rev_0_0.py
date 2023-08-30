@@ -1,5 +1,3 @@
-import time
-
 from ohmpi.config import HARDWARE_CONFIG
 import os
 import numpy as np
@@ -7,6 +5,7 @@ from ohmpi.hardware_components import MuxAbstract
 import adafruit_tca9548a  # noqa
 from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
 from digitalio import Direction  # noqa
+# import time
 
 MUX_CONFIG = HARDWARE_CONFIG['mux'].pop('default', {})
 MUX_CONFIG.update({'voltage_max': 50., 'current_max': 3.})  # board default values that overwrite system default values

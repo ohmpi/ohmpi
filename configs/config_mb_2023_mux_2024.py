@@ -44,7 +44,8 @@ HARDWARE_CONFIG = {
                       'mcp_1' : '0x23',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
                       'roles' : {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                       'voltage_max': 12.
-                }},
+                    }
+                },
             'default': {'voltage_max': 100., 'current_max': 3.}}
 }
 

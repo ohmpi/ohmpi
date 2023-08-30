@@ -41,6 +41,7 @@ TX_CONFIG['default_voltage'] = np.min([TX_CONFIG.pop('default_voltage', dps_defa
 TX_CONFIG['dps_switch_on_warm_up'] = TX_CONFIG.pop('dps_switch_on_warmup', dps_switch_on_warmup)
 TX_CONFIG['low_battery'] = TX_CONFIG.pop('low_battery', tx_low_battery)
 
+
 def _gain_auto(channel):
     """Automatically sets the gain on a channel
 

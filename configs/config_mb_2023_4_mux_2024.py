@@ -35,7 +35,7 @@ HARDWARE_CONFIG = {
             # overwritten by board properties defined at the board level within the board model file
             # both will be overwritten by properties specified in the board dict below. Use with caution...
             {'boards':
-                    {'mux_1':
+                    {'mux_02':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x77,
                           'tca_channel': 0,
@@ -44,7 +44,7 @@ HARDWARE_CONFIG = {
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                           'cabling': {(i, j): ('mux_1', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                           'voltage_max': 12.},
-                     'mux_2':
+                     'mux_05':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x77,
                           'tca_channel': 0,
@@ -53,7 +53,7 @@ HARDWARE_CONFIG = {
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                           'cabling': {(i, j): ('mux_2', i) for j in ['A', 'B', 'M', 'N'] for i in range(9, 17)},
                           'voltage_max': 12.},
-                     'mux_3':
+                     'mux_04':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x77,
                           'tca_channel': 0,
@@ -62,7 +62,7 @@ HARDWARE_CONFIG = {
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                           'cabling': {(i, j): ('mux_2', i) for j in ['A', 'B', 'M', 'N'] for i in range(17, 25)},
                           'voltage_max': 12.},
-                     'mux_4':
+                     'mux_06':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x77,
                           'tca_channel': 0,
