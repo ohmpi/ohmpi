@@ -35,32 +35,32 @@ HARDWARE_CONFIG = {
             # overwritten by board properties defined at the board level within the board model file
             # both will be overwritten by properties specified in the board dict below. Use with caution...
             {'boards':
-                    {'mux_1':
+                    {'mux_02':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': None,
                           'tca_channel': 0,
                           'mcp_0': '0x22',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
                           'mcp_1': '0x23',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                          'cabling': {(i+8, j): ('mux_1', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                          'cabling': {(i+8, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                           'voltage_max': 12.},
-                     'mux_2':
+                     'mux_00':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': None,
                           'tca_channel': 0,
                           'mcp_0': '0x24',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
                           'mcp_1': '0x25',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                          'cabling': {(i+16, j): ('mux_2', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                          'cabling': {(i+16, j): ('mux_00', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                           'voltage_max': 12.},
-                     'mux_3':
+                     'mux_04':
                          {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': None,
                           'tca_channel': 0,
                           'mcp_0': '0x26',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
                           'mcp_1': '0x27',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
                           'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                          'cabling': {(i+24, j): ('mux_3', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                          'cabling': {(i+24, j): ('mux_04', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                           'voltage_max': 12.}
                      },
              'default': {'voltage_max': 100.,
