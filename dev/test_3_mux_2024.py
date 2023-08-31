@@ -47,7 +47,7 @@ if within_ohmpi:
     from ohmpi.ohmpi import OhmPi
     print('Starting test of mux within OhmPi.')
     k = OhmPi()
-    A, B, M, N = (9, 12, 10, 11)
+    A, B, M, N = (10, 13, 12, 11)
     k.reset_mux()
     k._hw.switch_mux([A, B, M, N], state='on')
     k._hw.vab_square_wave(12.,12., cycles=2)
@@ -55,9 +55,8 @@ if within_ohmpi:
     k._hw.calibrate_rx_bias()  # electrodes 1 4 2 3 should be connected to a reference circuit
     # print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     # k._hw._plot_readings()
-    k._hw.switch_mux([10, 13, 12, 11], state='on')
-    k._hw.vab_square_wave(vab=12., cycle_duration=12., cycles=2)
-    k._hw.switch_mux([10, 13, 12, 11], state='off')
+    k.run_measurement([A, B, M, N], injection_duration=1.)
+    # k._hw._plot_readings()
     print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     k._hw._plot_readings()
     plot_exec_log('ohmpi/logs/exec.log')
