@@ -454,6 +454,11 @@ class OhmPi(object):
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2, cycles=nb_stack)
+            if 'delay' in kwargs.keys():
+                delay = kwargs['delay']
+            else:
+                delay = 0.
+            x = np.where(self._hw.readings[:, 0] >= delay)
             d = {
                 "time": datetime.now().isoformat(),
                 "A": quad[0],
@@ -463,7 +468,7 @@ class OhmPi(object):
                 "inj time [ms]": injection_duration,  # NOTE: check this
                 # "Vmn [mV]": sum_vmn / (2 * nb_stack),
                 # "I [mA]": sum_i / (2 * nb_stack),
-                "R [ohm]": np.mean(self._hw.readings[:, 2]*self._hw.readings[:, 4])/np.median(self._hw.readings[:, 3]),
+                "R [ohm]": np.mean(self._hw.readings[x, 2]*self._hw.readings[x, 4])/np.median(self._hw.readings[x, 3]),
                 "Ps [mV]": self._hw.sp,
                 "nbStack": nb_stack,
                 "Tx [V]": tx_volt,

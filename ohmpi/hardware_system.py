@@ -213,7 +213,7 @@ class OhmPiHardware:
     @property
     def last_dev(self):
         if len(self.readings) > 1:
-            v = self.readings[:,2] != 0
+            v = self.readings[:, 2] != 0  # exclude sample where the is no injection
             return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3])/self.last_rho
         else:
             return np.nan
