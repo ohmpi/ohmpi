@@ -313,7 +313,7 @@ class OhmPiHardware:
             polarity = 1
         return vab, polarity, rab
 
-    def _plot_readings(self):
+    def _plot_readings(self, save_fig=False):
         # Plot graphs
         fig, ax = plt.subplots(nrows=3, sharex=True)
         ax[0].plot(self.readings[:, 0], self.readings[:, 3], '-r', marker='.', label='iab')
@@ -323,7 +323,10 @@ class OhmPiHardware:
         ax[2].plot(self.readings[:, 0], self.readings[:, 2], '-g', marker='.', label='polarity')
         ax[2].set_ylabel('polarity [-]')
         fig.legend()
-        plt.show()
+        if save_fig:
+            fig.savefig(f'figures/test.png')
+        else:
+            plt.show()
 
     def calibrate_rx_bias(self):
         self.rx._bias += (np.mean(self.readings[self.readings[:, 2] == 1, 4])

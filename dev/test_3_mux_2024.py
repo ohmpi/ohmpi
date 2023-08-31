@@ -59,5 +59,5 @@ if within_ohmpi:
     # k._hw._plot_readings()
     print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     k._hw._plot_readings()
-    plot_exec_log('ohmpi/logs/exec.log')
+    # plot_exec_log('ohmpi/logs/exec.log')
 change_config('../configs/config_default.py', verbose=False)
