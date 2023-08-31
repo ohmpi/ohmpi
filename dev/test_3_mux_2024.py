@@ -58,6 +58,6 @@ if within_ohmpi:
     k.run_measurement([A, B, M, N], injection_duration=1.)
     # k._hw._plot_readings()
     print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
-    k._hw._plot_readings()
+    k._hw._plot_readings(save_fig=True)
     # plot_exec_log('ohmpi/logs/exec.log')
 change_config('../configs/config_default.py', verbose=False)
