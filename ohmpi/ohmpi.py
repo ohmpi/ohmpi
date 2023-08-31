@@ -458,7 +458,9 @@ class OhmPi(object):
                 delay = kwargs['delay']
             else:
                 delay = 0.
-            x = np.where(self._hw.readings[:, 0] >= delay)
+            x = np.where((self._hw.readings[:, 0] >= delay) & (self._hw.readings[:, 2] != 0))
+            R = np.mean(self._hw.readings[x, 2]*self._hw.readings[x, 4])/np.median(self._hw.readings[x, 3])
+            R_std = 100. * np.std(self._hw.readings[x, 2] * (self._hw.readings[x, 4] - self.sp) / self._hw.readings[x, 3])/R
             d = {
                 "time": datetime.now().isoformat(),
                 "A": quad[0],
@@ -468,7 +470,8 @@ class OhmPi(object):
                 "inj time [ms]": injection_duration,  # NOTE: check this
                 # "Vmn [mV]": sum_vmn / (2 * nb_stack),
                 # "I [mA]": sum_i / (2 * nb_stack),
-                "R [ohm]": np.mean(self._hw.readings[x, 2]*self._hw.readings[x, 4])/np.median(self._hw.readings[x, 3]),
+                "R [ohm]": R,
+                "R_std [%]": R_std,
                 "Ps [mV]": self._hw.sp,
                 "nbStack": nb_stack,
                 "Tx [V]": tx_volt,
