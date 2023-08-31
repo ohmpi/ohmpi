@@ -1,4 +1,4 @@
-from ohmpi.ohmpi.config import HARDWARE_CONFIG
+from ohmpi.config import HARDWARE_CONFIG
 import os
 from ohmpi.hardware_components import CtlAbstract
 CTL_CONFIG = HARDWARE_CONFIG['ctl']
