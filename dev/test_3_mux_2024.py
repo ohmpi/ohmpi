@@ -55,7 +55,7 @@ if within_ohmpi:
     k._hw.calibrate_rx_bias()  # electrodes 1 4 2 3 should be connected to a reference circuit
     # print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     # k._hw._plot_readings()
-    k.run_measurement([A, B, M, N], injection_duration=1.)
+    k.run_measurement([A, B, M, N], injection_duration=6.)
     # k._hw._plot_readings()
     print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     k._hw._plot_readings(save_fig=True)
