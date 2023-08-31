@@ -7,9 +7,9 @@ from ohmpi.hardware_components.mux_2024_rev_0_0 import Mux, MUX_CONFIG
 from ohmpi.hardware_components import raspberry_pi_i2c as ctl_module
 from ohmpi.config import HARDWARE_CONFIG
 
-stand_alone_mux = True
+stand_alone_mux = False
 part_of_hardware_system = False
-within_ohmpi = False
+within_ohmpi = True
 # Stand alone mux
 if stand_alone_mux:
     mux_id = 'mux_04'
@@ -47,10 +47,11 @@ if within_ohmpi:
     from ohmpi.ohmpi import OhmPi
     print('Starting test of mux within OhmPi.')
     k = OhmPi()
+    A, B, M, N = (25, 28, 27, 26)
     k.reset_mux()
-    k._hw.switch_mux([10, 13, 12, 11], state='on')
+    k._hw.switch_mux([A, B, M, N], state='on')
     k._hw.vab_square_wave(12.,12., cycles=2)
-    k._hw.switch_mux([10, 13, 12, 11], state='off')
+    k._hw.switch_mux([A, B, M, N], state='off')
     k._hw.calibrate_rx_bias()  # electrodes 1 4 2 3 should be connected to a reference circuit
     # print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     # k._hw._plot_readings()
