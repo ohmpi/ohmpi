@@ -18,26 +18,21 @@ OHMPI_CONFIG = {
 }
 
 HARDWARE_CONFIG = {
-    'ctl': {'model' : 'raspberry_pi'
+    'ctl': {'model' : 'dummy_ctl'
                    },
-    'tx' : {'model' : 'ohmpi_card_3_15',
-             'mcp_board_address': 0x20,
-             'current_max': 4800 / 50 / 2,  # Maximum current
-             'r_shunt': 2  # Shunt resistance in Ohms
+    'tx' : {'model' : 'dummy_tx',
+             'current_max': 4800 / 50 / 2,  # Maximum current mA
+             'r_shunt': 2,  # Shunt resistance in Ohms
+             'low_battery': 12.  # Volts
             },
-    'rx' : {'model': 'ohmpi_card_3_15',
-             'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
-             'sampling_rate': 10., # ms
-             'nb_samples': 20,  # Max value 10 # was named integer before...
+    'rx' : {'model': 'dummy_rx',
             },
-    'mux': {'model' : 'dummy_mux', # 'ohmpi_i2c_mux64_v1.01',
+    'mux': {'model' : 'dummy_mux',
              'max_elec': 64,
-             'board_addresses': {'A': 0x73, 'B': 0x72, 'M': 0x71, 'N': 0x70},  # CHECK IF YOUR BOARDS HAVE THESE ADDRESSES
-             'voltage_max': 100,
-             'current_max': 3
+             'voltage_max' : 100,
+             'current_max' : 3
             }
 }
-
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
