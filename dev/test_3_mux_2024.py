@@ -47,7 +47,7 @@ if within_ohmpi:
     from ohmpi.ohmpi import OhmPi
     print('Starting test of mux within OhmPi.')
     k = OhmPi()
-    A, B, M, N = (10, 13, 12, 11)
+    A, B, M, N = (32, 29, 31, 30)
     k.reset_mux()
     k._hw.switch_mux([A, B, M, N], state='on')
     k._hw.vab_square_wave(12.,12., cycles=2)
