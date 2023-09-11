@@ -54,7 +54,7 @@ if within_ohmpi:
     k._hw.switch_mux([A, B, M, N], state='off')
     k._hw.calibrate_rx_bias()  # electrodes 1 4 2 3 should be connected to a reference circuit
     #k._hw.rx._bias = -1.38
-    # print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
+    print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     # k._hw._plot_readings()
     A, B, M, N = (28, 25, 27, 26)
     k._hw.switch_mux([A, B, M, N], state='on')
@@ -66,7 +66,7 @@ if within_ohmpi:
     d = k.run_measurement([A, B, M, N], injection_duration=.5, nb_stack=3)
     print(d)
     # k._hw._plot_readings()
-    print(f'OhmPiHardware: Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
+    print(f'OhmPiHardware: Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, sp: {k._hw.sp:.2f} mV, rx bias: {k._hw.rx._bias:.2f} mV')
     print(f'OhmPi: Resistance: {d["R [ohm]"] :.2f} ohm, dev. {d["R_std [%]"]:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     k._hw._plot_readings(save_fig=False)
     # plot_exec_log('ohmpi/logs/exec.log')
