@@ -206,7 +206,8 @@ class OhmPiHardware:
     def last_rho(self):
         v = self.readings[:, 2] != 0
         if len(v) > 1:
-            return np.mean(np.abs(self.readings[v, 4] - self.sp) / self.readings[v, 3])
+            # return np.mean(np.abs(self.readings[v, 4] - self.sp) / self.readings[v, 3])
+            return np.mean((self.readings[v, 2] * self.readings[v, 4] - self.sp) / self.readings[v, 3])
         else:
             return np.nan
 
