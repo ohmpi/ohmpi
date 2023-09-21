@@ -23,3 +23,23 @@
 2023-09-21 08:01:00 UTC | 10750 | INFO: {'time': '2023-09-21T08:01:00.593040', 'A': '28', 'B': '25', 'M': '27', 'N': '26', 'inj time [ms]': 5.0, 'R [ohm]': -30.272, 'R_std [%]': -203.847, 'Ps [mV]': 150.992, 'nbStack': 3, 'Tx [V]': 5.0, 'CPU temp [degC]': 56.382, 'Nb samples [-]': 1483, 'cmd_id': 'None'}
 2023-09-21 08:02:29 UTC | 10804 | INFO: Starting_session
 2023-09-21 08:03:12 UTC | 10804 | INFO: {'time': '2023-09-21T08:03:12.210074', 'A': '28', 'B': '25', 'M': '27', 'N': '26', 'inj time [ms]': 5.0, 'R [ohm]': -28.419, 'R_std [%]': -211.693, 'Ps [mV]': 146.065, 'nbStack': 3, 'Tx [V]': 5.0, 'CPU temp [degC]': 56.92, 'Nb samples [-]': 1491, 'cmd_id': 'None'}
+2023-09-21 12:09:20 UTC | 15240 | INFO: Starting_session
+2023-09-21 12:09:34 UTC | 15240 | INFO: {'time': '2023-09-21T12:09:34.282673', 'A': '28', 'B': '25', 'M': '27', 'N': '26', 'inj time [ms]': 1.0, 'R [ohm]': 26.866, 'R_std [%]': 78.414, 'Ps [mV]': 111.309, 'nbStack': 2, 'Tx [V]': 5.0, 'CPU temp [degC]': 53.692, 'Nb samples [-]': 196, 'cmd_id': 'None'}
+2023-09-21 12:11:29 UTC | 15313 | INFO: Starting_session
+2023-09-21 12:11:53 UTC | 15313 | INFO: {'time': '2023-09-21T12:11:53.490313', 'A': '28', 'B': '25', 'M': '27', 'N': '26', 'inj time [ms]': 1.0, 'R [ohm]': 28.371, 'R_std [%]': 68.85, 'Ps [mV]': 102.726, 'nbStack': 2, 'Tx [V]': 5.0, 'CPU temp [degC]': 55.306, 'Nb samples [-]': 197, 'cmd_id': 'None'}
+2023-09-21 12:12:41 UTC | 15417 | INFO: Starting_session
+2023-09-21 12:13:20 UTC | 15417 | INFO: {'time': '2023-09-21T12:13:20.806841', 'A': '28', 'B': '25', 'M': '27', 'N': '26', 'inj time [ms]': 1.0, 'R [ohm]': 32.043, 'R_std [%]': 45.989, 'Ps [mV]': 81.139, 'nbStack': 10, 'Tx [V]': 5.0, 'CPU temp [degC]': 56.382, 'Nb samples [-]': 985, 'cmd_id': 'None'}
+2023-09-21 12:24:59 UTC | 15542 | INFO: Starting_session
+2023-09-21 12:25:22 UTC | 15542 | INFO: {'time': '2023-09-21T12:25:22.006335', 'A': '28', 'B': '25', 'M': '27', 'N': '26', 'inj time [ms]': 1.0, 'R [ohm]': 33.417, 'R_std [%]': 40.567, 'Ps [mV]': 72.76, 'nbStack': 6, 'Tx [V]': 5.0, 'CPU temp [degC]': 54.768, 'Nb samples [-]': 590, 'cmd_id': 'None'}
+2023-09-21 12:33:06 UTC | 15614 | INFO: Starting_session
+2023-09-21 12:33:29 UTC | 15614 | INFO: {'time': '2023-09-21T12:33:29.358042', 'A': '28', 'B': '25', 'M': '27', 'N': '26', 'inj time [ms]': 1.0, 'R [ohm]': 34.797, 'R_std [%]': 34.923, 'Ps [mV]': 64.272, 'nbStack': 6, 'Tx [V]': 5.0, 'CPU temp [degC]': 55.306, 'Nb samples [-]': 583, 'cmd_id': 'None'}
+2023-09-21 12:44:24 UTC | 15782 | INFO: Starting_session
+2023-09-21 12:44:50 UTC | 15782 | INFO: {'time': '2023-09-21T12:44:50.175504', 'A': '28', 'B': '25', 'M': '27', 'N': '26', 'inj time [ms]': 1.0, 'R [ohm]': 45.686, 'R_std [%]': 4.09, 'Ps [mV]': 62.356, 'nbStack': 6, 'Tx [V]': 5.0, 'CPU temp [degC]': 55.306, 'Nb samples [-]': 588, 'cmd_id': 'None'}
+2023-09-21 13:47:32 UTC | 15934 | INFO: Starting_session
+2023-09-21 13:48:02 UTC | 15934 | INFO: {'time': '2023-09-21T13:48:02.641195', 'A': '32', 'B': '29', 'M': '31', 'N': '30', 'inj time [ms]': 1.0, 'R [ohm]': 214.881, 'R_std [%]': 0.116, 'Ps [mV]': 0.071, 'nbStack': 6, 'Tx [V]': 5.0, 'CPU temp [degC]': 54.768, 'Nb samples [-]': 590, 'cmd_id': 'None'}
+2023-09-21 14:06:28 UTC | 16014 | INFO: Starting_session
+2023-09-21 14:07:10 UTC | 16014 | INFO: {'time': '2023-09-21T14:07:10.262520', 'A': '32', 'B': '29', 'M': '31', 'N': '30', 'inj time [ms]': 1.0, 'R [ohm]': 17.546, 'R_std [%]': 13.538, 'Ps [mV]': -43.898, 'nbStack': 6, 'Tx [V]': 5.0, 'CPU temp [degC]': 54.23, 'Nb samples [-]': 589, 'cmd_id': 'None'}
+2023-09-21 14:08:13 UTC | 16105 | INFO: Starting_session
+2023-09-21 14:08:44 UTC | 16105 | INFO: {'time': '2023-09-21T14:08:44.219799', 'A': '32', 'B': '29', 'M': '31', 'N': '30', 'inj time [ms]': 1.0, 'R [ohm]': 13.305, 'R_std [%]': 10.853, 'Ps [mV]': -2767.204, 'nbStack': 6, 'Tx [V]': 5.0, 'CPU temp [degC]': 55.844, 'Nb samples [-]': 588, 'cmd_id': 'None'}
+2023-09-21 14:13:30 UTC | 16174 | INFO: Starting_session
+2023-09-21 14:14:01 UTC | 16174 | INFO: {'time': '2023-09-21T14:14:01.835949', 'A': '32', 'B': '29', 'M': '31', 'N': '30', 'inj time [ms]': 1.0, 'R [ohm]': 8.961, 'R_std [%]': 8.703, 'Ps [mV]': -2785.386, 'nbStack': 6, 'Tx [V]': 5.0, 'CPU temp [degC]': 54.768, 'Nb samples [-]': 594, 'cmd_id': 'None'}
