@@ -319,12 +319,12 @@ class OhmPiHardware:
         fig, ax = plt.subplots(nrows=4, sharex=True)
         ax[0].plot(self.readings[:, 0], self.readings[:, 3], '-r', marker='.', label='iab')
         ax[0].set_ylabel('Iab [mA]')
-        ax[1].plot(self.readings[:, 0], self.readings[:, 2] * self.readings[:, 4], '-b', marker='.', label='vmn')
+        ax[1].plot(self.readings[:, 0], (self.readings[:, 2] * self.readings[:, 4]) - self.sp , '-b', marker='.', label='vmn')
         ax[1].set_ylabel('Vmn [mV]')
         ax[2].plot(self.readings[:, 0], self.readings[:, 2], '-g', marker='.', label='polarity')
         ax[2].set_ylabel('polarity [-]')
         v = self.readings[:, 2] != 0
-        ax[3].plot(self.readings[:, 0], (self.readings[v, 2] * self.readings[v, 4] - self.sp) / self.readings[v, 3],
+        ax[3].plot(self.readings[:, 0], ((self.readings[v, 2] * self.readings[v, 4]) - self.sp) / self.readings[v, 3],
                    '-m', marker='.', label='R [ohm]')
         ax[3].set_ylabel('R [ohm]')
         fig.legend()
