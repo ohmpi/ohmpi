@@ -63,7 +63,7 @@ if within_ohmpi:
     # print(f'OhmPiHardware Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     k._hw._plot_readings()
     print('using OhmPi')
-    d = k.run_measurement([A, B, M, N], injection_duration=1., nb_stack=6, duty_cycle=0.5)
+    d = k.run_measurement([A, B, M, N], injection_duration=1., nb_stack=4, duty_cycle=0.5)
     print(d)
     #k._hw._plot_readings()
     print(f'OhmPiHardware: Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, sp: {k._hw.sp:.2f} mV, rx bias: {k._hw.rx._bias:.2f} mV')

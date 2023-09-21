@@ -43,3 +43,9 @@
 2023-09-21 14:08:44 UTC | 16105 | INFO: {'time': '2023-09-21T14:08:44.219799', 'A': '32', 'B': '29', 'M': '31', 'N': '30', 'inj time [ms]': 1.0, 'R [ohm]': 13.305, 'R_std [%]': 10.853, 'Ps [mV]': -2767.204, 'nbStack': 6, 'Tx [V]': 5.0, 'CPU temp [degC]': 55.844, 'Nb samples [-]': 588, 'cmd_id': 'None'}
 2023-09-21 14:13:30 UTC | 16174 | INFO: Starting_session
 2023-09-21 14:14:01 UTC | 16174 | INFO: {'time': '2023-09-21T14:14:01.835949', 'A': '32', 'B': '29', 'M': '31', 'N': '30', 'inj time [ms]': 1.0, 'R [ohm]': 8.961, 'R_std [%]': 8.703, 'Ps [mV]': -2785.386, 'nbStack': 6, 'Tx [V]': 5.0, 'CPU temp [degC]': 54.768, 'Nb samples [-]': 594, 'cmd_id': 'None'}
+2023-09-21 14:54:52 UTC | 18347 | INFO: Starting_session
+2023-09-21 14:55:34 UTC | 18347 | INFO: {'time': '2023-09-21T14:55:34.090922', 'A': '32', 'B': '29', 'M': '31', 'N': '30', 'inj time [ms]': 1.0, 'R [ohm]': 4.142, 'R_std [%]': 7.397, 'Ps [mV]': -2770.798, 'nbStack': 6, 'Tx [V]': 5.0, 'CPU temp [degC]': 54.23, 'Nb samples [-]': 592, 'cmd_id': 'None'}
+2023-09-21 14:56:45 UTC | 18438 | INFO: Starting_session
+2023-09-21 14:57:06 UTC | 18438 | INFO: {'time': '2023-09-21T14:57:06.812145', 'A': '32', 'B': '29', 'M': '31', 'N': '30', 'inj time [ms]': 1.0, 'R [ohm]': 4.121, 'R_std [%]': 7.308, 'Ps [mV]': -2768.769, 'nbStack': 4, 'Tx [V]': 5.0, 'CPU temp [degC]': 55.306, 'Nb samples [-]': 397, 'cmd_id': 'None'}
+2023-09-21 15:04:26 UTC | 18501 | INFO: Starting_session
+2023-09-21 15:04:45 UTC | 18501 | INFO: {'time': '2023-09-21T15:04:45.781872', 'A': '32', 'B': '29', 'M': '31', 'N': '30', 'inj time [ms]': 1.0, 'R [ohm]': 4.086, 'R_std [%]': 7.08, 'Ps [mV]': -2758.542, 'nbStack': 4, 'Tx [V]': 5.0, 'CPU temp [degC]': 54.768, 'Nb samples [-]': 392, 'cmd_id': 'None'}
