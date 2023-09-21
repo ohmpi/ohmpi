@@ -220,7 +220,7 @@ class OhmPiHardware:
             return np.nan
 
     @property
-    def sp(self):  # TODO: use a time window within pulses
+    def sp(self):  # TODO: allow for different strategies for computing sp (i.e. when sp drift is not linear)
         if self.readings.shape == (0,) or len(self.readings[self.readings[:, 2] == 1, :]) < 1 or \
                 len(self.readings[self.readings[:, 2] == -1, :]) < 1:
             self.exec_logger.warning('Unable to compute sp: readings should at least contain one positive and one '
