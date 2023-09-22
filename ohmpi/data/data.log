@@ -49,3 +49,5 @@
 2023-09-21 14:57:06 UTC | 18438 | INFO: {'time': '2023-09-21T14:57:06.812145', 'A': '32', 'B': '29', 'M': '31', 'N': '30', 'inj time [ms]': 1.0, 'R [ohm]': 4.121, 'R_std [%]': 7.308, 'Ps [mV]': -2768.769, 'nbStack': 4, 'Tx [V]': 5.0, 'CPU temp [degC]': 55.306, 'Nb samples [-]': 397, 'cmd_id': 'None'}
 2023-09-21 15:04:26 UTC | 18501 | INFO: Starting_session
 2023-09-21 15:04:45 UTC | 18501 | INFO: {'time': '2023-09-21T15:04:45.781872', 'A': '32', 'B': '29', 'M': '31', 'N': '30', 'inj time [ms]': 1.0, 'R [ohm]': 4.086, 'R_std [%]': 7.08, 'Ps [mV]': -2758.542, 'nbStack': 4, 'Tx [V]': 5.0, 'CPU temp [degC]': 54.768, 'Nb samples [-]': 392, 'cmd_id': 'None'}
+2023-09-22 20:30:50 UTC | 2272 | INFO: Starting_session
+2023-09-22 20:30:55 UTC | 2272 | INFO: {'time': '2023-09-22T20:30:55.624244', 'A': '28', 'B': '25', 'M': '27', 'N': '26', 'inj time [ms]': 1.0, 'R [ohm]': 46.042, 'R_std [%]': 5.183, 'Ps [mV]': 172.947, 'nbStack': 2, 'Tx [V]': 5.0, 'CPU temp [degC]': 52.616, 'Nb samples [-]': 196, 'cmd_id': 'None'}

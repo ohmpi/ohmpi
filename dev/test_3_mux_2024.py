@@ -4,7 +4,7 @@ from ohmpi.plots import plot_exec_log
 import logging
 change_config('../configs/config_mb_2023_3_mux_2024.py', verbose=False)
 from ohmpi.hardware_components.mux_2024_rev_0_0 import Mux, MUX_CONFIG
-from ohmpi.hardware_components import raspberry_pi_i2c as ctl_module
+from ohmpi.hardware_components import raspberry_pi as ctl_module
 from ohmpi.config import HARDWARE_CONFIG
 
 stand_alone_mux = False
@@ -47,23 +47,23 @@ if within_ohmpi:
     from ohmpi.ohmpi import OhmPi
     print('Starting test of mux within OhmPi.')
     k = OhmPi()
-    A, B, M, N = (32, 29, 31, 30)
+    #A, B, M, N = (32, 29, 31, 30)
     k.reset_mux()
-    k._hw.switch_mux([A, B, M, N], state='on')
-    k._hw.vab_square_wave(12.,1., cycles=2)
-    k._hw.switch_mux([A, B, M, N], state='off')
+    #k._hw.switch_mux([A, B, M, N], state='on')
+    #k._hw.vab_square_wave(12.,1., cycles=2)
+    #k._hw.switch_mux([A, B, M, N], state='off')
     #k._hw.calibrate_rx_bias()  # electrodes 1 4 2 3 should be connected to a reference circuit
     #k._hw.rx._bias = -1.38
-    print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
+    #print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     # k._hw._plot_readings()
-    # A, B, M, N = (28, 25, 27, 26)
+    A, B, M, N = (28, 25, 27, 26)
     # k._hw.switch_mux([A, B, M, N], state='on')
     # k._hw.vab_square_wave(12., cycle_duration=10., cycles=3)
     # k._hw.switch_mux([A, B, M, N], state='off')
     # print(f'OhmPiHardware Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
-    k._hw._plot_readings()
+    # k._hw._plot_readings()
     print('using OhmPi')
-    d = k.run_measurement([A, B, M, N], injection_duration=1., nb_stack=4, duty_cycle=0.5)
+    d = k.run_measurement([A, B, M, N], injection_duration=1., nb_stack=2, duty_cycle=0.5)
     print(d)
     #k._hw._plot_readings()
     print(f'OhmPiHardware: Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, sp: {k._hw.sp:.2f} mV, rx bias: {k._hw.rx._bias:.2f} mV')
@@ -71,4 +71,3 @@ if within_ohmpi:
     k._hw._plot_readings(save_fig=False)
     # plot_exec_log('ohmpi/logs/exec.log')
 change_config('../configs/config_default.py', verbose=False)
-
