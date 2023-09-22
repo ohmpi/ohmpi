@@ -24,16 +24,23 @@ class Ctl(CtlAbstract):
         self.connections = dict()
         # I2C
         self.connections['i2c'] = busio.I2C(board.SCL, board.SDA)  # noqa
+
         # Extended I2C
-        self.connections['i2c_ext'] = ExtendedI2C(4)  # 4 is defined
+        try:
+            self.connections['i2c_ext'] = ExtendedI2C(4)  # 4 is defined
+        except Exception as e:
+            self.exec_logger.warning('Could not initialize Extended I2C:\n{e}')
         # modbus
-        self.connections['modbus'] = minimalmodbus.Instrument(port=modbus_port, slaveaddress=modbus_slave_address)
-        self.connections['modbus'].serial.baudrate = modbus_baudrate  # Baud rate 9600 as listed in doc
-        self.connections['modbus'].serial.bytesize = modbus_bitesize  #
-        self.connections['modbus'].serial.timeout = modbus_timeout  # greater than 0.5 for it to work
-        self.connections['modbus'].debug = modbus_debug  #
-        self.connections['modbus'].serial.parity = modbus_parity  # No parity
-        self.connections['modbus'].mode = modbus_mode  # RTU mode
+        try:
+            self.connections['modbus'] = minimalmodbus.Instrument(port=modbus_port, slaveaddress=modbus_slave_address)
+            self.connections['modbus'].serial.baudrate = modbus_baudrate  # Baud rate 9600 as listed in doc
+            self.connections['modbus'].serial.bytesize = modbus_bitesize  #
+            self.connections['modbus'].serial.timeout = modbus_timeout  # greater than 0.5 for it to work
+            self.connections['modbus'].debug = modbus_debug  #
+            self.connections['modbus'].serial.parity = modbus_parity  # No parity
+            self.connections['modbus'].mode = modbus_mode  # RTU mode
+        except Exception as e:
+            self.exec_logger.warning('Could not initialize Extended modbus:\n{e}')
 
         platform, on_pi = get_platform()
         assert on_pi
