@@ -10,7 +10,9 @@ from digitalio import Direction  # noqa
 MUX_CONFIG = HARDWARE_CONFIG['mux'].pop('default', {})
 MUX_CONFIG.update({'voltage_max': 50., 'current_max': 3.})  # board default values that overwrite system default values
 MUX_CONFIG.update({'activation_delay': 0.01, 'release_delay': 0.005})  # s
-default_mux_cabling = {(elec, role) : ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1,9)} # defaults to 4 roles cabling electrodes from 1 to 8
+# defaults to 4 roles cabling electrodes from 1 to 8
+default_mux_cabling = {(elec, role) : ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1,9)}
+# defaults to ic connection
 ctl_connection = HARDWARE_CONFIG['ctl'].pop('connection', 'i2c')
 
 inner_cabling = {'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MCP': 0, 'MCP_GPIO': 8},
