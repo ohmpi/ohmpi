@@ -23,7 +23,7 @@ class Ctl(CtlAbstract):
         super().__init__(**kwargs)
         self.connections = dict()
         # I2C
-        self.connections['i2c'] = I2C(board.SCL, board.SDA)  # noqa
+        self.connections['i2c'] = busio.I2C(board.SCL, board.SDA)  # noqa
         # Extended I2C
         self.connections['i2c_ext'] = ExtendedI2C(4)  # 4 is defined
         # modbus
