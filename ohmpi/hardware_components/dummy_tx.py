@@ -1,4 +1,4 @@
-from ohmpi.ohmpi.config import HARDWARE_CONFIG
+from ohmpi.config import HARDWARE_CONFIG
 import time
 import os
 import numpy as np
