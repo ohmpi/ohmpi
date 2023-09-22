@@ -413,6 +413,9 @@ class OhmPi(object):
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None,
                         autogain=True, strategy='constant', tx_volt=5., best_tx_injtime=0.1,
                         cmd_id=None, **kwargs):
+        # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value, change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
+        # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used in function definition
+        # TODO: add rs_check option (or propose an other way to do this)
         """Measures on a quadrupole and returns transfer resistance.
 
         Parameters
@@ -669,6 +672,7 @@ class OhmPi(object):
     #  isolate electrodes that are responsible for high resistances (ex: AB high, AC low, BC high
     #  -> might be a problem at B (cf what we did with WofE)
     def rs_check(self, tx_volt=12., cmd_id=None):
+        # TODO: add a default value for rs-check in config.py import it in ohmpi.py and add it in rs_check definition
         """Checks contact resistances
 
         Parameters
