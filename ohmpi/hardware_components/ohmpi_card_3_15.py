@@ -96,7 +96,7 @@ class Tx(TxAbstract):
             self.ctl = ctl_module.Ctl()
         # elif isinstance(self.ctl, dict):
         #     self.ctl = ctl_module.Ctl(**self.ctl)
-        self.io = self.ctl[kwargs.pop('connection', ctl_connection)]
+        self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)]
 
         # I2C connexion to MCP23008, for current injection
         self.mcp_board = MCP23008(self.io, address=TX_CONFIG['mcp_board_address'])
@@ -228,7 +228,7 @@ class Rx(RxAbstract):
         self.exec_logger.event(f'{self.board_name}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
         if self.ctl is None:
             self.ctl = ctl_module.Ctl()
-        self.io = self.ctl[kwargs.pop('connection', ctl_connection)]
+        self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)]
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = 0x49
