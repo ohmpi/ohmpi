@@ -8,7 +8,6 @@ from gpiozero import CPUTemperature  # noqa
 import minimalmodbus  # noqa
 
 
-
 class Ctl(CtlAbstract):
     def __init__(self, **kwargs):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
@@ -18,8 +17,6 @@ class Ctl(CtlAbstract):
         debug = kwargs.pop('debug', False)
         parity = kwargs.pop('parity', 'N')
         mode = kwargs.pop('mode', minimalmodbus.MODE_RTU)
-        port = kwargs.pop('port', '/dev/ttyUSB0')
-        slave_address = kwargs.pop('slave_address', 1)
         port = kwargs.pop('port', '/dev/ttyUSB0')
         slave_address = kwargs.pop('slave_address', 1)
         super().__init__(**kwargs)
