@@ -55,6 +55,7 @@ class PwrAbstract(ABC):
         self._current_max = kwargs.pop('current_max', 0.)
         self._voltage_min = kwargs.pop('voltage_min', 0.)
         self._voltage_max = kwargs.pop('voltage_max', 0.)
+        self.ctl = kwargs.pop('ctl', None)
         self.io = kwargs.pop('io', None)
 
     @property
@@ -110,6 +111,7 @@ class MuxAbstract(ABC):
         if self.board_id is None:
             self.exec_logger.error(f'MUX {self.board_name} should have an id !')
         self.exec_logger.debug(f'MUX {self.board_id} ({self.board_name}) initialization')
+        self.ctl = kwargs.pop('ctl', None)
         self.io = kwargs.pop('io', None)
         cabling = kwargs.pop('cabling', None)
         self.cabling = {}
@@ -254,6 +256,7 @@ class TxAbstract(ABC):
         self.soh_logger = kwargs.pop('soh_logger', None)
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_tx')
+        self.ctl = kwargs.pop('ctl', None)
         self.io = kwargs.pop('io', None)
         self.pwr = kwargs.pop('pwr', None)
         self._polarity = 0
@@ -371,6 +374,7 @@ class RxAbstract(ABC):
         self.soh_logger = kwargs.pop('soh_logger', None)
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_rx')
+        self.ctl = kwargs.pop('ctl', None)
         self.io = kwargs.pop('io', None)
         self.board_name = kwargs.pop('board_name', 'unknown RX hardware')
         self._sampling_rate = kwargs.pop('sampling_rate', 1)  # ms
