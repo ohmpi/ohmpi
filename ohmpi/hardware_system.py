@@ -143,6 +143,7 @@ class OhmPiHardware:
         self.tx_sync.wait()
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
+        self.rx.voltage_gain_auto()
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tend\t{datetime.datetime.utcnow()}')
 
     def _inject(self, polarity=1, injection_duration=None):  # TODO: deal with voltage or current pulse
@@ -340,7 +341,7 @@ class OhmPiHardware:
     def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, duty_cycle=1.,
                         append=False):
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
-        self.tx.polarity = polarity
+        self.tx.polarity = polarity  ### TODO: inject on both polarities for gain auto?
         durations = [cycle_duration/2]*2*cycles
         # set gains automatically
         gain_auto = Thread(target=self._gain_auto)
