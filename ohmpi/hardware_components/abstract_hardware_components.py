@@ -19,6 +19,7 @@ class CtlAbstract(ABC):
         self.exec_logger.debug(f'{self.board_name} Ctl initialization')
         self._cpu_temp_available = False
         self.max_cpu_temp = np.inf
+        self.connection = None
 
     @property
     def cpu_temperature(self):
