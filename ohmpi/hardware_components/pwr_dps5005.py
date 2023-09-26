@@ -6,7 +6,8 @@ import minimalmodbus  # noqa
 import os
 
 CTL_CONFIG = HARDWARE_CONFIG['ctl']
-ctl_name = CTL_CONFIG.pop('board_name', 'raspberry_pi_modbus')
+ctl_name = HARDWARE_CONFIG['ctl'].pop('board_name', 'raspberry_pi')
+ctl_connection = HARDWARE_CONFIG['ctl'].pop('connection', 'modbus')
 ctl_module = importlib.import_module(f'ohmpi.hardware_components.{ctl_name}')
 CTL_CONFIG['baudrate'] = CTL_CONFIG.pop('baudrate', 9600)
 CTL_CONFIG['bitesize'] = CTL_CONFIG.pop('bitesize', 8)
@@ -26,6 +27,7 @@ class Pwr(PwrAbstract):
         # if a controller is passed in kwargs, it will be instantiated
         if self.ctl is None:
             self.ctl = ctl_module.Ctl(**CTL_CONFIG)
+        self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)]
         self.voltage_adjustable = True
         self._voltage = voltage
         self._current_adjustable = False
@@ -41,11 +43,11 @@ class Pwr(PwrAbstract):
         self.exec_logger.debug(f'Current cannot be set on {self.board_name}')
 
     def turn_off(self):
-        self.ctl.bus.write_register(0x09, 1)
+        self.io.write_register(0x09, 1)
         self.exec_logger.debug(f'{self.board_name} is off')
 
     def turn_on(self):
-        self.ctl.bus.write_register(0x09, 1)
+        self.io.write_register(0x09, 1)
         self.exec_logger.debug(f'{self.board_name} is on')
 
     @property
@@ -54,11 +56,11 @@ class Pwr(PwrAbstract):
 
     @voltage.setter
     def voltage(self, value):
-        self.ctl.bus.write_register(0x0000, value, 2)
+        self.io.write_register(0x0000, value, 2)
     
     def battery_voltage(self):
-        self.ctl.bus.read_register(0x05, 2)
+        self.io.read_register(0x05, 2)
 
     @property
     def current_max(self,value):
-        self.ctl.bus.write_register(0x0001, value * 10, 0)
+        self.io.write_register(0x0001, value * 10, 0)
