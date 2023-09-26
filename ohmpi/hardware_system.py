@@ -385,7 +385,7 @@ class OhmPiHardware:
 
     def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
         n_pulses = len(durations)
-        self.exec_logger.warning(f'n_pulses: {n_pulses}')
+        self.exec_logger.debug(f'n_pulses: {n_pulses}')
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
         if polarities is not None:
