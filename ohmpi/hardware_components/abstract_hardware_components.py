@@ -111,7 +111,6 @@ class MuxAbstract(ABC):
         if self.board_id is None:
             self.exec_logger.error(f'MUX {self.board_name} should have an id !')
         self.exec_logger.debug(f'MUX {self.board_id} ({self.board_name}) initialization')
-        self.ctl = kwargs.pop('ctl', None)
         self.io = kwargs.pop('io', None)
         cabling = kwargs.pop('cabling', None)
         self.cabling = {}

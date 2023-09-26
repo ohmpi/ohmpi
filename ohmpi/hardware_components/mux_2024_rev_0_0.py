@@ -5,25 +5,14 @@ from ohmpi.hardware_components import MuxAbstract
 import adafruit_tca9548a  # noqa
 from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
 from digitalio import Direction  # noqa
+from busio import I2C
 # import time
 
-# board specs
-voltage_max = 50
-current_max = 3.
-activation_delay = 0.01
-release_delay = 0.005
-
-MUX_CONFIG = HARDWARE_CONFIG['mux'].pop('default', {})
-MUX_CONFIG.update({'voltage_max': max(0.,min(MUX_CONFIG.pop('voltage_max', voltage_max), voltage_max)),
-                   'current_max': max(0.,min(MUX_CONFIG.pop('current_max', voltage_max), voltage_max))})
-
-MUX_CONFIG.update({'activation_delay': max(MUX_CONFIG.pop('activation_delay', activation_delay), activation_delay),
-                   'release_delay': max(MUX_CONFIG.pop('release_delay', release_delay), release_delay)})
+# hardware characteristics and limitations
+SPECS = {'voltage_max': 50., 'current_max': 3., 'activation_delay': 0.01, 'release_delay': 0.005}
 
 # defaults to 4 roles cabling electrodes from 1 to 8
 default_mux_cabling = {(elec, role) : ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1,9)}
-# defaults to ic connection
-ctl_connection = MUX_CONFIG.pop('connection', 'i2c')
 
 inner_cabling = {'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MCP': 0, 'MCP_GPIO': 8},
                              (2, 'X'): {'MCP': 0, 'MCP_GPIO': 1}, (2, 'Y'): {'MCP': 0, 'MCP_GPIO': 9},
@@ -63,17 +52,19 @@ inner_cabling = {'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'M
 
 class Mux(MuxAbstract):
     def __init__(self, **kwargs):
-        if 'id' in kwargs.keys():
-            MUX_CONFIG.update(HARDWARE_CONFIG['mux']['boards'][kwargs['id']])
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
-        if 'cabling' not in kwargs.keys() or kwargs['cabling']=={}:
-            kwargs.update({'cabling': default_mux_cabling})
-        if 'activation_delay' not in kwargs:
-            kwargs.update({'activation_delay': MUX_CONFIG['activation_delay']})
-        if 'release_delay' not in kwargs:
-            kwargs.update({'release_delay': MUX_CONFIG['release_delay']})
+        kwargs.update({'cabling': kwargs.pop('cabling', default_mux_cabling)})
+        kwargs.update({'activation_delay': max(kwargs.pop('activation_delay', SPECS['activation_delay']),
+                                               SPECS['activation_delay'])})
+        kwargs.update({'release_delay': max(kwargs.pop('release_delay', SPECS['release_delay']),
+                                               SPECS['activation_delay'])})
+        kwargs.update({'voltage_max': max(0., min(kwargs.pop('voltage_max', SPECS['voltage_max']),
+                                                  SPECS['voltage_max']))})
+        kwargs.update({'current_max': max(0., min(kwargs.pop('current_max', SPECS['current_max']),
+                                                  SPECS['current_max']))})
         super().__init__(**kwargs)
-        self.exec_logger.debug(f'configuration: {MUX_CONFIG}')
+        assert isinstance(self.io, I2C)
+        self.exec_logger.debug(f'configuration: {kwargs}')
         tca_address = kwargs.pop('tca_address', None)
         tca_channel = kwargs.pop('tca_channel', 0)
         self._roles = kwargs.pop('roles', None)
@@ -86,7 +77,7 @@ class Mux(MuxAbstract):
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.board_name}: {self._roles} !')
             self._mode = ''
-        self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)]
+        # self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)] -> to hardware_system
         if tca_address is None:
             self._tca = self.io
         else:
