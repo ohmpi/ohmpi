@@ -13,7 +13,7 @@ MUX_CONFIG.update({'activation_delay': 0.01, 'release_delay': 0.005})  # s
 # defaults to 4 roles cabling electrodes from 1 to 8
 default_mux_cabling = {(elec, role) : ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1,9)}
 # defaults to ic connection
-ctl_connection = HARDWARE_CONFIG['ctl'].pop('connection', 'i2c')
+ctl_connection = MUX_CONFIG.pop('connection', 'i2c')
 
 inner_cabling = {'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MCP': 0, 'MCP_GPIO': 8},
                              (2, 'X'): {'MCP': 0, 'MCP_GPIO': 1}, (2, 'Y'): {'MCP': 0, 'MCP_GPIO': 9},
@@ -76,7 +76,7 @@ class Mux(MuxAbstract):
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.board_name}: {self._roles} !')
             self._mode = ''
-        self.io = self.ctl.connections[kwargs.pop('connection', MUX_CONFIG['connection'])]
+        self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)]
         if tca_address is None:
             self._tca = self.io
         else:
