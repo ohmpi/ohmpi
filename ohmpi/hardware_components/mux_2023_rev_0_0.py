@@ -8,11 +8,22 @@ import adafruit_tca9548a  # noqa
 from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
 from digitalio import Direction  # noqa
 
-MUX_CONFIG = HARDWARE_CONFIG['mux'].pop('default', {})
-MUX_CONFIG.update({'voltage_max': 50., 'current_max': 3.})  # board default values that overwrite system default values
-MUX_CONFIG.update({'activation_delay': 0.01, 'release_delay': 0.005})  # s
-default_mux_cabling = {(elec, role) : ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1,9)} # defaults to 4 roles cabling electrodes from 1 to 8
+# board specs
+voltage_max = 50
+current_max = 3.
+activation_delay = 0.01
+release_delay = 0.005
 
+MUX_CONFIG = HARDWARE_CONFIG['mux'].pop('default', {})
+MUX_CONFIG.update({'voltage_max': max(0.,min(MUX_CONFIG.pop('voltage_max', voltage_max), voltage_max)),
+                   'current_max': max(0.,min(MUX_CONFIG.pop('current_max', voltage_max), voltage_max))})
+
+MUX_CONFIG.update({'activation_delay': max(MUX_CONFIG.pop('activation_delay', activation_delay), activation_delay),
+                   'release_delay': max(MUX_CONFIG.pop('release_delay', release_delay), release_delay)})
+# defaults to ic connection
+ctl_connection = MUX_CONFIG.pop('connection', 'i2c')
+
+default_mux_cabling = {(elec, role) : ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1,9)} # defaults to 4 roles cabling electrodes from 1 to 8
 
 inner_cabling = {'1_role' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (2, 'X'): {'MCP': 0, 'MCP_GPIO': 1},
                              (3, 'X'): {'MCP': 0, 'MCP_GPIO': 2}, (4, 'X'): {'MCP': 0, 'MCP_GPIO': 3},
@@ -71,7 +82,7 @@ class Mux(MuxAbstract):
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.board_name}: {self._roles} !')
             self._mode = ''
-        self.io = self.ctl.connections[MUX_CONFIG['connection']]
+        self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)]
         self._tca = [adafruit_tca9548a.TCA9548A(self.io, tca_address)[i] for i in np.arange(7, 3, -1)]
         # self._mcp_addresses = (kwargs.pop('mcp', '0x20'))  # TODO: add assert on valid addresses..
         self._mcp = [None, None, None, None]
