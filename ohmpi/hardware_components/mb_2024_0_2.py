@@ -11,7 +11,8 @@ import time
 import numpy as np
 import os
 from ohmpi.hardware_components import TxAbstract, RxAbstract
-ctl_name = HARDWARE_CONFIG['ctl'].pop('board_name', 'raspberry_pi_i2c')
+ctl_name = HARDWARE_CONFIG['ctl'].pop('board_name', 'raspberry_pi')
+ctl_connection = HARDWARE_CONFIG['ctl'].pop('connection', 'i2c')
 ctl_module = importlib.import_module(f'ohmpi.hardware_components.{ctl_name}')
 
 TX_CONFIG = HARDWARE_CONFIG['tx']
@@ -24,6 +25,7 @@ voltage_adc_voltage_min = 10.  # mV
 voltage_adc_voltage_max = 4500.  # mV
 sampling_rate = 20.  # Hz
 data_rate = 860.  # S/s?
+rx_mcp_board_address = 0x27
 RX_CONFIG['voltage_min'] = np.min([voltage_adc_voltage_min, RX_CONFIG.pop('voltage_min', np.inf)])  # mV
 RX_CONFIG['voltage_max'] = np.min([voltage_adc_voltage_max, RX_CONFIG.pop('voltage_max', np.inf)])  # mV
 RX_CONFIG['sampling_rate'] = RX_CONFIG.pop('sampling_rate', sampling_rate)
@@ -31,6 +33,7 @@ RX_CONFIG['data_rate'] = RX_CONFIG.pop('data_rate', data_rate)
 # RX_CONFIG['coef_p2'] = RX_CONFIG.pop('coef_p2', 2.5)
 RX_CONFIG['latency'] = RX_CONFIG.pop('latency', 0.01)
 RX_CONFIG['bias'] = RX_CONFIG.pop('bias', 0.)
+RX_CONFIG['mcp_board_address'] = TX_CONFIG.pop('mcp_board_address', tx_mcp_board_address)
 
 
 # *** TX ***
@@ -96,9 +99,10 @@ class Tx(TxAbstract):
             self.ctl = ctl_module.Ctl()
         # elif isinstance(self.ctl, dict):
         #     self.ctl = ctl_module.Ctl(**self.ctl)
+        self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)]
 
         # I2C connexion to MCP23008, for current injection
-        self.mcp_board = MCP23008(self.ctl.bus, address=TX_CONFIG['mcp_board_address'])
+        self.mcp_board = MCP23008(self.io, address=TX_CONFIG['mcp_board_address'])
         # ADS1115 for current measurement (AB)
         self._ads_current_address = 0x48
         self._ads_current = ads.ADS1115(self.ctl.bus, gain=self.adc_gain, data_rate=860,
@@ -227,8 +231,10 @@ class Rx(RxAbstract):
         self.exec_logger.event(f'{self.board_name}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
         if self.ctl is None:
             self.ctl = ctl_module.Ctl()
+        self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)]
+
         # I2C connexion to MCP23008, for DG411
-        self.mcp_board = MCP23008(self.ctl.bus, address=RX_CONFIG['mcp_board_address'])
+        self.mcp_board = MCP23008(self.io, address=RX_CONFIG['mcp_board_address'])
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = 0x49
@@ -242,6 +248,18 @@ class Rx(RxAbstract):
         self._latency = kwargs.pop('latency', RX_CONFIG['latency'])
         self._bias = kwargs.pop('bias', RX_CONFIG['bias'])
         self.exec_logger.event(f'{self.board_name}\trx_init\tend\t{datetime.datetime.utcnow()}')
+
+        self.pin_DG0 = self.mcp_board.get_pin(0)
+        self.pin_DG0.direction = Direction.OUTPUT
+        self.pin_DG1 = self.mcp_board.get_pin(1)
+        self.pin_DG1.direction = Direction.OUTPUT
+        self.pin_DG2 = self.mcp_board.get_pin(2)
+        self.pin_DG2.direction = Direction.OUTPUT
+
+        self.pin_DG0.value = True  # open
+        self.pin_DG1.value = True  # open gain 1 inactive
+        self.pin_DG2.value = False  # close gain 0.5 active
+        self._voltage_gain = 0.5
 
     @property
     def adc_gain(self):
@@ -258,9 +276,7 @@ class Rx(RxAbstract):
 
     def adc_gain_auto(self):
         self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
-        gain_0 = _gain_auto(AnalogIn(self._ads_voltage, ads.P0))
-        gain_2 = _gain_auto(AnalogIn(self._ads_voltage, ads.P2))
-        gain = np.min([gain_0, gain_2])
+        gain = 2/3
         self.exec_logger.debug(f'Setting RX ADC gain automatically to {gain}')
         self.adc_gain = gain
         self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
@@ -273,3 +289,25 @@ class Rx(RxAbstract):
         u = -AnalogIn(self._ads_voltage, ads.P0, ads.P1).voltage * self._coef_p2 * 1000. - self._bias  # TODO: check if it should be negated
         self.exec_logger.event(f'{self.board_name}\trx_voltage\tend\t{datetime.datetime.utcnow()}')
         return u
+
+    @property
+    def voltage_gain(self):
+        return self._voltage_gain
+
+    @voltage_gain.setter
+    def voltage_gain(self,value):
+        assert value in [0.5, 1]
+        self._voltage_gain = value
+        if self._voltage_gain == 1:
+            self.pin_DG1.value = False  # closed gain 1 active
+            self.pin_DG2.value = True  # open gain 0.5 inactive
+        elif self._voltage_gain == 0.5:
+            self.pin_DG1.value = True  # closed gain 1 active
+            self.pin_DG2.value = False  # open gain 0.5 inactive
+
+    def voltage_gain_auto(self):
+        u = ((AnalogIn(self.ads_voltage, ads.P0).voltage * 1000) - self.vmn_hardware_offset) / self.voltage_gain
+        if abs(vmn1) < 2500 and abs(vmn2) < 2500:  ###TODO change voltage gain auto logic
+            self.voltage_gain = 1
+        else:
+            self.voltage_gain = 0.5
