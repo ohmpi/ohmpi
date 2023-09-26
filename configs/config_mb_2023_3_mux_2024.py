@@ -18,15 +18,15 @@ OHMPI_CONFIG = {
 }
 
 HARDWARE_CONFIG = {
-    'ctl': {'model': 'raspberry_pi', 'connection': 'i2c'},
+    'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_batt', 'voltage': 12.},
-    'tx':  {'model': 'ohmpi_card_3_15',
+    'tx':  {'model': 'mb_2023_0_X',
              'mcp_board_address': 0x20,
              'voltage_max': 12.,  # Maximum voltage supported by the TX board [V]
              'current_max': 4800 / 50 / 2,  # Maximum current supported by the TX board [mA]
              'r_shunt': 2  # Shunt resistance in Ohms
             },
-    'rx':  {'model': 'ohmpi_card_3_15',
+    'rx':  {'model': 'mb_2023_0_X',
              'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
              'latency': 0.010,  # latency in seconds in continuous mode
              'sampling_rate': 50  # number of samples per second
@@ -36,7 +36,7 @@ HARDWARE_CONFIG = {
             # both will be overwritten by properties specified in the board dict below. Use with caution...
             {'boards':
                     {'mux_02':
-                         {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
+                         {'model': 'mux_2024_0_X',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': None,
                           'tca_channel': 0,
                           'mcp_0': '0x22',  # TODO: Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
@@ -45,7 +45,7 @@ HARDWARE_CONFIG = {
                           'cabling': {(i+8, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                           'voltage_max': 12.},
                      'mux_00':
-                         {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
+                         {'model': 'mux_2024_0_X',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': None,
                           'tca_channel': 0,
                           'mcp_0': '0x24',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
@@ -54,7 +54,7 @@ HARDWARE_CONFIG = {
                           'cabling': {(i+16, j): ('mux_00', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                           'voltage_max': 12.},
                      'mux_04':
-                         {'model': 'mux_2024_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
+                         {'model': 'mux_2024_0_X',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': None,
                           'tca_channel': 0,
                           'mcp_0': '0x26',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...

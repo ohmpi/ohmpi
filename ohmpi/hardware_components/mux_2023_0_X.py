@@ -82,7 +82,7 @@ class Mux(MuxAbstract):
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.board_name}: {self._roles} !')
             self._mode = ''
-        self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)]
+        self.io = self.ctl.interfaces[kwargs.pop('connection', ctl_connection)]
         self._tca = [adafruit_tca9548a.TCA9548A(self.io, tca_address)[i] for i in np.arange(7, 3, -1)]
         # self._mcp_addresses = (kwargs.pop('mcp', '0x20'))  # TODO: add assert on valid addresses..
         self._mcp = [None, None, None, None]

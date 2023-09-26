@@ -20,12 +20,12 @@ OHMPI_CONFIG = {
 HARDWARE_CONFIG = {
     'ctl': {'model' : 'raspberry_pi_i2c'
                    },
-    'tx' : {'model' : 'ohmpi_card_3_15',
+    'tx' : {'model' : 'mb_2023_0_X',
              'mcp_board_address': 0x20,
              'current_max': 4800 / 50 / 2,  # Maximum current
              'r_shunt': 2  # Shunt resistance in Ohms
             },
-    'rx' : {'model': 'ohmpi_card_3_15',
+    'rx' : {'model': 'mb_2023_0_X',
              'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
              'sampling_rate': 100.,  # Hz
              'nb_samples': 20,  # Max value 10 # was named integer before...

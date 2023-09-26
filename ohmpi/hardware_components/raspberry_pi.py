@@ -21,24 +21,24 @@ class Ctl(CtlAbstract):
         modbus_slave_address = kwargs.pop('modbus_slave_address', 1)
 
         super().__init__(**kwargs)
-        self.connections = dict()
+        self.interfaces = dict()
         # I2C
-        self.connections['i2c'] = busio.I2C(board.SCL, board.SDA)  # noqa
+        self.interfaces['i2c'] = busio.I2C(board.SCL, board.SDA)  # noqa
 
         # Extended I2C
         try:
-            self.connections['i2c_ext'] = ExtendedI2C(4)  # 4 is defined
+            self.interfaces['i2c_ext'] = ExtendedI2C(4)  # 4 is defined
         except Exception as e:
             self.exec_logger.warning('Could not initialize Extended I2C:\n{e}')
         # modbus
         try:
-            self.connections['modbus'] = minimalmodbus.Instrument(port=modbus_port, slaveaddress=modbus_slave_address)
-            self.connections['modbus'].serial.baudrate = modbus_baudrate  # Baud rate 9600 as listed in doc
-            self.connections['modbus'].serial.bytesize = modbus_bitesize  #
-            self.connections['modbus'].serial.timeout = modbus_timeout  # greater than 0.5 for it to work
-            self.connections['modbus'].debug = modbus_debug  #
-            self.connections['modbus'].serial.parity = modbus_parity  # No parity
-            self.connections['modbus'].mode = modbus_mode  # RTU mode
+            self.interfaces['modbus'] = minimalmodbus.Instrument(port=modbus_port, slaveaddress=modbus_slave_address)
+            self.interfaces['modbus'].serial.baudrate = modbus_baudrate  # Baud rate 9600 as listed in doc
+            self.interfaces['modbus'].serial.bytesize = modbus_bitesize  #
+            self.interfaces['modbus'].serial.timeout = modbus_timeout  # greater than 0.5 for it to work
+            self.interfaces['modbus'].debug = modbus_debug  #
+            self.interfaces['modbus'].serial.parity = modbus_parity  # No parity
+            self.interfaces['modbus'].mode = modbus_mode  # RTU mode
         except Exception as e:
             self.exec_logger.warning('Could not initialize Extended modbus:\n{e}')
 
