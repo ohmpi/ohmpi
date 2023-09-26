@@ -97,13 +97,13 @@ class Tx(TxAbstract):
             self.ctl = ctl_module.Ctl()
         # elif isinstance(self.ctl, dict):
         #     self.ctl = ctl_module.Ctl(**self.ctl)
-        self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)]
+        self.connection = self.ctl.interfaces[kwargs.pop('connection', ctl_connection)]
 
         # I2C connexion to MCP23008, for current injection
-        self.mcp_board = MCP23008(self.io, address=TX_CONFIG['mcp_board_address'])
+        self.mcp_board = MCP23008(self.connection, address=TX_CONFIG['mcp_board_address'])
         # ADS1115 for current measurement (AB)
         self._ads_current_address = 0x48
-        self._ads_current = ads.ADS1115(self.io, gain=self.adc_gain, data_rate=860,
+        self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_current_address)
         self._ads_current.mode = Mode.CONTINUOUS
 
@@ -134,7 +134,7 @@ class Tx(TxAbstract):
     def adc_gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self._ads_current = ads.ADS1115(self.io, gain=self.adc_gain, data_rate=860,
+        self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_current_address)
         self._ads_current.mode = Mode.CONTINUOUS
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
@@ -229,12 +229,12 @@ class Rx(RxAbstract):
         self.exec_logger.event(f'{self.board_name}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
         if self.ctl is None:
             self.ctl = ctl_module.Ctl()
-        self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)]
+        self.connection = self.ctl.interfaces[kwargs.pop('connection', ctl_connection)]
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = 0x49
         self._adc_gain = 2/3
-        self._ads_voltage = ads.ADS1115(self.io, gain=self._adc_gain, data_rate=860,
+        self._ads_voltage = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=860,
                                         address=self._ads_voltage_address)
         self._ads_voltage.mode = Mode.CONTINUOUS
         self._coef_p2 = kwargs.pop('coef_p2', RX_CONFIG['coef_p2'])
@@ -252,7 +252,7 @@ class Rx(RxAbstract):
     def adc_gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self._ads_voltage = ads.ADS1115(self.io, gain=self.adc_gain, data_rate=860,
+        self._ads_voltage = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=860,
                                         address=self._ads_voltage_address)
         self._ads_voltage.mode = Mode.CONTINUOUS
         self.exec_logger.debug(f'Setting RX ADC gain to {value}')

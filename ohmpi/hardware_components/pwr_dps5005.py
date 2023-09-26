@@ -27,7 +27,7 @@ class Pwr(PwrAbstract):
         # if a controller is passed in kwargs, it will be instantiated
         if self.ctl is None:
             self.ctl = ctl_module.Ctl(**CTL_CONFIG)
-        self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)]
+        self.connection = self.ctl.interfaces[kwargs.pop('connection', ctl_connection)]
         self.voltage_adjustable = True
         self._voltage = voltage
         self._current_adjustable = False
@@ -43,11 +43,11 @@ class Pwr(PwrAbstract):
         self.exec_logger.debug(f'Current cannot be set on {self.board_name}')
 
     def turn_off(self):
-        self.io.write_register(0x09, 1)
+        self.connection.write_register(0x09, 1)
         self.exec_logger.debug(f'{self.board_name} is off')
 
     def turn_on(self):
-        self.io.write_register(0x09, 1)
+        self.connection.write_register(0x09, 1)
         self.exec_logger.debug(f'{self.board_name} is on')
 
     @property
@@ -56,11 +56,11 @@ class Pwr(PwrAbstract):
 
     @voltage.setter
     def voltage(self, value):
-        self.io.write_register(0x0000, value, 2)
+        self.connection.write_register(0x0000, value, 2)
     
     def battery_voltage(self):
-        self.io.read_register(0x05, 2)
+        self.connection.read_register(0x05, 2)
 
     @property
     def current_max(self,value):
-        self.io.write_register(0x0001, value * 10, 0)
+        self.connection.write_register(0x0001, value * 10, 0)

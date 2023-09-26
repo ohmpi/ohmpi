@@ -9,7 +9,7 @@ from threading import Event, Barrier, BrokenBarrierError
 class CtlAbstract(ABC):
     def __init__(self, **kwargs):
         self.board_name = kwargs.pop('board_name', 'unknown CTL hardware')
-        self.connections = None  # TODO: allow for several buses
+        self.interfaces = None  # TODO: allow for several buses
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_ctl')
@@ -56,7 +56,7 @@ class PwrAbstract(ABC):
         self._voltage_min = kwargs.pop('voltage_min', 0.)
         self._voltage_max = kwargs.pop('voltage_max', 0.)
         self.ctl = kwargs.pop('ctl', None)
-        self.io = kwargs.pop('io', None)
+        self.connection = kwargs.pop('io', None)
 
     @property
     @abstractmethod
@@ -111,7 +111,7 @@ class MuxAbstract(ABC):
         if self.board_id is None:
             self.exec_logger.error(f'MUX {self.board_name} should have an id !')
         self.exec_logger.debug(f'MUX {self.board_id} ({self.board_name}) initialization')
-        self.io = kwargs.pop('io', None)
+        self.connection = kwargs.pop('io', None)
         cabling = kwargs.pop('cabling', None)
         self.cabling = {}
         if cabling is not None:
@@ -256,7 +256,7 @@ class TxAbstract(ABC):
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_tx')
         self.ctl = kwargs.pop('ctl', None)
-        self.io = kwargs.pop('io', None)
+        self.connection = kwargs.pop('io', None)
         self.pwr = kwargs.pop('pwr', None)
         self._polarity = 0
         self._injection_duration = None
@@ -374,7 +374,7 @@ class RxAbstract(ABC):
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_rx')
         self.ctl = kwargs.pop('ctl', None)
-        self.io = kwargs.pop('io', None)
+        self.connection = kwargs.pop('io', None)
         self.board_name = kwargs.pop('board_name', 'unknown RX hardware')
         self._sampling_rate = kwargs.pop('sampling_rate', 1)  # ms
         self.exec_logger.debug(f'{self.board_name} RX initialization')

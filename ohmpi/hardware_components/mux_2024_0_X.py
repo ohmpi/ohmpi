@@ -63,7 +63,7 @@ class Mux(MuxAbstract):
         kwargs.update({'current_max': max(0., min(kwargs.pop('current_max', SPECS['current_max']),
                                                   SPECS['current_max']))})
         super().__init__(**kwargs)
-        assert isinstance(self.io, I2C)
+        assert isinstance(self.connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
         tca_address = kwargs.pop('tca_address', None)
         tca_channel = kwargs.pop('tca_channel', 0)
@@ -77,11 +77,10 @@ class Mux(MuxAbstract):
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.board_name}: {self._roles} !')
             self._mode = ''
-        # self.io = self.ctl.connections[kwargs.pop('connection', ctl_connection)] -> to hardware_system
         if tca_address is None:
-            self._tca = self.io
+            self._tca = self.connection
         else:
-            self._tca = adafruit_tca9548a.TCA9548A(self.io, tca_address)[tca_channel]
+            self._tca = adafruit_tca9548a.TCA9548A(self.connection, tca_address)[tca_channel]
         self._mcp_addresses = (kwargs.pop('mcp_0', '0x22'), kwargs.pop('mcp_1', '0x23'))  # TODO: add assert on valid addresses..
         self._mcp = [None, None]
         self.reset()

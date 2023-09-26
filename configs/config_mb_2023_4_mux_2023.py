@@ -20,13 +20,13 @@ OHMPI_CONFIG = {
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_batt', 'voltage': 12.},
-    'tx':  {'model': 'ohmpi_card_3_15',
+    'tx':  {'model': 'mb_2023_0_X',
              'mcp_board_address': 0x20,
              'voltage_max': 12.,  # Maximum voltage supported by the TX board [V]
              'current_max': 4800 / 50 / 2,  # Maximum current supported by the TX board [mA]
              'r_shunt': 2  # Shunt resistance in Ohms
             },
-    'rx':  {'model': 'ohmpi_card_3_15',
+    'rx':  {'model': 'mb_2023_0_X',
              'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
              'nb_samples': 20,  # Max value 10 # was named integer before...
             },
@@ -35,25 +35,25 @@ HARDWARE_CONFIG = {
             # both will be overwritten by properties specified in the board dict below. Use with caution...
             {'boards':
                     {'mux_1':
-                         {'model': 'mux_2023_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
+                         {'model': 'mux_2023_0_X',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x70,
                           'roles': {'A': 'X'},
                           'cabling': {(i, j): ('mux_1', i) for j in ['A'] for i in range(1, 65)},
                           'voltage_max': 12.},
                      'mux_2':
-                         {'model': 'mux_2023_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
+                         {'model': 'mux_2023_0_X',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x71,
                           'roles': {'B': 'X'},
                           'cabling': {(i, j): ('mux_2', i) for j in ['B'] for i in range(1, 65)},
                           'voltage_max': 12.},
                      'mux_3':
-                         {'model': 'mux_2023_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
+                         {'model': 'mux_2023_0_X',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x72,
                           'roles': {'M': 'X'},
                           'cabling': {(i, j): ('mux_3', i) for j in ['M'] for i in range(1, 65)},
                           'voltage_max': 12.},
                      'mux_4':
-                         {'model': 'mux_2023_rev_0_0',  # 'ohmpi_i2c_mux64_v1.01',
+                         {'model': 'mux_2023_0_X',  # 'ohmpi_i2c_mux64_v1.01',
                           'tca_address': 0x73,
                           'roles': {'N': 'X'},
                           'cabling': {(i, j): ('mux_4', i) for j in ['N'] for i in range(1, 65)},
