@@ -91,7 +91,7 @@ class PwrAbstract(ABC):
     def voltage(self, value):
         assert isinstance(value, float)
         if not self.voltage_adjustable:
-            self.exec_logger.warning(f'Voltage cannot be set on {self.board_name}...')
+            self.exec_logger.debug(f'Voltage cannot be set on {self.board_name}...')
         else:
             assert self._voltage_min < value < self._voltage_max
             # add actions to set the DPS voltage
