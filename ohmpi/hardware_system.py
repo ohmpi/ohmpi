@@ -198,7 +198,7 @@ class OhmPiHardware:
                 time.sleep(np.max([0., sleep_time.total_seconds()]))
 
         self.exec_logger.debug(f'pulse {self._pulse}: elapsed time {(lap-self._start_time).total_seconds()} s')
-        self.exec_logger.warning(f'pulse {self._pulse}: total samples {len(_readings)}')  # TODO: Set to debug level
+        self.exec_logger.debug(f'pulse {self._pulse}: total samples {len(_readings)}')
         self.readings = np.array(_readings)
         self._pulse += 1
         self.exec_logger.event(f'OhmPiHardware\tread_values\tend\t{datetime.datetime.utcnow()}')
