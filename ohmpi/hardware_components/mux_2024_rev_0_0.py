@@ -7,9 +7,19 @@ from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
 from digitalio import Direction  # noqa
 # import time
 
+# board specs
+voltage_max = 50
+current_max = 3.
+activation_delay = 0.01
+release_delay = 0.005
+
 MUX_CONFIG = HARDWARE_CONFIG['mux'].pop('default', {})
-MUX_CONFIG.update({'voltage_max': 50., 'current_max': 3.})  # board default values that overwrite system default values
-MUX_CONFIG.update({'activation_delay': 0.01, 'release_delay': 0.005})  # s
+MUX_CONFIG.update({'voltage_max': max(0,min(MUX_CONFIG['voltage_max'],voltage_max)),
+                   'current_max': max(0,min(MUX_CONFIG['current_max'],voltage_max))})
+
+MUX_CONFIG.update({'activation_delay': max(MUX_CONFIG['activation_delay'],activation_delay),
+                   'release_delay': max(MUX_CONFIG['release_delay'],release_delay)})
+
 # defaults to 4 roles cabling electrodes from 1 to 8
 default_mux_cabling = {(elec, role) : ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1,9)}
 # defaults to ic connection
