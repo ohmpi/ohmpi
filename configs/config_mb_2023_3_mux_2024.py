@@ -63,7 +63,8 @@ HARDWARE_CONFIG = {
                           'cabling': {(i+24, j): ('mux_04', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                           'voltage_max': 12.}
                      },
-             'default': {'voltage_max': 100.,
+             'default': {'connection': 'i2c',
+                         'voltage_max': 100.,
                          'current_max': 3.}
              }
 }

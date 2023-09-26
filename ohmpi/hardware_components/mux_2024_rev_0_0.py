@@ -12,8 +12,8 @@ MUX_CONFIG.update({'voltage_max': 50., 'current_max': 3.})  # board default valu
 MUX_CONFIG.update({'activation_delay': 0.01, 'release_delay': 0.005})  # s
 # defaults to 4 roles cabling electrodes from 1 to 8
 default_mux_cabling = {(elec, role) : ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1,9)}
-# defaults to ic connection
-ctl_connection = HARDWARE_CONFIG['ctl'].pop('connection', 'i2c')
+# # defaults to ic connection
+# ctl_connection = HARDWARE_CONFIG['ctl'].pop('connection', 'i2c')
 
 inner_cabling = {'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MCP': 0, 'MCP_GPIO': 8},
                              (2, 'X'): {'MCP': 0, 'MCP_GPIO': 1}, (2, 'Y'): {'MCP': 0, 'MCP_GPIO': 9},
@@ -76,10 +76,11 @@ class Mux(MuxAbstract):
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.board_name}: {self._roles} !')
             self._mode = ''
+        self.io = self.ctl.connections[kwargs.pop('connection', MUX_CONFIG['connection'])]
         if tca_address is None:
-            self._tca = self.ctl.connections[kwargs.pop('connection', ctl_connection)]
+            self._tca = self.io
         else:
-            self._tca = adafruit_tca9548a.TCA9548A(self.ctl.bus, tca_address)[tca_channel]
+            self._tca = adafruit_tca9548a.TCA9548A(self.io, tca_address)[tca_channel]
         self._mcp_addresses = (kwargs.pop('mcp_0', '0x22'), kwargs.pop('mcp_1', '0x23'))  # TODO: add assert on valid addresses..
         self._mcp = [None, None]
         self.reset()

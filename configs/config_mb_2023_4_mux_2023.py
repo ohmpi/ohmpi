@@ -18,7 +18,7 @@ OHMPI_CONFIG = {
 }
 
 HARDWARE_CONFIG = {
-    'ctl': {'model': 'raspberry_pi_i2c'},
+    'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_batt', 'voltage': 12.},
     'tx':  {'model': 'ohmpi_card_3_15',
              'mcp_board_address': 0x20,
@@ -59,7 +59,8 @@ HARDWARE_CONFIG = {
                           'cabling': {(i, j): ('mux_4', i) for j in ['N'] for i in range(1, 65)},
                           'voltage_max': 12.},
                      },
-             'default': {'voltage_max': 100.,
+             'default': {'connection': 'i2c',
+                         'voltage_max': 100.,
                          'current_max': 3.}
              }
 }
