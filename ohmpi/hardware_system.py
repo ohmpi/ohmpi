@@ -143,6 +143,7 @@ class OhmPiHardware:
         self.tx_sync.wait()
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
+        self.rx.voltage_gain_auto()
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tend\t{datetime.datetime.utcnow()}')
 
     def _inject(self, polarity=1, injection_duration=None):  # TODO: deal with voltage or current pulse
@@ -214,7 +215,7 @@ class OhmPiHardware:
     @property
     def last_dev(self):
         if len(self.readings) > 1:
-            v = self.readings[:, 2] != 0  # exclude sample where the is no injection
+            v = self.readings[:, 2] != 0  # exclude sample where there is no injection
             return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3]) / self.last_rho
         else:
             return np.nan
@@ -316,7 +317,7 @@ class OhmPiHardware:
 
     def _plot_readings(self, save_fig=False):
         # Plot graphs
-        fig, ax = plt.subplots(nrows=4, sharex=True)
+        fig, ax = plt.subplots(nrows=5, sharex=True)
         ax[0].plot(self.readings[:, 0], self.readings[:, 3], '-r', marker='.', label='iab')
         ax[0].set_ylabel('Iab [mA]')
         ax[1].plot(self.readings[:, 0], self.readings[:, 2] * (self.readings[:, 4] - self.sp) , '-b', marker='.', label='vmn')
@@ -327,6 +328,9 @@ class OhmPiHardware:
         ax[3].plot(self.readings[v, 0], (self.readings[v, 2] * (self.readings[v, 4] - self.sp)) / self.readings[v, 3],
                    '-m', marker='.', label='R [ohm]')
         ax[3].set_ylabel('R [ohm]')
+        ax[4].plot(self.readings[v, 0], (self.readings[v, 2] * (self.readings[v, 4] + self.sp)) / self.readings[v, 3],
+                   '-m', marker='.', label='R [ohm]')
+        ax[4].set_ylabel('R [ohm]')
         fig.legend()
         if save_fig:
             fig.savefig(f'figures/test.png')
@@ -340,7 +344,7 @@ class OhmPiHardware:
     def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, duty_cycle=1.,
                         append=False):
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
-        self.tx.polarity = polarity
+        self.tx.polarity = polarity  ### TODO: inject on both polarities for gain auto?
         durations = [cycle_duration/2]*2*cycles
         # set gains automatically
         gain_auto = Thread(target=self._gain_auto)
