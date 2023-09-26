@@ -103,11 +103,12 @@ class OhmPiHardware:
             mux_config.update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                'soh_logger': self.soh_logger})
             mux_config.update(**MUX_CONFIG[mux_id])
-            ctl = mux_config.pop('ctl', self.ctl)
+            mux_config.update(mux_config.pop('ctl', self.ctl))
+
             mux_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["model"]}')
-            if isinstance(ctl, dict): ### TODO: is this needed?
+            if isinstance(mux_config['ctl'], dict): ### TODO: is this needed?
                 mux_ctl_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["ctl"]["model"]}')
-                ctl = mux_ctl_module.Ctl(**self.ctl)
+                ctl = mux_ctl_module.Ctl(**mux_config['ctl'])  # (**self.ctl)
             assert issubclass(type(mux_config['ctl']), CtlAbstract)
             io = mux_config.pop('io', ctl.connections[mux_config.pop('connection', 'i2c')])
             mux_config.update({'io': io})
