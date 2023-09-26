@@ -23,7 +23,7 @@ rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG
 
 MUX_DEFAULT = HARDWARE_CONFIG['mux']['default']
 MUX_CONFIG = HARDWARE_CONFIG['mux']['boards']
-for k, v in HARDWARE_CONFIG.items():
+for k, v in MUX_CONFIG.items():
     MUX_CONFIG[k].update({'id': k})
     for k2, v2 in MUX_DEFAULT.items():
         MUX_CONFIG[k].update({k2: MUX_CONFIG[k].pop(k2, v2)})
