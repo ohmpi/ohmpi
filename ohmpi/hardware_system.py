@@ -328,7 +328,7 @@ class OhmPiHardware:
         ax[3].plot(self.readings[v, 0], (self.readings[v, 2] * (self.readings[v, 4] - self.sp)) / self.readings[v, 3],
                    '-m', marker='.', label='R [ohm]')
         ax[3].set_ylabel('R [ohm]')
-        ax[4].plot(self.readings[v, 0], ((self.readings[v, 2] * self.readings[v, 4]) + self.sp)) / self.readings[v, 3],
+        ax[4].plot(self.readings[v, 0], ((self.readings[v, 2] * self.readings[v, 4]) + self.sp) / self.readings[v, 3],
                    '-m', marker='.', label='R [ohm]')
         ax[4].set_ylabel('R [ohm]')
         fig.legend()
