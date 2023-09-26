@@ -3,9 +3,11 @@ from ohmpi.utils import change_config
 from ohmpi.plots import plot_exec_log
 import logging
 change_config('../configs/config_mb_2023_3_mux_2024.py', verbose=False)
-from ohmpi.hardware_components.mux_2024_rev_0_0 import Mux, MUX_CONFIG
+from ohmpi.hardware_components.mux_2024_rev_0_0 import Mux
 from ohmpi.hardware_components import raspberry_pi as ctl_module
 from ohmpi.config import HARDWARE_CONFIG
+MUX_CONFIG = HARDWARE_CONFIG['mux']
+
 
 stand_alone_mux = False
 part_of_hardware_system = False
