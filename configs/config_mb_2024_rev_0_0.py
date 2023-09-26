@@ -18,8 +18,7 @@ OHMPI_CONFIG = {
 }
 
 HARDWARE_CONFIG = {
-    'ctl': {'model' : 'raspberry_pi_i2c'
-                   },
+    'ctl': {'model' : 'raspberry_pi'},
     'pwr': {'model' : 'DPS_5005',
             'voltage_adjustable': True},
     'tx' : {'model' : 'mb_2024_rev_0_0',

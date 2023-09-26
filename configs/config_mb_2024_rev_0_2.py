@@ -18,7 +18,7 @@ OHMPI_CONFIG = {
 }
 
 HARDWARE_CONFIG = {
-    'ctl': {'model': 'raspberry_pi_i2c'},
+    'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_batt', 'voltage': 12.},
     'tx':  {'model': 'mb_2024_rev_0_2',
              'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
