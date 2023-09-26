@@ -27,6 +27,7 @@ MUX_CONFIG = HARDWARE_CONFIG['mux']
 #     MUX_CONFIG[mux_id] = mux_module.MUX_CONFIG
 #     MUX_CONFIG[mux_id].update(mux_config)
 #     MUX_CONFIG[mux_id].update({'id': mux_id})
+MUX_CONFIG = HARDWARE_CONFIG['mux']['boards']
 
 TX_CONFIG = tx_module.TX_CONFIG
 RX_CONFIG = rx_module.RX_CONFIG
