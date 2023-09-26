@@ -20,13 +20,13 @@ ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFI
 pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
 tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
 rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
-MUX_CONFIG = {}
+MUX_CONFIG = HARDWARE_CONFIG['mux']
 
-for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
-    mux_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["model"]}')
-    MUX_CONFIG[mux_id] = mux_module.MUX_CONFIG
-    MUX_CONFIG[mux_id].update(mux_config)
-    MUX_CONFIG[mux_id].update({'id': mux_id})
+# for mux_id, mux_config in HARDWARE_CONFIG['mux']['boards'].items():
+#     mux_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["model"]}')
+#     MUX_CONFIG[mux_id] = mux_module.MUX_CONFIG
+#     MUX_CONFIG[mux_id].update(mux_config)
+#     MUX_CONFIG[mux_id].update({'id': mux_id})
 
 TX_CONFIG = tx_module.TX_CONFIG
 RX_CONFIG = rx_module.RX_CONFIG
@@ -104,7 +104,7 @@ class OhmPiHardware:
                                'soh_logger': self.soh_logger})
             mux_config.update(**HARDWARE_CONFIG['mux']['boards'][mux_id])
             mux_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["model"]}')
-            ctl = mux_config.pop('ctl', self.ctl)
+            ctl = mux_config.update(mux_config.pop('ctl', self.ctl))
             if isinstance(ctl, dict):
                 mux_ctl_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["ctl"]["model"]}')
                 ctl = mux_ctl_module.Ctl(**self.ctl)
