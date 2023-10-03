@@ -33,8 +33,8 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'data_rate': {'default': 860.},
                 'compatible_power_sources': {'default': 'pwr_batt', 'others' : ['dps5005']},
                 'r_shunt':  {'min': 0., 'default': 2. },
-                'activation_delay': 0.005,  # Max turn on time of 211EH relays = 5ms
-                'release_delay': 0.001,  # Max turn off time of 211EH relays = 1ms
+                'activation_delay': {'default': 0.005},  # Max turn on time of 211EH relays = 5ms
+                'release_delay': {'default': 0.001},  # Max turn off time of 211EH relays = 1ms
                 }}
 
 # TODO: move low_battery spec in pwr
@@ -121,7 +121,8 @@ class Tx(TxAbstract):
         #self.pwr = None  # TODO: set a list of compatible power system with the tx
         self.exec_logger.event(f'{self.board_name}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         # self.voltage_max = kwargs['voltage_max']  # TODO: check if used
-
+        self._activation_delay = kwargs['activation_delay']
+        self._release_delay = kwargs['release_delay']
         self.voltage_adjustable = False
         self.current_adjustable = False
 
@@ -205,15 +206,15 @@ class Tx(TxAbstract):
         if polarity == 1:
             self.pin0.value = True
             self.pin1.value = False
-            time.sleep(SPECS['tx']['activation_delay'])
+            time.sleep(self._activation_delay)  # use a property set by kwargs?
         elif polarity == -1:
             self.pin0.value = False
             self.pin1.value = True
-            time.sleep(SPECS['tx']['activation_delay'])
+            time.sleep(self._activation_delay)
         else:
             self.pin0.value = False
             self.pin1.value = False
-            time.sleep(SPECS['tx']['release_delay'])
+            time.sleep(self._release_delay)
 
     def turn_off(self):
         self.pwr.turn_off(self)
