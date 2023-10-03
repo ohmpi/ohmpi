@@ -144,7 +144,7 @@ class OhmPiHardware:
         self.tx_sync.wait()
         self.tx.adc_gain_auto()
         self.rx.adc_gain_auto()
-        self.rx.voltage_gain_auto()
+        self.rx.voltage_gain_auto()  # TODO: delete me?
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tend\t{datetime.datetime.utcnow()}')
 
     def _inject(self, polarity=1, injection_duration=None):  # TODO: deal with voltage or current pulse

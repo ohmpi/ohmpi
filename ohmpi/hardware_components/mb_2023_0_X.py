@@ -1,6 +1,6 @@
 import datetime
 import importlib
-from ohmpi.config import HARDWARE_CONFIG  # TODO: Remove references at config here -> move it in ohmpi_hardware as done for mux_2024
+# from ohmpi.config import HARDWARE_CONFIG  # TODO: Remove references at config here -> move it in ohmpi_hardware as done for mux_2024
 import adafruit_ads1x15.ads1115 as ads  # noqa
 from adafruit_ads1x15.analog_in import AnalogIn  # noqa
 from adafruit_ads1x15.ads1x15 import Mode  # noqa
@@ -10,53 +10,62 @@ import time
 import numpy as np
 import os
 from ohmpi.hardware_components import TxAbstract, RxAbstract
-ctl_name = HARDWARE_CONFIG['ctl'].pop('board_name', 'raspberry_pi')
-ctl_connection = HARDWARE_CONFIG['ctl'].pop('connection', 'i2c')
-ctl_module = importlib.import_module(f'ohmpi.hardware_components.{ctl_name}')
+# ctl_name = HARDWARE_CONFIG['ctl'].pop('board_name', 'raspberry_pi')
+# ctl_connection = HARDWARE_CONFIG['ctl'].pop('connection', 'i2c')
+# ctl_module = importlib.import_module(f'ohmpi.hardware_components.{ctl_name}')
 
-TX_CONFIG = HARDWARE_CONFIG['tx']
-RX_CONFIG = HARDWARE_CONFIG['rx']
+# TX_CONFIG = HARDWARE_CONFIG['tx']
+# RX_CONFIG = HARDWARE_CONFIG['rx']
 
 # hardware characteristics and limitations
+# voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
+SPECS = {'RX': {'voltage_adc_voltage_min': 10., 'voltage_adc_voltage_max': 4500., 'sampling_rate': 20.,
+                'data_rate': 860.},
+         'TX': {'current_adc_voltage_min': 10., 'bias': 0., 'injection_voltage_max': 12000., 'low_battery': 12000.,
+                'tx_mcp_board_address': 0x20, 'data_rate': 860., 'comptatible_power_sources': ['pwr_batt', 'dps5005'],
+                'r_shunt'}}
+
+# TODO: move low_battery spec in pwr
+
 # *** RX ***
 # ADC for voltage
-voltage_adc_voltage_min = 10.  # mV
-voltage_adc_voltage_max = 4500.  # mV
-sampling_rate = 20.  # Hz
-data_rate = 860.  # S/s?
+# voltage_adc_voltage_min = 10.  # mV
+# voltage_adc_voltage_max = 4500.  # mV
+# sampling_rate = 20.  # Hz
+# data_rate = 860.  # S/s?
 
-RX_CONFIG['voltage_min'] = np.min([voltage_adc_voltage_min, RX_CONFIG.pop('voltage_min', np.inf)])  # mV
-RX_CONFIG['voltage_max'] = np.min([voltage_adc_voltage_max, RX_CONFIG.pop('voltage_max', np.inf)])  # mV
-RX_CONFIG['sampling_rate'] = RX_CONFIG.pop('sampling_rate', sampling_rate)
-RX_CONFIG['data_rate'] = RX_CONFIG.pop('data_rate', data_rate)
-RX_CONFIG['coef_p2'] = RX_CONFIG.pop('coef_p2', 2.5)
-RX_CONFIG['latency'] = RX_CONFIG.pop('latency', 0.01)
-RX_CONFIG['bias'] = RX_CONFIG.pop('bias', 0.)
+# RX_CONFIG['voltage_min'] = np.min([voltage_adc_voltage_min, RX_CONFIG.pop('voltage_min', np.inf)])  # mV
+# RX_CONFIG['voltage_max'] = np.min([voltage_adc_voltage_max, RX_CONFIG.pop('voltage_max', np.inf)])  # mV
+# RX_CONFIG['sampling_rate'] = RX_CONFIG.pop('sampling_rate', sampling_rate)
+# RX_CONFIG['data_rate'] = RX_CONFIG.pop('data_rate', data_rate)
+# RX_CONFIG['coef_p2'] = RX_CONFIG.pop('coef_p2', 2.5)
+# RX_CONFIG['latency'] = RX_CONFIG.pop('latency', 0.01)
+# RX_CONFIG['bias'] = RX_CONFIG.pop('bias', 0.)
 
 
 # *** TX ***
 # ADC for current
-current_adc_voltage_min = 10.  # mV
-current_adc_voltage_max = 4500.  # mV
-low_battery = 12.  # V (conventional value as it is not measured on this board)
-tx_mcp_board_address = 0x20  #
+# current_adc_voltage_min = 10.  # mV
+# current_adc_voltage_max = 4500.  # mV
+# low_battery = 12.  # V (conventional value as it is not measured on this board)
+# tx_mcp_board_address = 0x20  #
 # pwr_voltage_max = 12.  # V
 # pwr_default_voltage = 12.  # V
 # pwr_switch_on_warmup = 0.  # seconds
 
-TX_CONFIG['current_min'] = np.min([current_adc_voltage_min / (TX_CONFIG['r_shunt'] * 50),
-                                   TX_CONFIG.pop('current_min', np.inf)])  # mA
-TX_CONFIG['current_max'] = np.min([current_adc_voltage_max / (TX_CONFIG['r_shunt'] * 50),
-                                   TX_CONFIG.pop('current_max', np.inf)])  # mA
-# TX_CONFIG['voltage_max'] = np.min([pwr_voltage_max, TX_CONFIG.pop('voltage_max', np.inf)])  # V
-TX_CONFIG['voltage_max'] = TX_CONFIG.pop('voltage_max', np.inf)  # V
-TX_CONFIG['voltage_min'] = -TX_CONFIG['voltage_max']  # V
-TX_CONFIG['default_voltage'] = np.min([TX_CONFIG.pop('default_voltage', np.inf), TX_CONFIG['voltage_max']])  # V
-# TX_CONFIG['pwr_switch_on_warm_up'] = TX_CONFIG.pop('pwr_switch_on_warmup', pwr_switch_on_warmup)
-TX_CONFIG['mcp_board_address'] = TX_CONFIG.pop('mcp_board_address', tx_mcp_board_address)
-TX_CONFIG['low_battery'] = TX_CONFIG.pop('low_battery', low_battery)
-TX_CONFIG['latency'] = TX_CONFIG.pop('latency', 0.01)
-TX_CONFIG['bias'] = TX_CONFIG.pop('bias', 0.)
+# TX_CONFIG['current_min'] = np.min([current_adc_voltage_min / (TX_CONFIG['r_shunt'] * 50),
+#                                    TX_CONFIG.pop('current_min', np.inf)])  # mA
+# TX_CONFIG['current_max'] = np.min([current_adc_voltage_max / (TX_CONFIG['r_shunt'] * 50),
+#                                    TX_CONFIG.pop('current_max', np.inf)])  # mA
+# # TX_CONFIG['voltage_max'] = np.min([pwr_voltage_max, TX_CONFIG.pop('voltage_max', np.inf)])  # V
+# TX_CONFIG['voltage_max'] = TX_CONFIG.pop('voltage_max', np.inf)  # V
+# TX_CONFIG['voltage_min'] = -TX_CONFIG['voltage_max']  # V
+# TX_CONFIG['default_voltage'] = np.min([TX_CONFIG.pop('default_voltage', np.inf), TX_CONFIG['voltage_max']])  # V
+# # TX_CONFIG['pwr_switch_on_warm_up'] = TX_CONFIG.pop('pwr_switch_on_warmup', pwr_switch_on_warmup)
+# TX_CONFIG['mcp_board_address'] = TX_CONFIG.pop('mcp_board_address', tx_mcp_board_address)
+# TX_CONFIG['low_battery'] = TX_CONFIG.pop('low_battery', low_battery)
+# TX_CONFIG['latency'] = TX_CONFIG.pop('latency', 0.01)
+# TX_CONFIG['bias'] = TX_CONFIG.pop('bias', 0.)
 
 
 def _gain_auto(channel):
@@ -89,6 +98,11 @@ class Tx(TxAbstract):
     def __init__(self, **kwargs):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
+        kwargs.update({'pwr': kwargs.pop('pwr', SPECS['compatible_power_sources'][0])})
+        if kwargs['pwr'] not in SPECS['TX']['compatible_power_sources']:
+            self.exec_logger.warning(f'Incompatible power source specified check config')
+            assert kwargs['pwr'] in SPECS['TX']
+        self.pwr = None  # TODO: set a list of compatible power system with the tx
         self.exec_logger.event(f'{self.board_name}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         self._voltage = kwargs.pop('voltage', TX_CONFIG['default_voltage'])
         self.voltage_adjustable = False
@@ -100,7 +114,7 @@ class Tx(TxAbstract):
         self.connection = self.ctl.interfaces[kwargs.pop('connection', ctl_connection)]
 
         # I2C connexion to MCP23008, for current injection
-        self.mcp_board = MCP23008(self.connection, address=TX_CONFIG['mcp_board_address'])
+        self.mcp_board = MCP23008(self.connection, address=SPECS['TX']['mcp_board_address'])
         # ADS1115 for current measurement (AB)
         self._ads_current_address = 0x48
         self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=860,
@@ -114,8 +128,6 @@ class Tx(TxAbstract):
         self.pin1.direction = Direction.OUTPUT
         self.polarity = 0
         self.adc_gain = 2 / 3
-
-        self.pwr = None  # TODO: set a list of compatible power system with the tx
 
         # MCP23008 pins for LEDs
         self.pin4 = self.mcp_board.get_pin(4)  # TODO: Delete me? No LED on this version of the board
@@ -134,7 +146,7 @@ class Tx(TxAbstract):
     def adc_gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=860,
+        self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=SPECS['TX']['data_rate'],
                                         address=self._ads_current_address)
         self._ads_current.mode = Mode.CONTINUOUS
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
