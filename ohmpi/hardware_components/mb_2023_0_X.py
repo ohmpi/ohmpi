@@ -162,7 +162,8 @@ class Tx(TxAbstract):
     def adc_gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=kwargs['data_rate'],
+        self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain,
+                                        data_rate=SPECS['tx']['data_rate']['default'],
                                         address=self._ads_current_address)
         self._ads_current.mode = Mode.CONTINUOUS
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
@@ -177,7 +178,7 @@ class Tx(TxAbstract):
     def current_pulse(self, **kwargs):
         TxAbstract.current_pulse(self, **kwargs)
         self.exec_logger.warning(f'Current pulse is not implemented for the {self.board_name} board')
-if
+
     @property
     def current(self):
         """ Gets the current IAB in Amps
@@ -264,7 +265,8 @@ class Rx(RxAbstract):
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = 0x49
         self._adc_gain = 2/3
-        self._ads_voltage = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=860,
+        self._ads_voltage = ads.ADS1115(self.connection, gain=self._adc_gain,
+                                        data_rate=SPECS['rx']['data_rate']['default'],
                                         address=self._ads_voltage_address)
         self._ads_voltage.mode = Mode.CONTINUOUS
         self._coef_p2 = kwargs['coef_p2']
