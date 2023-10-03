@@ -31,7 +31,7 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'adc_voltage_max': {'default': 4500.},
                 'voltage_max': {'min': 0., 'default': 12., 'max': 12.},
                 'data_rate': {'default': 860.},
-                'compatible_power_sources': {'default': ['pwr_batt', 'dps5005']},
+                'compatible_power_sources': {'default': 'pwr_batt', 'others' : ['dps5005']},
                 'r_shunt':  {'min': 0., 'default': 2. },
                 'activation_delay': {'default': 0.005},
                 'release_delay': {'default': 0.001},
@@ -114,8 +114,9 @@ class Tx(TxAbstract):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         assert isinstance(self.connection, I2C)
-        kwargs.update({'pwr': kwargs.pop('pwr', SPECS['tx']['compatible_power_sources'][0])})
-        if kwargs['pwr'] not in SPECS['tx']['compatible_power_sources']:
+        kwargs.update({'pwr': kwargs.pop('pwr', SPECS['tx']['compatible_power_sources']['default'])})
+        if (kwargs['pwr'] != SPECS['tx']['compatible_power_sources']['default']
+                and kwargs['pwr'] not in SPECS['tx']['compatible_power_sources']['other']):
             self.exec_logger.warning(f'Incompatible power source specified check config')
             assert kwargs['pwr'] in SPECS['tx']
         #self.pwr = None  # TODO: set a list of compatible power system with the tx
