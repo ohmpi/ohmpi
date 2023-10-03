@@ -225,7 +225,7 @@ class Tx(TxAbstract):
         self.exec_logger.debug(f'{self.board_name} cannot read battery voltage. Returning default battery voltage.')
         return self.pwr.voltage
 
-    def voltage_pulse(self, voltage=self.voltage, length=None, polarity=1):
+    def voltage_pulse(self, voltage=None, length=None, polarity=1):
         """ Generates a square voltage pulse
 
         Parameters
@@ -241,7 +241,8 @@ class Tx(TxAbstract):
         # self.exec_logger.info(f'injection_duration: {length}')  # TODO: delete me
         if length is None:
             length = self.injection_duration
-        self.pwr.voltage = voltage
+        if voltage is not None:
+            self.pwr.voltage = voltage
         self.exec_logger.debug(f'Voltage pulse of {polarity*self.pwr.voltage:.3f} V for {length:.3f} s')
         self.inject(polarity=polarity, injection_duration=length)
         self.exec_logger.event(f'{self.board_name}\ttx_voltage_pulse\tend\t{datetime.datetime.utcnow()}')
