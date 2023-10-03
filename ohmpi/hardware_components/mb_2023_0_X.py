@@ -27,9 +27,9 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'coef_p2': {'default': 2.50},
                 'voltage_min': {'default': 10.0},
                 },
-         'tx': {'adc_voltage_min': {'default': 10.},
-                'adc_voltage_max': {'default': 4500.},
-                'voltage_max': {'min': 0., 'default': 12., 'max': 12.},
+         'tx': {'adc_voltage_min': {'default': 10.},  # Minimum voltage value used in vmin strategy
+                'adc_voltage_max': {'default': 4500.},  # Maximum voltage on ads1115 used to measure current
+                'voltage_max': {'min': 0., 'default': 12., 'max': 12.},  # Maximum input voltage
                 'data_rate': {'default': 860.},
                 'compatible_power_sources': {'default': 'pwr_batt', 'others' : ['dps5005']},
                 'r_shunt':  {'min': 0., 'default': 2. },
@@ -109,7 +109,7 @@ def _gain_auto(channel):
 class Tx(TxAbstract):
     def __init__(self, **kwargs):
         for key in SPECS['tx'].keys():
-                kwargs = enforce_specs(kwargs, SPECS['tx'], key)
+            kwargs = enforce_specs(kwargs, SPECS['tx'], key)
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         assert isinstance(self.connection, I2C)
@@ -177,7 +177,7 @@ class Tx(TxAbstract):
     def current_pulse(self, **kwargs):
         TxAbstract.current_pulse(self, **kwargs)
         self.exec_logger.warning(f'Current pulse is not implemented for the {self.board_name} board')
-
+if
     @property
     def current(self):
         """ Gets the current IAB in Amps
@@ -206,15 +206,15 @@ class Tx(TxAbstract):
         if polarity == 1:
             self.pin0.value = True
             self.pin1.value = False
-            time.sleep(self.activation_delay)  # Max turn on time of 211EH relays = 5ms
+            time.sleep(SPECS['tx']['activation_delay'])  # Max turn on time of 211EH relays = 5ms
         elif polarity == -1:
             self.pin0.value = False
             self.pin1.value = True
-            time.sleep(self.activation_delay)  # Max turn on time of 211EH relays = 5ms
+            time.sleep(SPECS['tx']['activation_delay'])  # Max turn on time of 211EH relays = 5ms
         else:
             self.pin0.value = False
             self.pin1.value = False
-            time.sleep(self.release_delay)  # Max turn off time of 211EH relays = 1ms
+            time.sleep(SPECS['tx']['release_delay'])  # Max turn off time of 211EH relays = 1ms
 
     def turn_off(self):
         self.pwr.turn_off(self)
