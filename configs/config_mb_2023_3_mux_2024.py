@@ -23,11 +23,11 @@ HARDWARE_CONFIG = {
     'tx':  {'model': 'mb_2023_0_X',
              'voltage_max': 12.,  # Maximum voltage supported by the TX board [V]
              'adc_voltage_max': 4800.,  # Maximum voltage read by the current ADC on the TX board [mA]
-             'r_shunt': 2  # Shunt resistance in Ohms
+             'r_shunt': 2.  # Shunt resistance in Ohms
             },
     'rx':  {'model': 'mb_2023_0_X',
              'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
-             'sampling_rate': 50  # number of samples per second
+             'sampling_rate': 50. # number of samples per second
             },
     'mux':  # default properties are system properties that will be
             # overwritten by board properties defined at the board level within the board model file
@@ -61,7 +61,7 @@ HARDWARE_CONFIG = {
                           'cabling': {(i+24, j): ('mux_04', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                           'voltage_max': 12.}
                      },
-             'default': {'connection': 'i2c',
+             'default': {'interface_name': 'i2c',
                          'voltage_max': 100.,
                          'current_max': 3.}
              }

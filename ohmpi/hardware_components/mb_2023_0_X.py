@@ -6,6 +6,7 @@ from adafruit_ads1x15.analog_in import AnalogIn  # noqa
 from adafruit_ads1x15.ads1x15 import Mode  # noqa
 from adafruit_mcp230xx.mcp23008 import MCP23008  # noqa
 from digitalio import Direction  # noqa
+from busio import I2C  # noqa
 import time
 import numpy as np
 import os
@@ -22,7 +23,6 @@ from ohmpi.utils import enforce_specs
 # voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
 SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'data_rate': {'default': 860.},
-                'connection': {'default': 'i2c'},
                 'bias':  {'min': -5000., 'default': 0., 'max': 5000.},
                 'coef_p2': {'default': 2.50}},
          'tx': {'adc_voltage_min': {'default': 10.},
@@ -33,7 +33,6 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'r_shunt':  {'min': 0., 'default': 2. },
                 'activation_delay': {'default': 0.005},
                 'release_delay': {'default': 0.001},
-                'connection': {'default': 'i2c'}
                 }}
 
 # TODO: move low_battery spec in pwr
@@ -111,6 +110,7 @@ class Tx(TxAbstract):
             kwargs = enforce_specs(kwargs, SPECS['tx'], key)
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
+        assert isinstance(self.connection, I2C)
         kwargs.update({'pwr': kwargs.pop('pwr', SPECS['compatible_power_sources'][0])})
         if kwargs['pwr'] not in SPECS['tx']['compatible_power_sources']:
             self.exec_logger.warning(f'Incompatible power source specified check config')
@@ -121,11 +121,6 @@ class Tx(TxAbstract):
 
         self.voltage_adjustable = False
         self.current_adjustable = False
-        if self.ctl is None:
-            self.ctl = ctl_module.Ctl()
-        # elif isinstance(self.ctl, dict):
-        #     self.ctl = ctl_module.Ctl(**self.ctl)
-        self.connection = self.ctl.interfaces[kwargs['connection']]
 
         # I2C connexion to MCP23008, for current injection
         self.mcp_board = MCP23008(self.connection, address=0x20)
@@ -258,10 +253,9 @@ class Rx(RxAbstract):
             kwargs = enforce_specs(kwargs, SPECS['rx'], key)
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
+        assert isinstance(self.connection, I2C)
+
         self.exec_logger.event(f'{self.board_name}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
-        if self.ctl is None:
-            self.ctl = ctl_module.Ctl()
-        self.connection = self.ctl.interfaces[kwargs['connection']]
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = 0x49
