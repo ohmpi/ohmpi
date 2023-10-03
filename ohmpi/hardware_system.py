@@ -28,7 +28,7 @@ for k, v in MUX_CONFIG.items():
     for k2, v2 in MUX_DEFAULT.items():
         MUX_CONFIG[k].update({k2: MUX_CONFIG[k].pop(k2, v2)})
 
-TX_CONFIG = HARDWARE_CONFIG['tx']
+TX_CONFIG = HARDWARE_CONFIG['tx']  # NOTE: is TX_CONFIG needed or should we use HARDWARE_CONFIX['tx']?
 for k, v in tx_module.SPECS['tx'].items():
     try:
         TX_CONFIG.update({k: TX_CONFIG.pop(k, v['default'])})

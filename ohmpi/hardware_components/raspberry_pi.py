@@ -29,7 +29,7 @@ class Ctl(CtlAbstract):
         try:
             self.interfaces['i2c_ext'] = ExtendedI2C(4)  # 4 is defined
         except Exception as e:
-            self.exec_logger.warning('Could not initialize Extended I2C:\n{e}')
+            self.exec_logger.warning(f'Could not initialize Extended I2C:\n{e}')
         # modbus
         try:
             self.interfaces['modbus'] = minimalmodbus.Instrument(port=modbus_port, slaveaddress=modbus_slave_address)
@@ -40,7 +40,7 @@ class Ctl(CtlAbstract):
             self.interfaces['modbus'].serial.parity = modbus_parity  # No parity
             self.interfaces['modbus'].mode = modbus_mode  # RTU mode
         except Exception as e:
-            self.exec_logger.warning('Could not initialize Extended modbus:\n{e}')
+            self.exec_logger.warning(f'Could not initialize Extended modbus:\n{e}')
 
         platform, on_pi = get_platform()
         assert on_pi
