@@ -114,7 +114,7 @@ class Tx(TxAbstract):
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         assert isinstance(self.connection, I2C)
-        kwargs.update({'pwr': kwargs.pop('pwr', SPECS['compatible_power_sources'][0])})
+        kwargs.update({'pwr': kwargs.pop('pwr', SPECS['tx']['compatible_power_sources'][0])})
         if kwargs['pwr'] not in SPECS['tx']['compatible_power_sources']:
             self.exec_logger.warning(f'Incompatible power source specified check config')
             assert kwargs['pwr'] in SPECS['tx']
