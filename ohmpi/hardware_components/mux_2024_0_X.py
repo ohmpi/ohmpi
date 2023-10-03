@@ -5,7 +5,7 @@ from ohmpi.hardware_components import MuxAbstract
 import adafruit_tca9548a  # noqa
 from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
 from digitalio import Direction  # noqa
-from busio import I2C
+from busio import I2C  # noqa
 # import time
 
 # hardware characteristics and limitations

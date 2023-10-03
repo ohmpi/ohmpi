@@ -28,14 +28,12 @@ for k, v in MUX_CONFIG.items():
     for k2, v2 in MUX_DEFAULT.items():
         MUX_CONFIG[k].update({k2: MUX_CONFIG[k].pop(k2, v2)})
 
-TX_CONFIG = HARDWARE_CONFIG['tx']  # NOTE: is TX_CONFIG needed or should we use HARDWARE_CONFIX['tx']?
-print(HARDWARE_CONFIG['tx'])
+TX_CONFIG = HARDWARE_CONFIG['tx']
 for k, v in tx_module.SPECS['tx'].items():
     try:
         TX_CONFIG.update({k: TX_CONFIG.pop(k, v['default'])})
     except:
         print(f'Cannot set value {v} in TX_CONFIG[{k}]')
-print(HARDWARE_CONFIG['tx'])
 
 RX_CONFIG = HARDWARE_CONFIG['rx']
 for k, v in rx_module.SPECS['rx'].items():
@@ -80,7 +78,11 @@ class OhmPiHardware:
 
         HARDWARE_CONFIG['rx'].pop('model')
         HARDWARE_CONFIG['rx'].update(**HARDWARE_CONFIG['rx'])
-        HARDWARE_CONFIG['rx'].update({'ctl': HARDWARE_CONFIG['rx'].pop('ctl', self.ctl)})
+        HARDWARE_CONFIG['rx'].update({'connection': HARDWARE_CONFIG['rx'].pop('connection',
+                                                                              self.ctl.interfaces[
+                                                                                  HARDWARE_CONFIG['rx'].pop(
+                                                                                      'interface_name', 'i2c')])})
+        #HARDWARE_CONFIG['rx'].update({'connection': HARDWARE_CONFIG['rx'].pop('connection', self.ctl)})
         if isinstance(HARDWARE_CONFIG['rx']['ctl'], dict):
             ctl_mod = HARDWARE_CONFIG['rx']['ctl'].pop('model', self.ctl)
             if isinstance(ctl_mod, str):
@@ -103,7 +105,12 @@ class OhmPiHardware:
         HARDWARE_CONFIG['tx'].pop('model')
         HARDWARE_CONFIG['tx'].update(**HARDWARE_CONFIG['tx'])
         HARDWARE_CONFIG['tx'].update({'tx_sync': self.tx_sync})
-        HARDWARE_CONFIG['tx'].update({'ctl': self.ctl})
+        #HARDWARE_CONFIG['tx'].update({'ctl': self.ctl})
+        HARDWARE_CONFIG['tx'].update({'connection': HARDWARE_CONFIG['tx'].pop('connection',
+                                                                              self.ctl.interfaces[
+                                                                                  HARDWARE_CONFIG['tx'].pop(
+                                                                                      'interface_name', 'i2c')])})
+
         HARDWARE_CONFIG['tx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                       'soh_logger': self.soh_logger})
         self.tx = kwargs.pop('tx', tx_module.Tx(**HARDWARE_CONFIG['tx']))
@@ -119,22 +126,15 @@ class OhmPiHardware:
             mux_config.update({'ctl': mux_config.pop('ctl', self.ctl)})
 
             mux_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["model"]}')
-            if isinstance(mux_config['ctl'], dict): ### TODO: is this needed?
+            if isinstance(mux_config['ctl'], dict):
                 mux_ctl_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["ctl"]["model"]}')
                 mux_config['ctl'] = mux_ctl_module.Ctl(**mux_config['ctl'])  # (**self.ctl)
             assert issubclass(type(mux_config['ctl']), CtlAbstract)
-            mux_config.update({
-                mux_config.pop('connection', mux_config['ctl'].interfaces[mux_config.pop('interface_name', 'i2c')])})
+            mux_config.update({mux_config.pop('connection',
+                                              mux_config['ctl'].interfaces[mux_config.pop('interface_name', 'i2c')])})
             mux_config['id'] = mux_id
 
             self.mux_boards[mux_id] = mux_module.Mux(**mux_config)
-
-        # self.mux_boards = kwargs.pop('mux', {'mux_1': mux_module.Mux(id='mux_1',
-        #                                                              exec_logger=self.exec_logger,
-        #                                                              data_logger=self.data_logger,
-        #                                                              soh_logger=self.soh_logger,
-        #                                                              ctl=self.ctl,
-        #                                                              cabling=self._cabling)})
 
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
         self._cabling = {}
