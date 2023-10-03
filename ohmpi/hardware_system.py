@@ -37,7 +37,7 @@ for k, v in tx_module.SPECS['tx'].items():
 
 RX_CONFIG = HARDWARE_CONFIG['rx']
 
-current_max = np.min([TX_CONFIG['current_max'], np.min([MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])])
+current_max = np.min([TX_CONFIG['voltage_max']/50/TX_CONFIG['r_shunt'], np.min([MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])])
 voltage_max = np.min([TX_CONFIG['voltage_max'], np.min([MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])])
 voltage_min = RX_CONFIG['voltage_min']
 
