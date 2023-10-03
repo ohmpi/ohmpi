@@ -1,6 +1,6 @@
 import datetime
 import importlib
-from ohmpi.config import HARDWARE_CONFIG
+from ohmpi.config import HARDWARE_CONFIG  # TODO: Remove references at config here -> move it in ohmpi_hardware as done for mux_2024
 import adafruit_ads1x15.ads1115 as ads  # noqa
 from adafruit_ads1x15.analog_in import AnalogIn  # noqa
 from adafruit_ads1x15.ads1x15 import Mode  # noqa
