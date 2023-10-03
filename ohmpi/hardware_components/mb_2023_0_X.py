@@ -108,8 +108,9 @@ def _gain_auto(channel):
 
 class Tx(TxAbstract):
     def __init__(self, **kwargs):
-        for key in SPECS['tx']:
-            kwargs = enforce_specs(kwargs, SPECS['tx'], key)
+        for key in kwargs.keys():
+            if key in SPECS['tx'].keys():
+                kwargs = enforce_specs(kwargs, SPECS['tx'], key)
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         assert isinstance(self.connection, I2C)
@@ -119,7 +120,7 @@ class Tx(TxAbstract):
             assert kwargs['pwr'] in SPECS['tx']
         #self.pwr = None  # TODO: set a list of compatible power system with the tx
         self.exec_logger.event(f'{self.board_name}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
-        self.voltage_max = kwargs['voltage_max']
+        # self.voltage_max = kwargs['voltage_max']  # TODO: check if used
 
         self.voltage_adjustable = False
         self.current_adjustable = False
@@ -252,8 +253,9 @@ class Tx(TxAbstract):
 
 class Rx(RxAbstract):
     def __init__(self, **kwargs):
-        for key in kwargs:
-            kwargs = enforce_specs(kwargs, SPECS['rx'], key)
+        for key in kwargs.keys():
+            if key in SPECS['rx'].keys():
+                kwargs = enforce_specs(kwargs, SPECS['rx'], key)
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         assert isinstance(self.connection, I2C)
