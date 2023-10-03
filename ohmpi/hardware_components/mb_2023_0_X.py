@@ -23,7 +23,7 @@ SPECS = {'RX': {'voltage_adc_voltage_min': 10., 'voltage_adc_voltage_max': 4500.
                 'data_rate': 860.},
          'TX': {'current_adc_voltage_min': 10., 'bias': 0., 'injection_voltage_max': 12000., 'low_battery': 12000.,
                 'tx_mcp_board_address': 0x20, 'data_rate': 860., 'comptatible_power_sources': ['pwr_batt', 'dps5005'],
-                'r_shunt'}}
+                'r_shunt': 2., 'activation_delay': 0.005, 'release_delay': 0.001}}
 
 # TODO: move low_battery spec in pwr
 
@@ -102,7 +102,7 @@ class Tx(TxAbstract):
         if kwargs['pwr'] not in SPECS['TX']['compatible_power_sources']:
             self.exec_logger.warning(f'Incompatible power source specified check config')
             assert kwargs['pwr'] in SPECS['TX']
-        self.pwr = None  # TODO: set a list of compatible power system with the tx
+        #self.pwr = None  # TODO: set a list of compatible power system with the tx
         self.exec_logger.event(f'{self.board_name}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         self._voltage = kwargs.pop('voltage', TX_CONFIG['default_voltage'])
         self.voltage_adjustable = False
@@ -134,7 +134,6 @@ class Tx(TxAbstract):
         self.pin4.direction = Direction.OUTPUT
         self.pin4.value = True
 
-        self._latency = kwargs.pop('latency', TX_CONFIG['latency'])
         self._bias = kwargs.pop('bias', TX_CONFIG['bias'])
         self.exec_logger.event(f'{self.board_name}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -190,15 +189,15 @@ class Tx(TxAbstract):
         if polarity == 1:
             self.pin0.value = True
             self.pin1.value = False
-            time.sleep(0.005)  # Max turn on time of 211EH relays = 5ms
+            time.sleep(SPECS['TX']['activation_delay'])  # Max turn on time of 211EH relays = 5ms
         elif polarity == -1:
             self.pin0.value = False
             self.pin1.value = True
-            time.sleep(0.005)  # Max turn on time of 211EH relays = 5ms
+            time.sleep(SPECS['TX']['activation_delay'])  # Max turn on time of 211EH relays = 5ms
         else:
             self.pin0.value = False
             self.pin1.value = False
-            time.sleep(0.001)  # Max turn off time of 211EH relays = 1ms
+            time.sleep(SPECS['TX']['release_delay'])  # Max turn off time of 211EH relays = 1ms
 
     def turn_off(self):
         self.pwr.turn_off(self)
