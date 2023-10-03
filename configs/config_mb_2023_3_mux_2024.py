@@ -21,14 +21,12 @@ HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_batt', 'voltage': 12.},
     'tx':  {'model': 'mb_2023_0_X',
-             'mcp_board_address': 0x20,
              'voltage_max': 12.,  # Maximum voltage supported by the TX board [V]
-             'current_max': 4800 / 50 / 2,  # Maximum current supported by the TX board [mA]
+             'adc_voltage_max': 4800.,  # Maximum voltage read by the current ADC on the TX board [mA]
              'r_shunt': 2  # Shunt resistance in Ohms
             },
     'rx':  {'model': 'mb_2023_0_X',
              'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
-             'latency': 0.010,  # latency in seconds in continuous mode
              'sampling_rate': 50  # number of samples per second
             },
     'mux':  # default properties are system properties that will be

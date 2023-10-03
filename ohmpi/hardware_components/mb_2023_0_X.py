@@ -10,6 +10,7 @@ import time
 import numpy as np
 import os
 from ohmpi.hardware_components import TxAbstract, RxAbstract
+from ohmpi.utils import enforce_specs
 # ctl_name = HARDWARE_CONFIG['ctl'].pop('board_name', 'raspberry_pi')
 # ctl_connection = HARDWARE_CONFIG['ctl'].pop('connection', 'i2c')
 # ctl_module = importlib.import_module(f'ohmpi.hardware_components.{ctl_name}')
@@ -19,11 +20,21 @@ from ohmpi.hardware_components import TxAbstract, RxAbstract
 
 # hardware characteristics and limitations
 # voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
-SPECS = {'RX': {'voltage_adc_voltage_min': 10., 'voltage_adc_voltage_max': 4500., 'sampling_rate': 20.,
-                'data_rate': 860.},
-         'TX': {'current_adc_voltage_min': 10., 'bias': 0., 'injection_voltage_max': 12000., 'low_battery': 12000.,
-                'tx_mcp_board_address': 0x20, 'data_rate': 860., 'comptatible_power_sources': ['pwr_batt', 'dps5005'],
-                'r_shunt': 2., 'activation_delay': 0.005, 'release_delay': 0.001}}
+SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
+                'data_rate': {'default': 860.},
+                'connection': {'default': 'i2c'},
+                'bias':  {'min': -5000., 'default': 0., 'max': 5000.},
+                'coef_p2': {'default': 2.50}},
+         'tx': {'adc_voltage_min': {'default': 10.},
+                'adc_voltage_max': {'default': 4500.},
+                'voltage_max': {'min': 0., 'default': 12., 'max': 12.},
+                'data_rate': {'default': 860.},
+                'compatible_power_sources': {'default': ['pwr_batt', 'dps5005']},
+                'r_shunt':  {'min': 0., 'default': 2. },
+                'activation_delay': {'default': 0.005},
+                'release_delay': {'default': 0.001},
+                'connection': {'default': 'i2c'}
+                }}
 
 # TODO: move low_battery spec in pwr
 
@@ -96,30 +107,37 @@ def _gain_auto(channel):
 
 class Tx(TxAbstract):
     def __init__(self, **kwargs):
+        for key in SPECS['tx']:
+            kwargs = enforce_specs(kwargs, SPECS['tx'], key)
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         kwargs.update({'pwr': kwargs.pop('pwr', SPECS['compatible_power_sources'][0])})
-        if kwargs['pwr'] not in SPECS['TX']['compatible_power_sources']:
+        if kwargs['pwr'] not in SPECS['tx']['compatible_power_sources']:
             self.exec_logger.warning(f'Incompatible power source specified check config')
-            assert kwargs['pwr'] in SPECS['TX']
+            assert kwargs['pwr'] in SPECS['tx']
         #self.pwr = None  # TODO: set a list of compatible power system with the tx
         self.exec_logger.event(f'{self.board_name}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
-        self._voltage = kwargs.pop('voltage', TX_CONFIG['default_voltage'])
+        self.voltage_max = kwargs['voltage_max']
+
         self.voltage_adjustable = False
         self.current_adjustable = False
         if self.ctl is None:
             self.ctl = ctl_module.Ctl()
         # elif isinstance(self.ctl, dict):
         #     self.ctl = ctl_module.Ctl(**self.ctl)
-        self.connection = self.ctl.interfaces[kwargs.pop('connection', ctl_connection)]
+        self.connection = self.ctl.interfaces[kwargs['connection']]
 
         # I2C connexion to MCP23008, for current injection
-        self.mcp_board = MCP23008(self.connection, address=SPECS['TX']['mcp_board_address'])
+        self.mcp_board = MCP23008(self.connection, address=0x20)
         # ADS1115 for current measurement (AB)
         self._ads_current_address = 0x48
-        self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=860,
+        self._ads_current_data_rate = kwargs['data_rate']
+        self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=self._ads_current_data_rate,
                                         address=self._ads_current_address)
         self._ads_current.mode = Mode.CONTINUOUS
+        self.r_shunt = kwargs['r_shunt']
+        self.adc_voltage_min = kwargs['adc_voltage_min']
+        self.adc_voltage_max = kwargs['adc_voltage_max']
 
         # Relays for pulse polarity
         self.pin0 = self.mcp_board.get_pin(0)
@@ -128,13 +146,14 @@ class Tx(TxAbstract):
         self.pin1.direction = Direction.OUTPUT
         self.polarity = 0
         self.adc_gain = 2 / 3
+        self.activation_delay = kwargs['activation_delay']
+        self.release_delay = kwargs['release_delay']
 
         # MCP23008 pins for LEDs
         self.pin4 = self.mcp_board.get_pin(4)  # TODO: Delete me? No LED on this version of the board
         self.pin4.direction = Direction.OUTPUT
         self.pin4.value = True
 
-        self._bias = kwargs.pop('bias', TX_CONFIG['bias'])
         self.exec_logger.event(f'{self.board_name}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
     @property
@@ -145,7 +164,7 @@ class Tx(TxAbstract):
     def adc_gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=SPECS['TX']['data_rate'],
+        self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=kwargs['data_rate'],
                                         address=self._ads_current_address)
         self._ads_current.mode = Mode.CONTINUOUS
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
@@ -159,20 +178,20 @@ class Tx(TxAbstract):
 
     def current_pulse(self, **kwargs):
         TxAbstract.current_pulse(self, **kwargs)
-        self.exec_logger.warning(f'Current pulse is not implemented for the {TX_CONFIG["model"]} board')
+        self.exec_logger.warning(f'Current pulse is not implemented for the {self.board_name} board')
 
     @property
     def current(self):
         """ Gets the current IAB in Amps
         """
-        iab = AnalogIn(self._ads_current, ads.P0).voltage * 1000. / (50 * TX_CONFIG['r_shunt'])  # measure current
+        iab = AnalogIn(self._ads_current, ads.P0).voltage * 1000. / (50 * self.r_shunt)  # measure current
         self.exec_logger.debug(f'Reading TX current:  {iab} mA')
         return iab
 
     @ current.setter
     def current(self, value):
-        assert TX_CONFIG['current_min'] <= value <= TX_CONFIG['current_max']
-        self.exec_logger.warning(f'Current pulse is not implemented for the {TX_CONFIG["model"]} board')
+        assert self.adc_voltage_min / (50 * self.r_shunt)  <= value <= self.adc_voltage_max / (50 * self.r_shunt)
+        self.exec_logger.warning(f'Current pulse is not implemented for the {self.board_name} board')
 
     def inject(self, polarity=1, injection_duration=None):
         self.polarity = polarity
@@ -189,15 +208,15 @@ class Tx(TxAbstract):
         if polarity == 1:
             self.pin0.value = True
             self.pin1.value = False
-            time.sleep(SPECS['TX']['activation_delay'])  # Max turn on time of 211EH relays = 5ms
+            time.sleep(self.activation_delay)  # Max turn on time of 211EH relays = 5ms
         elif polarity == -1:
             self.pin0.value = False
             self.pin1.value = True
-            time.sleep(SPECS['TX']['activation_delay'])  # Max turn on time of 211EH relays = 5ms
+            time.sleep(self.activation_delay)  # Max turn on time of 211EH relays = 5ms
         else:
             self.pin0.value = False
             self.pin1.value = False
-            time.sleep(SPECS['TX']['release_delay'])  # Max turn off time of 211EH relays = 1ms
+            time.sleep(self.release_delay)  # Max turn off time of 211EH relays = 1ms
 
     def turn_off(self):
         self.pwr.turn_off(self)
@@ -209,9 +228,9 @@ class Tx(TxAbstract):
     def tx_bat(self):
         self.soh_logger.warning(f'Cannot get battery voltage on {self.board_name}')
         self.exec_logger.debug(f'{self.board_name} cannot read battery voltage. Returning default battery voltage.')
-        return TX_CONFIG['low_battery']
+        return self.pwr.voltage
 
-    def voltage_pulse(self, voltage=TX_CONFIG['default_voltage'], length=None, polarity=1):
+    def voltage_pulse(self, voltage=self.voltage, length=None, polarity=1):
         """ Generates a square voltage pulse
 
         Parameters
@@ -235,12 +254,14 @@ class Tx(TxAbstract):
 
 class Rx(RxAbstract):
     def __init__(self, **kwargs):
+        for key in kwargs:
+            kwargs = enforce_specs(kwargs, SPECS['rx'], key)
         kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         self.exec_logger.event(f'{self.board_name}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
         if self.ctl is None:
             self.ctl = ctl_module.Ctl()
-        self.connection = self.ctl.interfaces[kwargs.pop('connection', ctl_connection)]
+        self.connection = self.ctl.interfaces[kwargs['connection']]
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = 0x49
@@ -248,11 +269,10 @@ class Rx(RxAbstract):
         self._ads_voltage = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=860,
                                         address=self._ads_voltage_address)
         self._ads_voltage.mode = Mode.CONTINUOUS
-        self._coef_p2 = kwargs.pop('coef_p2', RX_CONFIG['coef_p2'])
-        self._voltage_max = kwargs.pop('voltage_max', RX_CONFIG['voltage_max'])
-        self._sampling_rate = kwargs.pop('sampling_rate', sampling_rate)
-        self._latency = kwargs.pop('latency', RX_CONFIG['latency'])
-        self._bias = kwargs.pop('bias', RX_CONFIG['bias'])
+        self._coef_p2 = kwargs['coef_p2']
+        # self._voltage_max = kwargs['voltage_max']
+        self._sampling_rate = kwargs['sampling_rate']
+        self._bias = kwargs['bias']
         self.exec_logger.event(f'{self.board_name}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
     @property
