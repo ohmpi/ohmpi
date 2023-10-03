@@ -33,8 +33,8 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'data_rate': {'default': 860.},
                 'compatible_power_sources': {'default': 'pwr_batt', 'others' : ['dps5005']},
                 'r_shunt':  {'min': 0., 'default': 2. },
-                'activation_delay': {'default': 0.005},
-                'release_delay': {'default': 0.001},
+                'activation_delay': 0.005,  # Max turn on time of 211EH relays = 5ms
+                'release_delay': 0.001,  # Max turn off time of 211EH relays = 1ms
                 }}
 
 # TODO: move low_battery spec in pwr
@@ -144,8 +144,6 @@ class Tx(TxAbstract):
         self.pin1.direction = Direction.OUTPUT
         self.polarity = 0
         self.adc_gain = 2 / 3
-        self.activation_delay = kwargs['activation_delay']
-        self.release_delay = kwargs['release_delay']
 
         # MCP23008 pins for LEDs
         self.pin4 = self.mcp_board.get_pin(4)  # TODO: Delete me? No LED on this version of the board
@@ -207,15 +205,15 @@ class Tx(TxAbstract):
         if polarity == 1:
             self.pin0.value = True
             self.pin1.value = False
-            time.sleep(SPECS['tx']['activation_delay'])  # Max turn on time of 211EH relays = 5ms
+            time.sleep(SPECS['tx']['activation_delay'])
         elif polarity == -1:
             self.pin0.value = False
             self.pin1.value = True
-            time.sleep(SPECS['tx']['activation_delay'])  # Max turn on time of 211EH relays = 5ms
+            time.sleep(SPECS['tx']['activation_delay'])
         else:
             self.pin0.value = False
             self.pin1.value = False
-            time.sleep(SPECS['tx']['release_delay'])  # Max turn off time of 211EH relays = 1ms
+            time.sleep(SPECS['tx']['release_delay'])
 
     def turn_off(self):
         self.pwr.turn_off(self)
@@ -283,7 +281,8 @@ class Rx(RxAbstract):
     def adc_gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self._ads_voltage = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=860,
+        self._ads_voltage = ads.ADS1115(self.connection, gain=self.adc_gain,
+                                        data_rate=SPECS['rx']['data_rate']['default'],
                                         address=self._ads_voltage_address)
         self._ads_voltage.mode = Mode.CONTINUOUS
         self.exec_logger.debug(f'Setting RX ADC gain to {value}')
