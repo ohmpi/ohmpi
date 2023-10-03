@@ -29,6 +29,12 @@ for k, v in MUX_CONFIG.items():
         MUX_CONFIG[k].update({k2: MUX_CONFIG[k].pop(k2, v2)})
 
 TX_CONFIG = HARDWARE_CONFIG['tx']
+for k, v in tx_module.SPECS['tx'].items():
+    try:
+        TX_CONFIG.update({k: TX_CONFIG.pop(k, v['default'])})
+    except:
+        print(k, v)
+
 RX_CONFIG = HARDWARE_CONFIG['rx']
 
 current_max = np.min([TX_CONFIG['current_max'], np.min([MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])])
