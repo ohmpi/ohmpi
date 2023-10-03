@@ -28,8 +28,8 @@ for k, v in MUX_CONFIG.items():
     for k2, v2 in MUX_DEFAULT.items():
         MUX_CONFIG[k].update({k2: MUX_CONFIG[k].pop(k2, v2)})
 
-TX_CONFIG = tx_module.TX_CONFIG
-RX_CONFIG = rx_module.RX_CONFIG
+TX_CONFIG = HARDWARE_CONFIG['tx']
+RX_CONFIG = HARDWARE_CONFIG['rx']
 
 current_max = np.min([TX_CONFIG['current_max'], np.min([MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])])
 voltage_max = np.min([TX_CONFIG['voltage_max'], np.min([MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])])
