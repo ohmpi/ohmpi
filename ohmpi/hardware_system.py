@@ -54,6 +54,7 @@ def elapsed_seconds(start_time):
 
 class OhmPiHardware:
     def __init__(self, **kwargs):
+        # OhmPiHardware initialization
         self.exec_logger = kwargs.pop('exec_logger', None)
         self.exec_logger.event(f'OhmPiHardware\tinit\tbegin\t{datetime.datetime.utcnow()}')
         if self.exec_logger is None:
@@ -65,6 +66,8 @@ class OhmPiHardware:
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_hw')
         self.tx_sync = Event()
+
+        # Main Controller initialization
         HARDWARE_CONFIG['ctl'].pop('model')
         HARDWARE_CONFIG['ctl'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                        'soh_logger': self.soh_logger})
@@ -76,21 +79,26 @@ class OhmPiHardware:
                 ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
             self.ctl = ctl_mod.Ctl(**self.ctl)
 
+        # Initialize RX
         HARDWARE_CONFIG['rx'].pop('model')
         HARDWARE_CONFIG['rx'].update(**HARDWARE_CONFIG['rx'])
-        HARDWARE_CONFIG['rx'].update({'connection': HARDWARE_CONFIG['rx'].pop('connection',
-                                                                              self.ctl.interfaces[
-                                                                                  HARDWARE_CONFIG['rx'].pop(
-                                                                                      'interface_name', 'i2c')])})
-        #HARDWARE_CONFIG['rx'].update({'connection': HARDWARE_CONFIG['rx'].pop('connection', self.ctl)})
+        HARDWARE_CONFIG['rx'].update({'ctl': HARDWARE_CONFIG['rx'].pop('ctl', self.ctl)})
         if isinstance(HARDWARE_CONFIG['rx']['ctl'], dict):
             ctl_mod = HARDWARE_CONFIG['rx']['ctl'].pop('model', self.ctl)
             if isinstance(ctl_mod, str):
                 ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
             HARDWARE_CONFIG['rx']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['rx']['ctl'])
+        HARDWARE_CONFIG['rx'].update({'connection':
+                                          HARDWARE_CONFIG['rx'].pop('connection',
+                                                                    HARDWARE_CONFIG['rx']['ctl'].interfaces[
+                                                                                  HARDWARE_CONFIG['rx'].pop(
+                                                                                      'interface_name', 'i2c')])})
         HARDWARE_CONFIG['rx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                        'soh_logger': self.soh_logger})
+        HARDWARE_CONFIG['tx'].pop('ctl', None)
         self.rx = kwargs.pop('rx', rx_module.Rx(**HARDWARE_CONFIG['rx']))
+
+        # Initialize power source
         HARDWARE_CONFIG['pwr'].pop('model')
         HARDWARE_CONFIG['pwr'].update(**HARDWARE_CONFIG['pwr'])  # NOTE: Explain why this is needed or delete me
         HARDWARE_CONFIG['pwr'].update({'ctl': HARDWARE_CONFIG['pwr'].pop('ctl', self.ctl)})
@@ -102,21 +110,30 @@ class OhmPiHardware:
         HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                       'soh_logger': self.soh_logger})
         self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
+
+        # Initialize TX
         HARDWARE_CONFIG['tx'].pop('model')
         HARDWARE_CONFIG['tx'].update(**HARDWARE_CONFIG['tx'])
         HARDWARE_CONFIG['tx'].update({'tx_sync': self.tx_sync})
-        #HARDWARE_CONFIG['tx'].update({'ctl': self.ctl})
+        HARDWARE_CONFIG['tx'].update({'ctl': HARDWARE_CONFIG['tx'].pop('ctl', self.ctl)})
+        if isinstance(HARDWARE_CONFIG['tx']['ctl'], dict):
+            ctl_mod = HARDWARE_CONFIG['tx']['ctl'].pop('model', self.ctl)
+            if isinstance(ctl_mod, str):
+                ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
+            HARDWARE_CONFIG['tx']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['tx']['ctl'])
         HARDWARE_CONFIG['tx'].update({'connection': HARDWARE_CONFIG['tx'].pop('connection',
-                                                                              self.ctl.interfaces[
+                                                                              HARDWARE_CONFIG['rx']['ctl'].interfaces[
                                                                                   HARDWARE_CONFIG['tx'].pop(
                                                                                       'interface_name', 'i2c')])})
-
+        HARDWARE_CONFIG['tx'].pop('ctl', None)
         HARDWARE_CONFIG['tx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                       'soh_logger': self.soh_logger})
         self.tx = kwargs.pop('tx', tx_module.Tx(**HARDWARE_CONFIG['tx']))
         if isinstance(self.tx, dict):
             self.tx = tx_module.Tx(**self.tx)
         self.tx.pwr = self.pwr
+
+        # Initialize Muxes
         self._cabling = kwargs.pop('cabling', {})
         self.mux_boards = {}
         for mux_id, mux_config in MUX_CONFIG.items():
@@ -142,6 +159,8 @@ class OhmPiHardware:
             mux.barrier = self.mux_barrier
             for k, v in mux.cabling.items():
                 update_dict(self._cabling, {k: (mux_id, k[0])})
+
+        # Complete OhmPiHardware initialization
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
         self._pulse = 0  # pulse number
