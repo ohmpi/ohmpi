@@ -33,9 +33,14 @@ for k, v in tx_module.SPECS['tx'].items():
     try:
         TX_CONFIG.update({k: TX_CONFIG.pop(k, v['default'])})
     except:
-        print(k, v)
+        print(f'Cannot set value {v} in TX_CONFIG[{k}]')
 
 RX_CONFIG = HARDWARE_CONFIG['rx']
+for k, v in rx_module.SPECS['rx'].items():
+    try:
+        RX_CONFIG.update({k: RX_CONFIG.pop(k, v['default'])})
+    except:
+        print(f'Cannot set value {v} in RX_CONFIG[{k}]')
 
 current_max = np.min([TX_CONFIG['voltage_max']/50/TX_CONFIG['r_shunt'], np.min([MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])])
 voltage_max = np.min([TX_CONFIG['voltage_max'], np.min([MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])])
@@ -145,14 +150,14 @@ class OhmPiHardware:
         self._start_time = None
         self._pulse = 0
 
-    def _gain_auto(self, polarities=[1, -1]):  # TODO: improve _gain_auto
+    def _gain_auto(self, polarities=(1, -1)):  # TODO: improve _gain_auto
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
         self.tx_sync.wait()
         current, voltage = 0., 0.
         for pol in polarities:
             self.tx.polarity = pol
             # set gains automatically
-            injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': polarity})
+            injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
             readings = Thread(target=self._read_values)
             readings.start()
             injection.start()
