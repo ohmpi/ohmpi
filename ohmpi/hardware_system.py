@@ -147,8 +147,7 @@ class OhmPiHardware:
                 mux_ctl_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["ctl"]["model"]}')
                 mux_config['ctl'] = mux_ctl_module.Ctl(**mux_config['ctl'])  # (**self.ctl)
             assert issubclass(type(mux_config['ctl']), CtlAbstract)
-            mux_config.update({mux_config.pop('connection',
-                                              mux_config['ctl'].interfaces[mux_config.pop('interface_name', 'i2c')])})
+            mux_config.update({'connection': mux_config.pop('connection', mux_config['ctl'].interfaces[mux_config.pop('interface_name', 'i2c')])})
             mux_config['id'] = mux_id
 
             self.mux_boards[mux_id] = mux_module.Mux(**mux_config)
