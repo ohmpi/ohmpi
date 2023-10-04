@@ -281,7 +281,7 @@ class TxAbstract(ABC):
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
 
     @abstractmethod
-    def adc_gain_auto(self):
+    def _adc_gain_auto(self):
         pass
 
     @abstractmethod
@@ -398,7 +398,7 @@ class RxAbstract(ABC):
         self.exec_logger.debug(f'Setting RX ADC gain to {value}')
 
     @abstractmethod
-    def adc_gain_auto(self):
+    def _adc_gain_auto(self):
         pass
 
     @property
