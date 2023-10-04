@@ -167,7 +167,7 @@ class Tx(TxAbstract):
         self._ads_current.mode = Mode.CONTINUOUS
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
 
-    def adc_gain_auto(self):
+    def _adc_gain_auto(self):
         self.exec_logger.event(f'{self.board_name}\ttx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
         gain = _gain_auto(AnalogIn(self._ads_current, ads.P0))
         self.exec_logger.debug(f'Setting TX ADC gain automatically to {gain}')
@@ -191,6 +191,8 @@ class Tx(TxAbstract):
         assert self.adc_voltage_min / (50 * self.r_shunt)  <= value <= self.adc_voltage_max / (50 * self.r_shunt)
         self.exec_logger.warning(f'Current pulse is not implemented for the {self.board_name} board')
 
+    def gain_auto(self):
+        self._adc_gain_auto()
     def inject(self, polarity=1, injection_duration=None):
         self.polarity = polarity
         TxAbstract.inject(self, polarity=polarity, injection_duration=injection_duration)
@@ -288,7 +290,7 @@ class Rx(RxAbstract):
         self._ads_voltage.mode = Mode.CONTINUOUS
         self.exec_logger.debug(f'Setting RX ADC gain to {value}')
 
-    def adc_gain_auto(self):
+    def _adc_gain_auto(self):
         self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
         gain_0 = _gain_auto(AnalogIn(self._ads_voltage, ads.P0))
         gain_2 = _gain_auto(AnalogIn(self._ads_voltage, ads.P2))
@@ -297,6 +299,8 @@ class Rx(RxAbstract):
         self.adc_gain = gain
         self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
+    def gain_auto(self):
+        self._adc_gain_auto()
     @property
     def voltage(self):
         """ Gets the voltage VMN in Volts

@@ -175,7 +175,7 @@ class OhmPiHardware:
         current, voltage = 0., 0.
         for pol in polarities:
             self.tx.polarity = pol
-            self.tx_sync.wait()
+            # self.tx_sync.wait()
             # set gains automatically
             injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
             readings = Thread(target=self._read_values)
@@ -183,6 +183,7 @@ class OhmPiHardware:
             injection.start()
             readings.join()
             injection.join()
+            v = self.readings[:, 2] != 0
             current = max(current, np.mean(self.readings[v, 3]))
             voltage = max(voltage, np.abs(np.mean(self.readings[v, 2] * self.readings[v, 4])))
 

@@ -17,8 +17,8 @@ print(f'TX current: {tx.current:.3f} mA')
 print(f'RX voltage: {rx.voltage:.3f} mV')
 
 tx.inject(state='on', polarity=1)
-tx.adc_gain_auto()
-rx.adc_gain_auto()
+tx._adc_gain_auto()
+rx._adc_gain_auto()
 r = []
 for i in range(30):
     r.append(rx.voltage/tx.current)
