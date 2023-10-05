@@ -196,6 +196,7 @@ class OhmPiHardware:
             # voltage = max(voltage, np.abs(np.mean(self.readings[v, 2] * self.readings[v, 4])))
 
         self.tx.gain = min(tx_gains)
+        self.rx.gain = min(rx_gains)
         # self.rx.gain_auto(voltage)
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tend\t{datetime.datetime.utcnow()}')
 
