@@ -190,6 +190,7 @@ class OhmPiHardware:
             get_rx_gain.join()
             injection.join()
             tx_gains.append(self.tx.gain)
+            rx_gains.append(self.rx.gain)
 
             # v = self.readings[:, 2] != 0
             # current = max(current, np.mean(self.readings[v, 3]))
