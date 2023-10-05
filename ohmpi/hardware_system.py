@@ -186,9 +186,9 @@ class OhmPiHardware:
             injection.start()
             get_gain.join()
             injection.join()
-            v = self.readings[:, 2] != 0
-            current = max(current, np.mean(self.readings[v, 3]))
-            voltage = max(voltage, np.abs(np.mean(self.readings[v, 2] * self.readings[v, 4])))
+            # v = self.readings[:, 2] != 0
+            # current = max(current, np.mean(self.readings[v, 3]))
+            # voltage = max(voltage, np.abs(np.mean(self.readings[v, 2] * self.readings[v, 4])))
 
         self.tx.gain = min(tx_gains)
         # self.rx.gain_auto(voltage)
