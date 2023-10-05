@@ -179,12 +179,12 @@ class OhmPiHardware:
             # self.tx_sync.wait()
             # set gains automatically
             injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
-            self.tx.gain_auto()
             tx_gains.append(self.tx.gain)
-            readings = Thread(target=self._read_values)
-            readings.start()
+            # readings = Thread(target=self._read_values)
+            get_gain = Thread(target=self.tx.gain_auto)
+            get_gain.start()
             injection.start()
-            readings.join()
+            get_gain.join()
             injection.join()
             v = self.readings[:, 2] != 0
             current = max(current, np.mean(self.readings[v, 3]))
