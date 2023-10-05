@@ -278,11 +278,11 @@ class Rx(RxAbstract):
         self.exec_logger.event(f'{self.board_name}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
     @property
-    def adc_gain(self):
+    def gain(self):
         return self._adc_gain
 
-    @adc_gain.setter
-    def adc_gain(self, value):
+    @gain.setter
+    def gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
         self._ads_voltage = ads.ADS1115(self.connection, gain=self.adc_gain,
@@ -297,10 +297,10 @@ class Rx(RxAbstract):
         gain_2 = _gain_auto(AnalogIn(self._ads_voltage, ads.P2))
         gain = np.min([gain_0, gain_2])
         self.exec_logger.debug(f'Setting RX ADC gain automatically to {gain}')
-        self.adc_gain = gain
+        self.gain = gain
         self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
-    def gain_auto(self, value):
+    def gain_auto(self):
         self._adc_gain_auto()
     @property
     def voltage(self):

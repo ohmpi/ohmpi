@@ -174,16 +174,20 @@ class OhmPiHardware:
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
         current, voltage = 0., 0.
         tx_gains = []
+        rx_gains = []
         for pol in polarities:
             self.tx.polarity = pol
             # self.tx_sync.wait()
             # set gains automatically
             injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
             # readings = Thread(target=self._read_values)
-            get_gain = Thread(target=self.tx.gain_auto)
+            get_tx_gain = Thread(target=self.tx.gain_auto)
+            get_rx_gain = Thread(target=self.rx.gain_auto)
             injection.start()
-            get_gain.start()  # TODO: add a barrier to synchronize?
-            get_gain.join()
+            get_tx_gain.start()  # TODO: add a barrier to synchronize?
+            get_rx_gain.start()
+            get_tx_gain.join()
+            get_rx_gain.join()
             injection.join()
             tx_gains.append(self.tx.gain)
 
