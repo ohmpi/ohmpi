@@ -144,7 +144,7 @@ class Tx(TxAbstract):
         self.pin1 = self.mcp_board.get_pin(1)
         self.pin1.direction = Direction.OUTPUT
         self.polarity = 0
-        self.adc_gain = 2 / 3
+        self.gain = 2 / 3
 
         # MCP23008 pins for LEDs
         self.pin4 = self.mcp_board.get_pin(4)  # TODO: Delete me? No LED on this version of the board
@@ -154,11 +154,11 @@ class Tx(TxAbstract):
         self.exec_logger.event(f'{self.board_name}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
     @property
-    def adc_gain(self):
+    def gain(self):
         return self._adc_gain
 
-    @adc_gain.setter
-    def adc_gain(self, value):
+    @gain.setter
+    def gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
         self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain,
@@ -171,7 +171,7 @@ class Tx(TxAbstract):
         self.exec_logger.event(f'{self.board_name}\ttx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
         gain = _gain_auto(AnalogIn(self._ads_current, ads.P0))
         self.exec_logger.debug(f'Setting TX ADC gain automatically to {gain}')
-        self.adc_gain = gain
+        self.gain = gain
         self.exec_logger.event(f'{self.board_name}\ttx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
     def current_pulse(self, **kwargs):

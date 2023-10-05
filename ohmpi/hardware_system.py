@@ -173,11 +173,14 @@ class OhmPiHardware:
     def _gain_auto(self, polarities=(1, -1)):  # TODO: improve _gain_auto
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
         current, voltage = 0., 0.
+        gains = []
         for pol in polarities:
             self.tx.polarity = pol
             # self.tx_sync.wait()
             # set gains automatically
             injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
+            self.tx.gain_auto()
+            gains.append(self.tx.gain)
             readings = Thread(target=self._read_values)
             readings.start()
             injection.start()
