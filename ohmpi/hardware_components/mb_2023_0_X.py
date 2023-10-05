@@ -191,8 +191,9 @@ class Tx(TxAbstract):
         assert self.adc_voltage_min / (50 * self.r_shunt)  <= value <= self.adc_voltage_max / (50 * self.r_shunt)
         self.exec_logger.warning(f'Current pulse is not implemented for the {self.board_name} board')
 
-    def gain_auto(self):
+    def gain_auto(self, value):
         self._adc_gain_auto()
+
     def inject(self, polarity=1, injection_duration=None):
         self.polarity = polarity
         TxAbstract.inject(self, polarity=polarity, injection_duration=injection_duration)
@@ -299,7 +300,7 @@ class Rx(RxAbstract):
         self.adc_gain = gain
         self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
-    def gain_auto(self):
+    def gain_auto(self, value):
         self._adc_gain_auto()
     @property
     def voltage(self):
