@@ -1,7 +1,7 @@
 import logging
 from ohmpi.utils import get_platform
 
-from paho.mqtt.client import MQTTv31
+from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
 # DEFINE THE ID OF YOUR OhmPi
@@ -19,7 +19,7 @@ OHMPI_CONFIG = {
 
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
-    'pwr': {'model': 'pwr_batt', 'voltage': 12.,'interface_name':'none'},
+    'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
     'tx':  {'model': 'mb_2023_0_X',
              'voltage_max': 12.,  # Maximum voltage supported by the TX board [V]
              'adc_voltage_max': 4800.,  # Maximum voltage read by the current ADC on the TX board [mA]
@@ -35,39 +35,38 @@ HARDWARE_CONFIG = {
             # overwritten by properties defined in each the board dict below.
             # if defined in board specs, values out of specs will be bounded to remain in specs
             # omitted properties in config will be set to board specs default values if they exist
-            {'boards':
-                 {'mux_02':
-                      {'model': 'mux_2024_0_X',
-                       'tca_address': None,
-                       'tca_channel': 0,
-                       'addr2': 'up',
-                       'addr1': 'up',
-                       # 'mcp_0': '0x26',
-                       # 'mcp_1': '0x27',
-                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                       'cabling': {(i + 8, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                       'voltage_max': 50.},
-                  'mux_03':
-                      {'model': 'mux_2024_0_X',
-                       'tca_address': None,
-                       'tca_channel': 0,
-                       'addr2': 'down',
-                       'addr1': 'up',
-                       # 'mcp_0': '0x26',
-                       # 'mcp_1': '0x27',
-                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                       'cabling': {(i + 16, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                       'voltage_max': 50.},
-                  'mux_05':
-                      {'model': 'mux_2024_0_X',
-                       'tca_address': None,
-                       'tca_channel': 0,
-                       'addr2': 'up',
-                       'addr1': 'down',
-                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                       'cabling': {(i + 0, j): ('mux_05', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                       'voltage_max': 50.},
-                  },
+            {'boards': {'mux_02':
+                     {'model': 'mux_2024_0_X',
+                      'tca_address': None,
+                      'tca_channel': 0,
+                      'addr2': 'up',
+                      'addr1': 'up',
+                      # 'mcp_0': '0x26',
+                      # 'mcp_1': '0x27',
+                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
+                      'cabling': {(i+8, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'voltage_max': 50.},
+                'mux_03':
+                     {'model': 'mux_2024_0_X',
+                      'tca_address': None,
+                      'tca_channel': 0,
+                      'addr2': 'down',
+                      'addr1': 'up',
+                      # 'mcp_0': '0x26',
+                      # 'mcp_1': '0x27',
+                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
+                      'cabling': {(i+16, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'voltage_max': 50.},
+                 'mux_05':
+                     {'model': 'mux_2024_0_X',
+                      'tca_address': None,
+                      'tca_channel': 0,
+                      'addr2': 'up',
+                      'addr1': 'down',
+                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
+                      'cabling': {(i+0, j): ('mux_05', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'voltage_max': 50.},
+                },
              'default': {'interface_name': 'i2c',
                          'voltage_max': 100.,
                          'current_max': 3.}
