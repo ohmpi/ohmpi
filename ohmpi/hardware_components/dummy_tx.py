@@ -28,7 +28,6 @@ class Tx(TxAbstract):
         pass
 
     def __init__(self, **kwargs):
-        kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         self._voltage = kwargs.pop('voltage', TX_CONFIG['default_voltage'])
 

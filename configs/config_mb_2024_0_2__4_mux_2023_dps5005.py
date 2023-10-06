@@ -1,7 +1,6 @@
 import logging
 from ohmpi.utils import get_platform
-
-from paho.mqtt.client import MQTTv31
+from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
 # DEFINE THE ID OF YOUR OhmPi
@@ -18,36 +17,51 @@ OHMPI_CONFIG = {
 }
 
 HARDWARE_CONFIG = {
-    'ctl': {'model' : 'raspberry_pi'
-                   },
-    'pwr': {'model' : 'pwr_batt', 'voltage': 12.},
-    'tx' : {'model' : 'mb_2023_0_X',
-             'mcp_board_address': 0x20,
-             'voltage_max': 12., # Maximum voltage supported by the TX board [V]
-             'current_max': 4800 / 50 / 2,  # Maximum current supported by the TX board [mA]
-             'r_shunt': 2  # Shunt resistance in Ohms
+    'ctl': {'model': 'raspberry_pi'},
+    'pwr': {'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},
+    'tx':  {'model': 'mb_2024_0_2',
+             'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
+             'current_max': 4800,  # Maximum voltage read by the current ADC on the TX board [mA]
+             'r_shunt': 2,  # Shunt resistance in Ohms
+             'interface_name': 'i2c'
             },
-    'rx': {'model': 'mb_2023_0_X',
-             'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
-             'sampling_rate': 100.,  # Hz
-             'nb_samples': 20,  # Max value 10 # was named integer before...
+    'rx':  {'model': 'mb_2024_0_2',
+             'coef_p2': 1.00,  # slope for conversion for ADS, measurement in V/V
+             'latency': 0.010,  # latency in seconds in continuous mode
+             'sampling_rate': 50,  # number of samples per second
+             'interface_name': 'i2c'
             },
-    'mux':  # default properties are system properties that will be
-            # overwritten by board properties defined at the board level within the board model file
-            # both will be overwritten by properties specified in the board dict below. Use with caution...
-        {'boards':
-                {'mux_1':
-                     {'model' : 'mux_2024_0_X', # 'ohmpi_i2c_mux64_v1.01',
-                      'tca_address': None,
-                      'tca_channel': 0,
-                      'mcp_0' : '0x22',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
-                      'mcp_1' : '0x23',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
-                      'roles' : {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'voltage_max': 12.
-                    }
-                },
-            'default': {'voltage_max': 100., 'current_max': 3.}}
-}
+    'mux': {'boards':
+                {'mux_A':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x70,
+                      'roles': {'A': 'X'},
+                      'cabling': {(i, j): ('mux_A', i) for j in ['A'] for i in range(1, 65)},
+                      'voltage_max': 12.},
+                 'mux_B':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x71,
+                      'roles': {'B': 'X'},
+                      'cabling': {(i, j): ('mux_B', i) for j in ['B'] for i in range(1, 65)},
+                      'voltage_max': 12.},
+                 'mux_M':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x72,
+                      'roles': {'M': 'X'},
+                      'cabling': {(i, j): ('mux_M', i) for j in ['M'] for i in range(1, 65)},
+                      'voltage_max': 12.},
+                'mux_N':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x73,
+                      'roles': {'N': 'X'},
+                      'cabling': {(i, j): ('mux_N', i) for j in ['N'] for i in range(1, 65)},
+                      'voltage_max': 12.},
+                 },
+             'default': {'interface_name': 'i2c_ext',
+                         'voltage_max': 100.,
+                         'current_max': 3.}
+            }
+    }
 
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration

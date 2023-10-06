@@ -3,7 +3,25 @@ import os
 import shutil
 import collections.abc
 import numpy as np
+from numbers import Number
 
+
+def enforce_specs(kwargs, specs, key):
+
+    kwargs.update({key: kwargs.pop(key, specs[key]['default'])})
+    
+    if isinstance(kwargs[key], Number):
+        s = specs.copy()
+        min_value = s[key].pop('min', -np.inf)
+        s[key]['min'] = min_value
+        max_value = s[key].pop('max', np.inf)
+        s[key]['max'] = max_value
+        if kwargs[key] < min_value:
+            kwargs[key] = min_value
+        elif kwargs[key] > max_value:
+            kwargs[key] = max_value
+
+    return kwargs
 
 def update_dict(d, u):
     """Updates a dictionary by adding elements to collection items associated to existing keys

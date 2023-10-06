@@ -86,11 +86,17 @@ class OhmPi(object):
             'nb_meas': 1,
             'sequence_delay': 1,
             'nb_stack': 1,
-            'export_path': 'data/measurement.csv'
+            'sampling_interval': 2,
+            'tx_volt': 5,
+            'duty_cycle': 0.5,
+            'strategy': 'constant',
+            'export_path': None,
+            'export_dir': 'data',
+            'export_name': 'measurement.csv'
         }
         # read in acquisition settings
-        if settings is not None:
-            self.update_settings(settings)
+        # if settings is not None:
+        self.update_settings(settings)
 
         self.exec_logger.debug('Initialized with settings:' + str(self.settings))
 
@@ -162,6 +168,7 @@ class OhmPi(object):
 
     @staticmethod
     def append_and_save(filename: str, last_measurement: dict, cmd_id=None):
+        # TODO: find alternative approach to save full data (zip, hdf5 or mseed?)
         """Appends and saves the last measurement dict.
 
         Parameters
@@ -410,12 +417,13 @@ class OhmPi(object):
         else:
             self.exec_logger.warning('Not on Raspberry Pi, skipping reboot...')
 
-    def run_measurement(self, quad=None, nb_stack=None, injection_duration=None,
+    def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
                         autogain=True, strategy='constant', tx_volt=5., best_tx_injtime=0.1,
                         cmd_id=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value, change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used in function definition
         # TODO: add rs_check option (or propose an other way to do this)
+        # TODO: implement compute_tx_volt for injection strategies
         """Measures on a quadrupole and returns transfer resistance.
 
         Parameters
@@ -443,28 +451,43 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier
         """
+        # check pwr is on, if not, let's turn it on
+        switch_power_off = False
+        if self._hw.pwr_state == 'off':
+            self._hw.pwr_state = 'on'
+            switch_power_off = True
+
         self.exec_logger.debug('Starting measurement')
         self.exec_logger.debug('Waiting for data')
 
         # check arguments
         if quad is None:
-            quad = [0, 0, 0, 0]
+            quad = np.array([0, 0, 0, 0])
         if nb_stack is None:
             nb_stack = self.settings['nb_stack']
         if injection_duration is None:
-                injection_duration = self.settings['injection_duration']
-        tx_volt = float(tx_volt)
+            injection_duration = self.settings['injection_duration']
+        if duty_cycle is None:
+            duty_cycle = self.settings['duty_cycle']
+        # quad = kwargs.pop('quad', [0,0,0,0])
+        # nb_stack = kwargs.pop('nb_stack', self.settings['nb_stack'])
+        # injection_duration = kwargs.pop('injection_duration', self.settings['injection_duration'])
+        # duty_cycle = kwargs.pop('duty_cycle', self.settings['duty_cycle'])
+        # tx_volt = float(kwargs.pop('tx_volt', self.settings['tx_volt']))
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
-            self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2, cycles=nb_stack, duty_cycle=kwargs.pop('duty_cycle', 1.))
+            self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
                 delay = kwargs['delay']
             else:
-                delay = 0.
+                delay = injection_duration * 2/3  # TODO: check if this is ok and if last point is not taken the end of injection
             x = np.where((self._hw.readings[:, 0] >= delay) & (self._hw.readings[:, 2] != 0))
-            print(f'length of series: {len(x)}')
-            R = np.mean((self._hw.readings[x, 2] * (self._hw.readings[x, 4] - self._hw.sp)) / self._hw.readings[x, 3])
-            R_std = 100. * np.std((self._hw.readings[x, 2] * (self._hw.readings[x, 4] - self._hw.sp)) / self._hw.readings[x, 3]) / R
+            Vmn = np.mean(self._hw.readings[x, 2] * (self._hw.readings[x, 4] - self._hw.sp))
+            Vmn_std = 100. * np.std(self._hw.readings[x, 2] * (self._hw.readings[x, 4])) # - self._hw.sp))
+            I = np.mean(self._hw.readings[x, 3])
+            I_std = 100. * np.std(self._hw.readings[x, 3])
+            R = self._hw.last_resistance(delay=delay)
+            R_std = self._hw.last_dev(delay=delay)
             d = {
                 "time": datetime.now().isoformat(),
                 "A": quad[0],
@@ -472,8 +495,8 @@ class OhmPi(object):
                 "M": quad[2],
                 "N": quad[3],
                 "inj time [ms]": injection_duration,  # NOTE: check this
-                # "Vmn [mV]": sum_vmn / (2 * nb_stack),
-                # "I [mA]": sum_i / (2 * nb_stack),
+                "Vmn [mV]": Vmn,
+                "I [mA]": I,
                 "R [ohm]": R,
                 "R_std [%]": R_std,
                 "Ps [mV]": self._hw.sp,
@@ -483,10 +506,10 @@ class OhmPi(object):
                 "Nb samples [-]": len(self._hw.readings),  # TODO: use only samples after a delay in each pulse
                 "fulldata": self._hw.readings[:, [0, -2, -1]],
                 # "I_stack [mA]": i_stack_mean,
-                # "I_std [mA]": i_std,
+                "I_std [%]": I_std,
                 # "I_per_stack [mA]": np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
                 # "Vmn_stack [mV]": vmn_stack_mean,
-                # "Vmn_std [mV]": vmn_std,
+                "Vmn_std [%]": Vmn_std,
                 # "Vmn_per_stack [mV]": np.array([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1))[0] / 2 for i in range(nb_stack)]),
                 # "R_stack [ohm]": r_stack_mean,
                 # "R_std [ohm]": r_stack_std,
@@ -515,6 +538,11 @@ class OhmPi(object):
         else:
             self.exec_logger.info(f'Skipping {quad}')
         self.switch_mux_off(quad, cmd_id)
+
+        # if power was off before measurement, let's turn if off
+        if switch_power_off:
+            self._hw.pwr_state = 'off'
+
         return d
 
     def run_multiple_sequences(self, cmd_id=None, sequence_delay=None, nb_meas=None, **kwargs):  # NOTE : could be renamed repeat_sequence
@@ -571,6 +599,8 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier
         """
+        # switch power on
+        self._hw.pwr_state = 'on'
         self.status = 'running'
         self.exec_logger.debug(f'Status: {self.status}')
         self.exec_logger.debug(f'Measuring sequence: {self.sequence}')
@@ -578,7 +608,11 @@ class OhmPi(object):
         self.reset_mux()
         
         # create filename with timestamp
-        filename = self.settings["export_path"].replace('.csv',
+        if self.settings["export_path"] is None:
+            filename = self.settings['export_path'].replace(
+                '.csv', f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
+        else:
+            filename = self.settings["export_path"].replace('.csv',
                                                         f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
         self.exec_logger.debug(f'Saving to {filename}')
 
@@ -614,7 +648,7 @@ class OhmPi(object):
             # self.switch_mux_on(quad)
             # run a measurement
             if self.on_pi:
-                acquired_data = self.run_measurement(quad, **kwargs)
+                acquired_data = self.run_measurement(quad=quad, **kwargs)
             else:  # for testing, generate random data
                 sum_vmn = np.random.rand(1)[0] * 1000.
                 sum_i = np.random.rand(1)[0] * 100.
@@ -648,7 +682,7 @@ class OhmPi(object):
             self.append_and_save(filename, acquired_data)
             self.exec_logger.debug(f'quadrupole {i + 1:d}/{n:d}')
 
-        # self.switch_dps('off')
+        self._hw.pwr_state = 'off'
         self.status = 'idle'
 
     def run_sequence_async(self, cmd_id=None, **kwargs):
@@ -789,7 +823,10 @@ class OhmPi(object):
             self.exec_logger.debug(f'tx pwr voltage: {self._hw.tx.pwr.voltage}, rx max voltage: {self._hw.rx._voltage_max}')
             return False
         else:
-            return self._hw.switch_mux(electrodes=quadrupole, state='on', bypass_check=bypass_check)
+            if np.array(quadrupole).all() == np.array([0, 0, 0, 0]).all():  # NOTE: No mux
+                return True
+            else:
+                return self._hw.switch_mux(electrodes=quadrupole, state='on', bypass_check=bypass_check)
 
     def switch_mux_off(self, quadrupole, cmd_id=None):
         """Switches off multiplexer relays for given quadrupole.
@@ -840,7 +877,13 @@ class OhmPi(object):
             - nb_meas (total number of times the sequence will be run)
             - sequence_delay (delay in second between each sequence run)
             - nb_stack (number of stack for each quadrupole measurement)
-            - export_path (path where to export the data, timestamp will be added to filename)
+            - strategy (injection strategy: constant, vmax, vmin)
+            - duty_cycle (injection duty cycle comprised between 0.5 - 1)
+            - export_dir (directory where to export the data)
+            - export_name (name of exported file, timestamp will be added to filename)
+            - export_path (path where to export the data, timestamp will be added to filename ;
+                            if export_path is given, it goes over export_dir and export_name)
+
 
         Parameters
         ----------
@@ -865,7 +908,112 @@ class OhmPi(object):
                 status = False
         else:
             self.exec_logger.warning('Settings are missing...')
+
+        if self.settings['export_path'] is None:
+            self.settings['export_path'] = os.path.join(self.settings['export_dir'], self.settings['export_name'])
+        else:
+            self.settings['export_dir'] = os.path.split(self.settings['export_path'])[0]
+            self.settings['export_name'] = os.path.split(self.settings['export_path'])[1]
+
         return status
+
+    def run_inversion(self, survey_names=[], elec_spacing=1, **kwargs):
+        """Run a simple 2D inversion using ResIPy.
+        
+        Parameters
+        ----------
+        survey_names : list of string, optional
+            Filenames of the survey to be inverted (including extension).
+        elec_spacing : float (optional)
+            Electrode spacing in meters. We assume same electrode spacing everywhere.
+        kwargs : optional
+            Additiona keyword arguments passed to `resipy.Project.invert()`. For instance
+            `reg_mode` == 0 for batch inversion, `reg_mode == 2` for time-lapse inversion.
+            See ResIPy document for more information on options available
+            (https://hkex.gitlab.io/resipy/).
+
+        Returns
+        -------
+        xzv : list of dict
+            Each dictionnary with key 'x' and 'z' for the centroid of the elements and 'v'
+            for the values in resistivity of the elements.
+        """
+        # check if we have any files to be inverted
+        if len(survey_names) == 0:
+            self.exec_logger('No file to invert')
+            return []
+        
+        # check if user didn't provide a single string instead of a list
+        if isinstance(survey_names, str):
+            survey_names = [survey_names]
+
+        # check kwargs for reg_mode
+        if 'reg_mode' in kwargs:
+            reg_mode = kwargs['reg_mode']
+        else:
+            reg_mode = 0
+            kwargs['reg_mode'] = 0
+
+        pdir = os.path.dirname(__file__)
+        # import resipy if available
+        try:
+            import pandas as pd
+            import sys
+            sys.path.append(os.path.join(pdir, '../../resipy/src/'))
+            from resipy import Project
+        except Exception as e:
+            self.exec_logger.error('Cannot import ResIPy or Pandas, error: ' + str(e))
+            return []
+
+        # get absolule filename
+        fnames = []
+        for survey_name in survey_names:
+            fname = os.path.join(pdir, '../data', survey_name)
+            if os.path.exists(fname):
+                fnames.append(fname)
+            else:
+                self.exec_logger.warning(fname + ' not found')
+        
+        # define a parser for the "ohmpi" format
+        def ohmpiParser(fname):
+            df = pd.read_csv(fname)
+            df = df.rename(columns={'A':'a', 'B':'b', 'M':'m', 'N':'n'})
+            df['vp'] = df['Vmn [mV]']
+            df['i'] = df['I [mA]']
+            df['resist'] = df['vp']/df['i']
+            df['ip'] = np.nan
+            emax = np.max(df[['a', 'b', 'm', 'n']].values)
+            elec = np.zeros((emax, 3))
+            elec[:, 0] = np.arange(emax) * elec_spacing
+            return elec, df[['a','b','m','n','vp','i','resist','ip']]
+                
+        # run inversion
+        self.exec_logger.info('ResIPy: import surveys')
+        k = Project(typ='R2')  # invert in a temporary directory that will be erased afterwards
+        if len(survey_names) == 1:
+            k.createSurvey(fnames[0], parser=ohmpiParser)
+        elif len(survey_names) > 0 and reg_mode == 0:
+            k.createBatchSurvey(fnames, parser=ohmpiParser)
+        elif len(survey_names) > 0 and reg_mode > 0:
+            k.createTimeLapseSurvey(fnames, parser=ohmpiParser)
+        self.exec_logger.info('ResIPy: generate mesh')
+        k.createMesh('trian')
+        self.exec_logger.info('ResIPy: invert survey')
+        k.invert(param=kwargs)
+
+        # read data
+        self.exec_logger.info('Reading inverted surveys')
+        k.getResults()
+        xzv = []
+        for m in k.meshResults:
+            df = m.df
+            xzv.append({
+                'x': df['X'].values.tolist(),
+                'z': df['Z'].values.tolist(),
+                'rho': df['Resistivity(ohm.m)'].values.tolist(),
+            })
+        
+        return xzv
 
     # Properties
     @property

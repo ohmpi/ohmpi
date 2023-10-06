@@ -1,7 +1,7 @@
 import logging
 from ohmpi.utils import get_platform
 
-from paho.mqtt.client import MQTTv31
+from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
 # DEFINE THE ID OF YOUR OhmPi
@@ -19,7 +19,7 @@ OHMPI_CONFIG = {
 
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
-    'pwr': {'model': 'pwr_batt', 'voltage': 12.},
+    'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
     'tx':  {'model': 'mb_2023_0_X',
              'voltage_max': 12.,  # Maximum voltage supported by the TX board [V]
              'adc_voltage_max': 4800.,  # Maximum voltage read by the current ADC on the TX board [mA]
@@ -35,35 +35,7 @@ HARDWARE_CONFIG = {
             # overwritten by properties defined in each the board dict below.
             # if defined in board specs, values out of specs will be bounded to remain in specs
             # omitted properties in config will be set to board specs default values if they exist
-            {'boards':
-                    {'mux_02':
-                         {'model': 'mux_2024_0_X',
-                          'tca_address': None,
-                          'tca_channel': 0,
-                          'mcp_0': '0x22',  # TODO: Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
-                          'mcp_1': '0x23',  # TODO: Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
-                          'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                          'cabling': {(i+8, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                          'voltage_max': 12.},
-                     'mux_00':
-                         {'model': 'mux_2024_0_X',
-                          'tca_address': None,
-                          'tca_channel': 0,
-                          'mcp_0': '0x24',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
-                          'mcp_1': '0x25',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
-                          'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                          'cabling': {(i+16, j): ('mux_00', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                          'voltage_max': 12.},
-                     'mux_04':
-                         {'model': 'mux_2024_0_X',
-                          'tca_address': None,
-                          'tca_channel': 0,
-                          'mcp_0': '0x26',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
-                          'mcp_1': '0x27',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
-                          'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                          'cabling': {(i+24, j): ('mux_04', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                          'voltage_max': 12.}
-                     },
+            {'boards': {},
              'default': {'interface_name': 'i2c',
                          'voltage_max': 100.,
                          'current_max': 3.}

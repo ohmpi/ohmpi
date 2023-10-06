@@ -11,6 +11,7 @@ from ohmpi.logging_setup import create_stdout_logger
 from ohmpi.utils import update_dict
 from ohmpi.config import HARDWARE_CONFIG
 from threading import Thread, Event, Barrier, BrokenBarrierError
+import warnings
 
 # plt.switch_backend('agg')  # for thread safe operations...
 
@@ -28,11 +29,24 @@ for k, v in MUX_CONFIG.items():
     for k2, v2 in MUX_DEFAULT.items():
         MUX_CONFIG[k].update({k2: MUX_CONFIG[k].pop(k2, v2)})
 
-TX_CONFIG = tx_module.TX_CONFIG
-RX_CONFIG = rx_module.RX_CONFIG
+TX_CONFIG = HARDWARE_CONFIG['tx']
+for k, v in tx_module.SPECS['tx'].items():
+    try:
+        TX_CONFIG.update({k: TX_CONFIG.pop(k, v['default'])})
+    except Exception as e:
+        print(f'Cannot set value {v} in TX_CONFIG[{k}]:\n{e}')
 
-current_max = np.min([TX_CONFIG['current_max'], np.min([MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])])
-voltage_max = np.min([TX_CONFIG['voltage_max'], np.min([MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])])
+RX_CONFIG = HARDWARE_CONFIG['rx']
+for k, v in rx_module.SPECS['rx'].items():
+    try:
+        RX_CONFIG.update({k: RX_CONFIG.pop(k, v['default'])})
+    except Exception as e:
+        print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
+
+current_max = np.min([TX_CONFIG['voltage_max']/50/TX_CONFIG['r_shunt'],  # TODO: replace 50 by a TX config
+                      np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
+voltage_max = np.min([TX_CONFIG['voltage_max'],
+                      np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
 voltage_min = RX_CONFIG['voltage_min']
 
 
@@ -43,17 +57,14 @@ def elapsed_seconds(start_time):
 
 class OhmPiHardware:
     def __init__(self, **kwargs):
-        self.exec_logger = kwargs.pop('exec_logger', None)
+        # OhmPiHardware initialization
+        self.exec_logger = kwargs.pop('exec_logger', create_stdout_logger('exec_hw'))
         self.exec_logger.event(f'OhmPiHardware\tinit\tbegin\t{datetime.datetime.utcnow()}')
-        if self.exec_logger is None:
-            self.exec_logger = create_stdout_logger('exec_hw')
-        self.data_logger = kwargs.pop('exec_logger', None)
-        if self.data_logger is None:
-            self.data_logger = create_stdout_logger('data_hw')
-        self.soh_logger = kwargs.pop('soh_logger', None)
-        if self.soh_logger is None:
-            self.soh_logger = create_stdout_logger('soh_hw')
+        self.data_logger = kwargs.pop('exec_logger', create_stdout_logger('data_hw'))
+        self.soh_logger = kwargs.pop('soh_logger', create_stdout_logger('soh_hw'))
         self.tx_sync = Event()
+
+        # Main Controller initialization
         HARDWARE_CONFIG['ctl'].pop('model')
         HARDWARE_CONFIG['ctl'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                        'soh_logger': self.soh_logger})
@@ -65,17 +76,26 @@ class OhmPiHardware:
                 ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
             self.ctl = ctl_mod.Ctl(**self.ctl)
 
+        # Initialize RX
         HARDWARE_CONFIG['rx'].pop('model')
-        HARDWARE_CONFIG['rx'].update(**HARDWARE_CONFIG['rx'])
+        HARDWARE_CONFIG['rx'].update(**HARDWARE_CONFIG['rx'])  # TODO: delete me ?
         HARDWARE_CONFIG['rx'].update({'ctl': HARDWARE_CONFIG['rx'].pop('ctl', self.ctl)})
         if isinstance(HARDWARE_CONFIG['rx']['ctl'], dict):
             ctl_mod = HARDWARE_CONFIG['rx']['ctl'].pop('model', self.ctl)
             if isinstance(ctl_mod, str):
                 ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
             HARDWARE_CONFIG['rx']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['rx']['ctl'])
+        HARDWARE_CONFIG['rx'].update({'connection':
+                                          HARDWARE_CONFIG['rx'].pop('connection',
+                                                                    HARDWARE_CONFIG['rx']['ctl'].interfaces[
+                                                                                  HARDWARE_CONFIG['rx'].pop(
+                                                                                      'interface_name', 'i2c')])})
         HARDWARE_CONFIG['rx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                        'soh_logger': self.soh_logger})
+        HARDWARE_CONFIG['tx'].pop('ctl', None)
         self.rx = kwargs.pop('rx', rx_module.Rx(**HARDWARE_CONFIG['rx']))
+
+        # Initialize power source
         HARDWARE_CONFIG['pwr'].pop('model')
         HARDWARE_CONFIG['pwr'].update(**HARDWARE_CONFIG['pwr'])  # NOTE: Explain why this is needed or delete me
         HARDWARE_CONFIG['pwr'].update({'ctl': HARDWARE_CONFIG['pwr'].pop('ctl', self.ctl)})
@@ -84,19 +104,39 @@ class OhmPiHardware:
             if isinstance(ctl_mod, str):
                 ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
             HARDWARE_CONFIG['pwr']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['pwr']['ctl'])
+        #if 'interface_name' in HARDWARE_CONFIG['pwr']:
+        HARDWARE_CONFIG['pwr'].update({
+            'connection': HARDWARE_CONFIG['pwr'].pop(
+                'connection', HARDWARE_CONFIG['pwr']['ctl'].interfaces[
+                    HARDWARE_CONFIG['pwr'].pop('interface_name', None)])})
+
         HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                       'soh_logger': self.soh_logger})
         self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
+
+        # Initialize TX
         HARDWARE_CONFIG['tx'].pop('model')
         HARDWARE_CONFIG['tx'].update(**HARDWARE_CONFIG['tx'])
         HARDWARE_CONFIG['tx'].update({'tx_sync': self.tx_sync})
-        HARDWARE_CONFIG['tx'].update({'ctl': self.ctl})
+        HARDWARE_CONFIG['tx'].update({'ctl': HARDWARE_CONFIG['tx'].pop('ctl', self.ctl)})
+        if isinstance(HARDWARE_CONFIG['tx']['ctl'], dict):
+            ctl_mod = HARDWARE_CONFIG['tx']['ctl'].pop('model', self.ctl)
+            if isinstance(ctl_mod, str):
+                ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
+            HARDWARE_CONFIG['tx']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['tx']['ctl'])
+        HARDWARE_CONFIG['tx'].update({'connection': HARDWARE_CONFIG['tx'].pop('connection',
+                                                                              HARDWARE_CONFIG['tx']['ctl'].interfaces[
+                                                                                  HARDWARE_CONFIG['tx'].pop(
+                                                                                      'interface_name', 'i2c')])})
+        HARDWARE_CONFIG['tx'].pop('ctl', None)
         HARDWARE_CONFIG['tx'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                       'soh_logger': self.soh_logger})
         self.tx = kwargs.pop('tx', tx_module.Tx(**HARDWARE_CONFIG['tx']))
         if isinstance(self.tx, dict):
             self.tx = tx_module.Tx(**self.tx)
         self.tx.pwr = self.pwr
+
+        # Initialize Muxes
         self._cabling = kwargs.pop('cabling', {})
         self.mux_boards = {}
         for mux_id, mux_config in MUX_CONFIG.items():
@@ -106,22 +146,14 @@ class OhmPiHardware:
             mux_config.update({'ctl': mux_config.pop('ctl', self.ctl)})
 
             mux_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["model"]}')
-            if isinstance(mux_config['ctl'], dict): ### TODO: is this needed?
+            if isinstance(mux_config['ctl'], dict):
                 mux_ctl_module = importlib.import_module(f'ohmpi.hardware_components.{mux_config["ctl"]["model"]}')
                 mux_config['ctl'] = mux_ctl_module.Ctl(**mux_config['ctl'])  # (**self.ctl)
             assert issubclass(type(mux_config['ctl']), CtlAbstract)
-            io = mux_config.pop('io', mux_config['ctl'].interfaces[mux_config.pop('connection', 'i2c')])
-            mux_config.update({'io': io})
+            mux_config.update({'connection': mux_config.pop('connection', mux_config['ctl'].interfaces[mux_config.pop('interface_name', 'i2c')])})
             mux_config['id'] = mux_id
 
             self.mux_boards[mux_id] = mux_module.Mux(**mux_config)
-
-        # self.mux_boards = kwargs.pop('mux', {'mux_1': mux_module.Mux(id='mux_1',
-        #                                                              exec_logger=self.exec_logger,
-        #                                                              data_logger=self.data_logger,
-        #                                                              soh_logger=self.soh_logger,
-        #                                                              ctl=self.ctl,
-        #                                                              cabling=self._cabling)})
 
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
         self._cabling = {}
@@ -129,22 +161,68 @@ class OhmPiHardware:
             mux.barrier = self.mux_barrier
             for k, v in mux.cabling.items():
                 update_dict(self._cabling, {k: (mux_id, k[0])})
+
+        # Complete OhmPiHardware initialization
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
         self._pulse = 0  # pulse number
         self.exec_logger.event(f'OhmPiHardware\tinit\tend\t{datetime.datetime.utcnow()}')
+        self._pwr_state = 'off'
+
+    @property
+    def pwr_state(self):
+        return self._pwr_state
+
+    @pwr_state.setter
+    def pwr_state(self, state):
+        if state == 'on':
+            self.tx.pwr_state = 'on'
+            self._pwr_state = 'on'
+        elif state == 'off':
+            self.tx.pwr_state = 'off'
+            self._pwr_state = 'off'
 
     def _clear_values(self):
         self.readings = np.array([])
         self._start_time = None
         self._pulse = 0
 
-    def _gain_auto(self):  # TODO: improve _gain_auto
+    def _gain_auto(self, polarities=(1, -1), vab=5., switch_pwr_off=False): #TODO: improve _gain_auto
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
-        self.tx_sync.wait()
-        self.tx.adc_gain_auto()
-        self.rx.adc_gain_auto()
-        self.rx.voltage_gain_auto()
+        current, voltage = 0., 0.
+        if self.tx.pwr.voltage_adjustable:
+            self.tx.pwr.voltage = vab
+        if self.tx.pwr.pwr_state == 'off':
+            self.tx.pwr.pwr_state = 'on'
+            switch_pwr_off = True
+        tx_gains = []
+        rx_gains = []
+        for pol in polarities:
+            # self.tx.polarity = pol
+            # set gains automatically
+            injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
+            # readings = Thread(target=self._read_values)
+            get_tx_gain = Thread(target=self.tx.gain_auto)
+            get_rx_gain = Thread(target=self.rx.gain_auto)
+            injection.start()
+            self.tx_sync.wait()
+            get_tx_gain.start()  # TODO: add a barrier to synchronize?
+            get_rx_gain.start()
+            get_tx_gain.join()
+            get_rx_gain.join()
+            injection.join()
+            tx_gains.append(self.tx.gain)
+            rx_gains.append(self.rx.gain)
+
+            # v = self.readings[:, 2] != 0
+            # current = max(current, np.mean(self.readings[v, 3]))
+            # voltage = max(voltage, np.abs(np.mean(self.readings[v, 2] * self.readings[v, 4])))
+            self.tx.polarity = 0
+        self.tx.gain = min(tx_gains)
+        self.rx.gain = min(rx_gains)
+        # self.rx.gain_auto(voltage)
+        if switch_pwr_off:
+            self.tx.pwr.pwr_state = 'off'
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tend\t{datetime.datetime.utcnow()}')
 
     def _inject(self, polarity=1, injection_duration=None):  # TODO: deal with voltage or current pulse
@@ -158,7 +236,7 @@ class OhmPiHardware:
             mux.barrier = self.mux_barrier
 
     @property
-    def pulses(self):
+    def pulses(self):  # TODO: is this obsolete?
         pulses = {}
         for i in np.unique(self.readings[:, 1]):
             r = self.readings[self.readings[:, 1] == i, :]
@@ -204,20 +282,18 @@ class OhmPiHardware:
         self._pulse += 1
         self.exec_logger.event(f'OhmPiHardware\tread_values\tend\t{datetime.datetime.utcnow()}')
 
-    @property
-    def last_rho(self):
-        v = self.readings[:, 2] != 0
+    def last_resistance(self, delay=0.):
+        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
         if len(v) > 1:
             # return np.mean(np.abs(self.readings[v, 4] - self.sp) / self.readings[v, 3])
             return np.mean(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3])
         else:
             return np.nan
 
-    @property
-    def last_dev(self):
-        if len(self.readings) > 1:
-            v = self.readings[:, 2] != 0  # exclude sample where there is no injection
-            return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3]) / self.last_rho
+    def last_dev(self, delay=0.):
+        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        if len(v) > 1:
+            return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3]) / self.last_resistance(delay=delay)
         else:
             return np.nan
 
@@ -241,7 +317,7 @@ class OhmPiHardware:
             sp = np.mean(mean_vmn[np.ix_(polarity == 1)] + mean_vmn[np.ix_(polarity == -1)]) / 2
             return sp
 
-    def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5,
+    def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5.,
                          vab_max=voltage_max, vmn_min=voltage_min):
         """Estimates best Tx voltage based on different strategies.
         At first a half-cycle is made for a short duration with a fixed
@@ -285,7 +361,14 @@ class OhmPiHardware:
         vab_max = np.abs(vab_max)
         vmn_min = np.abs(vmn_min)
         vab = np.min([np.abs(tx_volt), vab_max])
-        self.tx.turn_on()
+        # self.tx.turn_on()
+        switch_pwr_off, switch_tx_pwr_off = False, False #TODO: check if these should be moved in kwargs
+        if self.tx.pwr_state == 'off':
+            self.tx.pwr_state = 'on'
+            switch_tx_pwr_off = True
+        if self.tx.pwr.pwr_state == 'off':
+            self.tx.pwr.pwr_state = 'on'
+            switch_pwr_off = True
         if 1. / self.rx.sampling_rate > pulse_duration:
             sampling_rate = 1. / pulse_duration  # TODO: check this...
         else:
@@ -307,7 +390,11 @@ class OhmPiHardware:
             self.tx.exec_logger.warning(f'Unknown strategy {strategy} for setting VAB! Using {vab} V')
         else:
             self.tx.exec_logger.debug(f'Constant strategy for setting VAB, using {vab} V')
-        self.tx.turn_off()
+        # self.tx.turn_off()
+        if switch_pwr_off:
+            self.tx.pwr.pwr_state = 'off'
+        if switch_tx_pwr_off:
+            self.tx.pwr_state = 'off'
         rab = (np.abs(vab) * 1000.) / iab
         self.exec_logger.debug(f'RAB = {rab:.2f} Ohms')
         if vmn < 0:
@@ -318,10 +405,11 @@ class OhmPiHardware:
 
     def _plot_readings(self, save_fig=False):
         # Plot graphs
+        warnings.filterwarnings("ignore", category=DeprecationWarning)
         fig, ax = plt.subplots(nrows=5, sharex=True)
         ax[0].plot(self.readings[:, 0], self.readings[:, 3], '-r', marker='.', label='iab')
         ax[0].set_ylabel('Iab [mA]')
-        ax[1].plot(self.readings[:, 0], self.readings[:, 2] * (self.readings[:, 4] - self.sp) , '-b', marker='.', label='vmn')
+        ax[1].plot(self.readings[:, 0], self.readings[:, 4] - self.sp , '-b', marker='.', label='vmn')
         ax[1].set_ylabel('Vmn [mV]')
         ax[2].plot(self.readings[:, 0], self.readings[:, 2], '-g', marker='.', label='polarity')
         ax[2].set_ylabel('polarity [-]')
@@ -329,13 +417,14 @@ class OhmPiHardware:
         ax[3].plot(self.readings[v, 0], (self.readings[v, 2] * (self.readings[v, 4] - self.sp)) / self.readings[v, 3],
                    '-m', marker='.', label='R [ohm]')
         ax[3].set_ylabel('R [ohm]')
-        ax[4].plot(self.readings[v, 0], np.ones_like(self.readings[v,0]) * self.sp, '-k', marker='.', label='SP [mV]')
+        ax[4].plot(self.readings[v, 0], np.ones_like(self.readings[v, 0]) * self.sp, '-k', marker='.', label='SP [mV]')
         ax[4].set_ylabel('SP [mV]')
-        fig.legend()
+        # fig.legend()
         if save_fig:
             fig.savefig(f'figures/test.png')
         else:
             plt.show()
+        warnings.resetwarnings()
 
     def calibrate_rx_bias(self):
         self.rx._bias += (np.mean(self.readings[self.readings[:, 2] == 1, 4])
@@ -344,19 +433,19 @@ class OhmPiHardware:
     def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, duty_cycle=1.,
                         append=False):
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
-        self.tx.polarity = polarity  ### TODO: inject on both polarities for gain auto?
-        durations = [cycle_duration/2]*2*cycles
-        # set gains automatically
-        gain_auto = Thread(target=self._gain_auto)
-        injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': polarity})
-        gain_auto.start()
-        injection.start()
-        gain_auto.join()
-        injection.join()
+        switch_pwr_off, switch_tx_pwr_off = False, False
+        if self.pwr_state == 'off':
+            self.pwr_state = 'on'
+            switch_tx_pwr_off = True
+        # if self.tx.pwr.pwr_state == 'off':
+        #     self.tx.pwr.pwr_state = 'on'
+        #     switch_pwr_off = True
+        self._gain_auto(vab=vab)
         assert 0. <= duty_cycle <= 1.
         if duty_cycle < 1.:
-            durations = [cycle_duration/2 * duty_cycle, cycle_duration/2*(1.-duty_cycle)] * 2 * cycles
-            pol = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(2 * cycles)]
+            durations = [cycle_duration/2 * duty_cycle, cycle_duration/2 * (1.-duty_cycle)] * 2 * cycles
+            pol = [-int(polarity * np.heaviside(i % 2, -1.)) for i in range(2 * cycles)]
+            # pol = [-int(self.tx.polarity * np.heaviside(i % 2, -1.)) for i in range(2 * cycles)]
             polarities = [0] * (len(pol) * 2)
             polarities[0::2] = pol
         else:
@@ -364,15 +453,20 @@ class OhmPiHardware:
             polarities = None
         self._vab_pulses(vab, durations, sampling_rate, polarities=polarities,  append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
+        if switch_pwr_off:
+            self.tx.pwr.pwr_state = 'off'
+        if switch_tx_pwr_off:
+            self.pwr_state = 'off'
 
-    def _vab_pulse(self, vab, duration, sampling_rate=None, polarity=1, append=False):
+    def _vab_pulse(self, vab=None, duration=1., sampling_rate=None, polarity=1, append=False):
         """ Gets VMN and IAB from a single voltage pulse
         """
-        self.tx.polarity = polarity
+        #self.tx.polarity = polarity
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
         if self.tx.pwr.voltage_adjustable:
-            self.tx.pwr.voltage = vab
+            if self.tx.pwr.voltage != vab:
+                self.tx.pwr.voltage = vab
         else:
             vab = self.tx.pwr.voltage
         # reads current and voltage during the pulse
@@ -382,23 +476,38 @@ class OhmPiHardware:
         injection.start()
         readings.join()
         injection.join()
-        self.tx.polarity = 0
+        self.tx.polarity = 0   #TODO: is this necessary?
 
     def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
+        switch_pwr_off, switch_tx_pwr_off = False, False
+        if self.pwr_state == 'off':
+            self.pwr_state = 'on'
+            switch_pwr_off = True
         n_pulses = len(durations)
         self.exec_logger.debug(f'n_pulses: {n_pulses}')
+        if self.tx.pwr.voltage_adjustable:
+            self.tx.pwr.voltage = vab
+        else:
+            vab = self.tx.pwr.voltage
+        if self.tx.pwr.pwr_state == 'off':
+            self.tx.pwr.pwr_state = 'on'
+            switch_pwr_off = True
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
         if polarities is not None:
             assert len(polarities) == n_pulses
         else:
-            polarities = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(n_pulses)]
+            polarities = [-int(self.tx.polarity * np.heaviside(i % 2, -1.)) for i in range(n_pulses)]
         if not append:
             self._clear_values()
         for i in range(n_pulses):
-            self._vab_pulse(self, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
+            self._vab_pulse(vab=vab, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
-
+        if switch_pwr_off:
+            self.tx.pwr.pwr_state = 'off'
+        if switch_tx_pwr_off:
+            self.pwr_state = 'off'
+    
     def switch_mux(self, electrodes, roles=None, state='off', **kwargs):
         """Switches on multiplexer relays for given quadrupole.
 
@@ -437,7 +546,7 @@ class OhmPiHardware:
                     # Create a new thread to perform some work
                     self.mux_boards[mux].barrier = b
                     kwargs.update({'elec_dict': elec_dict, 'state': state})
-                    mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs=kwargs)
+                    mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs=kwargs)  # TODO: handle minimum delay between two relays activation (to avoid lagging during test_mux at high speed)
                     mux_workers[idx].start()
                 try:
                     self.mux_barrier.wait()
@@ -453,7 +562,7 @@ class OhmPiHardware:
         self.exec_logger.event(f'OhmPiHardware\tswitch_mux\tend\t{datetime.datetime.utcnow()}')
         return status
 
-    def test_mux(self, channel=None, activation_time=1.0):
+    def test_mux(self, channel=None, activation_time=1.0): #TODO: add test in reverse order on each mux board
         """Interactive method to test the multiplexer.
 
         Parameters
@@ -476,11 +585,19 @@ class OhmPiHardware:
             time.sleep(activation_time)
             self.switch_mux(electrodes, roles, state='off')
         else:
-            for c in self._cabling.keys():
-                self.exec_logger.info(f'Testing electrode {c[0]} with role {c[1]}.')
-                self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='on')
-                time.sleep(activation_time)
-                self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='off')
+            list_of_muxes = [i for i in self.mux_boards.keys()]
+            list_of_muxes.sort()
+            for m_id in list_of_muxes:
+                for c in self.mux_boards[m_id].cabling.keys():
+                    self.exec_logger.info(f'Testing electrode {c[0]} with role {c[1]}.')
+                    self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='on')
+                    time.sleep(activation_time)
+                    self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='off')
+            # for c in self._cabling.keys():
+            #     self.exec_logger.info(f'Testing electrode {c[0]} with role {c[1]}.')
+            #     self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='on')
+            #     time.sleep(activation_time)
+            #     self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='off')
         self.exec_logger.info('Test finished.')
 
     def reset_mux(self):

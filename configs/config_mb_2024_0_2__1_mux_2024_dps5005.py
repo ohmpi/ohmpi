@@ -18,7 +18,7 @@ OHMPI_CONFIG = {
 
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
-    'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
+    'pwr': {'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},
     'tx':  {'model': 'mb_2024_0_2',
              'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
              'current_max': 4800,  # Maximum voltage read by the current ADC on the TX board [mA]
@@ -31,9 +31,23 @@ HARDWARE_CONFIG = {
              'sampling_rate': 50,  # number of samples per second
              'interface_name': 'i2c'
             },
-    'mux': {'boards': {},
-            'default': {}
-           }
+    'mux': {'boards':
+                {'mux_03':
+                     {'model': 'mux_2024_0_X',
+                      'tca_address': None,
+                      'tca_channel': 0,
+                      'addr2': 'down',
+                      'addr1': 'down',
+                      # 'mcp_0': '0x26',
+                      # 'mcp_1': '0x27',
+                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
+                      'cabling': {(i+0, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'voltage_max': 12.}
+                 },
+             'default': {'interface_name': 'i2c_ext',
+                         'voltage_max': 100.,
+                         'current_max': 3.}
+            }
     }
 
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
@@ -43,7 +57,7 @@ EXEC_LOGGING_CONFIG = {
     'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',
-    'max_bytes': 1048576,
+    'max_bytes': 262144,
     'backup_count': 30,
     'when': 'd',
     'interval': 1
