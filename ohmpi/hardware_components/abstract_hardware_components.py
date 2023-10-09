@@ -381,6 +381,7 @@ class RxAbstract(ABC):
         self._max_sampling_rate = np.inf
         self._latency = kwargs.pop('latency', 0.)
         self._bias = kwargs.pop('bias', 0.)
+        self._vmn_hardware_offset = kwargs.pop('vmn_hardware_offset', 0.)
 
     @property
     def adc_gain(self):
