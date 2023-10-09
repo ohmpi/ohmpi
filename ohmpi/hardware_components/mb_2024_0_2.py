@@ -73,10 +73,10 @@ class Tx(Tx_mb_2023):
         self.exec_logger.event(f'{self.board_name}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
     def inject(self, polarity=1, injection_duration=None):
-        self.polarity = polarity
         # add leds?
         self.pin6.value=True
         Tx_mb_2023.inject(self, polarity=polarity, injection_duration=injection_duration)
+        print(self.polarity)
         self.pin6.value = False
 
 
