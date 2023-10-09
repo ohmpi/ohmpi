@@ -1,4 +1,5 @@
 import datetime
+import time
 import adafruit_ads1x15.ads1115 as ads  # noqa
 from adafruit_ads1x15.analog_in import AnalogIn  # noqa
 from adafruit_ads1x15.ads1x15 import Mode  # noqa
