@@ -80,6 +80,28 @@ class Tx(Tx_mb_2023):
         Tx_mb_2023.inject(self, polarity=polarity, injection_duration=injection_duration)
         self.pin6.value = False
 
+    def polarity(self):
+        return self._polarity
+
+    @polarity.setter
+    def polarity(self, polarity):
+        assert polarity in [-1, 0, 1]
+        self._polarity = polarity
+        print(f'asserted polarity: {self.polarity}')
+
+        if polarity == 1:
+            print('pin0')
+            self.pin0.value = True
+            self.pin1.value = False
+            time.sleep(self._activation_delay)
+        elif polarity == -1:
+            self.pin0.value = False
+            self.pin1.value = True
+            time.sleep(self._activation_delay)
+        else:
+            self.pin0.value = False
+            self.pin1.value = False
+            time.sleep(self._release_delay)
 
 class Rx(Rx_mb_2023):
     def __init__(self, **kwargs):
