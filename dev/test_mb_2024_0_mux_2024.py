@@ -7,30 +7,24 @@ change_config('../configs/config_mb_2024_0_2.py', verbose=False)
 from ohmpi.hardware_components import raspberry_pi as ctl_module
 from ohmpi.config import HARDWARE_CONFIG
 # MUX_CONFIG = HARDWARE_CONFIG['mux']
+ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
+pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
+tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
+rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
 
-
-stand_alone_mux = False
+stand_alone_mux = True
 part_of_hardware_system = False
-within_ohmpi = True
+within_ohmpi = False
 # Stand alone mux
 if stand_alone_mux:
-    mux_id = 'mux_00'
-    first = 24
-    print(MUX_CONFIG)
-    MUX_CONFIG.update(HARDWARE_CONFIG['mux']['boards'][mux_id])
-    MUX_CONFIG.update({'id': mux_id})
-    MUX_CONFIG['ctl'] = ctl_module.Ctl()
-    mux = Mux(**MUX_CONFIG)
-    mux.switch_one(elec=1+first, role='M', state='on')
-    time.sleep(1)
-    mux.switch_one(elec=1+first, role='M', state='off')
-    mux.switch({'A': [1], 'B': [2], 'M': [3], 'N': [4]}, state='on')
-    time.sleep(2)
-    # mux.switch({'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
-    mux.reset()
-    mux.test({'A': [i+first for i in range(1, 9)], 'B': [i+first for i in range(1, 9)],
-              'M': [i+first for i in range(1, 9)], 'N': [i+first for i in range(1, 9)]}, activation_time=.1)
+    rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
+    tx = tx_module.Rx(**HARDWARE_CONFIG['tx'])
+    ctl = ctl_module.Rx(**HARDWARE_CONFIG['ctl'])
+    pwr = pwr_module.Rx(**HARDWARE_CONFIG['pwr'])
 
+    tx.polarity = 1
+    time.sleep(1)
+    tx.polarity = 0
 # mux as part of a OhmPiHardware system
 if part_of_hardware_system:
     from ohmpi.hardware_system import OhmPiHardware
