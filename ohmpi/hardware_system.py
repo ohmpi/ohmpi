@@ -123,7 +123,7 @@ class OhmPiHardware:
                 ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
             HARDWARE_CONFIG['tx']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['tx']['ctl'])
         HARDWARE_CONFIG['tx'].update({'connection': HARDWARE_CONFIG['tx'].pop('connection',
-                                                                              HARDWARE_CONFIG['rx']['ctl'].interfaces[
+                                                                              HARDWARE_CONFIG['tx']['ctl'].interfaces[
                                                                                   HARDWARE_CONFIG['tx'].pop(
                                                                                       'interface_name', 'i2c')])})
         HARDWARE_CONFIG['tx'].pop('ctl', None)
@@ -204,6 +204,7 @@ class OhmPiHardware:
 
     def _inject(self, polarity=1, injection_duration=None):  # TODO: deal with voltage or current pulse
         self.exec_logger.event(f'OhmPiHardware\tinject\tbegin\t{datetime.datetime.utcnow()}')
+        print('inject')
         self.tx.voltage_pulse(length=injection_duration, polarity=polarity)
         self.exec_logger.event(f'OhmPiHardware\tinject\tend\t{datetime.datetime.utcnow()}')
 

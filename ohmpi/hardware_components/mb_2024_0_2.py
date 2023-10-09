@@ -1,5 +1,4 @@
 import datetime
-import time
 import adafruit_ads1x15.ads1115 as ads  # noqa
 from adafruit_ads1x15.analog_in import AnalogIn  # noqa
 from adafruit_ads1x15.ads1x15 import Mode  # noqa
@@ -80,29 +79,6 @@ class Tx(Tx_mb_2023):
         self.pin6.value=True
         Tx_mb_2023.inject(self, polarity=polarity, injection_duration=injection_duration)
         self.pin6.value = False
-
-    @property
-    def polarity(self):
-        return self._polarity
-
-    @polarity.setter
-    def polarity(self, polarity):
-        print(polarity)
-        assert polarity in [-1, 0, 1]
-        print(f'asserted polarity: {self.polarity}')
-        self._polarity = polarity
-        if polarity == 1:
-            self.pin0.value = True
-            self.pin1.value = False
-            time.sleep(self._activation_delay)
-        elif polarity == -1:
-            self.pin0.value = False
-            self.pin1.value = True
-            time.sleep(self._activation_delay)
-        else:
-            self.pin0.value = False
-            self.pin1.value = False
-            time.sleep(self._release_delay)
 
 
 class Rx(Rx_mb_2023):
