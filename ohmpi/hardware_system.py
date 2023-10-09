@@ -439,7 +439,7 @@ class OhmPiHardware:
         if polarities is not None:
             assert len(polarities) == n_pulses
         else:
-            polarities = [-self.tx.polarity * np.heaviside(i % 2, -1.) for i in range(n_pulses)]
+            polarities = [-int(self.tx.polarity * np.heaviside(i % 2, -1.)) for i in range(n_pulses)]
         if not append:
             self._clear_values()
         for i in range(n_pulses):
