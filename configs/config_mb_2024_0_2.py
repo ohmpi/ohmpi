@@ -26,7 +26,7 @@ HARDWARE_CONFIG = {
              'r_shunt': 2  # Shunt resistance in Ohms
             },
     'rx':  {'model': 'mb_2024_rev_0_2',
-             'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
+             'coef_p2': 1.00,  # slope for conversion for ADS, measurement in V/V
              'latency': 0.010,  # latency in seconds in continuous mode
              'sampling_rate': 50  # number of samples per second
             }
