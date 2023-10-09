@@ -1,6 +1,4 @@
 import datetime
-import importlib
-# from ohmpi.config import HARDWARE_CONFIG  # TODO: Remove references at config here -> move it in ohmpi_hardware as done for mux_2024
 import adafruit_ads1x15.ads1115 as ads  # noqa
 from adafruit_ads1x15.analog_in import AnalogIn  # noqa
 from adafruit_ads1x15.ads1x15 import Mode  # noqa
@@ -12,12 +10,6 @@ import numpy as np
 import os
 from ohmpi.hardware_components import TxAbstract, RxAbstract
 from ohmpi.utils import enforce_specs
-# ctl_name = HARDWARE_CONFIG['ctl'].pop('board_name', 'raspberry_pi')
-# ctl_connection = HARDWARE_CONFIG['ctl'].pop('connection', 'i2c')
-# ctl_module = importlib.import_module(f'ohmpi.hardware_components.{ctl_name}')
-
-# TX_CONFIG = HARDWARE_CONFIG['tx']
-# RX_CONFIG = HARDWARE_CONFIG['rx']
 
 # hardware characteristics and limitations
 # voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
@@ -39,48 +31,7 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
 
 # TODO: move low_battery spec in pwr
 
-# *** RX ***
-# ADC for voltage
-# voltage_adc_voltage_min = 10.  # mV
-# voltage_adc_voltage_max = 4500.  # mV
-# sampling_rate = 20.  # Hz
-# data_rate = 860.  # S/s?
-
-# RX_CONFIG['voltage_min'] = np.min([voltage_adc_voltage_min, RX_CONFIG.pop('voltage_min', np.inf)])  # mV
-# RX_CONFIG['voltage_max'] = np.min([voltage_adc_voltage_max, RX_CONFIG.pop('voltage_max', np.inf)])  # mV
-# RX_CONFIG['sampling_rate'] = RX_CONFIG.pop('sampling_rate', sampling_rate)
-# RX_CONFIG['data_rate'] = RX_CONFIG.pop('data_rate', data_rate)
-# RX_CONFIG['coef_p2'] = RX_CONFIG.pop('coef_p2', 2.5)
-# RX_CONFIG['latency'] = RX_CONFIG.pop('latency', 0.01)
-# RX_CONFIG['bias'] = RX_CONFIG.pop('bias', 0.)
-
-
-# *** TX ***
-# ADC for current
-# current_adc_voltage_min = 10.  # mV
-# current_adc_voltage_max = 4500.  # mV
-# low_battery = 12.  # V (conventional value as it is not measured on this board)
-# tx_mcp_board_address = 0x20  #
-# pwr_voltage_max = 12.  # V
-# pwr_default_voltage = 12.  # V
-# pwr_switch_on_warmup = 0.  # seconds
-
-# TX_CONFIG['current_min'] = np.min([current_adc_voltage_min / (TX_CONFIG['r_shunt'] * 50),
-#                                    TX_CONFIG.pop('current_min', np.inf)])  # mA
-# TX_CONFIG['current_max'] = np.min([current_adc_voltage_max / (TX_CONFIG['r_shunt'] * 50),
-#                                    TX_CONFIG.pop('current_max', np.inf)])  # mA
-# # TX_CONFIG['voltage_max'] = np.min([pwr_voltage_max, TX_CONFIG.pop('voltage_max', np.inf)])  # V
-# TX_CONFIG['voltage_max'] = TX_CONFIG.pop('voltage_max', np.inf)  # V
-# TX_CONFIG['voltage_min'] = -TX_CONFIG['voltage_max']  # V
-# TX_CONFIG['default_voltage'] = np.min([TX_CONFIG.pop('default_voltage', np.inf), TX_CONFIG['voltage_max']])  # V
-# # TX_CONFIG['pwr_switch_on_warm_up'] = TX_CONFIG.pop('pwr_switch_on_warmup', pwr_switch_on_warmup)
-# TX_CONFIG['mcp_board_address'] = TX_CONFIG.pop('mcp_board_address', tx_mcp_board_address)
-# TX_CONFIG['low_battery'] = TX_CONFIG.pop('low_battery', low_battery)
-# TX_CONFIG['latency'] = TX_CONFIG.pop('latency', 0.01)
-# TX_CONFIG['bias'] = TX_CONFIG.pop('bias', 0.)
-
-
-def _gain_auto(channel):
+def _ads_1115_gain_auto(channel):  # Make it a class method ?
     """Automatically sets the gain on a channel
 
     Parameters
@@ -118,7 +69,6 @@ class Tx(TxAbstract):
                 and kwargs['pwr'] not in SPECS['tx']['compatible_power_sources']['other']):
             self.exec_logger.warning(f'Incompatible power source specified check config')
             assert kwargs['pwr'] in SPECS['tx']
-        #self.pwr = None  # TODO: set a list of compatible power system with the tx
         self.exec_logger.event(f'{self.board_name}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         # self.voltage_max = kwargs['voltage_max']  # TODO: check if used
         self._activation_delay = kwargs['activation_delay']
@@ -147,9 +97,9 @@ class Tx(TxAbstract):
         self.gain = 2 / 3
 
         # MCP23008 pins for LEDs
-        self.pin4 = self.mcp_board.get_pin(4)  # TODO: Delete me? No LED on this version of the board
-        self.pin4.direction = Direction.OUTPUT
-        self.pin4.value = True
+        # self.pin4 = self.mcp_board.get_pin(4)  # TODO: Delete me? No LED on this version of the board
+        # self.pin4.direction = Direction.OUTPUT
+        # self.pin4.value = True
 
         self.exec_logger.event(f'{self.board_name}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -169,7 +119,7 @@ class Tx(TxAbstract):
 
     def _adc_gain_auto(self):
         self.exec_logger.event(f'{self.board_name}\ttx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
-        gain = _gain_auto(AnalogIn(self._ads_current, ads.P0))
+        gain = _ads_1115_gain_auto(AnalogIn(self._ads_current, ads.P0))
         self.exec_logger.debug(f'Setting TX ADC gain automatically to {gain}')
         self.gain = gain
         self.exec_logger.event(f'{self.board_name}\ttx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
@@ -293,8 +243,8 @@ class Rx(RxAbstract):
 
     def _adc_gain_auto(self):
         self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
-        gain_0 = _gain_auto(AnalogIn(self._ads_voltage, ads.P0))
-        gain_2 = _gain_auto(AnalogIn(self._ads_voltage, ads.P2))
+        gain_0 = _ads_1115_gain_auto(AnalogIn(self._ads_voltage, ads.P0))
+        gain_2 = _ads_1115_gain_auto(AnalogIn(self._ads_voltage, ads.P2))
         gain = np.min([gain_0, gain_2])
         self.exec_logger.debug(f'Setting RX ADC gain automatically to {gain}')
         self.gain = gain
