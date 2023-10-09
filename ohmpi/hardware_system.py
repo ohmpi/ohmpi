@@ -295,7 +295,7 @@ class OhmPiHardware:
             sp = np.mean(mean_vmn[np.ix_(polarity == 1)] + mean_vmn[np.ix_(polarity == -1)]) / 2
             return sp
 
-    def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5,
+    def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5.,
                          vab_max=voltage_max, vmn_min=voltage_min):
         """Estimates best Tx voltage based on different strategies.
         At first a half-cycle is made for a short duration with a fixed

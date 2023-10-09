@@ -1,12 +1,10 @@
-import time
-
-from ohmpi.config import HARDWARE_CONFIG
 import os
 import numpy as np
 from ohmpi.hardware_components import MuxAbstract
 import adafruit_tca9548a  # noqa
 from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
 from digitalio import Direction  # noqa
+from busio import I2C  # noqa
 
 # hardware characteristics and limitations
 SPECS = {'voltage_max': 50., 'current_max': 3., 'activation_delay': 0.01, 'release_delay': 0.005}
