@@ -42,8 +42,9 @@ for k, v in rx_module.SPECS['rx'].items():
     except:
         print(f'Cannot set value {v} in RX_CONFIG[{k}]')
 
-current_max = np.min([TX_CONFIG['voltage_max']/50/TX_CONFIG['r_shunt'], np.min([MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])])
-voltage_max = np.min([TX_CONFIG['voltage_max'], np.min([MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])])
+current_max = np.min([TX_CONFIG['voltage_max']/50/TX_CONFIG['r_shunt'],  # TODO: replace 50 by a TX config
+                      np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
+voltage_max = np.min([TX_CONFIG['voltage_max'], np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
 voltage_min = RX_CONFIG['voltage_min']
 
 
