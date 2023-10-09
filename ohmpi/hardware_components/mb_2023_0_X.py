@@ -26,6 +26,7 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'bias':  {'min': -5000., 'default': 0., 'max': 5000.},
                 'coef_p2': {'default': 2.50},
                 'voltage_min': {'default': 10.0},
+                'vmn_hardware_offset': {'default': 0.}
                 },
          'tx': {'adc_voltage_min': {'default': 10.},  # Minimum voltage value used in vmin strategy
                 'adc_voltage_max': {'default': 4500.},  # Maximum voltage on ads1115 used to measure current
@@ -191,7 +192,7 @@ class Tx(TxAbstract):
         assert self.adc_voltage_min / (50 * self.r_shunt)  <= value <= self.adc_voltage_max / (50 * self.r_shunt)
         self.exec_logger.warning(f'Current pulse is not implemented for the {self.board_name} board')
 
-    def gain_auto(self):
+    def gain_auto_one_pulse(self):
         self._adc_gain_auto()
 
     def inject(self, polarity=1, injection_duration=None):
@@ -300,7 +301,7 @@ class Rx(RxAbstract):
         self.gain = gain
         self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
-    def gain_auto(self):
+    def gain_auto_one_pulse(self):
         self._adc_gain_auto()
     @property
     def voltage(self):
