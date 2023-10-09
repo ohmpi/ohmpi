@@ -18,10 +18,6 @@ part_of_hardware_system = False
 within_ohmpi = False
 # Stand alone mux
 if stand_alone_mux:
-    rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
-    tx = tx_module.Rx(**HARDWARE_CONFIG['tx'])
-    ctl = ctl_module.Rx(**HARDWARE_CONFIG['ctl'])
-    pwr = pwr_module.Rx(**HARDWARE_CONFIG['pwr'])
     HARDWARE_CONFIG['tx'].update({'connection': HARDWARE_CONFIG['tx'].pop('connection',
                                                                           HARDWARE_CONFIG['rx']['ctl'].interfaces[
                                                                               HARDWARE_CONFIG['tx'].pop(
@@ -30,6 +26,11 @@ if stand_alone_mux:
                                                                           HARDWARE_CONFIG['rx']['ctl'].interfaces[
                                                                               HARDWARE_CONFIG['rx'].pop(
                                                                                   'interface_name', 'i2c')])})
+
+    rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
+    tx = tx_module.Rx(**HARDWARE_CONFIG['tx'])
+    ctl = ctl_module.Rx(**HARDWARE_CONFIG['ctl'])
+    pwr = pwr_module.Rx(**HARDWARE_CONFIG['pwr'])
 
     tx.polarity = 1
     time.sleep(1)
