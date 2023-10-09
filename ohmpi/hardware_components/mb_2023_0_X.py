@@ -18,6 +18,7 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'bias':  {'min': -5000., 'default': 0., 'max': 5000.},
                 'coef_p2': {'default': 2.50},
                 'mcp_address': {'default': None},
+                'ads_address': {'default': 0x49},
                 'voltage_min': {'default': 10.0},
                 'vmn_hardware_offset': {'default': 0.}
                 },
@@ -26,6 +27,7 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'voltage_max': {'min': 0., 'default': 12., 'max': 12.},  # Maximum input voltage
                 'data_rate': {'default': 860.},
                 'mcp_address': {'default': 0x20},
+                'ads_address': {'default': 0x48},
                 'compatible_power_sources': {'default': 'pwr_batt', 'others' : ['dps5005']},
                 'r_shunt':  {'min': 0., 'default': 2. },
                 'activation_delay': {'default': 0.005},  # Max turn on time of 211EH relays = 5ms
@@ -82,7 +84,7 @@ class Tx(TxAbstract):
         # I2C connexion to MCP23008, for current injection
         self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
         # ADS1115 for current measurement (AB)
-        self._ads_current_address = 0x48
+        self._ads_current_address = kwargs['ads_address']
         self._ads_current_data_rate = kwargs['data_rate']
         self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=self._ads_current_data_rate,
                                         address=self._ads_current_address)
@@ -164,7 +166,7 @@ class Tx(TxAbstract):
         if polarity == 1:
             self.pin0.value = True
             self.pin1.value = False
-            time.sleep(self._activation_delay)  # use a property set by kwargs?
+            time.sleep(self._activation_delay)
         elif polarity == -1:
             self.pin0.value = False
             self.pin1.value = True
@@ -220,7 +222,7 @@ class Rx(RxAbstract):
         self.exec_logger.event(f'{self.board_name}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
 
         # ADS1115 for voltage measurement (MN)
-        self._ads_voltage_address = 0x49
+        self._ads_voltage_address = kwargs['ads_address']
         self._adc_gain = 2/3
         self._ads_voltage = ads.ADS1115(self.connection, gain=self._adc_gain,
                                         data_rate=SPECS['rx']['data_rate']['default'],
