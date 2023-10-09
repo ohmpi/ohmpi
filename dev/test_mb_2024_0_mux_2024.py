@@ -6,7 +6,7 @@ change_config('../configs/config_mb_2024_0_2.py', verbose=False)
 # from ohmpi.hardware_components.mux_2024_0_X import Mux
 from ohmpi.hardware_components import raspberry_pi as ctl_module
 from ohmpi.config import HARDWARE_CONFIG
-MUX_CONFIG = HARDWARE_CONFIG['mux']
+# MUX_CONFIG = HARDWARE_CONFIG['mux']
 
 
 stand_alone_mux = False
