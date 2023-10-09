@@ -14,7 +14,7 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'data_rate': {'default': 860.},
                 'bias':  {'min': -5000., 'default': 0., 'max': 5000.},
                 'coef_p2': {'default': 1.00},
-                'mcp_address': {'default': 0x27},
+                'mcp_address': {'default': 0x21},
                 'ads_address': {'default': 0x49},
                 'voltage_min': {'default': 10.0},
                 'vmn_hardware_offset' : {'default': 2500.},
@@ -23,7 +23,7 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'adc_voltage_max': {'default': 4500.},  # Maximum voltage on ads1115 used to measure current
                 'voltage_max': {'min': 0., 'default': 12., 'max': 12.},  # Maximum input voltage
                 'data_rate': {'default': 860.},
-                'mcp_address': {'default': 0x21},
+                'mcp_address': {'default': 0x27},
                 'ads_address': {'default': 0x48},
                 'compatible_power_sources': {'default': 'pwr_batt', 'others' : ['dps5005']},
                 'r_shunt':  {'min': 0., 'default': 2.},
@@ -63,7 +63,7 @@ class Tx(Tx_mb_2023):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # I2C connexion to MCP23008, for current injection
-        self.mcp_board = MCP23008(self.connection, address=0x21)
+        self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
 
         # Initialize LEDs
         self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
