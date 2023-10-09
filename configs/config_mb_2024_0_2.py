@@ -32,8 +32,8 @@ HARDWARE_CONFIG = {
              'sampling_rate': 50,  # number of samples per second
              'interface_name': 'i2c'
             },
-    'mux': {'boards':{},
-            'defaults':{}
+    'mux': {'boards': {},
+            'default': {}
            }
     }
 
