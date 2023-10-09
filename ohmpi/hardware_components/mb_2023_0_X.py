@@ -207,7 +207,7 @@ class Tx(TxAbstract):
         if voltage is not None:
             self.pwr.voltage = voltage
         self.exec_logger.debug(f'Voltage pulse of {polarity*self.pwr.voltage:.3f} V for {length:.3f} s')
-        print('inject')
+        print('inject_mb')
         self.inject(polarity=polarity, injection_duration=length)
         self.exec_logger.event(f'{self.board_name}\ttx_voltage_pulse\tend\t{datetime.datetime.utcnow()}')
 
