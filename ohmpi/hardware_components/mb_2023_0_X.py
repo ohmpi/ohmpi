@@ -164,6 +164,7 @@ class Tx(TxAbstract):
         print(f'asserted polarity: {self.polarity}')
 
         if polarity == 1:
+            print('pin0')
             self.pin0.value = True
             self.pin1.value = False
             time.sleep(self._activation_delay)
