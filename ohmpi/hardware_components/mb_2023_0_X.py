@@ -157,6 +157,7 @@ class Tx(TxAbstract):
 
     @polarity.setter
     def polarity(self, polarity):
+        print(polarity)
         assert polarity in [-1, 0, 1]
         self._polarity = polarity
         if polarity == 1:
