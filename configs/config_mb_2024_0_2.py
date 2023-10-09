@@ -31,8 +31,11 @@ HARDWARE_CONFIG = {
              'latency': 0.010,  # latency in seconds in continuous mode
              'sampling_rate': 50,  # number of samples per second
              'interface_name': 'i2c'
-            }
-}
+            },
+    'mux': {'boards':{},
+            'defaults':{}
+           }
+    }
 
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
