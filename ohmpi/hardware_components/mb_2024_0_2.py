@@ -13,7 +13,8 @@ from ohmpi.hardware_components.mb_2023_0_X import Rx as Rx_mb_2023
 SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'data_rate': {'default': 860.},
                 'bias':  {'min': -5000., 'default': 0., 'max': 5000.},
-                'coef_p2': {'default': 2.50},
+                'coef_p2': {'default': 1.00},
+                'mcp_address': {'default': 0x27},
                 'voltage_min': {'default': 10.0},
                 'vmn_hardware_offset' : {'default': 2500.},
                 },
@@ -21,8 +22,9 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'adc_voltage_max': {'default': 4500.},  # Maximum voltage on ads1115 used to measure current
                 'voltage_max': {'min': 0., 'default': 12., 'max': 12.},  # Maximum input voltage
                 'data_rate': {'default': 860.},
+                'mcp_address': {'default': 0x21},
                 'compatible_power_sources': {'default': 'pwr_batt', 'others' : ['dps5005']},
-                'r_shunt':  {'min': 0., 'default': 2. },
+                'r_shunt':  {'min': 0., 'default': 2.},
                 'activation_delay': {'default': 0.010},  # Max turn on time of OMRON G5LE-1 5VDC relays
                 'release_delay': {'default': 0.005},  # Max turn off time of OMRON G5LE-1 5VDC relays = 1ms
                 }}
@@ -81,8 +83,8 @@ class Tx(Tx_mb_2023):
 class Rx(Rx_mb_2023):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # I2C connexion to MCP23008, for current injection
-        self.mcp_board = MCP23008(self.connection, address=0x27)
+        # I2C connexion to MCP23008, for voltage
+        self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
         # ADS1115 for voltage measurement (MN)
         self._coef_p2 = 1.
         # Define default DG411 gain
@@ -94,12 +96,12 @@ class Rx(Rx_mb_2023):
         self.pin_DG1.direction = Direction.OUTPUT
         self.pin_DG2 = self.mcp_board.get_pin(2)
         self.pin_DG2.direction = Direction.OUTPUT
-        # TODO: try to only log this event and not the one created by super()
-        self.exec_logger.event(f'{self.board_name}\trx_init\tend\t{datetime.datetime.utcnow()}')
         self.pin_DG0.value = True  # open
         self.pin_DG1.value = True  # open gain 1 inactive
         self.pin_DG2.value = False  # close gain 0.5 active
         self.gain = 1/3
+        # TODO: try to only log this event and not the one created by super()
+        self.exec_logger.event(f'{self.board_name}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
     def _dg411_gain_auto(self):
         u = ((AnalogIn(self.ads_voltage, ads.P0).voltage * 1000) - self._vmn_hardware_offset) / self.voltage_gain

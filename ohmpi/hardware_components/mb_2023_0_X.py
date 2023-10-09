@@ -17,6 +17,7 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'data_rate': {'default': 860.},
                 'bias':  {'min': -5000., 'default': 0., 'max': 5000.},
                 'coef_p2': {'default': 2.50},
+                'mcp_address': {'default': None},
                 'voltage_min': {'default': 10.0},
                 'vmn_hardware_offset': {'default': 0.}
                 },
@@ -24,6 +25,7 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'adc_voltage_max': {'default': 4500.},  # Maximum voltage on ads1115 used to measure current
                 'voltage_max': {'min': 0., 'default': 12., 'max': 12.},  # Maximum input voltage
                 'data_rate': {'default': 860.},
+                'mcp_address': {'default': 0x20},
                 'compatible_power_sources': {'default': 'pwr_batt', 'others' : ['dps5005']},
                 'r_shunt':  {'min': 0., 'default': 2. },
                 'activation_delay': {'default': 0.005},  # Max turn on time of 211EH relays = 5ms
@@ -78,7 +80,7 @@ class Tx(TxAbstract):
         self.current_adjustable = False
 
         # I2C connexion to MCP23008, for current injection
-        self.mcp_board = MCP23008(self.connection, address=0x20)
+        self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
         # ADS1115 for current measurement (AB)
         self._ads_current_address = 0x48
         self._ads_current_data_rate = kwargs['data_rate']
