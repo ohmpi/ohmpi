@@ -19,7 +19,7 @@ within_ohmpi = False
 # Stand alone mux
 if stand_alone_mux:
     HARDWARE_CONFIG['tx'].update({'ctl': HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl)})
-    HARDWARE_CONFIG['rx'].update({'ctl': HARDWARE_CONFIG['rx'].pop('ctl', tl_module.Ctl)})
+    HARDWARE_CONFIG['rx'].update({'ctl': HARDWARE_CONFIG['rx'].pop('ctl', ctl_module.Ctl)})
     HARDWARE_CONFIG['tx'].update({'connection': HARDWARE_CONFIG['tx'].pop('connection',
                                                                           HARDWARE_CONFIG['rx']['ctl'].interfaces[
                                                                               HARDWARE_CONFIG['tx'].pop(
