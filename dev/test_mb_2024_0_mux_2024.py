@@ -20,7 +20,7 @@ within_ohmpi = False
 if stand_alone:
     HARDWARE_CONFIG['tx'].update({'ctl': HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl)})
     HARDWARE_CONFIG['rx'].update({'ctl': HARDWARE_CONFIG['rx'].pop('ctl', ctl_module.Ctl)})
-    print(HARDWARE_CONFIG['rx']['ctl'])
+    print(f'rx controller: {HARDWARE_CONFIG['rx']['ctl']}')
     HARDWARE_CONFIG['tx'].update({'connection': HARDWARE_CONFIG['tx'].pop('connection',
                                                                           HARDWARE_CONFIG['rx']['ctl'].interfaces[
                                                                               HARDWARE_CONFIG['tx'].pop(
