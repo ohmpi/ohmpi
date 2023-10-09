@@ -1,3 +1,4 @@
+import importlib
 import time
 from ohmpi.utils import change_config
 from ohmpi.plots import plot_exec_log
@@ -21,6 +22,14 @@ if stand_alone_mux:
     tx = tx_module.Rx(**HARDWARE_CONFIG['tx'])
     ctl = ctl_module.Rx(**HARDWARE_CONFIG['ctl'])
     pwr = pwr_module.Rx(**HARDWARE_CONFIG['pwr'])
+    HARDWARE_CONFIG['tx'].update({'connection': HARDWARE_CONFIG['tx'].pop('connection',
+                                                                          HARDWARE_CONFIG['rx']['ctl'].interfaces[
+                                                                              HARDWARE_CONFIG['tx'].pop(
+                                                                                  'interface_name', 'i2c')])})
+    HARDWARE_CONFIG['rx'].update({'connection': HARDWARE_CONFIG['rx'].pop('connection',
+                                                                          HARDWARE_CONFIG['rx']['ctl'].interfaces[
+                                                                              HARDWARE_CONFIG['rx'].pop(
+                                                                                  'interface_name', 'i2c')])})
 
     tx.polarity = 1
     time.sleep(1)
