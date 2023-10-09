@@ -104,11 +104,10 @@ class Rx(Rx_mb_2023):
         self.exec_logger.event(f'{self.board_name}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
     def _dg411_gain_auto(self):
-        u = ((AnalogIn(self.ads_voltage, ads.P0).voltage * 1000) - self._vmn_hardware_offset) / self.voltage_gain
-        if u < self._vmn_hardware_offset :
-            self.voltage_gain = 1
+        if self.voltage < self._vmn_hardware_offset :
+            self._dg411_gain = 1.
         else:
-            self.voltage_gain = 0.5
+            self._dg411_gain = 1/2
 
     @property
     def gain(self):
@@ -118,7 +117,7 @@ class Rx(Rx_mb_2023):
     def gain(self, value):
         assert value in [1/3, 2/3]
         self._dg411_gain = value / self._adc_gain
-        if self._dg411_gain == 1:
+        if self._dg411_gain == 1.:
             self.pin_DG1.value = False  # closed gain 1 active
             self.pin_DG2.value = True  # open gain 0.5 inactive
         elif self._dg411_gain == 1/2:
