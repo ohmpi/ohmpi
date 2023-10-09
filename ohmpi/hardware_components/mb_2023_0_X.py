@@ -159,6 +159,7 @@ class Tx(TxAbstract):
     def polarity(self, polarity):
         print(polarity)
         assert polarity in [-1, 0, 1]
+        print(f'asserted polarity: {self.polarity}')
         self._polarity = polarity
         if polarity == 1:
             self.pin0.value = True
