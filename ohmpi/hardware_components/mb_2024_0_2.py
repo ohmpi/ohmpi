@@ -80,6 +80,7 @@ class Tx(Tx_mb_2023):
         Tx_mb_2023.inject(self, polarity=polarity, injection_duration=injection_duration)
         self.pin6.value = False
 
+    @property
     def polarity(self):
         return self._polarity
 
