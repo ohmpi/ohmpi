@@ -196,7 +196,7 @@ class OhmPiHardware:
             # v = self.readings[:, 2] != 0
             # current = max(current, np.mean(self.readings[v, 3]))
             # voltage = max(voltage, np.abs(np.mean(self.readings[v, 2] * self.readings[v, 4])))
-
+        self.tx.polarity = 0
         self.tx.gain = min(tx_gains)
         self.rx.gain = min(rx_gains)
         # self.rx.gain_auto(voltage)
