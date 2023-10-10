@@ -66,13 +66,13 @@ def _ads_1115_gain_auto(channel):  # Make it a class method ?
 
 class Tx(Tx_mb_2023):
     def __init__(self, **kwargs):
-        print(f'mb_2023 kwargs: {kwargs}')
         if 'model' not in kwargs.keys():
             for key in SPECS['tx'].keys():
                 kwargs = enforce_specs(kwargs, SPECS['tx'], key)
             subclass_init = False
         else:
             subclass_init = True
+        print(f'mb_2024 kwargs: {kwargs}')
         super().__init__(**kwargs)
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
