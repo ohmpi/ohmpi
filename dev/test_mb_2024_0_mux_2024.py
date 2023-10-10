@@ -21,15 +21,15 @@ part_of_hardware_system = False
 within_ohmpi = False # True
 # Stand alone mux
 if stand_alone:
-    HARDWARE_CONFIG['tx'].update({'ctl': HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl())})
-    HARDWARE_CONFIG['rx'].update({'ctl': HARDWARE_CONFIG['rx'].pop('ctl', ctl_module.Ctl())})
-    print(f'rx controller: {HARDWARE_CONFIG["rx"]["ctl"]}')
+    ctl = ctl_module.Ctl()
+    HARDWARE_CONFIG['tx'].update({'ctl': ctl})  # HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl())})
+    HARDWARE_CONFIG['rx'].update({'ctl': ctl})  # HARDWARE_CONFIG['rx'].pop('ctl', ctl_module.Ctl())})
     HARDWARE_CONFIG['tx'].update({'connection': HARDWARE_CONFIG['tx'].pop('connection',
-                                                                          HARDWARE_CONFIG['rx']['ctl'].interfaces[
+                                                                          ctl.interfaces[
                                                                               HARDWARE_CONFIG['tx'].pop(
                                                                                   'interface_name', 'i2c')])})
     HARDWARE_CONFIG['rx'].update({'connection': HARDWARE_CONFIG['rx'].pop('connection',
-                                                                          HARDWARE_CONFIG['rx']['ctl'].interfaces[
+                                                                          ctl.interfaces[
                                                                               HARDWARE_CONFIG['rx'].pop(
                                                                                   'interface_name', 'i2c')])})
 
