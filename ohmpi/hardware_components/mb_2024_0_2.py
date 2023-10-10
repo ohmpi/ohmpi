@@ -66,7 +66,7 @@ def _ads_1115_gain_auto(channel):  # Make it a class method ?
 
 class Tx(Tx_mb_2023):
     def __init__(self, **kwargs):
-        if kwargs['model'] == os.path.basename(__file__).rstrip('.py'):
+        if 'model' not in kwargs.keys():
             for key in SPECS['tx'].keys():
                 kwargs = enforce_specs(kwargs, SPECS['tx'], key)
             subclass_init = False
@@ -93,7 +93,7 @@ class Tx(Tx_mb_2023):
 
 class Rx(Rx_mb_2023):
     def __init__(self, **kwargs):
-        if kwargs['model'] == os.path.basename(__file__).rstrip('.py'):
+        if 'model' not in kwargs.keys():
             for key in SPECS['rx'].keys():
                 kwargs = enforce_specs(kwargs, SPECS['rx'], key)
             subclass_init = False
