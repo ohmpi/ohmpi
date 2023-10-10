@@ -270,6 +270,7 @@ class OhmPiHardware:
 
     def last_dev(self, delay=0.):
         v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))
+        print(v)
         if len(v) > 1:
             return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3]) / self.last_resistance
         else:
