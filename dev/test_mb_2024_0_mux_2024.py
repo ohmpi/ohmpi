@@ -41,7 +41,7 @@ if stand_alone:
 # mux as part of a OhmPiHardware system
 if part_of_hardware_system:
     from ohmpi.hardware_system import OhmPiHardware
-    print('Starting test of mux as part of a OhmPiHardware system.')
+    print('Starting test of as part of an OhmPiHardware system.')
 
     k = OhmPiHardware()
     k.exec_logger.setLevel(logging.DEBUG)
@@ -55,7 +55,7 @@ if within_ohmpi:
     from ohmpi.ohmpi import OhmPi
     # from ohmpi.plots import plot_exec_log
 
-    print('Starting test of mux within OhmPi.')
+    print('Starting test with OhmPi.')
     k = OhmPi()
     #A, B, M, N = (32, 29, 31, 30)
     k.reset_mux()
