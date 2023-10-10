@@ -29,7 +29,7 @@ SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
                 'data_rate': {'default': 860.},
                 'mcp_address': {'default': 0x21},
                 'ads_address': {'default': 0x48},
-                'compatible_power_sources': {'default': 'pwr_batt', 'others' : ['dps5005']},
+                'compatible_power_sources': {'default': ['pwr_batt', 'dps5005']},
                 'r_shunt':  {'min': 0., 'default': 2.},
                 'activation_delay': {'default': 0.010},  # Max turn on time of OMRON G5LE-1 5VDC relays
                 'release_delay': {'default': 0.005},  # Max turn off time of OMRON G5LE-1 5VDC relays = 1ms

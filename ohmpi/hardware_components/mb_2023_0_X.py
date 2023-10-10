@@ -29,7 +29,7 @@ SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
                 'data_rate': {'default': 860.},
                 'mcp_address': {'default': 0x20},
                 'ads_address': {'default': 0x48},
-                'compatible_power_sources': {'default': 'pwr_batt', 'others' : ['dps5005']},
+                'compatible_power_sources': {'default': ['pwr_batt', 'dps5005']},
                 'r_shunt':  {'min': 0., 'default': 2. },
                 'activation_delay': {'default': 0.005},  # Max turn on time of 211EH relays = 5ms
                 'release_delay': {'default': 0.001},  # Max turn off time of 211EH relays = 1ms
@@ -77,13 +77,10 @@ class Tx(TxAbstract):
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
-        kwargs.update({'pwr': kwargs.pop('pwr', SPECS['tx']['compatible_power_sources']['default'])})
-        if (kwargs['pwr'] != SPECS['tx']['compatible_power_sources']['default']
-                and kwargs['pwr'] not in SPECS['tx']['compatible_power_sources']['other']):
+        kwargs.update({'pwr': kwargs.pop('pwr', SPECS['tx']['compatible_power_sources']['default'][0])})
+        if (kwargs['pwr'] not in SPECS['tx']['compatible_power_sources']['default']):
             self.exec_logger.warning(f'Incompatible power source specified check config')
             assert kwargs['pwr'] in SPECS['tx']
-        self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
-        # self.voltage_max = kwargs['voltage_max']  # TODO: check if used
         self._activation_delay = kwargs['activation_delay']
         self._release_delay = kwargs['release_delay']
         self.voltage_adjustable = False
