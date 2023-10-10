@@ -63,7 +63,6 @@ def add_logging_level(level_name, level_num, method_name=None):
 
 
 def create_stdout_logger(name):
-    add_logging_level('EVENT', logging.DEBUG + 1)
     logger = logging.getLogger(f'{name}_logger')
     log_format = f'%(asctime)-15s | {name[:8]:8s} | %(levelname)s: %(message)s'
     formatter = logging.Formatter(log_format)
