@@ -103,11 +103,6 @@ class Tx(TxAbstract):
         self.polarity = 0
         self.gain = 2 / 3
 
-        # MCP23008 pins for LEDs
-        # self.pin4 = self.mcp_board.get_pin(4)  # TODO: Delete me? No LED on this version of the board
-        # self.pin4.direction = Direction.OUTPUT
-        # self.pin4.value = True
-
         self.exec_logger.event(f'{self.board_name}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
     @property
@@ -161,6 +156,7 @@ class Tx(TxAbstract):
 
     @polarity.setter
     def polarity(self, polarity):
+        print(f'mcp address : {self.mcp_board._device.device_address}')
         assert polarity in [-1, 0, 1]
         self._polarity = polarity
         if polarity == 1:
