@@ -16,9 +16,9 @@ pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFI
 tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
 rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
 
-stand_alone = False  # True
+stand_alone = True # True
 part_of_hardware_system = False
-within_ohmpi = True  # False
+within_ohmpi = False
 # Stand alone mux
 if stand_alone:
     ctl = ctl_module.Ctl()
