@@ -72,7 +72,6 @@ class Tx(TxAbstract):
             subclass_init = False
         else:
             subclass_init = True
-        print(f'mb_2023 kwargs: {kwargs}, subclass_init : {subclass_init}')
         super().__init__(**kwargs)
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
