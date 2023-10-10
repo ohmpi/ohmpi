@@ -1,26 +1,23 @@
 import matplotlib
 matplotlib.use('TkAgg')
+from ohmpi.utils import change_config
+change_config('../configs/config_mb_2024_0_2.py', verbose=False)
 import importlib
 import time
-from ohmpi.utils import change_config
-from ohmpi.plots import plot_exec_log
 import logging
-change_config('../configs/config_mb_2024_0_2.py', verbose=False)
-# from ohmpi.hardware_components.mux_2024_0_X import Mux
-from ohmpi.hardware_components import raspberry_pi as ctl_module
 from ohmpi.config import HARDWARE_CONFIG
-from ohmpi.logging_setup import add_logging_level
-# MUX_CONFIG = HARDWARE_CONFIG['mux']
-ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
-pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
-tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
-rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
 
 stand_alone = True # True
 part_of_hardware_system = False
 within_ohmpi = False
-# Stand alone mux
+
+# Stand alone
 if stand_alone:
+    ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
+    pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
+    tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
+    rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
+
     ctl = ctl_module.Ctl()
     HARDWARE_CONFIG['tx'].update({'ctl': ctl})  # HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl())})
     HARDWARE_CONFIG['rx'].update({'ctl': ctl})  # HARDWARE_CONFIG['rx'].pop('ctl', ctl_module.Ctl())})
@@ -42,6 +39,7 @@ if stand_alone:
     tx.polarity = 1
     time.sleep(1)
     tx.polarity = 0
+
 # mux as part of a OhmPiHardware system
 if part_of_hardware_system:
     from ohmpi.hardware_system import OhmPiHardware
@@ -56,7 +54,9 @@ if part_of_hardware_system:
     k.switch_mux(electrodes=[1, 4, 2, 3], roles=['A', 'B', 'M', 'N'], state='off')
 
 if within_ohmpi:
-    from ohmpi.ohmpi import OhmPi
+    from ohmpi import OhmPi
+    # from ohmpi.plots import plot_exec_log
+
     print('Starting test of mux within OhmPi.')
     k = OhmPi()
     #A, B, M, N = (32, 29, 31, 30)
