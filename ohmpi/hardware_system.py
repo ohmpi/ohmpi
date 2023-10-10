@@ -404,7 +404,8 @@ class OhmPiHardware:
         assert 0. <= duty_cycle <= 1.
         if duty_cycle < 1.:
             durations = [cycle_duration/2 * duty_cycle, cycle_duration/2*(1.-duty_cycle)] * 2 * cycles
-            pol = [-int(self.tx.polarity * np.heaviside(i % 2, -1.)) for i in range(2 * cycles)]
+            pol = [-int(1. * np.heaviside(i % 2, -1.)) for i in range(2 * cycles)]
+            # pol = [-int(self.tx.polarity * np.heaviside(i % 2, -1.)) for i in range(2 * cycles)]
             polarities = [0] * (len(pol) * 2)
             polarities[0::2] = pol
         else:
