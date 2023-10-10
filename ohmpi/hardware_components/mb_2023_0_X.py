@@ -247,9 +247,7 @@ class Rx(RxAbstract):
 
     def _adc_gain_auto(self):
         self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
-        gain_0 = _ads_1115_gain_auto(AnalogIn(self._ads_voltage, ads.P0))
-        gain_2 = _ads_1115_gain_auto(AnalogIn(self._ads_voltage, ads.P2))
-        gain = np.min([gain_0, gain_2])
+        gain = _ads_1115_gain_auto(AnalogIn(self._ads_voltage, ads.P0, ads.P1))
         self.exec_logger.debug(f'Setting RX ADC gain automatically to {gain}')
         self.gain = gain
         self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')

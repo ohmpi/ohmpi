@@ -105,6 +105,13 @@ class Rx(Rx_mb_2023):
         # TODO: try to only log this event and not the one created by super()
         self.exec_logger.event(f'{self.board_name}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
+    def _adc_gain_auto(self):
+        self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
+        gain = _ads_1115_gain_auto(AnalogIn(self._ads_voltage, ads.P0))
+        self.exec_logger.debug(f'Setting RX ADC gain automatically to {gain}')
+        self.gain = gain
+        self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
+
     def _dg411_gain_auto(self):
         if self.voltage < self._vmn_hardware_offset :
             self._dg411_gain = 1.
