@@ -7,7 +7,7 @@ import os
 from ohmpi.utils import get_platform
 from gpiozero import CPUTemperature  # noqa
 import warnings
-warnings.filterwarnings("error")
+
 
 class Ctl(CtlAbstract):
     def __init__(self, **kwargs):
@@ -24,6 +24,7 @@ class Ctl(CtlAbstract):
         super().__init__(**kwargs)
         self.interfaces = dict()
 
+        warnings.filterwarnings("error")  # to filter out adafruit warning about setting I2C frequency
         # I2C
         try:
             self.interfaces['i2c'] = busio.I2C(board.SCL, board.SDA)  # noqa
@@ -37,6 +38,8 @@ class Ctl(CtlAbstract):
             pass
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize Extended I2C:\n{e}')
+        warnings.resetwarnings()
+
         # modbus
         try:
             self.interfaces['modbus'] = minimalmodbus.Instrument(port=modbus_port, slaveaddress=modbus_slave_address)
