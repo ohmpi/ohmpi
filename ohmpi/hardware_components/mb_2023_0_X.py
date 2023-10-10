@@ -69,11 +69,12 @@ class Tx(TxAbstract):
         if 'model' not in kwargs.keys():
             for key in SPECS['tx'].keys():
                 kwargs = enforce_specs(kwargs, SPECS['tx'], key)
-            self.exec_logger.event(f'{self.model}\ttx_init\tstart\t{datetime.datetime.utcnow()}')
             subclass_init = False
         else:
             subclass_init = True
         super().__init__(**kwargs)
+        if not subclass_init:
+            self.exec_logger.event(f'{self.model}\ttx_init\tstart\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         kwargs.update({'pwr': kwargs.pop('pwr', SPECS['tx']['compatible_power_sources']['default'])})
         if (kwargs['pwr'] != SPECS['tx']['compatible_power_sources']['default']
@@ -215,11 +216,12 @@ class Rx(RxAbstract):
         if 'model' not in kwargs.keys():
             for key in SPECS['rx'].keys():
                 kwargs = enforce_specs(kwargs, SPECS['rx'], key)
-            self.exec_logger.event(f'{self.model}\trx_init\tstart\t{datetime.datetime.utcnow()}')
             subclass_init = False
         else:
             subclass_init = True
         super().__init__(**kwargs)
+        if not subclass_init:
+            self.exec_logger.event(f'{self.model}\trx_init\tstart\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
 
         self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')

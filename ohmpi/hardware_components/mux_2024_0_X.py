@@ -61,11 +61,12 @@ class Mux(MuxAbstract):
         if 'model' not in kwargs.keys():
             for key in SPECS.keys():
                 kwargs = enforce_specs(kwargs, SPECS, key)
-            self.exec_logger.event(f'{self.model}{self.board_id}\tmux_init\tstart\t{datetime.datetime.utcnow()}')
             subclass_init = False
         else:
             subclass_init = True
         super().__init__(**kwargs)
+        if not subclass_init:
+            self.exec_logger.event(f'{self.model}{self.board_id}\tmux_init\tstart\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
         tca_address = kwargs.pop('tca_address', None)
