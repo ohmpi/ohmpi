@@ -74,7 +74,7 @@ class Tx(TxAbstract):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\ttx_init\tstart\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         kwargs.update({'pwr': kwargs.pop('pwr', SPECS['tx']['compatible_power_sources']['default'])})
         if (kwargs['pwr'] != SPECS['tx']['compatible_power_sources']['default']
@@ -221,10 +221,8 @@ class Rx(RxAbstract):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\trx_init\tstart\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
-
-        self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = kwargs['ads_address']

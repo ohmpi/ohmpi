@@ -68,7 +68,7 @@ class Mux(MuxAbstract):
         kwargs.update({'cabling': kwargs.pop('cabling', default_mux_cabling)})
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}{self.board_id}\tmux_init\tstart\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}{self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
         self._roles = kwargs.pop('roles', None)

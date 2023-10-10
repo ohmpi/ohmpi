@@ -5,7 +5,7 @@ import os
 
 class Pwr(PwrAbstract):
     def __init__(self, **kwargs):
-        kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
+        kwargs.update({'model': os.path.basename(__file__).rstrip('.py')})
         voltage = kwargs.pop('voltage', 12.)
         super().__init__(**kwargs)
         self.voltage_adjustable = False

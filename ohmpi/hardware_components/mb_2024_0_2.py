@@ -74,7 +74,7 @@ class Tx(Tx_mb_2023):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\ttx_init\tstart\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         # Initialize LEDs
         self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
         self.pin4.direction = Direction.OUTPUT
@@ -102,7 +102,7 @@ class Rx(Rx_mb_2023):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\trx_init\tstart\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
         # I2C connection to MCP23008, for voltage
         self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
         # ADS1115 for voltage measurement (MN)

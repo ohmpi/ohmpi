@@ -11,6 +11,8 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'current_max': {'default': 100.},
          }
 
+# TODO: Complete this code... handle modbus connection
+
 
 class Pwr(PwrAbstract):
     def __init__(self, **kwargs):
@@ -20,9 +22,9 @@ class Pwr(PwrAbstract):
             subclass_init = False
         else:
             subclass_init = True
+        super().__init__(**kwargs)
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tstart\t{datetime.datetime.utcnow()}')
-        super().__init__(**kwargs)
         # if a controller is passed in kwargs, it will be instantiated
         #if self.ctl is None:
         #    self.ctl = ctl_module.Ctl(**CTL_CONFIG)
