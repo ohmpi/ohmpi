@@ -290,7 +290,7 @@ class OhmPiHardware:
             mean_vmn = []
             mean_iab = []
             for i in range(n_pulses + 1):
-                mean_vmn.append(np.mean(self.readings[self.readings[:, 1] == i, 4]))
+                mean_vmn.append(polarity[i] * np.mean(self.readings[self.readings[:, 1] == i, 4]))
                 mean_iab.append(np.mean(self.readings[self.readings[:, 1] == i, 3]))
             mean_vmn = np.array(mean_vmn)
             mean_iab = np.array(mean_iab)
@@ -387,7 +387,7 @@ class OhmPiHardware:
         ax[3].set_ylabel('R [ohm]')
         ax[4].plot(self.readings[v, 0], np.ones_like(self.readings[v,0]) * self.sp, '-k', marker='.', label='SP [mV]')
         ax[4].set_ylabel('SP [mV]')
-        fig.legend()
+        # fig.legend()
         if save_fig:
             fig.savefig(f'figures/test.png')
         else:
