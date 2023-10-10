@@ -261,8 +261,8 @@ class OhmPiHardware:
         self.exec_logger.event(f'OhmPiHardware\tread_values\tend\t{datetime.datetime.utcnow()}')
 
     @property
-    def last_rho(self):
-        v = self.readings[:, 2] != 0
+    def last_resistance(self, delay=0.):
+        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
         if len(v) > 1:
             # return np.mean(np.abs(self.readings[v, 4] - self.sp) / self.readings[v, 3])
             return np.mean(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3])
@@ -270,10 +270,10 @@ class OhmPiHardware:
             return np.nan
 
     @property
-    def last_dev(self):
-        if len(self.readings) > 1:
-            v = self.readings[:, 2] != 0  # exclude sample where there is no injection
-            return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3]) / self.last_rho
+    def last_dev(self, delay=0.):
+        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))
+        if len(v) > 1:
+            return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3]) / self.last_resistance
         else:
             return np.nan
 
