@@ -468,7 +468,7 @@ class OhmPi(object):
             Vmn = np.mean(self._hw.readings[x, 2] * (self._hw.readings[x, 4] - self._hw.sp))
             Vmn_std = 100. * np.std(self._hw.readings[x, 2] * (self._hw.readings[x, 4] - self._hw.sp))
             I = np.mean(self._hw.readings[x, 3])
-            I = 100. * np.std(self._hw.readings[x, 3])
+            I_std = 100. * np.std(self._hw.readings[x, 3])
             d = {
                 "time": datetime.now().isoformat(),
                 "A": quad[0],
