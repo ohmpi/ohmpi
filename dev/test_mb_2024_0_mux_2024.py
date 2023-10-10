@@ -48,8 +48,6 @@ if part_of_hardware_system:
 
     k = OhmPiHardware()
     k.exec_logger.setLevel(logging.DEBUG)
-    add_logging_level('EVENT', logging.DEBUG + 1)
-    logging.getLogger(k.exec_logger).setLevel("EVENT")
     # Test mux switching
     k.reset_mux()
     k.switch_mux(electrodes=[1, 4, 2, 3], roles=['A', 'B', 'M', 'N'], state='on')
