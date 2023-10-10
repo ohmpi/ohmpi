@@ -196,7 +196,7 @@ class OhmPiHardware:
             # v = self.readings[:, 2] != 0
             # current = max(current, np.mean(self.readings[v, 3]))
             # voltage = max(voltage, np.abs(np.mean(self.readings[v, 2] * self.readings[v, 4])))
-        self.tx.polarity = 0
+            self.tx.polarity = 0
         self.tx.gain = min(tx_gains)
         self.rx.gain = min(rx_gains)
         # self.rx.gain_auto(voltage)
@@ -444,6 +444,7 @@ class OhmPiHardware:
         if not append:
             self._clear_values()
         for i in range(n_pulses):
+            print('polarity', polarities[i])
             self._vab_pulse(self, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
 
