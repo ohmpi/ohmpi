@@ -163,11 +163,6 @@ class Tx(TxAbstract):
     def polarity(self, polarity):
         assert polarity in [-1, 0, 1]
         self._polarity = polarity
-        # debugging code
-        curframe = inspect.currentframe()
-        calframe = inspect.getouterframes(curframe, 2)
-        print(f'polarity called from: {calframe}')
-
         if polarity == 1:
             print('pin0')
             self.pin0.value = True
