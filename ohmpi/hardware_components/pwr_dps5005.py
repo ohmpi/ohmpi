@@ -1,9 +1,9 @@
 from ohmpi.hardware_components.abstract_hardware_components import PwrAbstract
-import datetime
 import numpy as np
-#import minimalmodbus  # noqa
+import datetime
 import os
 from ohmpi.utils import enforce_specs
+#import minimalmodbus  # noqa
 
 # hardware characteristics and limitations
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
@@ -26,7 +26,7 @@ class Pwr(PwrAbstract):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\tpwr_init\tstart\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\tpwr_init\tbegin\t{datetime.datetime.utcnow()}')
         # if a controller is passed in kwargs, it will be instantiated
         #if self.ctl is None:
         #    self.ctl = ctl_module.Ctl(**CTL_CONFIG)

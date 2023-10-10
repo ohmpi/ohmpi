@@ -1,5 +1,6 @@
 from ohmpi.hardware_components.abstract_hardware_components import PwrAbstract
 import numpy as np
+import datetime
 import os
 from ohmpi.utils import enforce_specs
 
@@ -20,9 +21,13 @@ class Pwr(PwrAbstract):
         else:
             subclass_init = True
         super().__init__(**kwargs)
+        if not subclass_init:
+            self.exec_logger.event(f'{self.model}\tpwr_init\tbegin\t{datetime.datetime.utcnow()}')
         self._voltage = kwargs['voltage']
         self._current = np.nan
         self._state = 'on'
+        if not subclass_init:
+            self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')
 
     @property
     def current(self):

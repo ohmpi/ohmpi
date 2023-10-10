@@ -4,22 +4,32 @@ import busio  # noqa
 from adafruit_extended_bus import ExtendedI2C  # noqa
 import minimalmodbus  # noqa
 import os
-from ohmpi.utils import get_platform
+from ohmpi.utils import get_platform, enforce_specs
 from gpiozero import CPUTemperature  # noqa
 import warnings
+
+# hardware characteristics and limitations
+SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
+         'voltage': {'default': 12., 'max': 50., 'min': 0.},
+         'modbus_baudrate': {'default': 9600},
+         'modbus_bitesize': {'default': 8},
+         'modbus_timeout': {'default': 1},
+         'modbus_debug': {'default': False},
+         'modbus_parity': {'default': 'N'},
+         'modbus_mode': {'default': minimalmodbus.MODE_RTU},
+         'modbus_port': {'default': '/dev/ttyUSB0'},
+         'modbus_slave_address': {'default': 1}
+         }
 
 
 class Ctl(CtlAbstract):
     def __init__(self, **kwargs):
-        kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
-        modbus_baudrate = kwargs.pop('modbus_baudrate', 9600)
-        modbus_bitesize = kwargs.pop('modbus_bitesize', 8)
-        modbus_timeout = kwargs.pop('modbus_timeout', 1)
-        modbus_debug = kwargs.pop('modbus_debug', False)
-        modbus_parity = kwargs.pop('modbus_parity', 'N')
-        modbus_mode = kwargs.pop('modbus_mode', minimalmodbus.MODE_RTU)
-        modbus_port = kwargs.pop('modbus_port', '/dev/ttyUSB0')
-        modbus_slave_address = kwargs.pop('modbus_slave_address', 1)
+        if 'model' not in kwargs.keys():
+            for key in SPECS['tx'].keys():
+                kwargs = enforce_specs(kwargs, SPECS['tx'], key)
+            subclass_init = False
+        else:
+            subclass_init = True
 
         super().__init__(**kwargs)
         self.interfaces = dict()
@@ -42,19 +52,20 @@ class Ctl(CtlAbstract):
 
         # modbus
         try:
-            self.interfaces['modbus'] = minimalmodbus.Instrument(port=modbus_port, slaveaddress=modbus_slave_address)
-            self.interfaces['modbus'].serial.baudrate = modbus_baudrate  # Baud rate 9600 as listed in doc
-            self.interfaces['modbus'].serial.bytesize = modbus_bitesize  #
-            self.interfaces['modbus'].serial.timeout = modbus_timeout  # greater than 0.5 for it to work
-            self.interfaces['modbus'].debug = modbus_debug  #
-            self.interfaces['modbus'].serial.parity = modbus_parity  # No parity
-            self.interfaces['modbus'].mode = modbus_mode  # RTU mode
+            self.interfaces['modbus'] = minimalmodbus.Instrument(port=kwargs['modbus_port'],
+                                                                 slaveaddress=kwargs['modbus_slave_address'])
+            self.interfaces['modbus'].serial.baudrate = kwargs['modbus_baudrate']  # Baud rate 9600 as listed in doc
+            self.interfaces['modbus'].serial.bytesize = kwargs['modbus_bitesize']  #
+            self.interfaces['modbus'].serial.timeout = kwargs['modbus_timeout']  # greater than 0.5 for it to work
+            self.interfaces['modbus'].debug = kwargs['modbus_debug']  #
+            self.interfaces['modbus'].serial.parity = kwargs['modbus_parity']  # No parity
+            self.interfaces['modbus'].mode = kwargs['modbus_mode']  # RTU mode
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize Extended modbus:\n{e}')
 
         platform, on_pi = get_platform()
         assert on_pi
-        self.board_name = platform
+        self.model = platform
         self._cpu_temp_available = True
         self.max_cpu_temp = 85.  # °C
 
