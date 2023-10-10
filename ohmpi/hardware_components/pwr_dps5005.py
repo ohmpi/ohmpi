@@ -9,6 +9,8 @@ from ohmpi.utils import enforce_specs
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 12., 'max': 50., 'min': 0.},
          'current_max': {'default': 100.},
+         'current_adjustable': {'default': False},
+         'voltage_adjustable': {'default': True}
          }
 
 # TODO: Complete this code... handle modbus connection

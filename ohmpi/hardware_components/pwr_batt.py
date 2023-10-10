@@ -6,6 +6,8 @@ from ohmpi.utils import enforce_specs
 # hardware characteristics and limitations
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 12., 'max': 12., 'min': 12.},
+         'current_adjustable': {'default': False},
+         'voltage_adjustable': {'default': False}
          }
 
 
@@ -17,11 +19,8 @@ class Pwr(PwrAbstract):
             subclass_init = False
         else:
             subclass_init = True
-        voltage = kwargs.pop('voltage', 12.)
         super().__init__(**kwargs)
-        self.voltage_adjustable = False
-        self._voltage = voltage
-        self.current_adjustable = False
+        self._voltage = kwargs['voltage']
         self._current = np.nan
         self._state = 'on'
 
