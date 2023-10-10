@@ -1,16 +1,27 @@
 from ohmpi.hardware_components.abstract_hardware_components import PwrAbstract
 import numpy as np
 import os
+from ohmpi.utils import enforce_specs
+
+# hardware characteristics and limitations
+SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
+         'voltage': {'default': 12., 'max': 12., 'min': 12.},
+         }
 
 
 class Pwr(PwrAbstract):
     def __init__(self, **kwargs):
-        kwargs.update({'model': os.path.basename(__file__).rstrip('.py')})
+        if 'model' not in kwargs.keys():
+            for key in SPECS.keys():
+                kwargs = enforce_specs(kwargs, SPECS, key)
+            subclass_init = False
+        else:
+            subclass_init = True
         voltage = kwargs.pop('voltage', 12.)
         super().__init__(**kwargs)
         self.voltage_adjustable = False
         self._voltage = voltage
-        self._current_adjustable = False
+        self.current_adjustable = False
         self._current = np.nan
         self._state = 'on'
 
