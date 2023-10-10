@@ -32,6 +32,7 @@ if stand_alone:
                                                                           ctl.interfaces[
                                                                               HARDWARE_CONFIG['rx'].pop(
                                                                                   'interface_name', 'i2c')])})
+    HARDWARE_CONFIG['pwr'].update({'model': 'pwr_batt'})
 
     print(HARDWARE_CONFIG['rx'], rx_module)
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
