@@ -5,12 +5,15 @@ from adafruit_ads1x15.ads1x15 import Mode  # noqa
 from adafruit_mcp230xx.mcp23008 import MCP23008  # noqa
 from digitalio import Direction  # noqa
 from busio import I2C  # noqa
+import os
+from ohmpi.utils import enforce_specs
 from ohmpi.hardware_components.mb_2023_0_X import Tx as Tx_mb_2023
 from ohmpi.hardware_components.mb_2023_0_X import Rx as Rx_mb_2023
 
 # hardware characteristics and limitations
 # voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
-SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
+SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
+                'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'data_rate': {'default': 860.},
                 'bias':  {'min': -5000., 'default': 0., 'max': 5000.},
                 'coef_p2': {'default': 1.00},
@@ -19,7 +22,8 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 'voltage_min': {'default': 10.0},
                 'vmn_hardware_offset': {'default': 2500.},
                 },
-         'tx': {'adc_voltage_min': {'default': 10.},  # Minimum voltage value used in vmin strategy
+         'tx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
+                'adc_voltage_min': {'default': 10.},  # Minimum voltage value used in vmin strategy
                 'adc_voltage_max': {'default': 4500.},  # Maximum voltage on ads1115 used to measure current
                 'voltage_max': {'min': 0., 'default': 12., 'max': 12.},  # Maximum input voltage
                 'data_rate': {'default': 860.},
@@ -62,9 +66,13 @@ def _ads_1115_gain_auto(channel):  # Make it a class method ?
 
 class Tx(Tx_mb_2023):
     def __init__(self, **kwargs):
+        if kwargs['model'] == os.path.basename(__file__).rstrip('.py'):
+            for key in SPECS['tx'].keys():
+                kwargs = enforce_specs(kwargs, SPECS['tx'], key)
+            subclass_init = False
+        else:
+            subclass_init = True
         super().__init__(**kwargs)
-        # I2C connexion to MCP23008, for current injection
-        # self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
 
         # Initialize LEDs
         self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
@@ -73,7 +81,8 @@ class Tx(Tx_mb_2023):
         self.pin6 = self.mcp_board.get_pin(6)
         self.pin6.direction = Direction.OUTPUT
         self.pin6.value = False
-        self.exec_logger.event(f'{self.board_name}\ttx_init\tend\t{datetime.datetime.utcnow()}')
+        if not subclass_init:
+            self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
     def inject(self, polarity=1, injection_duration=None):
         # add leds?
@@ -84,8 +93,14 @@ class Tx(Tx_mb_2023):
 
 class Rx(Rx_mb_2023):
     def __init__(self, **kwargs):
+        if kwargs['model'] == os.path.basename(__file__).rstrip('.py'):
+            for key in SPECS['rx'].keys():
+                kwargs = enforce_specs(kwargs, SPECS['rx'], key)
+            subclass_init = False
+        else:
+            subclass_init = True
         super().__init__(**kwargs)
-        # I2C connexion to MCP23008, for voltage
+        # I2C connection to MCP23008, for voltage
         self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
         # ADS1115 for voltage measurement (MN)
         self._coef_p2 = 1.
@@ -102,15 +117,15 @@ class Rx(Rx_mb_2023):
         self.pin_DG1.value = True  # open gain 1 inactive
         self.pin_DG2.value = False  # close gain 0.5 active
         self.gain = 1/3
-        # TODO: try to only log this event and not the one created by super()
-        self.exec_logger.event(f'{self.board_name}\trx_init\tend\t{datetime.datetime.utcnow()}')
+        if not subclass_init:  # TODO: try to only log this event and not the one created by super()
+            self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
     def _adc_gain_auto(self):
-        self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
         gain = _ads_1115_gain_auto(AnalogIn(self._ads_voltage, ads.P0))
         self.exec_logger.debug(f'Setting RX ADC gain automatically to {gain}')
         self.gain = gain
-        self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
     def _dg411_gain_auto(self):
         if self.voltage < self._vmn_hardware_offset :
@@ -140,7 +155,7 @@ class Rx(Rx_mb_2023):
     def voltage(self):
         """ Gets the voltage VMN in Volts
         """
-        self.exec_logger.event(f'{self.board_name}\trx_voltage\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_voltage\tbegin\t{datetime.datetime.utcnow()}')
         u = (AnalogIn(self._ads_voltage, ads.P0).voltage * self._coef_p2 * 1000. - self._vmn_hardware_offset) / self._dg411_gain - self._bias  # TODO: check how to handle bias and _vmn_hardware_offset
-        self.exec_logger.event(f'{self.board_name}\trx_voltage\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_voltage\tend\t{datetime.datetime.utcnow()}')
         return u

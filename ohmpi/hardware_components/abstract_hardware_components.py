@@ -7,7 +7,7 @@ from threading import Event, Barrier, BrokenBarrierError
 
 class CtlAbstract(ABC):
     def __init__(self, **kwargs):
-        self.board_name = kwargs.pop('board_name', 'unknown CTL hardware')
+        self.model = kwargs.pop('model', 'unknown CTL hardware')
         self.interfaces = None
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
@@ -15,7 +15,7 @@ class CtlAbstract(ABC):
         self.soh_logger = kwargs.pop('soh_logger', None)
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_ctl')
-        self.exec_logger.debug(f'{self.board_name} Ctl initialization')
+        self.exec_logger.debug(f'{self.model} Ctl initialization')
         self._cpu_temp_available = False
         self.max_cpu_temp = np.inf
         self.connection = kwargs.pop('connection', None)
@@ -23,12 +23,12 @@ class CtlAbstract(ABC):
     @property
     def cpu_temperature(self):
         if not self._cpu_temp_available:
-            self.exec_logger.warning(f'CPU temperature reading is not available for {self.board_name}')
+            self.exec_logger.warning(f'CPU temperature reading is not available for {self.model}')
             cpu_temp = np.nan
         else:
             cpu_temp = self._cpu_temp
             if cpu_temp > self.max_cpu_temp:
-                self.soh_logger.warning(f'CPU temperature of {self.board_name} is over the limit!')
+                self.soh_logger.warning(f'CPU temperature of {self.model} is over the limit!')
         return cpu_temp
 
     @property
@@ -39,7 +39,7 @@ class CtlAbstract(ABC):
 
 class PwrAbstract(ABC):
     def __init__(self, **kwargs):
-        self.board_name = kwargs.pop('board_name', 'unknown PWR hardware')
+        self.model = kwargs.pop('model', 'unknown PWR hardware')
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_mux')
@@ -71,12 +71,12 @@ class PwrAbstract(ABC):
 
     @abstractmethod
     def turn_off(self):
-        self.exec_logger.debug(f'Switching {self.board_name} off')
+        self.exec_logger.debug(f'Switching {self.model} off')
         self._state = 'off'
 
     @abstractmethod
     def turn_on(self):
-        self.exec_logger.debug(f'Switching {self.board_name} on')
+        self.exec_logger.debug(f'Switching {self.model} on')
         self._state = 'on'
 
     @property
@@ -90,7 +90,7 @@ class PwrAbstract(ABC):
     def voltage(self, value):
         assert isinstance(value, float)
         if not self.voltage_adjustable:
-            self.exec_logger.debug(f'Voltage cannot be set on {self.board_name}...')
+            self.exec_logger.debug(f'Voltage cannot be set on {self.model}...')
         else:
             assert self._voltage_min < value < self._voltage_max
             # add actions to set the DPS voltage
@@ -99,17 +99,13 @@ class PwrAbstract(ABC):
 
 class MuxAbstract(ABC):
     def __init__(self, **kwargs):
-        self.board_name = kwargs.pop('board_name', 'unknown MUX hardware')
-        self.exec_logger = kwargs.pop('exec_logger', None)
-        if self.exec_logger is None:
-            self.exec_logger = create_stdout_logger('exec_mux')
-        self.soh_logger = kwargs.pop('soh_logger', None)
-        if self.soh_logger is None:
-            self.soh_logger = create_stdout_logger('soh_mux')
+        self.model = kwargs.pop('model', 'unknown MUX hardware')
+        self.exec_logger = kwargs.pop('exec_logger', create_stdout_logger('exec_mux'))
+        self.soh_logger = kwargs.pop('soh_logger', create_stdout_logger('soh_mux'))
         self.board_id = kwargs.pop('id', None)
         if self.board_id is None:
-            self.exec_logger.error(f'MUX {self.board_name} should have an id !')
-        self.exec_logger.debug(f'MUX {self.board_id} ({self.board_name}) initialization')
+            self.exec_logger.error(f'MUX {self.model} should have an id !')
+        self.exec_logger.debug(f'MUX {self.board_id} ({self.model}) initialization')
         self.connection = kwargs.pop('connection', None)
         cabling = kwargs.pop('cabling', None)
         self.cabling = {}
@@ -155,7 +151,7 @@ class MuxAbstract(ABC):
         """
         status = True
         if elec_dict is not None:
-            self.exec_logger.debug(f'Switching {self.board_name} ')
+            self.exec_logger.debug(f'Switching {self.model} ')
             # check to prevent A == B (SHORT-CIRCUIT)
             if 'A' in elec_dict.keys() and 'B' in elec_dict.keys():
                 out = np.in1d(elec_dict['A'], elec_dict['B'])
@@ -201,7 +197,7 @@ class MuxAbstract(ABC):
                 self.exec_logger.debug(f'Barrier error {self.board_id} switching aborted.')
                 status = False
         else:
-            self.exec_logger.warning(f'Missing argument for {self.board_name}.switch: elec_dict is None.')
+            self.exec_logger.warning(f'Missing argument for {self.model}.switch: elec_dict is None.')
             status = False
         if state == 'on':
             time.sleep(self._activation_delay)
@@ -232,7 +228,7 @@ class MuxAbstract(ABC):
         activation_time : float, optional
             Time in seconds during which the relays are activated.
         """
-        self.exec_logger.debug(f'Starting {self.board_name} test...')
+        self.exec_logger.debug(f'Starting {self.model} test...')
         self.reset()
 
         for role in elec_dict.keys():
@@ -246,7 +242,7 @@ class MuxAbstract(ABC):
 
 class TxAbstract(ABC):
     def __init__(self, **kwargs):
-        self.board_name = kwargs.pop('board_name', 'unknown TX hardware')
+        self.model = kwargs.pop('model', 'unknown TX hardware')
         injection_duration = kwargs.pop('injection_duration', 1.)
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
@@ -262,7 +258,7 @@ class TxAbstract(ABC):
         self.injection_duration = injection_duration
         self._latency = kwargs.pop('latency', 0.)
         self.tx_sync = kwargs.pop('tx_sync', Event())
-        self.exec_logger.debug(f'{self.board_name} TX initialization')
+        self.exec_logger.debug(f'{self.model} TX initialization')
 
     @property
     def adc_gain(self):
@@ -297,6 +293,8 @@ class TxAbstract(ABC):
             Injection polarity, can be eiter  1, 0 or -1
         injection_duration: float, default None
             Injection duration in seconds
+        switch_pwr: bool
+            switches on and off tx.pwr
         """
         assert polarity in [-1, 0, 1]
         if injection_duration is None:
@@ -315,7 +313,6 @@ class TxAbstract(ABC):
                 self.pwr.turn_off()
             time.sleep(injection_duration)
             self.tx_sync.clear()
-
 
     @property
     def injection_duration(self):
@@ -377,9 +374,9 @@ class RxAbstract(ABC):
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_rx')
         self.connection = kwargs.pop('connection', None)
-        self.board_name = kwargs.pop('board_name', 'unknown RX hardware')
+        self.model = kwargs.pop('model', 'unknown RX hardware')
         self._sampling_rate = kwargs.pop('sampling_rate', 1)  # ms
-        self.exec_logger.debug(f'{self.board_name} RX initialization')
+        self.exec_logger.debug(f'{self.model} RX initialization')
         self._voltage_max = kwargs.pop('voltage_max', 0.)
         self._adc_gain = 1.
         self._max_sampling_rate = np.inf

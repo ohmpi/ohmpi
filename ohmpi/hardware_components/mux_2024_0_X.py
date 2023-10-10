@@ -1,20 +1,26 @@
-from ohmpi.config import HARDWARE_CONFIG
 import os
+import datetime
 import numpy as np
 from ohmpi.hardware_components import MuxAbstract
 import adafruit_tca9548a  # noqa
 from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
 from digitalio import Direction  # noqa
 from busio import I2C  # noqa
-# import time
+from ohmpi.utils import enforce_specs
 
 # hardware characteristics and limitations
-SPECS = {'voltage_max': 50., 'current_max': 3., 'activation_delay': 0.01, 'release_delay': 0.005}
+SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
+         'id' : {'default': 'mux_??'},
+         'voltage_max': {'default': 50.},
+         'current_max': {'default': 3.},
+         'activation_delay': {'default': 0.01},
+         'release_delay': {'default': 0.005}
+         }
 
 # defaults to 4 roles cabling electrodes from 1 to 8
-default_mux_cabling = {(elec, role) : ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1,9)}
+default_mux_cabling = {(elec, role): ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in range(1, 9)}
 
-inner_cabling = {'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MCP': 0, 'MCP_GPIO': 8},
+inner_cabling = {'4_roles': {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MCP': 0, 'MCP_GPIO': 8},
                              (2, 'X'): {'MCP': 0, 'MCP_GPIO': 1}, (2, 'Y'): {'MCP': 0, 'MCP_GPIO': 9},
                              (3, 'X'): {'MCP': 0, 'MCP_GPIO': 2}, (3, 'Y'): {'MCP': 0, 'MCP_GPIO': 10},
                              (4, 'X'): {'MCP': 0, 'MCP_GPIO': 3}, (4, 'Y'): {'MCP': 0, 'MCP_GPIO': 11},
@@ -30,7 +36,7 @@ inner_cabling = {'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'M
                              (6, 'XX'): {'MCP': 1, 'MCP_GPIO': 2}, (6, 'YY'): {'MCP': 1, 'MCP_GPIO': 10},
                              (7, 'XX'): {'MCP': 1, 'MCP_GPIO': 1}, (7, 'YY'): {'MCP': 1, 'MCP_GPIO': 9},
                              (8, 'XX'): {'MCP': 1, 'MCP_GPIO': 0}, (8, 'YY'): {'MCP': 1, 'MCP_GPIO': 8}},
-                '2_roles':  # TODO: WARNING check 2_roles table, it has not been verified yet !!!
+                 '2_roles':  # TODO: WARNING check 2_roles table, it has not been verified yet !!!
                             {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MCP': 0, 'MCP_GPIO': 8},
                              (2, 'X'): {'MCP': 0, 'MCP_GPIO': 1}, (2, 'Y'): {'MCP': 0, 'MCP_GPIO': 9},
                              (3, 'X'): {'MCP': 0, 'MCP_GPIO': 2}, (3, 'Y'): {'MCP': 0, 'MCP_GPIO': 10},
@@ -47,21 +53,17 @@ inner_cabling = {'4_roles' : {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'M
                              (11, 'X'): {'MCP': 1, 'MCP_GPIO': 2}, (11, 'Y'): {'MCP': 1, 'MCP_GPIO': 10},
                              (10, 'X'): {'MCP': 1, 'MCP_GPIO': 1}, (10, 'Y'): {'MCP': 1, 'MCP_GPIO': 9},
                              (9, 'X'): {'MCP': 1, 'MCP_GPIO': 0}, (9, 'Y'): {'MCP': 1, 'MCP_GPIO': 8}}
-                }
+                 }
 
 
 class Mux(MuxAbstract):
     def __init__(self, **kwargs):
-        kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
-        kwargs.update({'cabling': kwargs.pop('cabling', default_mux_cabling)})
-        kwargs.update({'activation_delay': max(kwargs.pop('activation_delay', SPECS['activation_delay']),
-                                               SPECS['activation_delay'])})
-        kwargs.update({'release_delay': max(kwargs.pop('release_delay', SPECS['release_delay']),
-                                               SPECS['activation_delay'])})
-        kwargs.update({'voltage_max': max(0., min(kwargs.pop('voltage_max', SPECS['voltage_max']),
-                                                  SPECS['voltage_max']))})
-        kwargs.update({'current_max': max(0., min(kwargs.pop('current_max', SPECS['current_max']),
-                                                  SPECS['current_max']))})
+        if kwargs['model'] == os.path.basename(__file__).rstrip('.py'):
+            for key in SPECS.keys():
+                kwargs = enforce_specs(kwargs, SPECS, key)
+            subclass_init = False
+        else:
+            subclass_init = True
         super().__init__(**kwargs)
         assert isinstance(self.connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
@@ -75,7 +77,7 @@ class Mux(MuxAbstract):
         elif np.alltrue([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['2_roles'].keys())])]):
             self._mode = '2_roles'
         else:
-            self.exec_logger.error(f'Invalid role assignment for {self.board_name}: {self._roles} !')
+            self.exec_logger.error(f'Invalid role assignment for {self.model}: {self._roles} !')
             self._mode = ''
         if tca_address is None:
             self._tca = self.connection
@@ -87,6 +89,8 @@ class Mux(MuxAbstract):
         if self.addresses is None:
             self._get_addresses()
         self.exec_logger.debug(f'{self.board_id} addresses: {self.addresses}')
+        if not subclass_init:  # TODO: try to only log this event and not the one created by super()
+            self.exec_logger.event(f'{self.model}_{self.board_id}\tmux_init\tend\t{datetime.datetime.utcnow()}')
 
     def _get_addresses(self):
         """ Converts inner cabling addressing into (electrodes, role) addressing """

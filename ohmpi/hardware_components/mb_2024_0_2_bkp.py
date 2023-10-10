@@ -122,7 +122,7 @@ class Tx(TxAbstract):
             self.exec_logger.warning(f'Incompatible power source specified check config')
             assert kwargs['pwr'] in SPECS['tx']
         # self.pwr = None  # TODO: set a list of compatible power system with the tx
-        self.exec_logger.event(f'{self.board_name}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         # self.voltage_max = kwargs['voltage_max']  # TODO: check if used
         self._activation_delay = kwargs['activation_delay']
         self._release_delay = kwargs['release_delay']
@@ -156,7 +156,7 @@ class Tx(TxAbstract):
 
         self._latency = kwargs.pop('latency', TX_CONFIG['latency'])
         self._bias = kwargs.pop('bias', TX_CONFIG['bias'])
-        self.exec_logger.event(f'{self.board_name}\ttx_init\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
     @property
     def gain(self):
@@ -173,15 +173,15 @@ class Tx(TxAbstract):
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
 
     def _adc_gain_auto(self):
-        self.exec_logger.event(f'{self.board_name}\ttx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\ttx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
         gain = _gain_auto(AnalogIn(self._ads_current, ads.P0))
         self.exec_logger.debug(f'Setting TX ADC gain automatically to {gain}')
         self.gain = gain
-        self.exec_logger.event(f'{self.board_name}\ttx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\ttx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
     def current_pulse(self, **kwargs):
         TxAbstract.current_pulse(self, **kwargs)
-        self.exec_logger.warning(f'Current pulse is not implemented for the {self.board_name} board')
+        self.exec_logger.warning(f'Current pulse is not implemented for the {self.model} board')
 
     @property
     def current(self):
@@ -194,7 +194,7 @@ class Tx(TxAbstract):
     @ current.setter
     def current(self, value):
         assert self.adc_voltage_min / (50 * self.r_shunt)  <= value <= self.adc_voltage_max / (50 * self.r_shunt)
-        self.exec_logger.warning(f'Current pulse is not implemented for the {self.board_name} board')
+        self.exec_logger.warning(f'Current pulse is not implemented for the {self.model} board')
 
     def gain_auto(self):
         self._adc_gain_auto()
@@ -232,8 +232,8 @@ class Tx(TxAbstract):
 
     @property
     def tx_bat(self):
-        self.soh_logger.warning(f'Cannot get battery voltage on {self.board_name}')
-        self.exec_logger.debug(f'{self.board_name} cannot read battery voltage. Returning default battery voltage.')
+        self.soh_logger.warning(f'Cannot get battery voltage on {self.model}')
+        self.exec_logger.debug(f'{self.model} cannot read battery voltage. Returning default battery voltage.')
         return self.pwr.voltage
 
     def voltage_pulse(self, voltage=None, length=None, polarity=1):
@@ -248,7 +248,7 @@ class Tx(TxAbstract):
         polarity: 1,0,-1
             Polarity of the pulse
         """
-        self.exec_logger.event(f'{self.board_name}\ttx_voltage_pulse\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\ttx_voltage_pulse\tbegin\t{datetime.datetime.utcnow()}')
         # self.exec_logger.info(f'injection_duration: {length}')  # TODO: delete me
         if length is None:
             length = self.injection_duration
@@ -256,7 +256,7 @@ class Tx(TxAbstract):
             self.pwr.voltage = voltage
         self.exec_logger.debug(f'Voltage pulse of {polarity*self.pwr.voltage:.3f} V for {length:.3f} s')
         self.inject(polarity=polarity, injection_duration=length)
-        self.exec_logger.event(f'{self.board_name}\ttx_voltage_pulse\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\ttx_voltage_pulse\tend\t{datetime.datetime.utcnow()}')
 
 
 class Rx(RxAbstract):
@@ -267,7 +267,7 @@ class Rx(RxAbstract):
         super().__init__(**kwargs)
         assert isinstance(self.connection, I2C)
 
-        self.exec_logger.event(f'{self.board_name}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
 
         # I2C connexion to MCP23008, for DG411
         self.mcp_board = MCP23008(self.connection, address=0x27)
@@ -283,7 +283,7 @@ class Rx(RxAbstract):
         # self._voltage_max = kwargs['voltage_max']
         self._sampling_rate = kwargs['sampling_rate']
         self._bias = kwargs['bias']
-        self.exec_logger.event(f'{self.board_name}\trx_init\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
         self.pin_DG0 = self.mcp_board.get_pin(0)
         self.pin_DG0.direction = Direction.OUTPUT
@@ -312,13 +312,13 @@ class Rx(RxAbstract):
         self.exec_logger.debug(f'Setting RX ADC gain to {value}')
 
     def _adc_gain_auto(self):
-        self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
         gain_0 = _gain_auto(AnalogIn(self._ads_voltage, ads.P0))
         gain_2 = _gain_auto(AnalogIn(self._ads_voltage, ads.P2))
         gain = np.min([gain_0, gain_2])
         self.exec_logger.debug(f'Setting RX ADC gain automatically to {gain}')
         self.gain = gain
-        self.exec_logger.event(f'{self.board_name}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
     def gain_auto(self):
         self._adc_gain_auto()
@@ -326,9 +326,9 @@ class Rx(RxAbstract):
     def voltage(self):
         """ Gets the voltage VMN in Volts
         """
-        self.exec_logger.event(f'{self.board_name}\trx_voltage\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_voltage\tbegin\t{datetime.datetime.utcnow()}')
         u = -AnalogIn(self._ads_voltage, ads.P0, ads.P1).voltage * self._coef_p2 * 1000. - self._bias  # TODO: check if it should be negated
-        self.exec_logger.event(f'{self.board_name}\trx_voltage\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_voltage\tend\t{datetime.datetime.utcnow()}')
         return u
 
     @property

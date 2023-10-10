@@ -45,7 +45,8 @@ for k, v in rx_module.SPECS['rx'].items():
 
 current_max = np.min([TX_CONFIG['voltage_max']/50/TX_CONFIG['r_shunt'],  # TODO: replace 50 by a TX config
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
-voltage_max = np.min([TX_CONFIG['voltage_max'], np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
+voltage_max = np.min([TX_CONFIG['voltage_max'],
+                      np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
 voltage_min = RX_CONFIG['voltage_min']
 
 
@@ -57,16 +58,10 @@ def elapsed_seconds(start_time):
 class OhmPiHardware:
     def __init__(self, **kwargs):
         # OhmPiHardware initialization
-        self.exec_logger = kwargs.pop('exec_logger', None)
+        self.exec_logger = kwargs.pop('exec_logger', create_stdout_logger('exec_hw'))
         self.exec_logger.event(f'OhmPiHardware\tinit\tbegin\t{datetime.datetime.utcnow()}')
-        if self.exec_logger is None:
-            self.exec_logger = create_stdout_logger('exec_hw')
-        self.data_logger = kwargs.pop('exec_logger', None)
-        if self.data_logger is None:
-            self.data_logger = create_stdout_logger('data_hw')
-        self.soh_logger = kwargs.pop('soh_logger', None)
-        if self.soh_logger is None:
-            self.soh_logger = create_stdout_logger('soh_hw')
+        self.data_logger = kwargs.pop('exec_logger', create_stdout_logger('data_hw'))
+        self.soh_logger = kwargs.pop('soh_logger', create_stdout_logger('soh_hw'))
         self.tx_sync = Event()
 
         # Main Controller initialization

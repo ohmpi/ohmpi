@@ -1,7 +1,6 @@
 import logging
 from ohmpi.utils import get_platform
-
-from paho.mqtt.client import MQTTv31
+from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
 # DEFINE THE ID OF YOUR OhmPi
@@ -44,7 +43,7 @@ EXEC_LOGGING_CONFIG = {
     'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',
-    'max_bytes': 262144,
+    'max_bytes': 1048576,
     'backup_count': 30,
     'when': 'd',
     'interval': 1

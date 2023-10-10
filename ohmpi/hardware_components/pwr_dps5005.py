@@ -40,15 +40,15 @@ class Pwr(PwrAbstract):
 
     @current.setter
     def current(self, value, **kwargs):
-        self.exec_logger.debug(f'Current cannot be set on {self.board_name}')
+        self.exec_logger.debug(f'Current cannot be set on {self.model}')
 
     def turn_off(self):
         self.connection.write_register(0x09, 1)
-        self.exec_logger.debug(f'{self.board_name} is off')
+        self.exec_logger.debug(f'{self.model} is off')
 
     def turn_on(self):
         self.connection.write_register(0x09, 1)
-        self.exec_logger.debug(f'{self.board_name} is on')
+        self.exec_logger.debug(f'{self.model} is on')
 
     @property
     def voltage(self):
