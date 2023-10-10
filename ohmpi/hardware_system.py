@@ -290,7 +290,7 @@ class OhmPiHardware:
             mean_vmn = []
             mean_iab = []
             for i in range(n_pulses + 1):
-                mean_vmn.append(polarity[i] * np.mean(self.readings[self.readings[:, 1] == i, 4]))
+                mean_vmn.append(np.mean(self.readings[self.readings[:, 1] == i, 4]))
                 mean_iab.append(np.mean(self.readings[self.readings[:, 1] == i, 3]))
             mean_vmn = np.array(mean_vmn)
             mean_iab = np.array(mean_iab)

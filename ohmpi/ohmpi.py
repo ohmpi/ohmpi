@@ -463,12 +463,13 @@ class OhmPi(object):
                 delay = 0.
             x = np.where((self._hw.readings[:, 0] >= delay) & (self._hw.readings[:, 2] != 0))
             print(f'length of series: {len(x)}')
-            R = np.mean((self._hw.readings[x, 2] * (self._hw.readings[x, 4] - self._hw.sp)) / self._hw.readings[x, 3])
+            # R = np.mean((self._hw.readings[x, 2] * (self._hw.readings[x, 4] - self._hw.sp)) / self._hw.readings[x, 3])
             R_std = 100. * np.std((self._hw.readings[x, 2] * (self._hw.readings[x, 4] - self._hw.sp)) / self._hw.readings[x, 3]) / R
-            Vmn = np.mean(self._hw.readings[x, 2] * (self._hw.readings[x, 4] - self._hw.sp))
-            Vmn_std = 100. * np.std(self._hw.readings[x, 2] * (self._hw.readings[x, 4] - self._hw.sp))
+            Vmn = np.mean(self._hw.readings[x, 2] * (self._hw.readings[x, 4])) # - self._hw.sp))
+            Vmn_std = 100. * np.std(self._hw.readings[x, 2] * (self._hw.readings[x, 4])) # - self._hw.sp))
             I = np.mean(self._hw.readings[x, 3])
             I_std = 100. * np.std(self._hw.readings[x, 3])
+            R = Vmn / I
             d = {
                 "time": datetime.now().isoformat(),
                 "A": quad[0],
