@@ -36,7 +36,7 @@ if stand_alone:
     print(HARDWARE_CONFIG['rx'], rx_module)
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
     tx = tx_module.Tx(**HARDWARE_CONFIG['tx'])
-    pwr = pwr_module.pwr(**HARDWARE_CONFIG['pwr'])
+    pwr = pwr_module.Pwr(**HARDWARE_CONFIG['pwr'])
 
     tx.polarity = 1
     time.sleep(1)
