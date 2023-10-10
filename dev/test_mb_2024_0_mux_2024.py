@@ -34,9 +34,9 @@ if stand_alone:
                                                                                   'interface_name', 'i2c')])})
 
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
-    tx = tx_module.Rx(**HARDWARE_CONFIG['tx'])
-    ctl = ctl_module.Rx(**HARDWARE_CONFIG['ctl'])
-    pwr = pwr_module.Rx(**HARDWARE_CONFIG['pwr'])
+    tx = tx_module.Tx(**HARDWARE_CONFIG['tx'])
+    #ctl = ctl_module.Rx(**HARDWARE_CONFIG['ctl'])
+    pwr = pwr_module.pwr(**HARDWARE_CONFIG['pwr'])
 
     tx.polarity = 1
     time.sleep(1)
