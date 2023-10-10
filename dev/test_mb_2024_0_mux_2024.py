@@ -13,10 +13,10 @@ within_ohmpi = False
 
 # Stand alone
 if stand_alone:
-    ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG['ctl'].pop('model')}')
-    pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG['pwr'].pop('model')}')
-    tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG['tx'].pop('model')}')
-    rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG['rx'].pop('model')}')
+    ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"].pop("model")}')
+    pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"].pop("model")}')
+    tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"].pop("model")}')
+    rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"].pop("model")}')
 
     ctl = ctl_module.Ctl()
     HARDWARE_CONFIG['tx'].update({'ctl': ctl})  # HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl())})
