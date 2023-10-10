@@ -400,7 +400,7 @@ class OhmPiHardware:
     def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, duty_cycle=1.,
                         append=False):
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
-        self._gain_auto()
+        self._gain_auto()  # TODO: Uncomment me
         assert 0. <= duty_cycle <= 1.
         if duty_cycle < 1.:
             durations = [cycle_duration/2 * duty_cycle, cycle_duration/2*(1.-duty_cycle)] * 2 * cycles
