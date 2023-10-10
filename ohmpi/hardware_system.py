@@ -177,7 +177,7 @@ class OhmPiHardware:
         tx_gains = []
         rx_gains = []
         for pol in polarities:
-            self.tx.polarity = pol
+            # self.tx.polarity = pol
             # self.tx_sync.wait()
             # set gains automatically
             injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
@@ -430,7 +430,7 @@ class OhmPiHardware:
         injection.start()
         readings.join()
         injection.join()
-        self.tx.polarity = 0
+        self.tx.polarity = 0   #TODO: is this necessary?
 
     def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
         n_pulses = len(durations)
