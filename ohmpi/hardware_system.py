@@ -33,15 +33,15 @@ TX_CONFIG = HARDWARE_CONFIG['tx']
 for k, v in tx_module.SPECS['tx'].items():
     try:
         TX_CONFIG.update({k: TX_CONFIG.pop(k, v['default'])})
-    except:
-        print(f'Cannot set value {v} in TX_CONFIG[{k}]')
+    except Exception as e:
+        print(f'Cannot set value {v} in TX_CONFIG[{k}]:\n{e}')
 
 RX_CONFIG = HARDWARE_CONFIG['rx']
 for k, v in rx_module.SPECS['rx'].items():
     try:
         RX_CONFIG.update({k: RX_CONFIG.pop(k, v['default'])})
-    except:
-        print(f'Cannot set value {v} in RX_CONFIG[{k}]')
+    except Exception as e:
+        print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
 
 current_max = np.min([TX_CONFIG['voltage_max']/50/TX_CONFIG['r_shunt'],  # TODO: replace 50 by a TX config
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
@@ -384,7 +384,7 @@ class OhmPiHardware:
         ax[3].plot(self.readings[v, 0], (self.readings[v, 2] * (self.readings[v, 4] - self.sp)) / self.readings[v, 3],
                    '-m', marker='.', label='R [ohm]')
         ax[3].set_ylabel('R [ohm]')
-        ax[4].plot(self.readings[v, 0], np.ones_like(self.readings[v,0]) * self.sp, '-k', marker='.', label='SP [mV]')
+        ax[4].plot(self.readings[v, 0], np.ones_like(self.readings[v, 0]) * self.sp, '-k', marker='.', label='SP [mV]')
         ax[4].set_ylabel('SP [mV]')
         # fig.legend()
         if save_fig:
