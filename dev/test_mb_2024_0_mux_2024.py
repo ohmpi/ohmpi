@@ -13,10 +13,10 @@ within_ohmpi = False
 
 # Stand alone
 if stand_alone:
-    ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
-    pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
-    tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
-    rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
+    ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG['ctl'].pop('model')}')
+    pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG['pwr'].pop('model')}')
+    tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG['tx'].pop('model')}')
+    rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG['rx'].pop('model')}')
 
     ctl = ctl_module.Ctl()
     HARDWARE_CONFIG['tx'].update({'ctl': ctl})  # HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl())})
@@ -29,12 +29,7 @@ if stand_alone:
                                                                           ctl.interfaces[
                                                                               HARDWARE_CONFIG['rx'].pop(
                                                                                   'interface_name', 'i2c')])})
-    HARDWARE_CONFIG['pwr'].update({'model': 'pwr_batt'})
 
-    HARDWARE_CONFIG['rx'].pop('model')
-    HARDWARE_CONFIG['tx'].pop('model')
-    HARDWARE_CONFIG['pwr'].pop('model')
-    print(HARDWARE_CONFIG['rx'], rx_module)
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
     tx = tx_module.Tx(**HARDWARE_CONFIG['tx'])
     pwr = pwr_module.Pwr(**HARDWARE_CONFIG['pwr'])
