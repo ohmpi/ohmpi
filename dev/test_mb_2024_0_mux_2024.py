@@ -33,6 +33,7 @@ if stand_alone:
                                                                               HARDWARE_CONFIG['rx'].pop(
                                                                                   'interface_name', 'i2c')])})
 
+    print(HARDWARE_CONFIG['rx'])
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
     tx = tx_module.Tx(**HARDWARE_CONFIG['tx'])
     #ctl = ctl_module.Rx(**HARDWARE_CONFIG['ctl'])
