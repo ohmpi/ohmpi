@@ -76,7 +76,8 @@ def create_stdout_logger(name):
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
-    print(get_logging_levels())
+    if 'EVENT' not in get_logging_levels():
+        add_logging_level('EVENT', logging.DEBUG + 1)
     return logger
 
 
