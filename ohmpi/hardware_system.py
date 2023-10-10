@@ -11,6 +11,7 @@ from ohmpi.logging_setup import create_stdout_logger
 from ohmpi.utils import update_dict
 from ohmpi.config import HARDWARE_CONFIG
 from threading import Thread, Event, Barrier, BrokenBarrierError
+import warnings
 
 # plt.switch_backend('agg')  # for thread safe operations...
 
@@ -371,6 +372,7 @@ class OhmPiHardware:
 
     def _plot_readings(self, save_fig=False):
         # Plot graphs
+        warnings.filterwarnings("ignore", category=DeprecationWarning)
         fig, ax = plt.subplots(nrows=5, sharex=True)
         ax[0].plot(self.readings[:, 0], self.readings[:, 3], '-r', marker='.', label='iab')
         ax[0].set_ylabel('Iab [mA]')
@@ -389,6 +391,7 @@ class OhmPiHardware:
             fig.savefig(f'figures/test.png')
         else:
             plt.show()
+        warnings.resetwarnings()
 
     def calibrate_rx_bias(self):
         self.rx._bias += (np.mean(self.readings[self.readings[:, 2] == 1, 4])
