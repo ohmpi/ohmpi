@@ -10,7 +10,7 @@ from ohmpi.utils import enforce_specs
 
 # hardware characteristics and limitations
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
-         'id' : {'default': 'mux_??'},
+         'id': {'default': 'mux_??'},
          'voltage_max': {'default': 50.},
          'current_max': {'default': 3.},
          'activation_delay': {'default': 0.01},
@@ -58,9 +58,10 @@ inner_cabling = {'4_roles': {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (1, 'Y'): {'MC
 
 class Mux(MuxAbstract):
     def __init__(self, **kwargs):
-        if kwargs['model'] == os.path.basename(__file__).rstrip('.py'):
+        if 'model' not in kwargs.keys():
             for key in SPECS.keys():
                 kwargs = enforce_specs(kwargs, SPECS, key)
+            self.exec_logger.event(f'{self.model}{self.board_id}\tmux_init\tstart\t{datetime.datetime.utcnow()}')
             subclass_init = False
         else:
             subclass_init = True

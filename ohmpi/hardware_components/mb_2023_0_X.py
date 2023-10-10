@@ -66,9 +66,10 @@ def _ads_1115_gain_auto(channel):  # Make it a class method ?
 
 class Tx(TxAbstract):
     def __init__(self, **kwargs):
-        if kwargs['model'] == os.path.basename(__file__).rstrip('.py'):
+        if 'model' not in kwargs.keys():
             for key in SPECS['tx'].keys():
                 kwargs = enforce_specs(kwargs, SPECS['tx'], key)
+            self.exec_logger.event(f'{self.model}\ttx_init\tstart\t{datetime.datetime.utcnow()}')
             subclass_init = False
         else:
             subclass_init = True
@@ -211,13 +212,13 @@ class Tx(TxAbstract):
 
 class Rx(RxAbstract):
     def __init__(self, **kwargs):
-        if kwargs['model'] == os.path.basename(__file__).rstrip('.py'):
+        if 'model' not in kwargs.keys():
             for key in SPECS['rx'].keys():
                 kwargs = enforce_specs(kwargs, SPECS['rx'], key)
+            self.exec_logger.event(f'{self.model}\trx_init\tstart\t{datetime.datetime.utcnow()}')
             subclass_init = False
         else:
             subclass_init = True
-        kwargs.update({'board_name': os.path.basename(__file__).rstrip('.py')})
         super().__init__(**kwargs)
         assert isinstance(self.connection, I2C)
 

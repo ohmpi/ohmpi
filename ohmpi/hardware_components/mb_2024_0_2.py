@@ -69,6 +69,7 @@ class Tx(Tx_mb_2023):
         if 'model' not in kwargs.keys():
             for key in SPECS['tx'].keys():
                 kwargs = enforce_specs(kwargs, SPECS['tx'], key)
+            self.exec_logger.event(f'{self.model}\ttx_init\tstart\t{datetime.datetime.utcnow()}')
             subclass_init = False
         else:
             subclass_init = True
@@ -96,6 +97,7 @@ class Rx(Rx_mb_2023):
         if 'model' not in kwargs.keys():
             for key in SPECS['rx'].keys():
                 kwargs = enforce_specs(kwargs, SPECS['rx'], key)
+            self.exec_logger.event(f'{self.model}\trx_init\tstart\t{datetime.datetime.utcnow()}')
             subclass_init = False
         else:
             subclass_init = True

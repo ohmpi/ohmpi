@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import datetime
 from ohmpi.hardware_components import MuxAbstract
 import adafruit_tca9548a  # noqa
 from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
@@ -9,6 +10,7 @@ from ohmpi.utils import enforce_specs
 
 # hardware characteristics and limitations
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
+         'id': {'default': 'mux_??'},
          'voltage_max': {'default': 50.},
          'current_max': {'default': 3.},
          'activation_delay': {'default': 0.01},
@@ -57,9 +59,10 @@ inner_cabling = {'1_role': {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (2, 'X'): {'MCP
 
 class Mux(MuxAbstract):
     def __init__(self, **kwargs):
-        if kwargs['model'] == os.path.basename(__file__).rstrip('.py'):
+        if 'model' not in kwargs.keys():
             for key in SPECS.keys():
                 kwargs = enforce_specs(kwargs, SPECS, key)
+            self.exec_logger.event(f'{self.model}{self.board_id}\tmux_init\tstart\t{datetime.datetime.utcnow()}')
             subclass_init = False
         else:
             subclass_init = True
@@ -82,6 +85,8 @@ class Mux(MuxAbstract):
         if self.addresses is None:
             self._get_addresses()
         self.exec_logger.debug(f'{self.board_id} addresses: {self.addresses}')
+        if not subclass_init:
+            self.exec_logger.event(f'{self.model}_{self.board_id}\tmux_init\tend\t{datetime.datetime.utcnow()}')
 
     def _get_addresses(self):
         """ Converts inner cabling addressing into (electrodes, role) addressing """

@@ -48,7 +48,7 @@ class PwrAbstract(ABC):
             self.soh_logger = create_stdout_logger('soh_mux')
         self.voltage_adjustable = kwargs.pop('voltage_adjustable', False)
         self._voltage = np.nan
-        self._current_adjustable = kwargs.pop('current_adjustable', False)
+        self.current_adjustable = kwargs.pop('current_adjustable', False)
         self._current = np.nan
         self._state = 'off'
         self._current_min = kwargs.pop('current_min', 0.)
