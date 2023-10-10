@@ -31,6 +31,9 @@ if stand_alone:
                                                                                   'interface_name', 'i2c')])})
     HARDWARE_CONFIG['pwr'].update({'model': 'pwr_batt'})
 
+    HARDWARE_CONFIG['rx'].pop('model')
+    HARDWARE_CONFIG['tx'].pop('model')
+    HARDWARE_CONFIG['pwr'].pop('model')
     print(HARDWARE_CONFIG['rx'], rx_module)
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
     tx = tx_module.Tx(**HARDWARE_CONFIG['tx'])
