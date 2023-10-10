@@ -6,7 +6,8 @@ import minimalmodbus  # noqa
 import os
 from ohmpi.utils import get_platform
 from gpiozero import CPUTemperature  # noqa
-
+import warnings
+warnings.filterwarnings("error")
 
 class Ctl(CtlAbstract):
     def __init__(self, **kwargs):
@@ -22,12 +23,18 @@ class Ctl(CtlAbstract):
 
         super().__init__(**kwargs)
         self.interfaces = dict()
+
         # I2C
-        self.interfaces['i2c'] = busio.I2C(board.SCL, board.SDA)  # noqa
+        try:
+            self.interfaces['i2c'] = busio.I2C(board.SCL, board.SDA)  # noqa
+        except RuntimeWarning:
+            pass
 
         # Extended I2C
         try:
             self.interfaces['i2c_ext'] = ExtendedI2C(4)  # 4 is defined
+        except RuntimeWarning:
+            pass
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize Extended I2C:\n{e}')
         # modbus

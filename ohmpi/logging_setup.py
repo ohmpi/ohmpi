@@ -9,7 +9,6 @@ from ohmpi.compressed_sized_timed_rotating_handler import CompressedSizedTimedRo
 import sys
 from termcolor import colored
 
-
 def add_logging_level(level_name, level_num, method_name=None):
     """
     Comprehensively adds a new logging level to the `logging` module and the
@@ -72,6 +71,7 @@ def create_stdout_logger(name):
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
+    print(logger.
     return logger
 
 

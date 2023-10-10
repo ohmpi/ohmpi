@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-
 import numpy as np
 from ohmpi.logging_setup import create_stdout_logger
 import time
