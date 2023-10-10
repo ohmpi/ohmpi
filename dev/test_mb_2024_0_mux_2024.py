@@ -7,6 +7,7 @@ change_config('../configs/config_mb_2024_0_2.py', verbose=False)
 # from ohmpi.hardware_components.mux_2024_0_X import Mux
 from ohmpi.hardware_components import raspberry_pi as ctl_module
 from ohmpi.config import HARDWARE_CONFIG
+from ohmpi.logging_setup import add_logging_level
 # MUX_CONFIG = HARDWARE_CONFIG['mux']
 ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
 pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
@@ -18,8 +19,8 @@ part_of_hardware_system = False
 within_ohmpi = False
 # Stand alone mux
 if stand_alone:
-    HARDWARE_CONFIG['tx'].update({'ctl': HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl)})
-    HARDWARE_CONFIG['rx'].update({'ctl': HARDWARE_CONFIG['rx'].pop('ctl', ctl_module.Ctl)})
+    HARDWARE_CONFIG['tx'].update({'ctl': HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl())})
+    HARDWARE_CONFIG['rx'].update({'ctl': HARDWARE_CONFIG['rx'].pop('ctl', ctl_module.Ctl())})
     print(f'rx controller: {HARDWARE_CONFIG["rx"]["ctl"]}')
     HARDWARE_CONFIG['tx'].update({'connection': HARDWARE_CONFIG['tx'].pop('connection',
                                                                           HARDWARE_CONFIG['rx']['ctl'].interfaces[
@@ -45,7 +46,8 @@ if part_of_hardware_system:
 
     k = OhmPiHardware()
     k.exec_logger.setLevel(logging.DEBUG)
-
+    add_logging_level('EVENT', logging.DEBUG + 1)
+    logging.getLogger(k.exec_logger).setLevel("TRACE")
     # Test mux switching
     k.reset_mux()
     k.switch_mux(electrodes=[1, 4, 2, 3], roles=['A', 'B', 'M', 'N'], state='on')
