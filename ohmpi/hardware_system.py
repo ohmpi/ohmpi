@@ -204,7 +204,6 @@ class OhmPiHardware:
 
     def _inject(self, polarity=1, injection_duration=None):  # TODO: deal with voltage or current pulse
         self.exec_logger.event(f'OhmPiHardware\tinject\tbegin\t{datetime.datetime.utcnow()}')
-        print('inject')
         self.tx.voltage_pulse(length=injection_duration, polarity=polarity)
         self.exec_logger.event(f'OhmPiHardware\tinject\tend\t{datetime.datetime.utcnow()}')
 
@@ -269,8 +268,7 @@ class OhmPiHardware:
             return np.nan
 
     def last_dev(self, delay=0.):
-        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))
-        print(v)
+        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
         if len(v) > 1:
             return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3]) / self.last_resistance
         else:
@@ -444,7 +442,6 @@ class OhmPiHardware:
         if not append:
             self._clear_values()
         for i in range(n_pulses):
-            print('polarity', polarities[i])
             self._vab_pulse(self, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
 
