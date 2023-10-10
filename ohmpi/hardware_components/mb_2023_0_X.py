@@ -156,7 +156,6 @@ class Tx(TxAbstract):
 
     @polarity.setter
     def polarity(self, polarity):
-        print(f'mcp address : {self.mcp_board._device.device_address}')
         assert polarity in [-1, 0, 1]
         self._polarity = polarity
         if polarity == 1:

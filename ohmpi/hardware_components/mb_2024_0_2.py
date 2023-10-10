@@ -64,7 +64,7 @@ class Tx(Tx_mb_2023):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # I2C connexion to MCP23008, for current injection
-        self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
+        # self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
 
         # Initialize LEDs
         self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
@@ -80,6 +80,7 @@ class Tx(Tx_mb_2023):
         self.pin6.value=True
         Tx_mb_2023.inject(self, polarity=polarity, injection_duration=injection_duration)
         self.pin6.value = False
+
 
 class Rx(Rx_mb_2023):
     def __init__(self, **kwargs):
