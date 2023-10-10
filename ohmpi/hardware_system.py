@@ -260,7 +260,6 @@ class OhmPiHardware:
         self._pulse += 1
         self.exec_logger.event(f'OhmPiHardware\tread_values\tend\t{datetime.datetime.utcnow()}')
 
-    @property
     def last_resistance(self, delay=0.):
         v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
         if len(v) > 1:
@@ -269,7 +268,6 @@ class OhmPiHardware:
         else:
             return np.nan
 
-    @property
     def last_dev(self, delay=0.):
         v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))
         if len(v) > 1:
