@@ -10,6 +10,7 @@ import numpy as np
 import os
 from ohmpi.hardware_components import TxAbstract, RxAbstract
 from ohmpi.utils import enforce_specs
+import inspect
 
 # hardware characteristics and limitations
 # voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
@@ -35,6 +36,7 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
                 }}
 
 # TODO: move low_battery spec in pwr
+
 
 def _ads_1115_gain_auto(channel):  # Make it a class method ?
     """Automatically sets the gain on a channel
@@ -161,7 +163,10 @@ class Tx(TxAbstract):
     def polarity(self, polarity):
         assert polarity in [-1, 0, 1]
         self._polarity = polarity
-        print(f'asserted polarity: {self.polarity}')
+        # debugging code
+        curframe = inspect.currentframe()
+        calframe = inspect.getouterframes(curframe, 2)
+        print(f'polarity called from: {calframe}')
 
         if polarity == 1:
             print('pin0')

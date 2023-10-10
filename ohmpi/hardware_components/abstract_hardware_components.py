@@ -289,7 +289,7 @@ class TxAbstract(ABC):
         pass
 
     @abstractmethod
-    def inject(self, polarity=1, injection_duration=None):
+    def inject(self, polarity=1, injection_duration=None, switch_pwr=False):
         """
         Abstract method to define injection
         Parameters
@@ -303,15 +303,20 @@ class TxAbstract(ABC):
         if injection_duration is None:
             injection_duration = self._injection_duration
         if np.abs(polarity) > 0:
-            self.pwr.turn_on()
+            if switch_pwr:
+                self.pwr.turn_on()
             self.tx_sync.set()
             time.sleep(injection_duration)
-            self.pwr.turn_off()
+            self.tx_sync.clear()
+            if switch_pwr:
+                self.pwr.turn_off()
         else:
             self.tx_sync.set()
-            self.pwr.turn_off()
+            if switch_pwr:
+                self.pwr.turn_off()
             time.sleep(injection_duration)
-        self.tx_sync.clear()
+            self.tx_sync.clear()
+
 
     @property
     def injection_duration(self):

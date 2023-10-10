@@ -178,13 +178,13 @@ class OhmPiHardware:
         rx_gains = []
         for pol in polarities:
             # self.tx.polarity = pol
-            # self.tx_sync.wait()
             # set gains automatically
             injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
             # readings = Thread(target=self._read_values)
             get_tx_gain = Thread(target=self.tx.gain_auto)
             get_rx_gain = Thread(target=self.rx.gain_auto)
             injection.start()
+            self.tx_sync.wait()
             get_tx_gain.start()  # TODO: add a barrier to synchronize?
             get_rx_gain.start()
             get_tx_gain.join()
@@ -404,7 +404,7 @@ class OhmPiHardware:
         assert 0. <= duty_cycle <= 1.
         if duty_cycle < 1.:
             durations = [cycle_duration/2 * duty_cycle, cycle_duration/2*(1.-duty_cycle)] * 2 * cycles
-            pol = [-int(1. * np.heaviside(i % 2, -1.)) for i in range(2 * cycles)]
+            pol = [-int(polarity * np.heaviside(i % 2, -1.)) for i in range(2 * cycles)]
             # pol = [-int(self.tx.polarity * np.heaviside(i % 2, -1.)) for i in range(2 * cycles)]
             polarities = [0] * (len(pol) * 2)
             polarities[0::2] = pol

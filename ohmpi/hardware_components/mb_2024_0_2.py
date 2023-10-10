@@ -33,6 +33,7 @@ SPECS = {'rx': {'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
 
 # TODO: move low_battery spec in pwr
 
+
 def _ads_1115_gain_auto(channel):  # Make it a class method ?
     """Automatically sets the gain on a channel
 
@@ -123,7 +124,6 @@ class Rx(Rx_mb_2023):
         elif self._dg411_gain == 1/2:
             self.pin_DG1.value = True  # closed gain 1 active
             self.pin_DG2.value = False  # open gain 0.5 inactive
-
 
     def gain_auto(self):
         self._dg411_gain_auto()
