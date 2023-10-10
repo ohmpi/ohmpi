@@ -7,9 +7,9 @@ import time
 import logging
 from ohmpi.config import HARDWARE_CONFIG
 
-stand_alone = True # True
+stand_alone = False # True
 part_of_hardware_system = False
-within_ohmpi = False
+within_ohmpi = True
 
 # Stand alone
 if stand_alone:
