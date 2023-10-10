@@ -25,8 +25,8 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
 class Ctl(CtlAbstract):
     def __init__(self, **kwargs):
         if 'model' not in kwargs.keys():
-            for key in SPECS['tx'].keys():
-                kwargs = enforce_specs(kwargs, SPECS['tx'], key)
+            for key in SPECS.keys():
+                kwargs = enforce_specs(kwargs, SPECS, key)
             subclass_init = False
         else:
             subclass_init = True
