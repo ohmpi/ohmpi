@@ -21,7 +21,7 @@ if stand_alone:
     mux_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"][mux_id].pop("model")}')
 
     ctl = ctl_module.Ctl()
-    HARDWARE_CONFIG['tx'].update({'ctl': ctl})  # HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl())})
+    HARDWARE_CONFIG['tx'].update({'ctl': ctl, 'exec_logger': ctl.exec_logger})  # HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl())})
     HARDWARE_CONFIG['rx'].update({'ctl': ctl})  # HARDWARE_CONFIG['rx'].pop('ctl', ctl_module.Ctl())})
     HARDWARE_CONFIG['tx'].update({'connection': HARDWARE_CONFIG['tx'].pop('connection',
                                                                           ctl.interfaces[
