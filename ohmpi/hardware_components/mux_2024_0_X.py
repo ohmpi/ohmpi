@@ -69,8 +69,6 @@ class Mux(MuxAbstract):
             self.exec_logger.event(f'{self.model}{self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
-        tca_address = kwargs.pop('tca_address', None)
-        tca_channel = kwargs.pop('tca_channel', 0)
         self._roles = kwargs.pop('roles', None)
         if self._roles is None:
             self._roles = {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'}  # NOTE: defaults to 4-roles
@@ -81,15 +79,22 @@ class Mux(MuxAbstract):
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.model}: {self._roles} !')
             self._mode = ''
+
+        # Setup TCA
+        tca_address = kwargs.pop('tca_address', None)
+        tca_channel = kwargs.pop('tca_channel', 0)
         if tca_address is None:
             self._tca = self.connection
         else:
             self._tca = adafruit_tca9548a.TCA9548A(self.connection, tca_address)[tca_channel]
+
+        # Setup MCPs
         self._mcp_addresses = (kwargs.pop('mcp_0', '0x22'), kwargs.pop('mcp_1', '0x23'))  # TODO: add assert on valid addresses..
         self._mcp = [None, None]
         self.reset()
         if self.addresses is None:
             self._get_addresses()
+
         self.exec_logger.debug(f'{self.board_id} addresses: {self.addresses}')
         if not subclass_init:  # TODO: try to only log this event and not the one created by super()
             self.exec_logger.event(f'{self.model}_{self.board_id}\tmux_init\tend\t{datetime.datetime.utcnow()}')

@@ -1,7 +1,6 @@
 import logging
 from ohmpi.utils import get_platform
-
-from paho.mqtt.client import MQTTv31
+from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
 # DEFINE THE ID OF YOUR OhmPi
@@ -32,15 +31,17 @@ HARDWARE_CONFIG = {
              'sampling_rate': 50,  # number of samples per second
              'interface_name': 'i2c'
             },
-    'mux': {'mux_00':
-                {'model': 'mux_2024_0_X',
-                 'tca_address': None,
-                 'tca_channel': 0,
-                 'mcp_0': '0x24',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
-                 'mcp_1': '0x25',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
-                 'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                 'cabling': {(i+0, j): ('mux_00', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                 'voltage_max': 12.},
+    'mux': {'boards':
+                {'mux_00':
+                     {'model': 'mux_2024_0_X',
+                      'tca_address': None,
+                      'tca_channel': 0,
+                      'mcp_0': '0x24',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
+                      'mcp_1': '0x25',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
+                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
+                      'cabling': {(i+0, j): ('mux_00', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'voltage_max': 12.}
+                 },
              'default': {'interface_name': 'i2c',
                          'voltage_max': 100.,
                          'current_max': 3.}
