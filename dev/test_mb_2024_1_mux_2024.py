@@ -17,7 +17,7 @@ if stand_alone:
     pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"].pop("model")}')
     tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"].pop("model")}')
     rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"].pop("model")}')
-    mux_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"]["mux_00"].pop("model")}')
+    mux_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"]["mux_03"].pop("model")}')
 
     ctl = ctl_module.Ctl()
     HARDWARE_CONFIG['tx'].update({'ctl': ctl})  # HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl())})
@@ -30,14 +30,14 @@ if stand_alone:
                                                                           ctl.interfaces[
                                                                               HARDWARE_CONFIG['rx'].pop(
                                                                                   'interface_name', 'i2c')])})
-    HARDWARE_CONFIG['mux']['boards']['mux_00'].update({'connection':
-                                       HARDWARE_CONFIG['mux']['boards']['mux_00'].pop('connection', ctl.interfaces[
-                                           HARDWARE_CONFIG['mux']['boards']['mux_00'].pop('interface_name', 'i2c')])})
+    HARDWARE_CONFIG['mux']['boards']['mux_03'].update({'connection':
+                                       HARDWARE_CONFIG['mux']['boards']['mux_03'].pop('connection', ctl.interfaces[
+                                           HARDWARE_CONFIG['mux']['boards']['mux_03'].pop('interface_name', 'i2c')])})
 
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
     tx = tx_module.Tx(**HARDWARE_CONFIG['tx'])
     pwr = pwr_module.Pwr(**HARDWARE_CONFIG['pwr'])
-    mux = mux_module.Mux(**HARDWARE_CONFIG['mux']['boards']['mux_00'])
+    mux = mux_module.Mux(**HARDWARE_CONFIG['mux']['boards']['mux_03'])
 
     tx.polarity = 1
     time.sleep(1)
