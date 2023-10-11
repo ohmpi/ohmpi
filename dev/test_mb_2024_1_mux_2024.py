@@ -42,9 +42,9 @@ if stand_alone:
     tx.polarity = 1
     time.sleep(1)
     tx.polarity = 0
-    mux.switch(elec_dict={'A':1, 'B':4, 'M':2, 'N':3}, state='on')
+    mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='on')
     time.sleep(1)
-    mux.switch(elec_dict={'A':1, 'B':4, 'M':2, 'N':3}, state='off')
+    mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
 
 # mux as part of a OhmPiHardware system
 if part_of_hardware_system:
