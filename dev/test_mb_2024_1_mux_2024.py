@@ -18,7 +18,7 @@ if stand_alone:
     pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"].pop("model")}')
     tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"].pop("model")}')
     rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"].pop("model")}')
-    mux_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"]["mux_03"].pop("model")}')
+    mux_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"][mux_id].pop("model")}')
 
     ctl = ctl_module.Ctl()
     HARDWARE_CONFIG['tx'].update({'ctl': ctl})  # HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl())})
@@ -32,7 +32,7 @@ if stand_alone:
                                                                               HARDWARE_CONFIG['rx'].pop(
                                                                                   'interface_name', 'i2c')])})
     MUX_CONFIG = HARDWARE_CONFIG['mux']['boards'][mux_id]
-    MUX_CONFIG.update({'connection': MUX_CONFIG.pop('connection', ctl.interfaces[
+    MUX_CONFIG.update({'ctl': ctl, 'connection': MUX_CONFIG.pop('connection', ctl.interfaces[
                                            MUX_CONFIG.pop('interface_name', 'i2c')])})
     MUX_CONFIG.update({'id': mux_id})
 
@@ -49,7 +49,6 @@ if stand_alone:
     voltage = rx.voltage
     current = tx.current
     mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
-
     print(f'Resistance: {voltage / current :.2f} ohm, voltage: {voltage:.2f} mV, current: {current:.2f} mA')
 
 # mux as part of a OhmPiHardware system
@@ -71,14 +70,14 @@ if within_ohmpi:
 
     print('Starting test with OhmPi.')
     k = OhmPi()
-    #A, B, M, N = (32, 29, 31, 30)
+    # A, B, M, N = (32, 29, 31, 30)
     k.reset_mux()
-    #k._hw.switch_mux([A, B, M, N], state='on')
-    #k._hw.vab_square_wave(12.,1., cycles=2)
-    #k._hw.switch_mux([A, B, M, N], state='off')
-    #k._hw.calibrate_rx_bias()  # electrodes 1 4 2 3 should be connected to a reference circuit
-    #k._hw.rx._bias = -1.38
-    #print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
+    # k._hw.switch_mux([A, B, M, N], state='on')
+    # k._hw.vab_square_wave(12.,1., cycles=2)
+    # k._hw.switch_mux([A, B, M, N], state='off')
+    # k._hw.calibrate_rx_bias()  # electrodes 1 4 2 3 should be connected to a reference circuit
+    # k._hw.rx._bias = -1.38
+    # print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     # k._hw._plot_readings()
     A, B, M, N = (1, 4, 2, 3)
     # k._hw.switch_mux([A, B, M, N], state='on')
@@ -89,7 +88,7 @@ if within_ohmpi:
     print('using OhmPi')
     d = k.run_measurement([A, B, M, N], injection_duration=1., nb_stack=2, duty_cycle=0.5)
     print(d)
-    #k._hw._plot_readings()
+    # k._hw._plot_readings()
     print(f'OhmPiHardware: Resistance: {k._hw.last_resistance() :.2f} ohm, dev. {k._hw.last_dev():.2f} %, sp: {k._hw.sp:.2f} mV, rx bias: {k._hw.rx._bias:.2f} mV')
     print(f'OhmPi: Resistance: {d["R [ohm]"] :.2f} ohm, dev. {d["R_std [%]"]:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     k._hw._plot_readings(save_fig=False)
