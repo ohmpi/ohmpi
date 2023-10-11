@@ -35,20 +35,22 @@ if stand_alone:
     MUX_CONFIG.update({'connection': MUX_CONFIG.pop('connection', ctl.interfaces[
                                            MUX_CONFIG.pop('interface_name', 'i2c')])})
     MUX_CONFIG.update({'id': mux_id})
-    print(MUX_CONFIG['cabling'])
 
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
     tx = tx_module.Tx(**HARDWARE_CONFIG['tx'])
     pwr = pwr_module.Pwr(**HARDWARE_CONFIG['pwr'])
     mux = mux_module.Mux(**MUX_CONFIG)
-    print(mux.cabling)
 
     tx.polarity = 1
     time.sleep(1)
     tx.polarity = 0
     mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='on')
     time.sleep(1)
+    voltage = rx.voltage
+    current = tx.current
     mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
+
+    print(f'Resistance: {voltage / current :.2f} ohm, voltage: {voltage:.2f} mV, current: {current:.2f} mA')
 
 # mux as part of a OhmPiHardware system
 if part_of_hardware_system:
