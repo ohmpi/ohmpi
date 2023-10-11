@@ -30,7 +30,7 @@ if stand_alone:
                                                                           ctl.interfaces[
                                                                               HARDWARE_CONFIG['rx'].pop(
                                                                                   'interface_name', 'i2c')])})
-    HARDWARE_CONFIG['mux'].update({'connection':
+    HARDWARE_CONFIG['mux']['boards']['mux_00'].update({'connection':
                                        HARDWARE_CONFIG['mux']['boards']['mux_00'].pop('connection', ctl.interfaces[
                                            HARDWARE_CONFIG['mux']['boards']['mux_00'].pop('interface_name', 'i2c')])})
 
