@@ -39,7 +39,7 @@ HARDWARE_CONFIG = {
                       'mcp_0': '0x26',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
                       'mcp_1': '0x27',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+0, j): ('mux_00', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'cabling': {(i+0, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                       'voltage_max': 12.}
                  },
              'default': {'interface_name': 'i2c',
