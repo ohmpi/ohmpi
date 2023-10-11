@@ -7,6 +7,7 @@ from digitalio import Direction  # noqa
 from busio import I2C  # noqa
 import time
 import os
+import numpy as np
 from ohmpi.hardware_components import TxAbstract, RxAbstract
 from ohmpi.utils import enforce_specs
 
@@ -181,9 +182,13 @@ class Tx(TxAbstract):
 
     @property
     def tx_bat(self):
-        self.soh_logger.warning(f'Cannot get battery voltage on {self.model}')
-        self.exec_logger.debug(f'{self.model} cannot read battery voltage. Returning default battery voltage.')
-        return self.pwr.voltage
+        if np.isnan(self.tx.pwr.battery_voltage):
+            self.soh_logger.warning(f'Cannot get battery voltage on {self.model}')
+            self.exec_logger.debug(f'{self.model} cannot read battery voltage. Returning default battery voltage.')
+            return self.pwr.voltage
+        else:
+            return self.tx.pwr.battery_voltage
+
 
     def voltage_pulse(self, voltage=None, length=None, polarity=1):
         """ Generates a square voltage pulse

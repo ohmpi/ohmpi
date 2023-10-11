@@ -56,6 +56,7 @@ class PwrAbstract(ABC):
         self._voltage_min = kwargs.pop('voltage_min', 0.)
         self._voltage_max = kwargs.pop('voltage_max', 0.)
         self.connection = kwargs.pop('connection', None)
+        self._battery_voltage = np.nan
 
     @property
     @abstractmethod
@@ -92,10 +93,20 @@ class PwrAbstract(ABC):
         if not self.voltage_adjustable:
             self.exec_logger.debug(f'Voltage cannot be set on {self.model}...')
         else:
-            assert self._voltage_min < value < self._voltage_max
+            assert self._voltage_min <= value <= self._voltage_max
             # add actions to set the DPS voltage
             self._voltage = value
 
+    def battery_voltage(self):
+        # add actions to read the DPS voltage
+        self.exec_logger.debug(f'Battery voltage cannot be read on {self.model}...')
+        return self._battery_voltage
+
+    def reset_voltage(self):
+        if not self.voltage_adjustable:
+            self.exec_logger.debug(f'Voltage cannot be set on {self.model}...')
+        else:
+            self.voltage = self._voltage_min
 
 class MuxAbstract(ABC):
     def __init__(self, **kwargs):

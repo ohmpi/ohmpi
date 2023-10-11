@@ -91,7 +91,6 @@ class Tx(Tx_mb_2023):
         Tx_mb_2023.inject(self, polarity=polarity, injection_duration=injection_duration)
         self.pin6.value = False
 
-
 class Rx(Rx_mb_2023):
     def __init__(self, **kwargs):
         if 'model' not in kwargs.keys():

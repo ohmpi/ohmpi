@@ -209,7 +209,7 @@ class OhmPiHardware:
             mux.barrier = self.mux_barrier
 
     @property
-    def pulses(self):
+    def pulses(self):  # TODO: is this obsolete?
         pulses = {}
         for i in np.unique(self.readings[:, 1]):
             r = self.readings[self.readings[:, 1] == i, :]
@@ -409,15 +409,16 @@ class OhmPiHardware:
         self._vab_pulses(vab, durations, sampling_rate, polarities=polarities,  append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
 
-    def _vab_pulse(self, vab, duration, sampling_rate=None, polarity=1, append=False):
+    def _vab_pulse(self, vab=None, duration=1., sampling_rate=None, polarity=1, append=False):
         """ Gets VMN and IAB from a single voltage pulse
         """
         #self.tx.polarity = polarity
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
         if self.tx.pwr.voltage_adjustable:
-            self.tx.pwr.voltage = vab
-        else:
+            if self.tx.pwr.voltage != vab:
+                self.tx.pwr.voltage = vab
+        else :
             vab = self.tx.pwr.voltage
         # reads current and voltage during the pulse
         injection = Thread(target=self._inject, kwargs={'injection_duration': duration, 'polarity': polarity})
@@ -431,6 +432,10 @@ class OhmPiHardware:
     def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
         n_pulses = len(durations)
         self.exec_logger.debug(f'n_pulses: {n_pulses}')
+        if self.tx.pwr.voltage_adjustable:
+            self.tx.pwr.voltage = vab
+        else:
+            vab = self.tx.pwr.voltage
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
         if polarities is not None:
@@ -440,7 +445,7 @@ class OhmPiHardware:
         if not append:
             self._clear_values()
         for i in range(n_pulses):
-            self._vab_pulse(self, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
+            self._vab_pulse(self, vab, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
 
     def switch_mux(self, electrodes, roles=None, state='off', **kwargs):

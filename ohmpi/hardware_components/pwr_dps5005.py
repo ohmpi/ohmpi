@@ -2,12 +2,15 @@ from ohmpi.hardware_components.abstract_hardware_components import PwrAbstract
 import numpy as np
 import datetime
 import os
+import time
 from ohmpi.utils import enforce_specs
 #import minimalmodbus  # noqa
 
 # hardware characteristics and limitations
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 12., 'max': 50., 'min': 0.},
+         'voltage_min': {'default': 0},
+         'voltage_max': {'default': 0},
          'current_max': {'default': 100.},
          'current_adjustable': {'default': False},
          'voltage_adjustable': {'default': True}
@@ -54,20 +57,21 @@ class Pwr(PwrAbstract):
     def turn_on(self):
         self.connection.write_register(0x09, 1)
         self.exec_logger.debug(f'{self.model} is on')
+        time.sleep(.3)
 
     @property
     def voltage(self):
-        return PwrAbstract.voltage.fget(self)
+        # return PwrAbstract.voltage.fget(self)
+        return self._voltage
 
     @voltage.setter
     def voltage(self, value):
         self.connection.write_register(0x0000, value, 2)
+        self._voltage = value
 
     def battery_voltage(self):
-        self.connection.read_register(0x05, 2)
+        self._battery_voltage = self.connection.read_register(0x05, 2)
+        return self._battery_voltage
 
     def current_max(self, value):
         self.connection.write_register(0x0001, value * 10, 0)
-        
-    def reset_voltage(self):
-        self.DPS.write_register(0x0000, 0, 2)  # reset to 0 volt
