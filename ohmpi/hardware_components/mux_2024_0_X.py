@@ -66,7 +66,7 @@ class Mux(MuxAbstract):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}{self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}: {self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
         self._roles = kwargs.pop('roles', None)
@@ -97,7 +97,7 @@ class Mux(MuxAbstract):
 
         self.exec_logger.debug(f'{self.board_id} addresses: {self.addresses}')
         if not subclass_init:  # TODO: try to only log this event and not the one created by super()
-            self.exec_logger.event(f'{self.model}_{self.board_id}\tmux_init\tend\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}: {self.board_id}\tmux_init\tend\t{datetime.datetime.utcnow()}')
 
     def _get_addresses(self):
         """ Converts inner cabling addressing into (electrodes, role) addressing """
