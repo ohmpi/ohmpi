@@ -40,8 +40,9 @@ if stand_alone:
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
     tx = tx_module.Tx(**HARDWARE_CONFIG['tx'])
     pwr = pwr_module.Pwr(**HARDWARE_CONFIG['pwr'])
-    mux = mux_module.Mux(**HARDWARE_CONFIG['mux']['boards']['mux_03'])
-
+    mux = mux_module.Mux(**MUX_CONFIG)
+    print(mux.cabling)
+    
     tx.polarity = 1
     time.sleep(1)
     tx.polarity = 0
