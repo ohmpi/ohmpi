@@ -375,6 +375,8 @@ class TxAbstract(ABC):
         self.exec_logger.debug(f'Voltage pulse of {polarity * self.pwr.voltage:.3f} V for {length:.3f} s')
         self.inject(polarity=polarity, injection_duration=length)
 
+    def switch_pwr(self):
+        self.exec_logger.debug(f'Power source cannot be switched on or off on {self.model}')
 
 class RxAbstract(ABC):
     def __init__(self, **kwargs):

@@ -6,6 +6,7 @@ from adafruit_mcp230xx.mcp23008 import MCP23008  # noqa
 from digitalio import Direction  # noqa
 from busio import I2C  # noqa
 import os
+import time
 from ohmpi.utils import enforce_specs
 from ohmpi.hardware_components.mb_2023_0_X import Tx as Tx_mb_2023
 from ohmpi.hardware_components.mb_2023_0_X import Rx as Rx_mb_2023
@@ -82,6 +83,13 @@ class Tx(Tx_mb_2023):
         self.pin6 = self.mcp_board.get_pin(6)
         self.pin6.direction = Direction.OUTPUT
         self.pin6.value = False
+        self.pin2 = self.mcp_board.get_pin(2) # dsp -
+        self.pin2.direction = Direction.OUTPUT
+        self.pin2.value = False
+        self.pin3 = self.mcp_board.get_pin(3) # dsp -
+        self.pin3.direction = Direction.OUTPUT
+        self.pin3.value = False
+
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -90,6 +98,25 @@ class Tx(Tx_mb_2023):
         self.pin6.value=True
         Tx_mb_2023.inject(self, polarity=polarity, injection_duration=injection_duration)
         self.pin6.value = False
+
+    def switch_pwr(self,state='off', latency=4.):
+        """Switches pwr on or off.
+
+            Parameters
+            ----------
+            state : str
+                'on', 'off'
+            """
+        if state == 'on':
+            self.pin2.value = True
+            self.pin3.value = True
+            self.exec_logger.debug(f'Switching DPS on')
+            time.sleep(latency) # from pwr specs
+        elif state == 'off':
+            self.pin2.value = False
+            self.pin3.value = False
+            self.exec_logger.debug(f'Switching DPS off')
+
 
 class Rx(Rx_mb_2023):
     def __init__(self, **kwargs):
