@@ -32,12 +32,12 @@ HARDWARE_CONFIG = {
              'interface_name': 'i2c'
             },
     'mux': {'boards':
-                {'mux_00':
+                {'mux_03':
                      {'model': 'mux_2024_0_X',
                       'tca_address': None,
                       'tca_channel': 0,
-                      'mcp_0': '0x24',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
-                      'mcp_1': '0x25',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
+                      'mcp_0': '0x26',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
+                      'mcp_1': '0x27',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                       'cabling': {(i+0, j): ('mux_00', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                       'voltage_max': 12.}
