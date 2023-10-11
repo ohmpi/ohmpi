@@ -4,7 +4,7 @@ import datetime
 import os
 import time
 from ohmpi.utils import enforce_specs
-#import minimalmodbus  # noqa
+from minimalmodbus import Instrument  # noqa
 
 # hardware characteristics and limitations
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
@@ -30,6 +30,7 @@ class Pwr(PwrAbstract):
         super().__init__(**kwargs)
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tbegin\t{datetime.datetime.utcnow()}')
+        assert isinstance(self.connection, Instrument)
         # if a controller is passed in kwargs, it will be instantiated
         #if self.ctl is None:
         #    self.ctl = ctl_module.Ctl(**CTL_CONFIG)
