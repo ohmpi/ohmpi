@@ -48,7 +48,7 @@ class Pwr(PwrAbstract):
         self.exec_logger.debug(f'Current cannot be set on {self.model}')
 
     def turn_off(self):
-        self.connection.write_register(0x09, 1)
+        self.connection.write_register(0x09, 0)
         self.exec_logger.debug(f'{self.model} is off')
 
     def turn_on(self):
@@ -62,9 +62,12 @@ class Pwr(PwrAbstract):
     @voltage.setter
     def voltage(self, value):
         self.connection.write_register(0x0000, value, 2)
-    
+
     def battery_voltage(self):
         self.connection.read_register(0x05, 2)
 
     def current_max(self, value):
         self.connection.write_register(0x0001, value * 10, 0)
+        
+    def reset_voltage(self):
+        self.DPS.write_register(0x0000, 0, 2)  # reset to 0 volt
