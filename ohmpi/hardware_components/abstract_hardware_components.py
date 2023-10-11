@@ -116,7 +116,7 @@ class MuxAbstract(ABC):
         self.board_id = kwargs.pop('id', None)
         if self.board_id is None:
             self.exec_logger.error(f'MUX {self.model} should have an id !')
-        self.exec_logger.debug(f'MUX {self.board_id} ({self.model}) initialization')
+        self.exec_logger.debug(f'MUX {self.model}: {self.board_id} initialization')
         self.connection = kwargs.pop('connection', None)
         cabling = kwargs.pop('cabling', None)
         self.cabling = {}
