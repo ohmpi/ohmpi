@@ -153,7 +153,7 @@ class Rx(Rx_mb_2023):
         self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
         gain = _ads_1115_gain_auto(AnalogIn(self._ads_voltage, ads.P0))
         self.exec_logger.debug(f'Setting RX ADC gain automatically to {gain}')
-        self.gain = gain
+        self._adc_gain = gain
         self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
     def _dg411_gain_auto(self):
@@ -161,6 +161,7 @@ class Rx(Rx_mb_2023):
             self._dg411_gain = 1.
         else:
             self._dg411_gain = 1/2
+        self.exec_logger.debug(f'Setting RX DG411 gain automatically to {self._dg411_gain}')
 
     @property
     def gain(self):
@@ -179,6 +180,7 @@ class Rx(Rx_mb_2023):
 
     def gain_auto(self):
         self._dg411_gain_auto()
+        self.exec_logger.debug(f'Setting RX gain automatically to {self.gain}')
 
     @property
     def voltage(self):
