@@ -21,8 +21,8 @@ if stand_alone:
     mux_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"][mux_id].pop("model")}')
 
     ctl = ctl_module.Ctl()
-    HARDWARE_CONFIG['tx'].update({'ctl': ctl, 'exec_logger': ctl.exec_logger})  # HARDWARE_CONFIG['tx'].pop('ctl', ctl_module.Ctl())})
-    HARDWARE_CONFIG['rx'].update({'ctl': ctl})  # HARDWARE_CONFIG['rx'].pop('ctl', ctl_module.Ctl())})
+    HARDWARE_CONFIG['tx'].update({'ctl': ctl, 'exec_logger': ctl.exec_logger, 'soh_logger': ctl.soh_logger})
+    HARDWARE_CONFIG['rx'].update({'ctl': ctl, 'exec_logger': ctl.exec_logger, 'soh_logger': ctl.soh_logger})
     HARDWARE_CONFIG['tx'].update({'connection': HARDWARE_CONFIG['tx'].pop('connection',
                                                                           ctl.interfaces[
                                                                               HARDWARE_CONFIG['tx'].pop(
@@ -33,7 +33,8 @@ if stand_alone:
                                                                                   'interface_name', 'i2c')])})
     MUX_CONFIG = HARDWARE_CONFIG['mux']['boards'][mux_id]
     MUX_CONFIG.update({'ctl': ctl, 'connection': MUX_CONFIG.pop('connection', ctl.interfaces[
-                                           MUX_CONFIG.pop('interface_name', 'i2c')])})
+                                           MUX_CONFIG.pop('interface_name', 'i2c')]), 'exec_logger': ctl.exec_logger,
+                       'soh_logger': ctl.soh_logger})
     MUX_CONFIG.update({'id': mux_id})
 
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
