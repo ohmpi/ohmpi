@@ -418,7 +418,7 @@ class OhmPiHardware:
         if self.tx.pwr.voltage_adjustable:
             if self.tx.pwr.voltage != vab:
                 self.tx.pwr.voltage = vab
-        else :
+        else:
             vab = self.tx.pwr.voltage
         # reads current and voltage during the pulse
         injection = Thread(target=self._inject, kwargs={'injection_duration': duration, 'polarity': polarity})
@@ -445,7 +445,7 @@ class OhmPiHardware:
         if not append:
             self._clear_values()
         for i in range(n_pulses):
-            self._vab_pulse(self, vab, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
+            self._vab_pulse(self, vab=vab, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
 
     def switch_mux(self, electrodes, roles=None, state='off', **kwargs):
