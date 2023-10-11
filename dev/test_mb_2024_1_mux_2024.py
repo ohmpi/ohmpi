@@ -13,6 +13,7 @@ within_ohmpi = False
 
 # Stand alone
 if stand_alone:
+    mux_id = 'mux_03'
     ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"].pop("model")}')
     pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"].pop("model")}')
     tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"].pop("model")}')
@@ -30,9 +31,11 @@ if stand_alone:
                                                                           ctl.interfaces[
                                                                               HARDWARE_CONFIG['rx'].pop(
                                                                                   'interface_name', 'i2c')])})
-    HARDWARE_CONFIG['mux']['boards']['mux_03'].update({'connection':
-                                       HARDWARE_CONFIG['mux']['boards']['mux_03'].pop('connection', ctl.interfaces[
-                                           HARDWARE_CONFIG['mux']['boards']['mux_03'].pop('interface_name', 'i2c')])})
+    MUX_CONFIG = HARDWARE_CONFIG['mux']['boards'][mux_id]
+    MUX_CONFIG.update({'connection': MUX_CONFIG.pop('connection', ctl.interfaces[
+                                           MUX_CONFIG.pop('interface_name', 'i2c')])})
+    MUX_CONFIG.update({'id': mux_id})
+
 
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
     tx = tx_module.Tx(**HARDWARE_CONFIG['tx'])
