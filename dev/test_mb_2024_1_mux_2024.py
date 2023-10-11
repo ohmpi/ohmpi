@@ -80,7 +80,7 @@ if within_ohmpi:
     #k._hw.rx._bias = -1.38
     #print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     # k._hw._plot_readings()
-    A, B, M, N = (0, 0, 0, 0)
+    A, B, M, N = (1, 4, 2, 3)
     # k._hw.switch_mux([A, B, M, N], state='on')
     # k._hw.vab_square_wave(12., cycle_duration=10., cycles=3)
     # k._hw.switch_mux([A, B, M, N], state='off')
