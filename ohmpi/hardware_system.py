@@ -445,7 +445,7 @@ class OhmPiHardware:
         if not append:
             self._clear_values()
         for i in range(n_pulses):
-            self._vab_pulse(self, vab=vab, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
+            self._vab_pulse(vab=vab, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
 
     def switch_mux(self, electrodes, roles=None, state='off', **kwargs):
