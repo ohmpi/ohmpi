@@ -7,9 +7,9 @@ import time
 import logging
 from ohmpi.config import HARDWARE_CONFIG
 
-stand_alone = False
+stand_alone = True
 part_of_hardware_system = False
-within_ohmpi = True
+within_ohmpi = False
 
 # Stand alone
 if stand_alone:
@@ -31,6 +31,12 @@ if stand_alone:
                                                                           ctl.interfaces[
                                                                               HARDWARE_CONFIG['rx'].pop(
                                                                                   'interface_name', 'i2c')])})
+
+    HARDWARE_CONFIG['pwr'].update({'connection': HARDWARE_CONFIG['pwr'].pop('connection',
+                                                                          ctl.interfaces[
+                                                                              HARDWARE_CONFIG['pwr'].pop(
+                                                                                  'interface_name', None)])})
+
     MUX_CONFIG = HARDWARE_CONFIG['mux']['boards'][mux_id]
     MUX_CONFIG.update({'ctl': ctl, 'connection': MUX_CONFIG.pop('connection', ctl.interfaces[
                                            MUX_CONFIG.pop('interface_name', 'i2c')]), 'exec_logger': ctl.exec_logger,
