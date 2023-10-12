@@ -270,6 +270,7 @@ class TxAbstract(ABC):
         self._latency = kwargs.pop('latency', 0.)
         self.tx_sync = kwargs.pop('tx_sync', Event())
         self.exec_logger.debug(f'{self.model} TX initialization')
+        self._pwr_state = 'off'
 
     @property
     def adc_gain(self):
@@ -374,9 +375,18 @@ class TxAbstract(ABC):
         self.pwr.voltage = voltage
         self.exec_logger.debug(f'Voltage pulse of {polarity * self.pwr.voltage:.3f} V for {length:.3f} s')
         self.inject(polarity=polarity, injection_duration=length)
+    @property
+    @abstractmethod
+    def pwr_state(self):
+        return self._pwr_state
 
-    def switch_pwr(self):
+    @pwr_state.setter
+    def pwr_state(self, state):
         self.exec_logger.debug(f'Power source cannot be switched on or off on {self.model}')
+        if state == 'on':
+            self._pwr_state = 'on'
+        elif state == 'off':
+            self._pwr_state = 'off'
 
 class RxAbstract(ABC):
     def __init__(self, **kwargs):

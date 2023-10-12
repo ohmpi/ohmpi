@@ -430,6 +430,7 @@ class OhmPiHardware:
         self.tx.polarity = 0   #TODO: is this necessary?
 
     def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
+        switch_pwr_off = False
         n_pulses = len(durations)
         self.exec_logger.debug(f'n_pulses: {n_pulses}')
         if self.tx.pwr.voltage_adjustable:
@@ -444,10 +445,14 @@ class OhmPiHardware:
             polarities = [-int(self.tx.polarity * np.heaviside(i % 2, -1.)) for i in range(n_pulses)]
         if not append:
             self._clear_values()
+        if self.tx.pwr_state == 'off':
+            self.tx.pwr_state('on')
+            switch_pwr_off = True
         for i in range(n_pulses):
             self._vab_pulse(vab=vab, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
-
+        if switch_pwr_off:
+            self.tx.pwr_state('off')
     def switch_mux(self, electrodes, roles=None, state='off', **kwargs):
         """Switches on multiplexer relays for given quadrupole.
 

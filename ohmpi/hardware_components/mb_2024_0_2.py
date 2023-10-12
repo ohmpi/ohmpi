@@ -99,7 +99,13 @@ class Tx(Tx_mb_2023):
         Tx_mb_2023.inject(self, polarity=polarity, injection_duration=injection_duration)
         self.pin6.value = False
 
-    def switch_pwr(self,state='off', latency=4.):
+    @property
+
+    def pwr_state(self):
+        return self._pwr_state
+
+    @pwr_state.setter
+    def pwr_state(self, state, latency=4.):
         """Switches pwr on or off.
 
             Parameters
@@ -111,11 +117,13 @@ class Tx(Tx_mb_2023):
             self.pin2.value = True
             self.pin3.value = True
             self.exec_logger.debug(f'Switching DPS on')
+            self._pwr_state = 'on'
             time.sleep(latency) # from pwr specs
         elif state == 'off':
             self.pin2.value = False
             self.pin3.value = False
             self.exec_logger.debug(f'Switching DPS off')
+            self._pwr_state = 'off'
 
 
 class Rx(Rx_mb_2023):
