@@ -39,7 +39,7 @@ if stand_alone:
 
     MUX_CONFIG = HARDWARE_CONFIG['mux']['boards'][mux_id]
     MUX_CONFIG.update({'ctl': ctl, 'connection': MUX_CONFIG.pop('connection', ctl.interfaces[
-                                           MUX_CONFIG.pop('interface_name', 'i2c')]), 'exec_logger': ctl.exec_logger,
+                                           MUX_CONFIG.pop('interface_name', 'i2c_ext')]), 'exec_logger': ctl.exec_logger,
                        'soh_logger': ctl.soh_logger})
     MUX_CONFIG.update({'id': mux_id})
 
