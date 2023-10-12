@@ -401,6 +401,10 @@ class OhmPiHardware:
     def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, duty_cycle=1.,
                         append=False):
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
+        switch_pwr_off = False
+        if self.tx.pwr_state == 'off':
+            self.tx.pwr_state = 'on'
+            switch_pwr_off = True
         self._gain_auto()
         assert 0. <= duty_cycle <= 1.
         if duty_cycle < 1.:
@@ -414,7 +418,8 @@ class OhmPiHardware:
             polarities = None
         self._vab_pulses(vab, durations, sampling_rate, polarities=polarities,  append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
-
+        if switch_pwr_off:
+            self.tx.pwr_state = 'off'
     def _vab_pulse(self, vab=None, duration=1., sampling_rate=None, polarity=1, append=False):
         """ Gets VMN and IAB from a single voltage pulse
         """
