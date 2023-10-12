@@ -241,7 +241,7 @@ class Rx(RxAbstract):
             self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
     @property
-    def gain(self):
+    def gain(self): #TODO: should be in abstract_hardware_components
         return self._adc_gain
 
     @gain.setter
