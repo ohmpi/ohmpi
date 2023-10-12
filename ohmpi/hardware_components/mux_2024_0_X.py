@@ -94,6 +94,7 @@ class Mux(MuxAbstract):
         if self._mcp_addresses['mcp_0'] is None and self._mcp_addresses['mcp_1'] is None:
             if self._mcp_jumper_pos['addr2'] is not None and self._mcp_jumper_pos['addr1'] is not None:
                 self._mcp_jumper_pos_to_addr()
+                print(self._mcp_addresses['mcp_0'])
                 self.exec_logger.debug(f'{self.board_id} assigned mcp_addresses {self._mcp_addresses['mcp_0']} and '
                                        f'{self._mcp_addresses['mcp_1']} from jumper positions.')
             else:
