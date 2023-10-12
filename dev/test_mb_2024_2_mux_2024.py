@@ -40,7 +40,7 @@ if stand_alone:
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
     tx = tx_module.Tx(**HARDWARE_CONFIG['tx'])
     pwr = pwr_module.Pwr(**HARDWARE_CONFIG['pwr'])
-    mux_ids = ['mux_2', 'mux_5']
+    mux_ids = ['mux_02', 'mux_05']
     for m,mux_id in enumerate(mux_ids):
         mux_module = importlib.import_module(
             f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"][mux_id].pop("model")}')
