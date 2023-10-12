@@ -428,6 +428,7 @@ class OhmPiHardware:
             sampling_rate = RX_CONFIG['sampling_rate']
         if self.tx.pwr.voltage_adjustable:
             if self.tx.pwr.voltage != vab:
+                print('re-setting_voltage',self.tx.pwr.voltage,vab)
                 self.tx.pwr.voltage = vab
         else:
             vab = self.tx.pwr.voltage
