@@ -89,7 +89,7 @@ class Mux(MuxAbstract):
             self._tca = adafruit_tca9548a.TCA9548A(self.connection, tca_address)[tca_channel]
 
         # Setup MCPs
-        self._mcp_jumper_pos = (kwargs.pop('addr2', None), kwargs.pop('addr1', None))
+        self._mcp_jumper_pos = {'addr2': kwargs.pop('addr2', None), 'addr1': kwargs.pop('addr1', None)}
         self._mcp_addresses = (kwargs.pop('mcp_0', None), kwargs.pop('mcp_1', None))
         if self._mcp_addresses[0] is None and self._mcp_addresses[1] is None:
             if self._mcp_jumper_pos['addr2'] is not None and self._mcp_jumper_pos['addr1'] is not None:
