@@ -34,7 +34,7 @@ class Ctl(CtlAbstract):
         super().__init__(**kwargs)
         self.interfaces = dict()
 
-        warnings.filterwarnings("error")  # to filter out adafruit warning about setting I2C frequency
+        # warnings.filterwarnings("error")  # to filter out adafruit warning about setting I2C frequency
         # I2C
         try:
             self.interfaces['i2c'] = busio.I2C(board.SCL, board.SDA)  # noqa
