@@ -96,7 +96,7 @@ class Tx(Tx_mb_2023):
     def inject(self, polarity=1, injection_duration=None):
         # add leds?
         self.pin6.value=True
-        Tx_mb_2023.inject(self, polarity=polarity, injection_duration=injection_duration)
+        Tx_mb_2023.inject(self, polarity=polarity, injection_duration=injection_duration,switch_pwr=True)
         self.pin6.value = False
 
     @property
