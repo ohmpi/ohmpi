@@ -7,8 +7,8 @@ import time
 import logging
 from ohmpi.config import HARDWARE_CONFIG
 
-stand_alone = True
-part_of_hardware_system = False
+stand_alone = False
+part_of_hardware_system = True
 within_ohmpi = False
 
 # Stand alone
@@ -75,8 +75,8 @@ if part_of_hardware_system:
     # time.sleep(1.)
     # k.switch_mux(electrodes=[1, 4, 2, 3], roles=['A', 'B', 'M', 'N'], state='off')
     # k.mux_boards[mux_id].test(activation_time=.4)
-    # k.test_mux()
-
+    k.test_mux()
+    k.reset_mux()
 
 if within_ohmpi:
     from ohmpi.ohmpi import OhmPi
