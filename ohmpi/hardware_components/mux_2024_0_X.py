@@ -89,9 +89,21 @@ class Mux(MuxAbstract):
             self._tca = adafruit_tca9548a.TCA9548A(self.connection, tca_address)[tca_channel]
 
         # Setup MCPs
-        self._mcp_addresses = (kwargs.pop('mcp_0', '0x22'), kwargs.pop('mcp_1', '0x23'))  # TODO: add assert on valid addresses..
+        self._mcp_jumper_pos = (kwargs.pop('addr2', None), kwargs.pop('addr1', None))
+        self._mcp_addresses = (kwargs.pop('mcp_0', None), kwargs.pop('mcp_1', None))
+        if self._mcp_addresses['mcp_0'] is None and self._mcp_addresses['mcp_1'] is None:
+            if self._mcp_jumper_pos['addr2'] is not None and self._mcp_jumper_pos['addr1'] is not None:
+                self._mcp_jumper_pos_to_addr()
+                self.exec_logger.debug(f'{self.board_id} assigned mcp_addresses {self._mcp_addresses['mcp_0']} and '
+                                       f'{self._mcp_addresses['mcp_1']} from jumper positions.')
+            else:
+                self.exec_logger.debug(f'MCP addresses nor jumper positions for {self.board_id} not in config file...')
+                # TODO: if no addresses defined, should abort or should we set default mcp addresses?
+        for addr in self._mcp_addresses:
+            assert addr in [0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27]
         self._mcp = [None, None]
         self.reset()
+
         if self.addresses is None:
             self._get_addresses()
 
@@ -127,3 +139,9 @@ class Mux(MuxAbstract):
         if state == 'off':
             activate_relay(self._mcp[d['MCP']], d['MCP_GPIO'], False)
             # time.sleep(MUX_CONFIG['release_delay'])  # NOTE: moved to MuxAbstract switch
+
+    def _mcp_jumper_pos_to_addr(self):
+        d = {'up': 0, 'down': 1}
+        mcp_0 = hex(int(f'0100{d[self._mcp_jumper_pos['addr2']]}{d[self._mcp_jumper_pos['addr1']]}0', 2))
+        mcp_1 = hex(int(f'0100{d[self._mcp_jumper_pos['addr2']]}{d[self._mcp_jumper_pos['addr1']]}1', 2))
+        self._mcp_addresses = {'mcp_0': mcp_0, 'mcp_1': mcp_1}
