@@ -56,14 +56,15 @@ if stand_alone:
 if part_of_hardware_system:
     from ohmpi.hardware_system import OhmPiHardware
     print('Starting test of as part of an OhmPiHardware system.')
-
+    mux_id = 'mux_03'
     k = OhmPiHardware()
     k.exec_logger.setLevel(logging.DEBUG)
     # Test mux switching
     k.reset_mux()
-    k.switch_mux(electrodes=[1, 4, 2, 3], roles=['A', 'B', 'M', 'N'], state='on')
-    time.sleep(1.)
-    k.switch_mux(electrodes=[1, 4, 2, 3], roles=['A', 'B', 'M', 'N'], state='off')
+    # k.switch_mux(electrodes=[1, 4, 2, 3], roles=['A', 'B', 'M', 'N'], state='on')
+    # time.sleep(1.)
+    # k.switch_mux(electrodes=[1, 4, 2, 3], roles=['A', 'B', 'M', 'N'], state='off')
+    k._hw.mux_boards[mux_id].test(activation_time=activation_time)
 
 if within_ohmpi:
     from ohmpi.ohmpi import OhmPi
@@ -73,6 +74,7 @@ if within_ohmpi:
     k = OhmPi()
     # A, B, M, N = (32, 29, 31, 30)
     k.reset_mux()
+    k.test_mux(mux_id='mux_03')
     # k._hw.switch_mux([A, B, M, N], state='on')
     # k._hw.vab_square_wave(12.,1., cycles=2)
     # k._hw.switch_mux([A, B, M, N], state='off')
