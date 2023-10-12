@@ -375,8 +375,8 @@ class TxAbstract(ABC):
         self.pwr.voltage = voltage
         self.exec_logger.debug(f'Voltage pulse of {polarity * self.pwr.voltage:.3f} V for {length:.3f} s')
         self.inject(polarity=polarity, injection_duration=length)
+
     @property
-    @abstractmethod
     def pwr_state(self):
         return self._pwr_state
 

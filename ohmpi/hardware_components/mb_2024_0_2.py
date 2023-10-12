@@ -100,7 +100,6 @@ class Tx(Tx_mb_2023):
         self.pin6.value = False
 
     @property
-
     def pwr_state(self):
         return self._pwr_state
 
