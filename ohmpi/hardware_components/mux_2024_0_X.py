@@ -91,11 +91,11 @@ class Mux(MuxAbstract):
         # Setup MCPs
         self._mcp_jumper_pos = (kwargs.pop('addr2', None), kwargs.pop('addr1', None))
         self._mcp_addresses = (kwargs.pop('mcp_0', None), kwargs.pop('mcp_1', None))
-        if self._mcp_addresses['mcp_0'] is None and self._mcp_addresses['mcp_1'] is None:
+        if self._mcp_addresses[0] is None and self._mcp_addresses[1] is None:
             if self._mcp_jumper_pos['addr2'] is not None and self._mcp_jumper_pos['addr1'] is not None:
                 self._mcp_jumper_pos_to_addr()
-                self.exec_logger.debug(f"{self.board_id} assigned mcp_addresses {self._mcp_addresses['mcp_0']} and "
-                                       f"{self._mcp_addresses['mcp_1']} from jumper positions.")
+                self.exec_logger.debug(f"{self.board_id} assigned mcp_addresses {self._mcp_addresses[0]} and "
+                                       f"{self._mcp_addresses[1]} from jumper positions.")
             else:
                 self.exec_logger.debug(f'MCP addresses nor jumper positions for {self.board_id} not in config file...')
                 # TODO: if no addresses defined, should abort or should we set default mcp addresses?
@@ -144,4 +144,4 @@ class Mux(MuxAbstract):
         d = {'up': 0, 'down': 1}
         mcp_0 = hex(int(f"0100{d[self._mcp_jumper_pos['addr2']]}{d[self._mcp_jumper_pos['addr1']]}0", 2))
         mcp_1 = hex(int(f"0100{d[self._mcp_jumper_pos['addr2']]}{d[self._mcp_jumper_pos['addr1']]}1", 2))
-        self._mcp_addresses = {'mcp_0': mcp_0, 'mcp_1': mcp_1}
+        self._mcp_addresses = (mcp_0, mcp_1)
