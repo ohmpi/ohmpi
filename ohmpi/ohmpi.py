@@ -86,11 +86,17 @@ class OhmPi(object):
             'nb_meas': 1,
             'sequence_delay': 1,
             'nb_stack': 1,
-            'export_path': 'data/measurement.csv'
+            'sampling_interval': 2,
+            'tx_volt': 5,
+            'duty_cycle': 0.5,
+            'strategy': 'constant',
+            'export_path': None,
+            'export_dir': 'data',
+            'export_name': 'measurement.csv'
         }
         # read in acquisition settings
-        if settings is not None:
-            self.update_settings(settings)
+        # if settings is not None:
+        self.update_settings(settings)
 
         self.exec_logger.debug('Initialized with settings:' + str(self.settings))
 
@@ -410,12 +416,13 @@ class OhmPi(object):
         else:
             self.exec_logger.warning('Not on Raspberry Pi, skipping reboot...')
 
-    def run_measurement(self, quad=None, nb_stack=None, injection_duration=None,
+    def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
                         autogain=True, strategy='constant', tx_volt=5., best_tx_injtime=0.1,
                         cmd_id=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value, change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used in function definition
         # TODO: add rs_check option (or propose an other way to do this)
+        # TODO: better way of handling default settings
         """Measures on a quadrupole and returns transfer resistance.
 
         Parameters
@@ -452,7 +459,9 @@ class OhmPi(object):
         if nb_stack is None:
             nb_stack = self.settings['nb_stack']
         if injection_duration is None:
-                injection_duration = self.settings['injection_duration']
+            injection_duration = self.settings['injection_duration']
+        if duty_cycle is None:
+            duty_cycle = self.settings['duty_cycle']
         tx_volt = float(tx_volt)
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
@@ -582,7 +591,11 @@ class OhmPi(object):
         self.reset_mux()
         
         # create filename with timestamp
-        filename = self.settings["export_path"].replace('.csv',
+        if self.settings["export_path"] is None:
+            filename = self.settings['export_path'].replace(
+                '.csv', f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
+        else:
+            filename = self.settings["export_path"].replace('.csv',
                                                         f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
         self.exec_logger.debug(f'Saving to {filename}')
 
@@ -847,7 +860,12 @@ class OhmPi(object):
             - nb_meas (total number of times the sequence will be run)
             - sequence_delay (delay in second between each sequence run)
             - nb_stack (number of stack for each quadrupole measurement)
-            - export_path (path where to export the data, timestamp will be added to filename)
+            - strategy (injection strategy: constant, vmax, vmin)
+            - duty_cycle (injection duty cycle comprised between 0.5 - 1)
+            - export_dir (directory where to export the data)
+            - export_name (name of exported file, timestamp will be added to filename)
+            - export_path (path where to export the data, timestamp will be added to filename ;
+                            if export_path is given, it goes over export_dir and export_name)
 
         Parameters
         ----------
@@ -872,6 +890,13 @@ class OhmPi(object):
                 status = False
         else:
             self.exec_logger.warning('Settings are missing...')
+
+        if self.settings['export_path'] is None:
+            self.settings['export_path'] = os.path.join(self.settings['export_dir'], self.settings['export_name'])
+        else:
+            self.settings['export_dir'] = os.path.split(self.settings['export_path'])[0]
+            self.settings['export_name'] = os.path.split(self.settings['export_path'])[1]
+
         return status
 
     # Properties
