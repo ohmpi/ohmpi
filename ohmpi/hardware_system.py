@@ -109,7 +109,7 @@ class OhmPiHardware:
                                                                     HARDWARE_CONFIG['pwr']['ctl'].interfaces[
                                                                         HARDWARE_CONFIG['pwr'].pop(
                                                                             'interface_name', None)])})
-        
+
         HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                       'soh_logger': self.soh_logger})
         self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
@@ -437,6 +437,9 @@ class OhmPiHardware:
 
     def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
         switch_pwr_off = False
+        if self.tx.pwr_state == 'off':
+            self.tx.pwr_state = 'on'
+            switch_pwr_off = True
         n_pulses = len(durations)
         self.exec_logger.debug(f'n_pulses: {n_pulses}')
         if self.tx.pwr.voltage_adjustable:
@@ -451,9 +454,6 @@ class OhmPiHardware:
             polarities = [-int(self.tx.polarity * np.heaviside(i % 2, -1.)) for i in range(n_pulses)]
         if not append:
             self._clear_values()
-        if self.tx.pwr_state == 'off':
-            self.tx.pwr_state = 'on'
-            switch_pwr_off = True
         for i in range(n_pulses):
             self._vab_pulse(vab=vab, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
