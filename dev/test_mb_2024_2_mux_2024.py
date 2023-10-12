@@ -18,7 +18,6 @@ if stand_alone:
     pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"].pop("model")}')
     tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"].pop("model")}')
     rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"].pop("model")}')
-    mux_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"][mux_id].pop("model")}')
 
     ctl = ctl_module.Ctl()
     HARDWARE_CONFIG['tx'].update({'ctl': ctl, 'exec_logger': ctl.exec_logger, 'soh_logger': ctl.soh_logger})
@@ -36,13 +35,16 @@ if stand_alone:
                                                                           ctl.interfaces[
                                                                               HARDWARE_CONFIG['pwr'].pop(
                                                                                   'interface_name', None)])})
-    mux_ids = ['mux_2', 'mux_5']
+
 
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
     tx = tx_module.Tx(**HARDWARE_CONFIG['tx'])
     pwr = pwr_module.Pwr(**HARDWARE_CONFIG['pwr'])
-
+    mux_ids = ['mux_2', 'mux_5']
     for m,mux_id in enumerate(mux_ids):
+        mux_module = importlib.import_module(
+            f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"][mux_id].pop("model")}')
+
         MUX_CONFIG = HARDWARE_CONFIG['mux']['boards']
 
         MUX_CONFIG.update({'ctl': ctl, 'connection': MUX_CONFIG.pop('connection', ctl.interfaces[
