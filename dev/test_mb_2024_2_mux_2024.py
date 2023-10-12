@@ -45,7 +45,7 @@ if stand_alone:
         mux_module = importlib.import_module(
             f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"][mux_id].pop("model")}')
 
-        MUX_CONFIG = HARDWARE_CONFIG['mux']['boards']
+        MUX_CONFIG = HARDWARE_CONFIG['mux']['boards'][mux_id]
 
         MUX_CONFIG.update({'ctl': ctl, 'connection': MUX_CONFIG.pop('connection', ctl.interfaces[
                                            MUX_CONFIG.pop('interface_name', 'i2c')]), 'exec_logger': ctl.exec_logger,
