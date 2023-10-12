@@ -75,7 +75,7 @@ if part_of_hardware_system:
     # time.sleep(1.)
     # k.switch_mux(electrodes=[1, 4, 2, 3], roles=['A', 'B', 'M', 'N'], state='off')
     # k.mux_boards[mux_id].test(activation_time=.4)
-    # k.test_mux_one_relay((1, 'A'))
+    # k.test_mux()
 
 
 if within_ohmpi:

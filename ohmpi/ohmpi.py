@@ -825,7 +825,7 @@ class OhmPi(object):
         """
         self.reset_mux() # All mux boards should be reset even if we only want to test one otherwise we might create a shortcut
         if mux_id is None:
-            self._hw.test_mux_one_relay(activation_time=activation_time)
+            self._hw.test_mux(activation_time=activation_time)
         else:
             self._hw.mux_boards[mux_id].test(activation_time=activation_time)
 
