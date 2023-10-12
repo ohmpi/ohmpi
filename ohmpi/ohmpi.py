@@ -168,6 +168,7 @@ class OhmPi(object):
 
     @staticmethod
     def append_and_save(filename: str, last_measurement: dict, cmd_id=None):
+        # TODO: find alternative approach to save full data (zip, hdf5 or mseed?)
         """Appends and saves the last measurement dict.
 
         Parameters
@@ -454,18 +455,21 @@ class OhmPi(object):
         self.exec_logger.debug('Waiting for data')
 
         # check arguments
-        if quad is None:
-            quad = [0, 0, 0, 0]
-        if nb_stack is None:
-            nb_stack = self.settings['nb_stack']
-        if injection_duration is None:
-            injection_duration = self.settings['injection_duration']
-        if duty_cycle is None:
-            duty_cycle = self.settings['duty_cycle']
-        tx_volt = float(tx_volt)
+        # if quad is None:
+        #     quad = [0, 0, 0, 0]
+        # if nb_stack is None:
+        #     nb_stack = self.settings['nb_stack']
+        # if injection_duration is None:
+        #     injection_duration = self.settings['injection_duration']
+        # if duty_cycle is None:
+        #     duty_cycle = self.settings['duty_cycle']
+        quad = kwargs.pop('quad', [0,0,0,0])
+        nb_stack = kwargs.pop('nb_stack', self.settings['nb_stack'])
+        injection_duration = kwargs.pop('injection_duration', self.settings['injection_duration'])
+        duty_cycle = kwargs.pop('duty_cycle', self.settings['duty_cycle'])
+        tx_volt = float(kwargs.pop('duty_cycle', self.settings['tx_volt']))
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
-            duty_cycle = kwargs.pop('duty_cycle', 1.)
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
                 delay = kwargs['delay']
