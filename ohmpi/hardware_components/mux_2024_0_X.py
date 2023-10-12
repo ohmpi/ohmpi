@@ -142,6 +142,6 @@ class Mux(MuxAbstract):
 
     def _mcp_jumper_pos_to_addr(self):
         d = {'up': 0, 'down': 1}
-        mcp_0 = hex(int(f"0100{d[self._mcp_jumper_pos['addr2']]}{d[self._mcp_jumper_pos['addr1']]}0", 2))
-        mcp_1 = hex(int(f"0100{d[self._mcp_jumper_pos['addr2']]}{d[self._mcp_jumper_pos['addr1']]}1", 2))
+        mcp_0 = int(f"0100{d[self._mcp_jumper_pos['addr2']]}{d[self._mcp_jumper_pos['addr1']]}0", 2)
+        mcp_1 = int(f"0100{d[self._mcp_jumper_pos['addr2']]}{d[self._mcp_jumper_pos['addr1']]}1", 2)
         self._mcp_addresses = (mcp_0, mcp_1)
