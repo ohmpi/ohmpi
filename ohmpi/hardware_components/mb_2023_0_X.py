@@ -149,9 +149,9 @@ class Tx(TxAbstract):
     def gain_auto(self):
         self._adc_gain_auto()
 
-    def inject(self, polarity=1, injection_duration=None):
+    def inject(self, polarity=1, injection_duration=None, switch_pwr=False):
         self.polarity = polarity
-        TxAbstract.inject(self, polarity=polarity, injection_duration=injection_duration)
+        TxAbstract.inject(self, polarity=polarity, injection_duration=injection_duration, switch_pwr=switch_pwr)
 
     @property
     def polarity(self):

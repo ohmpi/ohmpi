@@ -93,10 +93,10 @@ class Tx(Tx_mb_2023):
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
-    def inject(self, polarity=1, injection_duration=None):
+    def inject(self, polarity=1, injection_duration=None,switch_pwr=True):
         # add leds?
         self.pin6.value=True
-        Tx_mb_2023.inject(self, polarity=polarity, injection_duration=injection_duration,switch_pwr=True)
+        Tx_mb_2023.inject(self, polarity=polarity, injection_duration=injection_duration,switch_pwr=switch_pwr)
         self.pin6.value = False
 
     @property
