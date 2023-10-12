@@ -502,7 +502,7 @@ class OhmPiHardware:
         self.exec_logger.event(f'OhmPiHardware\tswitch_mux\tend\t{datetime.datetime.utcnow()}')
         return status
 
-    def test_mux(self, channel=None, activation_time=1.0):
+    def test_mux_one_relay(self, channel=None, activation_time=1.0): #TODO: is this needed at OhmpiHardware level?
         """Interactive method to test the multiplexer.
 
         Parameters

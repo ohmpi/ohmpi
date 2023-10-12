@@ -51,6 +51,10 @@ if stand_alone:
     current = tx.current
     mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
     print(f'Resistance: {voltage / current :.2f} ohm, voltage: {voltage:.2f} mV, current: {current:.2f} mA')
+    mux.reset()
+    mux.test({'A': [i for i in range(1, 9)], 'B': [i for i in range(1, 9)],
+              'M': [i for i in range(1, 9)], 'N': [i for i in range(1, 9)]}, activation_time=.1)
+    mux.reset()
 
 # mux as part of a OhmPiHardware system
 if part_of_hardware_system:
@@ -65,8 +69,9 @@ if part_of_hardware_system:
     # time.sleep(1.)
     # k.switch_mux(electrodes=[1, 4, 2, 3], roles=['A', 'B', 'M', 'N'], state='off')
     # k.mux_boards[mux_id].test(activation_time=.4)
-    k.test_mux((1,'A'))
-    
+    # k.test_mux_one_relay((1, 'A'))
+
+
 if within_ohmpi:
     from ohmpi.ohmpi import OhmPi
     # from ohmpi.plots import plot_exec_log
@@ -75,7 +80,7 @@ if within_ohmpi:
     k = OhmPi()
     # A, B, M, N = (32, 29, 31, 30)
     k.reset_mux()
-    k.test_mux(mux_id='mux_03')
+    k.test_mux_one_relay(mux_id='mux_03')
     # k._hw.switch_mux([A, B, M, N], state='on')
     # k._hw.vab_square_wave(12.,1., cycles=2)
     # k._hw.switch_mux([A, B, M, N], state='off')
