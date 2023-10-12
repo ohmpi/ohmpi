@@ -104,6 +104,12 @@ class OhmPiHardware:
             if isinstance(ctl_mod, str):
                 ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
             HARDWARE_CONFIG['pwr']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['pwr']['ctl'])
+        HARDWARE_CONFIG['pwr'].update({'connection':
+                                          HARDWARE_CONFIG['pwr'].pop('connection',
+                                                                    HARDWARE_CONFIG['pwr']['ctl'].interfaces[
+                                                                        HARDWARE_CONFIG['pwr'].pop(
+                                                                            'interface_name', None)])})
+        
         HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                       'soh_logger': self.soh_logger})
         self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
