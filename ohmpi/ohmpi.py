@@ -487,10 +487,10 @@ class OhmPi(object):
                 "Nb samples [-]": len(self._hw.readings),  # TODO: use only samples after a delay in each pulse
                 "fulldata": self._hw.readings[:, [0, -2, -1]],
                 # "I_stack [mA]": i_stack_mean,
-                "I_std [mA]": I_std,
+                "I_std [%]": I_std,
                 # "I_per_stack [mA]": np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
                 # "Vmn_stack [mV]": vmn_stack_mean,
-                "Vmn_std [mV]": Vmn_std,
+                "Vmn_std [%]": Vmn_std,
                 # "Vmn_per_stack [mV]": np.array([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1))[0] / 2 for i in range(nb_stack)]),
                 # "R_stack [ohm]": r_stack_mean,
                 # "R_std [ohm]": r_stack_std,
