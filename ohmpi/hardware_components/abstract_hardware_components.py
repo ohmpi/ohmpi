@@ -396,7 +396,6 @@ class TxAbstract(ABC):
 
     @pwr_state.setter
     def pwr_state(self, state):
-
         if state == 'on':
             self._pwr_state = 'on'
             self.exec_logger.debug(f'{self.model} cannot switch on power source')

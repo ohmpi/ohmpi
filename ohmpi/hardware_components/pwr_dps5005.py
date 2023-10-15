@@ -78,7 +78,7 @@ class Pwr(PwrAbstract):
     def current_max(self, value):
         self.connection.write_register(0x0001, value * 10, 0)
 
-   def pwr_state(self):
+    def pwr_state(self):
         return self._pwr_state
 
     @pwr_state.setter
