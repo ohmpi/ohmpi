@@ -14,6 +14,7 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'current_max': {'default': 100.},
          'current_adjustable': {'default': False},
          'voltage_adjustable': {'default': True}
+         'pwr_latency':{'default': .3}
          }
 
 # TODO: Complete this code... handle modbus connection
@@ -41,6 +42,7 @@ class Pwr(PwrAbstract):
         self.current_adjustable = False
         self._current = np.nan
         self._pwr_state = 'off'
+        self._pwr_latency = kwargs['pwr_latency']
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -82,7 +84,7 @@ class Pwr(PwrAbstract):
         return self._pwr_state
 
     @pwr_state.setter
-    def pwr_state(self, state, latency=.3):
+    def pwr_state(self, state):
         """Switches pwr on or off.
 
             Parameters
@@ -94,7 +96,7 @@ class Pwr(PwrAbstract):
             self.connection.write_register(0x09, 1)
             self._pwr_state = 'on'
             self.exec_logger.debug(f'{self.model} is on')
-            time.sleep(latency) # from pwr specs
+            time.sleep(self._pwr_latency) # from pwr specs
 
         elif state == 'off':
             self.connection.write_register(0x09, 0)

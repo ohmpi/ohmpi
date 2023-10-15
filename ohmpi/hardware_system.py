@@ -436,6 +436,7 @@ class OhmPiHardware:
             self.tx.pwr.pwr_state = 'off'
         if switch_tx_pwr_off:
             self.tx.pwr_state = 'off'
+
     def _vab_pulse(self, vab=None, duration=1., sampling_rate=None, polarity=1, append=False):
         """ Gets VMN and IAB from a single voltage pulse
         """
