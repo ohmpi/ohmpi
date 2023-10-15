@@ -13,7 +13,7 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage_max': {'default': 0},
          'current_max': {'default': 100.},
          'current_adjustable': {'default': False},
-         'voltage_adjustable': {'default': True}
+         'voltage_adjustable': {'default': True},
          'pwr_latency':{'default': .3}
          }
 

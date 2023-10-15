@@ -120,7 +120,7 @@ class Tx(Tx_mb_2023):
             self.pin3.value = True
             self.exec_logger.debug(f'Switching DPS on')
             self._pwr_state = 'on'
-            time.sleep(self._pwr_latency) # from pwr specs 
+            time.sleep(self._pwr_latency) # from pwr specs
         elif state == 'off':
             self.pin2.value = False
             self.pin3.value = False
