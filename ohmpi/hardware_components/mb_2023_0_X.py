@@ -173,12 +173,12 @@ class Tx(TxAbstract):
             self.pin0.value = False
             self.pin1.value = False
             time.sleep(self._release_delay)
-
-    def turn_off(self):
-        self.pwr.turn_off(self)
-
-    def turn_on(self):
-        self.pwr.turn_on(self)
+    #
+    # def turn_off(self):
+    #     self.pwr.turn_off(self)
+    #
+    # def turn_on(self):
+    #     self.pwr.turn_on(self)
 
     @property
     def tx_bat(self):

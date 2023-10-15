@@ -423,7 +423,7 @@ class OhmPi(object):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value, change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used in function definition
         # TODO: add rs_check option (or propose an other way to do this)
-        # TODO: better way of handling default settings
+        # TODO: implement compute_tx_volt for injection strategies
         """Measures on a quadrupole and returns transfer resistance.
 
         Parameters
@@ -870,6 +870,7 @@ class OhmPi(object):
             - export_name (name of exported file, timestamp will be added to filename)
             - export_path (path where to export the data, timestamp will be added to filename ;
                             if export_path is given, it goes over export_dir and export_name)
+
 
         Parameters
         ----------

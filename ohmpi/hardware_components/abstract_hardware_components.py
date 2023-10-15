@@ -50,7 +50,7 @@ class PwrAbstract(ABC):
         self._voltage = np.nan
         self.current_adjustable = kwargs.pop('current_adjustable', False)
         self._current = np.nan
-        self._state = 'off'
+        self._pwr_state = 'off'
         self._current_min = kwargs.pop('current_min', 0.)
         self._current_max = kwargs.pop('current_max', 0.)
         self._voltage_min = kwargs.pop('voltage_min', 0.)
@@ -69,16 +69,30 @@ class PwrAbstract(ABC):
     def current(self, value, **kwargs):
         # add actions to set the DPS current
         pass
+    #
+    # @abstractmethod
+    # def turn_off(self):
+    #     self.exec_logger.debug(f'Switching {self.model} off')
+    #     self._state = 'off'
+    #
+    # @abstractmethod
+    # def turn_on(self):
+    #     self.exec_logger.debug(f'Switching {self.model} on')
+    #     self._state = 'on'
 
-    @abstractmethod
-    def turn_off(self):
-        self.exec_logger.debug(f'Switching {self.model} off')
-        self._state = 'off'
+    @property
+    def pwr_state(self):
+        return self._pwr_state
 
-    @abstractmethod
-    def turn_on(self):
-        self.exec_logger.debug(f'Switching {self.model} on')
-        self._state = 'on'
+    @pwr_state.setter
+    def pwr_state(self, state):
+        if state == 'on':
+            self._pwr_state = 'on'
+            self.exec_logger.debug(f'{self.model} cannot be switched on')
+        elif state == 'off':
+            self._pwr_state = 'off'
+            self.exec_logger.debug(f'{self.model} cannot be switched off')
+
 
     @property
     @abstractmethod
@@ -292,7 +306,7 @@ class TxAbstract(ABC):
         pass
 
     @abstractmethod
-    def current_pulse(self, **kwargs):
+    def current_pulse(self, **kurwargs):
         pass
 
     @abstractmethod
@@ -313,16 +327,16 @@ class TxAbstract(ABC):
             injection_duration = self._injection_duration
         if np.abs(polarity) > 0:
             if switch_pwr:
-                self.pwr.turn_on()
+                self.pwr.pwr_state('on')
             self.tx_sync.set()
             time.sleep(injection_duration)
             self.tx_sync.clear()
             if switch_pwr:
-                self.pwr.turn_off()
+                self.pwr.pwr_state('off')
         else:
             self.tx_sync.set()
             if switch_pwr:
-                self.pwr.turn_off()
+                self.pwr.pwr_state('off')
             time.sleep(injection_duration)
             self.tx_sync.clear()
 
@@ -382,11 +396,13 @@ class TxAbstract(ABC):
 
     @pwr_state.setter
     def pwr_state(self, state):
-        self.exec_logger.debug(f'Power source cannot be switched on or off on {self.model}')
+
         if state == 'on':
             self._pwr_state = 'on'
+            self.exec_logger.debug(f'{self.model} cannot switch on power source')
         elif state == 'off':
             self._pwr_state = 'off'
+            self.exec_logger.debug(f'{self.model} cannot switch off power source')
 
 class RxAbstract(ABC):
     def __init__(self, **kwargs):

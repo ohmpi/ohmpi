@@ -25,7 +25,7 @@ class Pwr(PwrAbstract):
             self.exec_logger.event(f'{self.model}\tpwr_init\tbegin\t{datetime.datetime.utcnow()}')
         self._voltage = kwargs['voltage']
         self._current = np.nan
-        self._state = 'on'
+        # self._state = 'on'
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -36,12 +36,12 @@ class Pwr(PwrAbstract):
     @current.setter
     def current(self, value, **kwargs):
         self.exec_logger.debug(f'Current cannot be set on {self.model}')
-
-    def turn_off(self):
-        self.exec_logger.debug(f'{self.model} cannot be turned off')
-
-    def turn_on(self):
-        self.exec_logger.debug(f'{self.model} is always on')
+    #
+    # def turn_off(self):
+    #     self.exec_logger.debug(f'{self.model} cannot be turned off')
+    #
+    # def turn_on(self):
+    #     self.exec_logger.debug(f'{self.model} is always on')
 
     @property
     def voltage(self):

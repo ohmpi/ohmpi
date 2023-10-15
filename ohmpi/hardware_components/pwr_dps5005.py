@@ -40,6 +40,7 @@ class Pwr(PwrAbstract):
         self.voltage_adjustable = True
         self.current_adjustable = False
         self._current = np.nan
+        self._pwr_state = 'off'
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -51,14 +52,14 @@ class Pwr(PwrAbstract):
     def current(self, value, **kwargs):
         self.exec_logger.debug(f'Current cannot be set on {self.model}')
 
-    def turn_off(self):
-        self.connection.write_register(0x09, 0)
-        self.exec_logger.debug(f'{self.model} is off')
-
-    def turn_on(self):
-        self.connection.write_register(0x09, 1)
-        self.exec_logger.debug(f'{self.model} is on')
-        time.sleep(.3)
+    # def turn_off(self):
+    #     self.connection.write_register(0x09, 0)
+    #     self.exec_logger.debug(f'{self.model} is off')
+    #
+    # def turn_on(self):
+    #     self.connection.write_register(0x09, 1)
+    #     self.exec_logger.debug(f'{self.model} is on')
+    #     time.sleep(.3)
 
     @property
     def voltage(self):
@@ -76,3 +77,26 @@ class Pwr(PwrAbstract):
 
     def current_max(self, value):
         self.connection.write_register(0x0001, value * 10, 0)
+
+   def pwr_state(self):
+        return self._pwr_state
+
+    @pwr_state.setter
+    def pwr_state(self, state, latency=.3):
+        """Switches pwr on or off.
+
+            Parameters
+            ----------
+            state : str
+                'on', 'off'
+            """
+        if state == 'on':
+            self.connection.write_register(0x09, 1)
+            self._pwr_state = 'on'
+            self.exec_logger.debug(f'{self.model} is on')
+            time.sleep(latency) # from pwr specs
+
+        elif state == 'off':
+            self.connection.write_register(0x09, 0)
+            self._pwr_state = 'off'
+            self.exec_logger.debug(f'{self.model} is off')

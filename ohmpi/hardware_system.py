@@ -340,7 +340,14 @@ class OhmPiHardware:
         vab_max = np.abs(vab_max)
         vmn_min = np.abs(vmn_min)
         vab = np.min([np.abs(tx_volt), vab_max])
-        self.tx.turn_on()
+        # self.tx.turn_on()
+        switch_pwr_off, switch_tx_pwr_off = False, False #TODO: check if these should be moved in kwargs
+        if self.tx.pwr_state == 'off':
+            self.tx.pwr_state = 'on'
+            switch_tx_pwr_off = True
+        if self.tx.pwr.pwr_state == 'off':
+            self.tx.pwr.pwr_state = 'on'
+            switch_pwr_off = True
         if 1. / self.rx.sampling_rate > pulse_duration:
             sampling_rate = 1. / pulse_duration  # TODO: check this...
         else:
@@ -362,7 +369,11 @@ class OhmPiHardware:
             self.tx.exec_logger.warning(f'Unknown strategy {strategy} for setting VAB! Using {vab} V')
         else:
             self.tx.exec_logger.debug(f'Constant strategy for setting VAB, using {vab} V')
-        self.tx.turn_off()
+        # self.tx.turn_off()
+        if switch_pwr_off:
+            self.tx.pwr.pwr_state = 'off'
+        if switch_tx_pwr_off:
+            self.tx.pwr_state = 'off'
         rab = (np.abs(vab) * 1000.) / iab
         self.exec_logger.debug(f'RAB = {rab:.2f} Ohms')
         if vmn < 0:
@@ -401,9 +412,12 @@ class OhmPiHardware:
     def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, duty_cycle=1.,
                         append=False):
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
-        switch_pwr_off = False
+        switch_pwr_off, switch_tx_pwr_off = False, False
         if self.tx.pwr_state == 'off':
             self.tx.pwr_state = 'on'
+            switch_tx_pwr_off = True
+        if self.tx.pwr.pwr_state == 'off':
+            self.tx.pwr.pwr_state = 'on'
             switch_pwr_off = True
         self._gain_auto()
         assert 0. <= duty_cycle <= 1.
@@ -419,6 +433,8 @@ class OhmPiHardware:
         self._vab_pulses(vab, durations, sampling_rate, polarities=polarities,  append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
         if switch_pwr_off:
+            self.tx.pwr.pwr_state = 'off'
+        if switch_tx_pwr_off:
             self.tx.pwr_state = 'off'
     def _vab_pulse(self, vab=None, duration=1., sampling_rate=None, polarity=1, append=False):
         """ Gets VMN and IAB from a single voltage pulse
@@ -442,9 +458,12 @@ class OhmPiHardware:
         self.tx.polarity = 0   #TODO: is this necessary?
 
     def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
-        switch_pwr_off = False
+        switch_pwr_off, switch_tx_pwr_off = False, False
         if self.tx.pwr_state == 'off':
             self.tx.pwr_state = 'on'
+            switch_pwr_off = True
+        if self.tx.pwr.pwr_state == 'off':
+            self.tx.pwr.pwr_state = 'on'
             switch_pwr_off = True
         n_pulses = len(durations)
         self.exec_logger.debug(f'n_pulses: {n_pulses}')
@@ -464,6 +483,8 @@ class OhmPiHardware:
             self._vab_pulse(vab=vab, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
         if switch_pwr_off:
+            self.tx.pwr.pwr_state = 'off'
+        if switch_tx_pwr_off:
             self.tx.pwr_state = 'off'
     def switch_mux(self, electrodes, roles=None, state='off', **kwargs):
         """Switches on multiplexer relays for given quadrupole.
