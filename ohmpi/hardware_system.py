@@ -444,7 +444,6 @@ class OhmPiHardware:
             sampling_rate = RX_CONFIG['sampling_rate']
         if self.tx.pwr.voltage_adjustable:
             if self.tx.pwr.voltage != vab:
-                print('re-setting_voltage',self.tx.pwr.voltage,vab)
                 self.tx.pwr.voltage = vab
         else:
             vab = self.tx.pwr.voltage
@@ -540,7 +539,7 @@ class OhmPiHardware:
         self.exec_logger.event(f'OhmPiHardware\tswitch_mux\tend\t{datetime.datetime.utcnow()}')
         return status
 
-    def test_mux(self, channel=None, activation_time=1.0): #TODO: is this needed at OhmpiHardware level?
+    def test_mux(self, channel=None, activation_time=1.0): #TODO: add test in reverse order on each mux board
         """Interactive method to test the multiplexer.
 
         Parameters
