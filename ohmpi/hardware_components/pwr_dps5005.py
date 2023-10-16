@@ -14,7 +14,7 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'current_max': {'default': 100.},
          'current_adjustable': {'default': False},
          'voltage_adjustable': {'default': True},
-         'pwr_latency':{'default': .3}
+         'pwr_latency': {'default': .3}
          }
 
 # TODO: Complete this code... handle modbus connection
@@ -80,6 +80,7 @@ class Pwr(PwrAbstract):
     def current_max(self, value):
         self.connection.write_register(0x0001, value * 10, 0)
 
+    @property
     def pwr_state(self):
         return self._pwr_state
 

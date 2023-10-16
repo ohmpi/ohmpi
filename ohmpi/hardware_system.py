@@ -173,9 +173,14 @@ class OhmPiHardware:
         self._start_time = None
         self._pulse = 0
 
-    def _gain_auto(self, polarities=(1, -1)):  # TODO: improve _gain_auto
+    def _gain_auto(self, polarities=(1, -1), vab=5., switch_pwr_off=False) # TODO: improve _gain_auto
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
         current, voltage = 0., 0.
+        if self.tx.pwr.voltage_adjustable:
+            self.tx.pwr.voltage = vab
+        if self.tx.pwr.pwr_state == 'off':
+            self.tx.pwr.pwr_state = 'on'
+            switch_pwr_off = True
         tx_gains = []
         rx_gains = []
         for pol in polarities:
@@ -202,6 +207,8 @@ class OhmPiHardware:
         self.tx.gain = min(tx_gains)
         self.rx.gain = min(rx_gains)
         # self.rx.gain_auto(voltage)
+        if switch_pwr_off:
+            self.tx.pwr.pwr_state = 'off'
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tend\t{datetime.datetime.utcnow()}')
 
     def _inject(self, polarity=1, injection_duration=None):  # TODO: deal with voltage or current pulse
@@ -416,10 +423,10 @@ class OhmPiHardware:
         if self.tx.pwr_state == 'off':
             self.tx.pwr_state = 'on'
             switch_tx_pwr_off = True
-        if self.tx.pwr.pwr_state == 'off':
-            self.tx.pwr.pwr_state = 'on'
-            switch_pwr_off = True
-        self._gain_auto()
+        # if self.tx.pwr.pwr_state == 'off':
+        #     self.tx.pwr.pwr_state = 'on'
+        #     switch_pwr_off = True
+        self._gain_auto(vab=vab)
         assert 0. <= duty_cycle <= 1.
         if duty_cycle < 1.:
             durations = [cycle_duration/2 * duty_cycle, cycle_duration/2 * (1.-duty_cycle)] * 2 * cycles
@@ -462,15 +469,15 @@ class OhmPiHardware:
         if self.tx.pwr_state == 'off':
             self.tx.pwr_state = 'on'
             switch_pwr_off = True
-        if self.tx.pwr.pwr_state == 'off':
-            self.tx.pwr.pwr_state = 'on'
-            switch_pwr_off = True
         n_pulses = len(durations)
         self.exec_logger.debug(f'n_pulses: {n_pulses}')
         if self.tx.pwr.voltage_adjustable:
             self.tx.pwr.voltage = vab
         else:
             vab = self.tx.pwr.voltage
+        if self.tx.pwr.pwr_state == 'off':
+            self.tx.pwr.pwr_state = 'on'
+            switch_pwr_off = True
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
         if polarities is not None:
