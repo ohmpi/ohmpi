@@ -41,7 +41,7 @@ HARDWARE_CONFIG = {
                       # 'mcp_0': '0x26',
                       # 'mcp_1': '0x27',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+0, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'cabling': {(i+8, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                       'voltage_max': 12.},
                 'mux_03':
                      {'model': 'mux_2024_0_X',
@@ -52,7 +52,7 @@ HARDWARE_CONFIG = {
                       # 'mcp_0': '0x26',
                       # 'mcp_1': '0x27',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+8, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'cabling': {(i+24, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                       'voltage_max': 12.},
                  'mux_05':
                      {'model': 'mux_2024_0_X',
@@ -61,7 +61,7 @@ HARDWARE_CONFIG = {
                       'addr2': 'up',
                       'addr1': 'down',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+16, j): ('mux_05', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'cabling': {(i+0, j): ('mux_05', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                       'voltage_max': 12.},
                 'mux_06':
                      {'model': 'mux_2024_0_X',
@@ -70,7 +70,7 @@ HARDWARE_CONFIG = {
                       'addr2': 'down',
                       'addr1': 'down',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+24, j): ('mux_06', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'cabling': {(i+16, j): ('mux_06', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                       'voltage_max': 12.},
                  },
              'default': {'interface_name': 'i2c_ext',
