@@ -456,7 +456,7 @@ class OhmPi(object):
 
         # check arguments
         if quad is None:
-            quad = [0, 0, 0, 0]
+            quad = np.array([0, 0, 0, 0])
         if nb_stack is None:
             nb_stack = self.settings['nb_stack']
         if injection_duration is None:
@@ -810,7 +810,7 @@ class OhmPi(object):
             self.exec_logger.debug(f'tx pwr voltage: {self._hw.tx.pwr.voltage}, rx max voltage: {self._hw.rx._voltage_max}')
             return False
         else:
-            if quadrupole == [0, 0, 0, 0]:  # NOTE: No mux
+            if np.array(quadrupole) == np.array([0, 0, 0, 0]):  # NOTE: No mux
                 return True
             else:
                 return self._hw.switch_mux(electrodes=quadrupole, state='on', bypass_check=bypass_check)
