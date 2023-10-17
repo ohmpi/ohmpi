@@ -52,7 +52,7 @@ HARDWARE_CONFIG = {
                       # 'mcp_0': '0x26',
                       # 'mcp_1': '0x27',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+24, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'cabling': {(i+16, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                       'voltage_max': 50.},
                  'mux_05':
                      {'model': 'mux_2024_0_X',
