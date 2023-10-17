@@ -173,7 +173,7 @@ class OhmPiHardware:
         self._start_time = None
         self._pulse = 0
 
-    def _gain_auto(self, polarities=(1, -1), vab=5., switch_pwr_off=False) # TODO: improve _gain_auto
+    def _gain_auto(self, polarities=(1, -1), vab=5., switch_pwr_off=False): #TODO: improve _gain_auto
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
         current, voltage = 0., 0.
         if self.tx.pwr.voltage_adjustable:
