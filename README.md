@@ -23,6 +23,8 @@ We strongly recommend users to create a virtual environment to run the code and 
 *  you should run you code within the virtual environment
 *  to leave the virtual environment simply type: `deactivate`
 
+To enable to Python module, we need to add the 'ohmpi' folder to the python path. This can be done by `source .env` or manually by adding `export PYTHONPATH=$PYTHONPATH:/home/<username>/OhmPi` to /home/<username>/.bashrc.
+
 ## First run with four electrodes
 
 In the examples folder, you will find the code "simple_measurement.py".
