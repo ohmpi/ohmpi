@@ -917,6 +917,104 @@ class OhmPi(object):
 
         return status
 
+    def run_inversion(self, survey_names=[], elec_spacing=1, **kwargs):
+        """Run a simple 2D inversion using ResIPy.
+        
+        Parameters
+        ----------
+        survey_names : list of string, optional
+            Filenames of the survey to be inverted (including extension).
+        elec_spacing : float (optional)
+            Electrode spacing in meters. We assume same electrode spacing everywhere.
+        kwargs : optional
+            Additiona keyword arguments passed to `resipy.Project.invert()`. For instance
+            `reg_mode` == 0 for batch inversion, `reg_mode == 2` for time-lapse inversion.
+            See ResIPy document for more information on options available
+            (https://hkex.gitlab.io/resipy/).
+
+        Returns
+        -------
+        xzv : list of dict
+            Each dictionnary with key 'x' and 'z' for the centroid of the elements and 'v'
+            for the values in resistivity of the elements.
+        """
+        # check if we have any files to be inverted
+        if len(survey_names) == 0:
+            self.exec_logger('No file to invert')
+            return []
+        
+        # check if user didn't provide a single string instead of a list
+        if isinstance(survey_names, str):
+            survey_names = [survey_names]
+
+        # check kwargs for reg_mode
+        if 'reg_mode' in kwargs:
+            reg_mode = kwargs['reg_mode']
+        else:
+            reg_mode = 0
+            kwargs['reg_mode'] = 0
+
+        pdir = os.path.dirname(__file__)
+        # import resipy if available
+        try:
+            import pandas as pd
+            import sys
+            sys.path.append(os.path.join(pdir, '../../resipy/src/'))
+            from resipy import Project
+        except Exception as e:
+            self.exec_logger.error('Cannot import ResIPy or Pandas, error: ' + str(e))
+            return []
+
+        # get absolule filename
+        fnames = []
+        for survey_name in survey_names:
+            fname = os.path.join(pdir, '../data', survey_name)
+            if os.path.exists(fname):
+                fnames.append(fname)
+            else:
+                self.exec_logger.warning(fname + ' not found')
+        
+        # define a parser for the "ohmpi" format
+        def ohmpiParser(fname):
+            df = pd.read_csv(fname)
+            df = df.rename(columns={'A':'a', 'B':'b', 'M':'m', 'N':'n'})
+            df['vp'] = df['Vmn [mV]']
+            df['i'] = df['I [mA]']
+            df['resist'] = df['vp']/df['i']
+            df['ip'] = np.nan
+            emax = np.max(df[['a', 'b', 'm', 'n']].values)
+            elec = np.zeros((emax, 3))
+            elec[:, 0] = np.arange(emax) * elec_spacing
+            return elec, df[['a','b','m','n','vp','i','resist','ip']]
+                
+        # run inversion
+        self.exec_logger.info('ResIPy: import surveys')
+        k = Project(typ='R2')  # invert in a temporary directory that will be erased afterwards
+        if len(survey_names) == 1:
+            k.createSurvey(fnames[0], parser=ohmpiParser)
+        elif len(survey_names) > 0 and reg_mode == 0:
+            k.createBatchSurvey(fnames, parser=ohmpiParser)
+        elif len(survey_names) > 0 and reg_mode > 0:
+            k.createTimeLapseSurvey(fnames, parser=ohmpiParser)
+        self.exec_logger.info('ResIPy: generate mesh')
+        k.createMesh('trian')
+        self.exec_logger.info('ResIPy: invert survey')
+        k.invert(param=kwargs)
+
+        # read data
+        self.exec_logger.info('Reading inverted surveys')
+        k.getResults()
+        xzv = []
+        for m in k.meshResults:
+            df = m.df
+            xzv.append({
+                'x': df['X'].values.tolist(),
+                'z': df['Z'].values.tolist(),
+                'rho': df['Resistivity(ohm.m)'].values.tolist(),
+            })
+        
+        return xzv
+
     # Properties
     @property
     def sequence(self):
