@@ -810,7 +810,7 @@ class OhmPi(object):
             self.exec_logger.debug(f'tx pwr voltage: {self._hw.tx.pwr.voltage}, rx max voltage: {self._hw.rx._voltage_max}')
             return False
         else:
-            if np.array(quadrupole).all() == np.array([0, 0, 0, 0]).all():  # NOTE: No mux
+            if quadrupole == [0, 0, 0, 0]:  # NOTE: No mux
                 return True
             else:
                 return self._hw.switch_mux(electrodes=quadrupole, state='on', bypass_check=bypass_check)
@@ -904,62 +904,6 @@ class OhmPi(object):
 
         return status
 
-    def run_inversion(self, survey_name, elec_spacing=1, **kwargs):
-        """Invert a specific survey on the Pi using ResIPy.
-        
-        Parameters
-        ----------
-        survey_name : str
-            Filename of the survey to be inverted with its extension.
-            To get all filenames availables, see get_data().
-        elec_spacing : float, optional
-            Electrode spacing in meters.
-        **kwargs : dict, optional
-            Additional keyword arguments are passed to resipy.Project.invert() function.
-
-        Returns
-        -------
-        xzv : dict
-            Dictionnary with keys: X and Z for centroid of the elements of the mesh
-            and key 'resistivity' for their resistivity.
-        """
-        # check if resipy is installed
-        try:
-            import sys
-            sys.path.append('../resipy/src/')
-            from resipy import Project
-        except Exception as e:
-            self.exec_logger.error('Could not import ResIPy. Make sure it is installed. Error ' + str(e))
-            return
-        
-        # create project instance and run inversion
-        k = Project(typ='R2')
-        if 'reg_mode' in kwargs:
-            if kwargs['reg_mode'] != 0:
-                fname0 = '../data/' + sorted(os.listdir('../data'))[0]
-                k.createTimeLapseSurvey([fname0, '../data/' + survey_name])
-            else:
-                k.createSurvey('../data/' + survey_name)
-        else:
-            k.createSurvey('../data/' + survey_name)
-        elec = np.zeros((k.surveys[0].df[['a', 'b', 'm', 'n']].max(), 3))
-        elec[:, 0] = np.arange(0, elec.shape[0]*elec_spacing, elec_spacing)
-        k.setElec(elec)
-        k.createMesh()
-        k.invert(**kwargs)
-        k.getResults()
-
-        # extract centroids of elements and values
-        df = k.meshResults[0].df
-        xzv = {
-            'x': df['X'].values,
-            'z': df['Z'].values,
-            'resistivity': df['Resistivity(ohm.m)'].values
-        }
-
-        self.data_logger.info(json.dumps(xzv))
-        return xzv
-        
     # Properties
     @property
     def sequence(self):
