@@ -8,7 +8,8 @@ from ohmpi.utils import enforce_specs
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 12., 'max': 12., 'min': 12.},
          'current_adjustable': {'default': False},
-         'voltage_adjustable': {'default': False}
+         'voltage_adjustable': {'default': False},
+         'interface': {'default': 'none'},
          }
 
 

@@ -1,7 +1,7 @@
 import logging
 from ohmpi.utils import get_platform
 
-from paho.mqtt.client import MQTTv31
+from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
 # DEFINE THE ID OF YOUR OhmPi
@@ -18,25 +18,34 @@ OHMPI_CONFIG = {
 }
 
 HARDWARE_CONFIG = {
-    'ctl': {'model' : 'dummy_ctl'
-                   },
-    'tx' : {'model' : 'dummy_tx',
-             'current_max': 4800 / 50 / 2,  # Maximum current mA
-             'r_shunt': 2,  # Shunt resistance in Ohms
-             'low_battery': 12.  # Volts
+    'ctl': {'model': 'raspberry_pi'},
+    'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
+    'tx':  {'model': 'mb_2023_0_X',
+             'voltage_max': 12.,  # Maximum voltage supported by the TX board [V]
+             'adc_voltage_max': 4800.,  # Maximum voltage read by the current ADC on the TX board [mA]
+             'r_shunt': 2.,  # Shunt resistance in Ohms
+             'interface_name': 'i2c',
             },
-    'rx' : {'model': 'dummy_rx',
+    'rx':  {'model': 'mb_2023_0_X',
+            'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
+            'sampling_rate': 50.,  # number of samples per second
+            'interface_name': 'i2c',
             },
-    'mux': {'model' : 'dummy_mux',
-             'max_elec': 64,
-             'voltage_max' : 100,
-             'current_max' : 3
-            }
+    'mux':  # default properties given in config are system properties that will be
+            # overwritten by properties defined in each the board dict below.
+            # if defined in board specs, values out of specs will be bounded to remain in specs
+            # omitted properties in config will be set to board specs default values if they exist
+            {'boards': {},
+             'default': {'interface_name': 'i2c',
+                         'voltage_max': 100.,
+                         'current_max': 3.}
+             }
 }
+
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
-    'logging_level': logging.INFO,
+    'logging_level': logging.DEBUG,  # TODO: set logging level back to INFO
     'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',
@@ -60,8 +69,8 @@ DATA_LOGGING_CONFIG = {
 # State of Health logging configuration (For a future release)
 SOH_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
-    'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
+    'log_file_logging_level': logging.DEBUG,
     'file_name': f'soh{logging_suffix}.log',
     'max_bytes': 16777216,
     'backup_count': 1024,
