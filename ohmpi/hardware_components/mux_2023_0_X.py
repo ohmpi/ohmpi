@@ -18,8 +18,8 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'tca_address': {'default': 0x70}
          }
 
-default_mux_cabling = {(elec, role): ('mux_1', elec) for role in ['A', 'B', 'M', 'N'] for elec in
-                       range(1, 9)}  # defaults to 4 roles cabling electrodes from 1 to 8
+# defaults to role 'A' cabling electrodes from 1 to 64
+default_mux_cabling = {(elec, role): ('mux_1', elec) for role in ['A'] for elec in range(1, 64)}
 
 inner_cabling = {'1_role': {(1, 'X'): {'MCP': 0, 'MCP_GPIO': 0}, (2, 'X'): {'MCP': 0, 'MCP_GPIO': 1},
                             (3, 'X'): {'MCP': 0, 'MCP_GPIO': 2}, (4, 'X'): {'MCP': 0, 'MCP_GPIO': 3},
