@@ -635,7 +635,7 @@ class OhmPi(object):
             # self.switch_mux_on(quad)
             # run a measurement
             if self.on_pi:
-                acquired_data = self.run_measurement(quad, **kwargs)
+                acquired_data = self.run_measurement(quad=quad, **kwargs)
             else:  # for testing, generate random data
                 sum_vmn = np.random.rand(1)[0] * 1000.
                 sum_i = np.random.rand(1)[0] * 100.
