@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<!-- debugging instruction to see the messages passing on the RPi
+mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
+-->
 <html>
 <head>
     <meta charset="utf8"/>
@@ -40,14 +43,14 @@
         <input id="cmax" type="number" value="150"/>
         <button id="capplyBtn" type="button" class="btn btn-info">Apply</button>
         <div id="gd"></div>
+        
+        <!-- trace figure -->
         <div class="mb3 row">
             <label for="quadSelect">Quadrupole:</label>
             <div class="col-sm-10">
                 <select id='quadSelect' class='custom-select'></select>    
             </div>
         </div>
-        
-        <!-- trace figure -->
         <button id="addTraceBtn" type="button" class="btn btn-info">Add trace</button>
         <button id="removeTracesBtn" type="button" class="btn btn-info">Remove all traces</button>    
         <div id="ts"></div>
@@ -57,9 +60,20 @@
         <button id="rsClearBtn" type="button" class="btn btn-info">Clear plot</button>
         <div id="rs"></div>
         
+        <!-- Inversion plot -->
+        <select id="surveySelectInv" class='custom-select'></select>
+        <button id="invertBtn" type="button" class="btn btn-info">Invert</button>
+        <input id="cminInv" type="number" value="0"/>
+        <input id="cmaxInv" type="number" value="150"/>
+        <button id="capplyBtnInv" type="button" class="btn btn-info">Apply</button>
+        <div id="inv"></div>
+        
         <!-- Additional buttons -->
         <button id="downloadBtn" type="button" class="btn btn-primary">Download data</button>
         <a id="download"></a>
+        
+        <button id="restartBtn" type="button" class="btn btn-danger">Restart</button>
+        <button id="shutdownBtn" type="button" class="btn btn-danger">Shutdown</button>
 
         <!-- Modal for configuration -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -124,9 +138,7 @@
             </div>
             </div>
         </div>
-        <button id="restartBtn" type="button" class="btn btn-danger">Restart</button>
-        <button id="shutdownBtn" type="button" class="btn btn-danger">Shutdown</button>
-        <footer>v0.2.0</footer>
+        <footer>v0.3.0</footer>
     </div>
 
     <script type="text/javascript">
@@ -153,12 +165,15 @@
         let clientId = 'ohmpi_0001_html'
         let message = null
         let msg = ''
+        let userName = 'jkl'  // can be ask to the user
+        let password = 'jkl'
 
         // create client
-        client = new Paho.MQTT.Client(hostname, port, clientId);
-        client.onConnectionLost = onConnectionLost;
-        client.onMessageArrived = onMessageArrived;
-        client.connect({onSuccess:onConnect});
+        client = new Paho.MQTT.Client(hostname, port, clientId)
+        client.onConnectionLost = onConnectionLost
+        client.onMessageArrived = onMessageArrived
+        client.connect({onSuccess: onConnect})
+//        client.connect({userName: username, password: password, onSuccess:onConnect})
 
         function onConnect() {
             console.log("onConnect")
@@ -466,6 +481,9 @@
         let rsClearBtn = document.getElementById('rsClearBtn')
         rsClearBtn.addEventListener('click', rsClearBtnFunc)
         
+        // Run inversion
+
+
         // getData
         function getData() {
             sendCommand(JSON.stringify({
