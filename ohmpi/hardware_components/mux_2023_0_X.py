@@ -8,6 +8,8 @@ from digitalio import Direction  # noqa
 from busio import I2C  # noqa
 from ohmpi.utils import enforce_specs
 
+# TODO: manage the case when a tca is added to handle more mux_2023 boards
+
 # hardware characteristics and limitations
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'id': {'default': 'mux_??'},
@@ -15,7 +17,7 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'current_max': {'default': 3.},
          'activation_delay': {'default': 0.01},
          'release_delay': {'default': 0.005},
-         'tca_address': {'default': 0x70}
+         'mux_tca_address': {'default': 0x70}
          }
 
 # defaults to role 'A' cabling electrodes from 1 to 64
@@ -79,7 +81,7 @@ class Mux(MuxAbstract):
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.model}: {self._roles} !')
             self._mode = ''
-        self._tca = [adafruit_tca9548a.TCA9548A(self.connection, kwargs['tca_address'])[i] for i in np.arange(7, 3, -1)]
+        self._tca = [adafruit_tca9548a.TCA9548A(self.connection, kwargs['mux_tca_address'])[i] for i in np.arange(7, 3, -1)]
         # self._mcp_addresses = (kwargs.pop('mcp', '0x20'))  # TODO: add assert on valid addresses..
         self._mcp = [None, None, None, None]
         self.reset()

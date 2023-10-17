@@ -546,7 +546,7 @@ class OhmPiHardware:
                     # Create a new thread to perform some work
                     self.mux_boards[mux].barrier = b
                     kwargs.update({'elec_dict': elec_dict, 'state': state})
-                    mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs=kwargs)
+                    mux_workers[idx] = Thread(target=self.mux_boards[mux].switch, kwargs=kwargs)  # TODO: handle minimum delay between two relays activation (to avoid lagging during test_mux at high speed)
                     mux_workers[idx].start()
                 try:
                     self.mux_barrier.wait()
@@ -585,11 +585,19 @@ class OhmPiHardware:
             time.sleep(activation_time)
             self.switch_mux(electrodes, roles, state='off')
         else:
-            for c in self._cabling.keys():
-                self.exec_logger.info(f'Testing electrode {c[0]} with role {c[1]}.')
-                self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='on')
-                time.sleep(activation_time)
-                self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='off')
+            list_of_muxes = [i for i in self.mux_boards.keys()]
+            list_of_muxes.sort()
+            for m_id in list_of_muxes:
+                for c in self.mux_boards[m_id].cabling.keys():
+                    self.exec_logger.info(f'Testing electrode {c[0]} with role {c[1]}.')
+                    self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='on')
+                    time.sleep(activation_time)
+                    self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='off')
+            # for c in self._cabling.keys():
+            #     self.exec_logger.info(f'Testing electrode {c[0]} with role {c[1]}.')
+            #     self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='on')
+            #     time.sleep(activation_time)
+            #     self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='off')
         self.exec_logger.info('Test finished.')
 
     def reset_mux(self):
