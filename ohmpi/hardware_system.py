@@ -167,6 +167,22 @@ class OhmPiHardware:
         self._start_time = None  # time of the beginning of a readings acquisition
         self._pulse = 0  # pulse number
         self.exec_logger.event(f'OhmPiHardware\tinit\tend\t{datetime.datetime.utcnow()}')
+        self._pwr_state = 'off'
+
+    @property
+    def pwr_state(self):
+        return self._pwr_state
+
+    @pwr_state.setter
+    def pwr_state(self, state):
+        if state == 'on':
+            self.tx.pwr_state = 'on'
+            self._pwr_state = 'on'
+            self.exec_logger.debug(f'{self.model} cannot be switched on')
+        elif state == 'off':
+            self.tx.pwr_state = 'off'
+            self._pwr_state = 'off'
+            self.exec_logger.debug(f'{self.model} cannot be switched off')
 
     def _clear_values(self):
         self.readings = np.array([])
@@ -420,8 +436,8 @@ class OhmPiHardware:
                         append=False):
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
         switch_pwr_off, switch_tx_pwr_off = False, False
-        if self.tx.pwr_state == 'off':
-            self.tx.pwr_state = 'on'
+        if self.pwr_state == 'off':
+            self.pwr_state = 'on'
             switch_tx_pwr_off = True
         # if self.tx.pwr.pwr_state == 'off':
         #     self.tx.pwr.pwr_state = 'on'
@@ -442,7 +458,7 @@ class OhmPiHardware:
         if switch_pwr_off:
             self.tx.pwr.pwr_state = 'off'
         if switch_tx_pwr_off:
-            self.tx.pwr_state = 'off'
+            self.pwr_state = 'off'
 
     def _vab_pulse(self, vab=None, duration=1., sampling_rate=None, polarity=1, append=False):
         """ Gets VMN and IAB from a single voltage pulse
@@ -466,8 +482,8 @@ class OhmPiHardware:
 
     def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
         switch_pwr_off, switch_tx_pwr_off = False, False
-        if self.tx.pwr_state == 'off':
-            self.tx.pwr_state = 'on'
+        if self.pwr_state == 'off':
+            self.pwr_state = 'on'
             switch_pwr_off = True
         n_pulses = len(durations)
         self.exec_logger.debug(f'n_pulses: {n_pulses}')
@@ -492,7 +508,8 @@ class OhmPiHardware:
         if switch_pwr_off:
             self.tx.pwr.pwr_state = 'off'
         if switch_tx_pwr_off:
-            self.tx.pwr_state = 'off'
+            self.pwr_state = 'off'
+    
     def switch_mux(self, electrodes, roles=None, state='off', **kwargs):
         """Switches on multiplexer relays for given quadrupole.
 

@@ -451,6 +451,12 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier
         """
+        # check pwr is on, if not, let's turn it on
+        switch_power_off = False
+        if self._hw.pwr_state == 'off':
+            self._hw.pwr_state = 'on'
+            switch_power_off = True
+
         self.exec_logger.debug('Starting measurement')
         self.exec_logger.debug('Waiting for data')
 
@@ -532,6 +538,11 @@ class OhmPi(object):
         else:
             self.exec_logger.info(f'Skipping {quad}')
         self.switch_mux_off(quad, cmd_id)
+
+        # if power was off before measurement, let's turn if off
+        if switch_power_off:
+            self._hw.pwr_state = 'off'
+
         return d
 
     def run_multiple_sequences(self, cmd_id=None, sequence_delay=None, nb_meas=None, **kwargs):  # NOTE : could be renamed repeat_sequence
@@ -588,6 +599,8 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier
         """
+        # switch power on
+        self._hw.pwr_state = 'on'
         self.status = 'running'
         self.exec_logger.debug(f'Status: {self.status}')
         self.exec_logger.debug(f'Measuring sequence: {self.sequence}')
@@ -669,7 +682,7 @@ class OhmPi(object):
             self.append_and_save(filename, acquired_data)
             self.exec_logger.debug(f'quadrupole {i + 1:d}/{n:d}')
 
-        # self.switch_dps('off')
+        self._hw.pwr_state = 'off'
         self.status = 'idle'
 
     def run_sequence_async(self, cmd_id=None, **kwargs):
