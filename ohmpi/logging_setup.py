@@ -14,6 +14,7 @@ def get_logging_levels():
     """Gets a list of the logging levels loaded"""
     return [logging.getLevelName(x) for x in range(1,101) if not logging.getLevelName(x).startswith('Level')]
 
+
 def add_logging_level(level_name, level_num, method_name=None):
     """
     Comprehensively adds a new logging level to the `logging` module and the
