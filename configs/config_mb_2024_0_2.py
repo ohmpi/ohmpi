@@ -18,7 +18,7 @@ OHMPI_CONFIG = {
 
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
-    'pwr': {'model': 'pwr_batt', 'voltage': 12.},
+    'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
     'tx':  {'model': 'mb_2024_0_2',
              'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
              'current_max': 4800,  # Maximum voltage read by the current ADC on the TX board [mA]
