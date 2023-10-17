@@ -178,11 +178,9 @@ class OhmPiHardware:
         if state == 'on':
             self.tx.pwr_state = 'on'
             self._pwr_state = 'on'
-            self.exec_logger.debug(f'{self.model} cannot be switched on')
         elif state == 'off':
             self.tx.pwr_state = 'off'
             self._pwr_state = 'off'
-            self.exec_logger.debug(f'{self.model} cannot be switched off')
 
     def _clear_values(self):
         self.readings = np.array([])
