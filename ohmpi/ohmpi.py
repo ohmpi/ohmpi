@@ -940,7 +940,7 @@ class OhmPi(object):
         """
         # check if we have any files to be inverted
         if len(survey_names) == 0:
-            self.exec_logger('No file to invert')
+            self.exec_logger.error('No file to invert')
             return []
         
         # check if user didn't provide a single string instead of a list
@@ -1013,13 +1013,18 @@ class OhmPi(object):
             grid_x, grid_z = np.meshgrid(x, z)
             grid_z = griddata(df[['X', 'Z']].values, df['Resistivity(ohm.m)'].values,
                               (grid_x, grid_z), method='linear')
+            
+            # set nan to -1
+            inan = np.isnan(grid_z)
+            grid_z[inan] = -1
+
             xzv.append({
                 'x': x.tolist(),
                 'z': z.tolist(),
                 'rho': grid_z.tolist(),
             })
         
-        self.data_logger.info(xzv)
+        self.data_logger.info(json.dumps(xzv))  # limited to one survey
         return xzv
 
     # Properties

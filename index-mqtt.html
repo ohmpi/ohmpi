@@ -61,8 +61,10 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         <div id="rs"></div>
         
         <!-- Inversion plot -->
-        <select id="surveySelectInv" class='custom-select'></select>
-        <button id="invertBtn" type="button" class="btn btn-info">Invert</button>
+        <select id="surveySelectInv" class='custom-select'>
+            <option>measurement_20220206T194552.csv</option>
+        </select>
+        <button id="invertBtn" type="button" class="btn btn-info">Run inversion</button>
         <input id="cminInv" type="number" value="0"/>
         <input id="cmaxInv" type="number" value="150"/>
         <button id="capplyBtnInv" type="button" class="btn btn-info">Apply</button>
@@ -154,6 +156,15 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         let squads = [] // selected quadrupoles for time-serie figure
         let commands = {} // store commands and their id
         let callbacks = {} // store callback (might not be needed)
+        let invertData = [{
+            rho: [[10, 10.625, 12.5, 15.625, 20],
+                    [5.625, 6.25, 8.125, 11.25, 15.625],
+                    [2.5, 3.125, 5., 8.125, 12.5],
+                    [0.625, 1.25, 3.125, 6.25, 10.625],
+                    [0, 0.625, 2.5, 5.625, 10]],
+            x: [-9, -6, -5 , -3, -1],
+            y: [0, 1, 4, 5, 7],
+        }] // store inverted data
 
         // function with MQTT
         let topic = 'ohmpi_0001' // we could change this through a drop-down to connect to a different ohmpi
@@ -202,7 +213,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                     let ddic = JSON.parse(payload.split('INFO:')[1])
 
                     // check cmd_id is any
-                    processData(ddic)
+                    processMessage(ddic)
 
                     // usually these don't have a cmd_id so we are not sure when
 
@@ -481,9 +492,6 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         let rsClearBtn = document.getElementById('rsClearBtn')
         rsClearBtn.addEventListener('click', rsClearBtnFunc)
         
-        // Run inversion
-
-
         // getData
         function getData() {
             sendCommand(JSON.stringify({
@@ -492,6 +500,19 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 // last survey is often partial so we download it again
             }), console.log('processData(ddic)')
             )
+        }
+
+        // processMessage
+        function processMessage(ddic) {
+            if ('status' in ddic) {
+                // acquisition related
+                processData(ddic)
+            } else {
+                // inversion related
+                console.log('--------', ddic)
+                let invertData = ddic[0]
+                showInvFunc()
+            }
         }
 
         // processData
@@ -600,6 +621,58 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             surveySelectFunc({'target': surveySelect})
         })
         
+        // plot inverted data
+        function showInvFunc() {
+            let cmin = document.getElementById('cminInv').value
+            let cmax = document.getElementById('cmaxInv').value
+            
+            var data = [{
+                z: invertData[0]['rho'],
+                x: invertData[0]['x'],
+                y: invertData[0]['z'],
+                type: 'contour',
+                colorscale: 'Jet',
+                autocontour: true, // set to false if cmin is given
+                contours: {
+                    start: cmin,
+                    end: cmax,
+                    size: 10
+                },
+            }]
+
+            var layout = {
+                title: 'Inverted section',
+                yaxis: {
+                    title: 'Z [m]',
+                },
+                xaxis: {
+                    title: 'X [m]'
+                }   
+            }
+            Plotly.newPlot('inv', data, layout)
+        }
+
+        //invert data
+        function invertBtnFunc() {
+            let survey_name = document.getElementById('surveySelectInv').value
+            sendCommand(JSON.stringify({
+                    'cmd': 'run_inversion',
+                    'kwargs': {
+                        'survey_names': [survey_name]
+                    }
+                }), function(x) {
+                    console.log('inversion results', x)
+            })
+        }
+        let invertBtn = document.getElementById('invertBtn')
+        invertBtn.addEventListener('click', invertBtnFunc)
+
+        // apply new colorscale for inversion
+        let capplyBtnInv = document.getElementById('capplyBtnInv')
+        capplyBtnInv.addEventListener('click', function() {
+            showInvFunc()
+        })
+
         // checkbox interaction for data download
         function dataRetrievalCheckFunc(x) {
             if (x['target'].checked == true) {
@@ -640,15 +713,6 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         let restartBtn = document.getElementById('restartBtn')
         restartBtn.addEventListener('click', restartBtnFunc)
         
-        // invert data
-        // function invertBtnFunc() {
-        //     sendCommand('{"cmd": "invert"}', function(x) {
-        //         console.log('inversion results', x)
-        //     })
-        // }
-        // let invertBtn = document.getElementById('invertBtn')
-        // invertBtn.addEventListener('click', invertBtnFunc)
-
         // download data
         function downloadBtnFunc() {
             sendCommand('{"cmd": "download"}', function(x) {
