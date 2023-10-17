@@ -78,7 +78,7 @@ class OhmPiHardware:
 
         # Initialize RX
         HARDWARE_CONFIG['rx'].pop('model')
-        HARDWARE_CONFIG['rx'].update(**HARDWARE_CONFIG['rx'])
+        HARDWARE_CONFIG['rx'].update(**HARDWARE_CONFIG['rx'])  # TODO: delete me ?
         HARDWARE_CONFIG['rx'].update({'ctl': HARDWARE_CONFIG['rx'].pop('ctl', self.ctl)})
         if isinstance(HARDWARE_CONFIG['rx']['ctl'], dict):
             ctl_mod = HARDWARE_CONFIG['rx']['ctl'].pop('model', self.ctl)
