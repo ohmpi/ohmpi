@@ -512,11 +512,11 @@ class OhmPiHardware:
                 # ax.plot([0, vab_max], [0, vmn_lower_bound * vab_max / vab[k]], '-g', alpha=(k + 1) / n_steps)
                 # bounds on rab
                 print(f'rab_lb: {vab_list[k] / iab_upper_bound}')
-                rab_lower_bound = np.min([0.1, np.abs(vab_list[k] / iab_upper_bound)])
-                rab_upper_bound = np.min([0.1, np.abs(vab_list[k] / iab_lower_bound)])
+                rab_lower_bound = np.max([0.1, np.abs(vab_list[k] / iab_upper_bound)])
+                rab_upper_bound = np.max([0.1, np.abs(vab_list[k] / iab_lower_bound)])
                 # bounds on r
-                r_lower_bound = np.min([0.01, np.abs(vmn_lower_bound / iab_upper_bound)])
-                r_upper_bound = np.min([0.01, np.abs(vmn_upper_bound / iab_lower_bound)])
+                r_lower_bound = np.max([0.01, np.abs(vmn_lower_bound / iab_upper_bound)])
+                r_upper_bound = np.max([0.01, np.abs(vmn_upper_bound / iab_lower_bound)])
                 # conditions for vab update
                 cond_vmn_max = rab_lower_bound / r_upper_bound * vmn_max
                 cond_p_max = np.sqrt(p_max * rab_lower_bound)
