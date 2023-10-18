@@ -263,6 +263,10 @@ class Rx(RxAbstract):
 
     def gain_auto(self):
         self._adc_gain_auto()
+
+    def reset_gain(self):
+        self.gain = 2/3
+
     @property
     def voltage(self):
         """ Gets the voltage VMN in Volts

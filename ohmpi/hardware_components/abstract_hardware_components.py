@@ -122,6 +122,7 @@ class PwrAbstract(ABC):
         else:
             self.voltage = self._voltage_min
 
+
 class MuxAbstract(ABC):
     def __init__(self, **kwargs):
         self.model = kwargs.pop('model', 'unknown MUX hardware')
@@ -279,7 +280,7 @@ class TxAbstract(ABC):
         self.pwr = kwargs.pop('pwr', None)
         self._polarity = 0
         self._injection_duration = None
-        self._adc_gain = 1.
+        self._gain = 1.
         self.injection_duration = injection_duration
         self._latency = kwargs.pop('latency', 0.)
         self.tx_sync = kwargs.pop('tx_sync', Event())
@@ -287,26 +288,23 @@ class TxAbstract(ABC):
         self._pwr_state = 'off'
 
     @property
-    def adc_gain(self):
-        return self._adc_gain
+    def gain(self):
+        return self._gain
 
-    @adc_gain.setter
-    def adc_gain(self, value):
+    @gain.setter
+    def gain(self, value):
         """
-        Set gain on RX ADC
+        Set gain on RX
         Parameters
         ----------
         value: float
         """
-        self._adc_gain = value
-        self.exec_logger.debug(f'Setting TX ADC gain to {value}')
+        self._gain = value
+        self.exec_logger.debug(f'Setting TX gain to {value}')
+
 
     @abstractmethod
-    def _adc_gain_auto(self):
-        pass
-
-    @abstractmethod
-    def current_pulse(self, **kurwargs):
+    def current_pulse(self, **kwargs):
         pass
 
     @abstractmethod
@@ -403,6 +401,10 @@ class TxAbstract(ABC):
             self._pwr_state = 'off'
             self.exec_logger.debug(f'{self.model} cannot switch off power source')
 
+    def reset_gain(self):
+        self.gain = 1.
+
+
 class RxAbstract(ABC):
     def __init__(self, **kwargs):
         self.exec_logger = kwargs.pop('exec_logger', None)
@@ -416,30 +418,33 @@ class RxAbstract(ABC):
         self._sampling_rate = kwargs.pop('sampling_rate', 1)  # ms
         self.exec_logger.debug(f'{self.model} RX initialization')
         self._voltage_max = kwargs.pop('voltage_max', 0.)
-        self._adc_gain = 1.
+        self._gain = 1.
         self._max_sampling_rate = np.inf
         self._latency = kwargs.pop('latency', 0.)
         self._bias = kwargs.pop('bias', 0.)
         self._vmn_hardware_offset = kwargs.pop('vmn_hardware_offset', 0.)
 
     @property
-    def adc_gain(self):
-        return self._adc_gain
+    def gain(self):
+        return self._gain
 
-    @adc_gain.setter
-    def adc_gain(self, value):
+    @gain.setter
+    def gain(self, value):
         """
-        Sets gain on RX ADC
+        Sets gain on RX
         Parameters
         ----------
         value: float
         """
-        self._adc_gain = value
-        self.exec_logger.debug(f'Setting RX ADC gain to {value}')
+        self._gain = value
+        self.exec_logger.debug(f'Setting RX gain to {value}')
 
     @abstractmethod
-    def _adc_gain_auto(self):
+    def gain_auto(self):
         pass
+
+    def reset_gain(self):
+        self.gain = 1.
 
     @property
     def sampling_rate(self):

@@ -192,6 +192,9 @@ class Rx(Rx_mb_2023):
         self._dg411_gain_auto()
         self.exec_logger.debug(f'Setting RX gain automatically to {self.gain}')
 
+    def reset_gain(self):
+        self.gain = 1/3
+
     @property
     def voltage(self):
         """ Gets the voltage VMN in Volts
