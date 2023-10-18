@@ -43,6 +43,7 @@ class Ctl(CtlAbstract):
             self.interfaces['i2c'] = busio.I2C(board.SCL, board.SDA)  # noqa
         except RuntimeWarning:
             pass
+        warnings.resetwarnings()
 
         # Extended I2C
         try:
@@ -51,7 +52,6 @@ class Ctl(CtlAbstract):
             pass
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize Extended I2C:\n{e}')
-        warnings.resetwarnings()
 
         # modbus
         try:
