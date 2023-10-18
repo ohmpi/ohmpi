@@ -602,6 +602,7 @@ class OhmPiHardware:
         # if self.tx.pwr.pwr_state == 'off':
         #     self.tx.pwr.pwr_state = 'on'
         #     switch_pwr_off = True
+
         self._gain_auto(vab=vab)
         assert 0. <= duty_cycle <= 1.
         if duty_cycle < 1.:
