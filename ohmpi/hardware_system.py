@@ -457,7 +457,9 @@ class OhmPiHardware:
 
         vab_max = np.abs(vab_max)
         vmn_min = np.abs(vmn_min)
-        vab = np.min([np.abs(tx_volt), vab_max])
+        k = 0
+        vab = np.zeros(n_steps + 1) * np.nan
+        vab[k] = np.min([np.abs(tx_volt), vab_max])
         # self.tx.turn_on()
         switch_pwr_off, switch_tx_pwr_off = False, False  # TODO: check if these should be moved in kwargs
         if self.tx.pwr_state == 'off':
@@ -476,13 +478,10 @@ class OhmPiHardware:
         if self.tx.pwr.pwr_state == 'off':
             self.tx.pwr.pwr_state = 'on'
             switch_pwr_off = True
-        k = 0
         diff_vab = np.inf
-
         while (k < n_steps) and (diff_vab > diff_vab_lim):
             vabs = []
             for pol in polarities:
-                vab = np.zeros(n_steps + 1) * np.nan
                 # self.tx.polarity = pol
                 # set gains automatically
                 injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
@@ -494,7 +493,6 @@ class OhmPiHardware:
                 injection.join()
                 v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0))[0] # NOTE : discard data aquired in the first x ms
                 iab = self.readings[v, 3]
-
                 vmn = self.readings[v, 4] * self.readings[v, 2]
                 iab_mean = np.mean(iab)
                 iab_std = np.std(iab)
@@ -532,16 +530,15 @@ class OhmPiHardware:
                     print('Vab bounded by Vmn max')
                 else:
                     print('Next step')
-                vab[k + 1] = new_vab
-                k = k + 1
                 vabs.append(new_vab)
                 if diff_vab < diff_vab_lim:
                     print('stopped on vab increase too small')
                 else:
                     print('stopped on maximum number of steps reached')
-                print(f'Selected Vab: {vab:.2f}')
-            vab_opt = np.min(vabs)
-            print(f'Selected Vab: {vab_opt:.2f}')
+            k = k + 1
+            vab[k] = np.min(vabs)
+        vab_opt = vab[k-1]
+        print(f'Selected Vab: {vab_opt:.2f}')
 
         # if strategy == 'vmax':
         #     # implement different strategies
