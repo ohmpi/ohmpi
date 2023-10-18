@@ -34,24 +34,28 @@ HARDWARE_CONFIG = {
     'mux': {'boards':
                 {'mux_A':
                      {'model': 'mux_2023_0_X',
+                      'interface_name': 'i2c',
                       'mux_tca_address': 0x70,
                       'roles': {'A': 'X'},
                       'cabling': {(i, j): ('mux_A', i) for j in ['A'] for i in range(1, 65)},
                       'voltage_max': 12.},
                  'mux_B':
                      {'model': 'mux_2023_0_X',
+                      'interface_name': 'i2c',
                       'mux_tca_address': 0x71,
                       'roles': {'B': 'X'},
                       'cabling': {(i, j): ('mux_B', i) for j in ['B'] for i in range(1, 65)},
                       'voltage_max': 12.},
                  'mux_M':
                      {'model': 'mux_2023_0_X',
+                      'interface_name': 'i2c',
                       'mux_tca_address': 0x72,
                       'roles': {'M': 'X'},
                       'cabling': {(i, j): ('mux_M', i) for j in ['M'] for i in range(1, 65)},
                       'voltage_max': 12.},
                 'mux_N':
                      {'model': 'mux_2023_0_X',
+                      'interface_name': 'i2c',
                       'mux_tca_address': 0x73,
                       'roles': {'N': 'X'},
                       'cabling': {(i, j): ('mux_N', i) for j in ['N'] for i in range(1, 65)},
