@@ -1,6 +1,5 @@
 import logging
 from ohmpi.utils import get_platform
-
 from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
@@ -31,21 +30,58 @@ HARDWARE_CONFIG = {
             'sampling_rate': 50.,  # number of samples per second
             'interface_name': 'i2c',
             },
-    'mux':  # default properties given in config are system properties that will be
-            # overwritten by properties defined in each the board dict below.
-            # if defined in board specs, values out of specs will be bounded to remain in specs
-            # omitted properties in config will be set to board specs default values if they exist
-            {'boards': {},
-             'default': {'interface_name': 'i2c',
+    'mux': {'boards':
+                {'mux_02':
+                     {'model': 'mux_2024_0_X',
+                      'tca_address': None,
+                      'tca_channel': 0,
+                      'addr2': 'up',
+                      'addr1': 'up',
+                      # 'mcp_0': '0x26',
+                      # 'mcp_1': '0x27',
+                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
+                      'cabling': {(i+8, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'voltage_max': 12.},
+                'mux_03':
+                     {'model': 'mux_2024_0_X',
+                      'tca_address': None,
+                      'tca_channel': 0,
+                      'addr2': 'down',
+                      'addr1': 'up',
+                      # 'mcp_0': '0x26',
+                      # 'mcp_1': '0x27',
+                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
+                      'cabling': {(i+24, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'voltage_max': 12.},
+                 'mux_05':
+                     {'model': 'mux_2024_0_X',
+                      'tca_address': None,
+                      'tca_channel': 0,
+                      'addr2': 'up',
+                      'addr1': 'down',
+                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
+                      'cabling': {(i+0, j): ('mux_05', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'voltage_max': 12.},
+                'mux_06':
+                     {'model': 'mux_2024_0_X',
+                      'tca_address': None,
+                      'tca_channel': 0,
+                      'addr2': 'down',
+                      'addr1': 'down',
+                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
+                      'cabling': {(i+16, j): ('mux_06', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
+                      'voltage_max': 12.},
+                 },
+             'default': {'interface_name': 'i2c_ext',
                          'voltage_max': 100.,
                          'current_max': 3.}
-             }
-}
+            }
+    }
 
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
-    'logging_level': logging.DEBUG,  # TODO: set logging level back to INFO
+    'logging_level': logging.INFO,
     'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',

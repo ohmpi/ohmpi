@@ -180,6 +180,11 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier
         """
+        # check if directory 'data' exists
+        ddir = os.path.join(os.path.dirname(__file__), '../data/')
+        if os.path.exists(ddir) is not True:
+            os.mkdir(ddir)
+
         last_measurement = deepcopy(last_measurement)
         if 'fulldata' in last_measurement:
             d = last_measurement['fulldata']
@@ -246,7 +251,8 @@ class OhmPi(object):
         # get all .csv file in data folder
         if survey_names is None:
             survey_names = []
-        fnames = [fname for fname in os.listdir('data/') if fname[-4:] == '.csv']
+        ddir = os.path.join(os.path.dirname(__file__), '../data/')
+        fnames = [fname for fname in os.listdir(ddir) if fname[-4:] == '.csv']
         ddic = {}
         if cmd_id is None:
             cmd_id = 'unknown'
@@ -254,19 +260,28 @@ class OhmPi(object):
             if ((fname != 'readme.txt')
                     and ('_rs' not in fname)
                     and (fname.replace('.csv', '') not in survey_names)):
-                try:
-                    data = np.loadtxt('data/' + fname, delimiter=',',
-                                      skiprows=1, usecols=(1, 2, 3, 4, 8))
-                    data = data[None, :] if len(data.shape) == 1 else data
-                    ddic[fname.replace('.csv', '')] = {
-                        'a': data[:, 0].astype(int).tolist(),
-                        'b': data[:, 1].astype(int).tolist(),
-                        'm': data[:, 2].astype(int).tolist(),
-                        'n': data[:, 3].astype(int).tolist(),
-                        'rho': data[:, 4].tolist(),
-                    }
-                except Exception as e:
-                    print(fname, ':', e)
+                #try:
+                # reading headers
+                with open(os.path.join(ddir, fname), 'r') as f:
+                    headers = f.readline().split(',')
+                
+                # fixing possible incompatibilities with cod eversion
+                for i, header in enumerate(headers):
+                    if header == 'R [ohm]':
+                        headers[i] = 'R [Ohm]'
+                icols = np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'R [Ohm]']))[0]
+                data = np.loadtxt(os.path.join(ddir, fname), delimiter=',',
+                                    skiprows=1, usecols=icols)                    
+                data = data[None, :] if len(data.shape) == 1 else data
+                ddic[fname.replace('.csv', '')] = {
+                    'a': data[:, 0].astype(int).tolist(),
+                    'b': data[:, 1].astype(int).tolist(),
+                    'm': data[:, 2].astype(int).tolist(),
+                    'n': data[:, 3].astype(int).tolist(),
+                    'rho': data[:, 4].tolist(),
+                }
+                #except Exception as e:
+                #    print(fname, ':', e)
         rdic = {'cmd_id': cmd_id, 'data': ddic}
         self.data_logger.info(json.dumps(rdic))
         return ddic
@@ -497,7 +512,7 @@ class OhmPi(object):
                 "inj time [ms]": injection_duration,  # NOTE: check this
                 "Vmn [mV]": Vmn,
                 "I [mA]": I,
-                "R [ohm]": R,
+                "R [Ohm]": R,
                 "R_std [%]": R_std,
                 "Ps [mV]": self._hw.sp,
                 "nbStack": nb_stack,
@@ -940,7 +955,7 @@ class OhmPi(object):
         """
         # check if we have any files to be inverted
         if len(survey_names) == 0:
-            self.exec_logger('No file to invert')
+            self.exec_logger.error('No file to invert')
             return []
         
         # check if user didn't provide a single string instead of a list
@@ -957,12 +972,13 @@ class OhmPi(object):
         pdir = os.path.dirname(__file__)
         # import resipy if available
         try:
+            from scipy.interpolate import griddata
             import pandas as pd
             import sys
             sys.path.append(os.path.join(pdir, '../../resipy/src/'))
             from resipy import Project
         except Exception as e:
-            self.exec_logger.error('Cannot import ResIPy or Pandas, error: ' + str(e))
+            self.exec_logger.error('Cannot import ResIPy, scipy or Pandas, error: ' + str(e))
             return []
 
         # get absolule filename
@@ -1001,18 +1017,29 @@ class OhmPi(object):
         self.exec_logger.info('ResIPy: invert survey')
         k.invert(param=kwargs)
 
-        # read data
+        # read data and regrid on a regular grid for a plotly contour plot
         self.exec_logger.info('Reading inverted surveys')
         k.getResults()
         xzv = []
         for m in k.meshResults:
             df = m.df
+            x = np.linspace(df['X'].min(), df['X'].max(), 20)
+            z = np.linspace(df['Z'].min(), df['Z'].max(), 20)
+            grid_x, grid_z = np.meshgrid(x, z)
+            grid_z = griddata(df[['X', 'Z']].values, df['Resistivity(ohm.m)'].values,
+                              (grid_x, grid_z), method='linear')
+            
+            # set nan to -1
+            inan = np.isnan(grid_z)
+            grid_z[inan] = -1
+
             xzv.append({
-                'x': df['X'].values.tolist(),
-                'z': df['Z'].values.tolist(),
-                'rho': df['Resistivity(ohm.m)'].values.tolist(),
+                'x': x.tolist(),
+                'z': z.tolist(),
+                'rho': grid_z.tolist(),
             })
         
+        self.data_logger.info(json.dumps(xzv))  # limited to one survey
         return xzv
 
     # Properties
