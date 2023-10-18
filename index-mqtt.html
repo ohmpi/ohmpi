@@ -62,7 +62,6 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         
         <!-- Inversion plot -->
         <select id="surveySelectInv" class='custom-select'>
-            <option>measurement_20220206T194552.csv</option>
         </select>
         <button id="invertBtn" type="button" class="btn btn-info">Run inversion</button>
         <input id="cminInv" type="number" value="0"/>
@@ -504,7 +503,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
         // processMessage
         function processMessage(ddic) {
-            if ('status' in ddic) {
+            //if (('status' in ddic) | ('data' in ddic)) {
+            if (ddic.constructor == Object) {  // it's a dictionnary
                 // acquisition related
                 processData(ddic)
             } else {
@@ -549,6 +549,19 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             // call the function directly
             // (as progammatically chaging the value does not trigger the event)
             surveySelectFunc({'target': surveySelect})
+
+            // update list of survey for inversion
+            surveySelectInv.removeEventListener('change', showInvFunc)
+            surveySelectInv.innerHTML = ''  // clearing all child nodes
+            for (let surveyName of surveyNames) {
+                let option = document.createElement('option')
+                option.innerText = surveyName
+                option.value = surveyName
+                surveySelectInv.appendChild(option)
+            }
+            surveySelectInv.addEventListener('change', showInvFunc)
+            surveySelectInv.value = surveyNames[surveyNames.length - 1]
+            
 
             // update list of quadrupoles if any
             if (quads.length == 0) {
@@ -630,7 +643,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 x: invertedData[0]['x'],
                 y: invertedData[0]['z'],
                 type: 'contour',
-                colorscale: 'Jet',
+                colorscale: 'Viridis',
                 autocontour: true, // set to false if cmin is given
                 contours: {
                     start: cmin,
@@ -650,16 +663,23 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             }
             
             Plotly.newPlot('inv', invData, invLayout)
+            var btn = document.getElementById('invertBtn')
+            btn.innerText = 'Run inversion'
+            btn.className = 'btn btn-info'
+
         }
         showInvFunc()
 
-        //invert data
+        // invert data
         function invertBtnFunc() {
             let survey_name = document.getElementById('surveySelectInv').value
+            var btn = document.getElementById('invertBtn')
+            btn.innerText = 'Inverting...'
+            btn.className = 'btn btn-warning'
             sendCommand(JSON.stringify({
                     'cmd': 'run_inversion',
                     'kwargs': {
-                        'survey_names': [survey_name]
+                        'survey_names': [survey_name + '.csv']
                     }
                 }), function(x) {
                     console.log('inversion results', x)
