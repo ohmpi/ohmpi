@@ -91,7 +91,7 @@ class Tx(TxAbstract):
         # ADS1115 for current measurement (AB)
         self._ads_current_address = kwargs['ads_address']
         self._ads_current_data_rate = kwargs['data_rate']
-        self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=self._ads_current_data_rate,
+        self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
                                         address=self._ads_current_address)
         self._ads_current.mode = Mode.CONTINUOUS
         self.r_shunt = kwargs['r_shunt']
