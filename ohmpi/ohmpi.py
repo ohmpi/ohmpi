@@ -940,7 +940,7 @@ class OhmPi(object):
         """
         # check if we have any files to be inverted
         if len(survey_names) == 0:
-            self.exec_logger('No file to invert')
+            self.exec_logger.error('No file to invert')
             return []
         
         # check if user didn't provide a single string instead of a list
@@ -957,12 +957,13 @@ class OhmPi(object):
         pdir = os.path.dirname(__file__)
         # import resipy if available
         try:
+            from scipy.interpolate import griddata
             import pandas as pd
             import sys
             sys.path.append(os.path.join(pdir, '../../resipy/src/'))
             from resipy import Project
         except Exception as e:
-            self.exec_logger.error('Cannot import ResIPy or Pandas, error: ' + str(e))
+            self.exec_logger.error('Cannot import ResIPy, scipy or Pandas, error: ' + str(e))
             return []
 
         # get absolule filename
@@ -1001,18 +1002,29 @@ class OhmPi(object):
         self.exec_logger.info('ResIPy: invert survey')
         k.invert(param=kwargs)
 
-        # read data
+        # read data and regrid on a regular grid for a plotly contour plot
         self.exec_logger.info('Reading inverted surveys')
         k.getResults()
         xzv = []
         for m in k.meshResults:
             df = m.df
+            x = np.linspace(df['X'].min(), df['X'].max(), 20)
+            z = np.linspace(df['Z'].min(), df['Z'].max(), 20)
+            grid_x, grid_z = np.meshgrid(x, z)
+            grid_z = griddata(df[['X', 'Z']].values, df['Resistivity(ohm.m)'].values,
+                              (grid_x, grid_z), method='linear')
+            
+            # set nan to -1
+            inan = np.isnan(grid_z)
+            grid_z[inan] = -1
+
             xzv.append({
-                'x': df['X'].values.tolist(),
-                'z': df['Z'].values.tolist(),
-                'rho': df['Resistivity(ohm.m)'].values.tolist(),
+                'x': x.tolist(),
+                'z': z.tolist(),
+                'rho': grid_z.tolist(),
             })
         
+        self.data_logger.info(json.dumps(xzv))  # limited to one survey
         return xzv
 
     # Properties

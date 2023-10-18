@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<!-- debugging instruction to see the messages passing on the RPi
+mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
+-->
 <html>
 <head>
     <meta charset="utf8"/>
@@ -40,14 +43,14 @@
         <input id="cmax" type="number" value="150"/>
         <button id="capplyBtn" type="button" class="btn btn-info">Apply</button>
         <div id="gd"></div>
+        
+        <!-- trace figure -->
         <div class="mb3 row">
             <label for="quadSelect">Quadrupole:</label>
             <div class="col-sm-10">
                 <select id='quadSelect' class='custom-select'></select>    
             </div>
         </div>
-        
-        <!-- trace figure -->
         <button id="addTraceBtn" type="button" class="btn btn-info">Add trace</button>
         <button id="removeTracesBtn" type="button" class="btn btn-info">Remove all traces</button>    
         <div id="ts"></div>
@@ -57,9 +60,22 @@
         <button id="rsClearBtn" type="button" class="btn btn-info">Clear plot</button>
         <div id="rs"></div>
         
+        <!-- Inversion plot -->
+        <select id="surveySelectInv" class='custom-select'>
+            <option>measurement_20220206T194552.csv</option>
+        </select>
+        <button id="invertBtn" type="button" class="btn btn-info">Run inversion</button>
+        <input id="cminInv" type="number" value="0"/>
+        <input id="cmaxInv" type="number" value="150"/>
+        <button id="capplyBtnInv" type="button" class="btn btn-info">Apply</button>
+        <div id="inv"></div>
+        
         <!-- Additional buttons -->
         <button id="downloadBtn" type="button" class="btn btn-primary">Download data</button>
         <a id="download"></a>
+        
+        <button id="restartBtn" type="button" class="btn btn-danger">Restart</button>
+        <button id="shutdownBtn" type="button" class="btn btn-danger">Shutdown</button>
 
         <!-- Modal for configuration -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -124,9 +140,7 @@
             </div>
             </div>
         </div>
-        <button id="restartBtn" type="button" class="btn btn-danger">Restart</button>
-        <button id="shutdownBtn" type="button" class="btn btn-danger">Shutdown</button>
-        <footer>v0.2.0</footer>
+        <footer>v0.3.0</footer>
     </div>
 
     <script type="text/javascript">
@@ -142,6 +156,15 @@
         let squads = [] // selected quadrupoles for time-serie figure
         let commands = {} // store commands and their id
         let callbacks = {} // store callback (might not be needed)
+        let invertData = [{
+            rho: [[10, 10.625, 12.5, 15.625, 20],
+                    [5.625, 6.25, 8.125, 11.25, 15.625],
+                    [2.5, 3.125, 5., 8.125, 12.5],
+                    [0.625, 1.25, 3.125, 6.25, 10.625],
+                    [0, 0.625, 2.5, 5.625, 10]],
+            x: [-9, -6, -5 , -3, -1],
+            y: [0, 1, 4, 5, 7],
+        }] // store inverted data
 
         // function with MQTT
         let topic = 'ohmpi_0001' // we could change this through a drop-down to connect to a different ohmpi
@@ -153,12 +176,15 @@
         let clientId = 'ohmpi_0001_html'
         let message = null
         let msg = ''
+        let userName = 'jkl'  // can be ask to the user
+        let password = 'jkl'
 
         // create client
-        client = new Paho.MQTT.Client(hostname, port, clientId);
-        client.onConnectionLost = onConnectionLost;
-        client.onMessageArrived = onMessageArrived;
-        client.connect({onSuccess:onConnect});
+        client = new Paho.MQTT.Client(hostname, port, clientId)
+        client.onConnectionLost = onConnectionLost
+        client.onMessageArrived = onMessageArrived
+        client.connect({onSuccess: onConnect})
+//        client.connect({userName: username, password: password, onSuccess:onConnect})
 
         function onConnect() {
             console.log("onConnect")
@@ -187,7 +213,7 @@
                     let ddic = JSON.parse(payload.split('INFO:')[1])
 
                     // check cmd_id is any
-                    processData(ddic)
+                    processMessage(ddic)
 
                     // usually these don't have a cmd_id so we are not sure when
 
@@ -476,6 +502,19 @@
             )
         }
 
+        // processMessage
+        function processMessage(ddic) {
+            if ('status' in ddic) {
+                // acquisition related
+                processData(ddic)
+            } else {
+                // inversion related
+                console.log('--------', ddic)
+                let invertData = ddic[0]
+                showInvFunc()
+            }
+        }
+
         // processData
         function processData(ddic) {
             // update status
@@ -582,6 +621,58 @@
             surveySelectFunc({'target': surveySelect})
         })
         
+        // plot inverted data
+        function showInvFunc() {
+            let cmin = document.getElementById('cminInv').value
+            let cmax = document.getElementById('cmaxInv').value
+            
+            var data = [{
+                z: invertData[0]['rho'],
+                x: invertData[0]['x'],
+                y: invertData[0]['z'],
+                type: 'contour',
+                colorscale: 'Jet',
+                autocontour: true, // set to false if cmin is given
+                contours: {
+                    start: cmin,
+                    end: cmax,
+                    size: 10
+                },
+            }]
+
+            var layout = {
+                title: 'Inverted section',
+                yaxis: {
+                    title: 'Z [m]',
+                },
+                xaxis: {
+                    title: 'X [m]'
+                }   
+            }
+            Plotly.newPlot('inv', data, layout)
+        }
+
+        //invert data
+        function invertBtnFunc() {
+            let survey_name = document.getElementById('surveySelectInv').value
+            sendCommand(JSON.stringify({
+                    'cmd': 'run_inversion',
+                    'kwargs': {
+                        'survey_names': [survey_name]
+                    }
+                }), function(x) {
+                    console.log('inversion results', x)
+            })
+        }
+        let invertBtn = document.getElementById('invertBtn')
+        invertBtn.addEventListener('click', invertBtnFunc)
+
+        // apply new colorscale for inversion
+        let capplyBtnInv = document.getElementById('capplyBtnInv')
+        capplyBtnInv.addEventListener('click', function() {
+            showInvFunc()
+        })
+
         // checkbox interaction for data download
         function dataRetrievalCheckFunc(x) {
             if (x['target'].checked == true) {
@@ -622,15 +713,6 @@
         let restartBtn = document.getElementById('restartBtn')
         restartBtn.addEventListener('click', restartBtnFunc)
         
-        // invert data
-        // function invertBtnFunc() {
-        //     sendCommand('{"cmd": "invert"}', function(x) {
-        //         console.log('inversion results', x)
-        //     })
-        // }
-        // let invertBtn = document.getElementById('invertBtn')
-        // invertBtn.addEventListener('click', invertBtnFunc)
-
         // download data
         function downloadBtnFunc() {
             sendCommand('{"cmd": "download"}', function(x) {
