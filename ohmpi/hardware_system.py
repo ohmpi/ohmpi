@@ -539,7 +539,7 @@ class OhmPiHardware:
                     print('stopped on maximum number of steps reached')
             k = k + 1
             vab_list[k] = np.min(vabs)
-        vab_opt = vab_list[k-1]
+        vab_opt = vab_list[k]
         print(f'Selected Vab: {vab_opt:.2f}')
 
         # if strategy == 'vmax':
