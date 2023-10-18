@@ -37,7 +37,7 @@ class Ctl(CtlAbstract):
         # None interface for battery
         self.interfaces['none'] = None
 
-        # warnings.filterwarnings("error")  # to filter out adafruit warning about setting I2C frequency
+        warnings.filterwarnings("error")  # to filter out adafruit warning about setting I2C frequency
         # I2C
         try:
             self.interfaces['i2c'] = busio.I2C(board.SCL, board.SDA)  # noqa
