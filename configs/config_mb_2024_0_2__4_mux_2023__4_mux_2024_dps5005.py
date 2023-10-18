@@ -92,8 +92,7 @@ HARDWARE_CONFIG = {
                       'cabling': {(i+65+0, j): ('mux_05', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                       'voltage_max': 12.},
                 'mux_06':
-                     {'interface_name': 'i2c',
-                      'model': 'mux_2024_0_X',
+                     {'model': 'mux_2024_0_X',
                       'tca_address': None,
                       'tca_channel': 0,
                       'addr2': 'down',
