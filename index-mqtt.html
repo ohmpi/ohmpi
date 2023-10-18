@@ -310,18 +310,6 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             }
             console.log(formVals)
             
-            // define callback to send settings to Pi
-            function configCallback() {
-                sendCommand(JSON.stringify({
-                    'cmd': 'update_settings',
-                    'kwargs': {
-                        'config': formVals
-                    }
-                }), function(x) {
-                    console.log('update_settings', x)
-                })
-            }
-            
             // deal with the potential file containing the sequence
             // https://stackoverflow.com/questions/19038919/is-it-possible-to-upload-a-text-file-to-input-in-html-js
             if (!window.FileReader) {
@@ -333,8 +321,27 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 const reader = new FileReader()
                 reader.readAsText(input.files[0])
                 reader.addEventListener('load', () => {
-                    formVals['sequence'] = reader.result
-                    console.log('file==', reader.result)
+                    // parse the file and make it a list of list of int
+                    var a = reader.result.split(/\r?\n|\r|\n/g)
+                    var seq = new Array()
+                    var eof = false
+                    for (var i = 0; i < a.length; i++) {
+                        b = a[i].split(' ')
+                        var arr = new Array(4)
+                        for (var j = 0; j < b.length; j++) {
+                            val = parseInt(b[j])
+                            if (isNaN(val) == true) {
+                                eof = true
+                                break
+                            }
+                            arr[j] = val
+                        }
+                        if (eof == true) {
+                            break
+                        }
+                        seq.push(arr)
+                    }
+                    formVals['sequence'] = seq
                     configCallback()
                 }, false)
             } else {
@@ -343,6 +350,17 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 configCallback()
             } 
             
+            // define callback to send settings to Pi
+            function configCallback() {
+                sendCommand(JSON.stringify({
+                    'cmd': 'update_settings',
+                    'kwargs': {
+                        'settings': formVals
+                    }
+                }), function(x) {
+                    console.log('update_settings', x)
+                })
+            }
             
         }
         let saveConfigBtn = document.getElementById('saveConfigBtn')
@@ -430,18 +448,24 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 let ypos = []
                 let app = []
                 for (let i = 0; i < a.length; i++) {
-                    let ab = (a[i] + b[i])/2
-                    let mn = (m[i] + n[i])/2
-                    let dist = Math.abs(ab - mn)
-                    xpos.push(Math.min(ab, mn) + dist/2)
-                    ypos.push(Math.sqrt(2)/2*dist)
+                    let emin = Math.min(...[a[i], b[i], m[i], n[i]])
+                    let emax = Math.max(...[a[i], b[i], m[i], n[i]])
+                    let dist = Math.abs(emax - emin)
+                    xpos.push(emin + dist/2)
+                    ypos.push(Math.sqrt(2)/2 * dist)
+                    // let ab = (a[i] + b[i])/2
+                    // let mn = (m[i] + n[i])/2
+                    // xpos.push(Math.min(ab, mn) + dist/2)
+                    // ypos.push(Math.sqrt(2)/2*dist)
                     let am = Math.abs(a[i] - m[i])
                     let bm = Math.abs(b[i] - m[i])
                     let an = Math.abs(a[i] - n[i])
                     let bn = Math.abs(a[i] - n[i])
                     let K = (2*Math.PI)/((1/am)-(1/an)-(1/an)+(1/bn))
-                    app.push(df['rho'][i]*-K)
+                    app.push(df['rho'][i]*K)
                 }
+                console.log('xpos', xpos)
+                console.log('ypos', ypos)
                 console.log(app)
                 // update the trace and redraw the figure
                 trace['x'] = xpos
@@ -469,7 +493,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         
         // run RS check
         function rsBtnFunc() {
-            sendCommand('{"cmd": "rsCheck"}', function (res) {
+            sendCommand('{"cmd": "rs_check"}', function (res) {
                 // update the bar plot
                 rsdata.push({
                 x: res['data']['AB'],
@@ -707,7 +731,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
         // remove data
         function removeDataBtnFunc() {
-            sendCommand('{"cmd": "removeData"}',function(x) {
+            sendCommand('{"cmd": "remove_data"}',function(x) {
                 data = {}
                 output.innerHTML = 'Status: ' + x['status'] + ' (all data cleared)'
                 console.log('all data removed')

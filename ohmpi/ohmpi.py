@@ -186,18 +186,21 @@ class OhmPi(object):
             os.mkdir(ddir)
 
         last_measurement = deepcopy(last_measurement)
+        
+        # TODO need to make all the full data of the same size (pre-populate
+        # readings with NaN in hardware_system.OhmPiHardware.read_values())
         if 'fulldata' in last_measurement:
-            d = last_measurement['fulldata']
-            n = d.shape[0]
-            if n > 1:
-                idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
-                udic = dict(zip(['u' + str(i) for i in range(n)], d[:, 1]))
-                tdic = dict(zip(['t' + str(i) for i in range(n)], d[:, 2]))
-                last_measurement.update(idic)
-                last_measurement.update(udic)
-                last_measurement.update(tdic)
+            # d = last_measurement['fulldata']
+            # n = d.shape[0]
+            # if n > 1:
+            #     idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
+            #     udic = dict(zip(['u' + str(i) for i in range(n)], d[:, 1]))
+            #     tdic = dict(zip(['t' + str(i) for i in range(n)], d[:, 2]))
+            #     last_measurement.update(idic)
+            #     last_measurement.update(udic)
+            #     last_measurement.update(tdic)
             last_measurement.pop('fulldata')
-
+        
         if os.path.isfile(filename):
             # Load data file and append data to it
             with open(filename, 'a') as f:
@@ -265,11 +268,15 @@ class OhmPi(object):
                 with open(os.path.join(ddir, fname), 'r') as f:
                     headers = f.readline().split(',')
                 
-                # fixing possible incompatibilities with cod eversion
+                # fixing possible incompatibilities with code version
                 for i, header in enumerate(headers):
                     if header == 'R [ohm]':
                         headers[i] = 'R [Ohm]'
-                icols = np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'R [Ohm]']))[0]
+                icols = list(np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'R [Ohm]']))[0])
+                print(headers)
+                print('+++++', icols)
+                print(np.array(headers)[np.array(icols)])
+                print(np.loadtxt(os.path.join(ddir, fname), delimiter=',', skiprows=1, usecols=icols).shape)
                 data = np.loadtxt(os.path.join(ddir, fname), delimiter=',',
                                     skiprows=1, usecols=icols)                    
                 data = data[None, :] if len(data.shape) == 1 else data
@@ -414,8 +421,9 @@ class OhmPi(object):
             Unique command identifier
         """
         self.exec_logger.debug(f'Removing all data following command {cmd_id}')
-        rmtree('data')
-        os.mkdir('data')
+        datadir = os.path.join(os.path.dirname(__file__), '../data')
+        rmtree(datadir)
+        os.mkdir(datadir)
 
     def restart(self, cmd_id=None):
         """Restarts the Raspberry Pi
@@ -490,6 +498,7 @@ class OhmPi(object):
         # duty_cycle = kwargs.pop('duty_cycle', self.settings['duty_cycle'])
         # tx_volt = float(kwargs.pop('tx_volt', self.settings['tx_volt']))
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
+        d = {}
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
@@ -720,7 +729,7 @@ class OhmPi(object):
     # TODO: we could build a smarter RS-Check by selecting adjacent electrodes based on their locations and try to
     #  isolate electrodes that are responsible for high resistances (ex: AB high, AC low, BC high
     #  -> might be a problem at B (cf what we did with WofE)
-    def rs_check(self, tx_volt=12., cmd_id=None):
+    def rs_check(self, tx_volt=5., cmd_id=None):
         # TODO: add a default value for rs-check in config.py import it in ohmpi.py and add it in rs_check definition
         """Checks contact resistances
 
@@ -731,6 +740,9 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier
         """
+
+        self._hw.tx.pwr.voltage = float(tx_volt)
+
         # create custom sequence where MN == AB
         # we only check the electrodes which are in the sequence (not all might be connected)
         if self.sequence is None:
@@ -912,6 +924,8 @@ class OhmPi(object):
             try:
                 if isinstance(settings, dict):
                     self.settings.update(settings)
+                    if 'sequence' in settings:
+                        self.set_sequence(settings['sequence'])
                 else:
                     with open(settings) as json_file:
                         dic = json.load(json_file)
