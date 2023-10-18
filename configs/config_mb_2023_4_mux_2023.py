@@ -70,7 +70,7 @@ HARDWARE_CONFIG = {
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
-    'logging_level': logging.DEBUG,  # TODO: set logging level back to INFO
+    'logging_level': logging.INFO,  # TODO: set logging level back to INFO
     'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',

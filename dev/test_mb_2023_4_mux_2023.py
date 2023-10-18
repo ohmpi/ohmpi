@@ -1,5 +1,6 @@
 import matplotlib
 matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
 from ohmpi.utils import change_config
 change_config('../configs/config_mb_2023_4_mux_2023.py', verbose=False)
 import importlib
@@ -7,6 +8,7 @@ import os
 import time
 import logging
 from ohmpi.config import HARDWARE_CONFIG
+import pandas as pd
 
 stand_alone = False
 part_of_hardware_system = False
@@ -82,7 +84,7 @@ if within_ohmpi:
 
     print('Starting test with OhmPi.')
     k = OhmPi()
-    k.load_sequence(os.path.join(os.path.dirname(__file__), '../sequences/01_GRAD_8_s4_a4.txt'))
+    # k.load_sequence(os.path.join(os.path.dirname(__file__), '../sequences/test_circuit_1423.txt'))
     k.reset_mux()
     # k.test_mux(mux_id=None, activation_time=0.2)
     # k._hw.switch_mux([A, B, M, N], state='on')
@@ -97,12 +99,20 @@ if within_ohmpi:
     # k._hw.switch_mux([A, B, M, N], state='off')
     # print(f'OhmPiHardware Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     # k._hw._plot_readings()
+    A, B, M, N = (16, 13, 15, 14)
     A, B, M, N = (1, 4, 2, 3)
-    d = k.run_measurement([A, B, M, N], injection_duration=2., nb_stack=2, duty_cycle=0.5)
+    d = k.run_measurement([A, B, M, N], injection_duration=0.5, nb_stack=2, duty_cycle=0.5)
     print(d)
-    # k._hw._plot_readings()
-    print(f'OhmPiHardware: Resistance: {k._hw.last_resistance() :.2f} ohm, dev. {k._hw.last_dev():.2f} %, sp: {k._hw.sp:.2f} mV, rx bias: {k._hw.rx._bias:.2f} mV')
-    print(f'OhmPi: Resistance: {d["R [ohm]"] :.2f} ohm, dev. {d["R_std [%]"]:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
-    k._hw._plot_readings(save_fig=False)
+    k._hw._plot_readings()
+    # print(f'OhmPiHardware: Resistance: {k._hw.last_resistance() :.2f} ohm, dev. {k._hw.last_dev():.2f} %, sp: {k._hw.sp:.2f} mV, rx bias: {k._hw.rx._bias:.2f} mV')
+    # print(f'OhmPi: Resistance: {d["R [ohm]"] :.2f} ohm, dev. {d["R_std [%]"]:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
+    # k._hw._plot_readings(save_fig=False)
+    # k.run_sequence(nb_stack=2, injection_duration=0.2, duty_cycle=0.5)
+    # ddir = os.path.join(os.path.dirname(__file__), '../data/')
+    # print(sorted(os.listdir(ddir)))
+    # df = pd.read_csv(os.path.join(ddir, sorted(os.listdir(ddir))[-3]))
+    # fig, ax = plt.subplots()
+    # df['R [Ohm]'].plot(ax=ax)
+    # fig.show(block=True)
     # plot_exec_log('ohmpi/logs/exec.log')
 change_config('../configs/config_default.py', verbose=False)
