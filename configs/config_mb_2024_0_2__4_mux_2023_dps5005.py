@@ -50,7 +50,7 @@ HARDWARE_CONFIG = {
                       'roles': {'M': 'X'},
                       'cabling': {(i, j): ('mux_M', i) for j in ['M'] for i in range(1, 65)},
                       'voltage_max': 12.},
-                'mux_N':
+                 'mux_N':
                      {'model': 'mux_2023_0_X',
                       'mux_tca_address': 0x73,
                       'roles': {'N': 'X'},

@@ -31,7 +31,7 @@ SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
                 'mcp_address': {'default': 0x20},
                 'ads_address': {'default': 0x48},
                 'compatible_power_sources': {'default': ['pwr_batt', 'dps5005']},
-                'r_shunt':  {'min': 0., 'default': 2. },
+                'r_shunt':  {'min': 0., 'default': 2.},
                 'activation_delay': {'default': 0.005},  # Max turn on time of 211EH relays = 5ms
                 'release_delay': {'default': 0.001},  # Max turn off time of 211EH relays = 1ms
                 }}
@@ -91,7 +91,8 @@ class Tx(TxAbstract):
         # ADS1115 for current measurement (AB)
         self._ads_current_address = kwargs['ads_address']
         self._ads_current_data_rate = kwargs['data_rate']
-        self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain, data_rate=self._ads_current_data_rate,
+        self._adc_gain = 2 / 3
+        self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
                                         address=self._ads_current_address)
         self._ads_current.mode = Mode.CONTINUOUS
         self.r_shunt = kwargs['r_shunt']
@@ -116,7 +117,7 @@ class Tx(TxAbstract):
     def gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self._ads_current = ads.ADS1115(self.connection, gain=self.adc_gain,
+        self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain,
                                         data_rate=SPECS['tx']['data_rate']['default'],
                                         address=self._ads_current_address)
         self._ads_current.mode = Mode.CONTINUOUS
@@ -182,12 +183,12 @@ class Tx(TxAbstract):
 
     @property
     def tx_bat(self):
-        if np.isnan(self.tx.pwr.battery_voltage):
+        if np.isnan(self.pwr.battery_voltage):
             self.soh_logger.warning(f'Cannot get battery voltage on {self.model}')
             self.exec_logger.debug(f'{self.model} cannot read battery voltage. Returning default battery voltage.')
             return self.pwr.voltage
         else:
-            return self.tx.pwr.battery_voltage
+            return self.pwr.battery_voltage
 
 
     def voltage_pulse(self, voltage=None, length=None, polarity=1):
@@ -248,7 +249,7 @@ class Rx(RxAbstract):
     def gain(self, value):
         assert value in [2/3, 2, 4, 8, 16]
         self._adc_gain = value
-        self._ads_voltage = ads.ADS1115(self.connection, gain=self.adc_gain,
+        self._ads_voltage = ads.ADS1115(self.connection, gain=self._adc_gain,
                                         data_rate=SPECS['rx']['data_rate']['default'],
                                         address=self._ads_voltage_address)
         self._ads_voltage.mode = Mode.CONTINUOUS
@@ -263,6 +264,10 @@ class Rx(RxAbstract):
 
     def gain_auto(self):
         self._adc_gain_auto()
+
+    def reset_gain(self):
+        self.gain = 2/3
+
     @property
     def voltage(self):
         """ Gets the voltage VMN in Volts
