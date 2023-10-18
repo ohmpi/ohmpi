@@ -458,8 +458,9 @@ class OhmPiHardware:
         vab_max = np.abs(vab_max)
         vmn_min = np.abs(vmn_min)
         k = 0
-        vab = np.zeros(n_steps + 1) * np.nan
-        vab[k] = np.min([np.abs(tx_volt), vab_max])
+        vab_list = np.zeros(n_steps + 1) * np.nan
+        vab = np.min([np.abs(tx_volt), vab_max])
+        vab_list[k] = vab
         # self.tx.turn_on()
         switch_pwr_off, switch_tx_pwr_off = False, False  # TODO: check if these should be moved in kwargs
         if self.tx.pwr_state == 'off':
@@ -491,7 +492,7 @@ class OhmPiHardware:
                 readings.start()
                 readings.join()
                 injection.join()
-                v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0))[0] # NOTE : discard data aquired in the first x ms
+                v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0))[0]  # NOTE : discard data aquired in the first x ms
                 iab = self.readings[v, 3]
                 vmn = self.readings[v, 4] * self.readings[v, 2]
                 iab_mean = np.mean(iab)
@@ -509,8 +510,8 @@ class OhmPiHardware:
                 # ax.plot([0, vab_max], [0, vmn_upper_bound * vab_max / vab[k]], '-r', alpha=(k + 1) / n_steps)
                 # ax.plot([0, vab_max], [0, vmn_lower_bound * vab_max / vab[k]], '-g', alpha=(k + 1) / n_steps)
                 # bounds on rab
-                rab_lower_bound = vab[k] / iab_upper_bound
-                rab_upper_bound = vab[k] / iab_lower_bound
+                rab_lower_bound = vab_list[k] / iab_upper_bound
+                rab_upper_bound = vab_list[k] / iab_lower_bound
                 # bounds on r
                 r_lower_bound = vmn_lower_bound / iab_upper_bound
                 r_upper_bound = vmn_upper_bound / iab_lower_bound
@@ -518,7 +519,7 @@ class OhmPiHardware:
                 cond_vmn_max = rab_lower_bound / r_upper_bound * vmn_max
                 cond_p_max = np.sqrt(p_max * rab_lower_bound)
                 new_vab = np.min([vab_max, cond_vmn_max, cond_p_max])
-                diff_vab = np.abs(new_vab - vab[k])
+                diff_vab = np.abs(new_vab - vab_list[k])
                 print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
                 print(
                     f'{k}: [{vab_max:.1f}, {cond_vmn_max:.1f}, {cond_p_max:.1f}], new_vab: {new_vab}, diff_vab: {diff_vab}\n')
@@ -536,8 +537,8 @@ class OhmPiHardware:
                 else:
                     print('stopped on maximum number of steps reached')
             k = k + 1
-            vab[k] = np.min(vabs)
-        vab_opt = vab[k-1]
+            vab_list[k] = np.min(vabs)
+        vab_opt = vab_list[k-1]
         print(f'Selected Vab: {vab_opt:.2f}')
 
         # if strategy == 'vmax':
