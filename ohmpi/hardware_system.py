@@ -540,6 +540,8 @@ class OhmPiHardware:
             k = k + 1
             vab_list[k] = np.min(vabs)
             time.sleep(0.5)
+            if self.tx.pwr.voltage_adjustable:
+                self.tx.pwr.voltage = vab_list[k]
         vab_opt = vab_list[k]
         print(f'Selected Vab: {vab_opt:.2f}')
 
