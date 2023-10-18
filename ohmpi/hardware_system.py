@@ -478,9 +478,11 @@ class OhmPiHardware:
             switch_pwr_off = True
         k = 0
         diff_vab = np.inf
+
         while (k < n_steps) and (diff_vab > diff_vab_lim):
             vabs = []
             for pol in polarities:
+                vab = np.zeros(n_steps + 1) * np.nan
                 # self.tx.polarity = pol
                 # set gains automatically
                 injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
@@ -492,6 +494,7 @@ class OhmPiHardware:
                 injection.join()
                 v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0))[0] # NOTE : discard data aquired in the first x ms
                 iab = self.readings[v, 3]
+
                 vmn = self.readings[v, 4] * self.readings[v, 2]
                 iab_mean = np.mean(iab)
                 iab_std = np.std(iab)
