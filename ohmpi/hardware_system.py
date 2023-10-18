@@ -444,9 +444,10 @@ class OhmPiHardware:
             Resistance between injection electrodes
         """
 
-        # Get those values from components
+        # TODO: Get those values from components
         p_max = 2.5
         vmn_max = 5.
+        vab_max = 50.
 
         # define a sill
         diff_vab_lim = 2.5
