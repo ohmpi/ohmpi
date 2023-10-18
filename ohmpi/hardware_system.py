@@ -495,7 +495,7 @@ class OhmPiHardware:
                 injection.join()
                 v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0))[0]  # NOTE : discard data aquired in the first x ms
                 iab = self.readings[v, 3]/1000.
-                vmn = self.readings[v, 4]/1000. * self.readings[v, 2]
+                vmn = np.abs(self.readings[v, 4]/1000. * self.readings[v, 2])
                 iab_mean = np.mean(iab)
                 iab_std = np.std(iab)
                 vmn_mean = np.mean(vmn)
