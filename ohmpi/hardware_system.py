@@ -469,7 +469,7 @@ class OhmPiHardware:
         if 1. / self.rx.sampling_rate > pulse_duration:
             sampling_rate = 1. / pulse_duration  # TODO: check this...
         else:
-            sampling_rate = self.tx.sampling_rate
+            sampling_rate = self.rx.sampling_rate
         current, voltage = 0., 0.
         if self.tx.pwr.voltage_adjustable:
             self.tx.pwr.voltage = vab
