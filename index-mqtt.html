@@ -9,7 +9,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
     <link rel="shortcut icon" type="image/jpg" href="logo_ohmpi.jpg"/>
     
     <!-- dependencies (need to be local as no internet in AP mode)-->
-    <script src="js/plotly-basic-2.8.3.min.js"></script>
+    <script src="js/plotly-2.26.0.min.js"></script>
     <script src="js/jquery-3.4.1.min.js"></script>
     <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet">
 	<!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
@@ -156,7 +156,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         let squads = [] // selected quadrupoles for time-serie figure
         let commands = {} // store commands and their id
         let callbacks = {} // store callback (might not be needed)
-        let invertData = [{
+        let invertedData = [{
             rho: [[10, 10.625, 12.5, 15.625, 20],
                     [5.625, 6.25, 8.125, 11.25, 15.625],
                     [2.5, 3.125, 5., 8.125, 12.5],
@@ -509,8 +509,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 processData(ddic)
             } else {
                 // inversion related
-                console.log('--------', ddic)
-                let invertData = ddic[0]
+                invertedData = ddic
                 showInvFunc()
             }
         }
@@ -626,10 +625,10 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             let cmin = document.getElementById('cminInv').value
             let cmax = document.getElementById('cmaxInv').value
             
-            var data = [{
-                z: invertData[0]['rho'],
-                x: invertData[0]['x'],
-                y: invertData[0]['z'],
+            var invData = [{
+                z: invertedData[0]['rho'],
+                x: invertedData[0]['x'],
+                y: invertedData[0]['z'],
                 type: 'contour',
                 colorscale: 'Jet',
                 autocontour: true, // set to false if cmin is given
@@ -640,7 +639,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 },
             }]
 
-            var layout = {
+            var invLayout = {
                 title: 'Inverted section',
                 yaxis: {
                     title: 'Z [m]',
@@ -649,8 +648,10 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                     title: 'X [m]'
                 }   
             }
-            Plotly.newPlot('inv', data, layout)
+            
+            Plotly.newPlot('inv', invData, invLayout)
         }
+        showInvFunc()
 
         //invert data
         function invertBtnFunc() {
