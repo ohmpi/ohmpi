@@ -511,6 +511,7 @@ class OhmPiHardware:
                 # ax.plot([0, vab_max], [0, vmn_upper_bound * vab_max / vab[k]], '-r', alpha=(k + 1) / n_steps)
                 # ax.plot([0, vab_max], [0, vmn_lower_bound * vab_max / vab[k]], '-g', alpha=(k + 1) / n_steps)
                 # bounds on rab
+                print(f'rab_lb: {vab_list[k] / iab_upper_bound}')
                 rab_lower_bound = np.min([0.1, np.abs(vab_list[k] / iab_upper_bound)])
                 rab_upper_bound = np.min([0.1, np.abs(vab_list[k] / iab_lower_bound)])
                 # bounds on r
