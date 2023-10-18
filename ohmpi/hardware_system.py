@@ -537,8 +537,8 @@ class OhmPiHardware:
                 else:
                     print('stopped on maximum number of steps reached')
                 print(f'Selected Vab: {vab:.2f}')
-            vab = np.min(vabs)
-            print(f'Selected Vab: {vab:.2f}')
+            vab_opt = np.min(vabs)
+            print(f'Selected Vab: {vab_opt:.2f}')
 
         # if strategy == 'vmax':
         #     # implement different strategies
@@ -563,7 +563,7 @@ class OhmPiHardware:
         #     polarity = -1  # TODO: check if we really need to return polarity
         # else:
         #     polarity = 1
-        return vab, None, None
+        return vab_opt, None, None
 
     def _plot_readings(self, save_fig=False):
         # Plot graphs
