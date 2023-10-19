@@ -16,13 +16,14 @@ OHMPI_CONFIG = {
     'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
 }
 
+r_shunt = 2.
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},
     'tx':  {'model': 'mb_2024_0_2',
              'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
-             'current_max': 4800,  # Maximum voltage read by the current ADC on the TX board [mA]
-             'r_shunt': 2,  # Shunt resistance in Ohms
+             'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [mA]
+             'r_shunt': r_shunt,  # Shunt resistance in Ohms
              'interface_name': 'i2c'
             },
     'rx':  {'model': 'mb_2024_0_2',
