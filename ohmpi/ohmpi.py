@@ -273,10 +273,6 @@ class OhmPi(object):
                     if header == 'R [ohm]':
                         headers[i] = 'R [Ohm]'
                 icols = list(np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'R [Ohm]']))[0])
-                print(headers)
-                print('+++++', icols)
-                print(np.array(headers)[np.array(icols)])
-                print(np.loadtxt(os.path.join(ddir, fname), delimiter=',', skiprows=1, usecols=icols).shape)
                 data = np.loadtxt(os.path.join(ddir, fname), delimiter=',',
                                     skiprows=1, usecols=icols)                    
                 data = data[None, :] if len(data.shape) == 1 else data
@@ -307,6 +303,7 @@ class OhmPi(object):
             self.exec_logger.debug('Interrupted sequence acquisition...')
         else:
             self.exec_logger.debug('No sequence measurement thread to interrupt.')
+        self.status = 'idle'
         self.exec_logger.debug(f'Status: {self.status}')
 
     def load_sequence(self, filename: str, cmd_id=None):
@@ -353,7 +350,7 @@ class OhmPi(object):
         message : str
             message containing a command and arguments or keywords and arguments
         """
-        status = False
+        self.status = 'idle'
         cmd_id = '?'
         try:
             decoded_message = json.loads(message)
@@ -374,12 +371,10 @@ class OhmPi(object):
                 except Exception as e:
                     self.exec_logger.error(
                         f"Unable to execute {cmd}({str(kwargs) if kwargs is not None else ''}): {e}")
-                    status = False
         except Exception as e:
             self.exec_logger.warning(f'Unable to decode command {message}: {e}')
-            status = False
         finally:
-            reply = {'cmd_id': cmd_id, 'status': status}
+            reply = {'cmd_id': cmd_id, 'status': self.status}
             reply = json.dumps(reply)
             self.exec_logger.debug(f'Execution report: {reply}')
 
@@ -596,6 +591,12 @@ class OhmPi(object):
         self.exec_logger.debug(f'Status: {self.status}')
         self.exec_logger.debug(f'Measuring sequence: {self.sequence}')
 
+        # # kill previous running thread
+        # if self.thread is not None:
+        #     self.exec_logger.info('Removing previous thread')
+        #     self.thread.stop()
+        #     self.thread.join()
+
         def func():
             for g in range(0, nb_meas):  # for time-lapse monitoring
                 if self.status == 'stopping':
@@ -603,12 +604,13 @@ class OhmPi(object):
                     break
                 t0 = time.time()
                 self.run_sequence(**kwargs)
-
                 # sleeping time between sequence
                 dt = sequence_delay - (time.time() - t0)
                 if dt < 0:
                     dt = 0
                 if nb_meas > 1:
+                    if self.status == 'stopping':
+                        break
                     time.sleep(dt)  # waiting for next measurement (time-lapse)
             self.status = 'idle'
 
@@ -706,9 +708,11 @@ class OhmPi(object):
             # save data and print in a text file
             self.append_and_save(filename, acquired_data)
             self.exec_logger.debug(f'quadrupole {i + 1:d}/{n:d}')
-
         self._hw.pwr_state = 'off'
-        self.status = 'idle'
+
+        # reset to idle if we didn't interrupt the sequence
+        if self.status != 'stopping':
+            self.status = 'idle'
 
     def run_sequence_async(self, cmd_id=None, **kwargs):
         """Runs the sequence in a separate thread. Can be stopped by 'OhmPi.interrupt()'.
@@ -828,10 +832,8 @@ class OhmPi(object):
         try:
             self.sequence = np.array(sequence).astype(int)
             # self.sequence = np.loadtxt(StringIO(sequence)).astype('uint32')
-            status = True
         except Exception as e:
             self.exec_logger.warning(f'Unable to set sequence: {e}')
-            status = False
 
     def switch_mux_on(self, quadrupole, bypass_check=False, cmd_id=None):
         """Switches on multiplexer relays for given quadrupole.
@@ -920,7 +922,6 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier
         """
-        status = False
         if settings is not None:
             try:
                 if isinstance(settings, dict):
@@ -932,10 +933,10 @@ class OhmPi(object):
                         dic = json.load(json_file)
                     self.settings.update(dic)
                 self.exec_logger.debug('Acquisition parameters updated: ' + str(self.settings))
-                status = True
+                self.status = 'idle (acquisition updated)'
             except Exception as e:  # noqa
                 self.exec_logger.warning('Unable to update settings.')
-                status = False
+                self.status = 'idle (unable to update settings)'
         else:
             self.exec_logger.warning('Settings are missing...')
 
@@ -944,8 +945,6 @@ class OhmPi(object):
         else:
             self.settings['export_dir'] = os.path.split(self.settings['export_path'])[0]
             self.settings['export_name'] = os.path.split(self.settings['export_path'])[1]
-
-        return status
 
     def run_inversion(self, survey_names=[], elec_spacing=1, **kwargs):
         """Run a simple 2D inversion using ResIPy.

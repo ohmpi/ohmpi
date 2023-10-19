@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<!-- 
+    To access the interface,
+    1. connect to the 'raspi-webgui' wifi with the given password
+    Open a browserdebugging instruction to see the messages passing on the RPi
+mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
+-->
+<html>
+<head>
+    <meta charset="utf8"/>
+    <title>OhmPi Acquisition Board</title>
+    <link rel="shortcut icon" type="image/jpg" href="logo_ohmpi.jpg"/>
+    
+    <!-- dependencies (need to be local as no internet in AP mode)-->
+    <script src="js/plotly-2.26.0.min.js"></script>
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet">
+	<!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
+	<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous"> -->
+    <!-- <script src="js/danfojs/bundle.min.js"></script> -->
+    <!-- <script src="js/mqtt.min.js"></script> -->
+    <script src="js/paho/paho-mqtt.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class='container-fluid'>
+        <h1>OhmPi Acquisition Board</h1>
+        <!-- nb stacks, on-time -->
+        <button id="update_settingsBtn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Settings</button>
+        <button id='runBtn' type="button" class="btn btn-primary">&#9654</button>
+        <button id='stopBtn' type="button" class="btn btn-warning">&#9724</button>
+        <!-- upload button for csv which display the table ABMN -->
+        <button id="removeDataBtn" type="button" class="btn btn-danger">Clear data</button>
+        <button id="getDataBtn" type="button" class="btn btn-info">Get data</button>
+        <div class="form-check">
+            <input id="dataRetrievalCheck" class="form-check-input" type="checkbox" value="">
+            <label class="form-check-label" for="dataRetrievalCheck">
+                Automaticaly get data every 1 secondStart
+            </label>
+        </div>
+        <div id='output'>Status: idle</div>
+        
+        <!-- Pseudo section -->
+        <select id='surveySelect' class='custom-select'>
+        </select>
+        <input id="cmin" type="number" value=""/>
+        <input id="cmax" type="number" value=""/>
+        <button id="capplyBtn" type="button" class="btn btn-info">Apply</button>
+        <div id="gd"></div>
+        
+        <!-- trace figure -->
+        <div class="mb3 row">
+            <label for="quadSelect">Quadrupole:</label>
+            <div class="col-sm-10">
+                <select id='quadSelect' class='custom-select'></select>    
+            </div>
+        </div>
+        <button id="addTraceBtn" type="button" class="btn btn-info">Add trace</button>
+        <button id="removeTracesBtn" type="button" class="btn btn-info">Remove all traces</button>    
+        <div id="ts"></div>
+        
+        <!-- RS check -->
+        <button id="rsBtn" type="button" class="btn btn-info">Check contact resistance</button>
+        <button id="rsClearBtn" type="button" class="btn btn-info">Clear plot</button>
+        <div id="rs"></div>
+        
+        <!-- Inversion plot -->
+        <select id="surveySelectInv" class='custom-select'>
+        </select>
+        <button id="invertBtn" type="button" class="btn btn-info">Run inversion</button>
+        <input id="cminInv" type="number" value=""/>
+        <input id="cmaxInv" type="number" value=""/>
+        <button id="capplyBtnInv" type="button" class="btn btn-info">Apply</button>
+        <div id="inv"></div>
+        
+        <!-- Additional buttons -->
+        <button id="downloadBtn" type="button" class="btn btn-primary">Download data</button>
+        <a id="download"></a>
+        
+        <button id="restartBtn" type="button" class="btn btn-danger">Restart</button>
+        <button id="shutdownBtn" type="button" class="btn btn-danger">Shutdown</button>
+
+        <!-- Modal for configuration -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">OhmPi configuration</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group row">
+                          <label for="nb_electrodes" class="col-sm-2 col-form-label">Nb electrodes</label>
+                          <div class="col-sm-10">
+                            <input type="number" class="form-control-number" id="nb_electrodes" value="64">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="injection_duration" class="col-sm-2 col-form-label">Injection duration [s]</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control-number" id="injection_duration" value="0.2">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="nb_meas" class="col-sm-2 col-form-label">Nb Measurements</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control-number" id="nb_meas" value="1">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="sequence_delay" class="col-sm-2 col-form-label">Sequence delay [s]</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control-number" id="sequence_delay" value="100">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="nb_stack" class="col-sm-2 col-form-label">Nb stack</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control-number" id="nb_stack" value="1">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="duty_cycle" class="col-sm-2 col-form-label">Duty cycle [0 -> 1]</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control-number" id="duty_cycle" value="0.5">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="sequence" class="col-sm-2 col-form-label">Sequence</label>
+                            <div class="col-sm-10">
+                              <input type="file" class="form-control" id="sequence">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="elecSpacing" class="col-sm-2 col-form-label">Electrode spacing [m]</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control" id="elecSpacing", value="1">
+                            </div>
+                          </div>
+                      </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="saveConfigBtn" type="button" data-dismiss="modal" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <footer>v0.3.0</footer>
+    </div>
+
+    <script type="text/javascript">
+        //let serverUrl = 'http://10.3.141.1:8080'
+        //let serverUrl = 'http://0.0.0.0:8080'
+        //let serverUrl = 'http://localhost:8080'
+        let serverUrl = 'http://' + window.location.host
+        console.log('serverUrl =', serverUrl)
+        let output = document.getElementById('output')
+        let data = {} // hold data of all surveys
+        let interv = null // hold interval for automatic data retrieval
+        let quads = [] // available quadrupoles for time-serie figure
+        let squads = [] // selected quadrupoles for time-serie figure
+        let commands = {} // store commands and their id
+        let callbacks = {} // store callback (might not be needed)
+        let invertedData = [{
+            rho: [[10, 10.625, 12.5, 15.625, 20],
+                    [5.625, 6.25, 8.125, 11.25, 15.625],
+                    [2.5, 3.125, 5., 8.125, 12.5],
+                    [0.625, 1.25, 3.125, 6.25, 10.625],
+                    [0, 0.625, 2.5, 5.625, 10]],
+            x: [-9, -6, -5 , -3, -1],
+            y: [0, 1, 4, 5, 7],
+        }] // store inverted data
+
+        // function with MQTT
+        let topic = 'ohmpi_0001' // we could change this through a drop-down to connect to a different ohmpi
+        let topic_ctrl = topic + '/ctrl'
+        let topic_exec = topic + '/exec'
+        let topic_data = topic + '/data'
+        let hostname = location.hostname
+        let port = 9001
+        let clientId = 'ohmpi_0001_html'
+        let message = null
+        let msg = ''
+        let userName = 'jkl'  // can be ask to the user
+        let password = 'jkl'
+
+        // create client
+        client = new Paho.MQTT.Client(hostname, port, clientId)
+        client.onConnectionLost = onConnectionLost
+        client.onMessageArrived = onMessageArrived
+        client.connect({onSuccess: onConnect})
+//        client.connect({userName: username, password: password, onSuccess:onConnect})
+
+        function onConnect() {
+            console.log("onConnect")
+            client.subscribe(topic_data)
+            client.subscribe(topic_exec)
+
+            // send welcome message
+            message = new Paho.MQTT.Message("Hello from index.html")
+            message.destinationName = topic_ctrl
+            client.send(message)
+        }
+
+        function onConnectionLost(responseObject) {
+            if (responseObject.errorCode !== 0)
+                console.log("onConnectionLost:" + responseObject.errorMessage)
+        }
+        
+        function onMessageArrived(message) {
+            try {
+                let payload = message.payloadString
+                if (message.topic == topic_data) {
+                    // process data
+                    msg = payload // for accessing the variable from the console
+                    console.log('DATA LOG:', payload)
+                    let ddic = JSON.parse(payload.split('INFO:')[1])
+
+                    // check cmd_id is any
+                    processMessage(ddic)
+
+                    // usually these don't have a cmd_id so we are not sure when
+
+                } else if (message.topic == topic_exec) {
+                    // display it in the log
+                    console.log('EXEC LOG:', payload)
+                }
+
+                // let response = JSON.parse(message.payloadString)
+                // console.log('response=', response)
+                // // check ID of message against our dictionnary of callback
+                // let cmd_id = response['cmd_id']
+                // if (callbacks.hasOwnProperty(cmd_id)) {
+                //     console.log('++ execute callback')
+                //     callbacks[cmd_id](response['content']) // execute callback
+                // }
+            } catch (e) {
+                console.log(e)
+            }
+            // client.disconnect()
+        }
+        
+        // useful functions
+        function generateUniqSerial() {  
+            return 'xxxx-xxxx-xxx-xxxx'.replace(/[x]/g, (c) => {  
+                const r = Math.floor(Math.random() * 16);  
+                return r.toString(16);  
+            });  
+        }
+
+        // sending commands to the OhmPi
+        function sendCommand(query, callback=null) {
+            // dic in the form: {'cmd': X, ...} as JSON
+            if (callback == null) {
+                function callback(x) {
+                    console.log('default callback:', x)
+                }
+            }
+            
+            /*
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    if (xhr.status == 200) {
+                        callback(JSON.parse(xhr.response))
+                    }
+                }
+            }
+            xhr.open('POST', serverUrl)
+            xhr.setRequestHeader('Content-Type', 'application/json')
+            xhr.send(query)
+            */
+            
+            // generate a unique command id to be associated with the commands
+            let uuid = generateUniqSerial()
+            commands[uuid] = query
+            callbacks[uuid] = callback // store the callback to be processed later when message arrives
+            let payload = '{"cmd_id": "' + uuid + '",' + query.slice(1)
+            console.log('sendCommand()', payload)
+            message = new Paho.MQTT.Message(payload)
+            message.destinationName = topic_ctrl
+            client.send(message)            
+        }
+
+        // run button
+        function runBtnFunc() {
+            sendCommand('{"cmd": "run_multiple_sequences"}', function(x) {
+                console.log(x['status'])
+                if (x['status'] == 'running') {
+                    output.innerHTML = 'Status: measuring...'
+                }
+            })
+        }
+        let runBtn = document.getElementById('runBtn')
+        runBtn.addEventListener('click', runBtnFunc)
+
+        // interrupt button
+        function stopBtnFunc() {
+            sendCommand('{"cmd": "interrupt"}', function(x) {
+                output.innerHTML = 'Status: ' + x['status']
+                clearInterval(interv)
+                getData()
+            })
+        }
+        let stopBtn = document.getElementById('stopBtn')
+        stopBtn.addEventListener('click', stopBtnFunc)
+
+        // set configuration
+        function saveConfigBtnFunc() {
+            // collect values from modal
+            let formVals = {
+                'nb_electrodes': parseInt(document.getElementById('nb_electrodes').value),
+                'injection_duration': parseFloat(document.getElementById('injection_duration').value),
+                'nb_meas': parseInt(document.getElementById('nb_meas').value),
+                'sequence_delay': parseFloat(document.getElementById('sequence_delay').value),
+                'nb_stack': parseInt(document.getElementById('nb_stack').value),   
+                'duty_cycle': parseFloat(document.getElementById('duty_cycle').value),
+            }
+            console.log(formVals)
+            
+            // deal with the potential file containing the sequence
+            // https://stackoverflow.com/questions/19038919/is-it-possible-to-upload-a-text-file-to-input-in-html-js
+            if (!window.FileReader) {
+                alert('Your browser is not supported');
+                return false;
+            }
+            let input = document.getElementById('sequence')
+            if (input.files.length) {
+                const reader = new FileReader()
+                reader.readAsText(input.files[0])
+                reader.addEventListener('load', () => {
+                    // parse the file and make it a list of list of int
+                    var a = reader.result.split(/\r?\n|\r|\n/g)
+                    var seq = new Array()
+                    var eof = false
+                    for (var i = 0; i < a.length; i++) {
+                        b = a[i].split(' ')
+                        var arr = new Array(4)
+                        for (var j = 0; j < b.length; j++) {
+                            val = parseInt(b[j])
+                            if (isNaN(val) == true) {
+                                eof = true
+                                break
+                            }
+                            arr[j] = val
+                        }
+                        if (eof == true) {
+                            break
+                        }
+                        seq.push(arr)
+                    }
+                    formVals['sequence'] = seq
+                    configCallback()
+                }, false)
+            } else {
+                console.log('no sequence uploaded')
+                formVals['sequence'] = ''
+                configCallback()
+            } 
+            
+            // define callback to send settings to Pi
+            function configCallback() {
+                sendCommand(JSON.stringify({
+                    'cmd': 'update_settings',
+                    'kwargs': {
+                        'settings': formVals
+                    }
+                }), function(x) {
+                    console.log('update_settings', x)
+                })
+            }
+            
+        }
+        let saveConfigBtn = document.getElementById('saveConfigBtn')
+        saveConfigBtn.addEventListener('click', saveConfigBtnFunc)
+
+        // make pseudo plot
+        var trace = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            marker: {
+                size: 40,
+                color: [],
+                colorbar: {
+                    title: 'App. res. [Ohm.m]',
+                    cmin: 0,
+                    cmax: 100,
+                }
+            }
+        }
+        let layout = {
+            title: 'Pseudo-section',
+            yaxis: {
+                title: 'Pseudo-depth',
+                autorange: 'reversed'
+            },
+            xaxis: {
+                title: 'X'
+            }
+
+        }
+        Plotly.newPlot('gd', [trace], layout, {responsive: true})
+
+        // make time-serie plot
+        let tdata = []
+        let layout2 = {
+            title: 'Time-serie',
+            yaxis: {
+                title: 'App. res. [Ohm.m]'
+            },
+            xaxis: {
+                title: 'Sampling time'
+            }
+        }
+        Plotly.newPlot('ts', tdata, layout2, {responsive: true})
+
+        // add trace to time-serie plot
+        function addTraceBtnFunc() {
+            let val = document.getElementById('quadSelect').value
+            squads.push(val.split(', '))
+            tdata.push({
+                x: [],
+                y: [],
+                name: val,
+                type: 'scatter'
+            })
+            Plotly.newPlot('ts', tdata, layout2, {responsive: true})
+            getData()
+        }
+        let addTraceBtn = document.getElementById('addTraceBtn')
+        addTraceBtn.addEventListener('click', addTraceBtnFunc)
+
+        // remove all traces from time-serie plot
+        function removeTracesBtnFunc() {
+            squads = []
+            tdata = []            
+            Plotly.newPlot('ts', tdata, layout2, {responsive: true})
+        }
+        let removeTracesBtn = document.getElementById('removeTracesBtn')
+        removeTracesBtn.addEventListener('click', removeTracesBtnFunc)
+
+        // callback function to draw the plot
+        function surveySelectFunc(el) {
+            let surveyName = el['target'].value
+            let df = data[surveyName]
+            if (df != undefined) {
+                let a = df['a']
+                let b = df['b']
+                let m = df['m']
+                let n = df['n']
+                // let's assume electrodes are 1 m distance
+                // compute pseudo-depth (assume no topo)
+                // compute app res (assumping flat, line survey)
+                let xpos = []
+                let ypos = []
+                let app = []
+                for (let i = 0; i < a.length; i++) {
+                    let emin = Math.min(...[a[i], b[i], m[i], n[i]])
+                    let emax = Math.max(...[a[i], b[i], m[i], n[i]])
+                    let dist = Math.abs(emax - emin)
+                    xpos.push(emin + dist/2)
+                    ypos.push(Math.sqrt(2)/2 * dist)
+                    // let ab = (a[i] + b[i])/2
+                    // let mn = (m[i] + n[i])/2
+                    // xpos.push(Math.min(ab, mn) + dist/2)
+                    // ypos.push(Math.sqrt(2)/2*dist)
+                    let am = Math.abs(a[i] - m[i])
+                    let bm = Math.abs(b[i] - m[i])
+                    let an = Math.abs(a[i] - n[i])
+                    let bn = Math.abs(a[i] - n[i])
+                    let K = (2*Math.PI)/((1/am)-(1/an)-(1/an)+(1/bn))
+                    app.push(df['rho'][i]*K)
+                }
+                // update the trace and redraw the figure
+                trace['x'] = xpos
+                trace['y'] = ypos
+                trace['marker']['color'] = app
+                trace['marker']['cmax'] = document.getElementById('cmax').value
+                trace['marker']['cmin'] = document.getElementById('cmin').value
+                Plotly.redraw('gd')
+            }
+        }
+        let surveySelect = document.getElementById('surveySelect')
+
+        // bar chart for contact resistance
+        let rsdata = []
+        let rslayout = {
+            title: 'Contact resistances',
+            yaxis: {
+                title: 'Resistance [kOhm]'
+            },
+            xaxis: {
+                title: 'Consecutive electrodes'
+            }
+        }
+        Plotly.newPlot('rs', rsdata, rslayout, {responsive: true})
+        
+        // run RS check
+        function rsBtnFunc() {
+            sendCommand('{"cmd": "rs_check"}', function (res) {
+                // update the bar plot
+                rsdata.push({
+                x: res['data']['AB'],
+                y: res['data']['res'],
+                name: 'RS',
+                type: 'bar'
+                })
+                Plotly.redraw('rs')
+            })
+        }
+        let rsBtn = document.getElementById('rsBtn')
+        rsBtn.addEventListener('click', rsBtnFunc)
+        
+        // clear RS graph
+        function rsClearBtnFunc() {
+            rsdata = []
+            Plotly.newPlot('rs', rsdata, rslayout, {responsive: true})
+        }
+        let rsClearBtn = document.getElementById('rsClearBtn')
+        rsClearBtn.addEventListener('click', rsClearBtnFunc)
+        
+        // getData
+        function getData() {
+            sendCommand(JSON.stringify({
+                'cmd': 'get_data',
+                'survey_names': Object.keys(data).slice(0, -1)
+                // last survey is often partial so we download it again
+            }), console.log('processData(ddic)')
+            )
+        }
+
+        // processMessage
+        function processMessage(ddic) {
+            //if (('status' in ddic) | ('data' in ddic)) {
+            if (ddic.constructor == Object) {  // it's a dictionnary
+                // acquisition related
+                processData(ddic)
+            } else {
+                // inversion related
+                invertedData = ddic
+                showInvFunc()
+            }
+        }
+
+        // processData
+        function processData(ddic) {
+            // update status
+            output.innerHTML = 'Status: ' + ddic['status']
+
+            // update data dic with new data
+            data = { // destructuring assignement (magic! :o)
+                ...data,
+                ...ddic['data'] // value from second dic are preferred
+            }
+            
+            // dropdown with number of surveys and +++
+            let surveyNames = Object.keys(data).sort()
+
+            // remove listener as we will replace the choices
+            surveySelect.removeEventListener('change', surveySelectFunc)
+            surveySelect.innerHTML = ''  // clearing all child nodes
+
+            // add choices again
+            for (let surveyName of surveyNames) {
+                let option = document.createElement('option')
+                option.innerText = surveyName
+                option.value = surveyName
+                surveySelect.appendChild(option)
+            }
+
+            // listener again
+            surveySelect.addEventListener('change', surveySelectFunc)
+            
+            // plot last one by default
+            surveySelect.value = surveyNames[surveyNames.length - 1]
+            
+            // call the function directly
+            // (as progammatically chaging the value does not trigger the event)
+            surveySelectFunc({'target': surveySelect})
+
+            // update list of survey for inversion
+            surveySelectInv.removeEventListener('change', showInvFunc)
+            surveySelectInv.innerHTML = ''  // clearing all child nodes
+            for (let surveyName of surveyNames) {
+                let option = document.createElement('option')
+                option.innerText = surveyName
+                option.value = surveyName
+                surveySelectInv.appendChild(option)
+            }
+            surveySelectInv.addEventListener('change', showInvFunc)
+            surveySelectInv.value = surveyNames[surveyNames.length - 1]
+            
+
+            // update list of quadrupoles if any
+            if (quads.length == 0) {
+                console.log('updating list of quadrupoles')
+                let df = data[surveyNames[0]]
+                let quadSelect = document.getElementById('quadSelect')
+                quadSelect.innerHTML = ''
+                for (let i = 0; i < df['a'].length; i++) {
+                    quad = [df['a'][i], df['b'][i], df['m'][i], df['n'][i]]
+                    quads.push(quad)
+                    let option = document.createElement('option')
+                    option.value = quad.join(', ')
+                    option.innerText = quad.join(', ')
+                    quadSelect.appendChild(option)
+                }
+                console.log('quads=', quads)
+            }
+
+            // update time-serie figure
+            if (squads.length > 0) {
+
+                // transform all surveyNames to datetime
+                let xt = []
+                for (surveyName of surveyNames) {
+                    let a = surveyName.split('_').slice(-1)[0]
+                    xt.push(a.slice(0, 4) + '-' 
+                        + a.slice(4, 6) + '-' 
+                        + a.slice(6, 8) + ' '
+                        + a.slice(9, 11) + ':'
+                        + a.slice(11, 13) + ':'
+                        + a.slice(13, 15))
+                }
+                //console.log(xt)
+
+                // create one new trace per selected quadrupole
+                for (let k = 0; k < squads.length; k++) {
+                    squad = squads[k]
+                    let x = []
+                    let y = []
+                    for (let i = 0; i < surveyNames.length; i++) {
+                        df = data[surveyNames[i]]
+                        for (let j = 0; j < df['a'].length; j++) {
+                            if (df['a'][j] == squad[0]
+                            && df['b'][j] == squad[1]
+                            && df['m'][j] == squad[2]
+                            && df['n'][j] == squad[3]) {
+                                y.push(df['rho'][j])
+                                x.push(xt[i])
+                                break
+                            }
+                        }
+                    }
+
+                    // update trace dictionnary
+                    tdata[k]['x'] = x
+                    tdata[k]['y'] = y
+                }
+                //console.log(tdata)
+                Plotly.redraw('ts')
+            }
+        }
+
+        let getDataBtn = document.getElementById('getDataBtn')
+        getDataBtn.addEventListener('click', getData)
+        
+        // apply new colorscale
+        let capplyBtn = document.getElementById('capplyBtn')
+        capplyBtn.addEventListener('click', function() {
+            surveySelectFunc({'target': surveySelect})
+        })
+        
+        // plot inverted data
+        function showInvFunc() {
+            let cmin = document.getElementById('cminInv').value
+            let cmax = document.getElementById('cmaxInv').value
+            
+            var invData = [{
+                z: invertedData[0]['rho'],
+                x: invertedData[0]['x'],
+                y: invertedData[0]['z'],
+                type: 'contour',
+                colorscale: 'Viridis',
+                autocontour: true, // set to false if cmin is given
+                contours: {
+                    start: cmin,
+                    end: cmax,
+                    size: 10
+                },
+            }]
+
+            var invLayout = {
+                title: 'Inverted section',
+                yaxis: {
+                    title: 'Z [m]',
+                },
+                xaxis: {
+                    title: 'X [m]'
+                }   
+            }
+            
+            Plotly.newPlot('inv', invData, invLayout, {responsive: true})
+            var btn = document.getElementById('invertBtn')
+            btn.innerText = 'Run inversion'
+            btn.className = 'btn btn-info'
+
+        }
+        showInvFunc()
+
+        // invert data
+        function invertBtnFunc() {
+            let survey_name = document.getElementById('surveySelectInv').value
+            var btn = document.getElementById('invertBtn')
+            btn.innerText = 'Inverting...'
+            btn.className = 'btn btn-warning'
+            sendCommand(JSON.stringify({
+                    'cmd': 'run_inversion',
+                    'kwargs': {
+                        'survey_names': [survey_name + '.csv']
+                    }
+                }), function(x) {
+                    console.log('inversion results', x)
+            })
+        }
+        let invertBtn = document.getElementById('invertBtn')
+        invertBtn.addEventListener('click', invertBtnFunc)
+
+        // apply new colorscale for inversion
+        let capplyBtnInv = document.getElementById('capplyBtnInv')
+        capplyBtnInv.addEventListener('click', function() {
+            showInvFunc()
+        })
+
+        // checkbox interaction for data download
+        function dataRetrievalCheckFunc(x) {
+            if (x['target'].checked == true) {
+                interv = setInterval(getData, 1000) // every 5s
+            } else {
+                clearInterval(interv)
+            }             
+        }
+        let dataRetrievalCheck = document.getElementById('dataRetrievalCheck')
+        dataRetrievalCheck.addEventListener('change', dataRetrievalCheckFunc)
+
+        // remove data
+        function removeDataBtnFunc() {
+            sendCommand('{"cmd": "remove_data"}',function(x) {
+                data = {}
+                output.innerHTML = 'Status: ' + x['status'] + ' (all data cleared)'
+                console.log('all data removed')
+            })
+        }
+        let removeDataBtn = document.getElementById('removeDataBtn')
+        removeDataBtn.addEventListener('click', removeDataBtnFunc)
+
+        // shutdown Pi
+        function shutdownBtnFunc() {
+            sendCommand('{"cmd": "shutdown"}', function(x) {
+                console.log('shuting down...')
+            })
+        }
+        let shutdownBtn = document.getElementById('shutdownBtn')
+        shutdownBtn.addEventListener('click', shutdownBtnFunc)
+        
+        // restart Pi
+        function restartBtnFunc() {
+            sendCommand('{"cmd": "restart"}', function(x) {
+                console.log('rebooting...')
+            })
+        }
+        let restartBtn = document.getElementById('restartBtn')
+        restartBtn.addEventListener('click', restartBtnFunc)
+        
+        // download data
+        function downloadBtnFunc() {
+            sendCommand('{"cmd": "download"}', function(x) {
+                let dwl = document.getElementById('download')
+                dwl.setAttribute('href', serverUrl + '/data.zip')
+                dwl.setAttribute('download', 'data.zip')
+                dwl.click()
+            })
+        }
+        let downloadBtn = document.getElementById('downloadBtn')
+        downloadBtn.addEventListener('click', downloadBtnFunc)
+
+
+    </script>
+    
+    <!-- Boostrap scripts (at the end of the page for faster loading time)-->
+	<script src="js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script> -->
+</body>
+</html>
