@@ -71,8 +71,8 @@ class Pwr(PwrAbstract):
         self._battery_voltage = self.connection.read_register(0x05, 2)
         return self._battery_voltage
 
-    def current_max(self, value):
-        self.connection.write_register(0x0001, value, 0)
+    def current_max(self, value):  # [mA]
+        self.connection.write_register(0x0001, hex(int(value)), 0)
 
     @property
     def pwr_state(self):
