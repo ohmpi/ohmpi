@@ -456,6 +456,7 @@ class OhmPiHardware:
             #     self.tx.pwr.pwr_state = 'off'
         else:
             vab_opt = tx_volt
+
         # if strategy == 'vmax':
         #     # implement different strategies
         #     if vab < vab_max and iab < current_max:

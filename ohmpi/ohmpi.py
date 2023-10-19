@@ -518,6 +518,9 @@ class OhmPi(object):
         d = {}
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
             tx_volt = self._hw._compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max)  # TODO: use tx_volt and vmn_max instead of hardcoded values
+            self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
+            time.sleep(0.5)
+            self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
                 delay = kwargs['delay']
@@ -579,7 +582,6 @@ class OhmPi(object):
             self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
             time.sleep(1.0)
             self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
-
         else:
             self.exec_logger.info(f'Skipping {quad}')
         self.switch_mux_off(quad, cmd_id)
