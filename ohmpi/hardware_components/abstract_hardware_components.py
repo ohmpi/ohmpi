@@ -280,6 +280,7 @@ class TxAbstract(ABC):
             self.soh_logger = create_stdout_logger('soh_tx')
         self.connection = kwargs.pop('connection', None)
         self.pwr = kwargs.pop('pwr', None)
+        self._voltage = 0.
         self._polarity = 0
         self._injection_duration = None
         self._gain = 1.
@@ -382,6 +383,18 @@ class TxAbstract(ABC):
     @abstractmethod
     def tx_bat(self):
         pass
+
+    @property
+    def voltage(self):
+        """ Gets the voltage VAB in Volts
+        """
+        return self._voltage
+
+    @voltage.setter
+    def voltage(self, value):
+        assert value >= 0.
+        self._voltage = value
+        self.pwr.voltage = value
 
     def voltage_pulse(self, voltage=0., length=None, polarity=1):
         """ Generates a square voltage pulse

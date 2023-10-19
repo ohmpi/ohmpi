@@ -265,8 +265,7 @@ class OhmPiHardware:
 
         while self.tx_sync.is_set():
             lap = datetime.datetime.utcnow()
-            r = [elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, self.tx.current, self.rx.voltage,
-                 self.tx.voltage]
+            r = [elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, self.tx.current, self.rx.voltage]
             if self.tx_sync.is_set():
                 sample += 1
                 _readings.append(r)
@@ -318,94 +317,8 @@ class OhmPiHardware:
             sp = np.mean(mean_vmn[np.ix_(polarity == 1)] + mean_vmn[np.ix_(polarity == -1)]) / 2
             return sp
 
-    # def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5.,
-    #                      vab_max=voltage_max, vmn_min=voltage_min):
-    #     """Estimates best Tx voltage based on different strategies.
-    #     At first a half-cycle is made for a short duration with a fixed
-    #     known voltage. This gives us Iab and Rab. We also measure Vmn.
-    #     A constant c = vmn/iab is computed (only depends on geometric
-    #     factor and ground resistivity, that doesn't change during a
-    #     quadrupole). Then depending on the strategy, we compute which
-    #     vab to inject to reach the minimum/maximum Iab current or
-    #     min/max Vmn.
-    #     This function also compute the polarity on Vmn (on which pin
-    #     of the ADS1115 we need to measure Vmn to get the positive value).
-    #
-    #     Parameters
-    #     ----------
-    #     pulse_duration : float, optional
-    #         Time in seconds for the pulse used to compute Rab.
-    #     strategy : str, optional
-    #         Either:
-    #         - vmax : compute Vab to reach a maximum Iab without exceeding vab_max
-    #         - vmin : compute Vab to reach at least vmn_min
-    #         - constant : apply given Vab
-    #     tx_volt : float, optional
-    #         Voltage to apply for guessing the best voltage. 5 V applied
-    #         by default. If strategy "constant" is chosen, constant voltage
-    #         to applied is "tx_volt".
-    #     vab_max : float, optional
-    #         Maximum injection voltage to apply to tx (used by all strategies)
-    #     vmn_min : float, optional
-    #         Minimum voltage target for rx (used by vmin strategy)
-    #
-    #     Returns
-    #     -------
-    #     vab : float
-    #         Proposed Vab according to the given strategy.
-    #     polarity:
-    #         Polarity of VMN relative to polarity of VAB
-    #     rab : float
-    #         Resistance between injection electrodes
-    #     """
-    #
-    #     vab_max = np.abs(vab_max)
-    #     vmn_min = np.abs(vmn_min)
-    #     vab = np.min([np.abs(tx_volt), vab_max])
-    #     # self.tx.turn_on()
-    #     switch_pwr_off, switch_tx_pwr_off = False, False #TODO: check if these should be moved in kwargs
-    #     if self.tx.pwr_state == 'off':
-    #         self.tx.pwr_state = 'on'
-    #         switch_tx_pwr_off = True
-    #     if self.tx.pwr.pwr_state == 'off':
-    #         self.tx.pwr.pwr_state = 'on'
-    #         switch_pwr_off = True
-    #     if 1. / self.rx.sampling_rate > pulse_duration:
-    #         sampling_rate = 1. / pulse_duration  # TODO: check this...
-    #     else:
-    #         sampling_rate = self.tx.sampling_rate
-    #     self._vab_pulse(vab=vab, duration=pulse_duration, sampling_rate=sampling_rate)  # TODO: use a square wave pulse?
-    #     vmn = np.mean(self.readings[:, 4])
-    #     iab = np.mean(self.readings[:, 3])
-    #     # if np.abs(vmn) is too small (smaller than voltage_min), strategy is not constant and vab < vab_max ,
-    #     # then we could call _compute_tx_volt with a tx_volt increased to np.min([vab_max, tx_volt*2.]) for example
-    #     if strategy == 'vmax':
-    #         # implement different strategies
-    #         if vab < vab_max and iab < current_max:
-    #             vab = vab * np.min([0.9 * vab_max / vab, 0.9 * current_max / iab])  # TODO: check if setting at 90% of max as a safety margin is OK
-    #         self.tx.exec_logger.debug(f'vmax strategy: setting VAB to {vab} V.')
-    #     elif strategy == 'vmin':
-    #         if vab <= vab_max and iab < current_max:
-    #             vab = vab * np.min([0.9 * vab_max / vab, vmn_min / np.abs(vmn), 0.9 * current_max / iab])  # TODO: check if setting at 90% of max as a safety margin is OK
-    #     elif strategy != 'constant':
-    #         self.tx.exec_logger.warning(f'Unknown strategy {strategy} for setting VAB! Using {vab} V')
-    #     else:
-    #         self.tx.exec_logger.debug(f'Constant strategy for setting VAB, using {vab} V')
-    #     # self.tx.turn_off()
-    #     if switch_pwr_off:
-    #         self.tx.pwr.pwr_state = 'off'
-    #     if switch_tx_pwr_off:
-    #         self.tx.pwr_state = 'off'
-    #     rab = (np.abs(vab) * 1000.) / iab
-    #     self.exec_logger.debug(f'RAB = {rab:.2f} Ohms')
-    #     if vmn < 0:
-    #         polarity = -1  # TODO: check if we really need to return polarity
-    #     else:
-    #         polarity = 1
-    #     return vab, polarity, rab
-
     def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5., vab_max=voltage_max,
-                         iab_max=current_max, vmn_max = 5., vmn_min=voltage_min, polarities=(1, -1), delay=0.050):
+                         iab_max=current_max, vmn_max=5., vmn_min=voltage_min, polarities=(1, -1), delay=0.050):
         # TODO: Optimise how to pass iab_max, vab_max, vmn_min
         """Estimates best Tx voltage based on different strategies.
         At first a half-cycle is made for a short duration with a fixed

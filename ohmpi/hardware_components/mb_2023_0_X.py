@@ -78,7 +78,7 @@ class Tx(TxAbstract):
             self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         kwargs.update({'pwr': kwargs.pop('pwr', SPECS['tx']['compatible_power_sources']['default'][0])})
-        if (kwargs['pwr'] not in SPECS['tx']['compatible_power_sources']['default']):
+        if kwargs['pwr'] not in SPECS['tx']['compatible_power_sources']['default']:
             self.exec_logger.warning(f'Incompatible power source specified check config')
             assert kwargs['pwr'] in SPECS['tx']
         self._activation_delay = kwargs['activation_delay']
@@ -139,7 +139,7 @@ class Tx(TxAbstract):
         """ Gets the current IAB in Amps
         """
         iab = AnalogIn(self._ads_current, ads.P0).voltage * 1000. / (50 * self._r_shunt)  # measure current
-        self.exec_logger.debug(f'Reading TX current:  {iab} mA')
+        self.exec_logger.debug(f'Reading TX current: {iab} mA')
         return iab
 
     @ current.setter
@@ -189,18 +189,6 @@ class Tx(TxAbstract):
             return self.pwr.voltage
         else:
             return self.pwr.battery_voltage
-
-    @property
-    def voltage(self):
-        """ Gets the voltage VAB in Volts
-        """
-        vab = self.current * self._r_shunt
-        self.exec_logger.debug(f'Reading TX current:  {vab} mv')
-        return vab
-
-    @voltage.setter
-    def voltage(self, value):
-        self.pwr.voltage = value
 
     def voltage_pulse(self, voltage=None, length=None, polarity=1):
         """ Generates a square voltage pulse
