@@ -423,7 +423,7 @@ class TxAbstract(ABC):
     def pwr_state(self, state):
         if state == 'on':
             self._pwr_state = 'on'
-            if not self.pwr.switchable:
+            if not self.pwr._switchable:
                 self.exec_logger.debug(f'{self.model} cannot switch on power source')
             self.pwr.reload_settings()
         elif state == 'off':
