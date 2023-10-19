@@ -43,7 +43,7 @@ for k, v in rx_module.SPECS['rx'].items():
     except Exception as e:
         print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
 
-current_max = np.min([TX_CONFIG['current_max'],  # TODO: replace 50 by a TX config
+current_max = np.min([TX_CONFIG['current_max'],  HARDWARE_CONFIG['pwr']['current_max'], # TODO: replace 50 by a TX config
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
 voltage_max = np.min([TX_CONFIG['voltage_max'],
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
@@ -99,6 +99,7 @@ class OhmPiHardware:
         HARDWARE_CONFIG['pwr'].pop('model')
         HARDWARE_CONFIG['pwr'].update(**HARDWARE_CONFIG['pwr'])  # NOTE: Explain why this is needed or delete me
         HARDWARE_CONFIG['pwr'].update({'ctl': HARDWARE_CONFIG['pwr'].pop('ctl', self.ctl)})
+        HARDWARE_CONFIG['pwr'].update({'current_max': current_max})
         if isinstance(HARDWARE_CONFIG['pwr']['ctl'], dict):
             ctl_mod = HARDWARE_CONFIG['pwr']['ctl'].pop('model', self.ctl)
             if isinstance(ctl_mod, str):
@@ -135,6 +136,7 @@ class OhmPiHardware:
         if isinstance(self.tx, dict):
             self.tx = tx_module.Tx(**self.tx)
         self.tx.pwr = self.pwr
+        self.tx.pwr._current_max = current_max
 
         # Initialize Muxes
         self._cabling = kwargs.pop('cabling', {})
