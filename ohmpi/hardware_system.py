@@ -412,9 +412,12 @@ class OhmPiHardware:
 
             vab_max = np.abs(vab_max)
             vmn_min = np.abs(vmn_min)
+            tx_volt = np.abs(tx_volt)
             # Set gain at min
             self.rx.reset_gain()
             vab_opt = tx_volt
+            if tx_volt >= vab_max:
+                strategy = 'constant'
             vab = np.min([np.abs(tx_volt), vab_max])
             if strategy == 'constant':
                 vab_max = vab
