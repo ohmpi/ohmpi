@@ -21,6 +21,7 @@ SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
                 'mcp_address': {'default': 0x27},
                 'ads_address': {'default': 0x49},
                 'voltage_min': {'default': 10.0},
+                'dg411_gain_ratio': 1/2, #  lowest resitor value over sum of resistor values
                 'vmn_hardware_offset': {'default': 2500.},
                 },
          'tx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
@@ -144,7 +145,7 @@ class Rx(Rx_mb_2023):
         # ADS1115 for voltage measurement (MN)
         self._coef_p2 = 1.
         # Define default DG411 gain
-        self._dg411_gain = 1/2
+        self._dg411_gain = kwargs['dg411_gain_ratio']
         # Define pins for DG411
         self.pin_DG0 = self.mcp_board.get_pin(0)
         self.pin_DG0.direction = Direction.OUTPUT
