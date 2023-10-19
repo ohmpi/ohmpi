@@ -21,6 +21,7 @@ SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
                 'mcp_address': {'default': None},
                 'ads_address': {'default': 0x49},
                 'voltage_min': {'default': 10.0},
+                'voltage_max': {'default': 5000.0},  # [mV]
                 'vmn_hardware_offset': {'default': 0.}
                 },
          'tx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},

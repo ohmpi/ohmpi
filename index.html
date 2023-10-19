@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<!-- debugging instruction to see the messages passing on the RPi
+<!-- 
+    To access the interface,
+    1. connect to the 'raspi-webgui' wifi with the given password
+    Open a browserdebugging instruction to see the messages passing on the RPi
 mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 -->
 <html>
@@ -17,9 +20,10 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
     <!-- <script src="js/danfojs/bundle.min.js"></script> -->
     <!-- <script src="js/mqtt.min.js"></script> -->
     <script src="js/paho/paho-mqtt.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <div class='container'>
+    <div class='container-fluid'>
         <h1>OhmPi Acquisition Board</h1>
         <!-- nb stacks, on-time -->
         <button id="update_settingsBtn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Settings</button>
@@ -39,8 +43,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         <!-- Pseudo section -->
         <select id='surveySelect' class='custom-select'>
         </select>
-        <input id="cmin" type="number" value="0"/>
-        <input id="cmax" type="number" value="150"/>
+        <input id="cmin" type="number" value=""/>
+        <input id="cmax" type="number" value=""/>
         <button id="capplyBtn" type="button" class="btn btn-info">Apply</button>
         <div id="gd"></div>
         
@@ -64,8 +68,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         <select id="surveySelectInv" class='custom-select'>
         </select>
         <button id="invertBtn" type="button" class="btn btn-info">Run inversion</button>
-        <input id="cminInv" type="number" value="0"/>
-        <input id="cmaxInv" type="number" value="150"/>
+        <input id="cminInv" type="number" value=""/>
+        <input id="cmaxInv" type="number" value=""/>
         <button id="capplyBtnInv" type="button" class="btn btn-info">Apply</button>
         <div id="inv"></div>
         
@@ -89,33 +93,39 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 <div class="modal-body">
                     <form>
                         <div class="form-group row">
-                          <label for="nbElectrodes" class="col-sm-2 col-form-label">Nb electrodes</label>
+                          <label for="nb_electrodes" class="col-sm-2 col-form-label">Nb electrodes</label>
                           <div class="col-sm-10">
-                            <input type="number" class="form-control-number" id="nbElectrodes" value="64">
+                            <input type="number" class="form-control-number" id="nb_electrodes" value="64">
                           </div>
                         </div>
                         <div class="form-group row">
-                            <label for="injectionDuration" class="col-sm-2 col-form-label">Injection duration [s]</label>
+                            <label for="injection_duration" class="col-sm-2 col-form-label">Injection duration [s]</label>
                             <div class="col-sm-10">
-                              <input type="number" class="form-control-number" id="injectionDuration" value="0.2">
+                              <input type="number" class="form-control-number" id="injection_duration" value="0.2">
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="nbMeasurements" class="col-sm-2 col-form-label">Nb Measurements</label>
+                            <label for="nb_meas" class="col-sm-2 col-form-label">Nb Measurements</label>
                             <div class="col-sm-10">
-                              <input type="number" class="form-control-number" id="nbMeasurements" value="1">
+                              <input type="number" class="form-control-number" id="nb_meas" value="1">
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="sequenceDelay" class="col-sm-2 col-form-label">Sequence delay [s]</label>
+                            <label for="sequence_delay" class="col-sm-2 col-form-label">Sequence delay [s]</label>
                             <div class="col-sm-10">
-                              <input type="number" class="form-control-number" id="sequenceDelay" value="100">
+                              <input type="number" class="form-control-number" id="sequence_delay" value="100">
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="nbStack" class="col-sm-2 col-form-label">Nb stack</label>
+                            <label for="nb_stack" class="col-sm-2 col-form-label">Nb stack</label>
                             <div class="col-sm-10">
-                              <input type="number" class="form-control-number" id="nbStack" value="1">
+                              <input type="number" class="form-control-number" id="nb_stack" value="1">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="duty_cycle" class="col-sm-2 col-form-label">Duty cycle [0 -> 1]</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control-number" id="duty_cycle" value="0.5">
                             </div>
                           </div>
                           <div class="form-group row">
@@ -202,17 +212,32 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         }
         
         function onMessageArrived(message) {
-            console.log("onMessageArrived:" + message.payloadString)
             try {
                 let payload = message.payloadString
                 if (message.topic == topic_data) {
                     // process data
                     msg = payload // for accessing the variable from the console
-                    console.log('DATA', payload)
+                    console.log('DATA LOG:', payload)
                     let ddic = JSON.parse(payload.split('INFO:')[1])
 
-                    // check cmd_id is any
-                    processMessage(ddic)
+                    // RS check data
+                    if ('rsdata' in ddic) {
+                        rsdata[0]['x'].push(ddic['rsdata']['A']), //, + '-' + ddic['rsdata']['B'],
+                        rsdata[0]['y'].push(ddic['rsdata']['rs']),
+                        Plotly.redraw('rs')
+                    
+                    } else if ('download' in ddic) {
+                        let dwl = document.getElementById('download')
+                        dwl.setAttribute('href', serverUrl + '/data.zip')
+                        dwl.setAttribute('download', 'data.zip')
+                        dwl.click()
+                    } else { // data or results from inversion
+                        processMessage(ddic)
+                    }
+
+                    if ('status' in  ddic) {
+                        document.getElementById('output').value = ddic['status']
+                    }
 
                     // usually these don't have a cmd_id so we are not sure when
 
@@ -303,10 +328,13 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         // set configuration
         function saveConfigBtnFunc() {
             // collect values from modal
-            let formVals = {}
-            for (let field of ['nbElectrodes', 'injectionDuration',
-             'nbMeasurements', 'sequenceDelay', 'nbStack']) {
-                formVals[field] = document.getElementById(field).value
+            let formVals = {
+                'nb_electrodes': parseInt(document.getElementById('nb_electrodes').value),
+                'injection_duration': parseFloat(document.getElementById('injection_duration').value),
+                'nb_meas': parseInt(document.getElementById('nb_meas').value),
+                'sequence_delay': parseFloat(document.getElementById('sequence_delay').value),
+                'nb_stack': parseInt(document.getElementById('nb_stack').value),   
+                'duty_cycle': parseFloat(document.getElementById('duty_cycle').value),
             }
             console.log(formVals)
             
@@ -392,7 +420,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             }
 
         }
-        Plotly.newPlot('gd', [trace], layout)
+        Plotly.newPlot('gd', [trace], layout, {responsive: true})
 
         // make time-serie plot
         let tdata = []
@@ -405,7 +433,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 title: 'Sampling time'
             }
         }
-        Plotly.newPlot('ts', tdata, layout2)
+        Plotly.newPlot('ts', tdata, layout2, {responsive: true})
 
         // add trace to time-serie plot
         function addTraceBtnFunc() {
@@ -417,7 +445,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 name: val,
                 type: 'scatter'
             })
-            Plotly.newPlot('ts', tdata, layout2)
+            Plotly.newPlot('ts', tdata, layout2, {responsive: true})
             getData()
         }
         let addTraceBtn = document.getElementById('addTraceBtn')
@@ -427,13 +455,14 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         function removeTracesBtnFunc() {
             squads = []
             tdata = []            
-            Plotly.newPlot('ts', tdata, layout2)
+            Plotly.newPlot('ts', tdata, layout2, {responsive: true})
         }
         let removeTracesBtn = document.getElementById('removeTracesBtn')
         removeTracesBtn.addEventListener('click', removeTracesBtnFunc)
 
         // callback function to draw the plot
         function surveySelectFunc(el) {
+            let elecSpacing = parseFloat(document.getElementById('elecSpacing').value)
             let surveyName = el['target'].value
             let df = data[surveyName]
             if (df != undefined) {
@@ -448,25 +477,44 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 let ypos = []
                 let app = []
                 for (let i = 0; i < a.length; i++) {
+                   
                     let emin = Math.min(...[a[i], b[i], m[i], n[i]])
                     let emax = Math.max(...[a[i], b[i], m[i], n[i]])
                     let dist = Math.abs(emax - emin)
                     xpos.push(emin + dist/2)
                     ypos.push(Math.sqrt(2)/2 * dist)
-                    // let ab = (a[i] + b[i])/2
-                    // let mn = (m[i] + n[i])/2
-                    // xpos.push(Math.min(ab, mn) + dist/2)
-                    // ypos.push(Math.sqrt(2)/2*dist)
                     let am = Math.abs(a[i] - m[i])
                     let bm = Math.abs(b[i] - m[i])
                     let an = Math.abs(a[i] - n[i])
                     let bn = Math.abs(a[i] - n[i])
                     let K = (2*Math.PI)/((1/am)-(1/an)-(1/an)+(1/bn))
                     app.push(df['rho'][i]*K)
+                    
+                    // let a = df['a'][i]
+                    // let b = df['b'][i]
+                    // let m = df['m'][i]
+                    // let n = df['n'][i]
+
+                    // // compute geometric factor assuming flat 2D surface
+                    // let am = Math.abs(a - m)*elecSpacing
+                    // let bm = Math.abs(b - m)*elecSpacing
+                    // let an = Math.abs(a - n)*elecSpacing
+                    // let bn = Math.abs(b - n)*elecSpacing
+                    // let K = 2*Math.PI/((1/am)-(1/bm)-(1/an)+(1/bn))
+                    // app.push(df['rho'][i]*K)
+                    // //console.log(K) // same as resipy for the wenner case
+                
+                    // // computing pseudo-depth assuming 2D flat array
+                    // // let's sort the electrodes AB are the two left, MN, the two right
+                    // let abmn = [a, b, m, n]
+                    // abmn = abmn.sort((a, b) => a - b)
+                    // let ab = (abmn[0] + abmn[1])/2
+                    // let mn = (abmn[2] + abmn[3])/2
+                    // let dist = Math.abs(ab - mn)
+                    // xpos.push((Math.min(ab, mn) + dist/2)*elecSpacing)
+                    // ypos.push((Math.sqrt(2)/2*dist)*elecSpacing)
                 }
-                console.log('xpos', xpos)
-                console.log('ypos', ypos)
-                console.log(app)
+                console.log('========', app, xpos, ypos)
                 // update the trace and redraw the figure
                 trace['x'] = xpos
                 trace['y'] = ypos
@@ -479,7 +527,13 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         let surveySelect = document.getElementById('surveySelect')
 
         // bar chart for contact resistance
-        let rsdata = []
+        let rsdata = [{
+            'x': [],
+            'y': [],
+            name: 'RS',
+            type: 'bar',
+            }
+        ]
         let rslayout = {
             title: 'Contact resistances',
             yaxis: {
@@ -489,7 +543,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 title: 'Consecutive electrodes'
             }
         }
-        Plotly.newPlot('rs', rsdata, rslayout)
+        Plotly.newPlot('rs', rsdata, rslayout, {responsive: true})
         
         // run RS check
         function rsBtnFunc() {
@@ -509,8 +563,13 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         
         // clear RS graph
         function rsClearBtnFunc() {
-            rsdata = []
-            Plotly.newPlot('rs', rsdata, rslayout)
+            rsdata = [{
+            'x': [],
+            'y': [],
+            name: 'RS',
+            type: 'bar',
+            }]
+            Plotly.newPlot('rs', rsdata, rslayout, {responsive: true})
         }
         let rsClearBtn = document.getElementById('rsClearBtn')
         rsClearBtn.addEventListener('click', rsClearBtnFunc)
@@ -530,7 +589,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             //if (('status' in ddic) | ('data' in ddic)) {
             if (ddic.constructor == Object) {  // it's a dictionnary
                 // acquisition related
-                processData(ddic)
+                processData(ddic)                
             } else {
                 // inversion related
                 invertedData = ddic
@@ -686,7 +745,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 }   
             }
             
-            Plotly.newPlot('inv', invData, invLayout)
+            Plotly.newPlot('inv', invData, invLayout, {responsive: true})
             var btn = document.getElementById('invertBtn')
             btn.innerText = 'Run inversion'
             btn.className = 'btn btn-info'
@@ -760,11 +819,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         
         // download data
         function downloadBtnFunc() {
-            sendCommand('{"cmd": "download"}', function(x) {
-                let dwl = document.getElementById('download')
-                dwl.setAttribute('href', serverUrl + '/data.zip')
-                dwl.setAttribute('download', 'data.zip')
-                dwl.click()
+            sendCommand('{"cmd": "download_data"}', function(x) {
+                console.log(x)
             })
         }
         let downloadBtn = document.getElementById('downloadBtn')

@@ -71,8 +71,8 @@ class Pwr(PwrAbstract):
         self._battery_voltage = self.connection.read_register(0x05, 2)
         return self._battery_voltage
 
-    def current_max(self, value):
-        self.connection.write_register(0x0001, value * 10, 0)
+    def current_max(self, value):  # [mA]
+        self.connection.write_register(0x0001, int(value*1000), 0)
 
     @property
     def pwr_state(self):
@@ -89,6 +89,8 @@ class Pwr(PwrAbstract):
             """
         if state == 'on':
             self.connection.write_register(0x09, 1)
+            self.current_max(self._current_max)
+            print(self._current_max)
             self._pwr_state = 'on'
             self.exec_logger.debug(f'{self.model} is on')
             time.sleep(self._pwr_latency) # from pwr specs
