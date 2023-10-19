@@ -413,15 +413,16 @@ class OhmPiHardware:
             # Set gain at min
             self.rx.reset_gain()
             vab_opt = tx_volt
+            vab = np.min([np.abs(tx_volt), vab_max])
             if strategy == 'constant':
-                vab_max = tx_volt
-                tx_volt = tx_volt * .9
+                vab_max = vab
+                tx_volt = vab * .9
                 strategy = 'vmax'
             vab_max = np.abs(vab_max)
             vmn_min = np.abs(vmn_min)
             k = 0
             vab_list = np.zeros(n_steps + 1) * np.nan
-            vab = np.min([np.abs(tx_volt), vab_max])
+
             vab_list[k] = vab
             # self.tx.turn_on()
             switch_pwr_off, switch_tx_pwr_off = False, False  # TODO: check if these should be moved in kwargs
