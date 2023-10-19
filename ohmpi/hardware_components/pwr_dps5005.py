@@ -72,7 +72,7 @@ class Pwr(PwrAbstract):
         return self._battery_voltage
 
     def current_max(self, value):  # [mA]
-        value=value * 1.2  # To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
+        value = value * 1.2  # To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
         self.connection.write_register(0x0001, int(value*1000), 0)
 
     @property
