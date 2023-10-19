@@ -15,7 +15,7 @@ from copy import deepcopy
 import numpy as np
 import csv
 import time
-from shutil import rmtree
+from shutil import rmtree, make_archive
 from threading import Thread
 from inspect import getmembers, isfunction
 from datetime import datetime
@@ -435,6 +435,28 @@ class OhmPi(object):
         else:
             self.exec_logger.warning('Not on Raspberry Pi, skipping reboot...')
 
+    def download_data(self, cmd_id=None):
+        """Create a zip of the data folder.
+        """
+        datadir = os.path.join(os.path.dirname(__file__), '../data/')
+        make_archive(datadir, 'zip', 'data')
+        self.data_logger.info(json.dumps({'download': 'ready'}))
+
+    def shutdown(self, cmd_id=None):
+        """Shutdown the Raspberry Pi
+
+        Parameters
+        ----------
+        cmd_id : str, optional
+            Unique command identifier
+        """
+
+        if self.on_pi:
+            self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
+            os.system('poweroff')
+        else:
+            self.exec_logger.warning('Not on Raspberry Pi, skipping shutdown...')
+
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
                         autogain=True, strategy='constant', tx_volt=5., best_tx_injtime=0.1,
                         cmd_id=None, **kwargs):
@@ -736,7 +758,9 @@ class OhmPi(object):
     #  -> might be a problem at B (cf what we did with WofE)
     def rs_check(self, tx_volt=5., cmd_id=None):
         # TODO: add a default value for rs-check in config.py import it in ohmpi.py and add it in rs_check definition
-        """Checks contact resistances
+        """Checks contact resistances.
+        Strategy: we just open A and B, measure the current and using vAB set or
+        assumed (12V assumed for battery), we compute Rab.
 
         Parameters
         ----------
@@ -751,7 +775,7 @@ class OhmPi(object):
         # create custom sequence where MN == AB
         # we only check the electrodes which are in the sequence (not all might be connected)
         if self.sequence is None:
-            quads = np.array([[1, 2, 1, 2]], dtype=np.uint32)
+            quads = np.array([[1, 2, 0, 0]], dtype=np.uint32)
         else:
             elec = np.sort(np.unique(self.sequence.flatten()))  # assumed order
             quads = np.vstack([
@@ -776,27 +800,40 @@ class OhmPi(object):
         # measure all quad of the RS sequence
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole
-            self.switch_mux_on(quad, bypass_check=True)  # put before raising the pins (otherwise conflict i2c)
-            d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=0.2, tx_volt=tx_volt, autogain=False,
-                                     bypass_check=True)
+            self._hw.switch_mux(electrodes=list(quads[i, :2]), roles=['A', 'B'], state='on')
+            self._hw._vab_pulse(duration=0.2)
+            current = self._hw.readings[-1, 3]
+            voltage = self._hw.tx.pwr.voltage * 1000
+            time.sleep(0.2)
+
+            # self.switch_mux_on(quad, bypass_check=True)  # put before raising the pins (otherwise conflict i2c)
+            # d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=0.2, tx_volt=tx_volt, autogain=False,
+            #                          bypass_check=True)
 
             # if self._hw.tx.voltage_adjustable:
             #     voltage = self._hw.tx.voltage  # imposed voltage on dps
             # else:
             #     voltage = self._hw.rx.voltage
 
-            voltage = self._hw.rx.voltage
-            current = self._hw.tx.current
+            # voltage = self._hw.rx.voltage
+            # current = self._hw.tx.current
 
             # compute resistance measured (= contact resistance)
-            resist = abs(voltage / current) / 1000.
+            resist = abs(voltage / current) / 1000 # kOhm
             # print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} kOhm'.format(
             #    current, voltage, resist))
-            msg = f'Contact resistance {str(quad):s}: I: {current * 1000.:>10.3f} mA, ' \
-                  f'V: {voltage :>10.3f} mV, ' \
-                  f'R: {resist :>10.3f} kOhm'
-
-            self.exec_logger.info(msg)
+            # msg = f'Contact resistance {str(quad):s}: I: {current :>10.3f} mA, ' \
+            #       f'V: {voltage :>10.3f} mV, ' \
+            #       f'R: {resist :>10.3f} kOhm'
+            # create a message as dictionnary to be used by the html interface
+            msg = {
+                'rsdata': {
+                    'A': int(quad[0]),
+                    'B': int(quad[1]),
+                    'rs': resist,  # in kOhm
+                }
+            }
+            self.data_logger.info(json.dumps(msg))
 
             # if contact resistance = 0 -> we have a short circuit!!
             if resist < 1e-5:
@@ -845,7 +882,7 @@ class OhmPi(object):
         quadrupole : list of 4 int
             List of 4 integers representing the electrode numbers.
         bypass_check: bool, optional
-            Bypasses checks for A==M or A==M or B==M or B==N (i.e. used for rs-check)
+            Bypasses checks for A==M or A==N or B==M or B==N (i.e. used for rs-check)
         """
         assert len(quadrupole) == 4
         if (self._hw.tx.pwr.voltage > self._hw.rx._voltage_max) and bypass_check:

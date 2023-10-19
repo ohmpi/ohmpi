@@ -220,8 +220,24 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                     console.log('DATA LOG:', payload)
                     let ddic = JSON.parse(payload.split('INFO:')[1])
 
-                    // check cmd_id is any
-                    processMessage(ddic)
+                    // RS check data
+                    if ('rsdata' in ddic) {
+                        rsdata[0]['x'].push(ddic['rsdata']['A']), //, + '-' + ddic['rsdata']['B'],
+                        rsdata[0]['y'].push(ddic['rsdata']['rs']),
+                        Plotly.redraw('rs')
+                    
+                    } else if ('download' in ddic) {
+                        let dwl = document.getElementById('download')
+                        dwl.setAttribute('href', serverUrl + '/data.zip')
+                        dwl.setAttribute('download', 'data.zip')
+                        dwl.click()
+                    } else { // data or results from inversion
+                        processMessage(ddic)
+                    }
+
+                    if ('status' in  ddic) {
+                        document.getElementById('output').value = ddic['status']
+                    }
 
                     // usually these don't have a cmd_id so we are not sure when
 
@@ -488,7 +504,13 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         let surveySelect = document.getElementById('surveySelect')
 
         // bar chart for contact resistance
-        let rsdata = []
+        let rsdata = [{
+            'x': [],
+            'y': [],
+            name: 'RS',
+            type: 'bar',
+            }
+        ]
         let rslayout = {
             title: 'Contact resistances',
             yaxis: {
@@ -518,7 +540,12 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         
         // clear RS graph
         function rsClearBtnFunc() {
-            rsdata = []
+            rsdata = [{
+            'x': [],
+            'y': [],
+            name: 'RS',
+            type: 'bar',
+            }]
             Plotly.newPlot('rs', rsdata, rslayout, {responsive: true})
         }
         let rsClearBtn = document.getElementById('rsClearBtn')
@@ -539,7 +566,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             //if (('status' in ddic) | ('data' in ddic)) {
             if (ddic.constructor == Object) {  // it's a dictionnary
                 // acquisition related
-                processData(ddic)
+                processData(ddic)                
             } else {
                 // inversion related
                 invertedData = ddic
@@ -769,11 +796,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         
         // download data
         function downloadBtnFunc() {
-            sendCommand('{"cmd": "download"}', function(x) {
-                let dwl = document.getElementById('download')
-                dwl.setAttribute('href', serverUrl + '/data.zip')
-                dwl.setAttribute('download', 'data.zip')
-                dwl.click()
+            sendCommand('{"cmd": "download_data"}', function(x) {
+                console.log(x)
             })
         }
         let downloadBtn = document.getElementById('downloadBtn')
