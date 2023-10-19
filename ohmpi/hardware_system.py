@@ -404,8 +404,9 @@ class OhmPiHardware:
     #         polarity = 1
     #     return vab, polarity, rab
 
-    def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5.,
-                         vab_max=voltage_max, vmn_min=voltage_min, polarities=(1, -1), delay=0.050):
+    def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5., vab_max=voltage_max,
+                         iab_max=current_max, vmn_max = 5., vmn_min=voltage_min, polarities=(1, -1), delay=0.050):
+        # TODO: Optimise how to pass iab_max, vab_max, vmn_min
         """Estimates best Tx voltage based on different strategies.
         At first a half-cycle is made for a short duration with a fixed
         known voltage. This gives us Iab and Rab. We also measure Vmn.
@@ -446,11 +447,8 @@ class OhmPiHardware:
         """
 
         if self.tx.pwr.voltage_adjustable:
-            # TODO: Get those values from components
-
-            p_max = 2.5
-            vmn_max = 5.
-            vab_max = 50.
+            # Get those values from components
+            p_max = vab_max * iab_max
 
             # define a sill
             diff_vab_lim = 2.5
@@ -570,7 +568,7 @@ class OhmPiHardware:
         #     polarity = -1  # TODO: check if we really need to return polarity
         # else:
         #     polarity = 1
-        return vab_opt, None, None
+        return vab_opt
 
     def _plot_readings(self, save_fig=False):
         # Plot graphs
