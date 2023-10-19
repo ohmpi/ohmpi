@@ -304,6 +304,17 @@ class TxAbstract(ABC):
         self._gain = value
         self.exec_logger.debug(f'Setting TX gain to {value}')
 
+    @property
+    @abstractmethod
+    def current(self):
+        """ Gets the current IAB in Amps
+        """
+        pass
+
+    @current.setter
+    @abstractmethod
+    def current(self, value):
+        pass
 
     @abstractmethod
     def current_pulse(self, **kwargs):

@@ -95,7 +95,7 @@ class Tx(TxAbstract):
         self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
                                         address=self._ads_current_address)
         self._ads_current.mode = Mode.CONTINUOUS
-        self.r_shunt = kwargs['r_shunt']
+        self._r_shunt = kwargs['r_shunt']
         self.adc_voltage_min = kwargs['adc_voltage_min']
         self.adc_voltage_max = kwargs['adc_voltage_max']
 
@@ -138,13 +138,13 @@ class Tx(TxAbstract):
     def current(self):
         """ Gets the current IAB in Amps
         """
-        iab = AnalogIn(self._ads_current, ads.P0).voltage * 1000. / (50 * self.r_shunt)  # measure current
+        iab = AnalogIn(self._ads_current, ads.P0).voltage * 1000. / (50 * self._r_shunt)  # measure current
         self.exec_logger.debug(f'Reading TX current:  {iab} mA')
         return iab
 
     @ current.setter
     def current(self, value):
-        assert self.adc_voltage_min / (50 * self.r_shunt)  <= value <= self.adc_voltage_max / (50 * self.r_shunt)
+        assert self.adc_voltage_min / (50 * self._r_shunt) <= value <= self.adc_voltage_max / (50 * self._r_shunt)
         self.exec_logger.warning(f'Current pulse is not implemented for the {self.model} board')
 
     def gain_auto(self):
@@ -190,6 +190,17 @@ class Tx(TxAbstract):
         else:
             return self.pwr.battery_voltage
 
+    @property
+    def voltage(self):
+        """ Gets the voltage VAB in Volts
+        """
+        vab = self.current * self._r_shunt
+        self.exec_logger.debug(f'Reading TX current:  {vab} mv')
+        return vab
+
+    @voltage.setter
+    def voltage(self, value):
+        self.pwr.voltage = value
 
     def voltage_pulse(self, voltage=None, length=None, polarity=1):
         """ Generates a square voltage pulse

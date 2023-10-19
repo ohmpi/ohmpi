@@ -72,9 +72,9 @@ class Mux(MuxAbstract):
         self._roles = kwargs.pop('roles', None)
         if self._roles is None:
             self._roles = {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'}  # NOTE: defaults to 4-roles
-        if np.alltrue([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['4_roles'].keys())])]):
+        if np.all([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['4_roles'].keys())])]):
             self._mode = '4_roles'
-        elif np.alltrue([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['2_roles'].keys())])]):
+        elif np.all([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['2_roles'].keys())])]):
             self._mode = '2_roles'
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.model}: {self._roles} !')

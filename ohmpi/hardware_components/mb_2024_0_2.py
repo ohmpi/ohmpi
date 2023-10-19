@@ -31,7 +31,7 @@ SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
                 'mcp_address': {'default': 0x21},
                 'ads_address': {'default': 0x48},
                 'compatible_power_sources': {'default': ['pwr_batt', 'dps5005']},
-                'r_shunt':  {'min': 0., 'default': 2.},
+                'r_shunt':  {'min': 0.001, 'default': 2.},
                 'activation_delay': {'default': 0.010},  # Max turn on time of OMRON G5LE-1 5VDC relays
                 'release_delay': {'default': 0.005},  # Max turn off time of OMRON G5LE-1 5VDC relays = 1ms
                 'pwr_latency': {'default': 4.}
@@ -86,10 +86,10 @@ class Tx(Tx_mb_2023):
         self.pin6 = self.mcp_board.get_pin(6)
         self.pin6.direction = Direction.OUTPUT
         self.pin6.value = False
-        self.pin2 = self.mcp_board.get_pin(2) # dsp -
+        self.pin2 = self.mcp_board.get_pin(2)  # dps -
         self.pin2.direction = Direction.OUTPUT
         self.pin2.value = False
-        self.pin3 = self.mcp_board.get_pin(3) # dsp -
+        self.pin3 = self.mcp_board.get_pin(3)  # dps -
         self.pin3.direction = Direction.OUTPUT
         self.pin3.value = False
 

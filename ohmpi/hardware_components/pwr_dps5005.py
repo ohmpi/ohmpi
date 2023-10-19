@@ -63,6 +63,9 @@ class Pwr(PwrAbstract):
     #     self.exec_logger.debug(f'{self.model} is on')
     #     time.sleep(.3)
 
+    def _retrieve_voltage(self):
+        self._voltage = self.connection.read_register(0x0002, 2)
+
     @property
     def voltage(self):
         # return PwrAbstract.voltage.fget(self)

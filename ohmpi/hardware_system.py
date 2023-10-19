@@ -191,7 +191,7 @@ class OhmPiHardware:
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
         current, voltage = 0., 0.
         if self.tx.pwr.voltage_adjustable:
-            self.tx.pwr.voltage = vab
+            self.tx.voltage = vab
         if self.tx.pwr.pwr_state == 'off':
             self.tx.pwr.pwr_state = 'on'
             switch_pwr_off = True
@@ -265,7 +265,8 @@ class OhmPiHardware:
 
         while self.tx_sync.is_set():
             lap = datetime.datetime.utcnow()
-            r = [elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, self.tx.current, self.rx.voltage]
+            r = [elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, self.tx.current, self.rx.voltage,
+                 self.tx.voltage]
             if self.tx_sync.is_set():
                 sample += 1
                 _readings.append(r)
@@ -469,7 +470,7 @@ class OhmPiHardware:
             if self.pwr_state == 'off':
                 self.pwr_state = 'on'
                 switch_tx_pwr_off = True
-            self.tx.pwr.voltage = vab
+            self.tx.voltage = vab
             if self.tx.pwr.pwr_state == 'off':
                 self.tx.pwr.pwr_state = 'on'
                 switch_pwr_off = True
@@ -539,7 +540,7 @@ class OhmPiHardware:
                 vab_list[k] = np.min(vabs)
                 time.sleep(0.5)
                 if self.tx.pwr.voltage_adjustable:
-                    self.tx.pwr.voltage = vab_list[k]
+                    self.tx.voltage = vab_list[k]
             vab_opt = vab_list[k]
             print(f'Selected Vab: {vab_opt:.2f}')
             if switch_pwr_off:
@@ -634,10 +635,10 @@ class OhmPiHardware:
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
         if self.tx.pwr.voltage_adjustable:
-            if self.tx.pwr.voltage != vab:
-                self.tx.pwr.voltage = vab
+            if self.tx.voltage != vab:
+                self.tx.voltage = vab
         else:
-            vab = self.tx.pwr.voltage
+            vab = self.tx.voltage
         # reads current and voltage during the pulse
         injection = Thread(target=self._inject, kwargs={'injection_duration': duration, 'polarity': polarity})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
@@ -655,9 +656,9 @@ class OhmPiHardware:
         n_pulses = len(durations)
         self.exec_logger.debug(f'n_pulses: {n_pulses}')
         if self.tx.pwr.voltage_adjustable:
-            self.tx.pwr.voltage = vab
+            self.tx.voltage = vab
         else:
-            vab = self.tx.pwr.voltage
+            vab = self.tx.voltage
         if self.tx.pwr.pwr_state == 'off':
             self.tx.pwr.pwr_state = 'on'
             switch_pwr_off = True
