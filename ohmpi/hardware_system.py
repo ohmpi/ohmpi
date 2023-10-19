@@ -317,6 +317,43 @@ class OhmPiHardware:
             sp = np.mean(mean_vmn[np.ix_(polarity == 1)] + mean_vmn[np.ix_(polarity == -1)]) / 2
             return sp
 
+    def _find_vab(self, vab, iab, vmn, p_max, vab_max, vmn_max):
+        iab_mean = np.mean(iab)
+        iab_std = np.std(iab)
+        vmn_mean = np.mean(vmn)
+        vmn_std = np.std(vmn)
+        print(f'iab: ({iab_mean:.5f}, {iab_std:5f}), vmn: ({vmn_mean:.4f}, {vmn_std:.4f})')
+        # bounds on iab
+        iab_upper_bound = iab_mean + 2 * iab_std
+        iab_lower_bound = np.max([0.00001, iab_mean - 2 * iab_std])
+        # bounds on vmn
+        vmn_upper_bound = vmn_mean + 2 * vmn_std
+        vmn_lower_bound = np.max([0.000001, vmn_mean - 2 * vmn_std])
+        # ax.plot([vab[k]] * 2, [vmn_lower_bound, vmn_upper_bound], '-b')
+        # ax.plot([0, vab_max], [0, vmn_upper_bound * vab_max / vab[k]], '-r', alpha=(k + 1) / n_steps)
+        # ax.plot([0, vab_max], [0, vmn_lower_bound * vab_max / vab[k]], '-g', alpha=(k + 1) / n_steps)
+        # bounds on rab
+        rab_lower_bound = np.max([0.1, np.abs(vab / iab_upper_bound)])
+        rab_upper_bound = np.max([0.1, np.abs(vab / iab_lower_bound)])
+        # bounds on r
+        r_lower_bound = np.max([0.1, np.abs(vmn_lower_bound / iab_upper_bound)])
+        r_upper_bound = np.max([0.1, np.abs(vmn_upper_bound / iab_lower_bound)])
+        # conditions for vab update
+        cond_vmn_max = rab_lower_bound / r_upper_bound * vmn_max
+        cond_p_max = np.sqrt(p_max * rab_lower_bound)
+        print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
+        print(f'{k}: [{vab_max:.1f}, {cond_vmn_max:.1f}, {cond_p_max:.1f}]')
+        new_vab = np.min([vab_max, cond_vmn_max, cond_p_max])
+        if new_vab == vab_max:
+            print('Vab bounded by Vab max')
+        elif new_vab == cond_p_max:
+            print('Vab bounded by Pmax')
+        else:
+            assert new_vab == cond_vmn_max
+            print('Vab bounded by Vmn max')
+
+        return new_vab
+
     def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5., vab_max=voltage_max,
                          iab_max=current_max, vmn_max=5., vmn_min=voltage_min, polarities=(1, -1), delay=0.050):
         # TODO: Optimise how to pass iab_max, vab_max, vmn_min
@@ -393,56 +430,15 @@ class OhmPiHardware:
             diff_vab = np.inf
             while (k < n_steps) and (diff_vab > diff_vab_lim):
                 vabs = []
-                for pol in polarities:
-                    # self.tx.polarity = pol
-                    # set gains automatically
-                    injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
-                    readings = Thread(target=self._read_values)
-                    injection.start()
-                    self.tx_sync.wait()
-                    readings.start()
-                    readings.join()
-                    injection.join()
-                    v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0))[0]  # NOTE : discard data aquired in the first x ms
+                self._vab_pulses(vab_list[k], durations=[0.2, 0.2], polarities=[1, -1])
+                for pol in range(2):
+                    v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (self.readings[:, pol]))[0]  # NOTE : discard data aquired in the first x ms
                     iab = self.readings[v, 3]/1000.
                     vmn = np.abs(self.readings[v, 4]/1000. * self.readings[v, 2])
-                    iab_mean = np.mean(iab)
-                    iab_std = np.std(iab)
-                    vmn_mean = np.mean(vmn)
-                    vmn_std = np.std(vmn)
-                    print(f'iab: ({iab_mean:.5f}, {iab_std:5f}), vmn: ({vmn_mean:.4f}, {vmn_std:.4f})')
-                    # bounds on iab
-                    iab_upper_bound = iab_mean + 2 * iab_std
-                    iab_lower_bound = np.max([0.00001, iab_mean - 2 * iab_std])
-                    # bounds on vmn
-                    vmn_upper_bound = vmn_mean + 2 * vmn_std
-                    vmn_lower_bound = np.max([0.000001, vmn_mean - 2 * vmn_std])
-                    # ax.plot([vab[k]] * 2, [vmn_lower_bound, vmn_upper_bound], '-b')
-                    # ax.plot([0, vab_max], [0, vmn_upper_bound * vab_max / vab[k]], '-r', alpha=(k + 1) / n_steps)
-                    # ax.plot([0, vab_max], [0, vmn_lower_bound * vab_max / vab[k]], '-g', alpha=(k + 1) / n_steps)
-                    # bounds on rab
-                    rab_lower_bound = np.max([0.1, np.abs(vab_list[k] / iab_upper_bound)])
-                    rab_upper_bound = np.max([0.1, np.abs(vab_list[k] / iab_lower_bound)])
-                    # bounds on r
-                    r_lower_bound = np.max([0.1, np.abs(vmn_lower_bound / iab_upper_bound)])
-                    r_upper_bound = np.max([0.1, np.abs(vmn_upper_bound / iab_lower_bound)])
-                    # conditions for vab update
-                    cond_vmn_max = rab_lower_bound / r_upper_bound * vmn_max
-                    cond_p_max = np.sqrt(p_max * rab_lower_bound)
-                    new_vab = np.min([vab_max, cond_vmn_max, cond_p_max])
+                    new_vab = self._find_vab(vab_list[k], iab, vmn, )
                     diff_vab = np.abs(new_vab - vab_list[k])
-                    print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
-                    print(
-                        f'{k}: [{vab_max:.1f}, {cond_vmn_max:.1f}, {cond_p_max:.1f}], new_vab: {new_vab}, diff_vab: {diff_vab}\n')
-                    if new_vab == vab_max:
-                        print('Vab bounded by Vab max')
-                    elif new_vab == cond_p_max:
-                        print('Vab bounded by Pmax')
-                    elif new_vab == cond_vmn_max:
-                        print('Vab bounded by Vmn max')
-                    else:
-                        print('Next step')
                     vabs.append(new_vab)
+                    print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
                     if diff_vab < diff_vab_lim:
                         print('stopped on vab increase too small')
                     else:
