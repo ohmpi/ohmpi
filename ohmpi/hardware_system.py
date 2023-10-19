@@ -416,7 +416,7 @@ class OhmPiHardware:
             vab = np.min([np.abs(tx_volt), vab_max])
             if strategy == 'constant':
                 vab_max = vab
-                tx_volt = vab * .9
+                vab = vab * .9
                 strategy = 'vmax'
             vab_max = np.abs(vab_max)
             vmn_min = np.abs(vmn_min)
