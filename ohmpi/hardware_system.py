@@ -51,6 +51,7 @@ voltage_min = RX_CONFIG['voltage_min']
 
 print(f'Current max: {current_max:.2f}')
 
+
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
     return lap.total_seconds()
