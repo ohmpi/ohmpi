@@ -340,7 +340,7 @@ class OhmPiHardware:
         cond_p_max = np.sqrt(p_max * rab_lower_bound)
         cond_iab_max = rab_lower_bound * iab_max
         print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
-        print(f'{k}: [{vab_max:.1f}, {cond_vmn_max:.1f}, {cond_p_max:.1f}]')
+        print(f'{k}: [{vab_max:.1f}, {cond_vmn_max:.1f}, {cond_p_max:.1f}, {cond_iab_max:.1f}]')
         new_vab = np.min([vab_max, cond_vmn_max, cond_p_max, cond_iab_max])
         if new_vab == vab_max:
             print('Vab bounded by Vab max')
