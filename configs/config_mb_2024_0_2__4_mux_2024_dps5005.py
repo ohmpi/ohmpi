@@ -15,7 +15,7 @@ OHMPI_CONFIG = {
     'id': ohmpi_id,  # Unique identifier of the OhmPi board (string)
     'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
 }
-r_shunt =2.
+r_shunt = 2.
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},
