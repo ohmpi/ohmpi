@@ -46,14 +46,12 @@ class Ctl(CtlAbstract):
         warnings.resetwarnings()
 
         # Extended I2C
-        warnings.filterwarnings("error")  # to filter out adafruit warning about setting I2C frequency
         try:
             self.interfaces['i2c_ext'] = ExtendedI2C(4)  # 4 is defined
         except RuntimeWarning:
             pass
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize Extended I2C:\n{e}')
-        warnings.resetwarnings()
 
         # modbus
         try:
