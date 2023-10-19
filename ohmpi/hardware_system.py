@@ -430,7 +430,7 @@ class OhmPiHardware:
                 sampling_rate = self.rx.sampling_rate
             current, voltage = 0., 0.
             diff_vab = np.inf
-            while (k < n_steps) and (diff_vab > diff_vab_lim):
+            while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k]>=vab_max):
                 vabs = []
                 self._vab_pulses(vab_list[k], sampling_rate=self.rx.sampling_rate, durations=[0.2, 0.2], polarities=[1, -1])
                 for pulse in range(2):
