@@ -17,14 +17,15 @@ OHMPI_CONFIG = {
     'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
 }
 
+r_shunt = 2.
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
-    'pwr': {'model': 'pwr_batt', 'voltage': 12.,'interface_name':'none'},
+    'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
     'tx':  {'model': 'mb_2023_0_X',
-             'voltage_max': 12.,  # Maximum voltage supported by the TX board [V]
-             'adc_voltage_max': 4800.,  # Maximum voltage read by the current ADC on the TX board [mA]
-             'r_shunt': 2.,  # Shunt resistance in Ohms
-             'interface_name': 'i2c',
+             'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
+             'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
+             'r_shunt': r_shunt,  # Shunt resistance in Ohms
+             'interface_name': 'i2c'
             },
     'rx':  {'model': 'mb_2023_0_X',
             'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
