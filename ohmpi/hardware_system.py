@@ -356,7 +356,7 @@ class OhmPiHardware:
 
     def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5., vab_max=voltage_max,
                          iab_max=current_max, vmn_max=None, vmn_min=voltage_min, polarities=(1, -1), delay=0.05,
-                         diff_vab_lim=2.5, n_steps=4):
+                         p_max=None, diff_vab_lim=2.5, n_steps=4):
         # TODO: Optimise how to pass iab_max, vab_max, vmn_min
         """Estimates best Tx voltage based on different strategies.
         At first a half-cycle is made for a short duration with a fixed
@@ -398,12 +398,12 @@ class OhmPiHardware:
         """
 
         if self.tx.pwr.voltage_adjustable:
+            print(f'Vmn max: {vmn_max}')
             if vmn_max is None:
                 vmn_max == self.rx._voltage_max / 1000.
-            p_max = vab_max * iab_max
-
-            # define a sill
-
+            print(f'Vmn max: {vmn_max}')
+            if p_max is None:
+                p_max = vab_max * iab_max
 
             # Set gain at min
             self.rx.reset_gain()
