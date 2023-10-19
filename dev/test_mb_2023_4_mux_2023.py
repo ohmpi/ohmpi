@@ -84,9 +84,10 @@ if within_ohmpi:
 
     print('Starting test with OhmPi.')
     k = OhmPi()
-    k.get_data()
-    # k.load_sequence(os.path.join(os.path.dirname(__file__), '../sequences/test_circuit_1423.txt'))
-    # k.reset_mux()
+    # k.get_data()
+    k.load_sequence(os.path.join(os.path.dirname(__file__), '../sequences/test_circuit_1423.txt'))
+    k.reset_mux()
+    k.run_multiple_sequences(sequence_delay=20, nb_meas=3)
     # k.run_sequence(injection_duration=0.2)
     # k.rs_check(tx_volt=4)
     # k.test_mux(mux_id=None, activation_time=0.2)
