@@ -326,7 +326,7 @@ class OhmPiHardware:
         iab_std = np.std(iab)
         vmn_mean = np.mean(vmn)
         vmn_std = np.std(vmn)
-        print(f'iab: ({iab_mean:.5f}, {iab_std:5f}), vmn: ({vmn_mean:.4f}, {vmn_std:.4f})')
+        # print(f'iab: ({iab_mean:.5f}, {iab_std:5f}), vmn: ({vmn_mean:.4f}, {vmn_std:.4f})')
         # bounds on iab
         iab_upper_bound = iab_mean + 2 * iab_std
         iab_lower_bound = np.max([0.00001, iab_mean - 2 * iab_std])
@@ -343,18 +343,18 @@ class OhmPiHardware:
         cond_vmn_max = rab_lower_bound / r_upper_bound * vmn_max
         cond_p_max = np.sqrt(p_max * rab_lower_bound)
         cond_iab_max = rab_lower_bound * iab_max
-        print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
-        print(f'{k}: [{vab_max:.1f}, {cond_vmn_max:.1f}, {cond_p_max:.1f}, {cond_iab_max:.1f}]')
+        # print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
+        # print(f'{k}: [{vab_max:.1f}, {cond_vmn_max:.1f}, {cond_p_max:.1f}, {cond_iab_max:.1f}]')
         new_vab = np.min([vab_max, cond_vmn_max, cond_p_max, cond_iab_max])
         if new_vab == vab_max:
-            print('Vab bounded by Vab max')
+            print(f'Vab {new_vab} bounded by Vab max')
         elif new_vab == cond_p_max:
-            print('Vab bounded by P max')
+            print(f'Vab {vab } bounded by P max')
         elif new_vab == cond_iab_max:
-            print('Vab bounded by Iab max')
+            print(f'Vab {vab} bounded by Iab max')
         else:
             assert new_vab == cond_vmn_max
-            print('Vab bounded by Vmn max')
+            print(f'Vab {vab} bounded by Vmn max')
 
         return new_vab
 
@@ -404,7 +404,7 @@ class OhmPiHardware:
         if self.tx.pwr.voltage_adjustable:
             if vmn_max is None:
                 vmn_max = self.rx._voltage_max / 1000.
-            print(f'Vmn max: {vmn_max}')
+            # print(f'Vmn max: {vmn_max}')
             if p_max is None:
                 p_max = vab_max * iab_max
 
@@ -442,7 +442,7 @@ class OhmPiHardware:
                     new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max)
                     diff_vab = np.abs(new_vab - vab_list[k])
                     vabs.append(new_vab)
-                    print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
+                    # print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
                     if diff_vab < diff_vab_lim:
                         print('stopped on vab increase too small')
                     else:
