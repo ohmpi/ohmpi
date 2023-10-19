@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf8"/>
+    <title>OhmPi Acquisition Board</title>
+    <link rel="shortcut icon" type="image/jpg" href="logo_ohmpi.jpg"/>
+    
+    <!-- dependencies (need to be local as no internet in AP mode)-->
+    <script src="js/plotly-basic-2.8.3.min.js"></script>
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet">
+	<!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
+	<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous"> -->
+    <!-- <script src="js/danfojs/bundle.min.js"></script> -->
+</head>
+<body>
+    <div class='container'>
+        <h1>OhmPi Acquisition Board</h1>
+        <!-- nb stacks, on-time -->
+        <button id="update_settingsBtn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Settings</button>
+        <button id='runBtn' type="button" class="btn btn-primary">&#9654</button>
+        <button id='stopBtn' type="button" class="btn btn-warning">&#9724</button>
+        <!-- upload button for csv which display the table ABMN -->
+        <button id="removeDataBtn" type="button" class="btn btn-danger">Clear data</button>
+        <button id="getDataBtn" type="button" class="btn btn-info">Get data</button>
+        <div class="form-check">
+            <input id="dataRetrievalCheck" class="form-check-input" type="checkbox" value="">
+            <label class="form-check-label" for="dataRetrievalCheck">
+                Automaticaly get data every 1 second
+            </label>
+        </div>
+        <div id='output'>Status: idle</div>
+        
+        <!-- Pseudo section -->
+        <select id='surveySelect' class='custom-select'>
+        </select>
+        <input id="cmin" type="number" value=""/>
+        <input id="cmax" type="number" value=""/>
+        <button id="capplyBtn" type="button" class="btn btn-info">Apply</button>
+        <div id="gd"></div>
+        <div id="hoverinfo" style="margin-left:80px;"></div>
+        <div class="mb3 row">
+            <label for="quadSelect">Quadrupole:</label>
+            <div class="col-sm-10">
+                <select id='quadSelect' class='custom-select'></select>    
+            </div>
+        </div>
+        
+        <!-- trace figure -->
+        <button id="addTraceBtn" type="button" class="btn btn-info">Add trace</button>
+        <button id="removeTracesBtn" type="button" class="btn btn-info">Remove all traces</button>    
+        <div id="ts"></div>
+        
+        <!-- RS check -->
+        <button id="rsBtn" type="button" class="btn btn-info">Check contact resistance</button>
+        <button id="getRsBtn" type="button" class="btn btn-info">Get contact resistance</button>
+        <button id="rsClearBtn" type="button" class="btn btn-info">Clear plot</button>
+        <div id="rs"></div>
+        
+        <!-- Additional buttons -->
+        <button id="downloadBtn" type="button" class="btn btn-primary">Download data</button>
+        <!-- <button id="invertBtn" type="button" class="btn btn-primary">Invert</button> -->
+        <a id="download"></a>
+
+        <!-- Modal for settings -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">OhmPi settings</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group row">
+                          <label for="nbElectrodes" class="col-sm-2 col-form-label">Nb electrodes</label>
+                          <div class="col-sm-10">
+                            <input type="number" class="form-control-number" id="nbElectrodes" value=64>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="injectionDuration" class="col-sm-2 col-form-label">Injection duration [s]</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control-number" id="injectionDuration" value=0.2>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="nbMeasurements" class="col-sm-2 col-form-label">Nb Measurements</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control-number" id="nbMeasurements" value="1">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="sequenceDelay" class="col-sm-2 col-form-label">Sequence delay [s]</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control-number" id="sequenceDelay" value="100">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="nbStack" class="col-sm-2 col-form-label">Nb stack</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control-number" id="nbStack" value="1">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="sequence" class="col-sm-2 col-form-label">Sequence</label>
+                            <div class="col-sm-10">
+                              <input type="file" class="form-control" id="sequence">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="elecSpacing" class="col-sm-2 col-form-label">Electrode spacing [m]</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control" id="elecSpacing", value="1">
+                            </div>
+                          </div>
+                      </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="saveConfigBtn" type="button" data-dismiss="modal" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <button id="restartBtn" type="button" class="btn btn-danger">Restart</button>
+        <button id="shutdownBtn" type="button" class="btn btn-danger">Shutdown</button>
+        <footer>v0.2.0</footer>
+    </div>
+
+    <script type="text/javascript">
+        //let serverUrl = 'http://10.3.141.1:8080'
+        //let serverUrl = 'http://0.0.0.0:8080'
+        //let serverUrl = 'http://localhost:8080'
+        let serverUrl = 'http://' + window.location.host
+        console.log('serverUrl =', serverUrl)
+        let output = document.getElementById('output')
+        let data = {} // hold data of all surveys
+        let interv = null // hold interval for automatic data retrieval
+        let quads = [] // available quadrupoles for time-serie figure
+        let squads = [] // selected quadrupoles for time-serie figure
+        let elecSpacing = 1 // 1 m
+
+        // useful functions
+        function sendCommand(query, callback=null) {
+            // dic in the form: {'cmd': X, ...} as JSON
+            if (callback == null) {
+                function callback(x) {
+                    console.log('default callback:', x)
+                }
+            }
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    if (xhr.status == 200) {
+                        callback(JSON.parse(xhr.response))
+                    }
+                }
+            }
+            xhr.open('POST', serverUrl)
+            xhr.setRequestHeader('Content-Type', 'application/json')
+            xhr.send(query)
+        }
+
+        // run button
+        function runBtnFunc() {
+            sendCommand('{"cmd": "run_multiple_sequences"}', function(x) {
+                console.log(x['ohmpi_status'])
+                if (x['ohmpi_status'] == 'running') {
+                    output.innerHTML = 'Status: measuring...'
+                }
+            })
+        }
+        let runBtn = document.getElementById('runBtn')
+        runBtn.addEventListener('click', runBtnFunc)
+
+        // interrupt button
+        function stopBtnFunc() {
+            sendCommand('{"cmd": "interrupt"}', function(x) {
+                output.innerHTML = 'Status: ' + x['ohmpi_status']
+                clearInterval(interv)
+                getData()
+            })
+        }
+        let stopBtn = document.getElementById('stopBtn')
+        stopBtn.addEventListener('click', stopBtnFunc)
+
+        // set configuration
+        function saveSettingsBtnFunc() {
+            // collect values from modal
+            let formVals = {}
+            formVals['nb_electrodes'] = parseInt(document.getElementById('nbElectrodes').value)
+            formVals['injection_duration'] = parseFloat(document.getElementById('injectionDuration').value)
+            formVals['nb_meas'] = parseInt(document.getElementById('nbMeasurements').value)
+            formVals['sequence_delay'] = parseInt(document.getElementById('sequenceDelay').value)
+            formVals['nb_stack'] = parseInt(document.getElementById('nbStack').value)
+            formVals['elec_spacing'] = parseFloat(document.getElementById('elecSpacing').value)
+            console.log(formVals)
+            elecSpacing = formVals['elec_spacing']
+            
+            // define callback to send settigs to Pi
+            function settingsCallback() {
+                sendCommand(JSON.stringify({
+                    'cmd': 'update_settings',
+                    'config': formVals
+                }), function(x) {
+                    console.log('update_settings', x)
+                })
+            }
+            
+            // deal with the potential file containing the sequence
+            // https://stackoverflow.com/questions/19038919/is-it-possible-to-upload-a-text-file-to-input-in-html-js
+            if (!window.FileReader) {
+                alert('Your browser is not supported');
+                return false;
+            }
+            let input = document.getElementById('sequence')
+            if (input.files.length) {
+                const reader = new FileReader()
+                reader.readAsText(input.files[0])
+                reader.addEventListener('load', () => {
+                    formVals['sequence'] = reader.result
+                    console.log('file==', reader.result)
+                    settingsCallback()
+                }, false)
+            } else {
+                console.log('no sequence uploaded')
+                formVals['sequence'] = ''
+                settingsCallback()
+            } 
+            
+            
+        }
+        let saveConfigBtn = document.getElementById('saveConfigBtn')
+        saveConfigBtn.addEventListener('click', saveSettingsBtnFunc)
+
+        // make pseudo plot
+        var trace = {}
+        let layout = {}
+        let tdata = []
+        let layout2 = {}
+        let rsdata = []
+        let rslayout = {}
+        
+        // initialize all plots
+        function initPlots() {
+			trace = {
+				x: [],
+				y: [],
+				mode: 'markers',
+				marker: {
+					size: 40,
+					color: [],
+					colorbar: {
+						title: 'App. res. [Ohm.m]',
+						cmin: 0,
+						cmax: 100,
+					}
+				}
+			}
+			layout = {
+				title: 'Pseudo-section',
+				yaxis: {
+					title: 'Pseudo-depth',
+					autorange: 'reversed'
+				},
+				xaxis: {
+					title: 'X'
+				}
+
+			}
+			Plotly.newPlot('gd', [trace], layout)
+
+			// make time-serie plot
+			tdata = []
+			layout2 = {
+				title: 'Time-serie',
+				yaxis: {
+					title: 'App. res. [Ohm.m]'
+				},
+				xaxis: {
+					title: 'Sampling time'
+				}
+			}
+			Plotly.newPlot('ts', tdata, layout2)
+			
+			// bar chart for contact resistance
+			rsdata = []
+			rslayout = {
+				title: 'Contact resistances',
+				yaxis: {
+					title: 'Resistance [kOhm]'
+				},
+				xaxis: {
+					title: 'Consecutive electrodes'
+				}
+			}
+			Plotly.newPlot('rs', rsdata, rslayout)
+		}
+		initPlots()
+
+        // hover function
+        var hoverInfo = document.getElementById('hoverinfo')
+        document.getElementById('gd').on('plotly_hover', function(data){
+            var infotext = data.points.map(function(d){
+              return (Math.round(d.data.marker.color[d.pointIndex], 2) + ' Ohm.m');
+            });
+            hoverInfo.innerHTML = infotext.join('<br/>');
+        })
+         .on('plotly_unhover', function(data){
+            hoverInfo.innerHTML = '';
+        });
+
+        // add trace to time-serie plot
+        function addTraceBtnFunc() {
+            let val = document.getElementById('quadSelect').value
+            squads.push(val.split(', '))
+            tdata.push({
+                x: [],
+                y: [],
+                name: val,
+                type: 'scatter'
+            })
+            Plotly.newPlot('ts', tdata, layout2)
+            getData()
+        }
+        let addTraceBtn = document.getElementById('addTraceBtn')
+        addTraceBtn.addEventListener('click', addTraceBtnFunc)
+
+        // remove all traces from time-serie plot
+        function removeTracesBtnFunc() {
+            squads = []
+            tdata = []            
+            Plotly.newPlot('ts', tdata, layout2)
+        }
+        let removeTracesBtn = document.getElementById('removeTracesBtn')
+        removeTracesBtn.addEventListener('click', removeTracesBtnFunc)
+
+        // callback function to draw the plot
+        function surveySelectFunc(el) {
+            let surveyName = el['target'].value
+            let df = data[surveyName]
+            if (df != undefined) {
+                // let's assume electrodes are 1 m distance
+                // compute pseudo-depth (assume no topo)
+                // compute app res (assumping flat, line survey)
+                let xpos = []
+                let ypos = []
+                let app = []
+                for (let i = 0; i < df['a'].length; i++) {
+                    let a = df['a'][i]
+                    let b = df['b'][i]
+                    let m = df['m'][i]
+                    let n = df['n'][i]
+                    
+                    // compute geometric factor assuming flat 2D surface
+                    let am = Math.abs(a - m)*elecSpacing
+                    let bm = Math.abs(b - m)*elecSpacing
+                    let an = Math.abs(a - n)*elecSpacing
+                    let bn = Math.abs(b - n)*elecSpacing
+                    let K = 2*Math.PI/((1/am)-(1/bm)-(1/an)+(1/bn))
+                    app.push(df['rho'][i]*K)
+                    //console.log(K) // same as resipy for the wenner case
+                
+                    // computing pseudo-depth assuming 2D flat array
+                    // let's sort the electrodes AB are the two left, MN, the two right
+                    let abmn = [a, b, m, n]
+                    abmn = abmn.sort((a, b) => a - b)
+                    let ab = (abmn[0] + abmn[1])/2
+                    let mn = (abmn[2] + abmn[3])/2
+                    let dist = Math.abs(ab - mn)
+                    xpos.push((Math.min(ab, mn) + dist/2)*elecSpacing)
+                    ypos.push((Math.sqrt(2)/2*dist)*elecSpacing)
+                    
+                    /*
+                           lookupDict = dict(zip(self.elec['label'], np.arange(self.elec.shape[0]))) 
+        array = self.df[['a','b','m','n']].replace(lookupDict).values.astype(int)
+        elecm = self.elec[['x','y','z']].values.astype(float).copy() # electrode matrix - should be array of floats so np.inf work properly
+            
+        ### first determine if measurements are nested ###
+        #find mid points of AB 
+        AB = (elecm[array[:,0]] + elecm[array[:,1]]) / 2 # mid points of AB 
+        MN = (elecm[array[:,2]] + elecm[array[:,3]]) / 2 # mid points of MN 
+        ABrad = np.sqrt(np.sum((elecm[array[:,0]] - AB)**2,axis=1)) # radius of AB circle 
+        MNrad = np.sqrt(np.sum((elecm[array[:,2]] - MN)**2,axis=1)) # radius of MN circle 
+        
+        Amn = np.sqrt(np.sum((elecm[array[:,0]] - MN)**2,axis=1)) # distance of A to mid point of MN 
+        Bmn = np.sqrt(np.sum((elecm[array[:,1]] - MN)**2,axis=1)) # distance of B to mid point of MN 
+        Nab = np.sqrt(np.sum((elecm[array[:,2]] - AB)**2,axis=1)) # distance of N to mid point of AB 
+        Mab = np.sqrt(np.sum((elecm[array[:,3]] - AB)**2,axis=1)) # distance of M to mid point of AB
+        
+        iABinMN = (Amn < MNrad) & (Bmn < MNrad)
+        iMNinAB = (Nab < ABrad) & (Mab < ABrad)
+        inested = iABinMN | iMNinAB #if AB encompasses MN or MN encompasses AB 
+                       
+        # so it will never be taken as minimium
+        elecm[self.elec['remote'].values,:] = np.inf
+        
+        # compute midpoint position of AB and MN dipoles
+        elecx = elecm[:,0]
+        elecy = elecm[:,1]
+
+        #CURRENT ELECTRODE MIDPOINTS 
+        caddx = np.abs(elecx[array[:,0]]-elecx[array[:,1]])/2
+        caddy = np.abs(elecy[array[:,0]]-elecy[array[:,1]])/2
+        caddx[np.isinf(caddx)] = 0 
+        caddy[np.isinf(caddy)] = 0        
+        cmiddlex = np.min([elecx[array[:,0]], elecx[array[:,1]]], axis=0) + caddx
+        cmiddley = np.min([elecy[array[:,0]], elecy[array[:,1]]], axis=0) + caddy
+        
+        #POTENTIAL ELECTRODE MIDPOINTS
+        paddx = np.abs(elecx[array[:,2]]-elecx[array[:,3]])/2
+        paddy = np.abs(elecy[array[:,2]]-elecy[array[:,3]])/2
+        paddx[np.isinf(paddx)] = 0 
+        paddy[np.isinf(paddy)] = 0 
+        pmiddlex = np.min([elecx[array[:,2]], elecx[array[:,3]]], axis=0) + paddx
+        pmiddley = np.min([elecy[array[:,2]], elecy[array[:,3]]], axis=0) + paddy
+
+        
+        # for non-nested measurements
+        xposNonNested  = np.min([cmiddlex, pmiddlex], axis=0) + np.abs(cmiddlex-pmiddlex)/2
+        yposNonNested  = np.min([cmiddley, pmiddley], axis=0) + np.abs(cmiddley-pmiddley)/2
+        pcdist = np.sqrt((cmiddlex-pmiddlex)**2 + (cmiddley-pmiddley)**2)
+
+        # zposNonNested = np.sqrt(2)/2*pcdist
+        zposNonNested = pcdist/4
+
+        if np.all(cmiddley-pmiddley == 0):
+            zposNonNested = 0.25*pcdist
+        else: # for 3D arrays where there are mid-line measurements, this works closer to inversion results
+            zposNonNested = np.sqrt(2)/2*pcdist
+        
+        # for nested measurements use formula of Dalhin 2006
+        xposNested = np.zeros(len(pmiddlex))
+        yposNested = np.zeros(len(pmiddlex))
+        outerElec1 = np.zeros((len(pmiddlex), 2)) # position of one electrode of outer dipole
+        outerElec2 = np.zeros((len(pmiddlex), 2)) # position of one electrode of outer dipole
+        # innerMid = np.zeros((len(pmiddlex), 2)) # middle of inner dipole
+        if np.sum(iMNinAB) > 0:
+            xposNested[iMNinAB] = pmiddlex[iMNinAB]
+            yposNested[iMNinAB] = pmiddley[iMNinAB]
+            outerElec1[iMNinAB] = np.c_[elecx[array[iMNinAB,0]], elecy[array[iMNinAB,0]]]
+            outerElec2[iMNinAB] = np.c_[elecx[array[iMNinAB,1]], elecy[array[iMNinAB,1]]]
+
+        if np.sum(iABinMN) > 0:
+            xposNested[iABinMN] = cmiddlex[iABinMN]
+            yposNested[iABinMN] = cmiddley[iABinMN]
+            outerElec1[iABinMN] = np.c_[elecx[array[iABinMN,2]], elecy[array[iABinMN,2]]]
+            outerElec2[iABinMN] = np.c_[elecx[array[iABinMN,3]], elecy[array[iABinMN,3]]]
+      
+        innerMid = np.c_[pmiddlex, pmiddley] # always use potential dipole
+        
+        apdist = np.sqrt(np.sum((outerElec1-innerMid)**2, axis=1))
+        bpdist = np.sqrt(np.sum((outerElec2-innerMid)**2, axis=1))
+        zposNested  = np.min([apdist, bpdist], axis=0)/3
+        
+        xpos = np.zeros_like(pmiddlex)
+        ypos = np.zeros_like(pmiddlex)
+        zpos = np.zeros_like(pmiddlex)
+        
+        xpos[~inested] = xposNonNested[~inested]
+        xpos[inested] = xposNested[inested]
+        
+        ypos[~inested] = yposNonNested[~inested]
+        ypos[inested] = yposNested[inested]
+        
+        zpos[~inested] = zposNonNested[~inested]
+        zpos[inested] = zposNested[inested]
+
+                    */
+                  }
+                //console.log(app)
+                // update the trace and redraw the figure
+                trace['x'] = xpos
+                trace['y'] = ypos
+                trace['marker']['color'] = app
+                trace['marker']['cmax'] = document.getElementById('cmax').value
+                trace['marker']['cmin'] = document.getElementById('cmin').value
+                Plotly.redraw('gd')
+            }
+        }
+        let surveySelect = document.getElementById('surveySelect')
+        
+        // run RS check
+        function rsBtnFunc() {
+            sendCommand('{"cmd": "rsCheck"}', function (a) {})
+        }
+        let rsBtn = document.getElementById('rsBtn')
+        rsBtn.addEventListener('click', rsBtnFunc)
+
+        // get RS check data
+        function getRsBtnFunc() {
+            sendCommand('{"cmd": "getRsCheck"}', function(res) {
+                // update the bar plot
+                rsdata.push({
+                x: res['data']['AB'],
+                y: res['data']['res'],
+                name: 'RS',
+                type: 'bar'
+                })
+                Plotly.redraw('rs')
+            })
+        }
+        let getRsBtn = document.getElementById('getRsBtn')
+        getRsBtn.addEventListener('click', getRsBtnFunc)
+        
+        // clear RS graph
+        function rsClearBtnFunc() {
+            rsdata = []
+            Plotly.newPlot('rs', rsdata, rslayout)
+        }
+        let rsClearBtn = document.getElementById('rsClearBtn')
+        rsClearBtn.addEventListener('click', rsClearBtnFunc)
+        
+        // getData
+        function getData() {
+            let surveyNames = []
+            sendCommand(JSON.stringify({
+                'cmd': 'getData',
+                'surveyNames': surveyNames
+                // last survey is often partial so we download it again
+            }), function(ddic) {
+                // update status
+                //output.innerHTML = 'Status: ' + ddic['status']
+
+                // update data dic with new data
+                data = { // destructuring assignement (magic! :o)
+                    ...data,
+                    ...ddic['data'] // value from second dic are preferred
+                }
+                
+                // dropdown with number of surveys
+                surveyNames = Object.keys(data).sort()
+
+                // remove listener as we will replace the choices
+                surveySelect.removeEventListener('change', surveySelectFunc)
+                surveySelect.innerHTML = ''  // clearing all child nodes
+
+                // add choices again
+                for (let surveyName of surveyNames) {
+                    let option = document.createElement('option')
+                    option.innerText = surveyName
+                    option.value = surveyName
+                    surveySelect.appendChild(option)
+                }
+
+                // listener again
+                surveySelect.addEventListener('change', surveySelectFunc)
+                
+                // plot last one by default
+                surveySelect.value = surveyNames[surveyNames.length - 1]
+                
+                // call the function directly
+                // (as progammatically chaging the value does not trigger the event)
+                surveySelectFunc({'target': surveySelect})
+
+                // update list of quadrupoles if any
+                let idiff = false
+                if (data[surveyNames[0]] != undefined) {
+                    idiff = quads.length != data[surveyNames[0]]['a'].length
+                } 
+                //console.log('idiff=', idiff, quads.length, data[surveyNames[0]]['a'].length)
+                if (((quads.length == 0) | idiff) & (data[surveyNames[0]] != undefined)){
+                    console.log('updating list of quadrupoles')
+                    quads = []
+                    let df = data[surveyNames[0]]
+                    let quadSelect = document.getElementById('quadSelect')
+                    quadSelect.innerHTML = ''
+                    for (let i = 0; i < df['a'].length; i++) {
+                        quad = [df['a'][i], df['b'][i], df['m'][i], df['n'][i]]
+                        quads.push(quad)
+                        let option = document.createElement('option')
+                        option.value = quad.join(', ')
+                        option.innerText = quad.join(', ')
+                        quadSelect.appendChild(option)
+                    }
+                    console.log('quads=', quads)
+                }
+                
+                // update time-serie figure
+                if (squads.length > 0) {
+
+                    // transform all surveyNames to datetime
+                    let xt = []
+                    for (surveyName of surveyNames) {
+                        let a = surveyName.split('_').slice(-1)[0]
+                        xt.push(a.slice(0, 4) + '-' 
+                            + a.slice(4, 6) + '-' 
+                            + a.slice(6, 8) + ' '
+                            + a.slice(9, 11) + ':'
+                            + a.slice(11, 13) + ':'
+                            + a.slice(13, 15))
+                    }
+                    //console.log(xt)
+
+                    // create one new trace per selected quadrupole
+                    for (let k = 0; k < squads.length; k++) {
+                        squad = squads[k]
+                        let x = []
+                        let y = []
+                        for (let i = 0; i < surveyNames.length; i++) {
+                            df = data[surveyNames[i]]
+                            for (let j = 0; j < df['a'].length; j++) {
+                                if (df['a'][j] == squad[0]
+                                && df['b'][j] == squad[1]
+                                && df['m'][j] == squad[2]
+                                && df['n'][j] == squad[3]) {
+                                    y.push(df['rho'][j])
+                                    x.push(xt[i])
+                                    break
+                                }
+                            }
+                        }
+
+                        // update trace dictionnary
+                        tdata[k]['x'] = x
+                        tdata[k]['y'] = y
+                    }
+                    //console.log(tdata)
+                    Plotly.redraw('ts')
+                }
+            })
+        }
+        let getDataBtn = document.getElementById('getDataBtn')
+        getDataBtn.addEventListener('click', getData)
+        
+        // apply new colorscale
+        let capplyBtn = document.getElementById('capplyBtn')
+        capplyBtn.addEventListener('click', function() {
+            surveySelectFunc({'target': surveySelect})
+        })
+
+        // checkbox interaction for data download
+        function dataRetrievalCheckFunc(x) {
+            if (x['target'].checked == true) {
+                interv = setInterval(getData, 1000) // every 5s
+            } else {
+                clearInterval(interv)
+            }             
+        }
+        let dataRetrievalCheck = document.getElementById('dataRetrievalCheck')
+        dataRetrievalCheck.addEventListener('change', dataRetrievalCheckFunc)
+
+        // remove data
+        function removeDataBtnFunc() {
+            sendCommand('{"cmd": "removeData"}',function(x) {
+                data = {}
+                output.innerHTML = 'Status: ' + x['ohmpi_status'] + ' (all data cleared)'
+                console.log('all data removed')
+                initPlots() // reset all plots
+            })
+        }
+        let removeDataBtn = document.getElementById('removeDataBtn')
+        removeDataBtn.addEventListener('click', removeDataBtnFunc)
+
+        // shutdown Pi
+        function shutdownBtnFunc() {
+            sendCommand('{"cmd": "shutdown"}', function(x) {
+                console.log('shuting down...')
+            })
+        }
+        let shutdownBtn = document.getElementById('shutdownBtn')
+        shutdownBtn.addEventListener('click', shutdownBtnFunc)
+        
+        // restart Pi
+        function restartBtnFunc() {
+            sendCommand('{"cmd": "restart"}', function(x) {
+                console.log('rebooting...')
+            })
+        }
+        let restartBtn = document.getElementById('restartBtn')
+        restartBtn.addEventListener('click', restartBtnFunc)
+        
+        // invert data
+        // function invertBtnFunc() {
+        //     sendCommand('{"cmd": "invert"}', function(x) {
+        //         console.log('inversion results', x)
+        //     })
+        // }
+        // let invertBtn = document.getElementById('invertBtn')
+        // invertBtn.addEventListener('click', invertBtnFunc)
+
+        // download data
+        function downloadBtnFunc() {
+            sendCommand('{"cmd": "download"}', function(x) {
+                let dwl = document.getElementById('download')
+                dwl.setAttribute('href', serverUrl + '/data.zip')
+                dwl.setAttribute('download', 'data.zip')
+                dwl.click()
+            })
+        }
+        let downloadBtn = document.getElementById('downloadBtn')
+        downloadBtn.addEventListener('click', downloadBtnFunc)
+
+
+    </script>
+    
+    <!-- Boostrap scripts (at the end of the page for faster loading time)-->
+	<script src="js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script> -->
+</body>
+</html>
