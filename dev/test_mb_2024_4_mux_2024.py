@@ -7,9 +7,9 @@ import time
 import logging
 from ohmpi.config import HARDWARE_CONFIG
 
-stand_alone = False
+stand_alone = True
 part_of_hardware_system = False
-within_ohmpi = True
+within_ohmpi = False
 
 # Stand alone
 if stand_alone:
@@ -66,14 +66,10 @@ if stand_alone:
     #     mux.test({'A': [i+8*m for i in range(1, 9)], 'B': [i+8*m for i in range(1, 9)],
     #               'M': [i+8*m for i in range(1, 9)], 'N': [i+8*m for i in range(1, 9)]}, activation_time=.1)
     #     mux.reset()
-    tx.polarity = 1
-    time.sleep(5)
-    tx.polarity = 0
-    time.sleep(5)
-    tx.polarity = -1
-    time.sleep(5)
-    tx.polarity = 0
-    time.sleep(5)
+    for pol in [1,0,-1,0]:
+        tx.polarity = pol
+        print(pol)
+        time.sleep(5)
 
 # mux as part of a OhmPiHardware system
 if part_of_hardware_system:
