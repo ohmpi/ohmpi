@@ -11,10 +11,10 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 12., 'max': 50., 'min': 0.},
          'voltage_min': {'default': 0},
          'voltage_max': {'default': 0},
-         'current_max': {'default': 100.},
+         'current_max': {'default': 60.},
          'current_adjustable': {'default': False},
          'voltage_adjustable': {'default': True},
-         'pwr_latency': {'default': .3}
+         'pwr_latency': {'default': .5}
          }
 
 # TODO: Complete this code... handle modbus connection
@@ -54,14 +54,8 @@ class Pwr(PwrAbstract):
     def current(self, value, **kwargs):
         self.exec_logger.debug(f'Current cannot be set on {self.model}')
 
-    # def turn_off(self):
-    #     self.connection.write_register(0x09, 0)
-    #     self.exec_logger.debug(f'{self.model} is off')
-    #
-    # def turn_on(self):
-    #     self.connection.write_register(0x09, 1)
-    #     self.exec_logger.debug(f'{self.model} is on')
-    #     time.sleep(.3)
+    def _retrieve_voltage(self):
+        self._voltage = self.connection.read_register(0x0002, 2)
 
     @property
     def voltage(self):
@@ -103,3 +97,7 @@ class Pwr(PwrAbstract):
             self.connection.write_register(0x09, 0)
             self._pwr_state = 'off'
             self.exec_logger.debug(f'{self.model} is off')
+
+    def reload_settings(self):
+        # self.voltage(self._voltage)
+        self.current_max(self._current_max)

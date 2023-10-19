@@ -40,32 +40,36 @@ if stand_alone:
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
     tx = tx_module.Tx(**HARDWARE_CONFIG['tx'])
     pwr = pwr_module.Pwr(**HARDWARE_CONFIG['pwr'])
-    mux_ids = ['mux_02', 'mux_05']
-    for m,mux_id in enumerate(mux_ids):
-        mux_module = importlib.import_module(
-            f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"][mux_id].pop("model")}')
-
-        MUX_CONFIG = HARDWARE_CONFIG['mux']['boards'][mux_id]
-
-        MUX_CONFIG.update({'ctl': ctl, 'connection': MUX_CONFIG.pop('connection', ctl.interfaces[
-                                           MUX_CONFIG.pop('interface_name', 'i2c_ext')]), 'exec_logger': ctl.exec_logger,
-                       'soh_logger': ctl.soh_logger})
-        MUX_CONFIG.update({'id': mux_id})
-        mux = mux_module.Mux(**MUX_CONFIG)
-
-        # tx.polarity = 1
-        # time.sleep(1)
-        # tx.polarity = 0
-        # mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='on')
-        # time.sleep(1)
-        # voltage = rx.voltage
-        # current = tx.current
-        # mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
-        # print(f'Resistance: {voltage / current :.2f} ohm, voltage: {voltage:.2f} mV, current: {current:.2f} mA')
-        mux.reset()
-        mux.test({'A': [i+8*m for i in range(1, 9)], 'B': [i+8*m for i in range(1, 9)],
-                  'M': [i+8*m for i in range(1, 9)], 'N': [i+8*m for i in range(1, 9)]}, activation_time=.1)
-        mux.reset()
+    # mux_ids = ['mux_02', 'mux_05']
+    # for m,mux_id in enumerate(mux_ids):
+    #     mux_module = importlib.import_module(
+    #         f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"][mux_id].pop("model")}')
+    #
+    #     MUX_CONFIG = HARDWARE_CONFIG['mux']['boards'][mux_id]
+    #
+    #     MUX_CONFIG.update({'ctl': ctl, 'connection': MUX_CONFIG.pop('connection', ctl.interfaces[
+    #                                        MUX_CONFIG.pop('interface_name', 'i2c_ext')]), 'exec_logger': ctl.exec_logger,
+    #                    'soh_logger': ctl.soh_logger})
+    #     MUX_CONFIG.update({'id': mux_id})
+    #     mux = mux_module.Mux(**MUX_CONFIG)
+    #
+    #     # tx.polarity = 1
+    #     # time.sleep(1)
+    #     # tx.polarity = 0
+    #     # mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='on')
+    #     # time.sleep(1)
+    #     # voltage = rx.voltage
+    #     # current = tx.current
+    #     # mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
+    #     # print(f'Resistance: {voltage / current :.2f} ohm, voltage: {voltage:.2f} mV, current: {current:.2f} mA')
+    #     mux.reset()
+    #     mux.test({'A': [i+8*m for i in range(1, 9)], 'B': [i+8*m for i in range(1, 9)],
+    #               'M': [i+8*m for i in range(1, 9)], 'N': [i+8*m for i in range(1, 9)]}, activation_time=.1)
+    #     mux.reset()
+    for pol in [1,0,-1,0]:
+        tx.polarity = pol
+        print(pol)
+        time.sleep(5)
 
 # mux as part of a OhmPiHardware system
 if part_of_hardware_system:
@@ -105,14 +109,15 @@ if within_ohmpi:
     # k._hw.switch_mux([A, B, M, N], state='off')
     # print(f'OhmPiHardware Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     # k._hw._plot_readings()
-    # k.load_sequence('sequences/9991_GRAD_16_s1_a1.txt')
-    # k.run_sequence(tx_volt=5., injection_duration=1., nb_stack=2, duty_cycle=0.5)
+    k.load_sequence('sequences/9991_GRAD_16_s1_a1.txt')
+    k.run_sequence(tx_volt=5, injection_duration=1., nb_stack=2, duty_cycle=0.5)
     print('using OhmPi')
-    d = k.run_measurement([A, B, M, N], injection_duration=1., nb_stack=2, duty_cycle=0.5)
+    # d = k.run_measurement([A, B, M, N], injection_duration=1., nb_stack=2, duty_cycle=0.5, tx_volt=5.)
     # print(d)
-    k._hw._plot_readings()
+    # k._hw._plot_readings()
     print(f'OhmPiHardware: Resistance: {k._hw.last_resistance() :.2f} ohm, dev. {k._hw.last_dev():.2f} %, sp: {k._hw.sp:.2f} mV, rx bias: {k._hw.rx._bias:.2f} mV')
     print(f'OhmPi: Resistance: {d["R [Ohm]"] :.2f} ohm, dev. {d["R_std [%]"]:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     # k._hw._plot_readings(save_fig=False)
     # plot_exec_log('ohmpi/logs/exec.log')
 change_config('../configs/config_default.py', verbose=False)
+

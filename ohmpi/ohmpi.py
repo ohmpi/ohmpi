@@ -517,7 +517,7 @@ class OhmPi(object):
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
-            #tx_volt,_ ,_ = self._hw._compute_tx_volt(tx_volt=tx_volt, strategy=strategy)
+            tx_volt = self._hw._compute_tx_volt(tx_volt=.5, strategy=strategy, vab_max=50., vmn_max=1.)  # TODO: use tx_volt and vmn_max instead of hardcoded values
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
                 delay = kwargs['delay']
@@ -536,7 +536,7 @@ class OhmPi(object):
                 "B": quad[1],
                 "M": quad[2],
                 "N": quad[3],
-                "inj time [ms]": injection_duration,  # NOTE: check this
+                "inj time [ms]": injection_duration * 1000.,  # NOTE: check this
                 "Vmn [mV]": Vmn,
                 "I [mA]": I,
                 "R [Ohm]": R,
@@ -545,7 +545,7 @@ class OhmPi(object):
                 "nbStack": nb_stack,
                 "Tx [V]": tx_volt,
                 "CPU temp [degC]": self._hw.ctl.cpu_temperature,
-                "Nb samples [-]": len(self._hw.readings),  # TODO: use only samples after a delay in each pulse
+                "Nb samples [-]": len(self._hw.readings[x,2]),  # TODO: use only samples after a delay in each pulse
                 "fulldata": self._hw.readings[:, [0, -2, -1]],
                 # "I_stack [mA]": i_stack_mean,
                 "I_std [%]": I_std,
@@ -699,26 +699,27 @@ class OhmPi(object):
             if self.on_pi:
                 acquired_data = self.run_measurement(quad=quad, **kwargs)
             else:  # for testing, generate random data
-                sum_vmn = np.random.rand(1)[0] * 1000.
-                sum_i = np.random.rand(1)[0] * 100.
-                cmd_id = np.random.randint(1000)
-                acquired_data = {
-                    "time": datetime.now().isoformat(),
-                    "A": quad[0],
-                    "B": quad[1],
-                    "M": quad[2],
-                    "N": quad[3],
-                    "inj time [ms]": self.settings['injection_duration'] * 1000.,
-                    "Vmn [mV]": sum_vmn,
-                    "I [mA]": sum_i,
-                    "R [ohm]": sum_vmn / sum_i,
-                    "Ps [mV]": np.random.randn(1)[0] * 100.,
-                    "nbStack": self.settings['nb_stack'],
-                    "Tx [V]": np.random.randn(1)[0] * 5.,
-                    "CPU temp [degC]": np.random.randn(1)[0] * 50.,
-                    "Nb samples [-]": self.nb_samples,
-                }
-                self.data_logger.info(acquired_data)
+                # sum_vmn = np.random.rand(1)[0] * 1000.
+                # sum_i = np.random.rand(1)[0] * 100.
+                # cmd_id = np.random.randint(1000)
+                # acquired_data = {
+                #     "time": datetime.now().isoformat(),
+                #     "A": quad[0],
+                #     "B": quad[1],
+                #     "M": quad[2],
+                #     "N": quad[3],
+                #     "inj time [ms]": self.settings['injection_duration'] * 1000.,
+                #     "Vmn [mV]": sum_vmn,
+                #     "I [mA]": sum_i,
+                #     "R [ohm]": sum_vmn / sum_i,
+                #     "Ps [mV]": np.random.randn(1)[0] * 100.,
+                #     "nbStack": self.settings['nb_stack'],
+                #     "Tx [V]": np.random.randn(1)[0] * 5.,
+                #     "CPU temp [degC]": np.random.randn(1)[0] * 50.,
+                #     "Nb samples [-]": self.nb_samples,
+                # }
+                pass
+            self.data_logger.info(acquired_data)
 
             # # switch mux off
             # self.switch_mux_off(quad)
@@ -1023,11 +1024,11 @@ class OhmPi(object):
         pdir = os.path.dirname(__file__)
         # import resipy if available
         try:
-            from scipy.interpolate import griddata
-            import pandas as pd
+            from scipy.interpolate import griddata  # noqa
+            import pandas as pd  #noqa
             import sys
             sys.path.append(os.path.join(pdir, '../../resipy/src/'))
-            from resipy import Project
+            from resipy import Project  # noqa
         except Exception as e:
             self.exec_logger.error('Cannot import ResIPy, scipy or Pandas, error: ' + str(e))
             return []

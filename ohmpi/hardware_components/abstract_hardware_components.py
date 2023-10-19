@@ -55,6 +55,7 @@ class PwrAbstract(ABC):
         self._current_max = kwargs.pop('current_max', 0.)
         self._voltage_min = kwargs.pop('voltage_min', 0.)
         self._voltage_max = kwargs.pop('voltage_max', 0.)
+        self._switchable = False
         self.connection = kwargs.pop('connection', None)
         self._battery_voltage = np.nan
 
@@ -93,6 +94,8 @@ class PwrAbstract(ABC):
             self._pwr_state = 'off'
             self.exec_logger.debug(f'{self.model} cannot be switched off')
 
+    def reload_settings(self):
+        pass
 
     @property
     @abstractmethod
@@ -278,6 +281,7 @@ class TxAbstract(ABC):
             self.soh_logger = create_stdout_logger('soh_tx')
         self.connection = kwargs.pop('connection', None)
         self.pwr = kwargs.pop('pwr', None)
+        self._voltage = 0.
         self._polarity = 0
         self._injection_duration = None
         self._gain = 1.
@@ -302,6 +306,17 @@ class TxAbstract(ABC):
         self._gain = value
         self.exec_logger.debug(f'Setting TX gain to {value}')
 
+    @property
+    @abstractmethod
+    def current(self):
+        """ Gets the current IAB in Amps
+        """
+        pass
+
+    @current.setter
+    @abstractmethod
+    def current(self, value):
+        pass
 
     @abstractmethod
     def current_pulse(self, **kwargs):
@@ -370,6 +385,18 @@ class TxAbstract(ABC):
     def tx_bat(self):
         pass
 
+    @property
+    def voltage(self):
+        """ Gets the voltage VAB in Volts
+        """
+        return self._voltage
+
+    @voltage.setter
+    def voltage(self, value):
+        assert value >= 0.
+        self._voltage = value
+        self.pwr.voltage = value
+
     def voltage_pulse(self, voltage=0., length=None, polarity=1):
         """ Generates a square voltage pulse
 
@@ -396,7 +423,9 @@ class TxAbstract(ABC):
     def pwr_state(self, state):
         if state == 'on':
             self._pwr_state = 'on'
-            self.exec_logger.debug(f'{self.model} cannot switch on power source')
+            if not self.pwr.switchable:
+                self.exec_logger.debug(f'{self.model} cannot switch on power source')
+            self.pwr.reload_settings()
         elif state == 'off':
             self._pwr_state = 'off'
             self.exec_logger.debug(f'{self.model} cannot switch off power source')

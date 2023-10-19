@@ -15,14 +15,14 @@ OHMPI_CONFIG = {
     'id': ohmpi_id,  # Unique identifier of the OhmPi board (string)
     'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
 }
-
+r_shunt = 2.
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},
     'tx':  {'model': 'mb_2024_0_2',
              'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
-             'current_max': 4800,  # Maximum voltage read by the current ADC on the TX board [mA]
-             'r_shunt': 2,  # Shunt resistance in Ohms
+             'current_max': 4.8/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
+             'r_shunt': r_shunt,  # Shunt resistance in Ohms
              'interface_name': 'i2c'
             },
     'rx':  {'model': 'mb_2024_0_2',
@@ -42,7 +42,7 @@ HARDWARE_CONFIG = {
                       # 'mcp_1': '0x27',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                       'cabling': {(i+8, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 12.},
+                      'voltage_max': 50.},
                 'mux_03':
                      {'model': 'mux_2024_0_X',
                       'tca_address': None,
@@ -53,7 +53,7 @@ HARDWARE_CONFIG = {
                       # 'mcp_1': '0x27',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                       'cabling': {(i+24, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 12.},
+                      'voltage_max': 50.},
                  'mux_05':
                      {'model': 'mux_2024_0_X',
                       'tca_address': None,
@@ -62,7 +62,7 @@ HARDWARE_CONFIG = {
                       'addr1': 'down',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                       'cabling': {(i+0, j): ('mux_05', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 12.},
+                      'voltage_max': 50.},
                 'mux_06':
                      {'model': 'mux_2024_0_X',
                       'tca_address': None,
@@ -71,11 +71,12 @@ HARDWARE_CONFIG = {
                       'addr1': 'down',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                       'cabling': {(i+16, j): ('mux_06', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 12.},
+                      'voltage_max': 50.},
                  },
              'default': {'interface_name': 'i2c_ext',
                          'voltage_max': 100.,
-                         'current_max': 3.}
+                         'current_max': 3.
+                         }
             }
     }
 

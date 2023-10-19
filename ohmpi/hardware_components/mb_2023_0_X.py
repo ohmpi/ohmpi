@@ -78,7 +78,7 @@ class Tx(TxAbstract):
             self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         kwargs.update({'pwr': kwargs.pop('pwr', SPECS['tx']['compatible_power_sources']['default'][0])})
-        if (kwargs['pwr'] not in SPECS['tx']['compatible_power_sources']['default']):
+        if kwargs['pwr'] not in SPECS['tx']['compatible_power_sources']['default']:
             self.exec_logger.warning(f'Incompatible power source specified check config')
             assert kwargs['pwr'] in SPECS['tx']
         self._activation_delay = kwargs['activation_delay']
@@ -95,7 +95,7 @@ class Tx(TxAbstract):
         self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
                                         address=self._ads_current_address)
         self._ads_current.mode = Mode.CONTINUOUS
-        self.r_shunt = kwargs['r_shunt']
+        self._r_shunt = kwargs['r_shunt']
         self.adc_voltage_min = kwargs['adc_voltage_min']
         self.adc_voltage_max = kwargs['adc_voltage_max']
 
@@ -138,13 +138,13 @@ class Tx(TxAbstract):
     def current(self):
         """ Gets the current IAB in Amps
         """
-        iab = AnalogIn(self._ads_current, ads.P0).voltage * 1000. / (50 * self.r_shunt)  # measure current
-        self.exec_logger.debug(f'Reading TX current:  {iab} mA')
+        iab = AnalogIn(self._ads_current, ads.P0).voltage * 1000. / (50 * self._r_shunt)  # measure current
+        self.exec_logger.debug(f'Reading TX current: {iab} mA')
         return iab
 
     @ current.setter
     def current(self, value):
-        assert self.adc_voltage_min / (50 * self.r_shunt)  <= value <= self.adc_voltage_max / (50 * self.r_shunt)
+        assert self.adc_voltage_min / (50 * self._r_shunt) <= value <= self.adc_voltage_max / (50 * self._r_shunt)
         self.exec_logger.warning(f'Current pulse is not implemented for the {self.model} board')
 
     def gain_auto(self):
@@ -189,7 +189,6 @@ class Tx(TxAbstract):
             return self.pwr.voltage
         else:
             return self.pwr.battery_voltage
-
 
     def voltage_pulse(self, voltage=None, length=None, polarity=1):
         """ Generates a square voltage pulse

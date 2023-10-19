@@ -21,17 +21,18 @@ SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
                 'mcp_address': {'default': 0x27},
                 'ads_address': {'default': 0x49},
                 'voltage_min': {'default': 10.0},
+                'dg411_gain_ratio': {'default': 1/2},  # lowest resistor value over sum of resistor values
                 'vmn_hardware_offset': {'default': 2500.},
                 },
          'tx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
                 'adc_voltage_min': {'default': 10.},  # Minimum voltage value used in vmin strategy
                 'adc_voltage_max': {'default': 4500.},  # Maximum voltage on ads1115 used to measure current
-                'voltage_max': {'min': 0., 'default': 12., 'max': 12.},  # Maximum input voltage
+                'voltage_max': {'min': 0., 'default': 12., 'max': 50.},  # Maximum input voltage
                 'data_rate': {'default': 860.},
                 'mcp_address': {'default': 0x21},
                 'ads_address': {'default': 0x48},
                 'compatible_power_sources': {'default': ['pwr_batt', 'dps5005']},
-                'r_shunt':  {'min': 0., 'default': 2.},
+                'r_shunt':  {'min': 0.001, 'default': 2.},
                 'activation_delay': {'default': 0.010},  # Max turn on time of OMRON G5LE-1 5VDC relays
                 'release_delay': {'default': 0.005},  # Max turn off time of OMRON G5LE-1 5VDC relays = 1ms
                 'pwr_latency': {'default': 4.}
@@ -86,10 +87,10 @@ class Tx(Tx_mb_2023):
         self.pin6 = self.mcp_board.get_pin(6)
         self.pin6.direction = Direction.OUTPUT
         self.pin6.value = False
-        self.pin2 = self.mcp_board.get_pin(2) # dsp -
+        self.pin2 = self.mcp_board.get_pin(2)  # dps -
         self.pin2.direction = Direction.OUTPUT
         self.pin2.value = False
-        self.pin3 = self.mcp_board.get_pin(3) # dsp -
+        self.pin3 = self.mcp_board.get_pin(3)  # dps -
         self.pin3.direction = Direction.OUTPUT
         self.pin3.value = False
 
@@ -144,7 +145,9 @@ class Rx(Rx_mb_2023):
         # ADS1115 for voltage measurement (MN)
         self._coef_p2 = 1.
         # Define default DG411 gain
-        self._dg411_gain = 1/2
+        self._dg411_gain_ratio = kwargs['dg411_gain_ratio']
+        self._dg411_gain = self._dg411_gain_ratio
+
         # Define pins for DG411
         self.pin_DG0 = self.mcp_board.get_pin(0)
         self.pin_DG0.direction = Direction.OUTPUT
@@ -170,7 +173,7 @@ class Rx(Rx_mb_2023):
         if self.voltage < self._vmn_hardware_offset :
             self._dg411_gain = 1.
         else:
-            self._dg411_gain = 1/2
+            self._dg411_gain = self._dg411_gain_ratio
         self.exec_logger.debug(f'Setting RX DG411 gain automatically to {self._dg411_gain}')
 
     @property
@@ -184,7 +187,7 @@ class Rx(Rx_mb_2023):
         if self._dg411_gain == 1.:
             self.pin_DG1.value = False  # closed gain 1 active
             self.pin_DG2.value = True  # open gain 0.5 inactive
-        elif self._dg411_gain == 1/2:
+        elif self._dg411_gain == self._dg411_gain_ratio:
             self.pin_DG1.value = True  # closed gain 1 active
             self.pin_DG2.value = False  # open gain 0.5 inactive
 
