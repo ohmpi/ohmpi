@@ -11,7 +11,7 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 12., 'max': 50., 'min': 0.},
          'voltage_min': {'default': 0},
          'voltage_max': {'default': 0},
-         'current_max': {'default': 100.},
+         'current_max': {'default': 60.},
          'current_adjustable': {'default': False},
          'voltage_adjustable': {'default': True},
          'pwr_latency': {'default': .3}
@@ -103,3 +103,7 @@ class Pwr(PwrAbstract):
             self.connection.write_register(0x09, 0)
             self._pwr_state = 'off'
             self.exec_logger.debug(f'{self.model} is off')
+
+    def reload_settings(self):
+        # self.voltage(self._voltage)
+        self.current_max(self._current_max)

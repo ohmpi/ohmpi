@@ -444,107 +444,108 @@ class OhmPiHardware:
             Resistance between injection electrodes
         """
 
-        # TODO: Get those values from components
-        p_max = 2.5
-        vmn_max = 5.
-        vab_max = 50.
-
-        # define a sill
-        diff_vab_lim = 2.5
-        n_steps = 4
-
-        # Set gain at min
-        self.rx.reset_gain()
-
-        vab_max = np.abs(vab_max)
-        vmn_min = np.abs(vmn_min)
-        k = 0
-        vab_list = np.zeros(n_steps + 1) * np.nan
-        vab = np.min([np.abs(tx_volt), vab_max])
-        vab_list[k] = vab
-        # self.tx.turn_on()
-        switch_pwr_off, switch_tx_pwr_off = False, False  # TODO: check if these should be moved in kwargs
-        if self.tx.pwr_state == 'off':
-            self.tx.pwr_state = 'on'
-            switch_tx_pwr_off = True
-        if self.tx.pwr.pwr_state == 'off':
-            self.tx.pwr.pwr_state = 'on'
-            switch_pwr_off = True
-        if 1. / self.rx.sampling_rate > pulse_duration:
-            sampling_rate = 1. / pulse_duration  # TODO: check this...
-        else:
-            sampling_rate = self.rx.sampling_rate
-        current, voltage = 0., 0.
         if self.tx.pwr.voltage_adjustable:
-            self.tx.pwr.voltage = vab
-        if self.tx.pwr.pwr_state == 'off':
-            self.tx.pwr.pwr_state = 'on'
-            switch_pwr_off = True
-        diff_vab = np.inf
-        while (k < n_steps) and (diff_vab > diff_vab_lim):
-            vabs = []
-            for pol in polarities:
-                # self.tx.polarity = pol
-                # set gains automatically
-                injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
-                readings = Thread(target=self._read_values)
-                injection.start()
-                self.tx_sync.wait()
-                readings.start()
-                readings.join()
-                injection.join()
-                v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0))[0]  # NOTE : discard data aquired in the first x ms
-                iab = self.readings[v, 3]/1000.
-                vmn = np.abs(self.readings[v, 4]/1000. * self.readings[v, 2])
-                iab_mean = np.mean(iab)
-                iab_std = np.std(iab)
-                vmn_mean = np.mean(vmn)
-                vmn_std = np.std(vmn)
-                print(f'iab: ({iab_mean:.5f}, {iab_std:5f}), vmn: ({vmn_mean:.4f}, {vmn_std:.4f})')
-                # bounds on iab
-                iab_upper_bound = iab_mean + 2 * iab_std
-                iab_lower_bound = np.max([0.00001, iab_mean - 2 * iab_std])
-                # bounds on vmn
-                vmn_upper_bound = vmn_mean + 2 * vmn_std
-                vmn_lower_bound = np.max([0.000001, vmn_mean - 2 * vmn_std])
-                # ax.plot([vab[k]] * 2, [vmn_lower_bound, vmn_upper_bound], '-b')
-                # ax.plot([0, vab_max], [0, vmn_upper_bound * vab_max / vab[k]], '-r', alpha=(k + 1) / n_steps)
-                # ax.plot([0, vab_max], [0, vmn_lower_bound * vab_max / vab[k]], '-g', alpha=(k + 1) / n_steps)
-                # bounds on rab
-                rab_lower_bound = np.max([0.1, np.abs(vab_list[k] / iab_upper_bound)])
-                rab_upper_bound = np.max([0.1, np.abs(vab_list[k] / iab_lower_bound)])
-                # bounds on r
-                r_lower_bound = np.max([0.01, np.abs(vmn_lower_bound / iab_upper_bound)])
-                r_upper_bound = np.max([0.01, np.abs(vmn_upper_bound / iab_lower_bound)])
-                # conditions for vab update
-                cond_vmn_max = rab_lower_bound / r_upper_bound * vmn_max
-                cond_p_max = np.sqrt(p_max * rab_lower_bound)
-                new_vab = np.min([vab_max, cond_vmn_max, cond_p_max])
-                diff_vab = np.abs(new_vab - vab_list[k])
-                print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
-                print(
-                    f'{k}: [{vab_max:.1f}, {cond_vmn_max:.1f}, {cond_p_max:.1f}], new_vab: {new_vab}, diff_vab: {diff_vab}\n')
-                if new_vab == vab_max:
-                    print('Vab bounded by Vab max')
-                elif new_vab == cond_p_max:
-                    print('Vab bounded by Pmax')
-                elif new_vab == cond_vmn_max:
-                    print('Vab bounded by Vmn max')
-                else:
-                    print('Next step')
-                vabs.append(new_vab)
-                if diff_vab < diff_vab_lim:
-                    print('stopped on vab increase too small')
-                else:
-                    print('stopped on maximum number of steps reached')
-            k = k + 1
-            vab_list[k] = np.min(vabs)
-            time.sleep(0.5)
-            if self.tx.pwr.voltage_adjustable:
-                self.tx.pwr.voltage = vab_list[k]
-        vab_opt = vab_list[k]
-        print(f'Selected Vab: {vab_opt:.2f}')
+            # TODO: Get those values from components
 
+            p_max = 2.5
+            vmn_max = 5.
+            vab_max = 50.
+
+            # define a sill
+            diff_vab_lim = 2.5
+            n_steps = 4
+
+            # Set gain at min
+            self.rx.reset_gain()
+
+            vab_max = np.abs(vab_max)
+            vmn_min = np.abs(vmn_min)
+            k = 0
+            vab_list = np.zeros(n_steps + 1) * np.nan
+            vab = np.min([np.abs(tx_volt), vab_max])
+            vab_list[k] = vab
+            # self.tx.turn_on()
+            switch_pwr_off, switch_tx_pwr_off = False, False  # TODO: check if these should be moved in kwargs
+            if self.pwr_state == 'off':
+                self.pwr_state = 'on'
+                switch_tx_pwr_off = True
+            self.tx.pwr.voltage = vab
+            if self.tx.pwr.pwr_state == 'off':
+                self.tx.pwr.pwr_state = 'on'
+                switch_pwr_off = True
+            if 1. / self.rx.sampling_rate > pulse_duration:
+                sampling_rate = 1. / pulse_duration  # TODO: check this...
+            else:
+                sampling_rate = self.rx.sampling_rate
+            current, voltage = 0., 0.
+            diff_vab = np.inf
+            while (k < n_steps) and (diff_vab > diff_vab_lim):
+                vabs = []
+                for pol in polarities:
+                    # self.tx.polarity = pol
+                    # set gains automatically
+                    injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
+                    readings = Thread(target=self._read_values)
+                    injection.start()
+                    self.tx_sync.wait()
+                    readings.start()
+                    readings.join()
+                    injection.join()
+                    v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0))[0]  # NOTE : discard data aquired in the first x ms
+                    iab = self.readings[v, 3]/1000.
+                    vmn = np.abs(self.readings[v, 4]/1000. * self.readings[v, 2])
+                    iab_mean = np.mean(iab)
+                    iab_std = np.std(iab)
+                    vmn_mean = np.mean(vmn)
+                    vmn_std = np.std(vmn)
+                    print(f'iab: ({iab_mean:.5f}, {iab_std:5f}), vmn: ({vmn_mean:.4f}, {vmn_std:.4f})')
+                    # bounds on iab
+                    iab_upper_bound = iab_mean + 2 * iab_std
+                    iab_lower_bound = np.max([0.00001, iab_mean - 2 * iab_std])
+                    # bounds on vmn
+                    vmn_upper_bound = vmn_mean + 2 * vmn_std
+                    vmn_lower_bound = np.max([0.000001, vmn_mean - 2 * vmn_std])
+                    # ax.plot([vab[k]] * 2, [vmn_lower_bound, vmn_upper_bound], '-b')
+                    # ax.plot([0, vab_max], [0, vmn_upper_bound * vab_max / vab[k]], '-r', alpha=(k + 1) / n_steps)
+                    # ax.plot([0, vab_max], [0, vmn_lower_bound * vab_max / vab[k]], '-g', alpha=(k + 1) / n_steps)
+                    # bounds on rab
+                    rab_lower_bound = np.max([0.1, np.abs(vab_list[k] / iab_upper_bound)])
+                    rab_upper_bound = np.max([0.1, np.abs(vab_list[k] / iab_lower_bound)])
+                    # bounds on r
+                    r_lower_bound = np.max([0.1, np.abs(vmn_lower_bound / iab_upper_bound)])
+                    r_upper_bound = np.max([0.1, np.abs(vmn_upper_bound / iab_lower_bound)])
+                    # conditions for vab update
+                    cond_vmn_max = rab_lower_bound / r_upper_bound * vmn_max
+                    cond_p_max = np.sqrt(p_max * rab_lower_bound)
+                    new_vab = np.min([vab_max, cond_vmn_max, cond_p_max])
+                    diff_vab = np.abs(new_vab - vab_list[k])
+                    print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
+                    print(
+                        f'{k}: [{vab_max:.1f}, {cond_vmn_max:.1f}, {cond_p_max:.1f}], new_vab: {new_vab}, diff_vab: {diff_vab}\n')
+                    if new_vab == vab_max:
+                        print('Vab bounded by Vab max')
+                    elif new_vab == cond_p_max:
+                        print('Vab bounded by Pmax')
+                    elif new_vab == cond_vmn_max:
+                        print('Vab bounded by Vmn max')
+                    else:
+                        print('Next step')
+                    vabs.append(new_vab)
+                    if diff_vab < diff_vab_lim:
+                        print('stopped on vab increase too small')
+                    else:
+                        print('stopped on maximum number of steps reached')
+                k = k + 1
+                vab_list[k] = np.min(vabs)
+                time.sleep(0.5)
+                if self.tx.pwr.voltage_adjustable:
+                    self.tx.pwr.voltage = vab_list[k]
+            vab_opt = vab_list[k]
+            print(f'Selected Vab: {vab_opt:.2f}')
+            if switch_pwr_off:
+                self.tx.pwr.pwr_state = 'off'
+        else:
+            vab_opt = tx_volt
         # if strategy == 'vmax':
         #     # implement different strategies
         #     if vab < vab_max and iab < current_max:

@@ -93,6 +93,8 @@ class PwrAbstract(ABC):
             self._pwr_state = 'off'
             self.exec_logger.debug(f'{self.model} cannot be switched off')
 
+    def reload_settings(self):
+        pass
 
     @property
     @abstractmethod
@@ -397,6 +399,7 @@ class TxAbstract(ABC):
         if state == 'on':
             self._pwr_state = 'on'
             self.exec_logger.debug(f'{self.model} cannot switch on power source')
+            self.pwr.reload_settings()
         elif state == 'off':
             self._pwr_state = 'off'
             self.exec_logger.debug(f'{self.model} cannot switch off power source')

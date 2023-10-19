@@ -987,11 +987,11 @@ class OhmPi(object):
         pdir = os.path.dirname(__file__)
         # import resipy if available
         try:
-            from scipy.interpolate import griddata
-            import pandas as pd
+            from scipy.interpolate import griddata  # noqa
+            import pandas as pd  #noqa
             import sys
             sys.path.append(os.path.join(pdir, '../../resipy/src/'))
-            from resipy import Project
+            from resipy import Project  #noqa
         except Exception as e:
             self.exec_logger.error('Cannot import ResIPy, scipy or Pandas, error: ' + str(e))
             return []
