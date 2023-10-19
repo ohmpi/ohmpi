@@ -356,8 +356,8 @@ class OhmPiHardware:
 
         return new_vab
 
-    def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5., vab_max=voltage_max,
-                         iab_max=current_max, vmn_max=None, vmn_min=voltage_min, polarities=(1, -1), delay=0.05,
+    def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5., vab_max=None,
+                         iab_max=None, vmn_max=None, vmn_min=voltage_min, polarities=(1, -1), delay=0.05,
                          p_max=None, diff_vab_lim=2.5, n_steps=4):
         # TODO: Optimise how to pass iab_max, vab_max, vmn_min
         """Estimates best Tx voltage based on different strategies.
@@ -402,6 +402,10 @@ class OhmPiHardware:
         if self.tx.pwr.voltage_adjustable:
             if vmn_max is None:
                 vmn_max = self.rx._voltage_max / 1000.
+            if iab_max is None:
+                iab_max = current_max
+            if vab_max is None:
+                vab_max = voltage_max
             # print(f'Vmn max: {vmn_max}')
             if p_max is None:
                 p_max = vab_max * iab_max
@@ -430,30 +434,31 @@ class OhmPiHardware:
                 sampling_rate = self.rx.sampling_rate
             current, voltage = 0., 0.
             diff_vab = np.inf
-            while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k]<vab_max):
-                vabs = []
-                self._vab_pulses(vab_list[k], sampling_rate=self.rx.sampling_rate, durations=[0.2, 0.2], polarities=[1, -1])
-                for pulse in range(2):
-                    v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (self.readings[:, 1]==pulse))[0]  # NOTE : discard data aquired in the first x ms
-                    iab = self.readings[v, 3]/1000.
-                    vmn = np.abs(self.readings[v, 4]/1000. * self.readings[v, 2])
-                    new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max)
-                    diff_vab = np.abs(new_vab - vab_list[k])
-                    vabs.append(new_vab)
-                    # print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
-                    if diff_vab < diff_vab_lim:
-                        print('stopped on vab increase too small')
-                k = k + 1
-                vab_list[k] = np.min(vabs)
-                time.sleep(0.5)
-                if self.tx.pwr.voltage_adjustable:
-                    self.tx.voltage = vab_list[k]
-            if k > n_steps:
-                print('stopped on maximum number of steps reached')
-            vab_opt = vab_list[k]
-            # print(f'Selected Vab: {vab_opt:.2f}')
-            # if switch_pwr_off:
-            #     self.tx.pwr.pwr_state = 'off'
+            if strategy=='vmax':
+                while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
+                    vabs = []
+                    self._vab_pulses(vab_list[k], sampling_rate=self.rx.sampling_rate, durations=[0.2, 0.2], polarities=[1, -1])
+                    for pulse in range(2):
+                        v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (self.readings[:, 1]==pulse))[0]  # NOTE : discard data aquired in the first x ms
+                        iab = self.readings[v, 3]/1000.
+                        vmn = np.abs(self.readings[v, 4]/1000. * self.readings[v, 2])
+                        new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max)
+                        diff_vab = np.abs(new_vab - vab_list[k])
+                        vabs.append(new_vab)
+                        # print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
+                        if diff_vab < diff_vab_lim:
+                            print('stopped on vab increase too small')
+                    k = k + 1
+                    vab_list[k] = np.min(vabs)
+                    time.sleep(0.5)
+                    if self.tx.pwr.voltage_adjustable:
+                        self.tx.voltage = vab_list[k]
+                if k > n_steps:
+                    print('stopped on maximum number of steps reached')
+                vab_opt = vab_list[k]
+                # print(f'Selected Vab: {vab_opt:.2f}')
+                # if switch_pwr_off:
+                #     self.tx.pwr.pwr_state = 'off'
         else:
             vab_opt = tx_volt
 
