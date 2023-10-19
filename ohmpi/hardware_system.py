@@ -431,11 +431,11 @@ class OhmPiHardware:
             while (k < n_steps) and (diff_vab > diff_vab_lim):
                 vabs = []
                 self._vab_pulses(vab_list[k], sampling_rate=self.rx.sampling_rate, durations=[0.2, 0.2], polarities=[1, -1])
-                for pol in range(2):
-                    v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (self.readings[:, pol]))[0]  # NOTE : discard data aquired in the first x ms
+                for pulse in range(2):
+                    v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (self.readings[:, 1]==pulse))[0]  # NOTE : discard data aquired in the first x ms
                     iab = self.readings[v, 3]/1000.
                     vmn = np.abs(self.readings[v, 4]/1000. * self.readings[v, 2])
-                    new_vab = self._find_vab(vab_list[k], iab, vmn, )
+                    new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, vmn_max)
                     diff_vab = np.abs(new_vab - vab_list[k])
                     vabs.append(new_vab)
                     print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
