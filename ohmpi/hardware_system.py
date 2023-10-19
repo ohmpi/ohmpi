@@ -398,9 +398,8 @@ class OhmPiHardware:
         """
 
         if self.tx.pwr.voltage_adjustable:
-            print(f'Vmn max: {vmn_max}')
             if vmn_max is None:
-                vmn_max == self.rx._voltage_max / 1000.
+                vmn_max = self.rx._voltage_max / 1000.
             print(f'Vmn max: {vmn_max}')
             if p_max is None:
                 p_max = vab_max * iab_max
