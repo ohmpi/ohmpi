@@ -21,7 +21,7 @@ SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
                 'mcp_address': {'default': 0x27},
                 'ads_address': {'default': 0x49},
                 'voltage_min': {'default': 10.0},
-                'dg411_gain_ratio': 1/2, #  lowest resitor value over sum of resistor values
+                'dg411_gain_ratio': {'default': 1/2},  # lowest resistor value over sum of resistor values
                 'vmn_hardware_offset': {'default': 2500.},
                 },
          'tx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
@@ -145,7 +145,9 @@ class Rx(Rx_mb_2023):
         # ADS1115 for voltage measurement (MN)
         self._coef_p2 = 1.
         # Define default DG411 gain
-        self._dg411_gain = kwargs['dg411_gain_ratio']
+        self._dg411_gain_ratio = kwargs['dg411_gain_ratio']
+        self._dg411_gain = self._dg411_gain_ratio
+
         # Define pins for DG411
         self.pin_DG0 = self.mcp_board.get_pin(0)
         self.pin_DG0.direction = Direction.OUTPUT
@@ -171,7 +173,7 @@ class Rx(Rx_mb_2023):
         if self.voltage < self._vmn_hardware_offset :
             self._dg411_gain = 1.
         else:
-            self._dg411_gain = 1/2
+            self._dg411_gain = self._dg411_gain_ratio
         self.exec_logger.debug(f'Setting RX DG411 gain automatically to {self._dg411_gain}')
 
     @property
@@ -185,7 +187,7 @@ class Rx(Rx_mb_2023):
         if self._dg411_gain == 1.:
             self.pin_DG1.value = False  # closed gain 1 active
             self.pin_DG2.value = True  # open gain 0.5 inactive
-        elif self._dg411_gain == 1/2:
+        elif self._dg411_gain == self._dg411_gain_ratio:
             self.pin_DG1.value = True  # closed gain 1 active
             self.pin_DG2.value = False  # open gain 0.5 inactive
 
