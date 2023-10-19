@@ -435,7 +435,7 @@ class OhmPiHardware:
             current, voltage = 0., 0.
             diff_vab = np.inf
             if strategy == 'constant':
-                tx_volt = vab_max*.9
+                vab_max = tx_volt * 1.001
                 strategy = 'vmax'
             if strategy == 'vmax':
                 while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
