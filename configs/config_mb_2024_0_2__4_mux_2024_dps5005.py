@@ -21,7 +21,7 @@ HARDWARE_CONFIG = {
     'pwr': {'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},
     'tx':  {'model': 'mb_2024_0_2',
              'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
-             'current_max': 4.8/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
+             'current_max': 4.8/(50*r_shunt)/5,  # Maximum voltage read by the current ADC on the TX board [A]
              'r_shunt': r_shunt,  # Shunt resistance in Ohms
              'interface_name': 'i2c',
              'vmn_hardware_offset': 2501.
