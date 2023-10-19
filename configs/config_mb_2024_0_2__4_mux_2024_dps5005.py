@@ -42,7 +42,7 @@ HARDWARE_CONFIG = {
                       # 'mcp_1': '0x27',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                       'cabling': {(i+8, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 12.},
+                      'voltage_max': 50.},
                 'mux_03':
                      {'model': 'mux_2024_0_X',
                       'tca_address': None,
@@ -53,7 +53,7 @@ HARDWARE_CONFIG = {
                       # 'mcp_1': '0x27',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                       'cabling': {(i+24, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 12.},
+                      'voltage_max': 50.},
                  'mux_05':
                      {'model': 'mux_2024_0_X',
                       'tca_address': None,
@@ -62,7 +62,7 @@ HARDWARE_CONFIG = {
                       'addr1': 'down',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                       'cabling': {(i+0, j): ('mux_05', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 12.},
+                      'voltage_max': 50.},
                 'mux_06':
                      {'model': 'mux_2024_0_X',
                       'tca_address': None,
@@ -71,7 +71,7 @@ HARDWARE_CONFIG = {
                       'addr1': 'down',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                       'cabling': {(i+16, j): ('mux_06', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 12.},
+                      'voltage_max': 50.},
                  },
              'default': {'interface_name': 'i2c_ext',
                          'voltage_max': 100.,
