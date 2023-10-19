@@ -43,7 +43,7 @@ for k, v in rx_module.SPECS['rx'].items():
     except Exception as e:
         print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
 
-current_max = np.min([TX_CONFIG['voltage_max']/50/TX_CONFIG['r_shunt'],  # TODO: replace 50 by a TX config
+current_max = np.min([TX_CONFIG['current_max'],  # TODO: replace 50 by a TX config
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
 voltage_max = np.min([TX_CONFIG['voltage_max'],
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
@@ -317,7 +317,7 @@ class OhmPiHardware:
             sp = np.mean(mean_vmn[np.ix_(polarity == 1)] + mean_vmn[np.ix_(polarity == -1)]) / 2
             return sp
 
-    def _find_vab(self, vab, iab, vmn, p_max, vab_max, vmn_max):
+    def _find_vab(self, vab, iab, vmn, p_max, vab_max, iab_max, vmn_max):
         iab_mean = np.mean(iab)
         iab_std = np.std(iab)
         vmn_mean = np.mean(vmn)
@@ -338,9 +338,10 @@ class OhmPiHardware:
         # conditions for vab update
         cond_vmn_max = rab_lower_bound / r_upper_bound * vmn_max
         cond_p_max = np.sqrt(p_max * rab_lower_bound)
+        cond_iab_max = rab_lower_bound * iab_max
         print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
         print(f'{k}: [{vab_max:.1f}, {cond_vmn_max:.1f}, {cond_p_max:.1f}]')
-        new_vab = np.min([vab_max, cond_vmn_max, cond_p_max])
+        new_vab = np.min([vab_max, cond_vmn_max, cond_p_max, cond_iab_max])
         if new_vab == vab_max:
             print('Vab bounded by Vab max')
         elif new_vab == cond_p_max:
@@ -432,7 +433,7 @@ class OhmPiHardware:
                     v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (self.readings[:, 1]==pulse))[0]  # NOTE : discard data aquired in the first x ms
                     iab = self.readings[v, 3]/1000.
                     vmn = np.abs(self.readings[v, 4]/1000. * self.readings[v, 2])
-                    new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, vmn_max)
+                    new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max)
                     diff_vab = np.abs(new_vab - vab_list[k])
                     vabs.append(new_vab)
                     print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
