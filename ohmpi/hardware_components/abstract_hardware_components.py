@@ -55,6 +55,7 @@ class PwrAbstract(ABC):
         self._current_max = kwargs.pop('current_max', 0.)
         self._voltage_min = kwargs.pop('voltage_min', 0.)
         self._voltage_max = kwargs.pop('voltage_max', 0.)
+        self._switchable = False
         self.connection = kwargs.pop('connection', None)
         self._battery_voltage = np.nan
 
@@ -422,7 +423,8 @@ class TxAbstract(ABC):
     def pwr_state(self, state):
         if state == 'on':
             self._pwr_state = 'on'
-            self.exec_logger.debug(f'{self.model} cannot switch on power source')
+            if not self.pwr.switchable:
+                self.exec_logger.debug(f'{self.model} cannot switch on power source')
             self.pwr.reload_settings()
         elif state == 'off':
             self._pwr_state = 'off'

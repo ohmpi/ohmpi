@@ -329,9 +329,6 @@ class OhmPiHardware:
         # bounds on vmn
         vmn_upper_bound = vmn_mean + 2 * vmn_std
         vmn_lower_bound = np.max([0.000001, vmn_mean - 2 * vmn_std])
-        # ax.plot([vab[k]] * 2, [vmn_lower_bound, vmn_upper_bound], '-b')
-        # ax.plot([0, vab_max], [0, vmn_upper_bound * vab_max / vab[k]], '-r', alpha=(k + 1) / n_steps)
-        # ax.plot([0, vab_max], [0, vmn_lower_bound * vab_max / vab[k]], '-g', alpha=(k + 1) / n_steps)
         # bounds on rab
         rab_lower_bound = np.max([0.1, np.abs(vab / iab_upper_bound)])
         rab_upper_bound = np.max([0.1, np.abs(vab / iab_lower_bound)])
