@@ -412,7 +412,7 @@ class OhmPiHardware:
 
             # Set gain at min
             self.rx.reset_gain()
-
+            vab_opt = tx_volt
             vab_max = np.abs(vab_max)
             vmn_min = np.abs(vmn_min)
             k = 0
@@ -434,7 +434,9 @@ class OhmPiHardware:
                 sampling_rate = self.rx.sampling_rate
             current, voltage = 0., 0.
             diff_vab = np.inf
-            if strategy=='vmax':
+            if strategy == 'constant':
+                tx_volt = vab_max*.9
+            if strategy == 'vmax':
                 while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
                     vabs = []
                     self._vab_pulses(vab_list[k], sampling_rate=self.rx.sampling_rate, durations=[0.2, 0.2], polarities=[1, -1])
@@ -459,8 +461,7 @@ class OhmPiHardware:
                 # print(f'Selected Vab: {vab_opt:.2f}')
                 # if switch_pwr_off:
                 #     self.tx.pwr.pwr_state = 'off'
-        else:
-            vab_opt = tx_volt
+
 
         # if strategy == 'vmax':
         #     # implement different strategies
