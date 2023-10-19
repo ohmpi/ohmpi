@@ -541,7 +541,7 @@ class OhmPi(object):
                 # "R_per_stack [Ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
                 # "PS_per_stack [mV]":  np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]),
                 # "PS_stack [mV]": ps_stack_mean,
-                # "R_ab [ohm]": Rab
+                "R_ab [ohm]": tx_volt / I
             }
 
             # to the data logger
