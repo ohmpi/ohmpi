@@ -21,6 +21,7 @@ SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
                 'mcp_address': {'default': 0x27},
                 'ads_address': {'default': 0x49},
                 'voltage_min': {'default': 10.0},
+                'voltage_max': {'default': 5000.0},  # [mV]
                 'dg411_gain_ratio': {'default': 1/2},  # lowest resistor value over sum of resistor values
                 'vmn_hardware_offset': {'default': 2500.},
                 },
