@@ -89,6 +89,7 @@ class Pwr(PwrAbstract):
             """
         if state == 'on':
             self.connection.write_register(0x09, 1)
+            self.current_max(self._current_max)
             self._pwr_state = 'on'
             self.exec_logger.debug(f'{self.model} is on')
             time.sleep(self._pwr_latency) # from pwr specs
