@@ -500,7 +500,7 @@ class OhmPi(object):
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
-            tx_volt = self._hw._compute_tx_volt(tx_volt=.5, strategy=strategy, vab_max=5.)  # TODO: use tx_volt and vmn_max instead of hardcoded values
+            tx_volt = self._hw._compute_tx_volt(tx_volt=.5, strategy=strategy, vab_max=10.)  # TODO: use tx_volt and vmn_max instead of hardcoded values
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
                 delay = kwargs['delay']
