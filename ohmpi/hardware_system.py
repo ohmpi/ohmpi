@@ -43,7 +43,7 @@ for k, v in rx_module.SPECS['rx'].items():
     except Exception as e:
         print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
 
-current_max = np.min([TX_CONFIG['current_max'],  HARDWARE_CONFIG['pwr']['current_max'], # TODO: replace 50 by a TX config
+current_max = np.min([TX_CONFIG['current_max'],  HARDWARE_CONFIG['pwr'].pop('current_max', np.inf), # TODO: replace 50 by a TX config
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
 voltage_max = np.min([TX_CONFIG['voltage_max'],
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
