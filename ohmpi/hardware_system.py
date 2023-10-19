@@ -345,7 +345,9 @@ class OhmPiHardware:
         if new_vab == vab_max:
             print('Vab bounded by Vab max')
         elif new_vab == cond_p_max:
-            print('Vab bounded by Pmax')
+            print('Vab bounded by P max')
+        elif new_vab == cond_iab_max:
+            print('Vab bounded by Iab max')
         else:
             assert new_vab == cond_vmn_max
             print('Vab bounded by Vmn max')
