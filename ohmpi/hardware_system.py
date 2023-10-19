@@ -413,6 +413,10 @@ class OhmPiHardware:
             # Set gain at min
             self.rx.reset_gain()
             vab_opt = tx_volt
+            if strategy == 'constant':
+                vab_max = tx_volt
+                tx_volt = tx_volt * .9
+                strategy = 'vmax'
             vab_max = np.abs(vab_max)
             vmn_min = np.abs(vmn_min)
             k = 0
@@ -434,10 +438,6 @@ class OhmPiHardware:
                 sampling_rate = self.rx.sampling_rate
             current, voltage = 0., 0.
             diff_vab = np.inf
-            if strategy == 'constant':
-                vab_max = tx_volt
-                tx_volt = tx_volt * .9
-                strategy = 'vmax'
             if strategy == 'vmax':
                 while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
                     vabs = []
