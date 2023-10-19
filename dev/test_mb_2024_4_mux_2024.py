@@ -7,9 +7,9 @@ import time
 import logging
 from ohmpi.config import HARDWARE_CONFIG
 
-stand_alone = False
+stand_alone = True
 part_of_hardware_system = False
-within_ohmpi = True
+within_ohmpi = False
 
 # Stand alone
 if stand_alone:
@@ -40,32 +40,36 @@ if stand_alone:
     rx = rx_module.Rx(**HARDWARE_CONFIG['rx'])
     tx = tx_module.Tx(**HARDWARE_CONFIG['tx'])
     pwr = pwr_module.Pwr(**HARDWARE_CONFIG['pwr'])
-    mux_ids = ['mux_02', 'mux_05']
-    for m,mux_id in enumerate(mux_ids):
-        mux_module = importlib.import_module(
-            f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"][mux_id].pop("model")}')
-
-        MUX_CONFIG = HARDWARE_CONFIG['mux']['boards'][mux_id]
-
-        MUX_CONFIG.update({'ctl': ctl, 'connection': MUX_CONFIG.pop('connection', ctl.interfaces[
-                                           MUX_CONFIG.pop('interface_name', 'i2c_ext')]), 'exec_logger': ctl.exec_logger,
-                       'soh_logger': ctl.soh_logger})
-        MUX_CONFIG.update({'id': mux_id})
-        mux = mux_module.Mux(**MUX_CONFIG)
-
-        # tx.polarity = 1
-        # time.sleep(1)
-        # tx.polarity = 0
-        # mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='on')
-        # time.sleep(1)
-        # voltage = rx.voltage
-        # current = tx.current
-        # mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
-        # print(f'Resistance: {voltage / current :.2f} ohm, voltage: {voltage:.2f} mV, current: {current:.2f} mA')
-        mux.reset()
-        mux.test({'A': [i+8*m for i in range(1, 9)], 'B': [i+8*m for i in range(1, 9)],
-                  'M': [i+8*m for i in range(1, 9)], 'N': [i+8*m for i in range(1, 9)]}, activation_time=.1)
-        mux.reset()
+    # mux_ids = ['mux_02', 'mux_05']
+    # for m,mux_id in enumerate(mux_ids):
+    #     mux_module = importlib.import_module(
+    #         f'ohmpi.hardware_components.{HARDWARE_CONFIG["mux"]["boards"][mux_id].pop("model")}')
+    #
+    #     MUX_CONFIG = HARDWARE_CONFIG['mux']['boards'][mux_id]
+    #
+    #     MUX_CONFIG.update({'ctl': ctl, 'connection': MUX_CONFIG.pop('connection', ctl.interfaces[
+    #                                        MUX_CONFIG.pop('interface_name', 'i2c_ext')]), 'exec_logger': ctl.exec_logger,
+    #                    'soh_logger': ctl.soh_logger})
+    #     MUX_CONFIG.update({'id': mux_id})
+    #     mux = mux_module.Mux(**MUX_CONFIG)
+    #
+    #     # tx.polarity = 1
+    #     # time.sleep(1)
+    #     # tx.polarity = 0
+    #     # mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='on')
+    #     # time.sleep(1)
+    #     # voltage = rx.voltage
+    #     # current = tx.current
+    #     # mux.switch(elec_dict={'A': [1], 'B': [4], 'M': [2], 'N': [3]}, state='off')
+    #     # print(f'Resistance: {voltage / current :.2f} ohm, voltage: {voltage:.2f} mV, current: {current:.2f} mA')
+    #     mux.reset()
+    #     mux.test({'A': [i+8*m for i in range(1, 9)], 'B': [i+8*m for i in range(1, 9)],
+    #               'M': [i+8*m for i in range(1, 9)], 'N': [i+8*m for i in range(1, 9)]}, activation_time=.1)
+    #     mux.reset()
+    for pol in [1,0,-1,0]:
+        tx.polarity = pol
+        print(pol)
+        time.sleep(5)
 
 # mux as part of a OhmPiHardware system
 if part_of_hardware_system:
