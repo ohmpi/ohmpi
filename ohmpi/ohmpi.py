@@ -459,7 +459,7 @@ class OhmPi(object):
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
                         autogain=True, strategy='constant', tx_volt=5., best_tx_injtime=0.1,
-                        cmd_id=None, vmn_max=None, **kwargs):
+                        cmd_id=None, vmn_max=None, vab_max=None, iab_max=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value, change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used in function definition
         # TODO: add rs_check option (or propose an other way to do this)
@@ -517,7 +517,7 @@ class OhmPi(object):
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
-            tx_volt = self._hw._compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max)  # TODO: use tx_volt and vmn_max instead of hardcoded values
+            tx_volt = self._hw._compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max, iab_max=iab_max)  # TODO: use tx_volt and vmn_max instead of hardcoded values
             time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
