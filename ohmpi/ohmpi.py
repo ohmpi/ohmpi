@@ -576,6 +576,10 @@ class OhmPi(object):
 
             dd['cmd_id'] = str(cmd_id)
             self.data_logger.info(dd)
+            self.switch_mux_on()
+            self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
+            time.sleep(0.2)
+            self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
 
         else:
             self.exec_logger.info(f'Skipping {quad}')
