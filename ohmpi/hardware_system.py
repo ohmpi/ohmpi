@@ -342,7 +342,7 @@ class OhmPiHardware:
         cond_p_max = np.sqrt(p_max * rab_lower_bound)
         cond_iab_max = rab_lower_bound * iab_max
         # print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
-        # print(f'{k}: [{vab_max:.1f}, {cond_vmn_max:.1f}, {cond_p_max:.1f}, {cond_iab_max:.1f}]')
+        print(f'{k}: [{vab_max:.1f}, {cond_vmn_max:.1f}, {cond_p_max:.1f}, {cond_iab_max:.1f}]')
         new_vab = np.min([vab_max, cond_vmn_max, cond_p_max, cond_iab_max])
         if new_vab == vab_max:
             print(f'Vab {new_vab} bounded by Vab max')
@@ -410,6 +410,8 @@ class OhmPiHardware:
             if p_max is None:
                 p_max = vab_max * iab_max
 
+            vab_max = np.abs(vab_max)
+            vmn_min = np.abs(vmn_min)
             # Set gain at min
             self.rx.reset_gain()
             vab_opt = tx_volt
@@ -418,8 +420,7 @@ class OhmPiHardware:
                 vab_max = vab
                 vab = vab * .9
                 strategy = 'vmax'
-            vab_max = np.abs(vab_max)
-            vmn_min = np.abs(vmn_min)
+
             k = 0
             vab_list = np.zeros(n_steps + 1) * np.nan
 
