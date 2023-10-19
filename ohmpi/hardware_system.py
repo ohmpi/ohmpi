@@ -449,9 +449,9 @@ class OhmPiHardware:
                 if self.tx.pwr.voltage_adjustable:
                     self.tx.voltage = vab_list[k]
             vab_opt = vab_list[k]
-            print(f'Selected Vab: {vab_opt:.2f}')
-            if switch_pwr_off:
-                self.tx.pwr.pwr_state = 'off'
+            # print(f'Selected Vab: {vab_opt:.2f}')
+            # if switch_pwr_off:
+            #     self.tx.pwr.pwr_state = 'off'
         else:
             vab_opt = tx_volt
         # if strategy == 'vmax':
