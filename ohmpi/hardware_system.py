@@ -435,7 +435,7 @@ class OhmPiHardware:
                     v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (self.readings[:, 1]==pulse))[0]  # NOTE : discard data aquired in the first x ms
                     iab = self.readings[v, 3]/1000.
                     vmn = np.abs(self.readings[v, 4]/1000. * self.readings[v, 2])
-                    new_vab = self._find_vab(vab_list[k], iab, vmn, )
+                    new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, vmn_max)
                     diff_vab = np.abs(new_vab - vab_list[k])
                     vabs.append(new_vab)
                     print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
