@@ -11,7 +11,7 @@ import warnings
 # hardware characteristics and limitations
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 12., 'max': 50., 'min': 0.},
-         'modbus_baudrate': {'default': 9600},
+         'modbus_baudrate': {'default': 19200},
          'modbus_bitesize': {'default': 8},
          'modbus_timeout': {'default': 1},
          'modbus_debug': {'default': False},
