@@ -112,7 +112,7 @@ if within_ohmpi:
     # k.load_sequence('sequences/9991_GRAD_16_s1_a1.txt')
     # k.run_sequence(tx_volt=5, injection_duration=1., nb_stack=2, duty_cycle=0.5)
     print('using OhmPi')
-    d = k.run_measurement([A, B, M, N], injection_duration=1., nb_stack=2, duty_cycle=0.5, tx_volt=5.)
+    d = k.run_measurement([A, B, M, N], injection_duration=1., nb_stack=2, duty_cycle=0.5, tx_volt=5., delay=0.01)
     print(d)
     k._hw._plot_readings()
     print(f'OhmPiHardware: Resistance: {k._hw.last_resistance() :.2f} ohm, dev. {k._hw.last_dev():.2f} %, sp: {k._hw.sp:.2f} mV, rx bias: {k._hw.rx._bias:.2f} mV')
