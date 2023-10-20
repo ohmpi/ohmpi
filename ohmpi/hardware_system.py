@@ -299,6 +299,34 @@ class OhmPiHardware:
         else:
             return np.nan
 
+    def last_vmn(self, delay=0.):
+        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        if len(v) > 1:
+            return np.mean(self.readings[v, 2] * (self.readings[v, 4] - self.sp))
+        else:
+            return np.nan
+
+    def last_vmn_dev(self, delay=0.):  # TODO: should compute std per stack because this does not account for SP...
+        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        if len(v) > 1:
+            return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4])) / self.last_vmn(delay=delay)
+        else:
+            return np.nan
+
+    def last_iab(self, delay=0.):
+        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        if len(v) > 1:
+            return np.mean(self.readings[v, 3])
+        else:
+            return np.nan
+
+    def last_iab_dev(self, delay=0.):
+        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        if len(v) > 1:
+            return 100. * np.std(self.readings[v, 3]) / / self.last_iab(delay=delay)
+        else:
+            return np.nan
+
     @property
     def sp(self):  # TODO: allow for different strategies for computing sp (i.e. when sp drift is not linear)
         if self.readings.shape == (0,) or len(self.readings[self.readings[:, 2] == 1, :]) < 1 or \
@@ -362,6 +390,7 @@ class OhmPiHardware:
                          iab_max=None, vmn_max=None, vmn_min=voltage_min, polarities=(1, -1), delay=0.05,
                          p_max=None, diff_vab_lim=2.5, n_steps=4):
         # TODO: Optimise how to pass iab_max, vab_max, vmn_min
+        # TODO: Update docstring
         """Estimates best Tx voltage based on different strategies.
         At first a half-cycle is made for a short duration with a fixed
         known voltage. This gives us Iab and Rab. We also measure Vmn.
