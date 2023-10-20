@@ -135,9 +135,9 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="elecSpacing" class="col-sm-2 col-form-label">Electrode spacing [m]</label>
+                            <label for="elec_spacing" class="col-sm-2 col-form-label">Electrode spacing [m]</label>
                             <div class="col-sm-10">
-                              <input type="number" class="form-control" id="elecSpacing", value="1">
+                              <input type="number" class="form-control" id="elec_spacing", value="1">
                             </div>
                           </div>
                       </form>
@@ -181,7 +181,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         let topic_exec = topic + '/exec'
         let topic_data = topic + '/data'
         let hostname = location.hostname
-        let port = 9001
+        let port = 9001  // corresponding listener for the broker
         let clientId = 'ohmpi_0001_html'
         let message = null
         let msg = ''
@@ -209,6 +209,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         function onConnectionLost(responseObject) {
             if (responseObject.errorCode !== 0)
                 console.log("onConnectionLost:" + responseObject.errorMessage)
+                console.log("trying to reconnect...")
+                client.connect({onSuccess: onConnect})
         }
         
         function onMessageArrived(message) {
@@ -403,7 +405,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 size: 40,
                 color: [],
                 colorbar: {
-                    title: 'App. res. [Ohm.m]',
+                    title: 'Apparent resistivity [Ohm.m]',
+                    titleside: 'right',
                     cmin: 0,
                     cmax: 100,
                 }
@@ -413,7 +416,6 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             title: 'Pseudo-section',
             yaxis: {
                 title: 'Pseudo-depth',
-                autorange: 'reversed'
             },
             xaxis: {
                 title: 'X'
@@ -462,7 +464,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
         // callback function to draw the plot
         function surveySelectFunc(el) {
-            let elecSpacing = parseFloat(document.getElementById('elecSpacing').value)
+            let elec_spacing = parseFloat(document.getElementById('elec_spacing').value)
             let surveyName = el['target'].value
             let df = data[surveyName]
             if (df != undefined) {
@@ -478,15 +480,15 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 let app = []
                 for (let i = 0; i < a.length; i++) {
                    
-                    let emin = Math.min(...[a[i], b[i], m[i], n[i]])
-                    let emax = Math.max(...[a[i], b[i], m[i], n[i]])
+                    let emin = Math.min(...[a[i], b[i], m[i], n[i]]) * elec_spacing
+                    let emax = Math.max(...[a[i], b[i], m[i], n[i]]) * elec_spacing
                     let dist = Math.abs(emax - emin)
                     xpos.push(emin + dist/2)
-                    ypos.push(Math.sqrt(2)/2 * dist)
-                    let am = Math.abs(a[i] - m[i])
-                    let bm = Math.abs(b[i] - m[i])
-                    let an = Math.abs(a[i] - n[i])
-                    let bn = Math.abs(a[i] - n[i])
+                    ypos.push(- Math.sqrt(2)/2 * dist)
+                    let am = Math.abs(a[i] - m[i]) * elec_spacing
+                    let bm = Math.abs(b[i] - m[i]) * elec_spacing
+                    let an = Math.abs(a[i] - n[i]) * elec_spacing
+                    let bn = Math.abs(a[i] - n[i]) * elec_spacing
                     let K = (2*Math.PI)/((1/am)-(1/an)-(1/an)+(1/bn))
                     app.push(df['rho'][i]*K)
                     
@@ -496,10 +498,10 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                     // let n = df['n'][i]
 
                     // // compute geometric factor assuming flat 2D surface
-                    // let am = Math.abs(a - m)*elecSpacing
-                    // let bm = Math.abs(b - m)*elecSpacing
-                    // let an = Math.abs(a - n)*elecSpacing
-                    // let bn = Math.abs(b - n)*elecSpacing
+                    // let am = Math.abs(a - m)*elec_spacing
+                    // let bm = Math.abs(b - m)*elec_spacing
+                    // let an = Math.abs(a - n)*elec_spacing
+                    // let bn = Math.abs(b - n)*elec_spacing
                     // let K = 2*Math.PI/((1/am)-(1/bm)-(1/an)+(1/bn))
                     // app.push(df['rho'][i]*K)
                     // //console.log(K) // same as resipy for the wenner case
@@ -511,8 +513,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                     // let ab = (abmn[0] + abmn[1])/2
                     // let mn = (abmn[2] + abmn[3])/2
                     // let dist = Math.abs(ab - mn)
-                    // xpos.push((Math.min(ab, mn) + dist/2)*elecSpacing)
-                    // ypos.push((Math.sqrt(2)/2*dist)*elecSpacing)
+                    // xpos.push((Math.min(ab, mn) + dist/2)*elec_spacing)
+                    // ypos.push(- (Math.sqrt(2)/2*dist)*elec_spacing)
                 }
                 console.log('========', app, xpos, ypos)
                 // update the trace and redraw the figure
@@ -718,21 +720,44 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         
         // plot inverted data
         function showInvFunc() {
-            let cmin = document.getElementById('cminInv').value
-            let cmax = document.getElementById('cmaxInv').value
-            
+            let cmin = parseFloat(document.getElementById('cminInv').value)
+            let cmax = parseFloat(document.getElementById('cmaxInv').value)
+            let autocontour = false
+            if (isNaN(cmin) | isNaN(cmax)) {
+                autocontour = true
+            }
+
+            // convert rho to log10(rho)
+            let log10rho = []
+            for (let i = 0; i < invertedData[0]['rho'].length; i++) {
+                let row = invertedData[0]['rho'][i]
+                var arr = []
+                for (let j = 0; j < row.length; j++) {
+                    arr.push(Math.log10(row[j]))
+                }
+                log10rho.push(arr)
+            }
+
             var invData = [{
-                z: invertedData[0]['rho'],
+                z: log10rho,
                 x: invertedData[0]['x'],
                 y: invertedData[0]['z'],
                 type: 'contour',
                 colorscale: 'Viridis',
-                autocontour: true, // set to false if cmin is given
+                autocontour: autocontour,
                 contours: {
                     start: cmin,
                     end: cmax,
-                    size: 10
+                    size: 10,
                 },
+                colorbar:{
+                    title: 'Resistivity (log10) [Ohm.m]',
+                    titleside: 'right',
+                    titlefont: {
+                        size: 14,
+                        family: 'Arial, sans-serif'
+                    }
+                }
             }]
 
             var invLayout = {
@@ -742,7 +767,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 },
                 xaxis: {
                     title: 'X [m]'
-                }   
+                },
             }
             
             Plotly.newPlot('inv', invData, invLayout, {responsive: true})
@@ -759,10 +784,15 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             var btn = document.getElementById('invertBtn')
             btn.innerText = 'Inverting...'
             btn.className = 'btn btn-warning'
+            var elec_spacing = parseFloat(document.getElementById('elec_spacing').value)
+            if (isNaN(elec_spacing)) {
+                elec_spacing = 1
+            }
             sendCommand(JSON.stringify({
                     'cmd': 'run_inversion',
                     'kwargs': {
-                        'survey_names': [survey_name + '.csv']
+                        'survey_names': [survey_name + '.csv'],
+                        'elec_spacing': elec_spacing,
                     }
                 }), function(x) {
                     console.log('inversion results', x)

@@ -32,9 +32,11 @@ sudo systemctl enable mosquitto.service
 echo -e "\n${txtgrn}>>> Broker is installed. Starting now...${txtdef}"
 mosquitto -v 
 
-echo -e "\n${txtgrn}>>> Updating configuration to allow anonymous remote connections...${txtdef}"
+echo -e "\n${txtgrn}>>> Updating configuration to allow anonymous remote connections and websockets...${txtdef}"
+echo "listener 9001" | sudo tee -a /etc/mosquitto/mosquitto.conf
 echo "listener 1883" | sudo tee -a /etc/mosquitto/mosquitto.conf
+echo "protocol websockets" | sudo tee -a /etc/mosquitto/mosquitto.conf
+echo "socket_domain ipv4" | sudo tee -a /etc/mosquitto/mosquitto.conf
 echo "allow_anonymous true" | sudo tee -a /etc/mosquitto/mosquitto.conf
 echo -e "\n${txtgrn}>>> Current configuration stored in /etc/mosquitto/mosquitto.conf is displayed below${txtdef}" 
 cat /etc/mosquitto/mosquitto.conf
-echo -e "\n${txtylw}>>> Adapt it according to your needs!${txtdef}\n"
