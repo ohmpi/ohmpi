@@ -474,12 +474,29 @@ class OhmPi(object):
             positive, one negative).
         injection_duration : int, optional
             Injection time in seconds.
-        strategy : str, optional
-            Default: conUsed if power is adjustable (e.g. dps5005)If we search for best voltage (tx_volt == 0), we can choose
-            vmax strategy : find the highest voltage that stays in the range
-            For a constant value, just set the tx_volt.
-        tx_volt : float, optional
-            (V3.0 only) If specified, voltage will be imposed. If 0, we will look
+        strategy : str, optional, default: constant
+            Define injection strategy (if power is adjustable, otherwise constant tx_volt)
+            Either:
+            - vmax : compute Vab to reach a maximum Vmn_max and Iab without exceeding vab_max
+            - vmin : compute Vab to reach at least Vmn_min
+            - constant : apply given Vab (tx_volt) -
+                        Safety check (i.e. short voltage pulses) performed prior to injection to ensure
+                        injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
+                        To avoid safety check before injection, tx_volt should be set equal to vab_max (not recpommanded)
+        vab_max : str, optional
+            Maximum injection voltage
+            Default value set by config or boards specs
+        iab_max : str, optional
+            Maximum current applied
+            Default value set by config or boards specs
+        vmn_max : str, optional
+            Maximum Vmn allowed
+            Default value set by config or boards specs
+        vmn_min :
+            Minimum Vmn desired (used in strategy vmin)
+            Default value set by config or boards specs
+        tx_volt : float, optional  # TODO: change tx_volt to Vab
+            For power adjustable only. If specified, voltage will be imposed. If 0, we will look
             for the best voltage.
         cmd_id : str, optional
             Unique command identifier
