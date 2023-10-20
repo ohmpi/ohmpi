@@ -48,7 +48,7 @@ current_max = np.min([TX_CONFIG['current_max'],  HARDWARE_CONFIG['pwr'].pop('cur
 voltage_max = np.min([TX_CONFIG['voltage_max'],
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
 voltage_min = RX_CONFIG['voltage_min']
-
+# TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
 
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
@@ -400,7 +400,8 @@ class OhmPiHardware:
         rab : float
             Resistance between injection electrodes
         """
-
+        tx_volt = np.abs(tx_volt)
+        vab_opt = tx_volt
         if self.tx.pwr.voltage_adjustable:
             if vmn_max is None:
                 vmn_max = self.rx._voltage_max / 1000.
@@ -414,10 +415,10 @@ class OhmPiHardware:
 
             vab_max = np.abs(vab_max)
             vmn_min = np.abs(vmn_min)
-            tx_volt = np.abs(tx_volt)
+            # tx_volt = np.abs(tx_volt)
             # Set gain at min
             self.rx.reset_gain()
-            vab_opt = tx_volt
+            # vab_opt = tx_volt
             if tx_volt >= vab_max:
                 strategy = 'constant'
             vab = np.min([np.abs(tx_volt), vab_max])
