@@ -1061,7 +1061,7 @@ class OhmPi(object):
         elif len(survey_names) > 0 and reg_mode > 0:
             k.createTimeLapseSurvey(fnames, parser=ohmpiParser)
         self.exec_logger.info('ResIPy: generate mesh')
-        k.createMesh('trian')
+        k.createMesh('trian', cl=elec_spacing/5)
         self.exec_logger.info('ResIPy: invert survey')
         k.invert(param=kwargs)
 
@@ -1074,20 +1074,20 @@ class OhmPi(object):
             x = np.linspace(df['X'].min(), df['X'].max(), 20)
             z = np.linspace(df['Z'].min(), df['Z'].max(), 20)
             grid_x, grid_z = np.meshgrid(x, z)
-            grid_z = griddata(df[['X', 'Z']].values, df['Resistivity(ohm.m)'].values,
-                              (grid_x, grid_z), method='linear')
+            grid_v = griddata(df[['X', 'Z']].values, df['Resistivity(ohm.m)'].values,
+                              (grid_x, grid_z), method='nearest')
             
             # set nan to -1
-            inan = np.isnan(grid_z)
-            grid_z[inan] = -1
+            inan = np.isnan(grid_v)
+            grid_v[inan] = -1
 
             xzv.append({
                 'x': x.tolist(),
                 'z': z.tolist(),
-                'rho': grid_z.tolist(),
+                'rho': grid_v.tolist(),
             })
         
-        self.data_logger.info(json.dumps(xzv))  # limited to one survey
+        self.data_logger.info(json.dumps(xzv))
         return xzv
 
     # Properties
