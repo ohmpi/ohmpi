@@ -248,6 +248,14 @@ class OhmPiHardware:
         return pulses
 
     def _read_values(self, sampling_rate=None, append=False):  # noqa
+        """
+        Reads vmn and iab values on ADS1115 and generates full waveform dataset consisting of
+        [time, pulse nr, polarity, vmn, iab]
+        Parameters
+        ----------
+        sampling_rate: float,None , optional
+        append: bool Default: False
+        """
         self.exec_logger.event(f'OhmPiHardware\tread_values\tbegin\t{datetime.datetime.utcnow()}')
         if not append:
             self._clear_values()
