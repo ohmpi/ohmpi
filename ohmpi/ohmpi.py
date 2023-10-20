@@ -484,7 +484,7 @@ class OhmPi(object):
             - constant : apply given Vab (tx_volt) -
                         Safety check (i.e. short voltage pulses) performed prior to injection to ensure
                         injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
-                        To avoid safety check before injection, tx_volt should be set equal to vab_max (not recpommanded)
+                        To bypass safety check before injection, tx_volt should be set equal to vab_max (not recpommanded)
         vab_max : str, optional
             Maximum injection voltage
             Default value set by config or boards specs
