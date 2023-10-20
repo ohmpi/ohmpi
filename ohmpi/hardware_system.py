@@ -319,7 +319,7 @@ class OhmPiHardware:
             sp = np.mean(mean_vmn[np.ix_(polarity == 1)] + mean_vmn[np.ix_(polarity == -1)]) / 2
             return sp
 
-    def _find_vab(self, vab, iab, vmn, p_max, vab_max, iab_max, vmn_max):
+    def _find_vab(self, vab, iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min):
         iab_mean = np.mean(iab)
         iab_std = np.std(iab)
         vmn_mean = np.mean(vmn)
@@ -339,10 +339,11 @@ class OhmPiHardware:
         r_upper_bound = np.max([0.1, np.abs(vmn_upper_bound / iab_lower_bound)])
         # conditions for vab update
         cond_vmn_max = rab_lower_bound / r_upper_bound * vmn_max
+        cond_vmn_min = rab_upper_bound / r_lower_bound * vmn_min
         cond_p_max = np.sqrt(p_max * rab_lower_bound)
         cond_iab_max = rab_lower_bound * iab_max
         # print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
-        print(f'[{vab_max:.1f}, {cond_vmn_max:.1f}, {cond_p_max:.1f}, {cond_iab_max:.1f}]')
+        print(f'[vab_max: {vab_max:.1f}, vmn_max: {cond_vmn_max:.1f}, vmn_min: {cond_vmn_min:.1f}, p_max: {cond_p_max:.1f}, iab_max: {cond_iab_max:.1f}]')
         new_vab = np.min([vab_max, cond_vmn_max, cond_p_max, cond_iab_max])
         if new_vab == vab_max:
             print(f'Vab {new_vab} bounded by Vab max')
@@ -443,15 +444,17 @@ class OhmPiHardware:
                 sampling_rate = self.rx.sampling_rate
             current, voltage = 0., 0.
             diff_vab = np.inf
-            if strategy == 'vmax':
+            if strategy == 'vmax' or strategy == 'vmin':
                 while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
+                    if strategy=='vmax':
+                        vmn_min = vmn_max
                     vabs = []
                     self._vab_pulses(vab_list[k], sampling_rate=self.rx.sampling_rate, durations=[0.2, 0.2], polarities=[1, -1])
                     for pulse in range(2):
                         v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (self.readings[:, 1]==pulse))[0]  # NOTE : discard data aquired in the first x ms
                         iab = self.readings[v, 3]/1000.
                         vmn = np.abs(self.readings[v, 4]/1000. * self.readings[v, 2])
-                        new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max)
+                        new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min)
                         diff_vab = np.abs(new_vab - vab_list[k])
                         vabs.append(new_vab)
                         # print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
