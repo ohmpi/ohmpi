@@ -471,9 +471,11 @@ class OhmPi(object):
             really create the route to the electrodes.
         nb_stack : int, optional
             Number of stacks. A stack is considered two pulses (one
-            positive, one negative).
+            positive, one negative).            If 0, we will look            for the best voltage.
         injection_duration : int, optional
             Injection time in seconds.
+        duty_cycle : float, optional, Default: 0.5
+            Duty cycle of injection square wave
         strategy : str, optional, default: constant
             Define injection strategy (if power is adjustable, otherwise constant tx_volt)
             Either:
@@ -496,8 +498,7 @@ class OhmPi(object):
             Minimum Vmn desired (used in strategy vmin)
             Default value set by config or boards specs
         tx_volt : float, optional  # TODO: change tx_volt to Vab
-            For power adjustable only. If specified, voltage will be imposed. If 0, we will look
-            for the best voltage.
+            For power adjustable only. If specified, voltage will be imposed.
         cmd_id : str, optional
             Unique command identifier
         """

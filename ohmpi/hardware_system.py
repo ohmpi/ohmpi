@@ -529,6 +529,25 @@ class OhmPiHardware:
 
     def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, duty_cycle=1.,
                         append=False):
+        """
+        Performs a Vab injection following a square wave and records full waveform data. Calls in function Vab_pulses.
+
+        Parameters
+        ----------
+        vab: float,
+            Injection voltage [V]
+        cycle_duration: float
+            Duration of one cycle within the square wave (in seconds)
+        sampling_rate: float, None Default None
+            Sampling rate for Rx readings
+        cycles: integer, Default: 3
+            Number of cycles
+        polarity: 1, 0 , -1
+            Starting polarity
+        duty_cycle: float (0 to 1)
+            Duty cycle of injection wave
+        append: bool, Default: False
+        """
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
         switch_pwr_off, switch_tx_pwr_off = False, False
         if self.pwr_state == 'off':
