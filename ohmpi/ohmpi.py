@@ -459,11 +459,9 @@ class OhmPi(object):
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
                         autogain=True, strategy='constant', tx_volt=5., best_tx_injtime=0.1,
-                        cmd_id=None, vmn_max=None, vab_max=None, iab_max=None, **kwargs):
+                        cmd_id=None, vab_max=None, iab_max=None, vmn_max=None, vmn_min=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value, change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used in function definition
-        # TODO: add rs_check option (or propose an other way to do this)
-        # TODO: implement compute_tx_volt for injection strategies
         """Measures on a quadrupole and returns transfer resistance.
 
         Parameters
@@ -476,13 +474,8 @@ class OhmPi(object):
             positive, one negative).
         injection_duration : int, optional
             Injection time in seconds.
-        best_tx_injtime: float, optional
-            ???
-        autogain : bool, optional
-            If True, will adapt the gain of the ADS1115 to maximize the
-            resolution of the reading.
         strategy : str, optional
-            (V3.0 only) If we search for best voltage (tx_volt == 0), we can choose
+            Default: conUsed if power is adjustable (e.g. dps5005)If we search for best voltage (tx_volt == 0), we can choose
             vmax strategy : find the highest voltage that stays in the range
             For a constant value, just set the tx_volt.
         tx_volt : float, optional
