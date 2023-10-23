@@ -331,7 +331,7 @@ class OhmPiHardware:
     def last_iab_dev(self, delay=0.):
         v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
         if len(v) > 1:
-            return 100. * np.std(self.readings[v, 3]) / / self.last_iab(delay=delay)
+            return 100. * np.std(self.readings[v, 3]) / self.last_iab(delay=delay)
         else:
             return np.nan
 
