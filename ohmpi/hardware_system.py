@@ -317,7 +317,7 @@ class OhmPiHardware:
     def last_vmn_dev(self, delay=0.):  # TODO: should compute std per stack because this does not account for SP...
         v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
         if len(v) > 1:
-            return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4])) / self.last_vmn(delay=delay)
+            return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4]) - self.sp) / self.last_vmn(delay=delay)
         else:
             return np.nan
 
