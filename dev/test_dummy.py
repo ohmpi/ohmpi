@@ -41,11 +41,13 @@ if within_ohmpi:
 
     print('Starting test with OhmPi.')
     k = OhmPi(mqtt=False)
+    k._hw.exec_logger.setLevel(logging.DEBUG)
     A, B, M, N = (32, 29, 31, 30)
     k.reset_mux()
     # k.test_mux(activation_time=0.01)#mux_id='mux_A')
-    # k._hw.switch_mux([A, B, M, N], state='on')
-    # k._hw.vab_square_wave(12.,1., cycles=2)
+    k._hw.switch_mux([A, B, M, N], state='on')
+    k._hw.vab_square_wave(12.,1., cycles=2)
+    # TODO self.tx_sync_wait() is blocking here
     # k._hw.switch_mux([A, B, M, N], state='off')
     # k._hw.calibrate_rx_bias()  # electrodes 1 4 2 3 should be connected to a reference circuit
     # k._hw.rx._bias = -1.38
