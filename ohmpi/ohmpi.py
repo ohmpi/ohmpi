@@ -784,6 +784,11 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier
         """
+        # check pwr is on, if not, let's turn it on
+        switch_power_off = False
+        if self._hw.pwr_state == 'off':
+            self._hw.pwr_state = 'on'
+            switch_power_off = True
 
         self._hw.tx.pwr.voltage = float(tx_volt)
 
@@ -866,7 +871,10 @@ class OhmPi(object):
             self.switch_mux_off(quad)
 
         self.status = 'idle'
-
+        
+        # if power was off before measurement, let's turn if off
+        if switch_power_off:
+            self._hw.pwr_state = 'off'
     #
     #         # TODO if interrupted, we would need to restore the values
     #         # TODO or we offer the possibility in 'run_measurement' to have rs_check each time?
