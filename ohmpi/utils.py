@@ -1,7 +1,8 @@
 import io
 import os
 import shutil
-git import numpy as np
+import collections.abc
+import numpy as np
 from numbers import Number
 
 
