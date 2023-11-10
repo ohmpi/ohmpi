@@ -790,7 +790,7 @@ class OhmPi(object):
             self._hw.pwr_state = 'on'
             switch_power_off = True
 
-        self._hw.tx.pwr.voltage = float(tx_volt)
+        # self._hw.tx.pwr.voltage = float(tx_volt)
 
         # create custom sequence where MN == AB
         # we only check the electrodes which are in the sequence (not all might be connected)
@@ -821,7 +821,7 @@ class OhmPi(object):
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole
             self._hw.switch_mux(electrodes=list(quads[i, :2]), roles=['A', 'B'], state='on')
-            self._hw._vab_pulse(duration=0.2)
+            self._hw._vab_pulse(duration=0.2, vab=tx_volt)
             current = self._hw.readings[-1, 3]
             voltage = self._hw.tx.pwr.voltage * 1000
             time.sleep(0.2)
@@ -871,7 +871,7 @@ class OhmPi(object):
             self.switch_mux_off(quad)
 
         self.status = 'idle'
-        
+
         # if power was off before measurement, let's turn if off
         if switch_power_off:
             self._hw.pwr_state = 'off'

@@ -1,8 +1,7 @@
 import io
 import os
 import shutil
-import collections.abc
-import numpy as np
+git import numpy as np
 from numbers import Number
 
 
@@ -112,3 +111,8 @@ def parse_log(log):
     msg = np.array(msg)
     session = np.array(session)
     return time, process_id, tag, msg, session
+
+def mux_2024_to_mux_2023_takeouts(sequence):
+    mapper = {1: 16, 2: 1, 3: 15, 4: 2, 5: 14, 6: 3, 7: 13, 8: 4, 9: 12, 10: 5, 11: 11,
+              12: 6, 13: 10, 14: 7, 15: 9, 16: 8}
+    remapped_sequence = mapper[sequence]
