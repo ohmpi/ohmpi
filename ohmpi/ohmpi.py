@@ -823,7 +823,9 @@ class OhmPi(object):
             self._hw.switch_mux(electrodes=list(quads[i, :2]), roles=['A', 'B'], state='on')
             self._hw._vab_pulse(duration=0.2, vab=tx_volt)
             current = self._hw.readings[-1, 3]
-            voltage = self._hw.tx.pwr.voltage * 1000
+            print(self._hw.tx.pwr.voltage)
+            voltage = self._hw.tx.pwr.voltage
+            print(self._hw.tx.pwr.voltage)
             time.sleep(0.2)
 
             # self.switch_mux_on(quad, bypass_check=True)  # put before raising the pins (otherwise conflict i2c)
@@ -839,7 +841,7 @@ class OhmPi(object):
             # current = self._hw.tx.current
 
             # compute resistance measured (= contact resistance)
-            resist = abs(voltage / current) / 1000 # kOhm
+            resist = abs(voltage / current/1000) / 1000 # kOhm
             # print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} kOhm'.format(
             #    current, voltage, resist))
             # msg = f'Contact resistance {str(quad):s}: I: {current :>10.3f} mA, ' \
