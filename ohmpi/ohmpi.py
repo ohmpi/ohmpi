@@ -821,8 +821,8 @@ class OhmPi(object):
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole
             self._hw.switch_mux(electrodes=list(quads[i, :2]), roles=['A', 'B'], state='on')
-            if self.tx.pwr.pwr_state == 'off':
-                self.tx.pwr.pwr_state = 'on'
+            if self._hw.pwr.pwr_state == 'off':
+                self._hw.pwr.pwr_state = 'on'
                 switch_pwr_off = True
             self._hw._vab_pulse(duration=0.2, vab=tx_volt)
             current = self._hw.readings[-1, 3]
@@ -876,7 +876,7 @@ class OhmPi(object):
 
         self.status = 'idle'
         if switch_pwr_off:
-            self.tx.pwr.pwr_state = 'off'
+            self._hw.pwr.pwr_state = 'off'
         # if power was off before measurement, let's turn if off
         if switch_tx_pwr_off:
             self._hw.pwr_state = 'off'
