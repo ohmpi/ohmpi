@@ -823,9 +823,10 @@ class OhmPi(object):
             self._hw.switch_mux(electrodes=list(quads[i, :2]), roles=['A', 'B'], state='on')
             self._hw._vab_pulse(duration=0.2, vab=tx_volt)
             current = self._hw.readings[-1, 3]
-            print(self._hw.tx.pwr.voltage)
-            voltage = self._hw.tx.pwr.voltage
-            print(self._hw.tx.pwr.voltage)
+            if self._hw.tx.pwr.voltage_adjustable:
+                if self._hw.tx.voltage != tx_volt:
+                    self._hw.tx.voltage = tx_volt
+            vab = self._hw.tx.pwr.voltage
             time.sleep(0.2)
 
             # self.switch_mux_on(quad, bypass_check=True)  # put before raising the pins (otherwise conflict i2c)
@@ -841,7 +842,7 @@ class OhmPi(object):
             # current = self._hw.tx.current
 
             # compute resistance measured (= contact resistance)
-            resist = abs(voltage / current/1000) / 1000 # kOhm
+            rab = abs(vab / current/1000) / 1000 # kOhm
             # print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} kOhm'.format(
             #    current, voltage, resist))
             # msg = f'Contact resistance {str(quad):s}: I: {current :>10.3f} mA, ' \
@@ -852,21 +853,21 @@ class OhmPi(object):
                 'rsdata': {
                     'A': int(quad[0]),
                     'B': int(quad[1]),
-                    'rs': resist,  # in kOhm
+                    'rs': rab,  # in kOhm
                 }
             }
             self.data_logger.info(json.dumps(msg))
 
             # if contact resistance = 0 -> we have a short circuit!!
-            if resist < 1e-5:
-                msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {resist:.3f} kOhm'
+            if rab < 1e-5:
+                msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {rab:.3f} kOhm'
                 self.exec_logger.warning(msg)
 
             # save data in a text file
             self.append_and_save(export_path_rs, {
                 'A': quad[0],
                 'B': quad[1],
-                'RS [kOhm]': resist,
+                'RS [kOhm]': rab,
             })
 
             # close mux path and put pin back to GND
