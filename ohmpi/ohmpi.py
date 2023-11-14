@@ -828,7 +828,7 @@ class OhmPi(object):
             #     if self._hw.tx.voltage != tx_volt:
             #         self._hw.tx.voltage = tx_volt
             vab = self._hw.tx.pwr.voltage
-            print(vab)
+            print(vab, current)
             time.sleep(0.2)
 
             # self.switch_mux_on(quad, bypass_check=True)  # put before raising the pins (otherwise conflict i2c)
