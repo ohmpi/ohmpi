@@ -857,21 +857,21 @@ class OhmPi(object):
                 'rsdata': {
                     'A': int(quad[0]),
                     'B': int(quad[1]),
-                    'rs': np.round(rab,2),  # in kOhm
+                    'rs': np.round(rab,3),  # in kOhm
                 }
             }
             self.data_logger.info(json.dumps(msg))
 
             # if contact resistance = 0 -> we have a short circuit!!
             if rab < 1e-5:
-                msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {rab:.2f} kOhm'
+                msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {rab:.3f} kOhm'
                 self.exec_logger.warning(msg)
 
             # save data in a text file
             self.append_and_save(export_path_rs, {
                 'A': quad[0],
                 'B': quad[1],
-                'RS [kOhm]': rab,
+                'RS [kOhm]': np.round(rab,3),
             })
 
             # close mux path and put pin back to GND
