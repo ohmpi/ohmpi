@@ -821,9 +821,7 @@ class OhmPi(object):
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole
             self._hw.switch_mux(electrodes=list(quads[i, :2]), roles=['A', 'B'], state='on')
-            print('tx', self._hw.tx.voltage)
             self._hw._vab_pulse(duration=0.2, vab=tx_volt)
-            print('tx', self._hw.tx.voltage)
             current = self._hw.readings[-1, 3]
             # if self._hw.tx.pwr.voltage_adjustable:
             #     print('tx',self._hw.tx.voltage)

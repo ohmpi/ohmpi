@@ -623,6 +623,9 @@ class OhmPiHardware:
                 self.tx.voltage = vab
         else:
             vab = self.tx.voltage
+        if self.tx.pwr.pwr_state == 'off':
+            self.tx.pwr.pwr_state = 'on'
+            switch_pwr_off = True
         # reads current and voltage during the pulse
         injection = Thread(target=self._inject, kwargs={'injection_duration': duration, 'polarity': polarity})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
@@ -631,7 +634,8 @@ class OhmPiHardware:
         readings.join()
         injection.join()
         self.tx.polarity = 0   #TODO: is this necessary?
-
+        if switch_pwr_off:
+            self.tx.pwr.pwr_state = 'off'
     def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
         switch_pwr_off, switch_tx_pwr_off = False, False
         if self.pwr_state == 'off':
