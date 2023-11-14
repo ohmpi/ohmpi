@@ -785,10 +785,10 @@ class OhmPi(object):
             Unique command identifier
         """
         # check pwr is on, if not, let's turn it on
-        switch_power_off = False
+        switch_tx_pwr_off = False
         if self._hw.pwr_state == 'off':
             self._hw.pwr_state = 'on'
-            switch_power_off = True
+            switch_tx_pwr_off = True
 
         # self._hw.tx.pwr.voltage = float(tx_volt)
 
@@ -821,12 +821,11 @@ class OhmPi(object):
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole
             self._hw.switch_mux(electrodes=list(quads[i, :2]), roles=['A', 'B'], state='on')
+            if self.tx.pwr.pwr_state == 'off':
+                self.tx.pwr.pwr_state = 'on'
+                switch_pwr_off = True
             self._hw._vab_pulse(duration=0.2, vab=tx_volt)
             current = self._hw.readings[-1, 3]
-            # if self._hw.tx.pwr.voltage_adjustable:
-            #     print('tx',self._hw.tx.voltage)
-            #     if self._hw.tx.voltage != tx_volt:
-            #         self._hw.tx.voltage = tx_volt
             vab = self._hw.tx.pwr.voltage
             print(vab, current)
             time.sleep(0.2)
@@ -844,7 +843,7 @@ class OhmPi(object):
             # current = self._hw.tx.current
 
             # compute resistance measured (= contact resistance)
-            rab = abs(vab / current/1000) / 1000 # kOhm
+            rab = abs(vab*1000 / current) / 1000 # kOhm
             # print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} kOhm'.format(
             #    current, voltage, resist))
             # msg = f'Contact resistance {str(quad):s}: I: {current :>10.3f} mA, ' \
@@ -876,9 +875,10 @@ class OhmPi(object):
             self.switch_mux_off(quad)
 
         self.status = 'idle'
-
+        if switch_pwr_off:
+            self.tx.pwr.pwr_state = 'off'
         # if power was off before measurement, let's turn if off
-        if switch_power_off:
+        if switch_tx_pwr_off:
             self._hw.pwr_state = 'off'
     #
     #         # TODO if interrupted, we would need to restore the values
