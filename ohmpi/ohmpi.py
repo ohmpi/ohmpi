@@ -817,13 +817,16 @@ class OhmPi(object):
 
         self.reset_mux()
 
+        # turn dps_pwr_on if needed
+        switch_pwr_off = False
+        if self._hw.pwr.pwr_state == 'off':
+            self._hw.pwr.pwr_state = 'on'
+            switch_pwr_off = True
+            
         # measure all quad of the RS sequence
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole
             self._hw.switch_mux(electrodes=list(quads[i, :2]), roles=['A', 'B'], state='on')
-            if self._hw.pwr.pwr_state == 'off':
-                self._hw.pwr.pwr_state = 'on'
-                switch_pwr_off = True
             self._hw._vab_pulse(duration=0.2, vab=tx_volt)
             current = self._hw.readings[-1, 3]
             vab = self._hw.tx.pwr.voltage
