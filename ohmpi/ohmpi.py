@@ -822,7 +822,7 @@ class OhmPi(object):
         if self._hw.pwr.pwr_state == 'off':
             self._hw.pwr.pwr_state = 'on'
             switch_pwr_off = True
-            
+
         # measure all quad of the RS sequence
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole

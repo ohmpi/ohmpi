@@ -587,6 +587,7 @@ class OhmPiHardware:
         """
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
         switch_pwr_off, switch_tx_pwr_off = False, False
+        # switches tx pwr on if needed (relays switching dps on and off)
         if self.pwr_state == 'off':
             self.pwr_state = 'on'
             switch_tx_pwr_off = True
@@ -623,6 +624,9 @@ class OhmPiHardware:
                 self.tx.voltage = vab
         else:
             vab = self.tx.voltage
+
+        # switches dps pwr on if needed
+        switch_pwr_off = False
         if self.tx.pwr.pwr_state == 'off':
             self.tx.pwr.pwr_state = 'on'
             switch_pwr_off = True
@@ -638,6 +642,8 @@ class OhmPiHardware:
             self.tx.pwr.pwr_state = 'off'
     def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
         switch_pwr_off, switch_tx_pwr_off = False, False
+
+        # switches tx pwr on if needed (relays switching dps on and off)
         if self.pwr_state == 'off':
             self.pwr_state = 'on'
             switch_pwr_off = True
@@ -647,9 +653,12 @@ class OhmPiHardware:
             self.tx.voltage = vab
         else:
             vab = self.tx.voltage
+
+        # switches dps pwr on if needed
         if self.tx.pwr.pwr_state == 'off':
             self.tx.pwr.pwr_state = 'on'
             switch_pwr_off = True
+
         if sampling_rate is None:
             sampling_rate = RX_CONFIG['sampling_rate']
         if polarities is not None:
