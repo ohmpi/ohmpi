@@ -857,14 +857,14 @@ class OhmPi(object):
                 'rsdata': {
                     'A': int(quad[0]),
                     'B': int(quad[1]),
-                    'rs': rab,  # in kOhm
+                    'rs': np.round(rab,2),  # in kOhm
                 }
             }
             self.data_logger.info(json.dumps(msg))
 
             # if contact resistance = 0 -> we have a short circuit!!
             if rab < 1e-5:
-                msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {rab:.3f} kOhm'
+                msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {rab:.2f} kOhm'
                 self.exec_logger.warning(msg)
 
             # save data in a text file
