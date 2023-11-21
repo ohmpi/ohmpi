@@ -1,4 +1,4 @@
-from ohmpi import OhmPi
+from ohmpi.ohmpi import OhmPi
 import matplotlib.pyplot as plt
 import numpy as np
 

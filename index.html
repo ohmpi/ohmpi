@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<!-- 
+    To access the interface,
+    1. connect to the 'raspi-webgui' wifi with the given password
+    Open a browserdebugging instruction to see the messages passing on the RPi
+mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
+-->
 <html>
 <head>
     <meta charset="utf8"/>
@@ -6,15 +12,18 @@
     <link rel="shortcut icon" type="image/jpg" href="logo_ohmpi.jpg"/>
     
     <!-- dependencies (need to be local as no internet in AP mode)-->
-    <script src="js/plotly-basic-2.8.3.min.js"></script>
+    <script src="js/plotly-2.26.0.min.js"></script>
     <script src="js/jquery-3.4.1.min.js"></script>
     <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet">
 	<!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
 	<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous"> -->
     <!-- <script src="js/danfojs/bundle.min.js"></script> -->
+    <!-- <script src="js/mqtt.min.js"></script> -->
+    <script src="js/paho/paho-mqtt.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <div class='container'>
+    <div class='container-fluid'>
         <h1>OhmPi Acquisition Board</h1>
         <!-- nb stacks, on-time -->
         <button id="update_settingsBtn" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Settings</button>
@@ -26,7 +35,7 @@
         <div class="form-check">
             <input id="dataRetrievalCheck" class="form-check-input" type="checkbox" value="">
             <label class="form-check-label" for="dataRetrievalCheck">
-                Automaticaly get data every 1 second
+                Automaticaly get data every 1 secondStart
             </label>
         </div>
         <div id='output'>Status: idle</div>
@@ -38,36 +47,45 @@
         <input id="cmax" type="number" value=""/>
         <button id="capplyBtn" type="button" class="btn btn-info">Apply</button>
         <div id="gd"></div>
-        <div id="hoverinfo" style="margin-left:80px;"></div>
+        
+        <!-- trace figure -->
         <div class="mb3 row">
             <label for="quadSelect">Quadrupole:</label>
             <div class="col-sm-10">
                 <select id='quadSelect' class='custom-select'></select>    
             </div>
         </div>
-        
-        <!-- trace figure -->
         <button id="addTraceBtn" type="button" class="btn btn-info">Add trace</button>
         <button id="removeTracesBtn" type="button" class="btn btn-info">Remove all traces</button>    
         <div id="ts"></div>
         
         <!-- RS check -->
         <button id="rsBtn" type="button" class="btn btn-info">Check contact resistance</button>
-        <button id="getRsBtn" type="button" class="btn btn-info">Get contact resistance</button>
         <button id="rsClearBtn" type="button" class="btn btn-info">Clear plot</button>
         <div id="rs"></div>
         
+        <!-- Inversion plot -->
+        <select id="surveySelectInv" class='custom-select'>
+        </select>
+        <button id="invertBtn" type="button" class="btn btn-info">Run inversion</button>
+        <input id="cminInv" type="number" value=""/>
+        <input id="cmaxInv" type="number" value=""/>
+        <button id="capplyBtnInv" type="button" class="btn btn-info">Apply</button>
+        <div id="inv"></div>
+        
         <!-- Additional buttons -->
         <button id="downloadBtn" type="button" class="btn btn-primary">Download data</button>
-        <!-- <button id="invertBtn" type="button" class="btn btn-primary">Invert</button> -->
         <a id="download"></a>
+        
+        <button id="restartBtn" type="button" class="btn btn-danger">Restart</button>
+        <button id="shutdownBtn" type="button" class="btn btn-danger">Shutdown</button>
 
-        <!-- Modal for settings -->
+        <!-- Modal for configuration -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">OhmPi settings</h5>
+                <h5 class="modal-title" id="exampleModalLabel">OhmPi configuration</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -75,33 +93,39 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group row">
-                          <label for="nbElectrodes" class="col-sm-2 col-form-label">Nb electrodes</label>
+                          <label for="nb_electrodes" class="col-sm-2 col-form-label">Nb electrodes</label>
                           <div class="col-sm-10">
-                            <input type="number" class="form-control-number" id="nbElectrodes" value=64>
+                            <input type="number" class="form-control-number" id="nb_electrodes" value="64">
                           </div>
                         </div>
                         <div class="form-group row">
-                            <label for="injectionDuration" class="col-sm-2 col-form-label">Injection duration [s]</label>
+                            <label for="injection_duration" class="col-sm-2 col-form-label">Injection duration [s]</label>
                             <div class="col-sm-10">
-                              <input type="number" class="form-control-number" id="injectionDuration" value=0.2>
+                              <input type="number" class="form-control-number" id="injection_duration" value="0.2">
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="nbMeasurements" class="col-sm-2 col-form-label">Nb Measurements</label>
+                            <label for="nb_meas" class="col-sm-2 col-form-label">Nb Measurements</label>
                             <div class="col-sm-10">
-                              <input type="number" class="form-control-number" id="nbMeasurements" value="1">
+                              <input type="number" class="form-control-number" id="nb_meas" value="1">
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="sequenceDelay" class="col-sm-2 col-form-label">Sequence delay [s]</label>
+                            <label for="sequence_delay" class="col-sm-2 col-form-label">Sequence delay [s]</label>
                             <div class="col-sm-10">
-                              <input type="number" class="form-control-number" id="sequenceDelay" value="100">
+                              <input type="number" class="form-control-number" id="sequence_delay" value="100">
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="nbStack" class="col-sm-2 col-form-label">Nb stack</label>
+                            <label for="nb_stack" class="col-sm-2 col-form-label">Nb stack</label>
                             <div class="col-sm-10">
-                              <input type="number" class="form-control-number" id="nbStack" value="1">
+                              <input type="number" class="form-control-number" id="nb_stack" value="1">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="duty_cycle" class="col-sm-2 col-form-label">Duty cycle [0 -> 1]</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control-number" id="duty_cycle" value="0.5">
                             </div>
                           </div>
                           <div class="form-group row">
@@ -111,9 +135,9 @@
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="elecSpacing" class="col-sm-2 col-form-label">Electrode spacing [m]</label>
+                            <label for="elec_spacing" class="col-sm-2 col-form-label">Electrode spacing [m]</label>
                             <div class="col-sm-10">
-                              <input type="number" class="form-control" id="elecSpacing", value="1">
+                              <input type="number" class="form-control" id="elec_spacing", value="1">
                             </div>
                           </div>
                       </form>
@@ -125,9 +149,7 @@
             </div>
             </div>
         </div>
-        <button id="restartBtn" type="button" class="btn btn-danger">Restart</button>
-        <button id="shutdownBtn" type="button" class="btn btn-danger">Shutdown</button>
-        <footer>v0.2.0</footer>
+        <footer>v0.3.0</footer>
     </div>
 
     <script type="text/javascript">
@@ -141,9 +163,120 @@
         let interv = null // hold interval for automatic data retrieval
         let quads = [] // available quadrupoles for time-serie figure
         let squads = [] // selected quadrupoles for time-serie figure
-        let elecSpacing = 1 // 1 m
+        let commands = {} // store commands and their id
+        let callbacks = {} // store callback (might not be needed)
+        let invertedData = [{
+            rho: [[10, 10.625, 12.5, 15.625, 20],
+                    [5.625, 6.25, 8.125, 11.25, 15.625],
+                    [2.5, 3.125, 5., 8.125, 12.5],
+                    [0.625, 1.25, 3.125, 6.25, 10.625],
+                    [0, 0.625, 2.5, 5.625, 10]],
+            x: [-9, -6, -5 , -3, -1],
+            y: [0, 1, 4, 5, 7],
+        }] // store inverted data
 
+        // function with MQTT
+        let topic = 'ohmpi_0001' // we could change this through a drop-down to connect to a different ohmpi
+        let topic_ctrl = topic + '/ctrl'
+        let topic_exec = topic + '/exec'
+        let topic_data = topic + '/data'
+        let hostname = location.hostname
+        let port = 9001  // corresponding listener for the broker
+        let clientId = 'ohmpi_0001_html'
+        let message = null
+        let msg = ''
+        let userName = 'jkl'  // can be ask to the user
+        let password = 'jkl'
+
+        // create client
+        client = new Paho.MQTT.Client(hostname, port, clientId)
+        client.onConnectionLost = onConnectionLost
+        client.onMessageArrived = onMessageArrived
+        client.connect({onSuccess: onConnect})
+//        client.connect({userName: username, password: password, onSuccess:onConnect})
+
+        function onConnect() {
+            console.log("onConnect")
+            client.subscribe(topic_data)
+            client.subscribe(topic_exec)
+
+            // send welcome message
+            message = new Paho.MQTT.Message("Hello from index.html")
+            message.destinationName = topic_ctrl
+            client.send(message)
+        }
+
+        function onConnectionLost(responseObject) {
+            if (responseObject.errorCode !== 0)
+                console.log("onConnectionLost:" + responseObject.errorMessage)
+                console.log("trying to reconnect...")
+                client.connect({onSuccess: onConnect})
+        }
+        
+        function onMessageArrived(message) {
+            try {
+                let payload = message.payloadString
+                if (message.topic == topic_data) {
+                    // process data
+                    msg = payload // for accessing the variable from the console
+                    console.log('DATA LOG:', payload)
+
+                    // replace NaN values by null to make them acceptable for json parser
+                    payload = payload.replace(/\bNaN\b/g, "null");
+                    payload = payload.replace(/\bnan\b/g, "null");
+
+                    // parse to json
+                    let ddic = JSON.parse(payload.split('INFO:')[1])
+
+                    // RS check data
+                    if ('rsdata' in ddic) {
+                        rsdata[0]['x'].push(ddic['rsdata']['A']), //, + '-' + ddic['rsdata']['B'],
+                        rsdata[0]['y'].push(ddic['rsdata']['rs']),
+                        Plotly.redraw('rs')
+                    
+                    } else if ('download' in ddic) {
+                        let dwl = document.getElementById('download')
+                        dwl.setAttribute('href', serverUrl + '/data.zip')
+                        dwl.setAttribute('download', 'data.zip')
+                        dwl.click()
+                    } else { // data or results from inversion
+                        processMessage(ddic)
+                    }
+
+                    if ('status' in  ddic) {
+                        document.getElementById('output').value = ddic['status']
+                    }
+
+                    // usually these don't have a cmd_id so we are not sure when
+
+                } else if (message.topic == topic_exec) {
+                    // display it in the log
+                    console.log('EXEC LOG:', payload)
+                }
+
+                // let response = JSON.parse(message.payloadString)
+                // console.log('response=', response)
+                // // check ID of message against our dictionnary of callback
+                // let cmd_id = response['cmd_id']
+                // if (callbacks.hasOwnProperty(cmd_id)) {
+                //     console.log('++ execute callback')
+                //     callbacks[cmd_id](response['content']) // execute callback
+                // }
+            } catch (e) {
+                console.log(e)
+            }
+            // client.disconnect()
+        }
+        
         // useful functions
+        function generateUniqSerial() {  
+            return 'xxxx-xxxx-xxx-xxxx'.replace(/[x]/g, (c) => {  
+                const r = Math.floor(Math.random() * 16);  
+                return r.toString(16);  
+            });  
+        }
+
+        // sending commands to the OhmPi
         function sendCommand(query, callback=null) {
             // dic in the form: {'cmd': X, ...} as JSON
             if (callback == null) {
@@ -151,6 +284,8 @@
                     console.log('default callback:', x)
                 }
             }
+            
+            /*
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (this.readyState == 4) {
@@ -162,13 +297,24 @@
             xhr.open('POST', serverUrl)
             xhr.setRequestHeader('Content-Type', 'application/json')
             xhr.send(query)
+            */
+            
+            // generate a unique command id to be associated with the commands
+            let uuid = generateUniqSerial()
+            commands[uuid] = query
+            callbacks[uuid] = callback // store the callback to be processed later when message arrives
+            let payload = '{"cmd_id": "' + uuid + '",' + query.slice(1)
+            console.log('sendCommand()', payload)
+            message = new Paho.MQTT.Message(payload)
+            message.destinationName = topic_ctrl
+            client.send(message)            
         }
 
         // run button
         function runBtnFunc() {
             sendCommand('{"cmd": "run_multiple_sequences"}', function(x) {
-                console.log(x['ohmpi_status'])
-                if (x['ohmpi_status'] == 'running') {
+                console.log(x['status'])
+                if (x['status'] == 'running') {
                     output.innerHTML = 'Status: measuring...'
                 }
             })
@@ -179,7 +325,7 @@
         // interrupt button
         function stopBtnFunc() {
             sendCommand('{"cmd": "interrupt"}', function(x) {
-                output.innerHTML = 'Status: ' + x['ohmpi_status']
+                output.innerHTML = 'Status: ' + x['status']
                 clearInterval(interv)
                 getData()
             })
@@ -188,27 +334,17 @@
         stopBtn.addEventListener('click', stopBtnFunc)
 
         // set configuration
-        function saveSettingsBtnFunc() {
+        function saveConfigBtnFunc() {
             // collect values from modal
-            let formVals = {}
-            formVals['nb_electrodes'] = parseInt(document.getElementById('nbElectrodes').value)
-            formVals['injection_duration'] = parseFloat(document.getElementById('injectionDuration').value)
-            formVals['nb_meas'] = parseInt(document.getElementById('nbMeasurements').value)
-            formVals['sequence_delay'] = parseInt(document.getElementById('sequenceDelay').value)
-            formVals['nb_stack'] = parseInt(document.getElementById('nbStack').value)
-            formVals['elec_spacing'] = parseFloat(document.getElementById('elecSpacing').value)
-            console.log(formVals)
-            elecSpacing = formVals['elec_spacing']
-            
-            // define callback to send settigs to Pi
-            function settingsCallback() {
-                sendCommand(JSON.stringify({
-                    'cmd': 'update_settings',
-                    'config': formVals
-                }), function(x) {
-                    console.log('update_settings', x)
-                })
+            let formVals = {
+                'nb_electrodes': parseInt(document.getElementById('nb_electrodes').value),
+                'injection_duration': parseFloat(document.getElementById('injection_duration').value),
+                'nb_meas': parseInt(document.getElementById('nb_meas').value),
+                'sequence_delay': parseFloat(document.getElementById('sequence_delay').value),
+                'nb_stack': parseInt(document.getElementById('nb_stack').value),   
+                'duty_cycle': parseFloat(document.getElementById('duty_cycle').value),
             }
+            console.log(formVals)
             
             // deal with the potential file containing the sequence
             // https://stackoverflow.com/questions/19038919/is-it-possible-to-upload-a-text-file-to-input-in-html-js
@@ -221,97 +357,91 @@
                 const reader = new FileReader()
                 reader.readAsText(input.files[0])
                 reader.addEventListener('load', () => {
-                    formVals['sequence'] = reader.result
-                    console.log('file==', reader.result)
-                    settingsCallback()
+                    // parse the file and make it a list of list of int
+                    var a = reader.result.split(/\r?\n|\r|\n/g)
+                    var seq = new Array()
+                    var eof = false
+                    for (var i = 0; i < a.length; i++) {
+                        b = a[i].split(' ')
+                        var arr = new Array(4)
+                        for (var j = 0; j < b.length; j++) {
+                            val = parseInt(b[j])
+                            if (isNaN(val) == true) {
+                                eof = true
+                                break
+                            }
+                            arr[j] = val
+                        }
+                        if (eof == true) {
+                            break
+                        }
+                        seq.push(arr)
+                    }
+                    formVals['sequence'] = seq
+                    configCallback()
                 }, false)
             } else {
                 console.log('no sequence uploaded')
                 formVals['sequence'] = ''
-                settingsCallback()
+                configCallback()
             } 
             
+            // define callback to send settings to Pi
+            function configCallback() {
+                sendCommand(JSON.stringify({
+                    'cmd': 'update_settings',
+                    'kwargs': {
+                        'settings': formVals
+                    }
+                }), function(x) {
+                    console.log('update_settings', x)
+                })
+            }
             
         }
         let saveConfigBtn = document.getElementById('saveConfigBtn')
-        saveConfigBtn.addEventListener('click', saveSettingsBtnFunc)
+        saveConfigBtn.addEventListener('click', saveConfigBtnFunc)
 
         // make pseudo plot
-        var trace = {}
-        let layout = {}
+        var trace = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            marker: {
+                size: 40,
+                color: [],
+                colorbar: {
+                    title: 'Apparent resistivity [Ohm.m]',
+                    titleside: 'right',
+                    cmin: 0,
+                    cmax: 100,
+                }
+            }
+        }
+        let layout = {
+            title: 'Pseudo-section',
+            yaxis: {
+                title: 'Pseudo-depth',
+            },
+            xaxis: {
+                title: 'X'
+            }
+
+        }
+        Plotly.newPlot('gd', [trace], layout, {responsive: true})
+
+        // make time-serie plot
         let tdata = []
-        let layout2 = {}
-        let rsdata = []
-        let rslayout = {}
-        
-        // initialize all plots
-        function initPlots() {
-			trace = {
-				x: [],
-				y: [],
-				mode: 'markers',
-				marker: {
-					size: 40,
-					color: [],
-					colorbar: {
-						title: 'App. res. [Ohm.m]',
-						cmin: 0,
-						cmax: 100,
-					}
-				}
-			}
-			layout = {
-				title: 'Pseudo-section',
-				yaxis: {
-					title: 'Pseudo-depth',
-					autorange: 'reversed'
-				},
-				xaxis: {
-					title: 'X'
-				}
-
-			}
-			Plotly.newPlot('gd', [trace], layout)
-
-			// make time-serie plot
-			tdata = []
-			layout2 = {
-				title: 'Time-serie',
-				yaxis: {
-					title: 'App. res. [Ohm.m]'
-				},
-				xaxis: {
-					title: 'Sampling time'
-				}
-			}
-			Plotly.newPlot('ts', tdata, layout2)
-			
-			// bar chart for contact resistance
-			rsdata = []
-			rslayout = {
-				title: 'Contact resistances',
-				yaxis: {
-					title: 'Resistance [kOhm]'
-				},
-				xaxis: {
-					title: 'Consecutive electrodes'
-				}
-			}
-			Plotly.newPlot('rs', rsdata, rslayout)
-		}
-		initPlots()
-
-        // hover function
-        var hoverInfo = document.getElementById('hoverinfo')
-        document.getElementById('gd').on('plotly_hover', function(data){
-            var infotext = data.points.map(function(d){
-              return (Math.round(d.data.marker.color[d.pointIndex], 2) + ' Ohm.m');
-            });
-            hoverInfo.innerHTML = infotext.join('<br/>');
-        })
-         .on('plotly_unhover', function(data){
-            hoverInfo.innerHTML = '';
-        });
+        let layout2 = {
+            title: 'Time-serie',
+            yaxis: {
+                title: 'App. res. [Ohm.m]'
+            },
+            xaxis: {
+                title: 'Sampling time'
+            }
+        }
+        Plotly.newPlot('ts', tdata, layout2, {responsive: true})
 
         // add trace to time-serie plot
         function addTraceBtnFunc() {
@@ -323,7 +453,7 @@
                 name: val,
                 type: 'scatter'
             })
-            Plotly.newPlot('ts', tdata, layout2)
+            Plotly.newPlot('ts', tdata, layout2, {responsive: true})
             getData()
         }
         let addTraceBtn = document.getElementById('addTraceBtn')
@@ -333,145 +463,65 @@
         function removeTracesBtnFunc() {
             squads = []
             tdata = []            
-            Plotly.newPlot('ts', tdata, layout2)
+            Plotly.newPlot('ts', tdata, layout2, {responsive: true})
         }
         let removeTracesBtn = document.getElementById('removeTracesBtn')
         removeTracesBtn.addEventListener('click', removeTracesBtnFunc)
 
         // callback function to draw the plot
         function surveySelectFunc(el) {
+            let elec_spacing = parseFloat(document.getElementById('elec_spacing').value)
             let surveyName = el['target'].value
             let df = data[surveyName]
             if (df != undefined) {
+                let a = df['a']
+                let b = df['b']
+                let m = df['m']
+                let n = df['n']
                 // let's assume electrodes are 1 m distance
                 // compute pseudo-depth (assume no topo)
                 // compute app res (assumping flat, line survey)
                 let xpos = []
                 let ypos = []
                 let app = []
-                for (let i = 0; i < df['a'].length; i++) {
-                    let a = df['a'][i]
-                    let b = df['b'][i]
-                    let m = df['m'][i]
-                    let n = df['n'][i]
-                    
-                    // compute geometric factor assuming flat 2D surface
-                    let am = Math.abs(a - m)*elecSpacing
-                    let bm = Math.abs(b - m)*elecSpacing
-                    let an = Math.abs(a - n)*elecSpacing
-                    let bn = Math.abs(b - n)*elecSpacing
-                    let K = 2*Math.PI/((1/am)-(1/bm)-(1/an)+(1/bn))
+                for (let i = 0; i < a.length; i++) {
+                   
+                    let emin = Math.min(...[a[i], b[i], m[i], n[i]]) * elec_spacing
+                    let emax = Math.max(...[a[i], b[i], m[i], n[i]]) * elec_spacing
+                    let dist = Math.abs(emax - emin)
+                    xpos.push(emin + dist/2)
+                    ypos.push(- Math.sqrt(2)/2 * dist)
+                    let am = Math.abs(a[i] - m[i]) * elec_spacing
+                    let bm = Math.abs(b[i] - m[i]) * elec_spacing
+                    let an = Math.abs(a[i] - n[i]) * elec_spacing
+                    let bn = Math.abs(a[i] - n[i]) * elec_spacing
+                    let K = (2*Math.PI)/((1/am)-(1/an)-(1/an)+(1/bn))
                     app.push(df['rho'][i]*K)
-                    //console.log(K) // same as resipy for the wenner case
-                
-                    // computing pseudo-depth assuming 2D flat array
-                    // let's sort the electrodes AB are the two left, MN, the two right
-                    let abmn = [a, b, m, n]
-                    abmn = abmn.sort((a, b) => a - b)
-                    let ab = (abmn[0] + abmn[1])/2
-                    let mn = (abmn[2] + abmn[3])/2
-                    let dist = Math.abs(ab - mn)
-                    xpos.push((Math.min(ab, mn) + dist/2)*elecSpacing)
-                    ypos.push((Math.sqrt(2)/2*dist)*elecSpacing)
                     
-                    /*
-                           lookupDict = dict(zip(self.elec['label'], np.arange(self.elec.shape[0]))) 
-        array = self.df[['a','b','m','n']].replace(lookupDict).values.astype(int)
-        elecm = self.elec[['x','y','z']].values.astype(float).copy() # electrode matrix - should be array of floats so np.inf work properly
-            
-        ### first determine if measurements are nested ###
-        #find mid points of AB 
-        AB = (elecm[array[:,0]] + elecm[array[:,1]]) / 2 # mid points of AB 
-        MN = (elecm[array[:,2]] + elecm[array[:,3]]) / 2 # mid points of MN 
-        ABrad = np.sqrt(np.sum((elecm[array[:,0]] - AB)**2,axis=1)) # radius of AB circle 
-        MNrad = np.sqrt(np.sum((elecm[array[:,2]] - MN)**2,axis=1)) # radius of MN circle 
-        
-        Amn = np.sqrt(np.sum((elecm[array[:,0]] - MN)**2,axis=1)) # distance of A to mid point of MN 
-        Bmn = np.sqrt(np.sum((elecm[array[:,1]] - MN)**2,axis=1)) # distance of B to mid point of MN 
-        Nab = np.sqrt(np.sum((elecm[array[:,2]] - AB)**2,axis=1)) # distance of N to mid point of AB 
-        Mab = np.sqrt(np.sum((elecm[array[:,3]] - AB)**2,axis=1)) # distance of M to mid point of AB
-        
-        iABinMN = (Amn < MNrad) & (Bmn < MNrad)
-        iMNinAB = (Nab < ABrad) & (Mab < ABrad)
-        inested = iABinMN | iMNinAB #if AB encompasses MN or MN encompasses AB 
-                       
-        # so it will never be taken as minimium
-        elecm[self.elec['remote'].values,:] = np.inf
-        
-        # compute midpoint position of AB and MN dipoles
-        elecx = elecm[:,0]
-        elecy = elecm[:,1]
+                    // let a = df['a'][i]
+                    // let b = df['b'][i]
+                    // let m = df['m'][i]
+                    // let n = df['n'][i]
 
-        #CURRENT ELECTRODE MIDPOINTS 
-        caddx = np.abs(elecx[array[:,0]]-elecx[array[:,1]])/2
-        caddy = np.abs(elecy[array[:,0]]-elecy[array[:,1]])/2
-        caddx[np.isinf(caddx)] = 0 
-        caddy[np.isinf(caddy)] = 0        
-        cmiddlex = np.min([elecx[array[:,0]], elecx[array[:,1]]], axis=0) + caddx
-        cmiddley = np.min([elecy[array[:,0]], elecy[array[:,1]]], axis=0) + caddy
-        
-        #POTENTIAL ELECTRODE MIDPOINTS
-        paddx = np.abs(elecx[array[:,2]]-elecx[array[:,3]])/2
-        paddy = np.abs(elecy[array[:,2]]-elecy[array[:,3]])/2
-        paddx[np.isinf(paddx)] = 0 
-        paddy[np.isinf(paddy)] = 0 
-        pmiddlex = np.min([elecx[array[:,2]], elecx[array[:,3]]], axis=0) + paddx
-        pmiddley = np.min([elecy[array[:,2]], elecy[array[:,3]]], axis=0) + paddy
-
-        
-        # for non-nested measurements
-        xposNonNested  = np.min([cmiddlex, pmiddlex], axis=0) + np.abs(cmiddlex-pmiddlex)/2
-        yposNonNested  = np.min([cmiddley, pmiddley], axis=0) + np.abs(cmiddley-pmiddley)/2
-        pcdist = np.sqrt((cmiddlex-pmiddlex)**2 + (cmiddley-pmiddley)**2)
-
-        # zposNonNested = np.sqrt(2)/2*pcdist
-        zposNonNested = pcdist/4
-
-        if np.all(cmiddley-pmiddley == 0):
-            zposNonNested = 0.25*pcdist
-        else: # for 3D arrays where there are mid-line measurements, this works closer to inversion results
-            zposNonNested = np.sqrt(2)/2*pcdist
-        
-        # for nested measurements use formula of Dalhin 2006
-        xposNested = np.zeros(len(pmiddlex))
-        yposNested = np.zeros(len(pmiddlex))
-        outerElec1 = np.zeros((len(pmiddlex), 2)) # position of one electrode of outer dipole
-        outerElec2 = np.zeros((len(pmiddlex), 2)) # position of one electrode of outer dipole
-        # innerMid = np.zeros((len(pmiddlex), 2)) # middle of inner dipole
-        if np.sum(iMNinAB) > 0:
-            xposNested[iMNinAB] = pmiddlex[iMNinAB]
-            yposNested[iMNinAB] = pmiddley[iMNinAB]
-            outerElec1[iMNinAB] = np.c_[elecx[array[iMNinAB,0]], elecy[array[iMNinAB,0]]]
-            outerElec2[iMNinAB] = np.c_[elecx[array[iMNinAB,1]], elecy[array[iMNinAB,1]]]
-
-        if np.sum(iABinMN) > 0:
-            xposNested[iABinMN] = cmiddlex[iABinMN]
-            yposNested[iABinMN] = cmiddley[iABinMN]
-            outerElec1[iABinMN] = np.c_[elecx[array[iABinMN,2]], elecy[array[iABinMN,2]]]
-            outerElec2[iABinMN] = np.c_[elecx[array[iABinMN,3]], elecy[array[iABinMN,3]]]
-      
-        innerMid = np.c_[pmiddlex, pmiddley] # always use potential dipole
-        
-        apdist = np.sqrt(np.sum((outerElec1-innerMid)**2, axis=1))
-        bpdist = np.sqrt(np.sum((outerElec2-innerMid)**2, axis=1))
-        zposNested  = np.min([apdist, bpdist], axis=0)/3
-        
-        xpos = np.zeros_like(pmiddlex)
-        ypos = np.zeros_like(pmiddlex)
-        zpos = np.zeros_like(pmiddlex)
-        
-        xpos[~inested] = xposNonNested[~inested]
-        xpos[inested] = xposNested[inested]
-        
-        ypos[~inested] = yposNonNested[~inested]
-        ypos[inested] = yposNested[inested]
-        
-        zpos[~inested] = zposNonNested[~inested]
-        zpos[inested] = zposNested[inested]
-
-                    */
-                  }
-                //console.log(app)
+                    // // compute geometric factor assuming flat 2D surface
+                    // let am = Math.abs(a - m)*elec_spacing
+                    // let bm = Math.abs(b - m)*elec_spacing
+                    // let an = Math.abs(a - n)*elec_spacing
+                    // let bn = Math.abs(b - n)*elec_spacing
+                    // let K = 2*Math.PI/((1/am)-(1/bm)-(1/an)+(1/bn))
+                    // app.push(df['rho'][i]*K)
+                    // //console.log(K) // same as resipy for the wenner case
+                
+                    // // computing pseudo-depth assuming 2D flat array
+                    // // let's sort the electrodes AB are the two left, MN, the two right
+                    // let abmn = [a, b, m, n]
+                    // abmn = abmn.sort((a, b) => a - b)
+                    // let ab = (abmn[0] + abmn[1])/2
+                    // let mn = (abmn[2] + abmn[3])/2
+                    // let dist = Math.abs(ab - mn)
+                    // xpos.push((Math.min(ab, mn) + dist/2)*elec_spacing)
+                    // ypos.push(- (Math.sqrt(2)/2*dist)*elec_spacing)
+                }
                 // update the trace and redraw the figure
                 trace['x'] = xpos
                 trace['y'] = ypos
@@ -482,17 +532,29 @@
             }
         }
         let surveySelect = document.getElementById('surveySelect')
+
+        // bar chart for contact resistance
+        let rsdata = [{
+            'x': [],
+            'y': [],
+            name: 'RS',
+            type: 'bar',
+            }
+        ]
+        let rslayout = {
+            title: 'Contact resistances',
+            yaxis: {
+                title: 'Resistance [kOhm]'
+            },
+            xaxis: {
+                title: 'Consecutive electrodes'
+            }
+        }
+        Plotly.newPlot('rs', rsdata, rslayout, {responsive: true})
         
         // run RS check
         function rsBtnFunc() {
-            sendCommand('{"cmd": "rsCheck"}', function (a) {})
-        }
-        let rsBtn = document.getElementById('rsBtn')
-        rsBtn.addEventListener('click', rsBtnFunc)
-
-        // get RS check data
-        function getRsBtnFunc() {
-            sendCommand('{"cmd": "getRsCheck"}', function(res) {
+            sendCommand('{"cmd": "rs_check"}', function (res) {
                 // update the bar plot
                 rsdata.push({
                 x: res['data']['AB'],
@@ -503,126 +565,155 @@
                 Plotly.redraw('rs')
             })
         }
-        let getRsBtn = document.getElementById('getRsBtn')
-        getRsBtn.addEventListener('click', getRsBtnFunc)
+        let rsBtn = document.getElementById('rsBtn')
+        rsBtn.addEventListener('click', rsBtnFunc)
         
         // clear RS graph
         function rsClearBtnFunc() {
-            rsdata = []
-            Plotly.newPlot('rs', rsdata, rslayout)
+            rsdata = [{
+            'x': [],
+            'y': [],
+            name: 'RS',
+            type: 'bar',
+            }]
+            Plotly.newPlot('rs', rsdata, rslayout, {responsive: true})
         }
         let rsClearBtn = document.getElementById('rsClearBtn')
         rsClearBtn.addEventListener('click', rsClearBtnFunc)
         
         // getData
         function getData() {
-            let surveyNames = []
             sendCommand(JSON.stringify({
-                'cmd': 'getData',
-                'surveyNames': surveyNames
+                'cmd': 'get_data',
+                'survey_names': Object.keys(data).slice(0, -1)
                 // last survey is often partial so we download it again
-            }), function(ddic) {
-                // update status
-                //output.innerHTML = 'Status: ' + ddic['status']
+            }), console.log('processData(ddic)')
+            )
+        }
 
-                // update data dic with new data
-                data = { // destructuring assignement (magic! :o)
-                    ...data,
-                    ...ddic['data'] // value from second dic are preferred
-                }
-                
-                // dropdown with number of surveys
-                surveyNames = Object.keys(data).sort()
+        // processMessage
+        function processMessage(ddic) {
+            //if (('status' in ddic) | ('data' in ddic)) {
+            if (ddic.constructor == Object) {  // it's a dictionnary
+                // acquisition related
+                processData(ddic)                
+            } else {
+                // inversion related
+                invertedData = ddic
+                showInvFunc()
+            }
+        }
 
-                // remove listener as we will replace the choices
-                surveySelect.removeEventListener('change', surveySelectFunc)
-                surveySelect.innerHTML = ''  // clearing all child nodes
+        // processData
+        function processData(ddic) {
+            // update status
+            output.innerHTML = 'Status: ' + ddic['status']
 
-                // add choices again
-                for (let surveyName of surveyNames) {
+            // update data dic with new data
+            data = { // destructuring assignement (magic! :o)
+                ...data,
+                ...ddic['data'] // value from second dic are preferred
+            }
+            
+            // dropdown with number of surveys and +++
+            let surveyNames = Object.keys(data).sort()
+
+            // remove listener as we will replace the choices
+            surveySelect.removeEventListener('change', surveySelectFunc)
+            surveySelect.innerHTML = ''  // clearing all child nodes
+
+            // add choices again
+            for (let surveyName of surveyNames) {
+                let option = document.createElement('option')
+                option.innerText = surveyName
+                option.value = surveyName
+                surveySelect.appendChild(option)
+            }
+
+            // listener again
+            surveySelect.addEventListener('change', surveySelectFunc)
+            
+            // plot last one by default
+            surveySelect.value = surveyNames[surveyNames.length - 1]
+            
+            // call the function directly
+            // (as progammatically chaging the value does not trigger the event)
+            surveySelectFunc({'target': surveySelect})
+
+            // update list of survey for inversion
+            surveySelectInv.removeEventListener('change', showInvFunc)
+            surveySelectInv.innerHTML = ''  // clearing all child nodes
+            for (let surveyName of surveyNames) {
+                let option = document.createElement('option')
+                option.innerText = surveyName
+                option.value = surveyName
+                surveySelectInv.appendChild(option)
+            }
+            surveySelectInv.addEventListener('change', showInvFunc)
+            surveySelectInv.value = surveyNames[surveyNames.length - 1]
+            
+
+            // update list of quadrupoles if any
+            if (quads.length == 0) {
+                console.log('updating list of quadrupoles')
+                let df = data[surveyNames[0]]
+                let quadSelect = document.getElementById('quadSelect')
+                quadSelect.innerHTML = ''
+                for (let i = 0; i < df['a'].length; i++) {
+                    quad = [df['a'][i], df['b'][i], df['m'][i], df['n'][i]]
+                    quads.push(quad)
                     let option = document.createElement('option')
-                    option.innerText = surveyName
-                    option.value = surveyName
-                    surveySelect.appendChild(option)
+                    option.value = quad.join(', ')
+                    option.innerText = quad.join(', ')
+                    quadSelect.appendChild(option)
                 }
+                console.log('quads=', quads)
+            }
 
-                // listener again
-                surveySelect.addEventListener('change', surveySelectFunc)
-                
-                // plot last one by default
-                surveySelect.value = surveyNames[surveyNames.length - 1]
-                
-                // call the function directly
-                // (as progammatically chaging the value does not trigger the event)
-                surveySelectFunc({'target': surveySelect})
+            // update time-serie figure
+            if (squads.length > 0) {
 
-                // update list of quadrupoles if any
-                let idiff = false
-                if (data[surveyNames[0]] != undefined) {
-                    idiff = quads.length != data[surveyNames[0]]['a'].length
-                } 
-                //console.log('idiff=', idiff, quads.length, data[surveyNames[0]]['a'].length)
-                if (((quads.length == 0) | idiff) & (data[surveyNames[0]] != undefined)){
-                    console.log('updating list of quadrupoles')
-                    quads = []
-                    let df = data[surveyNames[0]]
-                    let quadSelect = document.getElementById('quadSelect')
-                    quadSelect.innerHTML = ''
-                    for (let i = 0; i < df['a'].length; i++) {
-                        quad = [df['a'][i], df['b'][i], df['m'][i], df['n'][i]]
-                        quads.push(quad)
-                        let option = document.createElement('option')
-                        option.value = quad.join(', ')
-                        option.innerText = quad.join(', ')
-                        quadSelect.appendChild(option)
-                    }
-                    console.log('quads=', quads)
+                // transform all surveyNames to datetime
+                let xt = []
+                for (surveyName of surveyNames) {
+                    let a = surveyName.split('_').slice(-1)[0]
+                    xt.push(a.slice(0, 4) + '-' 
+                        + a.slice(4, 6) + '-' 
+                        + a.slice(6, 8) + ' '
+                        + a.slice(9, 11) + ':'
+                        + a.slice(11, 13) + ':'
+                        + a.slice(13, 15))
                 }
-                
-                // update time-serie figure
-                if (squads.length > 0) {
+                //console.log(xt)
 
-                    // transform all surveyNames to datetime
-                    let xt = []
-                    for (surveyName of surveyNames) {
-                        let a = surveyName.split('_').slice(-1)[0]
-                        xt.push(a.slice(0, 4) + '-' 
-                            + a.slice(4, 6) + '-' 
-                            + a.slice(6, 8) + ' '
-                            + a.slice(9, 11) + ':'
-                            + a.slice(11, 13) + ':'
-                            + a.slice(13, 15))
-                    }
-                    //console.log(xt)
-
-                    // create one new trace per selected quadrupole
-                    for (let k = 0; k < squads.length; k++) {
-                        squad = squads[k]
-                        let x = []
-                        let y = []
-                        for (let i = 0; i < surveyNames.length; i++) {
-                            df = data[surveyNames[i]]
-                            for (let j = 0; j < df['a'].length; j++) {
-                                if (df['a'][j] == squad[0]
-                                && df['b'][j] == squad[1]
-                                && df['m'][j] == squad[2]
-                                && df['n'][j] == squad[3]) {
-                                    y.push(df['rho'][j])
-                                    x.push(xt[i])
-                                    break
-                                }
+                // create one new trace per selected quadrupole
+                for (let k = 0; k < squads.length; k++) {
+                    squad = squads[k]
+                    let x = []
+                    let y = []
+                    for (let i = 0; i < surveyNames.length; i++) {
+                        df = data[surveyNames[i]]
+                        for (let j = 0; j < df['a'].length; j++) {
+                            if (df['a'][j] == squad[0]
+                            && df['b'][j] == squad[1]
+                            && df['m'][j] == squad[2]
+                            && df['n'][j] == squad[3]) {
+                                y.push(df['rho'][j])
+                                x.push(xt[i])
+                                break
                             }
                         }
-
-                        // update trace dictionnary
-                        tdata[k]['x'] = x
-                        tdata[k]['y'] = y
                     }
-                    //console.log(tdata)
-                    Plotly.redraw('ts')
+
+                    // update trace dictionnary
+                    tdata[k]['x'] = x
+                    tdata[k]['y'] = y
                 }
-            })
+                //console.log(tdata)
+                Plotly.redraw('ts')
+            }
         }
+
         let getDataBtn = document.getElementById('getDataBtn')
         getDataBtn.addEventListener('click', getData)
         
@@ -630,6 +721,95 @@
         let capplyBtn = document.getElementById('capplyBtn')
         capplyBtn.addEventListener('click', function() {
             surveySelectFunc({'target': surveySelect})
+        })
+        
+        // plot inverted data
+        function showInvFunc() {
+            let cmin = parseFloat(document.getElementById('cminInv').value)
+            let cmax = parseFloat(document.getElementById('cmaxInv').value)
+            let autocontour = false
+            if (isNaN(cmin) | isNaN(cmax)) {
+                autocontour = true
+            }
+
+            // convert rho to log10(rho)
+            let log10rho = []
+            for (let i = 0; i < invertedData[0]['rho'].length; i++) {
+                let row = invertedData[0]['rho'][i]
+                var arr = []
+                for (let j = 0; j < row.length; j++) {
+                    arr.push(Math.log10(row[j]))
+                }
+                log10rho.push(arr)
+            }
+
+            var invData = [{
+                z: log10rho,
+                x: invertedData[0]['x'],
+                y: invertedData[0]['z'],
+                type: 'contour',
+                colorscale: 'Viridis',
+                autocontour: autocontour,
+                contours: {
+                    start: cmin,
+                    end: cmax,
+                    size: 10,
+                },
+                colorbar:{
+                    title: 'Resistivity (log10) [Ohm.m]',
+                    titleside: 'right',
+                    titlefont: {
+                        size: 14,
+                        family: 'Arial, sans-serif'
+                    }
+                }
+            }]
+
+            var invLayout = {
+                title: 'Inverted section',
+                yaxis: {
+                    title: 'Z [m]',
+                },
+                xaxis: {
+                    title: 'X [m]'
+                },
+            }
+            
+            Plotly.newPlot('inv', invData, invLayout, {responsive: true})
+            var btn = document.getElementById('invertBtn')
+            btn.innerText = 'Run inversion'
+            btn.className = 'btn btn-info'
+
+        }
+        showInvFunc()
+
+        // invert data
+        function invertBtnFunc() {
+            let survey_name = document.getElementById('surveySelectInv').value
+            var btn = document.getElementById('invertBtn')
+            btn.innerText = 'Inverting...'
+            btn.className = 'btn btn-warning'
+            var elec_spacing = parseFloat(document.getElementById('elec_spacing').value)
+            if (isNaN(elec_spacing)) {
+                elec_spacing = 1
+            }
+            sendCommand(JSON.stringify({
+                    'cmd': 'run_inversion',
+                    'kwargs': {
+                        'survey_names': [survey_name + '.csv'],
+                        'elec_spacing': elec_spacing,
+                    }
+                }), function(x) {
+                    console.log('inversion results', x)
+            })
+        }
+        let invertBtn = document.getElementById('invertBtn')
+        invertBtn.addEventListener('click', invertBtnFunc)
+
+        // apply new colorscale for inversion
+        let capplyBtnInv = document.getElementById('capplyBtnInv')
+        capplyBtnInv.addEventListener('click', function() {
+            showInvFunc()
         })
 
         // checkbox interaction for data download
@@ -645,12 +825,15 @@
 
         // remove data
         function removeDataBtnFunc() {
-            sendCommand('{"cmd": "removeData"}',function(x) {
+            sendCommand('{"cmd": "remove_data"}',function(x) {
                 data = {}
-                output.innerHTML = 'Status: ' + x['ohmpi_status'] + ' (all data cleared)'
+                output.innerHTML = 'Status: ' + x['status'] + ' (all data cleared)'
                 console.log('all data removed')
-                initPlots() // reset all plots
             })
+            data = {}
+            quads = []
+            getData()
+            document.getElementById('quadSelect').innerHTML = ''
         }
         let removeDataBtn = document.getElementById('removeDataBtn')
         removeDataBtn.addEventListener('click', removeDataBtnFunc)
@@ -673,22 +856,10 @@
         let restartBtn = document.getElementById('restartBtn')
         restartBtn.addEventListener('click', restartBtnFunc)
         
-        // invert data
-        // function invertBtnFunc() {
-        //     sendCommand('{"cmd": "invert"}', function(x) {
-        //         console.log('inversion results', x)
-        //     })
-        // }
-        // let invertBtn = document.getElementById('invertBtn')
-        // invertBtn.addEventListener('click', invertBtnFunc)
-
         // download data
         function downloadBtnFunc() {
-            sendCommand('{"cmd": "download"}', function(x) {
-                let dwl = document.getElementById('download')
-                dwl.setAttribute('href', serverUrl + '/data.zip')
-                dwl.setAttribute('download', 'data.zip')
-                dwl.click()
+            sendCommand('{"cmd": "download_data"}', function(x) {
+                console.log(x)
             })
         }
         let downloadBtn = document.getElementById('downloadBtn')
