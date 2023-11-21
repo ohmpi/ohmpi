@@ -935,7 +935,7 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier
         """
-        self.reset_mux() # All mux boards should be reset even if we only want to test one otherwise we might create a shortcut
+        self.reset_mux()  # All mux boards should be reset even if we only want to test one otherwise we might create a shortcut
         if mux_id is None:
             self._hw.test_mux(activation_time=activation_time)
         else:
