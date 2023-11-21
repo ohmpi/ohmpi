@@ -784,8 +784,13 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier
         """
+        # check pwr is on, if not, let's turn it on
+        switch_tx_pwr_off = False
+        if self._hw.pwr_state == 'off':
+            self._hw.pwr_state = 'on'
+            switch_tx_pwr_off = True
 
-        self._hw.tx.pwr.voltage = float(tx_volt)
+        # self._hw.tx.pwr.voltage = float(tx_volt)
 
         # create custom sequence where MN == AB
         # we only check the electrodes which are in the sequence (not all might be connected)
@@ -812,13 +817,20 @@ class OhmPi(object):
 
         self.reset_mux()
 
+        # turn dps_pwr_on if needed
+        switch_pwr_off = False
+        if self._hw.pwr.pwr_state == 'off':
+            self._hw.pwr.pwr_state = 'on'
+            switch_pwr_off = True
+
         # measure all quad of the RS sequence
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole
             self._hw.switch_mux(electrodes=list(quads[i, :2]), roles=['A', 'B'], state='on')
-            self._hw._vab_pulse(duration=0.2)
+            self._hw._vab_pulse(duration=0.2, vab=tx_volt)
             current = self._hw.readings[-1, 3]
-            voltage = self._hw.tx.pwr.voltage * 1000
+            vab = self._hw.tx.pwr.voltage
+            print(vab, current)
             time.sleep(0.2)
 
             # self.switch_mux_on(quad, bypass_check=True)  # put before raising the pins (otherwise conflict i2c)
@@ -834,7 +846,7 @@ class OhmPi(object):
             # current = self._hw.tx.current
 
             # compute resistance measured (= contact resistance)
-            resist = abs(voltage / current) / 1000 # kOhm
+            rab = abs(vab*1000 / current) / 1000 # kOhm
             # print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} kOhm'.format(
             #    current, voltage, resist))
             # msg = f'Contact resistance {str(quad):s}: I: {current :>10.3f} mA, ' \
@@ -845,28 +857,32 @@ class OhmPi(object):
                 'rsdata': {
                     'A': int(quad[0]),
                     'B': int(quad[1]),
-                    'rs': resist,  # in kOhm
+                    'rs': np.round(rab,3),  # in kOhm
                 }
             }
             self.data_logger.info(json.dumps(msg))
 
             # if contact resistance = 0 -> we have a short circuit!!
-            if resist < 1e-5:
-                msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {resist:.3f} kOhm'
+            if rab < 1e-5:
+                msg = f'!!!SHORT CIRCUIT!!! {str(quad):s}: {rab:.3f} kOhm'
                 self.exec_logger.warning(msg)
 
             # save data in a text file
             self.append_and_save(export_path_rs, {
                 'A': quad[0],
                 'B': quad[1],
-                'RS [kOhm]': resist,
+                'RS [kOhm]': np.round(rab,3),
             })
 
             # close mux path and put pin back to GND
             self.switch_mux_off(quad)
 
         self.status = 'idle'
-
+        if switch_pwr_off:
+            self._hw.pwr.pwr_state = 'off'
+        # if power was off before measurement, let's turn if off
+        if switch_tx_pwr_off:
+            self._hw.pwr_state = 'off'
     #
     #         # TODO if interrupted, we would need to restore the values
     #         # TODO or we offer the possibility in 'run_measurement' to have rs_check each time?

@@ -220,6 +220,12 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                     // process data
                     msg = payload // for accessing the variable from the console
                     console.log('DATA LOG:', payload)
+
+                    // replace NaN values by null to make them acceptable for json parser
+                    payload = payload.replace(/\bNaN\b/g, "null");
+                    payload = payload.replace(/\bnan\b/g, "null");
+
+                    // parse to json
                     let ddic = JSON.parse(payload.split('INFO:')[1])
 
                     // RS check data
@@ -516,7 +522,6 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                     // xpos.push((Math.min(ab, mn) + dist/2)*elec_spacing)
                     // ypos.push(- (Math.sqrt(2)/2*dist)*elec_spacing)
                 }
-                console.log('========', app, xpos, ypos)
                 // update the trace and redraw the figure
                 trace['x'] = xpos
                 trace['y'] = ypos
@@ -825,6 +830,10 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 output.innerHTML = 'Status: ' + x['status'] + ' (all data cleared)'
                 console.log('all data removed')
             })
+            data = {}
+            quads = []
+            getData()
+            document.getElementById('quadSelect').innerHTML = ''
         }
         let removeDataBtn = document.getElementById('removeDataBtn')
         removeDataBtn.addEventListener('click', removeDataBtnFunc)
