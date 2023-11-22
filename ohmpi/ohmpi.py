@@ -199,7 +199,7 @@ class OhmPi(object):
                 last_measurement.update(idic)
                 last_measurement.update(udic)
                 last_measurement.update(tdic)
-            # last_measurement.pop('fulldata')
+            last_measurement.pop('fulldata')
         
         if os.path.isfile(filename):
             # Load data file and append data to it
