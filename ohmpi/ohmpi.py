@@ -190,15 +190,15 @@ class OhmPi(object):
         # TODO need to make all the full data of the same size (pre-populate
         # readings with NaN in hardware_system.OhmPiHardware.read_values())
         if 'fulldata' in last_measurement:
-            # d = last_measurement['fulldata']
-            # n = d.shape[0]
-            # if n > 1:
-            #     idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
-            #     udic = dict(zip(['u' + str(i) for i in range(n)], d[:, 1]))
-            #     tdic = dict(zip(['t' + str(i) for i in range(n)], d[:, 2]))
-            #     last_measurement.update(idic)
-            #     last_measurement.update(udic)
-            #     last_measurement.update(tdic)
+            d = last_measurement['fulldata']
+            n = d.shape[0]
+            if n > 1:
+                idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
+                udic = dict(zip(['u' + str(i) for i in range(n)], d[:, 1]))
+                tdic = dict(zip(['t' + str(i) for i in range(n)], d[:, 2]))
+                last_measurement.update(idic)
+                last_measurement.update(udic)
+                last_measurement.update(tdic)
             last_measurement.pop('fulldata')
         
         if os.path.isfile(filename):
