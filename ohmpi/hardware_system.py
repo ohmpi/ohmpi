@@ -43,12 +43,13 @@ for k, v in rx_module.SPECS['rx'].items():
     except Exception as e:
         print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
 
-current_max = np.min([TX_CONFIG['current_max'],  HARDWARE_CONFIG['pwr'].pop('current_max', np.inf), # TODO: replace 50 by a TX config
+current_max = np.min([TX_CONFIG['current_max'],  HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
 voltage_max = np.min([TX_CONFIG['voltage_max'],
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
 voltage_min = RX_CONFIG['voltage_min']
 # TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
+
 
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
@@ -189,7 +190,7 @@ class OhmPiHardware:
         self._start_time = None
         self._pulse = 0
 
-    def _gain_auto(self, polarities=(1, -1), vab=5., switch_pwr_off=False): #TODO: improve _gain_auto
+    def _gain_auto(self, polarities=(1, -1), vab=5., switch_pwr_off=False):  #TODO: improve _gain_auto
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
         current, voltage = 0., 0.
         if self.tx.pwr.voltage_adjustable:
@@ -238,7 +239,7 @@ class OhmPiHardware:
             mux.barrier = self.mux_barrier
 
     @property
-    def pulses(self):  # TODO: is this obsolete?
+    def pulses(self):  # TODO: is this obsolete? I don't think so...
         pulses = {}
         for i in np.unique(self.readings[:, 1]):
             r = self.readings[self.readings[:, 1] == i, :]
@@ -485,7 +486,7 @@ class OhmPiHardware:
             diff_vab = np.inf
             if strategy == 'vmax' or strategy == 'vmin':
                 while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
-                    if strategy=='vmax':
+                    if strategy == 'vmax':
                         vmn_min = vmn_max
                     vabs = []
                     self._vab_pulses(vab_list[k], sampling_rate=self.rx.sampling_rate, durations=[0.2, 0.2], polarities=[1, -1])
