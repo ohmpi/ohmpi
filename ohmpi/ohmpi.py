@@ -206,7 +206,6 @@ class OhmPi(object):
             with open(filename, 'a') as f:
                 w = csv.DictWriter(f, last_measurement.keys())
                 w.writerow(last_measurement)
-                # last_measurement.to_csv(f, header=False)
         else:
             # create data file and add headers
             with open(filename, 'a') as f:
@@ -559,17 +558,8 @@ class OhmPi(object):
                 "CPU temp [degC]": self._hw.ctl.cpu_temperature,
                 "Nb samples [-]": len(self._hw.readings[x,2]),  # TODO: use only samples after a delay in each pulse
                 "fulldata": self._hw.readings[:, [0, -2, -1]],
-                # "I_stack [mA]": i_stack_mean,
                 "I_std [%]": I_std,
-                # "I_per_stack [mA]": np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
-                # "Vmn_stack [mV]": vmn_stack_mean,
                 "Vmn_std [%]": Vmn_std,
-                # "Vmn_per_stack [mV]": np.array([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1))[0] / 2 for i in range(nb_stack)]),
-                # "R_stack [ohm]": r_stack_mean,
-                # "R_std [ohm]": r_stack_std,
-                # "R_per_stack [Ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
-                # "PS_per_stack [mV]":  np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]),
-                # "PS_stack [mV]": ps_stack_mean,
                 "R_ab [kOhm]": tx_volt / I
             }
 
@@ -694,54 +684,19 @@ class OhmPi(object):
                 quad = self.sequence[i, :]  # quadrupole
             if self.status == 'stopping':
                 break
-            # if i == 0:
-            #     # call the switch_mux function to switch to the right electrodes
-            #     # switch on DPS
-            #     self.mcp_board = MCP23008(self.i2c, address=self.mcp_board_address)
-            #     self.pin2 = self.mcp_board.get_pin(2) # dps -
-            #     self.pin2.direction = Direction.OUTPUT
-            #     self.pin2.value = True
-            #     self.pin3 = self.mcp_board.get_pin(3) # dps -
-            #     self.pin3.direction = Direction.OUTPUT
-            #     self.pin3.value = True
-            #     time.sleep (4)
-            #
-            #     #self.switch_dps('on')
-            # time.sleep(.6)
-            # self.switch_mux_on(quad)
             # run a measurement
             if self.on_pi:
                 acquired_data = self.run_measurement(quad=quad, **kwargs)
             else:  # for testing, generate random data
-                # sum_vmn = np.random.rand(1)[0] * 1000.
-                # sum_i = np.random.rand(1)[0] * 100.
-                # cmd_id = np.random.randint(1000)
-                # acquired_data = {
-                #     "time": datetime.now().isoformat(),
-                #     "A": quad[0],
-                #     "B": quad[1],
-                #     "M": quad[2],
-                #     "N": quad[3],
-                #     "inj time [ms]": self.settings['injection_duration'] * 1000.,
-                #     "Vmn [mV]": sum_vmn,
-                #     "I [mA]": sum_i,
-                #     "R [ohm]": sum_vmn / sum_i,
-                #     "Ps [mV]": np.random.randn(1)[0] * 100.,
-                #     "nbStack": self.settings['nb_stack'],
-                #     "Tx [V]": np.random.randn(1)[0] * 5.,
-                #     "CPU temp [degC]": np.random.randn(1)[0] * 50.,
-                #     "Nb samples [-]": self.nb_samples,
-                # }
                 pass
+
+            # log data to the data logger
             self.data_logger.info(acquired_data)
 
-            # # switch mux off
-            # self.switch_mux_off(quad)
-            #
-            # # add command_id in dataset
+            # add command_id in dataset
             acquired_data.update({'cmd_id': cmd_id})
             # log data to the data logger
-            # self.data_logger.info(f'{acquired_data}')
+            # self.data_logger.info(f'{acquired_data}')  # NOTE: It could be useful to keep the cmd_id in the
             # save data and print in a text file
             self.append_and_save(filename, acquired_data)
             self.exec_logger.debug(f'quadrupole {i + 1:d}/{n:d}')
@@ -1014,7 +969,7 @@ class OhmPi(object):
             self.settings['export_dir'] = os.path.split(self.settings['export_path'])[0]
             self.settings['export_name'] = os.path.split(self.settings['export_path'])[1]
 
-    def run_inversion(self, survey_names=[], elec_spacing=1, **kwargs):
+    def run_inversion(self, survey_names=None, elec_spacing=1, **kwargs):
         """Run a simple 2D inversion using ResIPy.
         
         Parameters
@@ -1024,7 +979,7 @@ class OhmPi(object):
         elec_spacing : float (optional)
             Electrode spacing in meters. We assume same electrode spacing everywhere.
         kwargs : optional
-            Additiona keyword arguments passed to `resipy.Project.invert()`. For instance
+            Additional keyword arguments passed to `resipy.Project.invert()`. For instance
             `reg_mode` == 0 for batch inversion, `reg_mode == 2` for time-lapse inversion.
             See ResIPy document for more information on options available
             (https://hkex.gitlab.io/resipy/).
@@ -1036,7 +991,7 @@ class OhmPi(object):
             for the values in resistivity of the elements.
         """
         # check if we have any files to be inverted
-        if len(survey_names) == 0:
+        if survey_names is None:
             self.exec_logger.error('No file to invert')
             return []
         
