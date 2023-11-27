@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Software interface to new hardware components &mdash; OhmPi open hardware resistivity-meter documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            OhmPi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="Ohmpi.html">OhmPi project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="V1_02.html">OhmPi V 1.02 (limited to 32 electrodes)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="V2023.html">OhmPi V2023 (64 electrodes and 12V)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OhmPi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Software interface to new hardware components</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/developing_hardware_components.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="software-interface-to-new-hardware-components">
+<h1>Software interface to new hardware components<a class="headerlink" href="#software-interface-to-new-hardware-components" title="Permalink to this heading"></a></h1>
+<p><a href="#id1"><span class="problematic" id="id2">**</span></a>* DRAFT VERSION - TO BE REVIEWED *
+This section is intended for developers of a new hardware component as part of an OhmPi system.</p>
+<p>It presents some advices and best practices that should help developing new hardware components to work
+within an OhmPi system.</p>
+<p>OhmPi is an open source system and contributions in terms of hardware and software are welcome. However, in order to
+maintain the project on tracks and promote exchange and reuse, it is necessary that contributors
+Developing a new hardware component should ideally follow a few basic steps.</p>
+<p>Two cases should be distinguished when dealing with hardware development components:</p>
+<p>1- Developments of a hardware component that comply with the way the OhmPi Hardware System works. Such developments typically
+focus on improving an existing component (reduce cost, improve performance, adapt range to specific applications,
+design with easily available parts…). The newly created hardware component will expose the minimal functionalities required
+by hardware_system for this type of component.</p>
+<p>2- Developments of a hardware component that introduce changes in the way the OhmPi Hardware System works. Such
+developments do not only focus on improving a single component but also on the way to operate the system. A
+discussion with developers of the OhmPi_Hardware and OhmPi classes should be initiated at a very early stage to investigate
+the best ways to design and implement a working solution.</p>
+<p>If you are dealing with case 1 or have designed a development path and strategy, you are ready to start.</p>
+<p>First the hardware board/device should be conceived and designed. The Ohmpi team recommends that contributors design or
+import their boards within KiCAD and that both schemas and PCB are shared.</p>
+<p>When developing a new component Class, always start your development in a new branch.
+1- Create a new python file or make a copy and modify an existing similar component file. All hardware component modules
+are stored in the ohmpi/hardware_component directory.
+In the newly created python file, define a new class based on the relevant abstract class of abstract_hardware_components.py.
+Implement the abstract methods to interact with your hardware. Name the file according to the name of the component.
+Make sure to place this new python module in the ohmpi/hardware_component directory.</p>
+<p>2- Create a new configuration file or make a copy and modify an existing configuration file. All existing config files
+are stored in the ohmpi/hardware_component directory.
+In this newly created config file, describe your system including the new component in the HARDWARE_CONFIG dictionary.
+Name it config_XXX.py where XXX should be replaced by an expression describing the system.
+Make sure to place your new config file in the ohmpi/configs directory.</p>
+<p>3- Create a new script or make a copy and modify of an existing script for testing the component.
+In this script, write python code where you will conduct the tests of the required functionalities of the new component.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, the OhmPi Team..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

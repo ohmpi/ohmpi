@@ -14,10 +14,10 @@ OhmPi project
 **Authors:** 
 ------------
 | Rémi CLEMENT, Vivien DUBOIS, Nicolas Forquet, INRAE, REVERSAAL, Villeurbanne, France
+| Olivier KAUFMANN, Arnaud WATLET, Université de Mons, Mons, Belgium
 | Yannick FARGIER, GERS-RRO, Univ Gustave Eiffel, IFSTTAR, Lyon, France
 | Hélène GUYARD, IGE Grenoble, Université Grenoble Alpes, Grenoble, France
-| Olivier KAUFMANN, Arnaud WATLET, Université de Mons, Mons, Belgium
-| Guillaume BLANCHY, ILVO, Merelbeke, Belgium|
+| Guillaume BLANCHY, ILVO, Merelbeke, Belgium
 
 
 **Partners:**
