@@ -188,7 +188,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/a/14_mes_board.jpg                   |
    |14       +------------------------------------------------------------+
-   |         | 1 MOhm resistors                                          |
+   |         | 1 MOhm resistors                                           |
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+  
    
@@ -198,7 +198,7 @@ which allows to realize precise current measurement around a shunt resistor. The
    +---------+------------------------------------------------------------+
    |         |   .. image:: step_n_2/a/15_mes_board.jpg                   |
    |15       +------------------------------------------------------------+
-   |         | Soldering tow 1 kOhm resistors                            |
+   |         | Soldering tow 1 kOhm resistors                             |
    |         |                                                            |                                                                       
    +---------+------------------------------------------------------------+
    
