@@ -276,7 +276,7 @@ class OhmPi(object):
                         headers[i] = 'R [Ohm]'
                 icols = list(np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'R [Ohm]']))[0])
                 data = np.loadtxt(os.path.join(ddir, fname), delimiter=',',
-                                    skiprows=1, usecols=icols)                    
+                                    skiprows=1, usecols=icols, ndmin=2)
                 data = data[None, :] if len(data.shape) == 1 else data
                 ddic[fname.replace('.csv', '')] = {
                     'a': data[:, 0].astype(int).tolist(),
