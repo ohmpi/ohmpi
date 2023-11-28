@@ -73,8 +73,9 @@ class OhmPi(object):
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                     'soh_logger': self.soh_logger})
         self.exec_logger.info('Hardware configured...')
-        
+
         # default acquisition settings
+        self.settings = {}
         self.update_settings('settings/default.json')
 
         # read in acquisition settings
