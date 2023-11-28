@@ -37,19 +37,19 @@ class Ctl(CtlAbstract):
         # None interface for battery
         self.interfaces['none'] = None
 
-        warnings.filterwarnings("error")  # to filter out adafruit warning about setting I2C frequency
+        # warnings.filterwarnings("error")  # to filter out adafruit warning about setting I2C frequency
         # I2C
+        warnings.filterwarnings(RuntimeWarning, action='ignore', module=busio)
         try:
             self.interfaces['i2c'] = busio.I2C(board.SCL, board.SDA)  # noqa
-        except RuntimeWarning:
-            pass
+        except Exception as e:
+            self.exec_logger.warning(f'Could not initialize I2C:\n{e}')
 
-        warnings.resetwarnings()
+       # warnings.resetwarnings()
         # Extended I2C
+        warnings.filterwarnings(RuntimeWarning, action='ignore', module=ExtendedI2C)
         try:
             self.interfaces['i2c_ext'] = ExtendedI2C(4)  # 4 is defined
-        except RuntimeWarning:
-            pass
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize Extended I2C:\n{e}')
 
