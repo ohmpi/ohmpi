@@ -50,7 +50,7 @@ class Ctl(CtlAbstract):
         except RuntimeWarning:
             pass
         except Exception as e:
-            self.exec_logger.warning(f'Could not initialize Extended I2C:\n{e}')
+            self.exec_logger.error(f'Could not initialize Extended I2C:\n{e}')
 
         warnings.resetwarnings()
 
