@@ -27,9 +27,9 @@ OhmPi project
    :align: center
   
    +------------------------------------------------------+--------------------------------------------------------+---------------------------------------------------+
-   |   .. image::../img/Logo/parteners/logo_inrae.jpg     |  .. image::../img/Logo/parteners/logo_univ_gustave.png |   .. image::../img/Logo/parteners/logo_ilvo.png   |
+   |   .. image::../img/Logo/partners/logo_inrae.jpg     |  .. image::../img/Logo/partners/logo_univ_gustave.png |   .. image::../img/Logo/partners/logo_ilvo.png   |
    +------------------------------------------------------+--------------------------------------------------------+---------------------------------------------------+
-   |   .. image::../img/Logo/parteners/logo_univ_mons.png |  .. image::../img/Logo/parteners/ige.png               |                                                   |              
+   |   .. image::../img/Logo/partners/logo_univ_mons.png |  .. image::../img/Logo/partners/ige.png               |                                                   |              
    +------------------------------------------------------+--------------------------------------------------------+---------------------------------------------------+
    
   
