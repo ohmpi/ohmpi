@@ -77,6 +77,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="V1_02.html">OhmPi V 1.02 (limited to 32 electrodes)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="V2023.html">OhmPi V2023 (64 electrodes and 12V)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="V2024_rc.html">OhmPi V2023 (64 electrodes and 12V)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
 </ul>
 
@@ -373,13 +374,13 @@ Once all the components have been soldered together, the measurement board can b
 battery terminal, according to Figure 9. Between the battery and the TX+ terminal of the measurement board, remember to
 place a fuse holder with a 1.5-A fuse for safety purposes.</p>
 <figure class="align-center" id="id2">
-<a class="reference internal image-reference" href="_images/measurement_board.jpg"><img alt="alternate text" src="_images/measurement_board.jpg" style="width: 800px; height: 500px;" /></a>
+<a class="reference internal image-reference" href="measurement_board.jpg"><img alt="alternate text" src="measurement_board.jpg" style="width: 800px; height: 500px;" /></a>
 <figcaption>
 <p><span class="caption-text">Measurement circuit board assembly: a) printed circuit board, b) adding the 1-KOhm resistors ± 1%, c)adding the 1.5-KOhm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <figure class="align-center" id="id3">
-<a class="reference internal image-reference" href="_images/measurement_board-2.jpg"><img alt="alternate text" src="_images/measurement_board-2.jpg" style="width: 800px; height: 700px;" /></a>
+<a class="reference internal image-reference" href="measurement_board-2.jpg"><img alt="alternate text" src="measurement_board-2.jpg" style="width: 800px; height: 700px;" /></a>
 <figcaption>
 <p><span class="caption-text">Measurement board installation with Raspberry Pi</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
 </figcaption>
@@ -400,7 +401,7 @@ the polarity at electrodes A and B. Thus, when relays 3 and 4 are energized by t
 the positive battery pole is connected to electrode A and the negative pole to electrode B. When not energized,
 they remain in the normally closed position. This set-up offers a simple and robust solution to inject current.</p>
 <figure class="align-center" id="id4">
-<a class="reference internal image-reference" href="_images/current_board.jpg"><img alt="alternate text" src="_images/current_board.jpg" style="width: 800px; height: 400px;" /></a>
+<a class="reference internal image-reference" href="current_board.jpg"><img alt="alternate text" src="current_board.jpg" style="width: 800px; height: 400px;" /></a>
 <figcaption>
 <p><span class="caption-text">Wiring of the 4-channel relay module board for current injection management</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
 </figcaption>
@@ -413,7 +414,7 @@ the relay card’s 4 channels respectively to the GND pin and 5Vcc of the Raspbe
 shown in the diagram, using 1-mm2 cables (red and black in Fig. 10). Lastly, connect the inputs of relay 1 and 2 respectively
 to terminals B and A of the measurement board.</p>
 <figure class="align-center" id="id5">
-<a class="reference internal image-reference" href="_images/installation_current_board.jpg"><img alt="alternate text" src="_images/installation_current_board.jpg" style="width: 800px; height: 700px;" /></a>
+<a class="reference internal image-reference" href="installation_current_board.jpg"><img alt="alternate text" src="installation_current_board.jpg" style="width: 800px; height: 700px;" /></a>
 <figcaption>
 <p><span class="caption-text">Current injection board installation with Raspberry Pi</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
 </figcaption>
@@ -439,7 +440,7 @@ configuration enables making smaller multiplexers (8 or 16 electrodes only). On 
 which is entirely possible, a GPIO channel multiplier will have to be used.
 To prepare the multiplexer, the channels of the two relay boards must be connected according to the wiring diagram shown below.</p>
 <figure class="align-center" id="id6">
-<a class="reference internal image-reference" href="_images/multiplexer_implementation.jpg"><img alt="alternate text" src="_images/multiplexer_implementation.jpg" style="width: 800px; height: 500px;" /></a>
+<a class="reference internal image-reference" href="multiplexer_implementation.jpg"><img alt="alternate text" src="multiplexer_implementation.jpg" style="width: 800px; height: 500px;" /></a>
 <figcaption>
 <p><span class="caption-text">Schematic diagram of the wiring of two 16-channel relay shields</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
 </figcaption>
@@ -453,7 +454,7 @@ for activating each relay (Fig. 12). However, we will be activating several rela
 see Section 2.4). To execute this step, it will be necessary to follow the protocol presented in Figure.</p>
 <blockquote>
 <div><figure class="align-center" id="id7">
-<a class="reference internal image-reference" href="_images/connection.jpg"><img alt="alternate text" src="_images/connection.jpg" style="width: 800px; height: 400px;" /></a>
+<a class="reference internal image-reference" href="connection.jpg"><img alt="alternate text" src="connection.jpg" style="width: 800px; height: 400px;" /></a>
 <figcaption>
 <p><span class="caption-text">Connection to the 16-channel relay shield</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
 </figcaption>
@@ -527,7 +528,7 @@ connections. Instead of having four cables connecting an electrode terminal to e
 must be connected to electrode no. 1 of MUX N, which in turn must be connected to electrode no. 1 of MUX M. Lastly, electrode no. 1 of MUX M is connected to the terminal block.
 This operation must be repeated for all 32 electrodes.</p>
 <figure class="align-center" id="id9">
-<a class="reference internal image-reference" href="_images/electrode_cable.jpg"><img alt="alternate text" src="_images/electrode_cable.jpg" style="width: 800px; height: 800px;" /></a>
+<a class="reference internal image-reference" href="electrode_cable.jpg"><img alt="alternate text" src="electrode_cable.jpg" style="width: 800px; height: 800px;" /></a>
 <figcaption>
 <p><span class="caption-text">Example of a multiplexer connection to the screw terminal for electrode no. 1.</span><a class="headerlink" href="#id9" title="Permalink to this image"></a></p>
 </figcaption>

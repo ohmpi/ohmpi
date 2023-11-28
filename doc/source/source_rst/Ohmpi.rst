@@ -2,7 +2,7 @@
 OhmPi project 
 ***************
 
-    .. image:: logo_ohmpi.JPG
+    .. image:: ../img/logo/ohmpi/logo_ohmpi.JPG
         :width: 250 px
         :align: center
         :height: 180 px
@@ -26,11 +26,11 @@ OhmPi project
 .. table::
    :align: center
   
-   +-------------------------------------------------+--------------------------------------------------+----------------------------------------------+
-   |   .. image:: Logo_parteners/logo_inrae.jpg      |  .. image:: Logo_parteners/logo_univ_gustave.png |   .. image:: Logo_parteners/logo_ilvo.png    |
-   +-------------------------------------------------+--------------------------------------------------+----------------------------------------------+
-   |   .. image:: Logo_parteners/logo_univ_mons.png  |  .. image:: Logo_parteners/ige.png               |                                              |              
-   +-------------------------------------------------+--------------------------------------------------+----------------------------------------------+
+   +------------------------------------------------------+--------------------------------------------------------+---------------------------------------------------+
+   |   .. image::../img/Logo/parteners/logo_inrae.jpg     |  .. image::../img/Logo/parteners/logo_univ_gustave.png |   .. image::../img/Logo/parteners/logo_ilvo.png   |
+   +------------------------------------------------------+--------------------------------------------------------+---------------------------------------------------+
+   |   .. image::../img/Logo/parteners/logo_univ_mons.png |  .. image::../img/Logo/parteners/ige.png               |                                                   |              
+   +------------------------------------------------------+--------------------------------------------------------+---------------------------------------------------+
    
   
 
@@ -55,7 +55,7 @@ OhmPi project
     The OhmPi team cannot be held responsible if the equipment does not work after assembly. You may redistribute and 
     modify this documentation and make products using it under the terms of the CERN-OHL-P v2. This documentation is 
     distributed WITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF MERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS
-     FOR A PARTICULAR PURPOSE. Please see the CERN-OHL-P v2 for applicable conditions.
+    FOR A PARTICULAR PURPOSE. Please see the CERN-OHL-P v2 for applicable conditions.
 
 
 
