@@ -183,13 +183,13 @@ class OhmPi(object):
                     f.write('A,B,M,N,t,pulse,polarity,current,voltage\n')
             # write full data
             with open(fw_filename, 'a') as f:
-                df = pd.DataFrame(last_measurement['fulldata'],
-                 columns=['t','pulse','polarity','current','voltage'])
-                df['A'] = last_measurement['A']
-                df['B'] = last_measurement['B']
-                df['M'] = last_measurement['M']
-                df['N'] = last_measurement['N']
-                df.to_csv(f, index=False, header=False)
+                dd = last_measurement['fulldata']
+                aa = np.repeat(last_measurement['A'], dd.shape[0])
+                bb = np.repeat(last_measurement['B'], dd.shape[0])
+                mm = np.repeat(last_measurement['M'], dd.shape[0])
+                nn = np.repeat(last_measurement['N'], dd.shape[0])
+                fwdata = np.c_[aa, bb, mm, nn, dd]
+                np.savetxt(f, fwdata, fmt=['%d', '%d', '%d', '%d', '%d', '%d', '%d', '%.3f', '%.3f'])
 
         if fw_in_csv:
             d = last_measurement['full_waveform']
@@ -691,6 +691,45 @@ class OhmPi(object):
             self.append_and_save(filename, acquired_data, fw_in_csv=fw_in_csv, fw_in_zip=fw_in_zip)
             self.exec_logger.debug(f'quadrupole {i + 1:d}/{n:d}')
         self._hw.pwr_state = 'off'
+
+        # file management
+        if fw_in_csv:  # make sure we have the same number of columns
+            with open(filename, '.csv', 'r') as f:
+                x = f.readlines()
+
+            # get column of start of full-waveform
+            icol = 0
+            for i, col in enumerate(x[0].split(',')):
+                if col == 't1':
+                    icol = i
+                    break
+
+            # get longest possible line
+            max_length = np.max([len(row.split(',')) for row in x]) - icol
+            nreadings = max_length // 5
+            print('-----', nreadings, max_length)
+
+            # create padding array for full-waveform  # TODO test this!
+            with open(filename, '.csv', 'w') as f:
+                # write back headers
+                xs = x[0].split(',')
+                f.write(','.join(xs[:icol]))
+                for col in ['t','s','p','v','i']:
+                    f.write(','.join([col + str(j+1) for j in range(nreadings)]))
+                f.write('\n')
+                for i, row in enumerate(x[1:]):
+                    xs = row.split(',')
+                    f.write(','.join(xs[:icol]))
+                    fw = np.array([icol:])
+                    fw_pad = fw.reshape((5, -1))
+                    fw_padded = np.zeros((max_length, 5))
+                    fw_padded[:fw_pad.shape[0], :] = fw_pad
+                    f.write(','.join(fw_padded.flatten()) + '\n')
+
+        if fw_in_zip:
+            with ZipFile(filename.replace('.csv', '_fw.zip'), 'w') as myzip:
+                myzip.write(filename.repleace('.csv', '_fw.csv'))
+            os.remove(filename.replace('.csv', '_fw.csv'))
 
         # reset to idle if we didn't interrupt the sequence
         if self.status != 'stopping':
