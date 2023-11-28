@@ -44,10 +44,10 @@ class Ctl(CtlAbstract):
         except RuntimeWarning:
             pass
 
+        warnings.resetwarnings()
         # Extended I2C
         try:
             self.interfaces['i2c_ext'] = ExtendedI2C(4)  # 4 is defined
-            warnings.resetwarnings()
         except RuntimeWarning:
             pass
         except Exception as e:
