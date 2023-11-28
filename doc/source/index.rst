@@ -40,6 +40,10 @@ Contents:
    source_rst/V2024.x.x/V2024
    source_rst/api
    source_rst/developing_hardware_components.rst
+   
+   source_
+   source_rst/gallery
+   source_rst/archived_version
   
 
   
