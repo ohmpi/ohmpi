@@ -93,7 +93,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 <div class="modal-body">
                     <form>
                         <div class="form-group row">
-                          <label for="nb_electrodes" class="col-sm-2 col-form-label">Nb electrodes</label>
+                          <!-- <label for="nb_electrodes" class="col-sm-2 col-form-label">Nb electrodes</label> -->
                           <div class="col-sm-10">
                             <input type="number" class="form-control-number" id="nb_electrodes" value="64">
                           </div>
@@ -337,7 +337,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         function saveConfigBtnFunc() {
             // collect values from modal
             let formVals = {
-                'nb_electrodes': parseInt(document.getElementById('nb_electrodes').value),
+                //'nb_electrodes': parseInt(document.getElementById('nb_electrodes').value),
                 'injection_duration': parseFloat(document.getElementById('injection_duration').value),
                 'nb_meas': parseInt(document.getElementById('nb_meas').value),
                 'sequence_delay': parseFloat(document.getElementById('sequence_delay').value),
