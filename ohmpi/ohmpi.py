@@ -256,7 +256,8 @@ class OhmPi(object):
         # get all .csv file in data folder
         if survey_names is None:
             survey_names = []
-        ddir = os.path.join(os.path.dirname(__file__), '../data/')
+        # ddir = os.path.join(os.path.dirname(__file__), '../data/')
+        ddir = self.settings['export_dir']
         fnames = [fname for fname in os.listdir(ddir) if fname[-4:] == '.csv']
         ddic = {}
         if cmd_id is None:
