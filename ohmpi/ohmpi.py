@@ -169,6 +169,12 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier.
         """
+        # check arguments
+        if fw_in_csv is None:
+            fw_in_csv = self.settings['fw_in_csv']
+        if fw_in_zip is None:
+            fw_in_zip = self.settings['fw_in_zip']
+
         # check if directory 'data' exists
         ddir = os.path.split(filename)[0]
         if os.path.exists(ddir) is not True:
@@ -651,6 +657,12 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier.
         """
+        # check arguments
+        if fw_in_csv is None:
+            fw_in_csv = self.settings['fw_in_csv']
+        if fw_in_zip is None:
+            fw_in_zip = self.settings['fw_in_zip']
+
         # switch power on
         self._hw.pwr_state = 'on'
         self.status = 'running'

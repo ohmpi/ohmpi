@@ -7,6 +7,7 @@
     "tx_volt": 5,
     "duty_cycle": 0.5,
     "strategy": "constant",
-    "fulldata": false,
+    "fw_in_csv": false,
+    "fw_in_zip": true,
     "export_path": "data/measurements.csv"
 }
