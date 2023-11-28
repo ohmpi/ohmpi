@@ -1,7 +1,7 @@
 import logging
 from ohmpi.utils import get_platform
 
-from paho.mqtt.client import MQTTv31
+from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
 # DEFINE THE ID OF YOUR OhmPi
@@ -43,8 +43,6 @@ HARDWARE_CONFIG = {
                        'tca_channel': 0,
                        'addr2': 'up',
                        'addr1': 'up',
-                       # 'mcp_0': '0x26',
-                       # 'mcp_1': '0x27',
                        'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                        'cabling': {(i + 8, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                        'voltage_max': 50.},
@@ -54,8 +52,6 @@ HARDWARE_CONFIG = {
                        'tca_channel': 0,
                        'addr2': 'down',
                        'addr1': 'up',
-                       # 'mcp_0': '0x26',
-                       # 'mcp_1': '0x27',
                        'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                        'cabling': {(i + 16, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                        'voltage_max': 50.},

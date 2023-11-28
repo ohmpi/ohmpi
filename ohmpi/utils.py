@@ -23,6 +23,7 @@ def enforce_specs(kwargs, specs, key):
 
     return kwargs
 
+
 def update_dict(d, u):
     """Updates a dictionary by adding elements to collection items associated to existing keys
 
@@ -113,17 +114,18 @@ def parse_log(log):
     session = np.array(session)
     return time, process_id, tag, msg, session
 
+
 def mux_2024_to_mux_2023_takeouts(mux_boards):
 
-    """Updates cabling for mux v2024 so that takeouts are similar to takeouts from mux v2023.
-    This is only useful when replacing mux v2023 installations or re-using old test circuits."
+    """ Updates cabling for mux v2024 so that takeouts are similar to takeouts from mux v2023.
+    This is only useful when replacing mux v2023 installations or re-using old test circuits.
 
     Parameters
     ----------
     mux_boards: list of class MUX objects.
 
-    Usage
-    ----------
+    Example
+    -------
     k = OhmPi()
     mux_2024_to_mux_2023_takeouts(k._hw.mux_boards)
     """

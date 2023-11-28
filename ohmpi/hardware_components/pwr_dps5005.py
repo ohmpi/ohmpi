@@ -17,8 +17,6 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'pwr_latency': {'default': .5}
          }
 
-# TODO: Complete this code... handle modbus connection
-
 
 class Pwr(PwrAbstract):
     def __init__(self, **kwargs):
@@ -32,10 +30,6 @@ class Pwr(PwrAbstract):
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, Instrument)
-        # if a controller is passed in kwargs, it will be instantiated
-        #if self.ctl is None:
-        #    self.ctl = ctl_module.Ctl(**CTL_CONFIG)
-        #self.connection = self.ctl.interfaces[kwargs.pop('connection', ctl_connection)]
         self._voltage = kwargs['voltage']
         self._current_max = kwargs['current_max']
         self.voltage_adjustable = True
@@ -93,7 +87,7 @@ class Pwr(PwrAbstract):
             self.current_max(self._current_max)
             self._pwr_state = 'on'
             self.exec_logger.debug(f'{self.model} is on')
-            time.sleep(self._pwr_latency) # from pwr specs
+            time.sleep(self._pwr_latency)
 
         elif state == 'off':
             self.connection.write_register(0x09, 0)
@@ -101,5 +95,4 @@ class Pwr(PwrAbstract):
             self.exec_logger.debug(f'{self.model} is off')
 
     def reload_settings(self):
-        # self.voltage(self._voltage)
         self.current_max(self._current_max)

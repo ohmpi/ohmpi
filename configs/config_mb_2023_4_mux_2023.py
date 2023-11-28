@@ -21,51 +21,51 @@ r_shunt = 2.
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
-    'tx':  {'model': 'mb_2023_0_X',
-             'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
-             'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
-             'r_shunt': r_shunt,  # Shunt resistance in Ohms
-             'interface_name': 'i2c'
-            },
-    'rx':  {'model': 'mb_2023_0_X',
-            'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
-            'sampling_rate': 50.,  # number of samples per second
-            'interface_name': 'i2c',
-            },
+    'tx': {'model': 'mb_2023_0_X',
+           'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
+           'current_max': 4.80 / (50 * r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
+           'r_shunt': r_shunt,  # Shunt resistance in Ohms
+           'interface_name': 'i2c'
+           },
+    'rx': {'model': 'mb_2023_0_X',
+           'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
+           'sampling_rate': 50.,  # number of samples per second
+           'interface_name': 'i2c',
+           },
     'mux':  # default properties given in config are system properties that will be
-            # overwritten by properties defined in each the board dict below.
-            # if defined in board specs, values out of specs will be bounded to remain in specs
-            # omitted properties in config will be set to board specs default values if they exist
-            {'boards':
-                {'mux_A':
-                     {'model': 'mux_2023_0_X',
-                      'mux_tca_address': 0x70,
-                      'roles': {'A': 'X'},
-                      'cabling': {(i, j): ('mux_A', i) for j in ['A'] for i in range(1, 65)},
-                      'voltage_max': 12.},
-                 'mux_B':
-                     {'model': 'mux_2023_0_X',
-                      'mux_tca_address': 0x71,
-                      'roles': {'B': 'X'},
-                      'cabling': {(i, j): ('mux_B', i) for j in ['B'] for i in range(1, 65)},
-                      'voltage_max': 12.},
-                 'mux_M':
-                     {'model': 'mux_2023_0_X',
-                      'mux_tca_address': 0x72,
-                      'roles': {'M': 'X'},
-                      'cabling': {(i, j): ('mux_M', i) for j in ['M'] for i in range(1, 65)},
-                      'voltage_max': 12.},
-                'mux_N':
-                     {'model': 'mux_2023_0_X',
-                      'mux_tca_address': 0x73,
-                      'roles': {'N': 'X'},
-                      'cabling': {(i, j): ('mux_N', i) for j in ['N'] for i in range(1, 65)},
-                      'voltage_max': 12.},
-                 },
-             'default': {'interface_name': 'i2c',
-                         'voltage_max': 12.,
-                         'current_max': 3.}
-             }
+    # overwritten by properties defined in each the board dict below.
+    # if defined in board specs, values out of specs will be bounded to remain in specs
+    # omitted properties in config will be set to board specs default values if they exist
+        {'boards':
+             {'mux_A':
+                  {'model': 'mux_2023_0_X',
+                   'mux_tca_address': 0x70,
+                   'roles': {'A': 'X'},
+                   'cabling': {(i, j): ('mux_A', i) for j in ['A'] for i in range(1, 65)},
+                   'voltage_max': 12.},
+              'mux_B':
+                  {'model': 'mux_2023_0_X',
+                   'mux_tca_address': 0x71,
+                   'roles': {'B': 'X'},
+                   'cabling': {(i, j): ('mux_B', i) for j in ['B'] for i in range(1, 65)},
+                   'voltage_max': 12.},
+              'mux_M':
+                  {'model': 'mux_2023_0_X',
+                   'mux_tca_address': 0x72,
+                   'roles': {'M': 'X'},
+                   'cabling': {(i, j): ('mux_M', i) for j in ['M'] for i in range(1, 65)},
+                   'voltage_max': 12.},
+              'mux_N':
+                  {'model': 'mux_2023_0_X',
+                   'mux_tca_address': 0x73,
+                   'roles': {'N': 'X'},
+                   'cabling': {(i, j): ('mux_N', i) for j in ['N'] for i in range(1, 65)},
+                   'voltage_max': 12.},
+              },
+         'default': {'interface_name': 'i2c',
+                     'voltage_max': 12.,
+                     'current_max': 3.}
+         }
 }
 
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS

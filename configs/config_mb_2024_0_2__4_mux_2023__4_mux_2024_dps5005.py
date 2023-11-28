@@ -27,7 +27,6 @@ HARDWARE_CONFIG = {
              'interface_name': 'i2c'
             },
     'rx':  {'model': 'mb_2024_0_2',
-             'coef_p2': 1.00,  # slope for conversion for ADS, measurement in V/V
              'latency': 0.010,  # latency in seconds in continuous mode
              'sampling_rate': 50,  # number of samples per second
              'interface_name': 'i2c'
@@ -67,8 +66,6 @@ HARDWARE_CONFIG = {
                       'tca_channel': 0,
                       'addr2': 'up',
                       'addr1': 'up',
-                      # 'mcp_0': '0x26',
-                      # 'mcp_1': '0x27',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                       'cabling': {(i+65+8, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                       'voltage_max': 12.},
@@ -78,8 +75,6 @@ HARDWARE_CONFIG = {
                       'tca_channel': 0,
                       'addr2': 'down',
                       'addr1': 'up',
-                      # 'mcp_0': '0x26',
-                      # 'mcp_1': '0x27',
                       'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
                       'cabling': {(i+65+24, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
                       'voltage_max': 12.},
