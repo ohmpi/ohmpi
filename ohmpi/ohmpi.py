@@ -325,7 +325,7 @@ class OhmPi(object):
             Array of shape (number quadrupoles * 4).
         """
         self.exec_logger.debug(f'Loading sequence {filename}')
-        sequence = np.loadtxt(filename, delimiter=" ", dtype=np.uint32)  # load quadrupole file
+        sequence = np.loadtxt(filename, delimiter=" ", dtype=np.uint32, ndim=2)  # load quadrupole file
 
         if sequence is not None:
             self.exec_logger.debug(f'Sequence of {sequence.shape[0]:d} quadrupoles read.')
