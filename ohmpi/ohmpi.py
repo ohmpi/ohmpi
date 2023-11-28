@@ -175,8 +175,7 @@ class OhmPi(object):
 
         last_measurement = deepcopy(last_measurement)
         
-        # TODO need to make all the full data of the same size (pre-populate
-        # readings with NaN in hardware_system.OhmPiHardware.read_values())
+        # save full waveform data in a long .csv file
         if fw_in_zip:
             fw_filename = filename.replace('.csv', '_fw.csv')
             if not os.path.exists(fw_filename):  # new file, write headers first
@@ -191,10 +190,9 @@ class OhmPi(object):
                 df['M'] = last_measurement['M']
                 df['N'] = last_measurement['N']
                 df.to_csv(f, index=False, header=False)
-            print('--------', fw_filename)
 
         if fw_in_csv:
-            d = last_measurement['fulldata']
+            d = last_measurement['full_waveform']
             n = d.shape[0]
             if n > 1:
                 idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
@@ -398,16 +396,6 @@ class OhmPi(object):
         """
         self.exec_logger.debug('Getting hardware config')
         self.id = OHMPI_CONFIG['id']  # ID of the OhmPi
-        # self.r_shunt = OHMPI_CONFIG['R_shunt']  # reference resistance value in ohm
-        # self.Imax = OHMPI_CONFIG['Imax']  # maximum current
-        # self.exec_logger.debug(f'The maximum current cannot be higher than {self.Imax} mA')
-        # self.coef_p2 = OHMPI_CONFIG['coef_p2']  # slope for current conversion for ads.P2, measurement in V/V
-        # self.nb_samples = OHMPI_CONFIG['nb_samples']  # number of samples measured for each stack
-        # self.version = OHMPI_CONFIG['version']  # hardware version
-        # self.max_elec = OHMPI_CONFIG['max_elec']  # maximum number of electrodes
-        # self.board_addresses = OHMPI_CONFIG['board_addresses']
-        # self.board_version = OHMPI_CONFIG['board_version']
-        # self.mcp_board_address = OHMPI_CONFIG['mcp_board_address']
         self.exec_logger.debug(f'OHMPI_CONFIG = {str(OHMPI_CONFIG)}')
 
     def remove_data(self, cmd_id=None):
