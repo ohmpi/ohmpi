@@ -364,6 +364,18 @@ class TxAbstract(ABC):
         self._injection_duration = value
 
     @property
+    def latency(self):
+        """ Gets the Tx latency """
+        return self._latency
+
+    @latency.setter
+    def latency(self, value):
+        """ Sets the Tx latency """
+        assert isinstance(value, float)
+        assert value >= 0.
+        self._latency = value
+
+    @property
     def polarity(self):
         return self._polarity
 
@@ -454,6 +466,17 @@ class RxAbstract(ABC):
         self._vmn_hardware_offset = kwargs.pop('vmn_hardware_offset', 0.)
 
     @property
+    def bias(self):
+        """ Gets the RX bias """
+        return self._bias
+
+    @bias.setter
+    def bias(self, value):
+        """ Sets the Rx bias """
+        assert isinstance(value, float)
+        self._bias = value
+
+    @property
     def gain(self):
         return self._gain
 
@@ -471,6 +494,18 @@ class RxAbstract(ABC):
     @abstractmethod
     def gain_auto(self):
         pass
+
+    @property
+    def latency(self):
+        """ Gets the Rx latency """
+        return self._latency
+
+    @latency.setter
+    def latency(self, value):
+        """ Sets the Rx latency """
+        assert isinstance(value, float)
+        assert value >= 0.
+        self._latency = value
 
     def reset_gain(self):
         self.gain = 1.
@@ -498,6 +533,5 @@ class RxAbstract(ABC):
     @property
     @abstractmethod
     def voltage(self):
-        """ Gets the voltage VMN in Volts
-        """
+        """ Gets the voltage VMN in Volts """
         pass

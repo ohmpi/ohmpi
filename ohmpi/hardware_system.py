@@ -190,7 +190,7 @@ class OhmPiHardware:
         self._start_time = None
         self._pulse = 0
 
-    def _gain_auto(self, polarities=(1, -1), vab=5., switch_pwr_off=False):  #TODO: improve _gain_auto
+    def _gain_auto(self, polarities=(1, -1), vab=5., switch_pwr_off=False):  # TODO: improve _gain_auto
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
         current, voltage = 0., 0.
         if self.tx.pwr.voltage_adjustable:
@@ -271,7 +271,7 @@ class OhmPiHardware:
         if not append or self._start_time is None:
             self._start_time = datetime.datetime.utcnow()
             # TODO: Check if replacing the following two options by a reset_buffer method of TX would be OK
-            time.sleep(np.max([self.rx._latency, self.tx._latency])) # if continuous mode
+            time.sleep(np.max([self.rx.latency, self.tx.latency])) # if continuous mode
             # _ = self.rx.voltage # if not continuous mode
 
         while self.tx_sync.is_set():
@@ -395,9 +395,9 @@ class OhmPiHardware:
 
         return new_vab
 
-    def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5., vab_max=None,
-                         iab_max=None, vmn_max=None, vmn_min=voltage_min, polarities=(1, -1), delay=0.05,
-                         p_max=None, diff_vab_lim=2.5, n_steps=4):
+    def compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5., vab_max=None,
+                        iab_max=None, vmn_max=None, vmn_min=voltage_min, polarities=(1, -1), delay=0.05,
+                        p_max=None, diff_vab_lim=2.5, n_steps=4):
         # TODO: Optimise how to pass iab_max, vab_max, vmn_min
         # TODO: Update docstring
         """Estimates best Tx voltage based on different strategies.
@@ -467,7 +467,6 @@ class OhmPiHardware:
 
             k = 0
             vab_list = np.zeros(n_steps + 1) * np.nan
-
             vab_list[k] = vab
             # self.tx.turn_on()
             switch_pwr_off, switch_tx_pwr_off = False, False  # TODO: check if these should be moved in kwargs
@@ -562,7 +561,7 @@ class OhmPiHardware:
         warnings.resetwarnings()
 
     def calibrate_rx_bias(self):
-        self.rx._bias += (np.mean(self.readings[self.readings[:, 2] == 1, 4])
+        self.rx.bias += (np.mean(self.readings[self.readings[:, 2] == 1, 4])
                           + np.mean(self.readings[self.readings[:, 2] == -1, 4])) / 2.
 
     def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, duty_cycle=1.,

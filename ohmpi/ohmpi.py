@@ -203,7 +203,7 @@ class OhmPi(object):
                 last_measurement.update(idic)
                 last_measurement.update(udic)
                 last_measurement.update(tdic)
-            last_measurement.pop('fulldata')
+            last_measurement.pop('full_waveform')
         
         if os.path.isfile(filename):
             # Load data file and append data to it
@@ -517,7 +517,7 @@ class OhmPi(object):
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
-            tx_volt = self._hw._compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max, iab_max=iab_max)  # TODO: use tx_volt and vmn_max instead of hardcoded values
+            tx_volt = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max, iab_max=iab_max)  # TODO: use tx_volt and vmn_max instead of hardcoded values
             time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
@@ -546,8 +546,8 @@ class OhmPi(object):
                 "nbStack": nb_stack,
                 "Tx [V]": tx_volt,
                 "CPU temp [degC]": self._hw.ctl.cpu_temperature,
-                "Nb samples [-]": len(self._hw.readings[x,2]),  # TODO: use only samples after a delay in each pulse
-                "fulldata": self._hw.readings[:, [0, -2, -1]],
+                "Nb samples [-]": len(self._hw.readings[x, 2]),  # TODO: use only samples after a delay in each pulse
+                "full_waveform": self._hw.readings[:, [0, -2, -1]],
                 "I_std [%]": I_std,
                 "Vmn_std [%]": Vmn_std,
                 "R_ab [kOhm]": tx_volt / I
@@ -555,7 +555,7 @@ class OhmPi(object):
 
             # to the data logger
             dd = d.copy()
-            dd.pop('fulldata')  # too much for logger
+            dd.pop('full_waveform')  # too much for logger
             dd.update({'A': str(dd['A'])})
             dd.update({'B': str(dd['B'])})
             dd.update({'M': str(dd['M'])})
@@ -791,7 +791,7 @@ class OhmPi(object):
                 'rsdata': {
                     'A': int(quad[0]),
                     'B': int(quad[1]),
-                    'rs': np.round(rab,3),  # in kOhm
+                    'rs': np.round(rab, 3),  # in kOhm
                 }
             }
             self.data_logger.info(json.dumps(msg))
@@ -1008,7 +1008,7 @@ class OhmPi(object):
         # define a parser for the "ohmpi" format
         def ohmpiParser(fname):
             df = pd.read_csv(fname)
-            df = df.rename(columns={'A':'a', 'B':'b', 'M':'m', 'N':'n'})
+            df = df.rename(columns={'A': 'a', 'B': 'b', 'M': 'm', 'N': 'n'})
             df['vp'] = df['Vmn [mV]']
             df['i'] = df['I [mA]']
             df['resist'] = df['vp']/df['i']
