@@ -15,6 +15,7 @@ from copy import deepcopy
 import numpy as np
 import csv
 import time
+import pandas as pd
 from shutil import rmtree, make_archive
 from threading import Thread
 from inspect import getmembers, isfunction
@@ -76,7 +77,7 @@ class OhmPi(object):
 
         # default acquisition settings
         self.settings = {}
-        self.update_settings('settings/default.json')
+        self.update_settings(os.path.join(os.path.split(os.path.dirname(__file__))[0],'settings/default.json'))
 
         # read in acquisition settings
         self.update_settings(settings)
@@ -169,7 +170,7 @@ class OhmPi(object):
             Unique command identifier.
         """
         # check if directory 'data' exists
-        ddir = os.path.join(os.path.dirname(__file__), '../data/')
+        ddir = os.path.split(filename)[0]
         if os.path.exists(ddir) is not True:
             os.mkdir(ddir)
 
@@ -179,7 +180,7 @@ class OhmPi(object):
         if fw_in_zip:
             fw_filename = filename.replace('.csv', '_fw.csv')
             if not os.path.exists(fw_filename):  # new file, write headers first
-                with open(fw_filane, 'w') as f:
+                with open(fw_filename, 'w') as f:
                     f.write('A,B,M,N,t,pulse,polarity,current,voltage\n')
             # write full data
             with open(fw_filename, 'a') as f:
@@ -399,7 +400,7 @@ class OhmPi(object):
         self.exec_logger.debug(f'OHMPI_CONFIG = {str(OHMPI_CONFIG)}')
 
     def remove_data(self, cmd_id=None):
-        """Remove all data in the ´data/´ folder on the raspberrypi.
+        """Remove all data in the ´export_path´ folder on the raspberrypi.
 
         Parameters
         ----------
@@ -407,7 +408,8 @@ class OhmPi(object):
             Unique command identifier.
         """
         self.exec_logger.debug(f'Removing all data following command {cmd_id}')
-        datadir = os.path.join(os.path.dirname(__file__), '../data')
+        datadir = os.path.split(self.settings['export_path'])
+        #datadir = os.path.join(os.path.dirname(__file__), '../data')
         rmtree(datadir)
         os.mkdir(datadir)
 
@@ -425,7 +427,8 @@ class OhmPi(object):
     def download_data(self, cmd_id=None):
         """Create a zip of the data folder to then download it easily.
         """
-        datadir = os.path.join(os.path.dirname(__file__), '../data/')
+        datadir = os.path.split(self.settings['export_path'])
+        # datadir = os.path.join(os.path.dirname(__file__), '../data/')
         make_archive(datadir, 'zip', 'data')
         self.data_logger.info(json.dumps({'download': 'ready'}))
 
@@ -986,7 +989,7 @@ class OhmPi(object):
         # get absolule filename
         fnames = []
         for survey_name in survey_names:
-            fname = os.path.join(pdir, '../data', survey_name)
+            fname = os.path.join(self.settings['export_path'], survey_name)
             if os.path.exists(fname):
                 fnames.append(fname)
             else:
