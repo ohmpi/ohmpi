@@ -723,7 +723,7 @@ class OhmPi(object):
                 for i, row in enumerate(x[1:]):
                     xs = row.split(',')
                     f.write(','.join(xs[:icol]))
-                    fw = np.array([icol:])
+                    fw = np.array(xs[icol:])
                     fw_pad = fw.reshape((5, -1))
                     fw_padded = np.zeros((max_length, 5))
                     fw_padded[:fw_pad.shape[0], :] = fw_pad
