@@ -27,7 +27,6 @@ HARDWARE_CONFIG = {
              'interface_name': 'i2c'
             },
     'rx':  {'model': 'mb_2024_0_2',
-             'coef_p2': 1.00,  # slope for conversion for ADS, measurement in V/V
              'latency': 0.010,  # latency in seconds in continuous mode
              'sampling_rate': 50,  # number of samples per second
              'interface_name': 'i2c'
