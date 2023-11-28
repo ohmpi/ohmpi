@@ -51,8 +51,7 @@ class OhmPi(object):
         Dictionnary of parameters. Possible parameters with their default values:
         `{'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
         'nb_stack': 1, 'sampling_interval': 2, 'tx_volt': 5, 'duty_cycle': 0.5,
-        'strategy': 'constant', 'export_path': None, 'export_dir': 'data',
-        'export_name': 'measurement.csv'`.
+        'strategy': 'constant', 'export_path': None
     sequence : str, optional
         Path of the .csv or .txt file with A, B, M and N electrodes.
         Electrode index starts at 1. See `OhmPi.load_sequence()` for full docstring.
@@ -911,10 +910,7 @@ class OhmPi(object):
             - nb_stack (number of stack for each quadrupole measurement)
             - strategy (injection strategy: constant, vmax, vmin)
             - duty_cycle (injection duty cycle comprised between 0.5 - 1)
-            - export_dir (directory where to export the data)
-            - export_name (name of exported file, timestamp will be added to filename)
-            - export_path (path where to export the data, timestamp will be added to filename ;
-                            if export_path is given, it goes over export_dir and export_name)
+            - export_path (path where to export the data, timestamp will be added to filename)
 
         Parameters
         ----------
@@ -942,10 +938,11 @@ class OhmPi(object):
             self.exec_logger.warning('Settings are missing...')
 
         if self.settings['export_path'] is None:
-            self.settings['export_path'] = os.path.join(self.settings['export_dir'], self.settings['export_name'])
-        else:
-            self.settings['export_dir'] = os.path.split(self.settings['export_path'])[0]
-            self.settings['export_name'] = os.path.split(self.settings['export_path'])[1]
+            self.settings['export_path'] = os.path.join("data", "measurement.csv")
+
+        if not os.path.isabs(self.settings['export_path']):
+            export_dir = os.path.split(os.path.dirname(__file__))[0]
+            self.settings['export_path'] = os.path.join(export_dir, self.settings['export_path'])
 
     def run_inversion(self, survey_names=None, elec_spacing=1, **kwargs):
         """Run a simple 2D inversion using ResIPy (https://gitlab.com/hkex/resipy).
