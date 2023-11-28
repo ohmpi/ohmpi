@@ -113,7 +113,27 @@ def parse_log(log):
     session = np.array(session)
     return time, process_id, tag, msg, session
 
-def mux_2024_to_mux_2023_takeouts(sequence):
+def mux_2024_to_mux_2023_takeouts(mux_boards):
+
+    """Updates cabling for mux v2024 so that takeouts are similar to takeouts from mux v2023.
+    This is only useful when replacing mux v2023 installations or re-using old test circuits."
+
+    Parameters
+    ----------
+    mux_boards: list of class MUX objects.
+
+    Usage
+    ----------
+    k = OhmPi()
+    mux_2024_to_mux_2023_takeouts(k._hw.mux_boards)
+    """
+
     mapper = {1: 16, 2: 1, 3: 15, 4: 2, 5: 14, 6: 3, 7: 13, 8: 4, 9: 12, 10: 5, 11: 11,
               12: 6, 13: 10, 14: 7, 15: 9, 16: 8}
-    remapped_sequence = mapper[sequence]
+
+    for mux in mux_boards:
+        new_cabling = mux.cabling.copy()
+        for k, v in mux.cabling.items():
+            print(k, v)
+            new_cabling[k] = (mapper[v[0]], v[1])
+        mux.cabling = new_cabling
