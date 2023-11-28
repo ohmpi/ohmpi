@@ -85,6 +85,7 @@ class OhmPiHardware:
             if isinstance(ctl_mod, str):
                 ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
             HARDWARE_CONFIG['rx']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['rx']['ctl'])
+        print(HARDWARE_CONFIG['rx'])
         HARDWARE_CONFIG['rx'].update({'connection':
                                           HARDWARE_CONFIG['rx'].pop('connection',
                                                                     HARDWARE_CONFIG['rx']['ctl'].interfaces[

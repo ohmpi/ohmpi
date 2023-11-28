@@ -6,6 +6,34 @@ from ohmpi.hardware_components import TxAbstract
 
 TX_CONFIG = HARDWARE_CONFIG['tx']
 
+# hardware characteristics and limitations
+# voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
+SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
+                'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
+                'data_rate': {'default': 860.},
+                'bias':  {'min': -5000., 'default': 0., 'max': 5000.},
+                'coef_p2': {'default': 1.00},
+                'mcp_address': {'default': 0x27},
+                'ads_address': {'default': 0x49},
+                'voltage_min': {'default': 10.0},
+                'voltage_max': {'default': 5000.0},  # [mV]
+                'dg411_gain_ratio': {'default': 1/2},  # lowest resistor value over sum of resistor values
+                'vmn_hardware_offset': {'default': 2500.},
+                },
+         'tx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
+                'adc_voltage_min': {'default': 10.},  # Minimum voltage value used in vmin strategy
+                'adc_voltage_max': {'default': 4500.},  # Maximum voltage on ads1115 used to measure current
+                'voltage_max': {'min': 0., 'default': 12., 'max': 50.},  # Maximum input voltage
+                'data_rate': {'default': 860.},
+                'mcp_address': {'default': 0x21},
+                'ads_address': {'default': 0x48},
+                'compatible_power_sources': {'default': ['pwr_batt', 'dps5005']},
+                'r_shunt':  {'min': 0.001, 'default': 2.},
+                'activation_delay': {'default': 0.010},  # Max turn on time of OMRON G5LE-1 5VDC relays
+                'release_delay': {'default': 0.005},  # Max turn off time of OMRON G5LE-1 5VDC relays = 1ms
+                'pwr_latency': {'default': 4.}
+                }}
+
 # ADC for current
 current_adc_voltage_min = 10.  # mV
 current_adc_voltage_max = 4500. # mV
@@ -24,8 +52,6 @@ TX_CONFIG['dps_switch_on_warm_up'] = TX_CONFIG.pop('dps_switch_on_warmup', dps_s
 TX_CONFIG['low_battery'] = TX_CONFIG.pop('low_battery', tx_low_battery)
 
 class Tx(TxAbstract):
-    def inject(self, state='on'):
-        pass
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -33,12 +59,20 @@ class Tx(TxAbstract):
 
         self._adc_gain = 1.
 
+        class Pin(object):
+            def __init__(self, val):
+                self.value = val
+        
+        self.pin0 = Pin(False)
+        self.pin1 = Pin(False)
+
         self.polarity = 0
-        self.turn_on()
         time.sleep(TX_CONFIG['dps_switch_on_warm_up'])
         self.exec_logger.info(f'TX battery: {self.tx_bat:.1f} V')
-        self.turn_off()
 
+    def inject(self, polarity=1, injection_duration=None, switch_pwr=False):
+        self.polarity = polarity
+        # TxAbstract.inject(self, polarity=polarity, injection_duration=injection_duration, switch_pwr=switch_pwr)
 
     @property
     def adc_gain(self):
@@ -53,6 +87,9 @@ class Tx(TxAbstract):
         gain = 1.
         self.exec_logger.debug(f'Setting TX ADC gain automatically to {gain}')
         self.adc_gain = gain
+    
+    def gain_auto(self):
+        self._adc_gain_auto()
 
     def current_pulse(self, **kwargs):
         super().current_pulse(**kwargs)
@@ -92,6 +129,24 @@ class Tx(TxAbstract):
         if tx_bat < 12.:
             self.soh_logger.debug(f'Low TX Battery: {tx_bat:.1f} V')
         return tx_bat
+    
+    @property
+    def polarity(self):
+        return self._polarity
+
+    @polarity.setter
+    def polarity(self, polarity):
+        assert polarity in [-1, 0, 1]
+        self._polarity = polarity
+        if polarity == 1:
+            self.pin0.value = True
+            self.pin1.value = False
+        elif polarity == -1:
+            self.pin0.value = False
+            self.pin1.value = True
+        else:
+            self.pin0.value = False
+            self.pin1.value = False
 
     def voltage_pulse(self, voltage=TX_CONFIG['default_voltage'], length=None, polarity=None):
         """ Generates a square voltage pulse

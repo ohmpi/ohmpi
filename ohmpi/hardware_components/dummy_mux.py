@@ -17,5 +17,5 @@ class Mux(MuxAbstract):
     def switch_one(self, *args):
         MuxAbstract.switch_one(self, *args)
 
-    def test(self, *args):
+    def test(self, *args, **kwargs):
         MuxAbstract.test(self, *args)
