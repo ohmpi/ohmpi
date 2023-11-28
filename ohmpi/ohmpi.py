@@ -15,6 +15,7 @@ from copy import deepcopy
 import numpy as np
 import csv
 import time
+import pandas as pd
 from shutil import rmtree, make_archive
 from threading import Thread
 from inspect import getmembers, isfunction
@@ -51,8 +52,7 @@ class OhmPi(object):
         Dictionnary of parameters. Possible parameters with their default values:
         `{'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
         'nb_stack': 1, 'sampling_interval': 2, 'tx_volt': 5, 'duty_cycle': 0.5,
-        'strategy': 'constant', 'export_path': None, 'export_dir': 'data',
-        'export_name': 'measurement.csv'`.
+        'strategy': 'constant', 'export_path': None
     sequence : str, optional
         Path of the .csv or .txt file with A, B, M and N electrodes.
         Electrode index starts at 1. See `OhmPi.load_sequence()` for full docstring.
@@ -74,9 +74,10 @@ class OhmPi(object):
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                     'soh_logger': self.soh_logger})
         self.exec_logger.info('Hardware configured...')
-        
+
         # default acquisition settings
-        self.update_settings('settings/default.json')
+        self.settings = {}
+        self.update_settings(os.path.join(os.path.split(os.path.dirname(__file__))[0],'settings/default.json'))
 
         # read in acquisition settings
         self.update_settings(settings)
@@ -169,18 +170,17 @@ class OhmPi(object):
             Unique command identifier.
         """
         # check if directory 'data' exists
-        ddir = os.path.join(os.path.dirname(__file__), '../data/')
+        ddir = os.path.split(filename)[0]
         if os.path.exists(ddir) is not True:
             os.mkdir(ddir)
 
         last_measurement = deepcopy(last_measurement)
         
-        # TODO need to make all the full data of the same size (pre-populate
-        # readings with NaN in hardware_system.OhmPiHardware.read_values())
+        # save full waveform data in a long .csv file
         if fw_in_zip:
             fw_filename = filename.replace('.csv', '_fw.csv')
             if not os.path.exists(fw_filename):  # new file, write headers first
-                with open(fw_filane, 'w') as f:
+                with open(fw_filename, 'w') as f:
                     f.write('A,B,M,N,t,pulse,polarity,current,voltage\n')
             # write full data
             with open(fw_filename, 'a') as f:
@@ -191,10 +191,9 @@ class OhmPi(object):
                 df['M'] = last_measurement['M']
                 df['N'] = last_measurement['N']
                 df.to_csv(f, index=False, header=False)
-            print('--------', fw_filename)
 
         if fw_in_csv:
-            d = last_measurement['fulldata']
+            d = last_measurement['full_waveform']
             n = d.shape[0]
             if n > 1:
                 idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
@@ -256,7 +255,8 @@ class OhmPi(object):
         # get all .csv file in data folder
         if survey_names is None:
             survey_names = []
-        ddir = os.path.join(os.path.dirname(__file__), '../data/')
+        # ddir = os.path.join(os.path.dirname(__file__), '../data/')
+        ddir = self.settings['export_dir']
         fnames = [fname for fname in os.listdir(ddir) if fname[-4:] == '.csv']
         ddic = {}
         if cmd_id is None:
@@ -397,20 +397,10 @@ class OhmPi(object):
         """
         self.exec_logger.debug('Getting hardware config')
         self.id = OHMPI_CONFIG['id']  # ID of the OhmPi
-        # self.r_shunt = OHMPI_CONFIG['R_shunt']  # reference resistance value in ohm
-        # self.Imax = OHMPI_CONFIG['Imax']  # maximum current
-        # self.exec_logger.debug(f'The maximum current cannot be higher than {self.Imax} mA')
-        # self.coef_p2 = OHMPI_CONFIG['coef_p2']  # slope for current conversion for ads.P2, measurement in V/V
-        # self.nb_samples = OHMPI_CONFIG['nb_samples']  # number of samples measured for each stack
-        # self.version = OHMPI_CONFIG['version']  # hardware version
-        # self.max_elec = OHMPI_CONFIG['max_elec']  # maximum number of electrodes
-        # self.board_addresses = OHMPI_CONFIG['board_addresses']
-        # self.board_version = OHMPI_CONFIG['board_version']
-        # self.mcp_board_address = OHMPI_CONFIG['mcp_board_address']
         self.exec_logger.debug(f'OHMPI_CONFIG = {str(OHMPI_CONFIG)}')
 
     def remove_data(self, cmd_id=None):
-        """Remove all data in the ´data/´ folder on the raspberrypi.
+        """Remove all data in the ´export_path´ folder on the raspberrypi.
 
         Parameters
         ----------
@@ -418,7 +408,8 @@ class OhmPi(object):
             Unique command identifier.
         """
         self.exec_logger.debug(f'Removing all data following command {cmd_id}')
-        datadir = os.path.join(os.path.dirname(__file__), '../data')
+        datadir = os.path.split(self.settings['export_path'])
+        #datadir = os.path.join(os.path.dirname(__file__), '../data')
         rmtree(datadir)
         os.mkdir(datadir)
 
@@ -436,7 +427,8 @@ class OhmPi(object):
     def download_data(self, cmd_id=None):
         """Create a zip of the data folder to then download it easily.
         """
-        datadir = os.path.join(os.path.dirname(__file__), '../data/')
+        datadir = os.path.split(self.settings['export_path'])
+        # datadir = os.path.join(os.path.dirname(__file__), '../data/')
         make_archive(datadir, 'zip', 'data')
         self.data_logger.info(json.dumps({'download': 'ready'}))
 
@@ -911,10 +903,7 @@ class OhmPi(object):
             - nb_stack (number of stack for each quadrupole measurement)
             - strategy (injection strategy: constant, vmax, vmin)
             - duty_cycle (injection duty cycle comprised between 0.5 - 1)
-            - export_dir (directory where to export the data)
-            - export_name (name of exported file, timestamp will be added to filename)
-            - export_path (path where to export the data, timestamp will be added to filename ;
-                            if export_path is given, it goes over export_dir and export_name)
+            - export_path (path where to export the data, timestamp will be added to filename)
 
         Parameters
         ----------
@@ -942,10 +931,11 @@ class OhmPi(object):
             self.exec_logger.warning('Settings are missing...')
 
         if self.settings['export_path'] is None:
-            self.settings['export_path'] = os.path.join(self.settings['export_dir'], self.settings['export_name'])
-        else:
-            self.settings['export_dir'] = os.path.split(self.settings['export_path'])[0]
-            self.settings['export_name'] = os.path.split(self.settings['export_path'])[1]
+            self.settings['export_path'] = os.path.join("data", "measurement.csv")
+
+        if not os.path.isabs(self.settings['export_path']):
+            export_dir = os.path.split(os.path.dirname(__file__))[0]
+            self.settings['export_path'] = os.path.join(export_dir, self.settings['export_path'])
 
     def run_inversion(self, survey_names=None, elec_spacing=1, **kwargs):
         """Run a simple 2D inversion using ResIPy (https://gitlab.com/hkex/resipy).
@@ -999,7 +989,7 @@ class OhmPi(object):
         # get absolule filename
         fnames = []
         for survey_name in survey_names:
-            fname = os.path.join(pdir, '../data', survey_name)
+            fname = os.path.join(self.settings['export_path'], survey_name)
             if os.path.exists(fname):
                 fnames.append(fname)
             else:

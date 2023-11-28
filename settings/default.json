@@ -1,0 +1,12 @@
+{
+    "injection_duration": 0.2,
+    "nb_meas": 1,
+    "sequence_delay": 1,
+    "nb_stack": 1,
+    "sampling_interval": 2,
+    "tx_volt": 5,
+    "duty_cycle": 0.5,
+    "strategy": "constant",
+    "fulldata": false,
+    "export_path": "data/measurements.csv"
+}
