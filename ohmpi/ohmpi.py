@@ -189,8 +189,8 @@ class OhmPi(object):
         
         # TODO need to make all the full data of the same size (pre-populate
         # readings with NaN in hardware_system.OhmPiHardware.read_values())
-        if 'fulldata' in last_measurement:
-            d = last_measurement['fulldata']
+        if 'full_waveform' in last_measurement:
+            d = last_measurement['full_waveform']
             n = d.shape[0]
             if n > 1:
                 idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
@@ -199,7 +199,7 @@ class OhmPi(object):
                 last_measurement.update(idic)
                 last_measurement.update(udic)
                 last_measurement.update(tdic)
-            last_measurement.pop('fulldata')
+            last_measurement.pop('full_waveform')
         
         if os.path.isfile(filename):
             # Load data file and append data to it
@@ -557,7 +557,7 @@ class OhmPi(object):
                 "Tx [V]": tx_volt,
                 "CPU temp [degC]": self._hw.ctl.cpu_temperature,
                 "Nb samples [-]": len(self._hw.readings[x, 2]),  # TODO: use only samples after a delay in each pulse
-                "fulldata": self._hw.readings[:, [0, -2, -1]],
+                "full_waveform": self._hw.readings[:, [0, -2, -1]],
                 "I_std [%]": I_std,
                 "Vmn_std [%]": Vmn_std,
                 "R_ab [kOhm]": tx_volt / I
@@ -565,7 +565,7 @@ class OhmPi(object):
 
             # to the data logger
             dd = d.copy()
-            dd.pop('fulldata')  # too much for logger
+            dd.pop('full_waveform')  # too much for logger
             dd.update({'A': str(dd['A'])})
             dd.update({'B': str(dd['B'])})
             dd.update({'M': str(dd['M'])})
