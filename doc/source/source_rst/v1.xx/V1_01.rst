@@ -524,7 +524,7 @@ Complete list of components
 
 
 .. csv-table:: Table Title
-   :file: list.csv
+   :file: ../../bom_list/list.csv
    :widths: 30, 70, 70, 70, 70,70
    :header-rows: 1
 

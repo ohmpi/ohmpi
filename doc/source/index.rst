@@ -39,6 +39,7 @@ Contents:
    source_rst/V2023.x.x/V2023
    source_rst/V2024.x.x/V2024
    source_rst/api
+   source_rst/developing_hardware_components.rst
   
 
   
