@@ -47,11 +47,12 @@ class Ctl(CtlAbstract):
         # Extended I2C
         try:
             self.interfaces['i2c_ext'] = ExtendedI2C(4)  # 4 is defined
+            warnings.resetwarnings()
         except RuntimeWarning:
             pass
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize Extended I2C:\n{e}')
-        warnings.resetwarnings()
+
 
 
         # modbus
