@@ -276,7 +276,7 @@ class OhmPi(object):
                         headers[i] = 'R [Ohm]'
                 icols = list(np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'R [Ohm]']))[0])
                 data = np.loadtxt(os.path.join(ddir, fname), delimiter=',',
-                                    skiprows=1, usecols=icols, ndmin=2)
+                                    skiprows=1, usecols=icols)
                 data = data[None, :] if len(data.shape) == 1 else data
                 ddic[fname.replace('.csv', '')] = {
                     'a': data[:, 0].astype(int).tolist(),
@@ -325,7 +325,7 @@ class OhmPi(object):
             Array of shape (number quadrupoles * 4).
         """
         self.exec_logger.debug(f'Loading sequence {filename}')
-        sequence = np.loadtxt(filename, delimiter=" ", dtype=np.uint32)  # load quadrupole file
+        sequence = np.loadtxt(filename, delimiter=" ", dtype=np.uint32, ndmin=2)  # load quadrupole file
 
         if sequence is not None:
             self.exec_logger.debug(f'Sequence of {sequence.shape[0]:d} quadrupoles read.')
