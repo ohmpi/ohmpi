@@ -62,7 +62,7 @@ For this step, the installation instructions are well described on the Raspberry
 .. note:: 
      All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:
      
-     .. figure:: raspbian_version.jpg
+     .. figure:: ../../img/raspbian_version.jpg
        :width: 800px
        :align: center
        :height: 400px
@@ -162,7 +162,7 @@ If you decided to use a virtual environment, it is necessary to setup Thonny Pyt
 
 2- Thonny opens, Python runs on the root (Python 3.7.3 (/usr/bin/python3))
 
-.. figure:: thonny_first_interface.jpg
+.. figure:: ../../img/thonny_first_interface.jpg
        :width: 600px
        :align: center
        :height: 450px
@@ -171,7 +171,7 @@ If you decided to use a virtual environment, it is necessary to setup Thonny Pyt
 
 3-Click on **Run>select interpreter**, a new window opens click on interpret
 
-.. figure:: thonny_option.jpg
+.. figure:: ../../img/thonny_option.jpg
        :width: 600px
        :align: center
        :height: 450px
@@ -180,7 +180,7 @@ If you decided to use a virtual environment, it is necessary to setup Thonny Pyt
 
 4-On the new open windows select **alternative Python3 or virtual environment**
 
-.. figure:: thonny_interpreter.jpg
+.. figure:: ../../img/thonny_interpreter.jpg
        :width: 600px
        :align: center
        :height: 450px
@@ -193,7 +193,7 @@ If you decided to use a virtual environment, it is necessary to setup Thonny Pyt
 
 7- In the **known interpreter** tab the path of the virtual environment should appear
 
-.. figure:: thonny_interpreter_folder.jpg
+.. figure:: ../../img/thonny_interpreter_folder.jpg
        :width: 600px
        :align: center
        :height: 450px
@@ -246,7 +246,7 @@ A shortcut between Electrodes A and B will generate excessive currents, whose in
 A lithium ion battery or automobile-type lead-acid battery can deliver a strong enough current to damage the board and, as such, 
 constitutes a potential hazard. We therefore recommend adding a 1.5-A fuse between the battery and resistor R9.
 
-.. figure:: schema_measurement_board.jpg
+.. figure:: ../../img/schema_measurement_board.jpg
    :width: 800px
    :align: center
    :height: 400px
@@ -303,7 +303,7 @@ Once all the components have been soldered together, the measurement board can b
 battery terminal, according to Figure 9. Between the battery and the TX+ terminal of the measurement board, remember to 
 place a fuse holder with a 1.5-A fuse for safety purposes.
 
-.. figure:: measurement_board.jpg
+.. figure:: ../../img/v1.xx/measurement_board.jpg
    :width: 800px
    :align: center
    :height: 500px
@@ -312,7 +312,7 @@ place a fuse holder with a 1.5-A fuse for safety purposes.
 
    Measurement circuit board assembly: a) printed circuit board, b) adding the 1-KOhm resistors ± 1%, c)adding the 1.5-KOhm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers
    
-.. figure:: measurement_board-2.jpg
+.. figure:: ../../img/v1.xx/measurement_board-2.jpg
    :width: 800px
    :align: center
    :height: 700px
@@ -336,7 +336,7 @@ the polarity at electrodes A and B. Thus, when relays 3 and 4 are energized by t
 the positive battery pole is connected to electrode A and the negative pole to electrode B. When not energized, 
 they remain in the normally closed position. This set-up offers a simple and robust solution to inject current.
 
-.. figure:: current_board.jpg
+.. figure:: ../../img/v1.xx/current_board.jpg
    :width: 800px
    :align: center
    :height: 400px
@@ -353,7 +353,7 @@ the relay card’s 4 channels respectively to the GND pin and 5Vcc of the Raspbe
 shown in the diagram, using 1-mm2 cables (red and black in Fig. 10). Lastly, connect the inputs of relay 1 and 2 respectively
 to terminals B and A of the measurement board.   
 
-.. figure:: installation_current_board.jpg
+.. figure:: ../../img/v1.xx/installation_current_board.jpg
    :width: 800px
    :align: center
    :height: 700px
@@ -390,7 +390,7 @@ configuration enables making smaller multiplexers (8 or 16 electrodes only). On 
 which is entirely possible, a GPIO channel multiplier will have to be used. 
 To prepare the multiplexer, the channels of the two relay boards must be connected according to the wiring diagram shown below.
 
-.. figure:: multiplexer_implementation.jpg
+.. figure::../../img/v1.xx/multiplexer_implementation.jpg
    :width: 800px
    :align: center
    :height: 500px
@@ -409,7 +409,7 @@ Once the operation has been completed, the 16 control pins of each 16-channel re
 for activating each relay (Fig. 12). However, we will be activating several relays with a single GPIO (to limit the number of GPIOs used on Raspberry Pi,
 see Section 2.4). To execute this step, it will be necessary to follow the protocol presented in Figure.
  
- .. figure:: connection.jpg
+ .. figure:: ../../img/v1.xx/connection.jpg
    :width: 800px
    :align: center
    :height: 400px
@@ -451,7 +451,7 @@ At this point, all that remains is to connect the electrodes of each multiplexer
 According to the chosen multiplexer configuration, all the relays of each multiplexer will be connected to an electrode and, consequently, each electrode will have four incoming 
 connections. Instead of having four cables connecting an electrode terminal to each multiplexer, we recommend using the cable assembly shown in the following Figure.
 
-.. figure:: cable.jpg
+.. figure:: ../../img/v1.xx/cable.jpg
    :width: 800px
    :align: center
    :height: 300px
@@ -464,7 +464,7 @@ the next figure provides an example of multiplexer relay connections for electro
 must be connected to electrode no. 1 of MUX N, which in turn must be connected to electrode no. 1 of MUX M. Lastly, electrode no. 1 of MUX M is connected to the terminal block. 
 This operation must be repeated for all 32 electrodes.
 
-.. figure:: electrode_cable.jpg
+.. figure:: ../../img/v1.xx/electrode_cable.jpg
    :width: 800px
    :align: center
    :height: 800px
