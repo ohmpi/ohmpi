@@ -71,7 +71,7 @@ class Mux(MuxAbstract):
         self.exec_logger.debug(f'configuration: {kwargs}')
         roles = kwargs.pop('roles', None)
         if roles is None:
-            roles = ['A','B','M','N'] # NOTE: defaults to 4-roles
+            roles = ['A', 'B', 'M', 'N'] # NOTE: defaults to 4-roles
         else:
             roles_board = ['X', 'Y', 'XX', 'YY']
             self._roles = {roles[i]: roles_board[i] for i in range(len(roles))}
