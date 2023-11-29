@@ -134,8 +134,9 @@ def mux_2024_to_mux_2023_takeouts(mux_boards):
               12: 6, 13: 10, 14: 7, 15: 9, 16: 8}
 
     for mux in mux_boards:
-        new_cabling = mux.cabling.copy()
         print(mux)
+
+        new_cabling = mux.cabling.copy()
         for k, v in mux.cabling.items():
             print(k, v)
             new_cabling[k] = (mapper[v[0]], v[1])
