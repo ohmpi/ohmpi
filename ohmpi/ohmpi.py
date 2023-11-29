@@ -44,23 +44,24 @@ VERSION = '3.0.0-beta'
 
 class OhmPi(object):
     """OhmPi class.
-    Construct the ohmpi object.
-
-    Parameters
-    ----------
-    settings : dict, optional
-        Dictionnary of parameters. Possible parameters with their default values:
-        `{'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
-        'nb_stack': 1, 'sampling_interval': 2, 'tx_volt': 5, 'duty_cycle': 0.5,
-        'strategy': 'constant', 'export_path': None
-    sequence : str, optional
-        Path of the .csv or .txt file with A, B, M and N electrodes.
-        Electrode index starts at 1. See `OhmPi.load_sequence()` for full docstring.
-    mqtt : bool, optional
-        If True (default), publish on mqtt topics while logging,
-        otherwise use other loggers only (print).
     """
     def __init__(self, settings=None, sequence=None, mqtt=True):
+        """Construct the ohmpi object.
+
+        Parameters
+        ----------
+        settings : dict, optional
+            Dictionnary of parameters. Possible parameters with their default values:
+            `{'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
+            'nb_stack': 1, 'sampling_interval': 2, 'tx_volt': 5, 'duty_cycle': 0.5,
+            'strategy': 'constant', 'export_path': None
+        sequence : str, optional
+            Path of the .csv or .txt file with A, B, M and N electrodes.
+            Electrode index starts at 1. See `OhmPi.load_sequence()` for full docstring.
+        mqtt : bool, optional
+            If True (default), publish on mqtt topics while logging,
+            otherwise use other loggers only (print).
+        """
         self._sequence = sequence
         self.nb_samples = 0
         self.status = 'idle'  # either running or idle
@@ -473,10 +474,10 @@ class OhmPi(object):
             Either:
             - vmax : compute Vab to reach a maximum Vmn_max and Iab without exceeding vab_max
             - vmin : compute Vab to reach at least Vmn_min
-            - constant : apply given Vab (tx_volt) -
-                Safety check (i.e. short voltage pulses) performed prior to injection to ensure
-                injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
-                To bypass safety check before injection, tx_volt should be set equal to vab_max (not recpommanded)
+            - constant : apply given Vab (tx_volt)
+            Safety check (i.e. short voltage pulses) performed prior to injection to ensure
+            injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
+            To bypass safety check before injection, tx_volt should be set equal to vab_max (not recpommanded)
         vab_max : str, optional
             Maximum injection voltage.
             Default value set by config or boards specs
@@ -947,14 +948,14 @@ class OhmPi(object):
     def update_settings(self, settings: str, cmd_id=None):
         """Updates acquisition settings from a json file or dictionary.
         Parameters can be:
-            - nb_electrodes (number of electrode used, if 4, no MUX needed)
-            - injection_duration (in seconds)
-            - nb_meas (total number of times the sequence will be run)
-            - sequence_delay (delay in second between each sequence run)
-            - nb_stack (number of stack for each quadrupole measurement)
-            - strategy (injection strategy: constant, vmax, vmin)
-            - duty_cycle (injection duty cycle comprised between 0.5 - 1)
-            - export_path (path where to export the data, timestamp will be added to filename)
+        - nb_electrodes (number of electrode used, if 4, no MUX needed)
+        - injection_duration (in seconds)
+        - nb_meas (total number of times the sequence will be run)
+        - sequence_delay (delay in second between each sequence run)
+        - nb_stack (number of stack for each quadrupole measurement)
+        - strategy (injection strategy: constant, vmax, vmin)
+        - duty_cycle (injection duty cycle comprised between 0.5 - 1)
+        - export_path (path where to export the data, timestamp will be added to filename)
 
         Parameters
         ----------

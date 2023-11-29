@@ -15,7 +15,7 @@
 import os
 import sys
 sys.path.append(os.path.abspath('../..'))
-import ohmpi  # import Ohmpi module to be documented in api.rst by numpydoc
+#import ohmpi  # import Ohmpi module to be documented in api.rst by numpydoc
 import sphinx_rtd_theme
 
 
