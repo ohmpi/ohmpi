@@ -82,7 +82,8 @@ class OhmPi(object):
         self.update_settings(os.path.join(os.path.split(os.path.dirname(__file__))[0],'settings/default.json'))
 
         # read in acquisition settings
-        self.update_settings(settings)
+        if settings is not None:
+            self.update_settings(settings)
         self.exec_logger.debug('Initialized with settings:' + str(self.settings))
 
         # read quadrupole sequence
@@ -189,7 +190,7 @@ class OhmPi(object):
             fw_filename = filename.replace('.csv', '_fw.csv')
             if not os.path.exists(fw_filename):  # new file, write headers first
                 with open(fw_filename, 'w') as f:
-                    f.write('A,B,M,N,t,pulse,polarity,current,voltage\n')
+                    f.write('A,B,M,N,t,current,voltage\n')
             # write full data
             with open(fw_filename, 'a') as f:
                 dd = last_measurement['full_waveform']
@@ -198,7 +199,7 @@ class OhmPi(object):
                 mm = np.repeat(last_measurement['M'], dd.shape[0])
                 nn = np.repeat(last_measurement['N'], dd.shape[0])
                 fwdata = np.c_[aa, bb, mm, nn, dd]
-                np.savetxt(f, fwdata, fmt=['%d', '%d', '%d', '%d', '%.3f', '%.3f', '%.3f'])
+                np.savetxt(f, fwdata, delimiter=',', fmt=['%d', '%d', '%d', '%d', '%.3f', '%.3f', '%.3f'])
 
         if fw_in_csv:
             d = last_measurement['full_waveform']
@@ -712,42 +713,48 @@ class OhmPi(object):
 
         # file management
         if fw_in_csv:  # make sure we have the same number of columns
-            with open(filename, '.csv', 'r') as f:
+            with open(filename, 'r') as f:
                 x = f.readlines()
 
             # get column of start of full-waveform
             icol = 0
             for i, col in enumerate(x[0].split(',')):
-                if col == 't1':
+                if col == 'i0':
                     icol = i
                     break
 
             # get longest possible line
             max_length = np.max([len(row.split(',')) for row in x]) - icol
-            nreadings = max_length // 5
-            print('-----', nreadings, max_length)
+            nreadings = max_length // 3
 
             # create padding array for full-waveform  # TODO test this!
-            with open(filename, '.csv', 'w') as f:
+            with open(filename, 'w') as f:
                 # write back headers
                 xs = x[0].split(',')
                 f.write(','.join(xs[:icol]))
-                for col in ['t','s','p','v','i']:
-                    f.write(','.join([col + str(j+1) for j in range(nreadings)]))
-                f.write('\n')
+                f.write(',')
+                for i, col in enumerate(['t', 'i','v']):
+                    f.write(','.join([col + str(j) for j in range(nreadings)]))
+                    if col == 'v':
+                        f.write('\n')
+                    else:
+                        f.write(',')
+                # write back rows
                 for i, row in enumerate(x[1:]):
                     xs = row.split(',')
                     f.write(','.join(xs[:icol]))
+                    f.write(',')
                     fw = np.array(xs[icol:])
-                    fw_pad = fw.reshape((5, -1))
-                    fw_padded = np.zeros((max_length, 5))
+                    fw_pad = fw.reshape((3, -1)).T
+                    fw_padded = np.zeros((nreadings, 3), dtype=fw_pad.dtype)
                     fw_padded[:fw_pad.shape[0], :] = fw_pad
-                    f.write(','.join(fw_padded.flatten()) + '\n')
+                    f.write(','.join(fw_padded.T.flatten()).replace('\n', '') + '\n')
 
         if fw_in_zip:
-            with ZipFile(filename.replace('.csv', '_fw.zip'), 'w') as myzip:
-                myzip.write(filename.replace('.csv', '_fw.csv'))
-            os.remove(filename.replace('.csv', '_fw.csv'))
+            fwfilename = filename.replace('.csv', '_fw')
+            with ZipFile(fwfilename + '.zip', 'w') as myzip:
+                myzip.write(fwfilename + '.csv', os.path.basename(fwfilename) + '.csv')
+            os.remove(fwfilename + '.csv')
 
         # reset to idle if we didn't interrupt the sequence
         if self.status != 'stopping':
