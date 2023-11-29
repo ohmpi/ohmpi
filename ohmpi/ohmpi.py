@@ -210,7 +210,8 @@ class OhmPi(object):
                 last_measurement.update(idic)
                 last_measurement.update(udic)
                 last_measurement.update(tdic)
-            last_measurement.pop('full_waveform')
+
+        last_measurement.pop('full_waveform')
         
         if os.path.isfile(filename):
             # Load data file and append data to it
