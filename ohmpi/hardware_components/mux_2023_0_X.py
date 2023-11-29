@@ -74,10 +74,13 @@ class Mux(MuxAbstract):
         assert isinstance(self.connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
         roles = kwargs.pop('roles', None)
-        if isinstance(roles, str):
-            roles = [roles]
+
         if roles is None:
             roles = ['A'] # NOTE: defaults to 1-role
+        elif isinstance(roles, str):
+            roles = [roles]
+        if isinstance(roles,dict): # roles if config are already formatted as {'A':'X'}
+            self._roles = roles
         else:
             self._roles = {roles[0]:'X'}
         if np.alltrue([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['1_role'].keys())])]):

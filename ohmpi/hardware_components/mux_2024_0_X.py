@@ -74,6 +74,9 @@ class Mux(MuxAbstract):
             roles = ['A', 'B', 'M', 'N'] # NOTE: defaults to 4-roles
         else:
             roles_board = ['X', 'Y', 'XX', 'YY']
+        if isinstance(roles,dict): # roles if config are already formatted as {'A':'X', 'B':'Y',...}
+            self._roles = roles
+        else:
             self._roles = {roles[i]: roles_board[i] for i in range(len(roles))}
         if np.all([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['4_roles'].keys())])]):
             self._mode = '4_roles'
