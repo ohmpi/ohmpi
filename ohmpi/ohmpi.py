@@ -16,6 +16,7 @@ import numpy as np
 import csv
 import time
 import pandas as pd
+from zipfile import ZipFile
 from shutil import rmtree, make_archive
 from threading import Thread
 from inspect import getmembers, isfunction
@@ -744,7 +745,7 @@ class OhmPi(object):
 
         if fw_in_zip:
             with ZipFile(filename.replace('.csv', '_fw.zip'), 'w') as myzip:
-                myzip.write(filename.repleace('.csv', '_fw.csv'))
+                myzip.write(filename.replace('.csv', '_fw.csv'))
             os.remove(filename.replace('.csv', '_fw.csv'))
 
         # reset to idle if we didn't interrupt the sequence
