@@ -83,6 +83,12 @@ class Mux(MuxAbstract):
             self.exec_logger.error(f'Invalid role assignment for {self.model}: {self._roles} !')
             self._mode = ''
 
+        print('cabling', cabling)
+        electrodes = kwargs.pop('electrodes', None)
+        self.cabling = {}
+        if cabling is None:
+            self.cabling = {(e, r): i + 1 for r in roles for i, e in enumerate(electrodes)}
+
         # Setup TCA
         tca_address = kwargs.pop('tca_address', None)
         tca_channel = kwargs.pop('tca_channel', 0)
