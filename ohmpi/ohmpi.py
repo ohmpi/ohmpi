@@ -16,6 +16,7 @@ import numpy as np
 import csv
 import time
 import pandas as pd
+from zipfile import ZipFile
 from shutil import rmtree, make_archive
 from threading import Thread
 from inspect import getmembers, isfunction
@@ -209,7 +210,8 @@ class OhmPi(object):
                 last_measurement.update(idic)
                 last_measurement.update(udic)
                 last_measurement.update(tdic)
-            last_measurement.pop('full_waveform')
+
+        last_measurement.pop('full_waveform')
         
         if os.path.isfile(filename):
             # Load data file and append data to it
@@ -565,7 +567,10 @@ class OhmPi(object):
                 if isinstance(dd[key], float):
                     dd[key] = np.round(dd[key], 3)
             dd['cmd_id'] = str(cmd_id)
+
+            # log data to the data logger
             self.data_logger.info(dd)
+
             self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
             time.sleep(1.0)
             self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
@@ -695,9 +700,6 @@ class OhmPi(object):
                 break
             # run a measurement
             acquired_data = self.run_measurement(quad=quad, **kwargs)
-     
-            # log data to the data logger
-            self.data_logger.info(acquired_data)
 
             # add command_id in dataset
             acquired_data.update({'cmd_id': cmd_id})
@@ -744,7 +746,7 @@ class OhmPi(object):
 
         if fw_in_zip:
             with ZipFile(filename.replace('.csv', '_fw.zip'), 'w') as myzip:
-                myzip.write(filename.repleace('.csv', '_fw.csv'))
+                myzip.write(filename.replace('.csv', '_fw.csv'))
             os.remove(filename.replace('.csv', '_fw.csv'))
 
         # reset to idle if we didn't interrupt the sequence
