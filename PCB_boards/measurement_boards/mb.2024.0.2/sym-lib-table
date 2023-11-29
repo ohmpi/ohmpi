@@ -1,0 +1,6 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "1085")(type "KiCad")(uri "${LIB}/1085.kicad_sym")(options "")(descr ""))
+  (lib (name "THD_15-1222N")(type "KiCad")(uri "${KIPRJMOD}/THD_15-1222N/THD_15-1222N.kicad_sym")(options "")(descr ""))
+  (lib (name "THD_15-1211N")(type "KiCad")(uri "${KIPRJMOD}/THD_15-1211N/THD_15-1211N.kicad_sym")(options "")(descr ""))
+)

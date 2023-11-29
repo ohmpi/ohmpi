@@ -23,6 +23,7 @@ def enforce_specs(kwargs, specs, key):
 
     return kwargs
 
+
 def update_dict(d, u):
     """Updates a dictionary by adding elements to collection items associated to existing keys
 
@@ -112,3 +113,34 @@ def parse_log(log):
     msg = np.array(msg)
     session = np.array(session)
     return time, process_id, tag, msg, session
+
+
+def mux_2024_to_mux_2023_takeouts(elec_list):
+    """ Updates cabling for mux v2024 so that takeouts are similar to takeouts from mux v2023.
+    This is only useful when replacing mux v2023 installations or re-using old test circuits.
+
+    Parameters
+    ----------
+    elec_list: list of electrodes or sequence
+
+    """
+
+    mapper = {1: 16, 2: 1, 3: 15, 4: 2, 5: 14, 6: 3, 7: 13, 8: 4, 9: 12, 10: 5, 11: 11,
+              12: 6, 13: 10, 14: 7, 15: 9, 16: 8}
+
+    return np.vectorize(mapper.get)(elec_list)
+
+def mux_2023_to_mux_2024_takeouts(elec_list):
+    """ Updates cabling for mux v2023 so that takeouts are similar to takeouts from mux v2024.
+    This is only useful when replacing mux v2023 installations or re-using old test circuits.
+
+    Parameters
+    ----------
+    elec_list: list of electrodes or sequence
+
+    """
+
+    mapper = { 1: 2, 2: 4, 3: 6, 4: 8, 5: 10, 6: 12, 7: 14, 8: 16,
+               9: 15, 10: 13, 11: 11, 12: 9, 13: 7, 14: 5, 15: 3, 16: 1,}
+
+    return np.vectorize(mapper.get)(elec_list)

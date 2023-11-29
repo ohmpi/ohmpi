@@ -14,8 +14,8 @@
 #
 import os
 import sys
-sys.path.append(os.path.abspath('../..'))
-import ohmpi  # import Ohmpi module to be documented in api.rst by numpydoc
+sys.path.append(os.path.abspath('../../'))
+# import ohmpi  # import Ohmpi module to be documented in api.rst by numpydoc
 import sphinx_rtd_theme
 
 
@@ -27,7 +27,7 @@ copyright = '2022, the OhmPi Team.'
 author = 'Rémi CLEMENT'
 
 # The full version, including alpha/beta/rc tags
-release = 'open hardware resistivity-meter'
+release = 'v2024rc'
 
 
 # -- General configuration ---------------------------------------------------
@@ -43,7 +43,7 @@ extensions = [
 
 
 
-numpydoc_show_class_members = False
+numpydoc_show_class_members = True
 
 
 # Add any paths that contain templates here, relative to this directory.

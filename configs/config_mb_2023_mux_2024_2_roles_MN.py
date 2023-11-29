@@ -18,33 +18,34 @@ OHMPI_CONFIG = {
 }
 
 HARDWARE_CONFIG = {
-    'ctl': {'model' : 'raspberry_pi'},
-    'pwr': {'model' : 'pwr_batt', 'voltage': 12.},
-    'tx' : {'model' : 'mb_2023_0_X',
-             'mcp_board_address': 0x20,
-             'voltage_max': 12., # Maximum voltage supported by the TX board [V]
-             'current_max': 4800 / 50 / 2,  # Maximum current supported by the TX board [mA]
-             'r_shunt': 2  # Shunt resistance in Ohms
-            },
-    'rx' : {'model': 'mb_2023_0_X',
-             'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
-             'sampling_rate': 100.,  # Hz
-             'nb_samples': 20,  # Max value 10 # was named integer before...
-            },
+    'ctl': {'model': 'raspberry_pi'},
+    'pwr': {'model': 'pwr_batt', 'voltage': 12.},
+    'tx': {'model': 'mb_2023_0_X',
+           'mcp_board_address': 0x20,
+           'voltage_max': 12.,  # Maximum voltage supported by the TX board [V]
+           'current_max': 4800 / 50 / 2,  # Maximum current supported by the TX board [mA]
+           'r_shunt': 2  # Shunt resistance in Ohms
+           },
+    'rx': {'model': 'mb_2023_0_X',
+           'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
+           'sampling_rate': 100.,  # Hz
+           'nb_samples': 20,  # Max value 10 # was named integer before...
+           },
     'mux':  # default properties are system properties that will be
-            # overwritten by board properties defined at the board level within the board model file
-            # both will be overwritten by properties specified in the board dict below. Use with caution...
+    # overwritten by board properties defined at the board level within the board model file
+    # both will be overwritten by properties specified in the board dict below. Use with caution...
         {'boards':
-                {'mux_1':
-                     {'model' : 'mux_2024_0_X', # 'ohmpi_i2c_mux64_v1.01',
-                      'tca_address': None,
-                      'tca_channel': 0,
-                      'mcp_0': '0x22',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...
-                      'mcp_1': '0x23',  # TODO : Replace this with pos of jumper on MUX board (address doesn't mean anything for the average user...)
-                      'roles': {'M': 'X', 'N': 'Y'},
-                      'voltage_max': 12.
-                }},
-            'default': {'voltage_max': 100., 'current_max': 3.}}
+             {'mux_1':
+                  {'model': 'mux_2024_0_X',  # 'ohmpi_i2c_mux64_v1.01',
+                   'tca_address': None,
+                   'tca_channel': 0,
+                   'addr2': 'up',
+                   'addr1': 'up',
+                   'roles': {'M': 'X', 'N': 'Y'},
+                   'voltage_max': 12.
+                   }
+              },
+         'default': {'voltage_max': 100., 'current_max': 3.}}
 }
 
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS

@@ -30,7 +30,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         <button id='runBtn' type="button" class="btn btn-primary">&#9654</button>
         <button id='stopBtn' type="button" class="btn btn-warning">&#9724</button>
         <!-- upload button for csv which display the table ABMN -->
-        <button id="removeDataBtn" type="button" class="btn btn-danger">Clear data</button>
+        <!-- <button id="removeDataBtn" type="button" class="btn btn-danger">Clear data</button> -->
+        <button id="rmDataModal" type="button" class="btn btn-danger" data-toggle="modal" data-target="#rmModal">Clear data</button>
         <button id="getDataBtn" type="button" class="btn btn-info">Get data</button>
         <div class="form-check">
             <input id="dataRetrievalCheck" class="form-check-input" type="checkbox" value="">
@@ -93,7 +94,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 <div class="modal-body">
                     <form>
                         <div class="form-group row">
-                          <label for="nb_electrodes" class="col-sm-2 col-form-label">Nb electrodes</label>
+                          <!-- <label for="nb_electrodes" class="col-sm-2 col-form-label">Nb electrodes</label> -->
                           <div class="col-sm-10">
                             <input type="number" class="form-control-number" id="nb_electrodes" value="64">
                           </div>
@@ -145,6 +146,28 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <button id="saveConfigBtn" type="button" data-dismiss="modal" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Modal for removing data -->
+        <div class="modal fade" id="rmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Data clearing</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to remove all data?</p>
+                    <p>Data can be downloaded as .zip at the bottom of the page.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button id="removeDataBtn" type="button" class="btn btn-danger">Clear data</button>
                 </div>
             </div>
             </div>
@@ -220,6 +243,12 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                     // process data
                     msg = payload // for accessing the variable from the console
                     console.log('DATA LOG:', payload)
+
+                    // replace NaN values by null to make them acceptable for json parser
+                    payload = payload.replace(/\bNaN\b/g, "null");
+                    payload = payload.replace(/\bnan\b/g, "null");
+
+                    // parse to json
                     let ddic = JSON.parse(payload.split('INFO:')[1])
 
                     // RS check data
@@ -331,7 +360,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         function saveConfigBtnFunc() {
             // collect values from modal
             let formVals = {
-                'nb_electrodes': parseInt(document.getElementById('nb_electrodes').value),
+                //'nb_electrodes': parseInt(document.getElementById('nb_electrodes').value),
                 'injection_duration': parseFloat(document.getElementById('injection_duration').value),
                 'nb_meas': parseInt(document.getElementById('nb_meas').value),
                 'sequence_delay': parseFloat(document.getElementById('sequence_delay').value),
@@ -516,7 +545,6 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                     // xpos.push((Math.min(ab, mn) + dist/2)*elec_spacing)
                     // ypos.push(- (Math.sqrt(2)/2*dist)*elec_spacing)
                 }
-                console.log('========', app, xpos, ypos)
                 // update the trace and redraw the figure
                 trace['x'] = xpos
                 trace['y'] = ypos
@@ -825,6 +853,10 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 output.innerHTML = 'Status: ' + x['status'] + ' (all data cleared)'
                 console.log('all data removed')
             })
+            data = {}
+            quads = []
+            getData()
+            document.getElementById('quadSelect').innerHTML = ''
         }
         let removeDataBtn = document.getElementById('removeDataBtn')
         removeDataBtn.addEventListener('click', removeDataBtnFunc)
