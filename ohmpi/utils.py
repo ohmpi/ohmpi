@@ -115,28 +115,32 @@ def parse_log(log):
     return time, process_id, tag, msg, session
 
 
-def mux_2024_to_mux_2023_takeouts(mux_boards):
-
+def mux_2024_to_mux_2023_takeouts(elec_list):
     """ Updates cabling for mux v2024 so that takeouts are similar to takeouts from mux v2023.
     This is only useful when replacing mux v2023 installations or re-using old test circuits.
 
     Parameters
     ----------
-    mux_boards: list of class MUX objects.
+    elec_list: list of electrodes or sequence
 
-    Example
-    -------
-    k = OhmPi()
-    mux_2024_to_mux_2023_takeouts(k._hw.mux_boards)
     """
 
-    mapper = {16: 1,  1: 2,  15: 3,  2: 4, 14: 5,  3: 6,  13: 7,  4: 8,  12: 9,  5: 10,  11: 11,  6: 12,  10: 13, 7: 14,
-              9: 15,  8: 16}
+    mapper = {1: 16, 2: 1, 3: 15, 4: 2, 5: 14, 6: 3, 7: 13, 8: 4, 9: 12, 10: 5, 11: 11,
+              12: 6, 13: 10, 14: 7, 15: 9, 16: 8}
 
-    for mux_id, mux in mux_boards.items():
-        new_cabling = mux.cabling.copy()
-        for k, v in mux.cabling.items():
-            print(k, v)
-            new_cabling[k] = (mapper[v[0]], v[1])
-        print(new_cabling)
-        mux.cabling = new_cabling
+    return np.vectorize(mapper.get)(elec_list)
+
+def mux_2023_to_mux_2024_takeouts(elec_list):
+    """ Updates cabling for mux v2023 so that takeouts are similar to takeouts from mux v2024.
+    This is only useful when replacing mux v2023 installations or re-using old test circuits.
+
+    Parameters
+    ----------
+    elec_list: list of electrodes or sequence
+
+    """
+
+    mapper = { 1: 2, 2: 4, 3: 6, 4: 8, 5: 10, 6: 12, 7: 14, 8: 16,
+               9: 15, 10: 13, 11: 11, 12: 9, 13: 7, 14: 5, 15: 3, 16: 1,}
+
+    return np.vectorize(mapper.get)(elec_list)
