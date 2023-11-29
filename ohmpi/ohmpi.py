@@ -565,7 +565,10 @@ class OhmPi(object):
                 if isinstance(dd[key], float):
                     dd[key] = np.round(dd[key], 3)
             dd['cmd_id'] = str(cmd_id)
+
+            # log data to the data logger
             self.data_logger.info(dd)
+
             self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
             time.sleep(1.0)
             self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
@@ -695,9 +698,6 @@ class OhmPi(object):
                 break
             # run a measurement
             acquired_data = self.run_measurement(quad=quad, **kwargs)
-     
-            # log data to the data logger
-            self.data_logger.info(acquired_data)
 
             # add command_id in dataset
             acquired_data.update({'cmd_id': cmd_id})
