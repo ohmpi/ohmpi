@@ -137,13 +137,14 @@ class Mux(MuxAbstract):
 
     def switch_one(self, elec=None, role=None, state=None):
         MuxAbstract.switch_one(self, elec=elec, role=role, state=state)
-
+        print(elec,role)
         def activate_relay(mcp, mcp_pin, value=True):
             pin_enable = mcp.get_pin(mcp_pin)
             pin_enable.direction = Direction.OUTPUT
             pin_enable.value = value
 
         d = self.addresses[elec, role]
+        print(d)
         if state == 'on':
             activate_relay(self._mcp[d['MCP']], d['MCP_GPIO'], True)
             # time.sleep(MUX_CONFIG['activation_delay'])  # NOTE: moved to MuxAbstract switch
