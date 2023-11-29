@@ -86,7 +86,6 @@ class Mux(MuxAbstract):
             self.exec_logger.error(f'Invalid role assignment for {self.model}: {self._roles} !')
             self._mode = ''
         cabling = kwargs.pop('cabling', None)
-        print('cabling',cabling)
         electrodes = kwargs.pop('electrodes', None)
         self.cabling = {}
         if cabling is None:
