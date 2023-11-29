@@ -86,10 +86,11 @@ class Mux(MuxAbstract):
             self.exec_logger.error(f'Invalid role assignment for {self.model}: {self._roles} !')
             self._mode = ''
         cabling = kwargs.pop('cabling', None)
+        print('cabling',cabling)
         electrodes = kwargs.pop('electrodes', None)
         self.cabling = {}
         if cabling is None:
-            cabling = {(e, r): i + 1 for r in roles for i, e in enumerate(electrodes)}
+            self.cabling = {(e, r): i + 1 for r in roles for i, e in enumerate(electrodes)}
         self._tca = [adafruit_tca9548a.TCA9548A(self.connection, kwargs['mux_tca_address'])[i] for i in np.arange(7, 3, -1)]
         # self._mcp_addresses = (kwargs.pop('mcp', '0x20'))  # TODO: add assert on valid addresses..
         self._mcp = [None, None, None, None]
