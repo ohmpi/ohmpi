@@ -87,7 +87,7 @@ class Mux(MuxAbstract):
         electrodes = kwargs.pop('electrodes', None)
         self.cabling = {}
         if cabling is None:
-            self.cabling = {(e, r): i + 1 for r in roles for i, e in enumerate(electrodes)}
+            self.cabling = {(e, r): (self.board_id, i + 1) for r in roles for i, e in enumerate(electrodes)}
 
         # Setup TCA
         tca_address = kwargs.pop('tca_address', None)
@@ -126,7 +126,7 @@ class Mux(MuxAbstract):
         self.addresses = {}
         d = {}
         for k, v in self.cabling.items():
-            d.update({k: ic[(v[0], self._roles[k])]})
+            d.update({k: ic[(v[0], self._roles[k[1]])]})
         self.addresses = d
 
     def reset(self):
