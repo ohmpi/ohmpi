@@ -90,7 +90,11 @@ class Mux(MuxAbstract):
         electrodes = kwargs.pop('electrodes', None)
         self.cabling = {}
         if cabling is None:
-            self.cabling = {(e, r): (self.board_id, i + 1) for r in roles for i, e in enumerate(electrodes)}
+            self.cabling = {(e, r): (i + 1, r) for r in roles for i, e in enumerate(electrodes)}
+        else:
+            for k, v in cabling.items():
+                if v[0] == self.board_id:
+                    self.cabling.update({k: (v[1], k[1])})
         self._tca = [adafruit_tca9548a.TCA9548A(self.connection, kwargs['mux_tca_address'])[i] for i in np.arange(7, 3, -1)]
         # self._mcp_addresses = (kwargs.pop('mcp', '0x20'))  # TODO: add assert on valid addresses..
         self._mcp = [None, None, None, None]

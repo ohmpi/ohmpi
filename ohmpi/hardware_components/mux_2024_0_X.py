@@ -87,8 +87,11 @@ class Mux(MuxAbstract):
         electrodes = kwargs.pop('electrodes', None)
         self.cabling = {}
         if cabling is None:
-            self.cabling = {(e, r): (self.board_id, i + 1) for r in roles for i, e in enumerate(electrodes)}
-
+            self.cabling = {(e, r): (i + 1, r) for r in roles for i, e in enumerate(electrodes)}
+        else:
+            for k, v in cabling.items():
+                if v[0] == self.board_id:
+                    self.cabling.update({k: (v[1], k[1])})
         # Setup TCA
         tca_address = kwargs.pop('tca_address', None)
         tca_channel = kwargs.pop('tca_channel', 0)
