@@ -73,14 +73,23 @@ class Mux(MuxAbstract):
             self.exec_logger.event(f'{self.model}: {self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
-        self._roles = kwargs.pop('roles', None)
-        if self._roles is None:
-            self._roles = {'A': 'X'}  # NOTE: defaults to 1-role
+        roles = kwargs.pop('roles', None)
+        if isinstance(roles, str):
+            roles = [roles]
+        if roles is None:
+            roles = ['A'] # NOTE: defaults to 1-role
+        else:
+            self._roles = {roles[0]:'X'}
         if np.alltrue([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['1_role'].keys())])]):
             self._mode = '1_role'
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.model}: {self._roles} !')
             self._mode = ''
+        cabling = kwargs.pop('cabling', None)
+        electrodes = kwargs.pop('electrodes', None)
+        self.cabling = {}
+        if cabling is None:
+            cabling = {(e, r): i + 1 for r in roles for i, e in enumerate(electrodes)}
         self._tca = [adafruit_tca9548a.TCA9548A(self.connection, kwargs['mux_tca_address'])[i] for i in np.arange(7, 3, -1)]
         # self._mcp_addresses = (kwargs.pop('mcp', '0x20'))  # TODO: add assert on valid addresses..
         self._mcp = [None, None, None, None]
@@ -97,7 +106,7 @@ class Mux(MuxAbstract):
         self.addresses = {}
         d = {}
         for k, v in self.cabling.items():
-            d.update({k: ic[(v[0], self._roles[k[1]])]})
+            d.update({k: ic[(v[0], self._roles[k])]})
         self.addresses = d
 
     def reset(self):

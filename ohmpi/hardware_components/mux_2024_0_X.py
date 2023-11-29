@@ -69,9 +69,12 @@ class Mux(MuxAbstract):
             self.exec_logger.event(f'{self.model}: {self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
-        self._roles = kwargs.pop('roles', None)
-        if self._roles is None:
-            self._roles = {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'}  # NOTE: defaults to 4-roles
+        roles = kwargs.pop('roles', None)
+        if roles is None:
+            roles = ['A','B','M','N'] # NOTE: defaults to 4-roles
+        else:
+            roles_board = ['X', 'Y', 'XX', 'YY']
+            self._roles = {roles[i]: roles_board[i] for i in range(len(roles))}
         if np.all([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['4_roles'].keys())])]):
             self._mode = '4_roles'
         elif np.all([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['2_roles'].keys())])]):

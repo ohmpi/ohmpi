@@ -141,7 +141,7 @@ class MuxAbstract(ABC):
         if cabling is not None:
             for k, v in cabling.items():
                 if v[0] == self.board_id:
-                    self.cabling.update({k: (v[1], k[1])})
+                    self.cabling.update({k: (v, k[1])})
         self.exec_logger.debug(f'{self.board_id} cabling: {self.cabling}')
         self.addresses = kwargs.pop('addresses', None)
         self._barrier = kwargs.pop('barrier', Barrier(1))
