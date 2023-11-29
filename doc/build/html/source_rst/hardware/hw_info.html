@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OhmPi electronic design &mdash; OhmPi v2024rc documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Measurement board v2023" href="mb_2023.html" />
+    <link rel="prev" title="Hardware" href="../hardware.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OhmPi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Ohmpi.html">OhmPi project</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../hardware.html">Hardware</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">OhmPi electronic design</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#measurement-board">Measurement board</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multiplexer">Multiplexer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="mb_2023.html">Measurement board v2023</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mb_2024.html">Measurement board v2024</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mux_2023.html">MUX board v2023</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mux_2024.html">MUX board v2024</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw_pwr.html">Power supply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw_rpi.html">Raspberry Pi  configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assembling.html">Assembling the OhmPi</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../software.html">Software and operation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gallery.html">Examples of applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developing_hardware_components.html">Software interface to new hardware components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../archived_version.html">Archived versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OhmPi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../hardware.html">Hardware</a></li>
+      <li class="breadcrumb-item active">OhmPi electronic design</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/source_rst/hardware/hw_info.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ohmpi-electronic-design">
+<h1>OhmPi electronic design<a class="headerlink" href="#ohmpi-electronic-design" title="Permalink to this heading"></a></h1>
+<section id="measurement-board">
+<h2>Measurement board<a class="headerlink" href="#measurement-board" title="Permalink to this heading"></a></h2>
+<p>The measurement board integrates different electronic components to</p>
+<ul class="simple">
+<li><p>measure the voltage at MN</p></li>
+<li><p>measure the current injected at AB</p></li>
+<li><p>switch the polarity of AB (to make different half-cycles/stack)</p></li>
+</ul>
+<p>Some general explanation about the components is given below to help you understand
+the general electronics of the OhmPi. For more details, we redirect the reader to
+the datasheet of each component.</p>
+<p><strong>Measuring voltage</strong></p>
+<p>Voltage measurement is typically done through an <strong>ADC (Analog to Digital Converter)</strong>.
+In the OhmPi, the component <cite>ADS1115</cite>, a 16-bit ADC is used. The <cite>ADS1115</cite> is
+also equipped with a programmable gain control (PGA), which means it can
+scale up the measured voltage by a factor before digitising it. Its gain can
+vary between 2/3 and 16. With a gain of 1, this component can measure voltages
+between 0 and 5 V with a precision of 5 / (2 ^ 16) = 0.076 mV.</p>
+<p>However, we often measure voltage beyond 5 V. So to measure larger voltage with
+our ADC, we need to divide the received voltage. In mb_2023, this is done using
+a <strong>resistor divider bridge</strong>. The voltage at MN is the distributed across two
+resistors placed in series according to their respective resistances. For instance,
+if we see 12V at MN and have two resistors in series of 150 and 300 Ohms. We will measure
+12 * 150 / (150 + 300) = 4 V on the first resistor and 8 V on the second. The 4 V can
+be measured by our ADC.</p>
+<p>Another technique to reduce the voltage consist in using <strong>opamp (Operational Amplifier)</strong>.
+These devices have multiple applications and using a given configuration with a known resistance,
+can be used to scale down the voltage input. In addition, opamp are used in ‘follow-up’ mode
+to ensure a <strong>high input impedance</strong> of the MN part. Indeed, if current is leaking in the MN
+part while we measure, it will affect our measure.</p>
+<p>In the measurement board 2024 (mb_2024), an opamp is also used in differential model to only
+measure the difference in voltage between M and N (N is used as a ‘floating ground’). This
+enables us to measure much higher voltage as long as the difference between M and N is not too large.</p>
+<p><strong>Measuring current</strong></p>
+<p>Current is usually measure by measuring the voltage through a very accurate resistance
+called a <strong>shunt resistance</strong>. In <cite>mb_2023</cite>, a shunt resistance of 2 Ohms is used.
+As this resistance has a tiny value, the voltage measure at on it is also very small and
+need to be amplified before being measured by the ADC. This is done through the INA282 components.</p>
+<p>In <cite>mb_2024</cite>, the current measurement is done via a click module where the shunt and amplifier (INA equivalent)
+are already soldered.</p>
+<p><strong>Polarity control</strong></p>
+<p>Each half-cycle has a different polarity. Current is first injected from A to B then from B to A
+with or without a time-off between the two. This reversed of polarity is ensured using
+four <strong>relays</strong> (optical in v2023, mechanical in v2024) that operate this transition. The
+relays are controlled from the MCP2308 which is <strong>GPIO expander</strong>.</p>
+<p><strong>Communication</strong></p>
+<p>The ADC (ADS1115) and GPI expander (MCP2308) communicate with the controller (raspberrypi) via
+two wires (SDA and SCL) using the <strong>I2C protocol</strong>. This protocol uses a line which sends
+pulses from a clock (SCL) and another line to transmit data (SDA). These lines must be
+pulled high using pull-up resistors (meaning at rest, there should be 5V between these lines and the ground).</p>
+</section>
+<section id="multiplexer">
+<h2>Multiplexer<a class="headerlink" href="#multiplexer" title="Permalink to this heading"></a></h2>
+<p>Multiplexer are used to address multiple electrodes. For this they use <strong>relays</strong>
+to create an electronic path between the electrode and the entry (A, B, M, or N) on the
+measurement board. The relays are usually controlled by <strong>GPIO expander</strong> (MCP23017).
+Because too many GPIO expander cannot be addressed on the same I2C bus, we use a
+<strong>I2C expander</strong> (TCAXXXX) which is itself connected via I2C to the controller (rapsberrypi).</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../hardware.html" class="btn btn-neutral float-left" title="Hardware" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mb_2023.html" class="btn btn-neutral float-right" title="Measurement board v2023" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, the OhmPi Team..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

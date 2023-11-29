@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OhmPi V 1.02 (limited to 32 electrodes) &mdash; OhmPi v2024rc documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="OhmPi V 1.01 (limited to 32 electrodes)" href="V1_01.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OhmPi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Ohmpi.html">OhmPi project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware.html">Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software.html">Software and operation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gallery.html">Examples of applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developing_hardware_components.html">Software interface to new hardware components</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../archived_version.html">Archived versions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="V1_01.html">OhmPi V 1.01 (limited to 32 electrodes)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">OhmPi V 1.02 (limited to 32 electrodes)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-philosophy-of-ohmpi">The philosophy of Ohmpi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#technical-data">Technical data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#raspberry-pi-configuration">Raspberry Pi  configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#os-installation">OS installation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#virtual-environment-and-packages">Virtual Environment and packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#activate-virtual-environment-on-thonny-python-ide-on-raspberry-pi">Activate virtual environment on Thonny (Python IDE)  (on Raspberry Pi)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi">Assembly of the measuring/current injection cards, and connection with the Raspberry Pi</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#electrical-resistivity-measurements-board">Electrical resistivity measurements board</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#current-injection-board">Current injection board</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#first-four-electrodes-resistivity-measurement">First four electrodes resistivity measurement</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#multiplexer-implementation">Multiplexer implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#electrode-connection">Electrode connection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operating-instruction">Operating instruction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#preliminary-procedure-only-for-the-initial-operation">Preliminary procedure (Only for the initial operation)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#startup-procedure">Startup procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#electrical-resistivity-measurement-parameters-description">Electrical resistivity measurement parameters description</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#complete-list-of-components">Complete list of components</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OhmPi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../archived_version.html">Archived versions</a></li>
+      <li class="breadcrumb-item active">OhmPi V 1.02 (limited to 32 electrodes)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/source_rst/v1.xx/V1_02.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ohmpi-v-1-02-limited-to-32-electrodes">
+<h1>OhmPi V 1.02 (limited to 32 electrodes)<a class="headerlink" href="#ohmpi-v-1-02-limited-to-32-electrodes" title="Permalink to this heading"></a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Ohmpi is a participative project open to all, it requires skills in electronics and to respect the safety rules. Ohmpi must be assembled in a professional context and by people competent in electronics. The Ohmpi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The Ohmpi team cannot be held responsible if the equipment does not work after assembly.</strong></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this version, we have improved the electronic measurement board. To upgrade from version 1.01 to 1.02, you just have to replace the measurement board by the new one proposed here.</p>
+</div>
+<section id="the-philosophy-of-ohmpi">
+<h2>The philosophy of Ohmpi<a class="headerlink" href="#the-philosophy-of-ohmpi" title="Permalink to this heading"></a></h2>
+<p>The philosophy of Ohmpi V1.01 is to offer a multi electrode resistivity meter, from a set of commercially available
+electronic cards it is a resistivity meter limited to 32 electrodes only. It is limited to low-current injection,
+but suitable for small laboratory experiments and small field time monitoring</p>
+</section>
+<section id="technical-data">
+<h2>Technical data<a class="headerlink" href="#technical-data" title="Permalink to this heading"></a></h2>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>Parameter</strong></p></td>
+<td><p><strong>Specifications</strong></p></td>
+<td><p>Units</p></td>
+</tr>
+<tr class="row-even"><td><p>Electrodes</p></td>
+<td><p>32</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Operating temperature</p></td>
+<td><p>0 to 50</p></td>
+<td><p>°C</p></td>
+</tr>
+<tr class="row-even"><td><p>Power consumption of CPU and
+control system</p></td>
+<td><p>18.5</p></td>
+<td><p>W</p></td>
+</tr>
+<tr class="row-odd"><td><p>Voltage injection</p></td>
+<td><p>9</p></td>
+<td><p>V</p></td>
+</tr>
+<tr class="row-even"><td><p>Battery</p></td>
+<td><p>12</p></td>
+<td><p>V</p></td>
+</tr>
+<tr class="row-odd"><td><p>Current</p></td>
+<td><p>0 to 50</p></td>
+<td><p>mA</p></td>
+</tr>
+<tr class="row-even"><td><p>Min pulse duration</p></td>
+<td><p>150</p></td>
+<td><p>ms</p></td>
+</tr>
+<tr class="row-odd"><td><p>Input impedance</p></td>
+<td><p>36</p></td>
+<td><p>MOhm</p></td>
+</tr>
+<tr class="row-even"><td><p>Data storage</p></td>
+<td><p>micro SD card</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Resolution</p></td>
+<td><p>O.O1</p></td>
+<td><p>Ohm</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="raspberry-pi-configuration">
+<h2>Raspberry Pi  configuration<a class="headerlink" href="#raspberry-pi-configuration" title="Permalink to this heading"></a></h2>
+<section id="os-installation">
+<h3>OS installation<a class="headerlink" href="#os-installation" title="Permalink to this heading"></a></h3>
+<p>The first step is to start up the Raspberry Pi board, including installation of an OS (operating system).
+For this step, the installation instructions are well described on the Raspberry website</p>
+<ol class="arabic simple">
+<li><p>Watch the video “how to set up your raspberry Pi” (<a class="reference external" href="https://www.youtube.com/watch?v=wjWZhV1v3Pk">https://www.youtube.com/watch?v=wjWZhV1v3Pk</a>)</p></li>
+<li><p>The authors recommend installing the latest stable and complete version of Raspbian by using NOOBS (a simple-to-use operating system installer).</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/raspbian_version1.jpg"><img alt="alternate text" src="../../_images/raspbian_version1.jpg" style="width: 800px; height: 400px;" /></a>
+</figure>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Once the OS has been installed,  <strong>1-wire, spi and GPIO remote option</strong> must be deactivated via the Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.</p>
+</div>
+<p>3. When the relays are connected to the GPIO, make sure that all the GPIOs are in the low position when the raspberry starts up. If not, the relays will activate unexpectedly.
+To ensure that the GPIOs are in Low position, you will need to modify the /boot/config.txt file.</p>
+<blockquote>
+<div><p>Run the terminal, and write</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li><p>Open config.txt with GNU nano editor</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="n">config</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><p>At the end of the file write :</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gpio</span><span class="o">=</span><span class="mi">8</span><span class="o">=</span><span class="n">op</span><span class="p">,</span><span class="n">dl</span>
+<span class="n">gpio</span><span class="o">=</span><span class="mi">7</span><span class="o">=</span><span class="n">op</span><span class="p">,</span><span class="n">dl</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="6">
+<li><p>Press Ctrl +O to save the modifications and press enter</p></li>
+<li><p>Press Ctrl +x to escape and return to the terminal</p></li>
+<li><p>Close the terminal</p></li>
+</ol>
+</section>
+<section id="virtual-environment-and-packages">
+<h3>Virtual Environment and packages<a class="headerlink" href="#virtual-environment-and-packages" title="Permalink to this heading"></a></h3>
+<p>All dependencies are specified in requirements.txt</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All instructions below should be typed in the terminal</p>
+</div>
+<p>It is first necessary to ensure that the libatlas-base-dev library is installed:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libatlas</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+</div>
+<p>We strongly recommend users to create a virtual environment to run the code and installed all required dependencies. It can be done either in a directory gathering all virtual environments used on the computer or within the ohmpy directory.</p>
+<p>Create the virtual environment:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="n">ohmpy</span>
+</pre></div>
+</div>
+<p>Activate it using the following command:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="n">ohmpy</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</pre></div>
+</div>
+<p>Install packages within the virtual environment. Installing the following package should be sufficient to meet dependencies:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">RPi</span><span class="o">.</span><span class="n">GPIO</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">blinka</span> <span class="n">numpy</span> <span class="n">adafruit</span><span class="o">-</span><span class="n">circuitpython</span><span class="o">-</span><span class="n">ads1x15</span> <span class="n">pandas</span>
+</pre></div>
+</div>
+<p>Check that requirements are met using</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="nb">list</span>
+</pre></div>
+</div>
+<p>You should run you code within the virtual environment
+to leave the virtual environment simply type:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">deactivate</span>
+</pre></div>
+</div>
+</section>
+<section id="activate-virtual-environment-on-thonny-python-ide-on-raspberry-pi">
+<h3>Activate virtual environment on Thonny (Python IDE)  (on Raspberry Pi)<a class="headerlink" href="#activate-virtual-environment-on-thonny-python-ide-on-raspberry-pi" title="Permalink to this heading"></a></h3>
+<p>If you decided to use a virtual environment, it is necessary to setup Thonny Python IDE the first time you use it.</p>
+<p>1- Run the Thonny Python IDE software, Click on raspberry access <strong>menu &gt; programming&gt; Thonny pythonIDE</strong></p>
+<p>2- Thonny opens, Python runs on the root (Python 3.7.3 (/usr/bin/python3))</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/thonny_first_interface2.jpg"><img alt="alternate text" src="../../_images/thonny_first_interface2.jpg" style="width: 600px; height: 450px;" /></a>
+</figure>
+<p>3-Click on <strong>Run&gt;select interpreter</strong>, a new window opens click on interpret</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/thonny_option1.jpg"><img alt="alternate text" src="../../_images/thonny_option1.jpg" style="width: 600px; height: 450px;" /></a>
+</figure>
+<p>4-On the new open windows select <strong>alternative Python3 or virtual environment</strong></p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/thonny_interpreter1.jpg"><img alt="alternate text" src="../../_images/thonny_interpreter1.jpg" style="width: 600px; height: 450px;" /></a>
+</figure>
+<p>5- New buttons appeared, selected <strong>“locate another python executable “</strong></p>
+<p>6- A new window opens, find the folder where there is the python 3 file in the virtual environment folder previously created <strong>/home/pi/ohmpi/bin/python3</strong>.</p>
+<p>7- In the <strong>known interpreter</strong> tab the path of the virtual environment should appear</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/thonny_interpreter_folder1.jpg"><img alt="alternate text" src="../../_images/thonny_interpreter_folder1.jpg" style="width: 600px; height: 450px;" /></a>
+</figure>
+<p>8- Close the window by clicking on <strong>ok</strong>.</p>
+<p>9- Close thonny to save modifications</p>
+</section>
+</section>
+<section id="assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi">
+<h2>Assembly of the measuring/current injection cards, and connection with the Raspberry Pi<a class="headerlink" href="#assembly-of-the-measuring-current-injection-cards-and-connection-with-the-raspberry-pi" title="Permalink to this heading"></a></h2>
+<section id="electrical-resistivity-measurements-board">
+<h3>Electrical resistivity measurements board<a class="headerlink" href="#electrical-resistivity-measurements-board" title="Permalink to this heading"></a></h3>
+<section id="a-description">
+<h4>a) Description<a class="headerlink" href="#a-description" title="Permalink to this heading"></a></h4>
+<p>To measure electrical resistivity with Raspberry Pi, an ADS1115 was introduced, as proposed by Florsch [7]. The ADS1115
+is a 16-bit ADC (Analog-to-Digital Converter), with an adaptable gain. Its value has been set at 2/3 in this study. The
+input signal value could lie between - to + 6.114 V. The ADS1115 is mounted on a board adapted from an in-house design.
+Figure 5 shows the general diagram for the electronic measurement board developed. This figure also displays the test
+circuit used to test the board in the laboratory, which mimics the behavior of a soil subjected to current injection.
+In this test circuit, resistance R11 represents the soil resistance.
+Soil resistance R11 is connected to electrodes A and B for the current injection. Resistors R10 and R12 constitute
+the contact resistances between soil and electrodes; they are typically made of stainless steel. The battery, which
+allows for direct current injection, is connected in series with resistors R10, R11 and R12. In this part of the board,
+resistance R9 has been added to measure the current flowing between electrodes A and B. This resistance value has been
+set at 50 ohms in order to ensure:
+•       a precise resistance,
+•       a resistance less than the sum of resistors R10, R11 and R12; indeed, R10 and R12 generally lie between 100 and 5,000 ohms.
+To measure the current intensity between A and B, the electrical potential difference at the pole of the reference resistor (R9)
+is measured. The intensity (in mA) is calculated by inserting the resulting value into the following: ?
+To measure the potential difference needed to measure current intensity, the ADS 1115 is connected to the ground of the circuit.
+In our case, the ground reference is electrode B. The analog inputs A1 and A0 of the ADS1115 are connected to each pole of the
+reference resistor (R9). In order to increase input impedance and adapt the signal gain, tracking amplifiers have been included
+and completed by a divider bridge (R5, R8, R6 and R7) located between the two amplifiers. The resistance of the divider bridge
+ensures that the signal remains between 0 and 5 V, in accordance with the ADS1115 signal gain. To measure the potential difference,
+the M and N electrodes are connected to analog inputs A2 and A3 of the ADS 1115. Between the ADC and the electrodes, two tracking
+amplifiers and a divider bridge have been positioned so as to obtain a potential lying within the 0-5 V range at the analog input of the ADS 1115.
+Let’s note that the potential difference value would equal the potential measured with ADS1115 multiplied by the voltage reduction
+value of the divider bridge (see Section 5.2). Despite the use of high-resolution resistance (i.e. accurate to within 1%), it is
+still necessary to calibrate the divider bridge using a precision voltmeter. For this purpose, the input and output potentials
+of the divider bridge must be measured using an equivalent circuit for various electrical potential values. These values serve
+to calculate the gain. With this electronic board, it is possible to measure the potential and intensity without disturbing the
+electric field in the ground, with the total input impedance value being estimated at 36 mega-ohms.
+A shortcut between Electrodes A and B will generate excessive currents, whose intensities depend on the type of battery used.
+A lithium ion battery or automobile-type lead-acid battery can deliver a strong enough current to damage the board and, as such,
+constitutes a potential hazard. We therefore recommend adding a 1.5-A fuse between the battery and resistor R9.
+In version 1.02, we have improved the electronic board of measurement. we have added a DC/DC converter to supply the operational amplifiers
+(2 Traco power DC/DC converter TRN3-1215). These converters allow to limit the suppression of the signal when the injected voltage is higher than 10V.
+We also added 4 capacitors on the +12v inputs of the fast operational amplifiers. These are decoupling capacitors (typically 100nF ceramic)
+between each power supply terminal and ground. The last point, we have added a four very high resistances of 10 MOhm, between the ground and
+the signal input on the operational amplifiers. This prevents the operational amplifiers from overheating.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../_images/schema_measurement_board1_02.png"><img alt="alternate text" src="../../_images/schema_measurement_board1_02.png" style="width: 800px; height: 400px;" /></a>
+<figcaption>
+<p><span class="caption-text">Measurement board (Ohmpi version 1.02)</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want to have very accurate measurements you can replace the resistors with a tolerance of 1% by resistors with a tolerance of 0.01% which will improve the measurement, but the cost will be higher.</p>
+</div>
+</section>
+<section id="b-implementation">
+<h4>b) Implementation<a class="headerlink" href="#b-implementation" title="Permalink to this heading"></a></h4>
+<p>The measurement board must be printed using the PCB file (Source file repository), with components soldered onto
+it by following the steps described below and illustrated in the following figure :</p>
+<ul>
+<li><dl>
+<dt>Step no. 1: test divider bridge</dt><dd><blockquote>
+<div><p>For each measurement channel, we have installed a bridge divider, it is necessary to test with ohmmeter the value of the resistances, to adjust  each coefficients (coef_p0, coef_p1, coef_p2, coef_p3) in the Ohmpi.py code..</p>
+</div></blockquote>
+<div class="math notranslate nohighlight">
+\[coef po = (R1 + R2) / R1\]</div>
+<div class="math notranslate nohighlight">
+\[coef p1 = (R3 + R4) / R3\]</div>
+<div class="math notranslate nohighlight">
+\[coef p2 = (R7 + R6) / R7\]</div>
+<div class="math notranslate nohighlight">
+\[coef p3 = (R9 + R8) / R9\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">36</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">37</span><span class="sd"> hardware parameters</span>
+<span class="linenos">38</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="linenos">39</span> <span class="n">R_ref</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># reference resistance value in ohm</span>
+<span class="linenos">40</span> <span class="n">coef_p0</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P0, measurement in V/V</span>
+<span class="linenos">41</span> <span class="n">coef_p1</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P1, measurement in V/V</span>
+<span class="linenos">42</span> <span class="n">coef_p2</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P2, measurement in V/V</span>
+<span class="linenos">43</span> <span class="n">coef_p3</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># slope for current conversion for ADS.P3, measurement in V/V</span>
+</pre></div>
+</div>
+<p>The coefficient parameters can be adjusted in lines 40 to 43 of the ohmpi.py code.</p>
+</dd>
+</dl>
+</li>
+<li><p>Step no. 2: installation of the 1-KOhm resistors with an accuracy of ± 1% (b-in the figure).</p></li>
+<li><p>Step no. 3: installation of the 1.5-KOhm resistors with an accuracy of ± 1%(C-in the figure).</p></li>
+<li><p>Step no. 4: installation of both the black female 1 x 10 header and the 7-blue screw terminal blocks (c-in the figure)</p></li>
+<li><p>Step no. 5: installation of the 50-Ohm reference resistor ± 0.1%, please check the value and correct the line 39 in ohmpi.py code (d-in the figure)</p></li>
+<li><p>Step no. 6: addition of both the ADS115 directly onto the header (pins must be plugged according to the figure) and the LM358N operational amplifiers (pay attention to the orientation) (e-in the figure).</p></li>
+<li><p>Step no. 7: installation of the 10-MOhm resistors with an accuracy of ± 5% (f-in the figure).</p></li>
+<li><p>Step no. 8: installation of the two DC/DC converter TRN3-1215 (h-in the figure).</p></li>
+<li><p>Step no. 9: installation of the four capacitor on 100-nF/50vDC and the fuse of 10-A (h-in the figure).</p></li>
+</ul>
+<p>1-KOhm and 1.5-KOhm resistors apply to the divider bridge. If, for example, you prefer using a stronger power supply, it would be possible to adjust the divider bridge value by simply modifying these resistors.
+Once all the components have been soldered together, the measurement board can be connected to the Raspberry Pi and the
+battery terminal, according to Figure 9. Between the battery and the TX+ terminal of the measurement board, remember to
+place a fuse holder with a 1.5-A fuse for safety purposes.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../../_images/measurement_board1-02.jpg"><img alt="alternate text" src="../../_images/measurement_board1-02.jpg" style="width: 800px; height: 700px;" /></a>
+<figcaption>
+<p><span class="caption-text">Measurement circuit board assembly: a) printed circuit board, b) adding the 1-KOhm resistors ± 1%, c)adding the 1.5-KOhm resistors ± 1%, d) adding the black female 1 x 10 header and the 7-blue screw terminal block(2 pin, 3.5-mm pitch), e) adding the 50-ohm reference resistor ± 0.1%, and f) adding the ADS1115 and the LM358N low-power dual operational amplifiers</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="../../_images/measurement_board-2-V1-02.jpg"><img alt="alternate text" src="../../_images/measurement_board-2-V1-02.jpg" style="width: 800px; height: 700px;" /></a>
+<figcaption>
+<p><span class="caption-text">Measurement board installation with Raspberry Pi</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="current-injection-board">
+<h3>Current injection board<a class="headerlink" href="#current-injection-board" title="Permalink to this heading"></a></h3>
+<p>To carry out the electrical resistivity measurement, the first step consists of injecting current into the ground.
+In our case, a simple 9-V lead-acid battery is used to create an electrical potential difference that results
+in current circulating into the ground. The current is injected through electrodes A and B (see Fig. 2). This
+injection is controlled via a 4-channel relay module board connected to the Raspberry Pi. The mechanical relay
+module board is shown in Figure 4. Relays 1 and 2 serve to switch on the current source. The common contacts
+of relays 1 and 2 are connected to the positive and negative battery poles, respectively. The normally open
+contacts of both relays are connected to the common contacts of relays 3 and 4. Relays 1 and 2 are connected
+to the GPIO 7 on the Raspberry Pi and therefore activate simultaneously. The role of relays 3 and 4 is to reverse
+the polarity at electrodes A and B. Thus, when relays 3 and 4 are energized by the GPIO 8 in the open position,
+the positive battery pole is connected to electrode A and the negative pole to electrode B. When not energized,
+they remain in the normally closed position. This set-up offers a simple and robust solution to inject current.</p>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="../../_images/current_board.jpg"><img alt="alternate text" src="../../_images/current_board.jpg" style="width: 800px; height: 400px;" /></a>
+<figcaption>
+<p><span class="caption-text">Wiring of the 4-channel relay module board for current injection management</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>The next step consists of featuring the 4-channel relay module used for current injection and its assembly. The wiring
+between the relays must be carried out in strict accordance with Fig. 10. This card must then be connected to the Raspberry
+Pi and the measurement card. On the Raspberry Pi, it is necessary to connect inputs In1 and In2 to the same GPIO. For this
+purpose, it is necessary to solder together the two pins on the 4-channel relay shield module and connect them to the Raspberry Pi GPIO-7 (Fig. 10). The same must be performed for inputs In3 and In4 with GPIO-8. Connect the GND and 5Vdc pins of
+the relay card’s 4 channels respectively to the GND pin and 5Vcc of the Raspberry Pi. Now connect relays 1, 2, 3 and 4, as
+shown in the diagram, using 1-mm2 cables (red and black in Fig. 10). Lastly, connect the inputs of relay 1 and 2 respectively
+to terminals B and A of the measurement board.</p>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="../../_images/installation_current_board_1_02.jpg"><img alt="alternate text" src="../../_images/installation_current_board_1_02.jpg" style="width: 800px; height: 700px;" /></a>
+<figcaption>
+<p><span class="caption-text">Current injection board installation with Raspberry Pi</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Congratulations, you have build a 4 electrodes resistivity-meter.</p>
+</section>
+<section id="first-four-electrodes-resistivity-measurement">
+<h3>First four electrodes resistivity measurement<a class="headerlink" href="#first-four-electrodes-resistivity-measurement" title="Permalink to this heading"></a></h3>
+<p>Under construction !</p>
+<p>Describe the way to validate the first part of the instruction.
+Electrical resistivity measurement on test circuit</p>
+</section>
+</section>
+<section id="multiplexer-implementation">
+<h2>Multiplexer implementation<a class="headerlink" href="#multiplexer-implementation" title="Permalink to this heading"></a></h2>
+<p>The resistivity measurement is conducted on four terminals (A, B, M and N). The user could perform each measurement
+by manually plugging four electrodes into the four channel terminals. In practice, ERT requires several tens or thousands
+of measurements conducted on different electrode arrays. A multiplexer is therefore used to connect each channel to one of
+the 32 electrodes stuck into the ground, all of which are connected to the data logger.</p>
+<p>We will describe below how to assemble the four multiplexers (MUX), one per terminal. A multiplexer consists of 2 relay
+modules with 16 channels each. On the first board, on each MUX, 15 relays out of the 16 available will be used. Please note that the suggested
+configuration enables making smaller multiplexers (8 or 16 electrodes only). On the other hand, if you prefer upping to 64 electrodes,
+which is entirely possible, a GPIO channel multiplier will have to be used.
+To prepare the multiplexer, the channels of the two relay boards must be connected according to the wiring diagram shown below.</p>
+<figure class="align-center" id="id6">
+<a class="reference internal image-reference" href="../../_images/multiplexer_implementation.jpg"><img alt="alternate text" src="../../_images/multiplexer_implementation.jpg" style="width: 800px; height: 500px;" /></a>
+<figcaption>
+<p><span class="caption-text">Schematic diagram of the wiring of two 16-channel relay shields</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>For this purpose, 0.5-mm² cables with end caps are used and their length adjusted for each connection in order to produce a clean assembly.
+The length was adjusted so that the distance between the two points to be connected could be directly measured on the board once they had
+been assembled one above the other, in adding an extra 3 cm. The wires at the ends need to be stripped and the end caps added.
+As a final step, connect the cables to the correct connectors. This operation must be repeated in order to carry out all the wiring shown in Figure below.</p>
+<p>Once the operation has been completed, the 16 control pins of each 16-channel relay shield card must be prepared. Each card actually contains 16 input channels
+for activating each relay (Fig. 12). However, we will be activating several relays with a single GPIO (to limit the number of GPIOs used on Raspberry Pi,
+see Section 2.4). To execute this step, it will be necessary to follow the protocol presented in Figure.</p>
+<blockquote>
+<div><figure class="align-center" id="id7">
+<a class="reference internal image-reference" href="../../_images/connection.jpg"><img alt="alternate text" src="../../_images/connection.jpg" style="width: 800px; height: 400px;" /></a>
+<figcaption>
+<p><span class="caption-text">Connection to the 16-channel relay shield</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</div></blockquote>
+<p>For the 16-channel relay shield no. 1, these steps must be followed:
+*       Position a test circuit with 10 horizontal and 10 vertical holes on the pins of the 16-channel relay shield board.
+*       Follow the diagram and solder the pins as shown in Fig.
+*       Lastly, solder 0.5-mm² wires 1 m in length to the test circuit.</p>
+<p>For relay shield no. 2, follow the same procedure, but solder all the pins together (d-e-f).
+This same operation must be repeated for the other three multiplexers as well.
+The next step consists of connecting the relay card inputs to the Raspberry Pi according to Table 5 for all four multiplexers.</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td rowspan="2"></td>
+<td colspan="4"><p>Relay shield n°1</p></td>
+<td><p>Relay Shield n°2</p></td>
+</tr>
+<tr class="row-even"><td><p>Pin 1</p></td>
+<td><p>Pin 2-3</p></td>
+<td><p>Pin 4-7</p></td>
+<td><p>Pin 8-16</p></td>
+<td><p>Pin 1- 16</p></td>
+</tr>
+<tr class="row-odd"><td><p>Multiplexer A</p></td>
+<td><p>12</p></td>
+<td><p>16</p></td>
+<td><p>20</p></td>
+<td><p>21</p></td>
+<td><p>26</p></td>
+</tr>
+<tr class="row-even"><td><p>Multiplexer B</p></td>
+<td><p>18</p></td>
+<td><p>23</p></td>
+<td><p>24</p></td>
+<td><p>25</p></td>
+<td><p>19</p></td>
+</tr>
+<tr class="row-odd"><td><p>Multiplexer M</p></td>
+<td><p>06</p></td>
+<td><p>13</p></td>
+<td><p>04</p></td>
+<td><p>17</p></td>
+<td><p>27</p></td>
+</tr>
+<tr class="row-even"><td><p>Multiplexer N</p></td>
+<td><p>22</p></td>
+<td><p>10</p></td>
+<td><p>09</p></td>
+<td><p>11</p></td>
+<td><p>05</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><p>Connection of the GPIOs to each multiplexer</p>
+</div></blockquote>
+</section>
+<section id="electrode-connection">
+<h2>Electrode connection<a class="headerlink" href="#electrode-connection" title="Permalink to this heading"></a></h2>
+<p>At this point, all that remains is to connect the electrodes of each multiplexer to a terminal block (Fig. 13). In our set-up, screw terminals assembled on a din rail were used.
+According to the chosen multiplexer configuration, all the relays of each multiplexer will be connected to an electrode and, consequently, each electrode will have four incoming
+connections. Instead of having four cables connecting an electrode terminal to each multiplexer, we recommend using the cable assembly shown in the following Figure.</p>
+<figure class="align-center" id="id8">
+<a class="reference internal image-reference" href="../../_images/cable.jpg"><img alt="alternate text" src="../../_images/cable.jpg" style="width: 800px; height: 300px;" /></a>
+<figcaption>
+<p><span class="caption-text">Wire cabling for multiplexer and terminal screw connection</span><a class="headerlink" href="#id8" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>the next figure provides an example of multiplexer relay connections for electrode no. 1: this electrode of multiplexer MUX A must be connected to electrode no. 1 of MUX B. Moreover, electrode no. 1 of MUX B
+must be connected to electrode no. 1 of MUX N, which in turn must be connected to electrode no. 1 of MUX M. Lastly, electrode no. 1 of MUX M is connected to the terminal block.
+This operation must be repeated for all 32 electrodes.</p>
+<figure class="align-center" id="id9">
+<a class="reference internal image-reference" href="../../_images/electrode_cable.jpg"><img alt="alternate text" src="../../_images/electrode_cable.jpg" style="width: 800px; height: 800px;" /></a>
+<figcaption>
+<p><span class="caption-text">Example of a multiplexer connection to the screw terminal for electrode no. 1.</span><a class="headerlink" href="#id9" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The 16 channel relay cards exist in 5-V and 12-V , in the bottom figure we have 12-V cards that we will directly connect to the battery.
+In case you bought 16 channel relay 5-V cards, you will need to add a DC/DC 12-V/5-V converter. You can use a STEP DOWN MODULE DC-DC (Velleman WPM404) and set the voltage to 5V with the potentiometer.</p>
+</div>
+</section>
+<section id="operating-instruction">
+<h2>Operating instruction<a class="headerlink" href="#operating-instruction" title="Permalink to this heading"></a></h2>
+<section id="preliminary-procedure-only-for-the-initial-operation">
+<h3>Preliminary procedure (Only for the initial operation)<a class="headerlink" href="#preliminary-procedure-only-for-the-initial-operation" title="Permalink to this heading"></a></h3>
+<p>The open source code must be downloaded at the Open Science Framework source file repository for this manuscript (<a class="reference external" href="https://osf.io/dzwb4/">https://osf.io/dzwb4/</a>)
+or at the following Gitlab repository address: <a class="reference external" href="https://gitlab.irstea.fr/reversaal/OhmPi">https://gitlab.irstea.fr/reversaal/OhmPi</a>. The code must be then unzipped into a selected folder (e.g. OhmPi-master). A “readme” file
+is proposed in the directory to assist with installation of the software and required python packages. It is strongly recommended to create a python virtual environment for installing
+the required packages and running the code.</p>
+</section>
+<section id="startup-procedure">
+<h3>Startup procedure<a class="headerlink" href="#startup-procedure" title="Permalink to this heading"></a></h3>
+<p>As an initial operating instruction, all batteries must be disconnected before any hardware handling. Ensure that the battery is charged at full capacity. Plug all the electrodes (32 or fewer)
+into the screw terminals. The Raspberry Pi must be plugged into a computer screen, with a mouse and keyboard accessed remotely. The Raspberry Pi must then be plugged into the power supply
+(for laboratory measurements) or a power bank (5V - 2A for field measurements). At this point, you’ll need to access the Raspbian operating system. Inside the previously created folder “ohmPi”,
+the protocol file “ABMN.txt” must be created or modified; this file contains all quadrupole ABMN numeration (an example is proposed with the source code). Some input parameters of the main “ohmpi.py”
+function may be adjusted/optimized depending on the measurement attributes. For example, both the current injection duration and number of stacks can be adjusted. At this point, the9 V and 12-V battery can be
+plugged into the hardware; the “ohmpi.py” source code must be run within a python3 environment (or a virtual environment if one has been created) either in the terminal or using Thonny. You should now
+hear the characteristic sound of a relay switching as a result of electrode permutation. After each quadrupole measurement, the potential difference as well as the current intensity and resistance
+are displayed on the screen. A measurement file is automatically created and named “measure.csv”; it will be placed in the same folder.</p>
+</section>
+<section id="electrical-resistivity-measurement-parameters-description">
+<h3>Electrical resistivity measurement parameters description<a class="headerlink" href="#electrical-resistivity-measurement-parameters-description" title="Permalink to this heading"></a></h3>
+<p>In the version 1.02, the measurement parameters are in the Jason file (ohmpi_param.json).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span> <span class="n">nb_electrodes</span> <span class="o">=</span> <span class="mi">32</span> <span class="c1"># maximum number of electrodes on the resistivity meter</span>
+<span class="linenos">2</span> <span class="n">injection_duration</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Current injection duration in second</span>
+<span class="linenos">3</span> <span class="n">nbr_meas</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># Number of times the quadrupole sequence is repeated</span>
+<span class="linenos">4</span> <span class="n">sequence_delay</span><span class="o">=</span> <span class="mi">30</span> <span class="c1"># Delay in seconds between 2 sequences</span>
+<span class="linenos">5</span> <span class="n">stack</span><span class="o">=</span> <span class="mi">1</span> <span class="c1"># repetition of the current injection for each quadrupole</span>
+<span class="linenos">6</span> <span class="n">export_path</span><span class="o">=</span> <span class="s2">&quot;home/pi/Desktop/measurement.csv&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="complete-list-of-components">
+<h2>Complete list of components<a class="headerlink" href="#complete-list-of-components" title="Permalink to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The list evolve a little bit after the publication of the article, it is necessary to refer to this list, the article is out of date</p>
+</div>
+<table class="docutils align-default" id="id10">
+<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id10" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Number</p></th>
+<th class="head"><p>Cost per unit</p></th>
+<th class="head"><p>Total cost</p></th>
+<th class="head"><p>Manufacturer</p></th>
+<th class="head"><p>Manufacturer s reference</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Raspberry Pi 3 Model B+</p></td>
+<td><p>1</p></td>
+<td><p>37</p></td>
+<td><p>37</p></td>
+<td><p>Raspberry</p></td>
+<td><p>Raspberry Pi 3 Model B</p></td>
+</tr>
+<tr class="row-odd"><td><p>Raspberry Pi 1 2 and 3 Power Supply</p></td>
+<td><p>1</p></td>
+<td><p>8.37</p></td>
+<td><p>8.37</p></td>
+<td><p>Raspberry</p></td>
+<td><p>Raspberry Pi 1 2 and 3 Power Supply</p></td>
+</tr>
+<tr class="row-even"><td><p>SainSmart 16-Channel 12V Relay</p></td>
+<td><p>8</p></td>
+<td><p>24.99</p></td>
+<td><p>199.92</p></td>
+<td><p>Sain Smart</p></td>
+<td><p>101-70-103</p></td>
+</tr>
+<tr class="row-odd"><td><p>4-Channel 5V Relay Module</p></td>
+<td><p>1</p></td>
+<td><p>7.99</p></td>
+<td><p>7.99</p></td>
+<td><p>Sain Smart</p></td>
+<td><p>20-018-101-CMS</p></td>
+</tr>
+<tr class="row-even"><td><p>cable 1X1 mm2 (50 m)</p></td>
+<td><p>1</p></td>
+<td><p>19.66</p></td>
+<td><p>19.66</p></td>
+<td><p>TRU COMPONENTS</p></td>
+<td><p>1568649</p></td>
+</tr>
+<tr class="row-odd"><td><p>cable 1X0.5 mm2 (100 m)</p></td>
+<td><p>1</p></td>
+<td><p>29.71</p></td>
+<td><p>29.71</p></td>
+<td><p>TRU COMPONENTS</p></td>
+<td><p>1565235</p></td>
+</tr>
+<tr class="row-even"><td><p>Printed circuit board (packaging quantity x 3)</p></td>
+<td><p>1</p></td>
+<td><p>12</p></td>
+<td><p>12</p></td>
+<td><p>Asler</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Header sets 1x10</p></td>
+<td><p>1</p></td>
+<td><p>2.68</p></td>
+<td><p>2.68</p></td>
+<td><p>Samtec</p></td>
+<td><p>SSW-110-02-G-S</p></td>
+</tr>
+<tr class="row-even"><td><p>Dual screw terminal (3.5-mm pitch)</p></td>
+<td><p>7</p></td>
+<td><p>0.648</p></td>
+<td><p>4.55</p></td>
+<td><p>RS PRO</p></td>
+<td><p>897-1332</p></td>
+</tr>
+<tr class="row-odd"><td><p>Resistor 1 Kohm 0.5W +- 0.1%</p></td>
+<td><p>4</p></td>
+<td><p>0.858</p></td>
+<td><p>3.44</p></td>
+<td><p>TE Connectivity</p></td>
+<td><p>H81K0BYA</p></td>
+</tr>
+<tr class="row-even"><td><p>Resistor 1.5 Kohms +- 0.1%</p></td>
+<td><p>4</p></td>
+<td><p>0.627</p></td>
+<td><p>2.52</p></td>
+<td><p>TE Connectivity</p></td>
+<td><p>H81K5BYA</p></td>
+</tr>
+<tr class="row-odd"><td><p>Resistor 50 +- 0.1%</p></td>
+<td><p>1</p></td>
+<td><p>8.7</p></td>
+<td><p>8.7</p></td>
+<td><p>TE Connectivity</p></td>
+<td><p>UPW50B50RV</p></td>
+</tr>
+<tr class="row-even"><td><p>LM358N AMP-o</p></td>
+<td><p>4</p></td>
+<td><p>0.8</p></td>
+<td><p>2.4</p></td>
+<td><p>Texas Instruments</p></td>
+<td><p>LM358AN/NOPB</p></td>
+</tr>
+<tr class="row-odd"><td><p>ADS1115</p></td>
+<td><p>1</p></td>
+<td><p>11.9</p></td>
+<td><p>11.9</p></td>
+<td><p>Adafruit</p></td>
+<td><p>1083</p></td>
+</tr>
+<tr class="row-even"><td><p>12V battery 7ah</p></td>
+<td><p>1</p></td>
+<td><p>19.58</p></td>
+<td><p>19.58</p></td>
+<td><p>RS PRO</p></td>
+<td><p>537-5488</p></td>
+</tr>
+<tr class="row-odd"><td><p>Battery Holder Type D LR20 (9V)</p></td>
+<td><p>1</p></td>
+<td><p>3.43</p></td>
+<td><p>3.43</p></td>
+<td><p>RS PRO</p></td>
+<td><p>185-4686</p></td>
+</tr>
+<tr class="row-even"><td><p>Ferrule Crimp Terminal (1 mm2) (500 pieces)</p></td>
+<td><p>1</p></td>
+<td><p>30.48</p></td>
+<td><p>30.48</p></td>
+<td><p>WEIDMULLER</p></td>
+<td><p>9004330000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Electrical Crimp Terminal (0.5 mm2) (100 piece)</p></td>
+<td><p>1</p></td>
+<td><p>6.38</p></td>
+<td><p>6.38</p></td>
+<td><p>AMP - TE CONNECTIVITY</p></td>
+<td><p>966067-1</p></td>
+</tr>
+<tr class="row-even"><td><p>Fuse 1.0 A</p></td>
+<td><p>1</p></td>
+<td><p>0.2</p></td>
+<td></td>
+<td><p>LITTELFUSE</p></td>
+<td><p>0251001.PAT1L</p></td>
+</tr>
+<tr class="row-odd"><td><p>Capacitor 100nF 50Vdc 10% Ceramic</p></td>
+<td><p>4</p></td>
+<td><p>0.2</p></td>
+<td><p>0.8</p></td>
+<td><p>KEMET</p></td>
+<td><p>C320C104K1</p></td>
+</tr>
+<tr class="row-even"><td><p>DC/DC converter 12 to 24V</p></td>
+<td><p>2</p></td>
+<td><p>26.72</p></td>
+<td><p>53.44</p></td>
+<td><p>TracoPower</p></td>
+<td><p>TRN 3-1215</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="V1_01.html" class="btn btn-neutral float-left" title="OhmPi V 1.01 (limited to 32 electrodes)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, the OhmPi Team..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
