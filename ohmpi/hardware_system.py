@@ -163,8 +163,7 @@ class OhmPiHardware:
         for mux_id, mux in self.mux_boards.items():
             mux.barrier = self.mux_barrier
             for k, v in mux.cabling.items():
-                update_dict(self._cabling, {k: (mux_id, k[0])})
-
+                update_dict(self._cabling, {k: (mux_id, k[0])})   #TODO: in theory k[0] is not needed in values
         # Complete OhmPiHardware initialization
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
