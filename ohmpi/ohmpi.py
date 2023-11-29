@@ -191,13 +191,13 @@ class OhmPi(object):
                     f.write('A,B,M,N,t,pulse,polarity,current,voltage\n')
             # write full data
             with open(fw_filename, 'a') as f:
-                dd = last_measurement['fulldata']
+                dd = last_measurement['full_waveform']
                 aa = np.repeat(last_measurement['A'], dd.shape[0])
                 bb = np.repeat(last_measurement['B'], dd.shape[0])
                 mm = np.repeat(last_measurement['M'], dd.shape[0])
                 nn = np.repeat(last_measurement['N'], dd.shape[0])
                 fwdata = np.c_[aa, bb, mm, nn, dd]
-                np.savetxt(f, fwdata, fmt=['%d', '%d', '%d', '%d', '%d', '%d', '%d', '%.3f', '%.3f'])
+                np.savetxt(f, fwdata, fmt=['%d', '%d', '%d', '%d', '%.3f', '%.3f', '%.3f'])
 
         if fw_in_csv:
             d = last_measurement['full_waveform']

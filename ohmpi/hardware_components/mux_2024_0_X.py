@@ -69,9 +69,12 @@ class Mux(MuxAbstract):
             self.exec_logger.event(f'{self.model}: {self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
-        self._roles = kwargs.pop('roles', None)
-        if self._roles is None:
-            self._roles = {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'}  # NOTE: defaults to 4-roles
+        roles = kwargs.pop('roles', None)
+        if roles is None:
+            roles = ['A', 'B', 'M', 'N'] # NOTE: defaults to 4-roles
+        else:
+            roles_board = ['X', 'Y', 'XX', 'YY']
+            self._roles = {roles[i]: roles_board[i] for i in range(len(roles))}
         if np.all([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['4_roles'].keys())])]):
             self._mode = '4_roles'
         elif np.all([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['2_roles'].keys())])]):
@@ -79,7 +82,15 @@ class Mux(MuxAbstract):
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.model}: {self._roles} !')
             self._mode = ''
-
+        cabling = kwargs.pop('cabling', None)
+        electrodes = kwargs.pop('electrodes', None)
+        self.cabling = {}
+        if cabling is None:
+            self.cabling = {(e, r): (i + 1, r) for r in roles for i, e in enumerate(electrodes)}
+        else:
+            for k, v in cabling.items():
+                if v[0] == self.board_id:
+                    self.cabling.update({k: (v[1], k[1])})
         # Setup TCA
         tca_address = kwargs.pop('tca_address', None)
         tca_channel = kwargs.pop('tca_channel', 0)
@@ -126,7 +137,6 @@ class Mux(MuxAbstract):
 
     def switch_one(self, elec=None, role=None, state=None):
         MuxAbstract.switch_one(self, elec=elec, role=role, state=state)
-
         def activate_relay(mcp, mcp_pin, value=True):
             pin_enable = mcp.get_pin(mcp_pin)
             pin_enable.direction = Direction.OUTPUT
