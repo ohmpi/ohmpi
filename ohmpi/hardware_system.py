@@ -43,12 +43,13 @@ for k, v in rx_module.SPECS['rx'].items():
     except Exception as e:
         print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
 
-current_max = np.min([TX_CONFIG['current_max'],  HARDWARE_CONFIG['pwr'].pop('current_max', np.inf), # TODO: replace 50 by a TX config
+current_max = np.min([TX_CONFIG['current_max'],  HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
 voltage_max = np.min([TX_CONFIG['voltage_max'],
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
 voltage_min = RX_CONFIG['voltage_min']
 # TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
+
 
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
@@ -163,8 +164,7 @@ class OhmPiHardware:
         for mux_id, mux in self.mux_boards.items():
             mux.barrier = self.mux_barrier
             for k, v in mux.cabling.items():
-                update_dict(self._cabling, {k: (mux_id, k[0])})
-
+                update_dict(self._cabling, {k: (mux_id, k[0])})   #TODO: in theory k[0] is not needed in values
         # Complete OhmPiHardware initialization
         self.readings = np.array([])  # time series of acquired data
         self._start_time = None  # time of the beginning of a readings acquisition
@@ -190,7 +190,7 @@ class OhmPiHardware:
         self._start_time = None
         self._pulse = 0
 
-    def _gain_auto(self, polarities=(1, -1), vab=5., switch_pwr_off=False): #TODO: improve _gain_auto
+    def _gain_auto(self, polarities=(1, -1), vab=5., switch_pwr_off=False):  # TODO: improve _gain_auto
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
         current, voltage = 0., 0.
         if self.tx.pwr.voltage_adjustable:
@@ -239,7 +239,7 @@ class OhmPiHardware:
             mux.barrier = self.mux_barrier
 
     @property
-    def pulses(self):  # TODO: is this obsolete?
+    def pulses(self):  # TODO: is this obsolete? I don't think so...
         pulses = {}
         for i in np.unique(self.readings[:, 1]):
             r = self.readings[self.readings[:, 1] == i, :]
@@ -271,7 +271,7 @@ class OhmPiHardware:
         if not append or self._start_time is None:
             self._start_time = datetime.datetime.utcnow()
             # TODO: Check if replacing the following two options by a reset_buffer method of TX would be OK
-            time.sleep(np.max([self.rx._latency, self.tx._latency])) # if continuous mode
+            time.sleep(np.max([self.rx.latency, self.tx.latency])) # if continuous mode
             # _ = self.rx.voltage # if not continuous mode
 
         while self.tx_sync.is_set():
@@ -395,9 +395,9 @@ class OhmPiHardware:
 
         return new_vab
 
-    def _compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5., vab_max=None,
-                         iab_max=None, vmn_max=None, vmn_min=voltage_min, polarities=(1, -1), delay=0.05,
-                         p_max=None, diff_vab_lim=2.5, n_steps=4):
+    def compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5., vab_max=None,
+                        iab_max=None, vmn_max=None, vmn_min=voltage_min, polarities=(1, -1), delay=0.05,
+                        p_max=None, diff_vab_lim=2.5, n_steps=4):
         # TODO: Optimise how to pass iab_max, vab_max, vmn_min
         # TODO: Update docstring
         """Estimates best Tx voltage based on different strategies.
@@ -467,7 +467,6 @@ class OhmPiHardware:
 
             k = 0
             vab_list = np.zeros(n_steps + 1) * np.nan
-
             vab_list[k] = vab
             # self.tx.turn_on()
             switch_pwr_off, switch_tx_pwr_off = False, False  # TODO: check if these should be moved in kwargs
@@ -486,7 +485,7 @@ class OhmPiHardware:
             diff_vab = np.inf
             if strategy == 'vmax' or strategy == 'vmin':
                 while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
-                    if strategy=='vmax':
+                    if strategy == 'vmax':
                         vmn_min = vmn_max
                     vabs = []
                     self._vab_pulses(vab_list[k], sampling_rate=self.rx.sampling_rate, durations=[0.2, 0.2], polarities=[1, -1])
@@ -562,7 +561,7 @@ class OhmPiHardware:
         warnings.resetwarnings()
 
     def calibrate_rx_bias(self):
-        self.rx._bias += (np.mean(self.readings[self.readings[:, 2] == 1, 4])
+        self.rx.bias += (np.mean(self.readings[self.readings[:, 2] == 1, 4])
                           + np.mean(self.readings[self.readings[:, 2] == -1, 4])) / 2.
 
     def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, duty_cycle=1.,

@@ -55,7 +55,7 @@ class PwrAbstract(ABC):
         self._current_max = kwargs.pop('current_max', 0.)
         self._voltage_min = kwargs.pop('voltage_min', 0.)
         self._voltage_max = kwargs.pop('voltage_max', 0.)
-        self._switchable = False
+        self.switchable = False
         self.connection = kwargs.pop('connection', None)
         self._battery_voltage = np.nan
 
@@ -364,6 +364,18 @@ class TxAbstract(ABC):
         self._injection_duration = value
 
     @property
+    def latency(self):
+        """ Gets the Tx latency """
+        return self._latency
+
+    @latency.setter
+    def latency(self, value):
+        """ Sets the Tx latency """
+        assert isinstance(value, float)
+        assert value >= 0.
+        self._latency = value
+
+    @property
     def polarity(self):
         return self._polarity
 
@@ -423,7 +435,7 @@ class TxAbstract(ABC):
     def pwr_state(self, state):
         if state == 'on':
             self._pwr_state = 'on'
-            if not self.pwr._switchable:
+            if not self.pwr.switchable:
                 self.exec_logger.debug(f'{self.model} cannot switch on power source')
             self.pwr.reload_settings()
         elif state == 'off':
@@ -454,6 +466,17 @@ class RxAbstract(ABC):
         self._vmn_hardware_offset = kwargs.pop('vmn_hardware_offset', 0.)
 
     @property
+    def bias(self):
+        """ Gets the RX bias """
+        return self._bias
+
+    @bias.setter
+    def bias(self, value):
+        """ Sets the Rx bias """
+        assert isinstance(value, float)
+        self._bias = value
+
+    @property
     def gain(self):
         return self._gain
 
@@ -471,6 +494,18 @@ class RxAbstract(ABC):
     @abstractmethod
     def gain_auto(self):
         pass
+
+    @property
+    def latency(self):
+        """ Gets the Rx latency """
+        return self._latency
+
+    @latency.setter
+    def latency(self, value):
+        """ Sets the Rx latency """
+        assert isinstance(value, float)
+        assert value >= 0.
+        self._latency = value
 
     def reset_gain(self):
         self.gain = 1.
@@ -498,6 +533,5 @@ class RxAbstract(ABC):
     @property
     @abstractmethod
     def voltage(self):
-        """ Gets the voltage VMN in Volts
-        """
+        """ Gets the voltage VMN in Volts """
         pass

@@ -15,6 +15,7 @@ from copy import deepcopy
 import numpy as np
 import csv
 import time
+import pandas as pd
 from shutil import rmtree, make_archive
 from threading import Thread
 from inspect import getmembers, isfunction
@@ -42,31 +43,25 @@ VERSION = '3.0.0-beta'
 
 
 class OhmPi(object):
-    """ OhmPi class.
+    """OhmPi class.
     """
-
-    def __init__(self, settings=None, sequence=None, mqtt=True, onpi=None):
-        """Constructs the ohmpi object
+    def __init__(self, settings=None, sequence=None, mqtt=True):
+        """Construct the ohmpi object.
 
         Parameters
         ----------
-        settings:
-
-        sequence:
-
-        mqtt: bool, defaut: True
-            if True publish on mqtt topics while logging, otherwise use other loggers only
-        onpi: bool,None default: None
-            if None, the platform on which the class is instantiated is determined to set on_pi to either True or False.
-            if False the behaviour of an ohmpi will be partially emulated and return random data.
+        settings : dict, optional
+            Dictionnary of parameters. Possible parameters with their default values:
+            `{'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
+            'nb_stack': 1, 'sampling_interval': 2, 'tx_volt': 5, 'duty_cycle': 0.5,
+            'strategy': 'constant', 'export_path': None
+        sequence : str, optional
+            Path of the .csv or .txt file with A, B, M and N electrodes.
+            Electrode index starts at 1. See `OhmPi.load_sequence()` for full docstring.
+        mqtt : bool, optional
+            If True (default), publish on mqtt topics while logging,
+            otherwise use other loggers only (print).
         """
-
-        if onpi is None:
-            _, onpi = get_platform()
-        elif onpi:
-            assert get_platform()[1]  # Checks that the system actually runs on a pi if onpi is True
-        self.on_pi = onpi  # True if runs from the RaspberryPi with the hardware, otherwise False for random data # TODO : replace with dummy hardware?
-
         self._sequence = sequence
         self.nb_samples = 0
         self.status = 'idle'  # either running or idle
@@ -80,24 +75,13 @@ class OhmPi(object):
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                     'soh_logger': self.soh_logger})
         self.exec_logger.info('Hardware configured...')
-        # default acquisition settings
-        self.settings = {
-            'injection_duration': 0.2,
-            'nb_meas': 1,
-            'sequence_delay': 1,
-            'nb_stack': 1,
-            'sampling_interval': 2,
-            'tx_volt': 5,
-            'duty_cycle': 0.5,
-            'strategy': 'constant',
-            'export_path': None,
-            'export_dir': 'data',
-            'export_name': 'measurement.csv'
-        }
-        # read in acquisition settings
-        # if settings is not None:
-        self.update_settings(settings)
 
+        # default acquisition settings
+        self.settings = {}
+        self.update_settings(os.path.join(os.path.split(os.path.dirname(__file__))[0],'settings/default.json'))
+
+        # read in acquisition settings
+        self.update_settings(settings)
         self.exec_logger.debug('Initialized with settings:' + str(self.settings))
 
         # read quadrupole sequence
@@ -167,30 +151,56 @@ class OhmPi(object):
             setattr(cls, i[0], i[1])
 
     @staticmethod
-    def append_and_save(filename: str, last_measurement: dict, cmd_id=None):
-        # TODO: find alternative approach to save full data (zip, hdf5 or mseed?)
+    def append_and_save(filename: str, last_measurement: dict, fw_in_csv=None, fw_in_zip=None, cmd_id=None):
         """Appends and saves the last measurement dict.
 
         Parameters
         ----------
         filename : str
-            filename to save the last measurement dataframe
+            Filename of the .csv.
         last_measurement : dict
-            Last measurement taken in the form of a python dictionary
+            Last measurement taken in the form of a python dictionary.
+        fw_in_csv : bool, optional
+            Wether to save the full-waveform data in the .csv (one line per quadrupole).
+            As these readings have different lengths for different quadrupole, the data are padded with NaN.
+            If None, default is read from default.json.
+        fw_in_zip : bool, optional
+            Wether to save the full-waveform data in a separate .csv in long format to be zipped to
+            spare space. If None, default is read from default.json.
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
         """
+        # check arguments
+        if fw_in_csv is None:
+            fw_in_csv = self.settings['fw_in_csv']
+        if fw_in_zip is None:
+            fw_in_zip = self.settings['fw_in_zip']
+
         # check if directory 'data' exists
-        ddir = os.path.join(os.path.dirname(__file__), '../data/')
+        ddir = os.path.split(filename)[0]
         if os.path.exists(ddir) is not True:
             os.mkdir(ddir)
 
         last_measurement = deepcopy(last_measurement)
         
-        # TODO need to make all the full data of the same size (pre-populate
-        # readings with NaN in hardware_system.OhmPiHardware.read_values())
-        if 'fulldata' in last_measurement:
-            d = last_measurement['fulldata']
+        # save full waveform data in a long .csv file
+        if fw_in_zip:
+            fw_filename = filename.replace('.csv', '_fw.csv')
+            if not os.path.exists(fw_filename):  # new file, write headers first
+                with open(fw_filename, 'w') as f:
+                    f.write('A,B,M,N,t,pulse,polarity,current,voltage\n')
+            # write full data
+            with open(fw_filename, 'a') as f:
+                dd = last_measurement['full_waveform']
+                aa = np.repeat(last_measurement['A'], dd.shape[0])
+                bb = np.repeat(last_measurement['B'], dd.shape[0])
+                mm = np.repeat(last_measurement['M'], dd.shape[0])
+                nn = np.repeat(last_measurement['N'], dd.shape[0])
+                fwdata = np.c_[aa, bb, mm, nn, dd]
+                np.savetxt(f, fwdata, fmt=['%d', '%d', '%d', '%d', '%.3f', '%.3f', '%.3f'])
+
+        if fw_in_csv:
+            d = last_measurement['full_waveform']
             n = d.shape[0]
             if n > 1:
                 idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
@@ -199,14 +209,13 @@ class OhmPi(object):
                 last_measurement.update(idic)
                 last_measurement.update(udic)
                 last_measurement.update(tdic)
-            last_measurement.pop('fulldata')
+            last_measurement.pop('full_waveform')
         
         if os.path.isfile(filename):
             # Load data file and append data to it
             with open(filename, 'a') as f:
                 w = csv.DictWriter(f, last_measurement.keys())
                 w.writerow(last_measurement)
-                # last_measurement.to_csv(f, header=False)
         else:
             # create data file and add headers
             with open(filename, 'a') as f:
@@ -230,7 +239,6 @@ class OhmPi(object):
         output : numpy.ndarray 1D array of int
             List of index of rows where A and B are identical.
         """
-
         # if we have a 1D array (so only 1 quadrupole), make it a 2D array
         if len(quads.shape) == 1:
             quads = quads[None, :]
@@ -249,12 +257,13 @@ class OhmPi(object):
             their content won't be returned again. Only files not in the list
             will be read.
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
         """
         # get all .csv file in data folder
         if survey_names is None:
             survey_names = []
-        ddir = os.path.join(os.path.dirname(__file__), '../data/')
+        # ddir = os.path.join(os.path.dirname(__file__), '../data/')
+        ddir = self.settings['export_dir']
         fnames = [fname for fname in os.listdir(ddir) if fname[-4:] == '.csv']
         ddic = {}
         if cmd_id is None:
@@ -274,7 +283,7 @@ class OhmPi(object):
                         headers[i] = 'R [Ohm]'
                 icols = list(np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'R [Ohm]']))[0])
                 data = np.loadtxt(os.path.join(ddir, fname), delimiter=',',
-                                    skiprows=1, usecols=icols)                    
+                                    skiprows=1, usecols=icols)
                 data = data[None, :] if len(data.shape) == 1 else data
                 ddic[fname.replace('.csv', '')] = {
                     'a': data[:, 0].astype(int).tolist(),
@@ -290,12 +299,12 @@ class OhmPi(object):
         return ddic
 
     def interrupt(self, cmd_id=None):
-        """Interrupts the acquisition
+        """Interrupts the acquisition.
 
         Parameters
         ----------
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
         """
         self.status = 'stopping'
         if self.thread is not None:
@@ -315,7 +324,7 @@ class OhmPi(object):
             Path of the .csv or .txt file with A, B, M and N electrodes.
             Electrode index start at 1.
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
 
         Returns
         -------
@@ -323,7 +332,7 @@ class OhmPi(object):
             Array of shape (number quadrupoles * 4).
         """
         self.exec_logger.debug(f'Loading sequence {filename}')
-        sequence = np.loadtxt(filename, delimiter=" ", dtype=np.uint32)  # load quadrupole file
+        sequence = np.loadtxt(filename, delimiter=" ", dtype=np.uint32, ndmin=2)  # load quadrupole file
 
         if sequence is not None:
             self.exec_logger.debug(f'Sequence of {sequence.shape[0]:d} quadrupoles read.')
@@ -343,12 +352,12 @@ class OhmPi(object):
         self.sequence = sequence
 
     def _process_commands(self, message: str):
-        """Processes commands received from the controller(s)
+        """Processes commands received from the controller(s).
 
         Parameters
         ----------
         message : str
-            message containing a command and arguments or keywords and arguments
+            Message containing a command and arguments or keywords and arguments.
         """
         self.status = 'idle'
         cmd_id = '?'
@@ -379,90 +388,74 @@ class OhmPi(object):
             self.exec_logger.debug(f'Execution report: {reply}')
 
     def quit(self, cmd_id=None):
-        """Quits OhmPi
+        """Quits OhmPi.
 
         Parameters
         ----------
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
         """
 
         self.exec_logger.debug(f'Quitting ohmpi.py following command {cmd_id}')
         exit()
 
     def _read_hardware_config(self):
-        """Reads hardware configuration from config.py
+        """Reads hardware configuration from config.py.
         """
         self.exec_logger.debug('Getting hardware config')
         self.id = OHMPI_CONFIG['id']  # ID of the OhmPi
-        # self.r_shunt = OHMPI_CONFIG['R_shunt']  # reference resistance value in ohm
-        # self.Imax = OHMPI_CONFIG['Imax']  # maximum current
-        # self.exec_logger.debug(f'The maximum current cannot be higher than {self.Imax} mA')
-        # self.coef_p2 = OHMPI_CONFIG['coef_p2']  # slope for current conversion for ads.P2, measurement in V/V
-        # self.nb_samples = OHMPI_CONFIG['nb_samples']  # number of samples measured for each stack
-        # self.version = OHMPI_CONFIG['version']  # hardware version
-        # self.max_elec = OHMPI_CONFIG['max_elec']  # maximum number of electrodes
-        # self.board_addresses = OHMPI_CONFIG['board_addresses']
-        # self.board_version = OHMPI_CONFIG['board_version']
-        # self.mcp_board_address = OHMPI_CONFIG['mcp_board_address']
         self.exec_logger.debug(f'OHMPI_CONFIG = {str(OHMPI_CONFIG)}')
 
     def remove_data(self, cmd_id=None):
-        """Remove all data in the data folder
+        """Remove all data in the ´export_path´ folder on the raspberrypi.
 
         Parameters
         ----------
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
         """
         self.exec_logger.debug(f'Removing all data following command {cmd_id}')
-        datadir = os.path.join(os.path.dirname(__file__), '../data')
+        datadir = os.path.split(self.settings['export_path'])
+        #datadir = os.path.join(os.path.dirname(__file__), '../data')
         rmtree(datadir)
         os.mkdir(datadir)
 
     def restart(self, cmd_id=None):
-        """Restarts the Raspberry Pi
+        """Restarts the Raspberry Pi.
 
         Parameters
         ----------
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
         """
-
-        if self.on_pi:
-            self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
-            os.system('reboot')
-        else:
-            self.exec_logger.warning('Not on Raspberry Pi, skipping reboot...')
+        self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
+        os.system('reboot')  # this may need admin rights
 
     def download_data(self, cmd_id=None):
-        """Create a zip of the data folder.
+        """Create a zip of the data folder to then download it easily.
         """
-        datadir = os.path.join(os.path.dirname(__file__), '../data/')
+        datadir = os.path.split(self.settings['export_path'])
+        # datadir = os.path.join(os.path.dirname(__file__), '../data/')
         make_archive(datadir, 'zip', 'data')
         self.data_logger.info(json.dumps({'download': 'ready'}))
 
     def shutdown(self, cmd_id=None):
-        """Shutdown the Raspberry Pi
+        """Shutdown the Raspberry Pi.
 
         Parameters
         ----------
         cmd_id : str, optional
             Unique command identifier
         """
-
-        if self.on_pi:
-            self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
-            os.system('poweroff')
-        else:
-            self.exec_logger.warning('Not on Raspberry Pi, skipping shutdown...')
-
+        self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
+        os.system('poweroff')  # this may require admin rights
+ 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
                         autogain=True, strategy='constant', tx_volt=5., best_tx_injtime=0.1,
                         cmd_id=None, vab_max=None, iab_max=None, vmn_max=None, vmn_min=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value, change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used in function definition
-        """Measures on a quadrupole and returns transfer resistance.
+        """Measures on a quadrupole and returns a dictionnary with the transfer resistance.
 
         Parameters
         ----------
@@ -471,36 +464,36 @@ class OhmPi(object):
             really create the route to the electrodes.
         nb_stack : int, optional
             Number of stacks. A stack is considered two pulses (one
-            positive, one negative).            If 0, we will look            for the best voltage.
+            positive, one negative). If 0, we will look for the best voltage.
         injection_duration : int, optional
             Injection time in seconds.
-        duty_cycle : float, optional, Default: 0.5
-            Duty cycle of injection square wave
+        duty_cycle : float, optional
+            Duty cycle (default=0.5) of injection square wave.
         strategy : str, optional, default: constant
-            Define injection strategy (if power is adjustable, otherwise constant tx_volt)
+            Define injection strategy (if power is adjustable, otherwise constant tx_volt, generally 12V battery is used).
             Either:
             - vmax : compute Vab to reach a maximum Vmn_max and Iab without exceeding vab_max
             - vmin : compute Vab to reach at least Vmn_min
-            - constant : apply given Vab (tx_volt) -
-                        Safety check (i.e. short voltage pulses) performed prior to injection to ensure
-                        injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
-                        To bypass safety check before injection, tx_volt should be set equal to vab_max (not recpommanded)
+            - constant : apply given Vab (tx_volt)
+            Safety check (i.e. short voltage pulses) performed prior to injection to ensure
+            injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
+            To bypass safety check before injection, tx_volt should be set equal to vab_max (not recpommanded)
         vab_max : str, optional
-            Maximum injection voltage
+            Maximum injection voltage.
             Default value set by config or boards specs
         iab_max : str, optional
-            Maximum current applied
+            Maximum current applied.
             Default value set by config or boards specs
         vmn_max : str, optional
-            Maximum Vmn allowed
+            Maximum Vmn allowed.
             Default value set by config or boards specs
         vmn_min :
-            Minimum Vmn desired (used in strategy vmin)
+            Minimum Vmn desired (used in strategy vmin).
             Default value set by config or boards specs
         tx_volt : float, optional  # TODO: change tx_volt to Vab
             For power adjustable only. If specified, voltage will be imposed.
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
         """
         # check pwr is on, if not, let's turn it on
         switch_power_off = False
@@ -520,15 +513,10 @@ class OhmPi(object):
             injection_duration = self.settings['injection_duration']
         if duty_cycle is None:
             duty_cycle = self.settings['duty_cycle']
-        # quad = kwargs.pop('quad', [0,0,0,0])
-        # nb_stack = kwargs.pop('nb_stack', self.settings['nb_stack'])
-        # injection_duration = kwargs.pop('injection_duration', self.settings['injection_duration'])
-        # duty_cycle = kwargs.pop('duty_cycle', self.settings['duty_cycle'])
-        # tx_volt = float(kwargs.pop('tx_volt', self.settings['tx_volt']))
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
-            tx_volt = self._hw._compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max, iab_max=iab_max)  # TODO: use tx_volt and vmn_max instead of hardcoded values
+            tx_volt = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max, iab_max=iab_max)  # TODO: use tx_volt and vmn_max instead of hardcoded values
             time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
@@ -557,25 +545,16 @@ class OhmPi(object):
                 "nbStack": nb_stack,
                 "Tx [V]": tx_volt,
                 "CPU temp [degC]": self._hw.ctl.cpu_temperature,
-                "Nb samples [-]": len(self._hw.readings[x,2]),  # TODO: use only samples after a delay in each pulse
-                "fulldata": self._hw.readings[:, [0, -2, -1]],
-                # "I_stack [mA]": i_stack_mean,
+                "Nb samples [-]": len(self._hw.readings[x, 2]),  # TODO: use only samples after a delay in each pulse
+                "full_waveform": self._hw.readings[:, [0, -2, -1]],
                 "I_std [%]": I_std,
-                # "I_per_stack [mA]": np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
-                # "Vmn_stack [mV]": vmn_stack_mean,
                 "Vmn_std [%]": Vmn_std,
-                # "Vmn_per_stack [mV]": np.array([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1))[0] / 2 for i in range(nb_stack)]),
-                # "R_stack [ohm]": r_stack_mean,
-                # "R_std [ohm]": r_stack_std,
-                # "R_per_stack [Ohm]": np.mean([np.diff(np.mean(vmn_stack[i*2:i*2+2], axis=1)) / 2 for i in range(nb_stack)]) / np.array([np.mean(i_stack[i*2:i*2+2]) for i in range(nb_stack)]),
-                # "PS_per_stack [mV]":  np.array([np.mean(np.mean(vmn_stack[i*2:i*2+2], axis=1)) for i in range(nb_stack)]),
-                # "PS_stack [mV]": ps_stack_mean,
                 "R_ab [kOhm]": tx_volt / I
             }
 
             # to the data logger
             dd = d.copy()
-            dd.pop('fulldata')  # too much for logger
+            dd.pop('full_waveform')  # too much for logger
             dd.update({'A': str(dd['A'])})
             dd.update({'B': str(dd['B'])})
             dd.update({'M': str(dd['M'])})
@@ -585,7 +564,6 @@ class OhmPi(object):
             for key in dd.keys():  # Check why this is applied on keys and not values...
                 if isinstance(dd[key], float):
                     dd[key] = np.round(dd[key], 3)
-
             dd['cmd_id'] = str(cmd_id)
             self.data_logger.info(dd)
             self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
@@ -601,23 +579,35 @@ class OhmPi(object):
 
         return d
 
-    def run_multiple_sequences(self, cmd_id=None, sequence_delay=None, nb_meas=None, **kwargs):  # NOTE : could be renamed repeat_sequence
+    def repeat_sequence(self, **kwargs):
+        """Identical to run_multiple_sequences().
+        """
+        self.run_multiple_sequences(**kwargs)
+
+    def run_multiple_sequences(self, sequence_delay=None, nb_meas=None, fw_in_csv=None,
+    fw_in_zip=None, cmd_id=None, **kwargs):
         """Runs multiple sequences in a separate thread for monitoring mode.
            Can be stopped by 'OhmPi.interrupt()'.
            Additional arguments are passed to run_measurement().
 
         Parameters
         ----------
-        cmd_id : str, optional
-            Unique command identifier
         sequence_delay : int, optional
             Number of seconds at which the sequence must be started from each others.
         nb_meas : int, optional
             Number of time the sequence must be repeated.
+        fw_in_csv : bool, optional
+            Wether to save the full-waveform data in the .csv (one line per quadrupole).
+            As these readings have different lengths for different quadrupole, the data are padded with NaN.
+            If None, default is read from default.json.
+        fw_in_zip : bool, optional
+            Wether to save the full-waveform data in a separate .csv in long format to be zipped to
+            spare space. If None, default is read from default.json.
+        cmd_id : str, optional
+            Unique command identifier.
         kwargs : dict, optional
-            See help(k.run_measurement) for more info.
+            See help(OhmPi.run_measurement) for more info.
         """
-        # self.run = True
         if sequence_delay is None:
             sequence_delay = self.settings['sequence_delay']
         sequence_delay = int(sequence_delay)
@@ -639,9 +629,8 @@ class OhmPi(object):
                     self.exec_logger.warning('Data acquisition interrupted')
                     break
                 t0 = time.time()
-                self.run_sequence(**kwargs)
-                # sleeping time between sequence
-                dt = sequence_delay - (time.time() - t0)
+                self.run_sequence(fw_in_csv=fw_in_csv, fw_in_zip=fw_in_zip, **kwargs)
+                dt = sequence_delay - (time.time() - t0)  # sleeping time between sequence
                 if dt < 0:
                     dt = 0
                 if nb_meas > 1:
@@ -653,15 +642,28 @@ class OhmPi(object):
         self.thread = Thread(target=func)
         self.thread.start()
 
-    def run_sequence(self, cmd_id=None, **kwargs):
+    def run_sequence(self, fw_in_csv=None, fw_in_zip=None, cmd_id=None, **kwargs):
         """Runs sequence synchronously (=blocking on main thread).
            Additional arguments are passed to run_measurement().
 
         Parameters
         ----------
+        fw_in_csv : bool, optional
+            Wether to save the full-waveform data in the .csv (one line per quadrupole).
+            As these readings have different lengths for different quadrupole, the data are padded with NaN.
+            If None, default is read from default.json.
+        fw_in_zip : bool, optional
+            Wether to save the full-waveform data in a separate .csv in long format to be zipped to
+            spare space. If None, default is read from default.json.
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
         """
+        # check arguments
+        if fw_in_csv is None:
+            fw_in_csv = self.settings['fw_in_csv']
+        if fw_in_zip is None:
+            fw_in_zip = self.settings['fw_in_zip']
+
         # switch power on
         self._hw.pwr_state = 'on'
         self.status = 'running'
@@ -679,9 +681,6 @@ class OhmPi(object):
                                                         f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
         self.exec_logger.debug(f'Saving to {filename}')
 
-        # make sure all multiplexer are off
-        
-
         # measure all quadrupole of the sequence
         if self.sequence is None:
             n = 1
@@ -694,58 +693,59 @@ class OhmPi(object):
                 quad = self.sequence[i, :]  # quadrupole
             if self.status == 'stopping':
                 break
-            # if i == 0:
-            #     # call the switch_mux function to switch to the right electrodes
-            #     # switch on DPS
-            #     self.mcp_board = MCP23008(self.i2c, address=self.mcp_board_address)
-            #     self.pin2 = self.mcp_board.get_pin(2) # dps -
-            #     self.pin2.direction = Direction.OUTPUT
-            #     self.pin2.value = True
-            #     self.pin3 = self.mcp_board.get_pin(3) # dps -
-            #     self.pin3.direction = Direction.OUTPUT
-            #     self.pin3.value = True
-            #     time.sleep (4)
-            #
-            #     #self.switch_dps('on')
-            # time.sleep(.6)
-            # self.switch_mux_on(quad)
             # run a measurement
-            if self.on_pi:
-                acquired_data = self.run_measurement(quad=quad, **kwargs)
-            else:  # for testing, generate random data
-                # sum_vmn = np.random.rand(1)[0] * 1000.
-                # sum_i = np.random.rand(1)[0] * 100.
-                # cmd_id = np.random.randint(1000)
-                # acquired_data = {
-                #     "time": datetime.now().isoformat(),
-                #     "A": quad[0],
-                #     "B": quad[1],
-                #     "M": quad[2],
-                #     "N": quad[3],
-                #     "inj time [ms]": self.settings['injection_duration'] * 1000.,
-                #     "Vmn [mV]": sum_vmn,
-                #     "I [mA]": sum_i,
-                #     "R [ohm]": sum_vmn / sum_i,
-                #     "Ps [mV]": np.random.randn(1)[0] * 100.,
-                #     "nbStack": self.settings['nb_stack'],
-                #     "Tx [V]": np.random.randn(1)[0] * 5.,
-                #     "CPU temp [degC]": np.random.randn(1)[0] * 50.,
-                #     "Nb samples [-]": self.nb_samples,
-                # }
-                pass
+            acquired_data = self.run_measurement(quad=quad, **kwargs)
+     
+            # log data to the data logger
             self.data_logger.info(acquired_data)
 
-            # # switch mux off
-            # self.switch_mux_off(quad)
-            #
-            # # add command_id in dataset
+            # add command_id in dataset
             acquired_data.update({'cmd_id': cmd_id})
             # log data to the data logger
-            # self.data_logger.info(f'{acquired_data}')
+            # self.data_logger.info(f'{acquired_data}')  # NOTE: It could be useful to keep the cmd_id in the
             # save data and print in a text file
-            self.append_and_save(filename, acquired_data)
+            self.append_and_save(filename, acquired_data, fw_in_csv=fw_in_csv, fw_in_zip=fw_in_zip)
             self.exec_logger.debug(f'quadrupole {i + 1:d}/{n:d}')
         self._hw.pwr_state = 'off'
+
+        # file management
+        if fw_in_csv:  # make sure we have the same number of columns
+            with open(filename, '.csv', 'r') as f:
+                x = f.readlines()
+
+            # get column of start of full-waveform
+            icol = 0
+            for i, col in enumerate(x[0].split(',')):
+                if col == 't1':
+                    icol = i
+                    break
+
+            # get longest possible line
+            max_length = np.max([len(row.split(',')) for row in x]) - icol
+            nreadings = max_length // 5
+            print('-----', nreadings, max_length)
+
+            # create padding array for full-waveform  # TODO test this!
+            with open(filename, '.csv', 'w') as f:
+                # write back headers
+                xs = x[0].split(',')
+                f.write(','.join(xs[:icol]))
+                for col in ['t','s','p','v','i']:
+                    f.write(','.join([col + str(j+1) for j in range(nreadings)]))
+                f.write('\n')
+                for i, row in enumerate(x[1:]):
+                    xs = row.split(',')
+                    f.write(','.join(xs[:icol]))
+                    fw = np.array(xs[icol:])
+                    fw_pad = fw.reshape((5, -1))
+                    fw_padded = np.zeros((max_length, 5))
+                    fw_padded[:fw_pad.shape[0], :] = fw_pad
+                    f.write(','.join(fw_padded.flatten()) + '\n')
+
+        if fw_in_zip:
+            with ZipFile(filename.replace('.csv', '_fw.zip'), 'w') as myzip:
+                myzip.write(filename.repleace('.csv', '_fw.csv'))
+            os.remove(filename.replace('.csv', '_fw.csv'))
 
         # reset to idle if we didn't interrupt the sequence
         if self.status != 'stopping':
@@ -758,7 +758,7 @@ class OhmPi(object):
         Parameters
         ----------
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
         """
 
         def func():
@@ -771,7 +771,7 @@ class OhmPi(object):
     # TODO: we could build a smarter RS-Check by selecting adjacent electrodes based on their locations and try to
     #  isolate electrodes that are responsible for high resistances (ex: AB high, AC low, BC high
     #  -> might be a problem at B (cf what we did with WofE)
-    def rs_check(self, tx_volt=5., cmd_id=None):
+    def rs_check(self, tx_volt=5.0, cmd_id=None):
         # TODO: add a default value for rs-check in config.py import it in ohmpi.py and add it in rs_check definition
         """Checks contact resistances.
         Strategy: we just open A and B, measure the current and using vAB set or
@@ -780,17 +780,15 @@ class OhmPi(object):
         Parameters
         ----------
         tx_volt : float
-            Voltage of the injection
+            Voltage of the injection.
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
         """
         # check pwr is on, if not, let's turn it on
         switch_tx_pwr_off = False
         if self._hw.pwr_state == 'off':
             self._hw.pwr_state = 'on'
             switch_tx_pwr_off = True
-
-        # self._hw.tx.pwr.voltage = float(tx_volt)
 
         # create custom sequence where MN == AB
         # we only check the electrodes which are in the sequence (not all might be connected)
@@ -804,17 +802,13 @@ class OhmPi(object):
                 elec[:-1],
                 elec[1:],
             ]).T
-        # if self.idps:
-        #     quads[:, 2:] = 0  # we don't open Vmn to prevent burning the MN part
-        #     # as it has a smaller range of accepted voltage
-
+        
         # create filename to store RS
         export_path_rs = self.settings['export_path'].replace('.csv', '') \
                          + '_' + datetime.now().strftime('%Y%m%dT%H%M%S') + '_rs.csv'
 
         # perform RS check
         self.status = 'running'
-
         self.reset_mux()
 
         # turn dps_pwr_on if needed
@@ -833,31 +827,15 @@ class OhmPi(object):
             print(vab, current)
             time.sleep(0.2)
 
-            # self.switch_mux_on(quad, bypass_check=True)  # put before raising the pins (otherwise conflict i2c)
-            # d = self.run_measurement(quad=quad, nb_stack=1, injection_duration=0.2, tx_volt=tx_volt, autogain=False,
-            #                          bypass_check=True)
-
-            # if self._hw.tx.voltage_adjustable:
-            #     voltage = self._hw.tx.voltage  # imposed voltage on dps
-            # else:
-            #     voltage = self._hw.rx.voltage
-
-            # voltage = self._hw.rx.voltage
-            # current = self._hw.tx.current
-
             # compute resistance measured (= contact resistance)
             rab = abs(vab*1000 / current) / 1000 # kOhm
-            # print(str(quad) + '> I: {:>10.3f} mA, V: {:>10.3f} mV, R: {:>10.3f} kOhm'.format(
-            #    current, voltage, resist))
-            # msg = f'Contact resistance {str(quad):s}: I: {current :>10.3f} mA, ' \
-            #       f'V: {voltage :>10.3f} mV, ' \
-            #       f'R: {resist :>10.3f} kOhm'
+            
             # create a message as dictionnary to be used by the html interface
             msg = {
                 'rsdata': {
                     'A': int(quad[0]),
                     'B': int(quad[1]),
-                    'rs': np.round(rab,3),  # in kOhm
+                    'rs': np.round(rab, 3),  # in kOhm
                 }
             }
             self.data_logger.info(json.dumps(msg))
@@ -880,26 +858,26 @@ class OhmPi(object):
         self.status = 'idle'
         if switch_pwr_off:
             self._hw.pwr.pwr_state = 'off'
+        
         # if power was off before measurement, let's turn if off
         if switch_tx_pwr_off:
             self._hw.pwr_state = 'off'
-    #
-    #         # TODO if interrupted, we would need to restore the values
-    #         # TODO or we offer the possibility in 'run_measurement' to have rs_check each time?
+    
+        # TODO if interrupted, we would need to restore the values
+        # TODO or we offer the possibility in 'run_measurement' to have rs_check each time?
 
     def set_sequence(self, sequence=None, cmd_id=None):
-        """Sets the sequence to acquire
+        """Sets the sequence to acquire.
 
         Parameters
         ----------
-        sequence : list, str
-            sequence of quadrupoles
+        sequence : list of list or array_like
+            Sequence of quadrupoles (list of list or array_like).
         cmd_id: str, optional
-            Unique command identifier
+            Unique command identifier.
         """
         try:
             self.sequence = np.array(sequence).astype(int)
-            # self.sequence = np.loadtxt(StringIO(sequence)).astype('uint32')
         except Exception as e:
             self.exec_logger.warning(f'Unable to set sequence: {e}')
 
@@ -908,12 +886,12 @@ class OhmPi(object):
 
         Parameters
         ----------
-        cmd_id : str, optional
-            Unique command identifier
         quadrupole : list of 4 int
             List of 4 integers representing the electrode numbers.
         bypass_check: bool, optional
-            Bypasses checks for A==M or A==N or B==M or B==N (i.e. used for rs-check)
+            Bypasses checks for A==M or A==N or B==M or B==N (i.e. used for rs-check).
+        cmd_id : str, optional
+            Unique command identifier.
         """
         assert len(quadrupole) == 4
         if (self._hw.tx.pwr.voltage > self._hw.rx._voltage_max) and bypass_check:
@@ -931,15 +909,15 @@ class OhmPi(object):
 
         Parameters
         ----------
-        cmd_id : str, optional
-            Unique command identifier
         quadrupole : list of 4 int
             List of 4 integers representing the electrode numbers.
+        cmd_id : str, optional
+            Unique command identifier.
         """
         assert len(quadrupole) == 4
         return self._hw.switch_mux(electrodes=quadrupole, state='off')
 
-    def test_mux(self, activation_time=1.0, mux_id=None, cmd_id=None): # TODO: add this in the MUX code
+    def test_mux(self, activation_time=0.2, mux_id=None, cmd_id=None):
         """Interactive method to test the multiplexer boards.
 
         Parameters
@@ -947,11 +925,11 @@ class OhmPi(object):
         activation_time : float, optional
             Time in seconds during which the relays are activated.
         mux_id : str, optional
-            id of the mux_board to test
+            ID of the mux_board to test.
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
         """
-        self.reset_mux()  # All mux boards should be reset even if we only want to test one otherwise we might create a shortcut
+        self.reset_mux()  # all mux boards should be reset even if we only want to test one otherwise we might create a shortcut
         if mux_id is None:
             self._hw.test_mux(activation_time=activation_time)
         else:
@@ -963,32 +941,28 @@ class OhmPi(object):
         Parameters
         ----------
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
         """
         self._hw.reset_mux()
 
     def update_settings(self, settings: str, cmd_id=None):
         """Updates acquisition settings from a json file or dictionary.
         Parameters can be:
-            - nb_electrodes (number of electrode used, if 4, no MUX needed)
-            - injection_duration (in seconds)
-            - nb_meas (total number of times the sequence will be run)
-            - sequence_delay (delay in second between each sequence run)
-            - nb_stack (number of stack for each quadrupole measurement)
-            - strategy (injection strategy: constant, vmax, vmin)
-            - duty_cycle (injection duty cycle comprised between 0.5 - 1)
-            - export_dir (directory where to export the data)
-            - export_name (name of exported file, timestamp will be added to filename)
-            - export_path (path where to export the data, timestamp will be added to filename ;
-                            if export_path is given, it goes over export_dir and export_name)
-
+        - nb_electrodes (number of electrode used, if 4, no MUX needed)
+        - injection_duration (in seconds)
+        - nb_meas (total number of times the sequence will be run)
+        - sequence_delay (delay in second between each sequence run)
+        - nb_stack (number of stack for each quadrupole measurement)
+        - strategy (injection strategy: constant, vmax, vmin)
+        - duty_cycle (injection duty cycle comprised between 0.5 - 1)
+        - export_path (path where to export the data, timestamp will be added to filename)
 
         Parameters
         ----------
         settings : str, dict
             Path to the .json settings file or dictionary of settings.
         cmd_id : str, optional
-            Unique command identifier
+            Unique command identifier.
         """
         if settings is not None:
             try:
@@ -1009,22 +983,23 @@ class OhmPi(object):
             self.exec_logger.warning('Settings are missing...')
 
         if self.settings['export_path'] is None:
-            self.settings['export_path'] = os.path.join(self.settings['export_dir'], self.settings['export_name'])
-        else:
-            self.settings['export_dir'] = os.path.split(self.settings['export_path'])[0]
-            self.settings['export_name'] = os.path.split(self.settings['export_path'])[1]
+            self.settings['export_path'] = os.path.join("data", "measurement.csv")
 
-    def run_inversion(self, survey_names=[], elec_spacing=1, **kwargs):
-        """Run a simple 2D inversion using ResIPy.
+        if not os.path.isabs(self.settings['export_path']):
+            export_dir = os.path.split(os.path.dirname(__file__))[0]
+            self.settings['export_path'] = os.path.join(export_dir, self.settings['export_path'])
+
+    def run_inversion(self, survey_names=None, elec_spacing=1, **kwargs):
+        """Run a simple 2D inversion using ResIPy (https://gitlab.com/hkex/resipy).
         
         Parameters
         ----------
         survey_names : list of string, optional
             Filenames of the survey to be inverted (including extension).
         elec_spacing : float (optional)
-            Electrode spacing in meters. We assume same electrode spacing everywhere.
+            Electrode spacing in meters. We assume same electrode spacing everywhere. Default is 1 m.
         kwargs : optional
-            Additiona keyword arguments passed to `resipy.Project.invert()`. For instance
+            Additional keyword arguments passed to `resipy.Project.invert()`. For instance
             `reg_mode` == 0 for batch inversion, `reg_mode == 2` for time-lapse inversion.
             See ResIPy document for more information on options available
             (https://hkex.gitlab.io/resipy/).
@@ -1036,7 +1011,7 @@ class OhmPi(object):
             for the values in resistivity of the elements.
         """
         # check if we have any files to be inverted
-        if len(survey_names) == 0:
+        if survey_names is None:
             self.exec_logger.error('No file to invert')
             return []
         
@@ -1051,8 +1026,8 @@ class OhmPi(object):
             reg_mode = 0
             kwargs['reg_mode'] = 0
 
-        pdir = os.path.dirname(__file__)
         # import resipy if available
+        pdir = os.path.dirname(__file__)
         try:
             from scipy.interpolate import griddata  # noqa
             import pandas as pd  #noqa
@@ -1066,7 +1041,7 @@ class OhmPi(object):
         # get absolule filename
         fnames = []
         for survey_name in survey_names:
-            fname = os.path.join(pdir, '../data', survey_name)
+            fname = os.path.join(self.settings['export_path'], survey_name)
             if os.path.exists(fname):
                 fnames.append(fname)
             else:
@@ -1075,7 +1050,7 @@ class OhmPi(object):
         # define a parser for the "ohmpi" format
         def ohmpiParser(fname):
             df = pd.read_csv(fname)
-            df = df.rename(columns={'A':'a', 'B':'b', 'M':'m', 'N':'n'})
+            df = df.rename(columns={'A': 'a', 'B': 'b', 'M': 'm', 'N': 'n'})
             df['vp'] = df['Vmn [mV]']
             df['i'] = df['I [mA]']
             df['resist'] = df['vp']/df['i']
@@ -1111,7 +1086,7 @@ class OhmPi(object):
             grid_v = griddata(df[['X', 'Z']].values, df['Resistivity(ohm.m)'].values,
                               (grid_x, grid_z), method='nearest')
             
-            # set nan to -1
+            # set nan to -1 (hard to parse NaN in JSON)
             inan = np.isnan(grid_v)
             grid_v[inan] = -1
 

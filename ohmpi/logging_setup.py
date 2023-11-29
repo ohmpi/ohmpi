@@ -1,6 +1,6 @@
 import json
-from ohmpi.config import EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, SOH_LOGGING_CONFIG,\
-    MQTT_LOGGING_CONFIG, MQTT_CONTROL_CONFIG
+from ohmpi.config import (EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, SOH_LOGGING_CONFIG, MQTT_LOGGING_CONFIG,
+                          MQTT_CONTROL_CONFIG)
 from os import path, mkdir, statvfs
 from time import gmtime
 import logging
@@ -12,7 +12,7 @@ from termcolor import colored
 
 def get_logging_levels():
     """Gets a list of the logging levels loaded"""
-    return [logging.getLevelName(x) for x in range(1,101) if not logging.getLevelName(x).startswith('Level')]
+    return [logging.getLevelName(x) for x in range(1, 101) if not logging.getLevelName(x).startswith('Level')]
 
 
 def add_logging_level(level_name, level_num, method_name=None):
@@ -227,7 +227,7 @@ def setup_loggers(mqtt=True):
     except Exception as err:
         msg += colored(f'\n\u26A0 ERROR: Could not initialize logging!\n{err}', 'red')
     finally:
-        return exec_logger, exec_log_filename, data_logger, data_log_filename, soh_logger, soh_log_filename,\
+        return exec_logger, exec_log_filename, data_logger, data_log_filename, soh_logger, soh_log_filename, \
             EXEC_LOGGING_CONFIG['logging_level'], msg
 
 
