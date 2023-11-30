@@ -17,6 +17,7 @@ for k, v in HARDWARE_CONFIG.items():
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
     i2C_addresses_on_bus = [hex(k) for k in bus.scan()]
+    print(i2C_addresses_on_bus)
     if i2c_addr in i2C_addresses_on_bus:
         return True
     else:
@@ -43,12 +44,12 @@ class OhmPiTests(unittest.TestCase):
 
     def test_tx_connections(self):
         if 'mcp_address' in self._hw.rx.specs :
-            if test_i2c_devices_on_bus(self._hw.tx.specs['mcp_addr'], self._hw.tx.connection).scan():
+            if test_i2c_devices_on_bus(self._hw.tx.specs['mcp_addr'], self._hw.tx.connection):
                 print(f"I2C device with address {hex(self._hw.tx.specs['mcp_addr'])} accessible on I2C bus.")
             else:
                 self.fail()
         if 'ads_address' in self._hw.rx.specs :
-            if test_i2c_devices_on_bus(self._hw.tx.specs['ads_address'], self._hw.tx.connection.scan()):
+            if test_i2c_devices_on_bus(self._hw.tx.specs['ads_address'], self._hw.tx.connection):
                 print(f"I2C device with address {hex(self._hw.tx.specs['mcp_address'])} accessible on I2C bus.")
 
             else:
@@ -56,13 +57,13 @@ class OhmPiTests(unittest.TestCase):
 
     def test_rx_connections(self):
         if 'mcp_address' in self._hw.rx.specs:
-            if test_i2c_devices_on_bus(self._hw.rx.specs['mcp_address'], self._hw.rx.connection.scan()):
+            if test_i2c_devices_on_bus(self._hw.rx.specs['mcp_address'], self._hw.rx.connection):
                 print(f"I2C device with address {hex(self._hw.tx.specs['mcp_addr'])} accessible on I2C bus.")
 
             else:
                 self.fail()
         if 'ads_address' in self._hw.rx.specs:
-            if test_i2c_devices_on_bus(self._hw.rx.specs['ads_address'], self._hw.rx.connection.scan()):
+            if test_i2c_devices_on_bus(self._hw.rx.specs['ads_address'], self._hw.rx.connection):
                 print(f"I2C device with address {hex(self._hw.tx.specs['mcp_addr'])} accessible on I2C bus.")
 
             else:
