@@ -71,7 +71,7 @@ class OhmPiTests(unittest.TestCase):
 
     def test_mux_connections(self):
         for mux_id, mux in self._hw.mux_boards.items():
-
+            pass
     def test_pwr(self):
         pass
 
