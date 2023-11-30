@@ -10,7 +10,10 @@ from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import HARDWARE_CONFIG
 
 for k, v in HARDWARE_CONFIG.items():
-    HARDWARE_CONFIG[k].update({'connect': False})
+    if k == 'mux':
+        HARDWARE_CONFIG[k]['default'].update({'connect': False})
+    else:
+        HARDWARE_CONFIG[k].update({'connect': False})
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
     i2C_addresses_on_bus = [hex(k) for k in bus.scan()]
