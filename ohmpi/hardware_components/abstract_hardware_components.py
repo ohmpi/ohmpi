@@ -107,6 +107,7 @@ class PwrAbstract(ABC):
         self.switchable = False
         self.connection = kwargs['connection']
         self._battery_voltage = np.nan
+        self.connect = connect
         self.specs = kwargs
 
     @property
@@ -203,6 +204,7 @@ class MuxAbstract(ABC):
         self._barrier = kwargs['barrier']
         self._activation_delay = kwargs['activation_delay']
         self._release_delay = kwargs['release_delay']
+        self.connect = connect
         self.specs = kwargs
 
     @abstractmethod
@@ -347,6 +349,7 @@ class TxAbstract(ABC):
         self.tx_sync = kwargs['tx_sync']
         self.exec_logger.debug(f'{self.model} TX initialization')
         self._pwr_state = 'off'
+        self.connect = connect
         self.specs = kwargs
 
     @property
@@ -524,6 +527,7 @@ class RxAbstract(ABC):
         self._latency = kwargs['latency']
         self._bias = kwargs['bias']
         self._vmn_hardware_offset = kwargs['vmn_hardware_offset']
+        self.connect = connect
         self.specs = kwargs
 
     @property

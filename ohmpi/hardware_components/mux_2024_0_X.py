@@ -104,7 +104,7 @@ class Mux(MuxAbstract):
         kwargs.update({'tca_channel': kwargs.pop('tca_channel', 0)})
         tca_channel = kwargs['tca_channel']
         self._tca = None
-        if connect:
+        if self.connect:
             if tca_address is None:
                 self._tca = self.connection
             else:
@@ -129,7 +129,7 @@ class Mux(MuxAbstract):
         for addr in self._mcp_addresses:
             assert addr in ['0x20', '0x21', '0x22', '0x23', '0x24', '0x25', '0x26', '0x27']
         self._mcp = [None, None]
-        if connect:
+        if self.connect:
             self.reset()
 
         if self.addresses is None:

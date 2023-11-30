@@ -103,7 +103,7 @@ class Mux(MuxAbstract):
         self._tca = [adafruit_tca9548a.TCA9548A(self.connection, kwargs['mux_tca_address'])[i] for i in np.arange(7, 3, -1)]
         # self._mcp_addresses = (kwargs.pop('mcp', '0x20'))  # TODO: add assert on valid addresses..
         self._mcp = [None, None, None, None]
-        if connect:
+        if self.connect:
             self.reset()
         if self.addresses is None:
             self._get_addresses()
