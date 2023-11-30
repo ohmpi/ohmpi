@@ -30,6 +30,7 @@ class OhmPiHardware:
         self.tx_sync = Event()
         self.hardware_config = kwargs.pop('hardware_config', HARDWARE_CONFIG)
         HARDWARE_CONFIG = self.hardware_config
+        print('hardware_config',HARDWARE_CONFIG)
         # Define the default controller, a distinct controller could be defined for each tx, rx or mux board
         # when using a distinct controller, the specific controller definition must be included in the component configuration
         ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
