@@ -59,13 +59,13 @@ class OhmPiHardware:
             except Exception as e:
                 print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
 
-        current_max = np.min([TX_CONFIG['current_max'], HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
+        self.current_max = np.min([TX_CONFIG['current_max'], HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
                               np.min(np.hstack(
                                   (np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
-        voltage_max = np.min([TX_CONFIG['voltage_max'],
+        self.voltage_max = np.min([TX_CONFIG['voltage_max'],
                               np.min(np.hstack(
                                   (np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
-        voltage_min = RX_CONFIG['voltage_min']
+        self.voltage_min = RX_CONFIG['voltage_min']
         # TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
 
         # Main Controller initialization
@@ -140,7 +140,7 @@ class OhmPiHardware:
         if isinstance(self.tx, dict):
             self.tx = tx_module.Tx(**self.tx)
         self.tx.pwr = self.pwr
-        self.tx.pwr._current_max = current_max
+        self.tx.pwr._current_max = self.current_max
 
         # Initialize Muxes
         self._cabling = kwargs.pop('cabling', {})
@@ -398,7 +398,7 @@ class OhmPiHardware:
         return new_vab
 
     def compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5., vab_max=None,
-                        iab_max=None, vmn_max=None, vmn_min=voltage_min, polarities=(1, -1), delay=0.05,
+                        iab_max=None, vmn_max=None, vmn_min=self.voltage_min, polarities=(1, -1), delay=0.05,
                         p_max=None, diff_vab_lim=2.5, n_steps=4):
         # TODO: Optimise how to pass iab_max, vab_max, vmn_min
         # TODO: Update docstring
@@ -446,9 +446,9 @@ class OhmPiHardware:
             if vmn_max is None:
                 vmn_max = self.rx._voltage_max / 1000.
             if iab_max is None:
-                iab_max = current_max
+                iab_max = self.current_max
             if vab_max is None:
-                vab_max = voltage_max
+                vab_max = self.voltage_max
             # print(f'Vmn max: {vmn_max}')
             if p_max is None:
                 p_max = vab_max * iab_max
