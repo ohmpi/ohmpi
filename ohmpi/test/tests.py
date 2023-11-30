@@ -120,7 +120,7 @@ class OhmPiTests(unittest.TestCase):
         self._hw.test_mux()
 
 
-def main(self):
+def main():
     import sys
 
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(OhmPiTests)
