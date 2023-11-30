@@ -46,7 +46,7 @@ VERSION = '3.0.0-beta'
 class OhmPi(object):
     """OhmPi class.
     """
-    def __init__(self, settings=None, sequence=None, mqtt=True):
+    def __init__(self, settings=None, sequence=None, mqtt=True, config=None):
         """Construct the ohmpi object.
 
         Parameters
@@ -74,8 +74,11 @@ class OhmPi(object):
 
         # specify loggers when instancing the hardware
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-                                    'soh_logger': self.soh_logger})
+                                    'soh_logger': self.soh_logger}, hardware_config=config.HARDWARE_CONFIG)
         self.exec_logger.info('Hardware configured...')
+
+        if config is None:
+            config = ohmpi.config
 
         # default acquisition settings
         self.settings = {}

@@ -15,42 +15,6 @@ import warnings
 
 # plt.switch_backend('agg')  # for thread safe operations...
 
-# Define the default controller, a distinct controller could be defined for each tx, rx or mux board
-# when using a distinct controller, the specific controller definition must be included in the component configuration
-ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
-pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
-tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
-rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
-
-MUX_DEFAULT = HARDWARE_CONFIG['mux']['default']
-MUX_CONFIG = HARDWARE_CONFIG['mux']['boards']
-for k, v in MUX_CONFIG.items():
-    MUX_CONFIG[k].update({'id': k})
-    for k2, v2 in MUX_DEFAULT.items():
-        MUX_CONFIG[k].update({k2: MUX_CONFIG[k].pop(k2, v2)})
-
-TX_CONFIG = HARDWARE_CONFIG['tx']
-for k, v in tx_module.SPECS['tx'].items():
-    try:
-        TX_CONFIG.update({k: TX_CONFIG.pop(k, v['default'])})
-    except Exception as e:
-        print(f'Cannot set value {v} in TX_CONFIG[{k}]:\n{e}')
-
-RX_CONFIG = HARDWARE_CONFIG['rx']
-for k, v in rx_module.SPECS['rx'].items():
-    try:
-        RX_CONFIG.update({k: RX_CONFIG.pop(k, v['default'])})
-    except Exception as e:
-        print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
-
-current_max = np.min([TX_CONFIG['current_max'],  HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
-                      np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
-voltage_max = np.min([TX_CONFIG['voltage_max'],
-                      np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
-voltage_min = RX_CONFIG['voltage_min']
-# TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
-
-
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
     return lap.total_seconds()
@@ -64,6 +28,44 @@ class OhmPiHardware:
         self.data_logger = kwargs.pop('exec_logger', create_stdout_logger('data_hw'))
         self.soh_logger = kwargs.pop('soh_logger', create_stdout_logger('soh_hw'))
         self.tx_sync = Event()
+        self.hardware_config = kwargs.pop('hardware_config', HARDWARE_CONFIG)
+        HARDWARE_CONFIG = self.hardware_config
+        # Define the default controller, a distinct controller could be defined for each tx, rx or mux board
+        # when using a distinct controller, the specific controller definition must be included in the component configuration
+        ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
+        pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
+        tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
+        rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
+
+        MUX_DEFAULT = HARDWARE_CONFIG['mux']['default']
+        MUX_CONFIG = HARDWARE_CONFIG['mux']['boards']
+        for k, v in MUX_CONFIG.items():
+            MUX_CONFIG[k].update({'id': k})
+            for k2, v2 in MUX_DEFAULT.items():
+                MUX_CONFIG[k].update({k2: MUX_CONFIG[k].pop(k2, v2)})
+
+        TX_CONFIG = HARDWARE_CONFIG['tx']
+        for k, v in tx_module.SPECS['tx'].items():
+            try:
+                TX_CONFIG.update({k: TX_CONFIG.pop(k, v['default'])})
+            except Exception as e:
+                print(f'Cannot set value {v} in TX_CONFIG[{k}]:\n{e}')
+
+        RX_CONFIG = HARDWARE_CONFIG['rx']
+        for k, v in rx_module.SPECS['rx'].items():
+            try:
+                RX_CONFIG.update({k: RX_CONFIG.pop(k, v['default'])})
+            except Exception as e:
+                print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
+
+        current_max = np.min([TX_CONFIG['current_max'], HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
+                              np.min(np.hstack(
+                                  (np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
+        voltage_max = np.min([TX_CONFIG['voltage_max'],
+                              np.min(np.hstack(
+                                  (np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
+        voltage_min = RX_CONFIG['voltage_min']
+        # TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
 
         # Main Controller initialization
         HARDWARE_CONFIG['ctl'].pop('model')
