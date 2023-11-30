@@ -7,7 +7,7 @@ from ohmpi.utils import enforce_specs
 
 SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
                 'exec_logger': {'default': None},
-                'soh_logger': {'default': None},
+                'soh_logger': {'default': None}},
          'pwr': {'model': {'default': 'unknown PWR hardware'},
                 'exec_logger': {'default': None},
                 'soh_logger': {'default': None},
@@ -44,7 +44,7 @@ SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
                 'latency': {'default': 0.},
                 'voltage_max': {'default': 0.},
                 'bias': {'default': 0.},
-                'vmn_hardware_offset': {'default': 0.}}}
+                'vmn_hardware_offset': {'default': 0.}}
          }
 
 class CtlAbstract(ABC):
