@@ -1,24 +1,63 @@
 from abc import ABC, abstractmethod
 import numpy as np
-from ohmpi.logging_setup import create_stdout_logger
 import time
 from threading import Event, Barrier, BrokenBarrierError
+from ohmpi.logging_setup import create_stdout_logger
+from ohmpi.utils import enforce_specs
 
+SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
+                'exec_logger': {'default': None},
+                'soh_logger': {'default': None},
+         'pwr': {'current_min': {'default': 0.},
+                'current_max': {'default': 0.},
+                'voltage_min': {'default': 0.},
+                'voltage_max': {'default': 0.},
+                'voltage_adjustable': {'default': False},
+                'current_adjustable': {'default': False},
+                'connection': {'default': None}},
+         'mux': {'model': {'default': 'unknown MUX hardware'},
+                'exec_logger': {'default': None},
+                'soh_logger': {'default': None},
+                'id': {'default': None},
+                'connection': {'default': None},
+                'cabling': {'default': None},
+                'addresses': {'default': None},
+                'barrier': {'default': Barrier(1)},
+                'activation_delay': {'default': 0.}, # in s
+                'release_delay': {'default': 0.}}, # in s
+        'tx':   {'model': {'default':  'unknown TX hardware'},
+                'injection_duration': {'default': 1.},
+                'exec_logger': {'default': None},
+                'soh_logger': {'default': None},
+                'connection': {'default': None},
+                'latency': {'default': 0.},
+                'tx_sync': {'default': Event()}},
+        'rx':   {'model': {'default':  'unknown RX hardware'},
+                'exec_logger': {'default': None},
+                'soh_logger': {'default': None},
+                'connection': {'default': None},
+                'sampling_rate': {'default': 1., 'max': np.inf},
+                'latency': {'default': 0.},
+                'voltage_max': {'default': 0.},
+                'bias': {'default': 0.},
+                'vmn_hardware_offset': {'default': 0.}}}
+         }
 
 class CtlAbstract(ABC):
     def __init__(self, **kwargs):
-        self.model = kwargs.pop('model', 'unknown CTL hardware')
+        self.model = kwargs['model']
         self.interfaces = None
-        self.exec_logger = kwargs.pop('exec_logger', None)
+        self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_ctl')
-        self.soh_logger = kwargs.pop('soh_logger', None)
+        self.soh_logger = kwargs['soh_logger']
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_ctl')
         self.exec_logger.debug(f'{self.model} Ctl initialization')
         self._cpu_temp_available = False
         self.max_cpu_temp = np.inf
-        self.connection = kwargs.pop('connection', None)
+        self.connection = kwargs['connection']
+        self.specs = kwargs
 
     @property
     def cpu_temperature(self):
@@ -39,25 +78,29 @@ class CtlAbstract(ABC):
 
 class PwrAbstract(ABC):
     def __init__(self, **kwargs):
-        self.model = kwargs.pop('model', 'unknown PWR hardware')
-        self.exec_logger = kwargs.pop('exec_logger', None)
+        for key in SPECS['tx'].keys():
+            kwargs = enforce_specs(kwargs, SPECS['tx'], key)
+
+        self.model = kwargs['model']
+        self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
-            self.exec_logger = create_stdout_logger('exec_mux')
-        self.soh_logger = kwargs.pop('soh_logger', None)
+            self.exec_logger = create_stdout_logger('exec_pwr')
+        self.soh_logger = kwargs['soh_logger']
         if self.soh_logger is None:
-            self.soh_logger = create_stdout_logger('soh_mux')
-        self.voltage_adjustable = kwargs.pop('voltage_adjustable', False)
+            self.soh_logger = create_stdout_logger('soh_pwr')
+        self.voltage_adjustable = kwargs['voltage_adjustable']
         self._voltage = np.nan
-        self.current_adjustable = kwargs.pop('current_adjustable', False)
+        self.current_adjustable = kwargs['current_adjustable']
         self._current = np.nan
         self._pwr_state = 'off'
-        self._current_min = kwargs.pop('current_min', 0.)
-        self._current_max = kwargs.pop('current_max', 0.)
-        self._voltage_min = kwargs.pop('voltage_min', 0.)
-        self._voltage_max = kwargs.pop('voltage_max', 0.)
+        self._current_min = kwargs['current_min']
+        self._current_max = kwargs['current_max']
+        self._voltage_min = kwargs['voltage_min']
+        self._voltage_max = kwargs['voltage_max']
         self.switchable = False
-        self.connection = kwargs.pop('connection', None)
+        self.connection = kwargs['connection']
         self._battery_voltage = np.nan
+        self.specs = kwargs
 
     @property
     @abstractmethod
@@ -128,25 +171,30 @@ class PwrAbstract(ABC):
 
 class MuxAbstract(ABC):
     def __init__(self, **kwargs):
-        self.model = kwargs.pop('model', 'unknown MUX hardware')
-        self.exec_logger = kwargs.pop('exec_logger', create_stdout_logger('exec_mux'))
-        self.soh_logger = kwargs.pop('soh_logger', create_stdout_logger('soh_mux'))
-        self.board_id = kwargs.pop('id', None)
+        self.model = kwargs['model']
+        self.exec_logger = kwargs['exec_logger']
+        if self.exec_logger is None:
+            self.exec_logger = create_stdout_logger('exec_mux')
+        self.soh_logger = kwargs['soh_logger']
+        if self.soh_logger is None:
+            self.soh_logger = create_stdout_logger('soh_mux')
+        self.board_id = kwargs['id']
         if self.board_id is None:
             self.exec_logger.error(f'MUX {self.model} should have an id !')
         self.exec_logger.debug(f'MUX {self.model}: {self.board_id} initialization')
-        self.connection = kwargs.pop('connection', None)
-        cabling = kwargs.pop('cabling', None)
+        self.connection = kwargs['connection']
+        cabling = kwargs['cabling']
         self.cabling = {}
         if cabling is not None:
             for k, v in cabling.items():
                 if v[0] == self.board_id:
                     self.cabling.update({k: (v[1], k[1])})
         self.exec_logger.debug(f'{self.board_id} cabling: {self.cabling}')
-        self.addresses = kwargs.pop('addresses', None)
-        self._barrier = kwargs.pop('barrier', Barrier(1))
-        self._activation_delay = kwargs.pop('activation_delay', 0.)  # in s
-        self._release_delay = kwargs.pop('release_delay', 0.)  # in s
+        self.addresses = kwargs['addresses']
+        self._barrier = kwargs['barrier']
+        self._activation_delay = kwargs['activation_delay']
+        self._release_delay = kwargs['release_delay']
+        self.specs = kwargs
 
     @abstractmethod
     def _get_addresses(self):
@@ -271,25 +319,24 @@ class MuxAbstract(ABC):
 
 class TxAbstract(ABC):
     def __init__(self, **kwargs):
-        self.model = kwargs.pop('model', 'unknown TX hardware')
-        injection_duration = kwargs.pop('injection_duration', 1.)
-        self.exec_logger = kwargs.pop('exec_logger', None)
+        self.model = kwargs['model']
+        self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_tx')
-        self.soh_logger = kwargs.pop('soh_logger', None)
+        self.soh_logger = kwargs['soh_logger']
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_tx')
-        self.connection = kwargs.pop('connection', None)
-        self.pwr = kwargs.pop('pwr', None)
+        self.connection = kwargs['connection']
+        self.pwr = kwargs['pwr']
         self._voltage = 0.
         self._polarity = 0
-        self._injection_duration = None
+        self._injection_duration = kwargs['injection_duration']
         self._gain = 1.
-        self.injection_duration = injection_duration
-        self._latency = kwargs.pop('latency', 0.)
-        self.tx_sync = kwargs.pop('tx_sync', Event())
+        self._latency = kwargs['latency']
+        self.tx_sync = kwargs['tx_sync']
         self.exec_logger.debug(f'{self.model} TX initialization')
         self._pwr_state = 'off'
+        self.specs = kwargs
 
     @property
     def gain(self):
@@ -448,22 +495,23 @@ class TxAbstract(ABC):
 
 class RxAbstract(ABC):
     def __init__(self, **kwargs):
-        self.exec_logger = kwargs.pop('exec_logger', None)
+        self.model = kwargs['model']
+        self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_rx')
-        self.soh_logger = kwargs.pop('soh_logger', None)
+        self.soh_logger = kwargs['soh_logger']
         if self.soh_logger is None:
             self.soh_logger = create_stdout_logger('soh_rx')
-        self.connection = kwargs.pop('connection', None)
-        self.model = kwargs.pop('model', 'unknown RX hardware')
-        self._sampling_rate = kwargs.pop('sampling_rate', 1)  # ms
+        self.connection = kwargs['connection']
+        self._sampling_rate = kwargs['sampling_rate']
         self.exec_logger.debug(f'{self.model} RX initialization')
-        self._voltage_max = kwargs.pop('voltage_max', 0.)
+        self._voltage_max = kwargs['voltage_max']
         self._gain = 1.
         self._max_sampling_rate = np.inf
-        self._latency = kwargs.pop('latency', 0.)
-        self._bias = kwargs.pop('bias', 0.)
-        self._vmn_hardware_offset = kwargs.pop('vmn_hardware_offset', 0.)
+        self._latency = kwargs['latency']
+        self._bias = kwargs['bias']
+        self._vmn_hardware_offset = kwargs['vmn_hardware_offset']
+        self.specs = kwargs
 
     @property
     def bias(self):
