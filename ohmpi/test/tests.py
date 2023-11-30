@@ -41,36 +41,34 @@ class OhmPiTests(unittest.TestCase):
     def test_connections(self):
         pass
 
-    def test_tx_connections(self):
-        if 'mcp_address' in self._hw.rx.specs :
-            if test_i2c_devices_on_bus(self._hw.tx.specs['mcp_address'], self._hw.tx.connection):
-                print(f"TX connections: MCP device with address {hex(self._hw.tx.specs['mcp_address'])} accessible on I2C bus.")
-            else:
-                self.fail()
-        if 'ads_address' in self._hw.rx.specs :
-            if test_i2c_devices_on_bus(self._hw.tx.specs['ads_address'], self._hw.tx.connection):
-                print(f"TX connections: ADS device with address {hex(self._hw.tx.specs['ads_address'])} accessible on I2C bus.")
-
+    def test_tx_connections(self, devices=['mcp','ads']):
+        for device in devices:
+            if f'{device}_address' in self._hw.tx.specs:
+                if test_i2c_devices_on_bus(self._hw.tx.specs[f'{device}_address'], self._hw.tx.connection):
+                    print(f"RX connections: MCP device with address {hex(self._hw.tx.specs[f'{device}_address'])} accessible on I2C bus.")
             else:
                 self.fail()
 
-    def test_rx_connections(self):
-        if 'mcp_address' in self._hw.rx.specs:
-            if test_i2c_devices_on_bus(self._hw.rx.specs['mcp_address'], self._hw.rx.connection):
-                print(f"RX connections: MCP device with address {hex(self._hw.tx.specs['mcp_address'])} accessible on I2C bus.")
-
-            else:
-                self.fail()
-        if 'ads_address' in self._hw.rx.specs:
-            if test_i2c_devices_on_bus(self._hw.rx.specs['ads_address'], self._hw.rx.connection):
-                print(f"RX connections: ADS device with address {hex(self._hw.tx.specs['ads_address'])} accessible on I2C bus.")
-
+    def test_rx_connections(self, devices=['mcp','ads']):
+        for device in devices:
+            if f'{device}_address' in self._hw.rx.specs:
+                if test_i2c_devices_on_bus(self._hw.rx.specs[f'{device}_address'], self._hw.rx.connection):
+                    print(f"RX connections: MCP device with address {hex(self._hw.tx.specs[f'{device}_address'])} accessible on I2C bus.")
             else:
                 self.fail()
 
-    def test_mux_connections(self):
-        for mux_id, mux in self._hw.mux_boards.items():
-            pass
+    def test_mux_connections(self, devices=['mcp', 'mux_tca']):
+        for device in devices
+            for mux_id, mux in self._hw.mux_boards.items():
+                if f'{device}_addresses' in mux.specs:
+                    for device_address in mux.specs[f'{device}_addresses']:
+                        if test_i2c_devices_on_bus(device_address, mux.connection):
+                            print(
+                                f"MUX connections: {mux_id} with address {hex(device_address)} accessible on I2C bus.")
+                if  f'{device}_address' in mux.specs:
+                    if test_i2c_devices_on_bus(mux.specs[f'{device}_address'], mux.connection):
+                        print(f"MUX connections: {mux_id} with address {hex(mux.specs[f'{device}_address'])} accessible on I2C bus.")
+
     def test_pwr(self):
         pass
 
