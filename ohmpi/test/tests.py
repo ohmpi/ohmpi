@@ -58,14 +58,14 @@ class OhmPiTests(unittest.TestCase):
                 self.fail()
 
     def test_mux_connections(self, devices=['mcp', 'mux_tca']):
-        for device in devices
+        for device in devices:
             for mux_id, mux in self._hw.mux_boards.items():
                 if f'{device}_addresses' in mux.specs:
                     for device_address in mux.specs[f'{device}_addresses']:
                         if test_i2c_devices_on_bus(device_address, mux.connection):
                             print(
                                 f"MUX connections: {mux_id} with address {hex(device_address)} accessible on I2C bus.")
-                if  f'{device}_address' in mux.specs:
+                if f'{device}_address' in mux.specs:
                     if test_i2c_devices_on_bus(mux.specs[f'{device}_address'], mux.connection):
                         print(f"MUX connections: {mux_id} with address {hex(mux.specs[f'{device}_address'])} accessible on I2C bus.")
 
