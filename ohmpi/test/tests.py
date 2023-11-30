@@ -2,10 +2,12 @@ import importlib
 import time
 import unittest
 import logging
+import datetime
 import numpy as np
 import traceback
 from ohmpi.ohmpi import OhmPi
 from ohmpi.logging_setup import setup_loggers
+from ohmpi.config import HARDWARE_CONFIG
 
 for k, v in HARDWARE_CONFIG.items():
     HARDWARE_CONFIG[k].update({'connect': False})
