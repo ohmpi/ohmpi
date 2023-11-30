@@ -69,7 +69,9 @@ class Mux(MuxAbstract):
             self.exec_logger.event(f'{self.model}: {self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
-        roles = kwargs.pop('roles', None)
+
+        kwargs.update({'roles': kwargs.pop('roles', None)})
+        roles = kwargs['roles']
         if roles is None:
             roles = ['A', 'B', 'M', 'N'] # NOTE: defaults to 4-roles
         else:
@@ -85,8 +87,10 @@ class Mux(MuxAbstract):
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.model}: {self._roles} !')
             self._mode = ''
-        cabling = kwargs.pop('cabling', None)
-        electrodes = kwargs.pop('electrodes', None)
+        kwargs.update({'cabling': kwargs.pop('cabling', None)})
+        cabling = kwargs['cabling']
+        kwargs.update({'electrodes': kwargs.pop('electrodes', None)})
+        electrodes = kwargs['electrodes']
         self.cabling = {}
         if cabling is None:
             self.cabling = {(e, r): (i + 1, r) for r in roles for i, e in enumerate(electrodes)}
@@ -95,16 +99,25 @@ class Mux(MuxAbstract):
                 if v[0] == self.board_id:
                     self.cabling.update({k: (v[1], k[1])})
         # Setup TCA
-        tca_address = kwargs.pop('tca_address', None)
-        tca_channel = kwargs.pop('tca_channel', 0)
-        if tca_address is None:
-            self._tca = self.connection
-        else:
-            self._tca = adafruit_tca9548a.TCA9548A(self.connection, tca_address)[tca_channel]
+        kwargs.update({'tca_channel': kwargs.pop('tca_channel', None)})
+        tca_address = kwargs['tca_address']
+        kwargs.update({'tca_channel': kwargs.pop('tca_channel', 0)})
+        tca_channel = kwargs['tca_channel']
+        self._tca = None
+        if connect:
+            if tca_address is None:
+                self._tca = self.connection
+            else:
+                self._tca = adafruit_tca9548a.TCA9548A(self.connection, tca_address)[tca_channel]
 
         # Setup MCPs
-        self._mcp_jumper_pos = {'addr2': kwargs.pop('addr2', None), 'addr1': kwargs.pop('addr1', None)}
-        self._mcp_addresses = (kwargs.pop('mcp_0', None), kwargs.pop('mcp_1', None))
+        kwargs.update({'addr2': kwargs.pop('addr2', None)})
+        kwargs.update({'addr1': kwargs.pop('addr1', None)})
+        kwargs.update({'mcp_0': kwargs.pop('mcp_0', None)})
+        kwargs.update({'mcp_1': kwargs.pop('mcp_1', None)})
+
+        self._mcp_jumper_pos = {'addr2': kwargs['addr2'], 'addr1': kwargs['addr1']}
+        self._mcp_addresses = (kwargs['mcp_0'], kwargs['mcp_1'])
         if self._mcp_addresses[0] is None and self._mcp_addresses[1] is None:
             if self._mcp_jumper_pos['addr2'] is not None and self._mcp_jumper_pos['addr1'] is not None:
                 self._mcp_jumper_pos_to_addr()
@@ -116,7 +129,8 @@ class Mux(MuxAbstract):
         for addr in self._mcp_addresses:
             assert addr in ['0x20', '0x21', '0x22', '0x23', '0x24', '0x25', '0x26', '0x27']
         self._mcp = [None, None]
-        self.reset()
+        if connect:
+            self.reset()
 
         if self.addresses is None:
             self._get_addresses()

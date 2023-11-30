@@ -84,7 +84,7 @@ class CtlAbstract(ABC):
 
 
 class PwrAbstract(ABC):
-    def __init__(self, **kwargs):
+    def __init__(self, connect=True, **kwargs):
         for key in SPECS['pwr'].keys():
             kwargs = enforce_specs(kwargs, SPECS['pwr'], key)
 
@@ -177,7 +177,7 @@ class PwrAbstract(ABC):
 
 
 class MuxAbstract(ABC):
-    def __init__(self, **kwargs):
+    def __init__(self, connect=True, **kwargs):
         for key in SPECS['mux'].keys():
             kwargs = enforce_specs(kwargs, SPECS['mux'], key)
         self.model = kwargs['model']
@@ -327,7 +327,7 @@ class MuxAbstract(ABC):
 
 
 class TxAbstract(ABC):
-    def __init__(self, **kwargs):
+    def __init__(self, connect=True, **kwargs):
         for key in SPECS['tx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['tx'], key)
         self.model = kwargs['model']
@@ -505,7 +505,7 @@ class TxAbstract(ABC):
 
 
 class RxAbstract(ABC):
-    def __init__(self, **kwargs):
+    def __init__(self, connect=True, **kwargs):
         for key in SPECS['rx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['rx'], key)
         self.model = kwargs['model']
