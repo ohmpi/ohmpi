@@ -107,7 +107,7 @@ class OhmPiTests():
     def __init__(self, mqtt=True, config=None):
         # set loggers
         self.test_logger, _, _, _ = setup_test_logger(mqtt=mqtt)
-        self.exec_logger, _, self.data_logger, _, self.test_logger, _, _, msg = setup_loggers(mqtt=mqtt)
+        self.exec_logger, _, self.data_logger, _, self.soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
         print(msg)
 
         # specify loggers when instancing the hardware
