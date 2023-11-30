@@ -1,13 +1,29 @@
-import importlib
-import time
-import unittest
+import json
+from ohmpi.config import (EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, SOH_LOGGING_CONFIG, MQTT_LOGGING_CONFIG,
+                          MQTT_CONTROL_CONFIG)
+from os import path, mkdir, statvfs
+from time import gmtime
 import logging
-import datetime
-import numpy as np
+from ohmpi.mqtt_handler import MQTTHandler
+from ohmpi.compressed_sized_timed_rotating_handler import CompressedSizedTimedRotatingFileHandler
+import sys
+from termcolor import colored
 import traceback
 from ohmpi.hardware_system import OhmPiHardware
 from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import HARDWARE_CONFIG
+
+logging_suffix = ''
+TEST_LOGGING_CONFIG = {
+    'logging_level': logging.INFO,
+    'logging_to_console': True,
+    'log_file_logging_level': logging.DEBUG,
+    'file_name': f'test{logging_suffix}.log',
+    'max_bytes': 16777216,
+    'backup_count': 1024,
+    'when': 'd',
+    'interval': 1
+}
 
 for k, v in HARDWARE_CONFIG.items():
     if k == 'mux':
@@ -23,19 +39,77 @@ def test_i2c_devices_on_bus(i2c_addr, bus):
     else:
         return False
 
+def setup_test_logger(mqtt=True):
+    msg = ''
+    # Message logging setup
+    log_path = path.join(path.dirname(__file__), 'logs')
+    if not path.isdir(log_path):
+        mkdir(log_path)
+    test_log_filename = path.join(log_path, TEST_LOGGING_CONFIG['file_name'])
 
-class OhmPiTests(unittest.TestCase):
+    test_logger = logging.getLogger('test_logger')
+
+    # TEST logging setup
+    # Set message logging format and level
+    log_format = '%(asctime)-15s | %(process)d | %(levelname)s: %(message)s'
+    logging_to_console = TEST_LOGGING_CONFIG['logging_to_console']
+    test_handler = CompressedSizedTimedRotatingFileHandler(test_log_filename,
+                                                           max_bytes=TEST_LOGGING_CONFIG['max_bytes'],
+                                                           backup_count=TEST_LOGGING_CONFIG['backup_count'],
+                                                           when=TEST_LOGGING_CONFIG['when'],
+                                                           interval=TEST_LOGGING_CONFIG['interval'])
+    test_formatter = logging.Formatter(log_format)
+    test_formatter.converter = gmtime
+    test_formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
+    test_handler.setFormatter(test_formatter)
+    test_handler.addHandler(test_handler)
+    test_handler.setLevel(TEST_LOGGING_CONFIG['log_file_logging_level'])
+
+    if logging_to_console:
+        console_test_handler = logging.StreamHandler(sys.stdout)
+        console_test_handler.setLevel(TEST_LOGGING_CONFIG['logging_level'])
+        console_test_handler.setFormatter(test_formatter)
+        test_logger.addHandler(console_test_handler)
+
+    if mqtt:
+        mqtt_settings = MQTT_LOGGING_CONFIG.copy()
+        mqtt_test_logging_level = mqtt_settings.pop('test_logging_level', logging.DEBUG)
+        [mqtt_settings.pop(i, None) for i in ['client_id', 'exec_topic', 'data_topic', 'test_topic',
+                                              'data_logging_level', 'exec_logging_level']]
+        mqtt_settings.update({'topic': MQTT_LOGGING_CONFIG['test_topic']})
+        # TODO: handle the case of MQTT broker down or temporarily unavailable
+        try:
+            mqtt_test_handler = MQTTHandler(**mqtt_settings)
+            mqtt_test_handler.setLevel(mqtt_test_logging_level)
+            mqtt_test_handler.setFormatter(test_formatter)
+            test_logger.addHandler(mqtt_test_handler)
+            msg += colored(f"\n\u2611 Publishes execution as {MQTT_LOGGING_CONFIG['test_topic']} topic on the "
+                           f"{MQTT_LOGGING_CONFIG['hostname']} broker", 'blue')
+        except Exception as e:
+            msg += colored(f'\nWarning: Unable to connect to test topic on broker\n{e}', 'yellow')
+            mqtt = False
+
+    # try:
+    #     init_logging( test_logger,
+    #                  TEST_LOGGING_CONFIG['logging_level'], log_path, data_log_filename)
+    # except Exception as err:
+    #     msg += colored(f'\n\u26A0 ERROR: Could not initialize logging!\n{err}', 'red')
+
+    return test_logger, test_log_filename, TEST_LOGGING_CONFIG['logging_level'], msg
+
+class OhmPiTests():
     """
     OhmPiTests class .
     """
-    def __init__(self, settings=None, sequence=None, mqtt=True, config=None):
+    def __init__(self, mqtt=True, config=None):
         # set loggers
-        self.exec_logger, _, self.data_logger, _, self.soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
+        self.test_logger, _, _ = setup_test_logger(mqtt=mqtt)
+        self.exec_logger, _, self.data_logger, _, self.test_logger, _, _, msg = setup_loggers(mqtt=mqtt)
         print(msg)
 
         # specify loggers when instancing the hardware
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-                                    'soh_logger': self.soh_logger}, hardware_config=HARDWARE_CONFIG)
+                                    'test_logger': self.soh_logger}, hardware_config=HARDWARE_CONFIG)
         self.exec_logger.info('Hardware configured...')
         self.exec_logger.info('OhmPi tests ready to start...')
 
@@ -118,17 +192,3 @@ class OhmPiTests(unittest.TestCase):
 
     def test_mux(self):
         self._hw.test_mux()
-
-
-def main():
-    import sys
-
-    suite = unittest.defaultTestLoader.loadTestsFromTestCase(OhmPiTests)
-    runner = unittest.TextTestRunner(verbosity=4)
-    result = runner.run(suite)
-    if not result.wasSuccessful():
-        sys.exit(1)
-
-
-if __name__ == '__main__':
-    main()
