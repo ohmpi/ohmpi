@@ -2,19 +2,10 @@ import importlib
 import time
 import unittest
 import logging
-import mqtt
-import datetime
 import numpy as np
 import traceback
 from ohmpi.ohmpi import OhmPi
 from ohmpi.logging_setup import setup_loggers
-
-from ohmpi.hardware_components.abstract_hardware_components import CtlAbstract
-from ohmpi.logging_setup import create_stdout_logger
-from ohmpi.utils import update_dict
-from ohmpi.config import HARDWARE_CONFIG
-from threading import Thread, Event, Barrier, BrokenBarrierError
-import warnings
 
 for k, v in HARDWARE_CONFIG.items():
     HARDWARE_CONFIG[k].update({'connect': False})
