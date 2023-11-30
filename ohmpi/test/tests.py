@@ -167,7 +167,7 @@ class OhmPiTests():
         tx_volt = 5.
         injection_duration = .5
         duty_cycle = .5 # or 0
-        cycles = 2
+        nb_stack = 2
         delay = injection_duration * 2/3
         if self.switch_mux_on(quad):
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration * 2 / duty_cycle, cycles=nb_stack,
