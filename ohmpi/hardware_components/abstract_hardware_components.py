@@ -84,9 +84,10 @@ class CtlAbstract(ABC):
 
 
 class PwrAbstract(ABC):
-    def __init__(self, connect=True, **kwargs):
+    def __init__(self, **kwargs):
         for key in SPECS['pwr'].keys():
             kwargs = enforce_specs(kwargs, SPECS['pwr'], key)
+        kwargs = kwargs.update(kwargs.pop('connect', True))
 
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
@@ -107,7 +108,7 @@ class PwrAbstract(ABC):
         self.switchable = False
         self.connection = kwargs['connection']
         self._battery_voltage = np.nan
-        self.connect = connect
+        self.connect = kwargs['connect']
         self.specs = kwargs
 
     @property
@@ -178,9 +179,10 @@ class PwrAbstract(ABC):
 
 
 class MuxAbstract(ABC):
-    def __init__(self, connect=True, **kwargs):
+    def __init__(self, **kwargs):
         for key in SPECS['mux'].keys():
             kwargs = enforce_specs(kwargs, SPECS['mux'], key)
+        kwargs = kwargs.update(kwargs.pop('connect', True))
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
@@ -204,7 +206,7 @@ class MuxAbstract(ABC):
         self._barrier = kwargs['barrier']
         self._activation_delay = kwargs['activation_delay']
         self._release_delay = kwargs['release_delay']
-        self.connect = connect
+        self.connect = kwargs['connect']
         self.specs = kwargs
 
     @abstractmethod
@@ -329,9 +331,11 @@ class MuxAbstract(ABC):
 
 
 class TxAbstract(ABC):
-    def __init__(self, connect=True, **kwargs):
+    def __init__(self, **kwargs):
         for key in SPECS['tx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['tx'], key)
+        kwargs = kwargs.update(kwargs.pop('connect', True))
+
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
@@ -349,7 +353,7 @@ class TxAbstract(ABC):
         self.tx_sync = kwargs['tx_sync']
         self.exec_logger.debug(f'{self.model} TX initialization')
         self._pwr_state = 'off'
-        self.connect = connect
+        self.connect = kwargs['connect']
         self.specs = kwargs
 
     @property
@@ -508,9 +512,10 @@ class TxAbstract(ABC):
 
 
 class RxAbstract(ABC):
-    def __init__(self, connect=True, **kwargs):
+    def __init__(self, **kwargs):
         for key in SPECS['rx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['rx'], key)
+        kwargs = kwargs.update(kwargs.pop('connect', True))
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
@@ -527,7 +532,7 @@ class RxAbstract(ABC):
         self._latency = kwargs['latency']
         self._bias = kwargs['bias']
         self._vmn_hardware_offset = kwargs['vmn_hardware_offset']
-        self.connect = connect
+        self.connect = kwargs['connect']
         self.specs = kwargs
 
     @property
