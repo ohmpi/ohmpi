@@ -16,8 +16,7 @@ for k, v in HARDWARE_CONFIG.items():
         HARDWARE_CONFIG[k].update({'connect': False})
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
-    i2C_addresses_on_bus = [hex(k) for k in bus.scan()]
-    print(i2C_addresses_on_bus)
+    i2C_addresses_on_bus = bus.scan()
     if i2c_addr in i2C_addresses_on_bus:
         return True
     else:
