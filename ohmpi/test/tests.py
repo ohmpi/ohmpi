@@ -68,6 +68,8 @@ class OhmPiTests(unittest.TestCase):
                         if test_i2c_devices_on_bus(mcp_address, mux.connection):
                             print(
                                 f"MUX connections: {mux_id} with address {hex(mcp_address)} accessible on I2C bus.")
+                        else:
+                            self.fail( f"MUX connections: {mux_id} with address {hex(mcp_address)} NOT accessible on I2C bus.")
             elif  mux.model == 'mux_2023_0_X':
                 if f'mux_tca_address' in mux.specs:
                     if test_i2c_devices_on_bus(mux.specs['mux_tca_address'], mux.connection):
