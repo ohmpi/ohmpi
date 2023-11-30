@@ -24,7 +24,7 @@ class OhmPiTests(unittest.TestCase):
     """
     OhmPiTests class .
     """
-    def __init__(self):
+    def __init__(self, settings=None, sequence=None, mqtt=True, config=None):
         # set loggers
         self.exec_logger, _, self.data_logger, _, self.soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
         print(msg)
