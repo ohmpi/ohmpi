@@ -45,6 +45,8 @@ SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
 
 class CtlAbstract(ABC):
     def __init__(self, **kwargs):
+        for key in SPECS['ctl'].keys():
+            kwargs = enforce_specs(kwargs, SPECS['ctl'], key)
         self.model = kwargs['model']
         self.interfaces = None
         self.exec_logger = kwargs['exec_logger']
@@ -78,8 +80,8 @@ class CtlAbstract(ABC):
 
 class PwrAbstract(ABC):
     def __init__(self, **kwargs):
-        for key in SPECS['tx'].keys():
-            kwargs = enforce_specs(kwargs, SPECS['tx'], key)
+        for key in SPECS['pwr'].keys():
+            kwargs = enforce_specs(kwargs, SPECS['pwr'], key)
 
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
@@ -171,6 +173,8 @@ class PwrAbstract(ABC):
 
 class MuxAbstract(ABC):
     def __init__(self, **kwargs):
+        for key in SPECS['mux'].keys():
+            kwargs = enforce_specs(kwargs, SPECS['mux'], key)
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
@@ -319,6 +323,8 @@ class MuxAbstract(ABC):
 
 class TxAbstract(ABC):
     def __init__(self, **kwargs):
+        for key in SPECS['tx'].keys():
+            kwargs = enforce_specs(kwargs, SPECS['tx'], key)
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
@@ -495,6 +501,8 @@ class TxAbstract(ABC):
 
 class RxAbstract(ABC):
     def __init__(self, **kwargs):
+        for key in SPECS['rx'].keys():
+            kwargs = enforce_specs(kwargs, SPECS['rx'], key)
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
