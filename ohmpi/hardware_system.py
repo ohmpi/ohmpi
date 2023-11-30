@@ -9,7 +9,7 @@ except Exception:
 from ohmpi.hardware_components.abstract_hardware_components import CtlAbstract
 from ohmpi.logging_setup import create_stdout_logger
 from ohmpi.utils import update_dict
-from ohmpi.config import HARDWARE_CONFIG
+from ohmpi.config import HARDWARE_CONFIG as HC
 from threading import Thread, Event, Barrier, BrokenBarrierError
 import warnings
 
@@ -28,7 +28,7 @@ class OhmPiHardware:
         self.data_logger = kwargs.pop('exec_logger', create_stdout_logger('data_hw'))
         self.soh_logger = kwargs.pop('soh_logger', create_stdout_logger('soh_hw'))
         self.tx_sync = Event()
-        self.hardware_config = kwargs.pop('hardware_config', HARDWARE_CONFIG)
+        self.hardware_config = kwargs.pop('hardware_config', HC)
         HARDWARE_CONFIG = self.hardware_config
         print('hardware_config',HARDWARE_CONFIG)
         # Define the default controller, a distinct controller could be defined for each tx, rx or mux board
