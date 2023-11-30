@@ -1,0 +1,52 @@
+Measurement board
+=============================
+
+This section introduces the OhmPi measurement boards. Starting from this year, it has been possible to use any measurement board with the latest OhmPi code.
+Consequently, the OhmPi group provides a variety of board options tailored to your technical needs (e.g., laboratory measurement, field measurement), budget, and electronic skills.
+
+The characteristics of each measurement board are described in the following table:
+
+
+Specifications
+--------------
+
+
+
+
+.. table::
+   :align: center
+
+   +----------------------------------+-----------------------+-----------+-----------------------+-----------+
+   | **Parameters**                   |**v2023.0.1**          | Units     |       **v2024.0.2**   | Units     |
+   +==================================+=======================+===========+=======================+===========+
+   |Vmn number of channels            |1                      |           |1                      |           |
+   +----------------------------------+-----------------------+-----------+-----------------------+-----------+
+   |Operating temperature             |0 to 50                |°c         |-25 to 50              |°C         |
+   +----------------------------------+-----------------------+-----------+-----------------------+-----------+
+   |Max. permissible Vab              |24                     |vdc        |200                    |vdc        |
+   +----------------------------------+-----------------------+-----------+-----------------------+-----------+
+   |Power supply                      |12                     |vdc        |12                     |vdc        |
+   +----------------------------------+-----------------------+-----------+-----------------------+-----------+
+   |Current with 2 ohms shunt resistor|0.11 to 40             |mA         |0.11 to 48             |mA         |
+   +----------------------------------+-----------------------+-----------+-----------------------+-----------+
+   |Min pulse duration                |50                     |ms         |50                     |ms         |
+   +----------------------------------+-----------------------+-----------+-----------------------+-----------+
+   |Max pulse duration                |15                     |second     |15                     |seconde    |
+   +----------------------------------+-----------------------+-----------+-----------------------+-----------+
+   |Vmn input impedance               |80                     |MOhm       |1                      |TOhm       |
+   +----------------------------------+-----------------------+-----------+-----------------------+-----------+
+   |Vmn range                         |-/+ 5                  |volt       | -/+5                  |volt       |
+   +----------------------------------+-----------------------+-----------+-----------------------+-----------+
+
+
+
+
+Contents: 
+
+.. toctree:: 
+   :maxdepth: 2 
+
+   mb/mb_2023.rst
+   mb/mb_2024.rst
+
+   
