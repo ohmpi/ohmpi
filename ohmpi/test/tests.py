@@ -31,7 +31,7 @@ class OhmPiTests(unittest.TestCase):
 
         # specify loggers when instancing the hardware
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-                                    'soh_logger': self.soh_logger})
+                                    'soh_logger': self.soh_logger}, hardware_config=HARDWARE_CONFIG)
         self.exec_logger.info('Hardware configured...')
         self.exec_logger.info('OhmPi tests ready to start...')
 
