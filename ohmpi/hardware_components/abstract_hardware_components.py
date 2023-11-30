@@ -87,7 +87,7 @@ class PwrAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['pwr'].keys():
             kwargs = enforce_specs(kwargs, SPECS['pwr'], key)
-        kwargs = kwargs.update(kwargs.pop('connect', True))
+        kwargs.update('connect': kwargs.pop('connect', True))
 
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
@@ -182,7 +182,7 @@ class MuxAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['mux'].keys():
             kwargs = enforce_specs(kwargs, SPECS['mux'], key)
-        kwargs = kwargs.update(kwargs.pop('connect', True))
+        kwargs.update('connect': kwargs.pop('connect', True))
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
@@ -334,7 +334,7 @@ class TxAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['tx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['tx'], key)
-        kwargs = kwargs.update(kwargs.pop('connect', True))
+        kwargs.update('connect': kwargs.pop('connect', True))
 
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
@@ -515,7 +515,7 @@ class RxAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['rx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['rx'], key)
-        kwargs = kwargs.update(kwargs.pop('connect', True))
+        kwargs.update('connect': kwargs.pop('connect', True))
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
