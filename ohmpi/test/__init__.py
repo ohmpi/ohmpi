@@ -1,1 +1,1 @@
-from .test import OhmPiTests
+from .tests import OhmPiTests
