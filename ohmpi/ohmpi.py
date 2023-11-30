@@ -68,6 +68,9 @@ class OhmPi(object):
         self.status = 'idle'  # either running or idle
         self.thread = None  # contains the handle for the thread taking the measurement
 
+        if config is None:
+            config = ohmpi.config
+
         # set loggers
         self.exec_logger, _, self.data_logger, _, self.soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
         print(msg)
@@ -76,9 +79,6 @@ class OhmPi(object):
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                     'soh_logger': self.soh_logger}, hardware_config=config.HARDWARE_CONFIG)
         self.exec_logger.info('Hardware configured...')
-
-        if config is None:
-            config = ohmpi.config
 
         # default acquisition settings
         self.settings = {}
