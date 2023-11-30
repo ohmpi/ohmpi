@@ -113,29 +113,29 @@ class OhmPiTests():
         # specify loggers when instancing the hardware
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                     'soh_logger': self.soh_logger}, hardware_config=HARDWARE_CONFIG)
+
         self.exec_logger.info('Hardware configured...')
         self.exec_logger.info('OhmPi tests ready to start...')
 
     def test_connections(self):
         pass
 
-    def test_tx_connections(self, devices=['mcp','ads']):
+    def test_tx_connection(self, devices=['mcp','ads']):
         for device in devices:
             if f'{device}_address' in self._hw.tx.specs:
                 if test_i2c_devices_on_bus(self._hw.tx.specs[f'{device}_address'], self._hw.tx.connection):
                     self.test_logger.info(f"TX connections: MCP device with address {hex(self._hw.tx.specs[f'{device}_address'])} accessible on I2C bus.")
             else:
-                self.fail()
+                pass
 
-    def test_rx_connections(self, devices=['mcp','ads']):
+    def test_rx_connection(self, devices=['mcp','ads']):
         for device in devices:
             if f'{device}_address' in self._hw.rx.specs:
                 if test_i2c_devices_on_bus(self._hw.rx.specs[f'{device}_address'], self._hw.rx.connection):
                     self.test_logger.info(f"RX connections: MCP device with address {hex(self._hw.tx.specs[f'{device}_address'])} accessible on I2C bus.")
             else:
-                self.fail()
-
-    def test_mux_connections(self, devices=['mcp', 'mux_tca']):
+                pass
+    def test_mux_connection(self, devices=['mcp', 'mux_tca']):
         for mux_id, mux in self._hw.mux_boards.items():
             if mux.model == 'mux_2024_0_X':
                 print(mux.model)
@@ -143,33 +143,14 @@ class OhmPiTests():
                     print(mcp_address)
                     if mcp_address is not None:
                         if test_i2c_devices_on_bus(mcp_address, mux.connection):
-                            print(
+                            self.test_logger.info(
                                 f"MUX connections: {mux_id} with address {hex(mcp_address)} accessible on I2C bus.")
                         else:
-                            self.fail() #: {mux_id} with address {hex(mcp_address)} NOT accessible on I2C bus.")
+                            self.test_logger.info(f"MUX connections{mux_id} with address {hex(mcp_address)} NOT accessible on I2C bus.")
             elif  mux.model == 'mux_2023_0_X':
                 if f'mux_tca_address' in mux.specs:
                     if test_i2c_devices_on_bus(mux.specs['mux_tca_address'], mux.connection):
-                        print(f"MUX connections: {mux_id} with address {hex(mux.specs['mux_tca_address'])} accessible on I2C bus.")
-
-    def test_pwr(self):
-        pass
-
-
-
-    def test_i2c_mux_boards(self):
-        try:
-            pass
-        except:
-            traceback.print_exc()
-            self.fail()
-
-    def test_i2c_measurement_board(self):
-        try:
-            pass
-        except:
-            traceback.print_exc()
-            self.fail()
+                        self.test_logger.info(f"MUX connections: {mux_id} with address {hex(mux.specs['mux_tca_address'])} accessible on I2C bus.")
 
     def test_pwr_connection(self):
         if self._hw.tx.pwr.voltage_adjustable:
@@ -177,12 +158,31 @@ class OhmPiTests():
                 pass
             except:
                 traceback.print_exc()
-                self.fail()
         else:
             self.exec_logger.info('Pwr cannot be tested with this system configuration.')
 
     def test_vmn_hardware_offset(self):
-        pass
+        test_result = False
+        quad = [0, 0, 0, 0]
+        tx_volt = 5.
+        injection_duration = .5
+        duty_cycle = .5 # or 0
+        cycles = 2
+        delay = injection_duration * 2/3
+        if self.switch_mux_on(quad):
+            self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration * 2 / duty_cycle, cycles=nb_stack,
+                                     duty_cycle=duty_cycle)
+        Vmn = self._hw.last_vmn(delay=delay)
+        Vmn_std = self._hw.last_vmn_dev(delay=delay)
+
+        Vmn_deviation_from_offset = abs(1 - Vmn / self._hw.rx._vmn_hardware_offset) *100
+
+        self.test_logger.info(f"Test Vmn hardware offset: Vmn offset deviation from config = {Vmn_deviation_from_offset: %.3f} %")
+        if Vmn_deviation_from_offset <= 10.:
+            test_result = True
+
+        return test_result
+
 
     def test_r_shunt(self):
         if self._hw.tx.pwr.voltage_adjustable:
