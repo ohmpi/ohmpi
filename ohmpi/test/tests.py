@@ -1,5 +1,5 @@
 import json
-from ohmpi.config import (EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, SOH_LOGGING_CONFIG, MQTT_LOGGING_CONFIG,
+from ohmpi.config import (OHMPI_CONFIG,EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, SOH_LOGGING_CONFIG, MQTT_LOGGING_CONFIG,
                           MQTT_CONTROL_CONFIG)
 from os import path, mkdir, statvfs
 from time import gmtime
@@ -14,6 +14,9 @@ from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import HARDWARE_CONFIG
 
 logging_suffix = ''
+MQTT_LOGGING_CONFIG.update({'test_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/test'})
+MQTT_LOGGING_CONFIG.update({'test_logging_level': logging.DEBUG})
+
 TEST_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
     'logging_to_console': True,
