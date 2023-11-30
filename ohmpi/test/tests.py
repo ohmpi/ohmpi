@@ -62,8 +62,8 @@ def setup_test_logger(mqtt=True):
     test_formatter.converter = gmtime
     test_formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
     test_handler.setFormatter(test_formatter)
-    test_handler.addHandler(test_handler)
-    test_handler.setLevel(TEST_LOGGING_CONFIG['log_file_logging_level'])
+    test_logger.addHandler(test_handler)
+    test_logger.setLevel(TEST_LOGGING_CONFIG['log_file_logging_level'])
 
     if logging_to_console:
         console_test_handler = logging.StreamHandler(sys.stdout)
