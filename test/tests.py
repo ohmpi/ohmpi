@@ -10,6 +10,14 @@ from ohmpi.hardware_system import OhmPiHardware
 from ohmpi.logging_setup import setup_loggers
 
 
+def test_i2c_devices_on_bus(i2c_addr, bus):
+    i2C_addresses_on_bus = [hex(k) for k in bus.scan()]
+    if i2c_addr in i2C_addresses_on_bus:
+        return True
+    else:
+        return False
+
+
 class OhmPiTests(unittest.TestCase):
     """
     OhmPiTests class .
@@ -25,9 +33,19 @@ class OhmPiTests(unittest.TestCase):
         self.exec_logger.info('Hardware configured...')
         self.exec_logger.info('OhmPi tests ready to start...')
 
-    def test_i2c_devices_on_bus(self):
-        self.test_i2c_mux_boards()
-        self.test_i2c_measurement_baord()
+    def test_connections(self):
+
+    def test_tx_connections(self):
+        i2c_addresses = self._hw.rx.connection
+
+    def test_rx(self):
+        pass
+
+    def test_pwr(self):
+        pass
+
+    def test_mux(self):
+        pass
 
     def test_i2c_mux_boards(self):
         try:
