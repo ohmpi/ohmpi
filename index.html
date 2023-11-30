@@ -93,12 +93,12 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="form-group row">
-                          <!-- <label for="nb_electrodes" class="col-sm-2 col-form-label">Nb electrodes</label> -->
+                        <!-- <div class="form-group row">
+                          <label for="nb_electrodes" class="col-sm-2 col-form-label">Nb electrodes</label>
                           <div class="col-sm-10">
                             <input type="number" class="form-control-number" id="nb_electrodes" value="64">
                           </div>
-                        </div>
+                        </div> -->
                         <div class="form-group row">
                             <label for="injection_duration" class="col-sm-2 col-form-label">Injection duration [s]</label>
                             <div class="col-sm-10">
@@ -167,7 +167,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button id="removeDataBtn" type="button" class="btn btn-danger">Clear data</button>
+                    <button id="removeDataBtn" type="button" class="btn btn-danger" data-dismiss="modal">Clear data</button>
                 </div>
             </div>
             </div>
@@ -249,7 +249,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                     payload = payload.replace(/\bnan\b/g, "null");
 
                     // parse to json
-                    let ddic = JSON.parse(payload.split('INFO:')[1])
+                    let ddic = JSON.parse(payload.split('INFO:')[1].replace(/'/g, '"'))
 
                     // RS check data
                     if ('rsdata' in ddic) {
@@ -274,7 +274,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
                 } else if (message.topic == topic_exec) {
                     // display it in the log
-                    console.log('EXEC LOG:', payload)
+                    //console.log('EXEC LOG:', payload)
                 }
 
                 // let response = JSON.parse(message.payloadString)
@@ -677,7 +677,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             
 
             // update list of quadrupoles if any
-            if (quads.length == 0) {
+            if ((quads.length == 0) & (surveyNames.length > 0)) {
                 console.log('updating list of quadrupoles')
                 let df = data[surveyNames[0]]
                 let quadSelect = document.getElementById('quadSelect')
