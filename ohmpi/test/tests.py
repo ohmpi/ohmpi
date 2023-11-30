@@ -43,13 +43,13 @@ class OhmPiTests(unittest.TestCase):
 
     def test_tx_connections(self):
         if 'mcp_address' in self._hw.rx.specs :
-            if test_i2c_devices_on_bus(self._hw.tx.specs['mcp_addr'],self._hw.tx.connection):
-                print(f'I2C device with address {self._hw.tx.specs['mcp_addr']} accessible on I2C bus.')
+            if test_i2c_devices_on_bus(self._hw.tx.specs['mcp_addr'], self._hw.tx.connection):
+                print(f"I2C device with address {self._hw.tx.specs['mcp_addr']} accessible on I2C bus.")
             else:
                 self.fail()
         if 'ads_address' in self._hw.rx.specs :
-            if test_i2c_devices_on_bus(self._hw.tx.specs['ads_addr'],self._hw.tx.connection):
-                print(f'I2C device with address {self._hw.tx.specs['mcp_addr']} accessible on I2C bus.')
+            if test_i2c_devices_on_bus(self._hw.tx.specs['ads_addr'], self._hw.tx.connection):
+                print(f"I2C device with address {self._hw.tx.specs['mcp_addr']} accessible on I2C bus.")
 
             else:
                 self.fail()
@@ -57,13 +57,13 @@ class OhmPiTests(unittest.TestCase):
     def test_rx_connections(self):
         if 'mcp_address' in self._hw.rx.specs:
             if test_i2c_devices_on_bus(self._hw.rx.specs['mcp_addr'], self._hw.rx.connection):
-                print(f'I2C device with address {self._hw.tx.specs['mcp_addr']} accessible on I2C bus.')
+                print(f"I2C device with address {self._hw.tx.specs['mcp_addr']} accessible on I2C bus.")
 
             else:
                 self.fail()
         if 'ads_address' in self._hw.rx.specs:
             if test_i2c_devices_on_bus(self._hw.rx.specs['ads_addr'], self._hw.rx.connection):
-                print(f'I2C device with address {self._hw.tx.specs['mcp_addr']} accessible on I2C bus.')
+                print(f"I2C device with address {self._hw.tx.specs['mcp_addr']} accessible on I2C bus.")
 
             else:
                 self.fail()
