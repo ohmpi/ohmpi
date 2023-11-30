@@ -7,7 +7,8 @@ from ohmpi.utils import enforce_specs
 
 SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
                 'exec_logger': {'default': None},
-                'soh_logger': {'default': None}},
+                'soh_logger': {'default': None},
+                'connection': {'default': None}},
          'pwr': {'model': {'default': 'unknown PWR hardware'},
                 'exec_logger': {'default': None},
                 'soh_logger': {'default': None},
