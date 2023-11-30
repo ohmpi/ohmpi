@@ -103,7 +103,7 @@ class OhmPiHardware:
         HARDWARE_CONFIG['pwr'].pop('model')
         HARDWARE_CONFIG['pwr'].update(**HARDWARE_CONFIG['pwr'])  # NOTE: Explain why this is needed or delete me
         HARDWARE_CONFIG['pwr'].update({'ctl': HARDWARE_CONFIG['pwr'].pop('ctl', self.ctl)})
-        HARDWARE_CONFIG['pwr'].update({'current_max': current_max})
+        HARDWARE_CONFIG['pwr'].update({'current_max': self.current_max})
         if isinstance(HARDWARE_CONFIG['pwr']['ctl'], dict):
             ctl_mod = HARDWARE_CONFIG['pwr']['ctl'].pop('model', self.ctl)
             if isinstance(ctl_mod, str):
