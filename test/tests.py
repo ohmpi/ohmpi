@@ -3,12 +3,21 @@ import time
 import unittest
 import logging
 import mqtt
+import datetime
+import numpy as np
 import traceback
-from ohmpi.config import HARDWARE_CONFIG
 from ohmpi.ohmpi import OhmPi
-from ohmpi.hardware_system import OhmPiHardware
 from ohmpi.logging_setup import setup_loggers
 
+from ohmpi.hardware_components.abstract_hardware_components import CtlAbstract
+from ohmpi.logging_setup import create_stdout_logger
+from ohmpi.utils import update_dict
+from ohmpi.config import HARDWARE_CONFIG
+from threading import Thread, Event, Barrier, BrokenBarrierError
+import warnings
+
+for k, v in HARDWARE_CONFIG.items():
+    HARDWARE_CONFIG[k].update({'connect': False})
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
     i2C_addresses_on_bus = [hex(k) for k in bus.scan()]
@@ -34,18 +43,39 @@ class OhmPiTests(unittest.TestCase):
         self.exec_logger.info('OhmPi tests ready to start...')
 
     def test_connections(self):
+        pass
 
     def test_tx_connections(self):
-        i2c_addresses = self._hw.rx.connection
+        if 'mcp_address' in self._hw.rx.specs :
+            if test_i2c_devices_on_bus(self._hw.tx.specs['mcp_addr'],self._hw.tx.connection):
+                pass
+            else:
+                self.fail()
+        if 'ads_address' in self._hw.rx.specs :
+            if test_i2c_devices_on_bus(self._hw.tx.specs['ads_addr'],self._hw.tx.connection):
+                pass
+            else:
+                self.fail()
 
-    def test_rx(self):
-        pass
+    def test_rx_connections(self):
+        if 'mcp_address' in self._hw.rx.specs:
+            if test_i2c_devices_on_bus(self._hw.rx.specs['mcp_addr'], self._hw.rx.connection):
+                pass
+            else:
+                self.fail()
+        if 'ads_address' in self._hw.rx.specs:
+            if test_i2c_devices_on_bus(self._hw.rx.specs['ads_addr'], self._hw.rx.connection):
+                pass
+            else:
+                self.fail()
+
+    def test_mux_connections(self):
+        for mux_id, mux in self._hw.mux_boards.items():
 
     def test_pwr(self):
         pass
 
-    def test_mux(self):
-        pass
+
 
     def test_i2c_mux_boards(self):
         try:
