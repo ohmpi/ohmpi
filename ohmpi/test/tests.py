@@ -446,7 +446,7 @@ class OhmPiTests():
             injection.start()
             readings.join()
             injection.join()
-            self.tx.polarity = 0
+            self._hw.tx.polarity = 0
 
             iab = self._hw.readings[-1, 3]
             vab = self._hw.tx.pwr.voltage
