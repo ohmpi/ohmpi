@@ -10,8 +10,9 @@ The characteristics of each measurement board are described in the following tab
 Specifications
 --------------
 
-
-
+   +----------------------------------+-----------------------+
+   | **Parameters**                   |**v2023.0.1**          | 
+   +----------------------------------+-----------------------+
 
 .. table::
    :align: center
