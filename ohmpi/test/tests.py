@@ -224,7 +224,7 @@ class OhmPiTests():
     def test_rx_connectivity(self, devices=['mcp', 'ads']):
         rx = self._hw_nc.rx
         self.test_logger.info(
-            f"\n*** Start RX connectivity test on {rx.specs['model']} board ***")
+            f"*** Start RX connectivity test on {rx.specs['model']} board ***")
         if isinstance(devices, str):
             devices = [devices]
         test_result = [False] * len(devices)
@@ -287,7 +287,7 @@ class OhmPiTests():
         for i, mux_id in enumerate(mux_ids):
             mux = self._hw_nc.mux_boards[mux_id]
             self.test_logger.info(
-                f"\n*** Accessibility test initiated for {mux_id} with version {mux.model} ***")
+                f"*** Accessibility test initiated for {mux_id} with version {mux.model} ***")
             if mux.model == 'mux_2024_0_X':
                 for mcp_address in mux._mcp_addresses:
                     mcp_address = int(mcp_address, 16)
@@ -325,7 +325,7 @@ class OhmPiTests():
         for i, mux_id in enumerate(mux_ids):
             mux = self._hw_nc.mux_boards[mux_id]
             self.test_logger.info(
-                f"\n*** Connectivity test initiated for {mux_id} with version {mux.model} ***")
+                f"*** Connectivity test initiated for {mux_id} with version {mux.model} ***")
             for i in range(len(mux._mcp)):
                 try:
                     mux.reset_i2c_ext_tca()
@@ -359,7 +359,7 @@ class OhmPiTests():
         for i, mux_id in enumerate(mux_ids):
             mux = self._hw_nc.mux_boards[mux_id]
             self.test_logger.info(
-                f"\n*** Connection test initiated for {mux_id} with version {mux.model} ***")
+                f"*** Connection test initiated for {mux_id} with version {mux.model} ***")
             accessibility_results, connectivity_results = False, False
             accessibility_results = self.test_mux_accessibility(mux_id=mux_id)
             if accessibility_results:
@@ -368,7 +368,7 @@ class OhmPiTests():
                 connectivity_results = self.test_mux_connectivity(mux_id=mux_id)
                 if connectivity_results:
                     self.test_logger.info(
-                        f"\nMUX connection test successful for {mux_id} with version {mux.model}.")
+                        f"MUX connection test successful for {mux_id} with version {mux.model}.")
                     test_result[i] = True
 
         return all(test_result)
