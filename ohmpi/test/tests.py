@@ -30,7 +30,8 @@ TEST_LOGGING_CONFIG = {
     'interval': 1
 }
 
-HARDWARE_CONFIG_nc = HARDWARE_CONFIG.copy()
+from ohmpi.config import HARDWARE_CONFIG as HARDWARE_CONFIG_nc
+# HARDWARE_CONFIG_nc = HARDWARE_CONFIG.copy()
 
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
@@ -114,7 +115,7 @@ class OhmPiTests():
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                     'soh_logger': self.soh_logger})
 
-        print('config',HARDWARE_CONFIG_nc)
+        print('config', HARDWARE_CONFIG_nc)
         for k, v in HARDWARE_CONFIG_nc.items():
             if k == 'mux':
                 HARDWARE_CONFIG_nc[k]['default'].update({'connect': False})
