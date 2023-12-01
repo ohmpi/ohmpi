@@ -28,11 +28,6 @@ TEST_LOGGING_CONFIG = {
     'interval': 1
 }
 
-for k, v in HARDWARE_CONFIG.items():
-    if k == 'mux':
-        HARDWARE_CONFIG[k]['default'].update({'connect': False})
-    else:
-        HARDWARE_CONFIG[k].update({'connect': False})
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
     i2c_addresses_on_bus = bus.scan()
@@ -114,29 +109,59 @@ class OhmPiTests():
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                     'soh_logger': self.soh_logger}, hardware_config=HARDWARE_CONFIG)
 
-        self.exec_logger.info('Hardware configured...')
-        self.exec_logger.info('OhmPi tests ready to start...')
+        HARDWARE_CONFIG_nc = HARDWARE_CONFIG.copy()
+        for k, v in HARDWARE_CONFIG_nc.items():
+            if k == 'mux':
+                HARDWARE_CONFIG_nc[k]['default'].update({'connect': False})
+            else:
+                HARDWARE_CONFIG_nc[k].update({'connect': False})
+
+        self._hw_nc = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+                                    'soh_logger': self.soh_logger}, hardware_config=HARDWARE_CONFIG_nc)
+
+
+        self.test_logger.info('Hardware configured...')
+        self.test_logger.info('OhmPi tests ready to start...')
 
     def test_connections(self):
         pass
 
-    def test_tx_connection(self, devices=['mcp','ads']):
+    def test_tx_accessibility(self, devices=['mcp','ads']):
+        self.test_logger.info(
+            f"\n### Start TX accessibility test on {self._hw_nc.tx.specs['model']} board ###")
         for device in devices:
-            if f'{device}_address' in self._hw.tx.specs:
-                if test_i2c_devices_on_bus(self._hw.tx.specs[f'{device}_address'], self._hw.tx.connection):
-                    self.test_logger.info(f"TX connections: MCP device with address {hex(self._hw.tx.specs[f'{device}_address'])} accessible on I2C bus.")
+            if f'{device}_address' in self._hw_nc.tx.specs:
+                if test_i2c_devices_on_bus(self._hw_nc.tx.specs[f'{device}_address'], self._hw_nc.tx.connection):
+                    self.test_logger.info(f"TX connections: MCP device with address {hex(self._hw_nc.tx.specs[f'{device}_address'])} accessible on I2C bus.")
             else:
                 pass
 
-    def test_rx_connection(self, devices=['mcp','ads']):
+    def test_rx_accessibility(self, devices=['mcp','ads']):
+        self.test_logger.info(
+            f"\n### Start RX accessibility test on {self._hw_nc.tx.specs['model']} board ###")
         for device in devices:
-            if f'{device}_address' in self._hw.rx.specs:
-                if test_i2c_devices_on_bus(self._hw.rx.specs[f'{device}_address'], self._hw.rx.connection):
-                    self.test_logger.info(f"RX connections: MCP device with address {hex(self._hw.tx.specs[f'{device}_address'])} accessible on I2C bus.")
+            if f'{device}_address' in self._hw_nc.rx.specs:
+                if test_i2c_devices_on_bus(self._hw_nc.rx.specs[f'{device}_address'], self._hw_nc.rx.connection):
+                    self.test_logger.info(f"RX connections: MCP device with address {hex(self._hw_nc.tx.specs[f'{device}_address'])} accessible on I2C bus.")
             else:
                 pass
-    def test_mux_connection(self, devices=['mcp', 'mux_tca']):
-        for mux_id, mux in self._hw.mux_boards.items():
+    def test_mux_accessibility(self, mux_id=None):
+        self.test_logger.info(
+            f"\n### Start MUX accessibility test  ###")
+
+        if mux_id is None:
+            mux_ids = [k for k in self._hw_nc.mux_boards.keys()]
+            self.test_logger("Testing all MUX boards in MUX config.")
+
+        if isinstance(mux_id, str):
+            mux_ids = [mux_id]
+        else:
+            mux_ids = mux_id
+        test_result = [False] * len(mux_ids)
+        for i, mux_id in enumerate(mux_ids):
+            mux = self._hw_nc.mux_boards[mux_id]
+            self.test_logger.info(
+                f"\n### Accessibility test initiated for {mux_id} with version {mux.model} ###")
             if mux.model == 'mux_2024_0_X':
                 print(mux.model)
                 for mcp_address in mux._mcp_addresses:
@@ -144,27 +169,93 @@ class OhmPiTests():
                     if mcp_address is not None:
                         if test_i2c_devices_on_bus(mcp_address, mux.connection):
                             self.test_logger.info(
-                                f"MUX connections: {mux_id} with address {hex(mcp_address)} accessible on I2C bus.")
+                                f"{mux_id} with address {hex(mcp_address)} is accessible on I2C bus.")
+                            test_result[i] = True
                         else:
-                            self.test_logger.info(f"MUX connections{mux_id} with address {hex(mcp_address)} NOT accessible on I2C bus.")
-            elif  mux.model == 'mux_2023_0_X':
+                            self.test_logger.info(f"{mux_id} with address {hex(mcp_address)} is NOT accessible on I2C bus.")
+            elif mux.model == 'mux_2023_0_X':
                 if f'mux_tca_address' in mux.specs:
                     if test_i2c_devices_on_bus(mux.specs['mux_tca_address'], mux.connection):
-                        self.test_logger.info(f"MUX connections: {mux_id} with address {hex(mux.specs['mux_tca_address'])} accessible on I2C bus.")
+                        self.test_logger.info(f"{mux_id} with address {hex(mux.specs['mux_tca_address'])} is accessible on I2C bus.")
+                        test_result[i] = True
+                    else:
+                        self.test_logger.info(f"{mux_id} with address {hex(mcp_address)} is NOT accessible on I2C bus.")
+        return all(test_result)
+
+
+    def test_mux_connectivity(self, mux_id=None):
+        self.test_logger.info(
+            f"\n### Start MUX connectivity test  ###")
+
+        if mux_id is None:
+            mux_ids = [k for k in self._hw_nc.mux_boards.keys()]
+            self.test_logger.info("Testing all MUX boards in MUX config.")
+
+        if isinstance(mux_id, str):
+            mux_ids = [mux_id]
+        else:
+            mux_ids = mux_id
+
+        test_result = [False] * len(mux_ids)
+        for i, mux_id in enumerate(mux_ids):
+            mux = self._hw_nc.mux_boards[mux_id]
+            self.test_logger.info(
+                f"\n### Connectivity test initiated for {mux_id} with version {mux.model} ###")
+            for i in range(len(mux._mcp)):
+                try:
+                    mux.reset_one(which=i)
+                    self.test_logger.info(
+                        f"Connection established with MCP {i} on {mux_id}.")
+                except:
+                    self.test_logger.info(
+                        f"Connection NOT established with MCP {i} on {mux_id}.")
+        return all(test_result)
+
+    def mux_connection(self, mux_id=None):
+        self.test_logger.info(
+            f"\n### Start MUX connection test ###")
+
+        if mux_id is None:
+            mux_ids = [k for k in self._hw_nc.mux_boards.keys()]
+            self.test_logger.info("Testing all MUX boards in MUX config.")
+
+        if isinstance(mux_id, str):
+            mux_ids = [mux_id]
+        else:
+            mux_ids = mux_id
+
+        test_result = [False] * len(mux_ids)
+        for i, mux_id in enumerate(mux_ids):
+            self.test_logger.info(
+                f"\n### Connection test initiated for {mux_id} with version {mux.model} ###")
+            accessibility_results, connectivity_results = False, False
+            accessibility_results = self.test_mux_accessibility(mux_id=mux_id)
+            if accessibility_results:
+                self.test_logger.info(
+                    f"Accessibility test successful. Will check if device respond...")
+                connectivity_results = self.test_mux_connectivity(mux_id=mux_id)
+                if connectivity_results:
+                    self.test_logger.info(
+                        f"\nConnection test successful for {mux_id} with version {mux.model}.")
+                    test_result[i] = True
+
+        return all(test_result)
+
+
 
     def test_pwr_connection(self):
-        if self._hw.tx.pwr.voltage_adjustable:
+        if self._hw_nc.tx.pwr.voltage_adjustable:
             try:
                 pass
             except:
                 traceback.print_exc()
         else:
-            self.exec_logger.info('Pwr cannot be tested with this system configuration.')
+            self.test_logger.info('Pwr cannot be tested with this system configuration.')
 
     def test_vmn_hardware_offset(self):
         test_result = False
         quad = [0, 0, 0, 0]
-        tx_volt = 5.
+        tx_volt = 0.
         injection_duration = .5
         duty_cycle = .5 # or 0
         nb_stack = 2
