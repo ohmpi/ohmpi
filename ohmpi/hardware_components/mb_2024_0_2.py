@@ -144,7 +144,8 @@ class Rx(Rx_mb_2023):
             self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
         # I2C connection to MCP23008, for voltage
         # self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
-        # self.reset_mcp()
+        if self.connect:
+            self.reset_mcp()
         # ADS1115 for voltage measurement (MN)
         self._coef_p2 = 1.
         # Define default DG411 gain
