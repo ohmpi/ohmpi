@@ -186,9 +186,11 @@ class Tx(TxAbstract):
     # def turn_on(self):
     #     self.pwr.turn_on(self)
 
-    def reset_ads(self):
+    def reset_ads(self, mode=Mode.CONTINUOUS):
         self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
                                     address=self._ads_current_address)
+        self._ads_current.mode = mode
+
     def reset_mcp(self):
         self.mcp_board = MCP23008(self.connection, address=self._mcp_address)
 
@@ -279,7 +281,7 @@ class Rx(RxAbstract):
         self.gain = 2/3
 
     def reset_ads(self, mode=Mode.CONTINUOUS):
-        self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
+        self._ads_voltage = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
                                     address=self._ads_current_address)
         self._ads_voltage.mode = mode
 
