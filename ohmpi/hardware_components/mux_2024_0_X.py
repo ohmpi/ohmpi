@@ -15,12 +15,8 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'current_max': {'default': 3.},
          'activation_delay': {'default': 0.01},
          'release_delay': {'default': 0.005},
-         'i2c_ext_tca_address': {'default': None},
-         'i2c_ext_tca_channel': {'default': 0},
-         'addr2': {'default': None},
-         'addr1': {'default': None},
-         'mcp_0': {'default': None},
-         'mcp_1': {'default': None}
+         # 'i2c_ext_tca_address': {'default': None},
+         # 'i2c_ext_tca_channel': {'default': 0},
          }
 
 # defaults to 4 roles cabling electrodes from 1 to 8
@@ -75,7 +71,7 @@ class Mux(MuxAbstract):
             self.exec_logger.event(f'{self.model}: {self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
-        print(kwargs)
+
         kwargs.update({'roles': kwargs.pop('roles', None)})
         roles = kwargs['roles']
         if roles is None:
@@ -105,13 +101,21 @@ class Mux(MuxAbstract):
                 if v[0] == self.board_id:
                     self.cabling.update({k: (v[1], k[1])})
         # Setup TCA
+        kwargs.update({'i2c_ext_tca_address': kwargs.pop('i2c_ext_tca_address', None)})
         self._i2c_ext_tca_address = kwargs['i2c_ext_tca_address']
+        kwargs.update({'i2c_ext_tca_channel': kwargs.pop('i2c_ext_tca_channel', 0)})
         self._i2c_ext_tca_channel = kwargs['i2c_ext_tca_channel']
-        self._i2c_ext_tca = None
+        self._tca = None
         if self.connect:
             self.reset_i2c_ext_tca()
 
         # Setup MCPs
+        kwargs.update({'addr2': kwargs.pop('addr2', None)})
+        kwargs.update({'addr1': kwargs.pop('addr1', None)})
+        kwargs.update({'mcp_0': kwargs.pop('mcp_0', None)})
+        kwargs.update({'mcp_1': kwargs.pop('mcp_1', None)})
+
+        self.specs = kwargs
         self._mcp_jumper_pos = {'addr2': kwargs['addr2'], 'addr1': kwargs['addr1']}
         self._mcp_addresses = (kwargs['mcp_0'], kwargs['mcp_1'])
         if self._mcp_addresses[0] is None and self._mcp_addresses[1] is None:

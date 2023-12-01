@@ -18,8 +18,8 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'activation_delay': {'default': 0.01},
          'release_delay': {'default': 0.005},
          'mux_tca_address': {'default': 0x70},
-         'i2c_ext_tca_address': {'default': None},
-         'i2c_ext_tca_channel': {'default': 0},
+         # 'i2c_ext_tca_address': {'default': None},
+         # 'i2c_ext_tca_channel': {'default': 0},
          }
 
 # defaults to role 'A' cabling electrodes from 1 to 64
@@ -105,13 +105,15 @@ class Mux(MuxAbstract):
 
         self._tca_address = kwargs['tca_address']
         self._tca_channels = [i for i in np.arange(7, 3, -1)]
+        kwargs.update({'i2c_ext_tca_address': kwargs.pop('i2c_ext_tca_address', None)})
         self._i2c_ext_tca_address = kwargs['i2c_ext_tca_address']
+        kwargs.update({'i2c_ext_tca_channel': kwargs.pop('i2c_ext_tca_channel', 0)})
         self._i2c_ext_tca_channel = kwargs['i2c_ext_tca_channel']
         self._i2c_ext_tca = None
         if self.connet:
             self.reset_i2c_ext_tca()
             self.reset_tca()
-
+        self.specs = kwargs
         # self._mcp_addresses = (kwargs.pop('mcp', '0x20'))  # TODO: add assert on valid addresses..
         self._mcp = [None, None, None, None]
         if self.connect:
