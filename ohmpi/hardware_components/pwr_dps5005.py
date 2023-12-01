@@ -61,7 +61,7 @@ class Pwr(PwrAbstract):
 
     @voltage.setter
     def voltage(self, value):
-        self.connection.write_register(0x0000, value, 2)
+        self.connection.write_register(0x0000, np.round(value,2), 2)
         self._voltage = value
 
     def battery_voltage(self):
@@ -70,7 +70,7 @@ class Pwr(PwrAbstract):
 
     def current_max(self, value):  # [mA]
         value = value * 1.2  # To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
-        self.connection.write_register(0x0001, int(value*1000), 0)
+        self.connection.write_register(0x0001, np.round((value / 1000), 2), 0)
 
     @property
     def pwr_state(self):
