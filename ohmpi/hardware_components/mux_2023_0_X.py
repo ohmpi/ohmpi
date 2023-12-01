@@ -17,7 +17,9 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'current_max': {'default': 3.},
          'activation_delay': {'default': 0.01},
          'release_delay': {'default': 0.005},
-         'mux_tca_address': {'default': 0x70}
+         'mux_tca_address': {'default': 0x70},
+         'i2c_ext_tca_address': {'default': None},
+         'i2c_ext_tca_channel': {'default': 0},
          }
 
 # defaults to role 'A' cabling electrodes from 1 to 64
@@ -100,7 +102,16 @@ class Mux(MuxAbstract):
             for k, v in cabling.items():
                 if v[0] == self.board_id:
                     self.cabling.update({k: (v[1], k[1])})
-        self._tca = [adafruit_tca9548a.TCA9548A(self.connection, kwargs['mux_tca_address'])[i] for i in np.arange(7, 3, -1)]
+
+        self._tca_address = kwargs['tca_address']
+        self._tca_channels = [i for i in np.arange(7, 3, -1)]
+        self._i2c_ext_tca_address = kwargs['i2c_ext_tca_address']
+        self._i2c_ext_tca_channel = kwargs['i2c_ext_tca_channel']
+        self._i2c_ext_tca = None
+        if self.connet:
+            self.reset_i2c_ext_tca()
+            self.reset_tca()
+
         # self._mcp_addresses = (kwargs.pop('mcp', '0x20'))  # TODO: add assert on valid addresses..
         self._mcp = [None, None, None, None]
         if self.connect:
@@ -128,6 +139,15 @@ class Mux(MuxAbstract):
 
     def reset_one(self, which=0):
         self._mcp[which] = MCP23017(self._tca[which])
+
+    def reset_i2c_ext_tca(self):
+        if self._i2c_ext_tca_address is None:
+            self._i2c_ext_tca = self.connection
+        else:
+            self._i2c_ext_tca = adafruit_tca9548a.TCA9548A(self.connection, self._i2c_ext_tca_address)[self._i2c_ext_tca_address]
+
+    def reset_tca(self,tca_channels):
+        self._tca = [adafruit_tca9548a.TCA9548A(self.connection, self._tca_address)[tca_channel] for tca_channel in tca_channels]
 
     def switch_one(self, elec=None, role=None, state=None):
         MuxAbstract.switch_one(self, elec=elec, role=role, state=state)

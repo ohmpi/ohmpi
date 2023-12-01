@@ -14,7 +14,13 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage_max': {'default': 50.},
          'current_max': {'default': 3.},
          'activation_delay': {'default': 0.01},
-         'release_delay': {'default': 0.005}
+         'release_delay': {'default': 0.005},
+         'i2c_ext_tca_address': {'default': None},
+         'i2c_ext_tca_channel': {'default': 0},
+         'addr2': {'default': None},
+         'addr1': {'default': None},
+         'mcp_0': {'default': None},
+         'mcp_1': {'default': None}
          }
 
 # defaults to 4 roles cabling electrodes from 1 to 8
@@ -99,20 +105,13 @@ class Mux(MuxAbstract):
                 if v[0] == self.board_id:
                     self.cabling.update({k: (v[1], k[1])})
         # Setup TCA
-        kwargs.update({'tca_channel': kwargs.pop('tca_channel', None)})
-        tca_address = kwargs['tca_address']
-        kwargs.update({'tca_channel': kwargs.pop('tca_channel', 0)})
-        tca_channel = kwargs['tca_channel']
-        self._tca = None
+        self._i2c_ext_tca_address = kwargs['i2c_ext_tca_address']
+        self._i2c_ext_tca_channel = kwargs['i2c_ext_tca_channel']
+        self._i2c_ext_tca = None
         if self.connect:
-            self.reset_tca(tca_address, tca_channel)
+            self.reset_i2c_ext_tca()
 
         # Setup MCPs
-        kwargs.update({'addr2': kwargs.pop('addr2', None)})
-        kwargs.update({'addr1': kwargs.pop('addr1', None)})
-        kwargs.update({'mcp_0': kwargs.pop('mcp_0', None)})
-        kwargs.update({'mcp_1': kwargs.pop('mcp_1', None)})
-
         self._mcp_jumper_pos = {'addr2': kwargs['addr2'], 'addr1': kwargs['addr1']}
         self._mcp_addresses = (kwargs['mcp_0'], kwargs['mcp_1'])
         if self._mcp_addresses[0] is None and self._mcp_addresses[1] is None:
@@ -148,12 +147,6 @@ class Mux(MuxAbstract):
     def reset(self):
         self._mcp[0] = MCP23017(self._tca, address=int(self._mcp_addresses[0], 16))
         self._mcp[1] = MCP23017(self._tca, address=int(self._mcp_addresses[1], 16))
-
-    def reset_tca(self, tca_address, tca_channel):
-        if tca_address is None:
-            self._tca = self.connection
-        else:
-            self._tca = adafruit_tca9548a.TCA9548A(self.connection, tca_address)[tca_channel]
 
     def reset_one(self, which=0):
         self._mcp[which] = MCP23017(self._tca, address=int(self._mcp_addresses[which], 16))
