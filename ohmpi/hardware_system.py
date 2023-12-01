@@ -30,7 +30,7 @@ class OhmPiHardware:
         self.tx_sync = Event()
         self.hardware_config = kwargs.pop('hardware_config', HC)
         HARDWARE_CONFIG = self.hardware_config
-        print('hardware_config',HARDWARE_CONFIG)
+        print('hardware_config', HARDWARE_CONFIG)
         # Define the default controller, a distinct controller could be defined for each tx, rx or mux board
         # when using a distinct controller, the specific controller definition must be included in the component configuration
         ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
@@ -67,6 +67,7 @@ class OhmPiHardware:
                                   (np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
         self.voltage_min = RX_CONFIG['voltage_min']
         # TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
+        print('rx_config',RX_CONFIG)
 
         # Main Controller initialization
         HARDWARE_CONFIG['ctl'].pop('model')
