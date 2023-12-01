@@ -294,12 +294,12 @@ class OhmPiHardware:
 
     def select_samples(self, delay=0.):
         x = []
-        for pulse in range(int(max(self._hw.readings[:, 1]))):
-            v = np.where((self._hw.readings[:, 1] == pulse))[0]
+        for pulse in range(int(max(self.readings[:, 1]))):
+            v = np.where((self.readings[:, 1] == pulse))[0]
 
-            t_start_pulse = min(self._hw.readings[v, 0])
-            x.append(np.where((k._hw.readings[:, 0] >= t_start_pulse + delay) & (self._hw.readings[:, 2] != 0) & (
-                        self._hw.readings[:, 1] == pulse))[0])
+            t_start_pulse = min(self.readings[v, 0])
+            x.append(np.where((self.readings[:, 0] >= t_start_pulse + delay) & (self.readings[:, 2] != 0) & (
+                        self.readings[:, 1] == pulse))[0])
         x = np.concatenate(np.array(x))
         return x
 
