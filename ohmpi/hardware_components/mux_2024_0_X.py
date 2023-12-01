@@ -75,7 +75,7 @@ class Mux(MuxAbstract):
             self.exec_logger.event(f'{self.model}: {self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
         assert isinstance(self.connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
-
+        print(kwargs)
         kwargs.update({'roles': kwargs.pop('roles', None)})
         roles = kwargs['roles']
         if roles is None:
