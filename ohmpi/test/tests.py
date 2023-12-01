@@ -161,7 +161,7 @@ class OhmPiTests():
         for i, device in enumerate(devices):
             if f'{device}_address' in tx.specs:
                 try:
-                    getattr(f'tx.reset_{device}')
+                    getattr(f'tx.reset_{device}', None)
                     self.test_logger.info(f"TX: Connection established with {device} with address {hex(tx.specs[f'{device}_address'])}.")
                     test_result[i] = True
                 except:
@@ -328,6 +328,7 @@ class OhmPiTests():
                     self.test_logger.info(
                         f"Connection established with MCP {i} on {mux_id}.")
                 except:
+                    traceback.print_exc()
                     self.test_logger.info(
                         f"Connection NOT established with MCP {i} on {mux_id}.")
         return all(test_result)
