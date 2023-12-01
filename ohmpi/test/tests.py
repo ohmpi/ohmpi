@@ -385,7 +385,7 @@ class OhmPiTests():
             duty_cycle = .5  # or 0
             nb_stack = 2
             delay = injection_duration * 2 / 3
-            self._hw.switch_mux(quad, roles,status='on'):
+            self._hw.switch_mux(quad, roles,status='on')
             self._hw._vab_pulse(duration=injection_duration, vab=tx_volt)
             iab = self._hw.readings[-1, 3]
             vab = self._hw.tx.pwr.voltage
