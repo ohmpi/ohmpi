@@ -105,10 +105,7 @@ class Mux(MuxAbstract):
         tca_channel = kwargs['tca_channel']
         self._tca = None
         if self.connect:
-            if tca_address is None:
-                self._tca = self.connection
-            else:
-                self._tca = adafruit_tca9548a.TCA9548A(self.connection, tca_address)[tca_channel]
+            self.reset_tca(tca_address, tca_channel)
 
         # Setup MCPs
         kwargs.update({'addr2': kwargs.pop('addr2', None)})
@@ -151,6 +148,12 @@ class Mux(MuxAbstract):
     def reset(self):
         self._mcp[0] = MCP23017(self._tca, address=int(self._mcp_addresses[0], 16))
         self._mcp[1] = MCP23017(self._tca, address=int(self._mcp_addresses[1], 16))
+
+    def reset_tca(self, tca_address, tca_channel):
+        if tca_address is None:
+            self._tca = self.connection
+        else:
+            self._tca = adafruit_tca9548a.TCA9548A(self.connection, tca_address)[tca_channel]
 
     def reset_one(self, which=0):
         self._mcp[which] = MCP23017(self._tca, address=int(self._mcp_addresses[which], 16))
