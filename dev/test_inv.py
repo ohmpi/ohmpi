@@ -6,6 +6,7 @@ matplotlib.use('TkAgg')
 import numpy as np
 from ohmpi.utils import change_config
 change_config('../configs/config_mb_2023.py', verbose=False)
+import os
 
 from ohmpi.ohmpi import OhmPi
 k = OhmPi()
@@ -14,7 +15,7 @@ k = OhmPi()
 
 # batch inversion
 xzv = k.run_inversion([
-    'measurement_20231014T133508.csv'
+    'measurements_20231130T215031.csv'
 ], reg_mode=0)
 
 # make a contour figure with the output
