@@ -41,7 +41,7 @@ class Pwr(PwrAbstract):
             self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')
 
     def _retrieve_current(self):
-        self._current = self.connection.read_register(0x0000, 2)
+        self._current = self.connection.read_register(0x0003, 2)
 
     @property
     def current(self):
