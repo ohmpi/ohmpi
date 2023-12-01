@@ -441,7 +441,7 @@ class OhmPiTests():
             iab = self._hw.readings[-1, 3]
             vab = self._hw.tx.pwr.voltage
             iab_dps = self._hw.tx.pwr.current
-            print(iab, iab_dps)
+            print(iab, iab_dps, vab)
 
             # close mux path and put pin back to GND
             self._hw.switch_mux(quad, roles, status = 'off')
