@@ -127,24 +127,81 @@ class OhmPiTests():
         pass
 
     def test_tx_accessibility(self, devices=['mcp','ads']):
+        tx = self._hw_nc.tx
         self.test_logger.info(
-            f"\n### Start TX accessibility test on {self._hw_nc.tx.specs['model']} board ###")
-        for device in devices:
-            if f'{device}_address' in self._hw_nc.tx.specs:
-                if test_i2c_devices_on_bus(self._hw_nc.tx.specs[f'{device}_address'], self._hw_nc.tx.connection):
-                    self.test_logger.info(f"TX connections: MCP device with address {hex(self._hw_nc.tx.specs[f'{device}_address'])} accessible on I2C bus.")
+            f"\n### Start TX accessibility test on {tx.specs['model']} board ###")
+        test_result = [False] * len(devices)
+        for i, device in enumerate(devices):
+            if f'TX: {device}_address' in tx.specs:
+                if test_i2c_devices_on_bus(tx.specs[f'{device}_address'], tx.connection):
+                    self.test_logger.info(f"{device} with address {hex(tx.specs[f'{device}_address'])} accessible on I2C bus.")
+                    test_result[i] = True
+                else:
+                    self.test_logger.info(
+                        f"TX: {device} with address {hex(tx.specs[f'{device}_address'])} NOT accessible on I2C bus.")
             else:
-                pass
+                self.test_logger.info(
+                    f"TX: {device} with address {hex(tx.specs[f'{device}_address'])} not in TX config.")
+        return all(test_result)
+
+    def test_tx_connectivity(self, devices=['mcp','ads']):
+        tx = self._hw_nc.tx
+        self.test_logger.info(
+            f"\n### Start TX accessibility test on {tx.specs['model']} board ###")
+        test_result = [False] * len(devices)
+        for i, device in enumerate(devices):
+            if f'TX: {device}_address' in tx.specs:
+                try:
+                    getattr(f'tx.reset_{device}')
+                    self.test_logger.info(f"TX: Connection established with {device} with address {hex(tx.specs[f'{device}_address'])}.")
+                    test_result[i] = True
+                except:
+                    self.test_logger.info(
+                        f"TX: Connection NOT established with {device} with address {hex(tx.specs[f'{device}_address'])}.")
+            else:
+                self.test_logger.info(
+                    f"TX: {device} with address {hex(tx.specs[f'{device}_address'])} not in TX config.")
+        return all(test_result)
 
     def test_rx_accessibility(self, devices=['mcp','ads']):
+        rx = self._hw_nc.rx
         self.test_logger.info(
-            f"\n### Start RX accessibility test on {self._hw_nc.tx.specs['model']} board ###")
-        for device in devices:
-            if f'{device}_address' in self._hw_nc.rx.specs:
-                if test_i2c_devices_on_bus(self._hw_nc.rx.specs[f'{device}_address'], self._hw_nc.rx.connection):
-                    self.test_logger.info(f"RX connections: MCP device with address {hex(self._hw_nc.tx.specs[f'{device}_address'])} accessible on I2C bus.")
+            f"\n### Start RX accessibility test on {rx.specs['model']} board ###")
+        test_result = [False] * len(devices)
+        for i, device in enumerate(devices):
+            if f'{device}_address' in rx.specs:
+                if test_i2c_devices_on_bus(rx.specs[f'{device}_address'], rx.connection):
+                    self.test_logger.info(
+                        f"RX: {device} with address {hex(rx.specs[f'{device}_address'])} accessible on I2C bus.")
+                    test_result[i] = True
+                else:
+                    self.test_logger.info(
+                        f"RX: {device} with address {hex(rx.specs[f'{device}_address'])} NOT accessible on I2C bus.")
             else:
-                pass
+                self.test_logger.info(
+                    f"RX: {device} with address {hex(rx.specs[f'{device}_address'])} not in RX config.")
+        return all(test_result)
+
+    def test_rx_connectivity(self, devices=['mcp', 'ads']):
+        rx = self._hw_nc.rx
+        self.test_logger.info(
+            f"\n### Start RX accessibility test on {rx.specs['model']} board ###")
+        test_result = [False] * len(devices)
+        for i, device in enumerate(devices):
+            if f'RX: {device}_address' in rx.specs:
+                try:
+                    getattr(f'rx.reset_{device}')
+                    self.test_logger.info(
+                        f"RX: Connection established with {device} with address {hex(rx.specs[f'{device}_address'])}.")
+                    test_result[i] = True
+                except:
+                    self.test_logger.info(
+                        f"RX: Connection NOT established with {device} with address {hex(rx.specs[f'{device}_address'])}.")
+            else:
+                self.test_logger.info(
+                    f"RX: {device} with address {hex(rx.specs[f'{device}_address'])} not in RX config.")
+        return all(test_result)
+
     def test_mux_accessibility(self, mux_id=None):
         self.test_logger.info(
             f"\n### Start MUX accessibility test  ###")
