@@ -422,9 +422,9 @@ class OhmPiTests():
                 self._hw.pwr_state = 'on'
                 switch_tx_pwr_off = True
             test_result = False
-            quad = [0, 0]
+            quad = [1, 2]
             roles = ['A','B']
-            tx_volt = 5.
+            tx_volt = 3.
             injection_duration = .5
             duty_cycle = .5  # or 0
             nb_stack = 2
@@ -438,6 +438,15 @@ class OhmPiTests():
 
             self._hw.switch_mux(quad, roles,status='on')
             self._hw._vab_pulse(duration=injection_duration, vab=tx_volt)
+            # injection = Thread(target=self._hw._inject, kwargs={'injection_duration': injection_duration, 'polarity': 1})
+            # readings = Thread(target=self._hw._read_values, kwargs={'sampling_rate': self._hw.sampling_rate, 'append': False})
+            # current_dps = Thread(target=self.retrieve_current_from_dps)
+            # readings.start()
+            # injection.start()
+            # readings.join()
+            # injection.join()
+            # self.tx.polarity = 0
+
             iab = self._hw.readings[-1, 3]
             vab = self._hw.tx.pwr.voltage
             self._hw.tx.pwr._retrieve_current()
