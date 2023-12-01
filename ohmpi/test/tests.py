@@ -165,6 +165,7 @@ class OhmPiTests():
                     self.test_logger.info(f"TX: Connection established with {device} with address {hex(tx.specs[f'{device}_address'])}.")
                     test_result[i] = True
                 except:
+                    traceback.print_exc()
                     self.test_logger.info(
                         f"TX: Connection NOT established with {device} with address {hex(tx.specs[f'{device}_address'])}.")
             else:
@@ -284,7 +285,7 @@ class OhmPiTests():
             if mux.model == 'mux_2024_0_X':
                 print(mux.model)
                 for mcp_address in mux._mcp_addresses:
-                    print(mcp_address)
+                    mcp_address = int(mcp_address, 16)
                     if mcp_address is not None:
                         if test_i2c_devices_on_bus(mcp_address, mux.connection):
                             self.test_logger.info(
