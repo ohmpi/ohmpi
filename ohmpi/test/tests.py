@@ -347,6 +347,7 @@ class OhmPiTests():
 
         test_result = [False] * len(mux_ids)
         for i, mux_id in enumerate(mux_ids):
+            mux = self._hw_nc.mux_boards[mux_id]
             self.test_logger.info(
                 f"\n### Connection test initiated for {mux_id} with version {mux.model} ###")
             accessibility_results, connectivity_results = False, False
