@@ -367,6 +367,7 @@ class OhmPiHardware:
             return sp
 
     def _find_vab(self, vab, iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min):
+        self.exec_logger.debug('Searching best Vab...')
         iab_mean = np.mean(iab)
         iab_std = np.std(iab)
         vmn_mean = np.mean(vmn)
@@ -390,18 +391,18 @@ class OhmPiHardware:
         cond_p_max = np.sqrt(p_max * rab_lower_bound)
         cond_iab_max = rab_lower_bound * iab_max
         # print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
-        print(f'[vab_max: {vab_max:.1f}, vmn_max: {cond_vmn_max:.1f}, vmn_min: {cond_vmn_min:.1f}, p_max: {cond_p_max:.1f}, iab_max: {cond_iab_max:.1f}]')
+        self.exec_logger.debug(f'[vab_max: {vab_max:.1f}, vmn_max: {cond_vmn_max:.1f}, vmn_min: {cond_vmn_min:.1f}, p_max: {cond_p_max:.1f}, iab_max: {cond_iab_max:.1f}]')
         new_vab = np.min([vab_max, cond_vmn_max, cond_p_max, cond_iab_max])
         if new_vab == vab_max:
-            print(f'Vab {new_vab} bounded by Vab max')
+            self.exec_logger.debug(f'Vab {new_vab} bounded by Vab max')
         elif new_vab == cond_p_max:
-            print(f'Vab {vab } bounded by P max')
+            self.exec_logger.debug(f'Vab {vab } bounded by P max')
         elif new_vab == cond_iab_max:
-            print(f'Vab {vab} bounded by Iab max')
+            self.exec_logger.debug(f'Vab {vab} bounded by Iab max')
         elif new_vab == cond_vmn_max:
-            print(f'Vab {vab} bounded by Vmn max')
+            self.exec_logger.debug(f'Vab {vab} bounded by Vmn max')
         else:
-            print(f'Vab {vab} bounded by Vmn min')
+            self.exec_logger.debug(f'Vab {vab} bounded by Vmn min')
 
         return new_vab
 
