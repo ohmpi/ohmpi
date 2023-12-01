@@ -14,6 +14,7 @@ import copy
 from ohmpi.hardware_system import OhmPiHardware
 from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import HARDWARE_CONFIG
+from threading import Thread
 
 print('hardware_config_import',HARDWARE_CONFIG)
 
