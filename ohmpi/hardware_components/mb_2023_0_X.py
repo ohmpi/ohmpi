@@ -89,25 +89,28 @@ class Tx(TxAbstract):
 
         # I2C connexion to MCP23008, for current injection
         self._mcp_address = kwargs['mcp_address']
-        self.reset_mcp()
+        if self.connect:
+            self.reset_mcp()
         # ADS1115 for current measurement (AB)
         self._ads_current_address = kwargs['ads_address']
         self._ads_current_data_rate = kwargs['data_rate']
         self._adc_gain = 2 / 3
-        self.reset_ads()
+        if self.connect:
+            self.reset_ads()
+            self._ads_current.mode = Mode.CONTINUOUS
 
-        self._ads_current.mode = Mode.CONTINUOUS
         self._r_shunt = kwargs['r_shunt']
         self.adc_voltage_min = kwargs['adc_voltage_min']
         self.adc_voltage_max = kwargs['adc_voltage_max']
 
         # Relays for pulse polarity
-        self.pin0 = self.mcp_board.get_pin(0)
-        self.pin0.direction = Direction.OUTPUT
-        self.pin1 = self.mcp_board.get_pin(1)
-        self.pin1.direction = Direction.OUTPUT
-        self.polarity = 0
-        self.gain = 2 / 3
+        if self.connect:
+            self.pin0 = self.mcp_board.get_pin(0)
+            self.pin0.direction = Direction.OUTPUT
+            self.pin1 = self.mcp_board.get_pin(1)
+            self.pin1.direction = Direction.OUTPUT
+            self.polarity = 0
+            self.gain = 2 / 3
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 

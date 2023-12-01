@@ -82,18 +82,19 @@ class Tx(Tx_mb_2023):
         self._pwr_latency = kwargs['pwr_latency']
 
         # Initialize LEDs
-        self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
-        self.pin4.direction = Direction.OUTPUT
-        self.pin4.value = True
-        self.pin6 = self.mcp_board.get_pin(6)
-        self.pin6.direction = Direction.OUTPUT
-        self.pin6.value = False
-        self.pin2 = self.mcp_board.get_pin(2)  # dps -
-        self.pin2.direction = Direction.OUTPUT
-        self.pin2.value = False
-        self.pin3 = self.mcp_board.get_pin(3)  # dps -
-        self.pin3.direction = Direction.OUTPUT
-        self.pin3.value = False
+        if self.connect:
+            self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
+            self.pin4.direction = Direction.OUTPUT
+            self.pin4.value = True
+            self.pin6 = self.mcp_board.get_pin(6)
+            self.pin6.direction = Direction.OUTPUT
+            self.pin6.value = False
+            self.pin2 = self.mcp_board.get_pin(2)  # dps -
+            self.pin2.direction = Direction.OUTPUT
+            self.pin2.value = False
+            self.pin3 = self.mcp_board.get_pin(3)  # dps -
+            self.pin3.direction = Direction.OUTPUT
+            self.pin3.value = False
 
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
@@ -151,16 +152,17 @@ class Rx(Rx_mb_2023):
         self._dg411_gain = self._dg411_gain_ratio
 
         # Define pins for DG411
-        self.pin_DG0 = self.mcp_board.get_pin(0)
-        self.pin_DG0.direction = Direction.OUTPUT
-        self.pin_DG1 = self.mcp_board.get_pin(1)
-        self.pin_DG1.direction = Direction.OUTPUT
-        self.pin_DG2 = self.mcp_board.get_pin(2)
-        self.pin_DG2.direction = Direction.OUTPUT
-        self.pin_DG0.value = True  # open
-        self.pin_DG1.value = True  # open gain 1 inactive
-        self.pin_DG2.value = False  # close gain 0.5 active
-        self.gain = 1/3
+        if self.connect:
+            self.pin_DG0 = self.mcp_board.get_pin(0)
+            self.pin_DG0.direction = Direction.OUTPUT
+            self.pin_DG1 = self.mcp_board.get_pin(1)
+            self.pin_DG1.direction = Direction.OUTPUT
+            self.pin_DG2 = self.mcp_board.get_pin(2)
+            self.pin_DG2.direction = Direction.OUTPUT
+            self.pin_DG0.value = True  # open
+            self.pin_DG1.value = True  # open gain 1 inactive
+            self.pin_DG2.value = False  # close gain 0.5 active
+            self.gain = 1/3
         if not subclass_init:  # TODO: try to only log this event and not the one created by super()
             self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
