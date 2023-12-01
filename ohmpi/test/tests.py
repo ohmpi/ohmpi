@@ -132,7 +132,7 @@ class OhmPiTests():
             f"\n### Start TX accessibility test on {tx.specs['model']} board ###")
         test_result = [False] * len(devices)
         for i, device in enumerate(devices):
-            if f'TX: {device}_address' in tx.specs:
+            if f'{device}_address' in tx.specs:
                 if test_i2c_devices_on_bus(tx.specs[f'{device}_address'], tx.connection):
                     self.test_logger.info(f"{device} with address {hex(tx.specs[f'{device}_address'])} accessible on I2C bus.")
                     test_result[i] = True
@@ -147,10 +147,10 @@ class OhmPiTests():
     def test_tx_connectivity(self, devices=['mcp','ads']):
         tx = self._hw_nc.tx
         self.test_logger.info(
-            f"\n### Start TX accessibility test on {tx.specs['model']} board ###")
+            f"\n### Start TX connectivity test on {tx.specs['model']} board ###")
         test_result = [False] * len(devices)
         for i, device in enumerate(devices):
-            if f'TX: {device}_address' in tx.specs:
+            if f'{device}_address' in tx.specs:
                 try:
                     getattr(f'tx.reset_{device}')
                     self.test_logger.info(f"TX: Connection established with {device} with address {hex(tx.specs[f'{device}_address'])}.")
@@ -161,6 +161,27 @@ class OhmPiTests():
             else:
                 self.test_logger.info(
                     f"TX: {device} with address {hex(tx.specs[f'{device}_address'])} not in TX config.")
+        return all(test_result)
+
+    def test_tx_connection(self, devices=['mcp', 'ads']):
+        tx = self._hw_nc.tx
+        self.test_logger.info(
+            f"\n### Start TX connection test on {tx.specs['model']} board ###")
+
+        test_result = [False] * len(devices)
+        for i, device in enumerate(devices):
+            if f'{device}_address' in tx.specs:
+                accessibility_results, connectivity_results = False, False
+                accessibility_results = self.test_tx_accessibility(devices=device)
+                if accessibility_results:
+                    self.test_logger.info(
+                        f"Accessibility test successful. Will check if device respond...")
+                    connectivity_results = self.test_tx_connectivity(devices=device)
+                    if connectivity_results:
+                        self.test_logger.info(
+                            f"\nTX Connection test successful for {device} with address {hex(tx.specs[f'{device}_address'])}.")
+                        test_result[i] = True
+
         return all(test_result)
 
     def test_rx_accessibility(self, devices=['mcp','ads']):
@@ -185,10 +206,10 @@ class OhmPiTests():
     def test_rx_connectivity(self, devices=['mcp', 'ads']):
         rx = self._hw_nc.rx
         self.test_logger.info(
-            f"\n### Start RX accessibility test on {rx.specs['model']} board ###")
+            f"\n### Start RX connectivity test on {rx.specs['model']} board ###")
         test_result = [False] * len(devices)
         for i, device in enumerate(devices):
-            if f'RX: {device}_address' in rx.specs:
+            if f'{device}_address' in rx.specs:
                 try:
                     getattr(f'rx.reset_{device}')
                     self.test_logger.info(
@@ -201,6 +222,28 @@ class OhmPiTests():
                 self.test_logger.info(
                     f"RX: {device} with address {hex(rx.specs[f'{device}_address'])} not in RX config.")
         return all(test_result)
+
+    def test_rx_connection(self, devices=['mcp','ads']):
+        rx = self._hw_nc.rx
+        self.test_logger.info(
+            f"\n### Start RX connection test on {rx.specs['model']} board ###")
+
+        test_result = [False] * len(devices)
+        for i, device in enumerate(devices):
+            if f'{device}_address' in rx.specs:
+                accessibility_results, connectivity_results = False, False
+                accessibility_results = self.test_rx_accessibility(devices=device)
+                if accessibility_results:
+                    self.test_logger.info(
+                        f"Accessibility test successful. Will check if device respond...")
+                    connectivity_results = self.test_rx_connectivity(devices=device)
+                    if connectivity_results:
+                        self.test_logger.info(
+                            f"\nRX connection test successful for {device} with address {hex(rx.specs[f'{device}_address'])}.")
+                        test_result[i] = True
+
+        return all(test_result)
+
 
     def test_mux_accessibility(self, mux_id=None):
         self.test_logger.info(
@@ -293,11 +336,10 @@ class OhmPiTests():
                 connectivity_results = self.test_mux_connectivity(mux_id=mux_id)
                 if connectivity_results:
                     self.test_logger.info(
-                        f"\nConnection test successful for {mux_id} with version {mux.model}.")
+                        f"\nMUX connection test successful for {mux_id} with version {mux.model}.")
                     test_result[i] = True
 
         return all(test_result)
-
 
 
     def test_pwr_connection(self):
