@@ -13,6 +13,8 @@ from ohmpi.hardware_system import OhmPiHardware
 from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import HARDWARE_CONFIG
 
+print('hardware_config_import',HARDWARE_CONFIG)
+
 logging_suffix = ''
 MQTT_LOGGING_CONFIG.update({'test_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/test'})
 MQTT_LOGGING_CONFIG.update({'test_logging_level': logging.DEBUG})
