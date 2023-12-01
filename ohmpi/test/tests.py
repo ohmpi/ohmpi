@@ -110,6 +110,7 @@ class OhmPiTests():
                                     'soh_logger': self.soh_logger}, hardware_config=HARDWARE_CONFIG)
 
         HARDWARE_CONFIG_nc = HARDWARE_CONFIG.copy()
+        print('config',HARDWARE_CONFIG_nc)
         for k, v in HARDWARE_CONFIG_nc.items():
             if k == 'mux':
                 HARDWARE_CONFIG_nc[k]['default'].update({'connect': False})
