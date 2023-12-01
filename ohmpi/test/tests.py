@@ -30,8 +30,7 @@ TEST_LOGGING_CONFIG = {
     'interval': 1
 }
 
-from ohmpi.config import HARDWARE_CONFIG as HARDWARE_CONFIG_nc
-# HARDWARE_CONFIG_nc = HARDWARE_CONFIG.copy()
+HARDWARE_CONFIG_nc = HARDWARE_CONFIG.deepcopy()
 
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
