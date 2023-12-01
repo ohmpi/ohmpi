@@ -8,7 +8,7 @@ from minimalmodbus import Instrument  # noqa
 
 # hardware characteristics and limitations
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
-         'voltage': {'default': 12., 'max': 50., 'min': 0.},
+         'voltage': {'default': 5., 'max': 50., 'min': 0.},
          'voltage_min': {'default': 0},
          'voltage_max': {'default': 0},
          'current_max': {'default': 60.},

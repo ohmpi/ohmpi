@@ -226,7 +226,7 @@ class MuxAbstract(ABC):
     def reset(self):
         pass
 
-    def switch(self, elec_dict=None, state='off', bypass_check=False):  # TODO: generalize for other roles
+    def switch(self, elec_dict=None, state='off', bypass_check=False, bypass_ab_check=False):  # TODO: generalize for other roles
         """Switch a given list of electrodes with different roles.
         Electrodes with a value of 0 will be ignored.
 
@@ -238,18 +238,23 @@ class MuxAbstract(ABC):
             Either 'on' or 'off'.
         bypass_check: bool, optional
             Bypasses checks for A==M or A==M or B==M or B==N (i.e. used for rs-check)
+        bypass_check: bool, optional
+            Bypasses checks for A==B (i.e. used for testing r_shunt). Should be used with caution.
         """
         status = True
         if elec_dict is not None:
             self.exec_logger.debug(f'Switching {self.model} ')
             # check to prevent A == B (SHORT-CIRCUIT)
             if 'A' in elec_dict.keys() and 'B' in elec_dict.keys():
-                out = np.in1d(elec_dict['A'], elec_dict['B'])
-                if out.any() and state == 'on':  # noqa
-                    self.exec_logger.error('Trying to switch on some electrodes with both A and B roles. '
-                                           'This would create a short-circuit! Switching aborted.')
-                    status = False
-                    return status
+                if bypass_ab_check:
+                    self.exec_logger.warning(f'Bypassing AB check: {bypass_ab_check}')
+                else
+                    out = np.in1d(elec_dict['A'], elec_dict['B'])
+                    if out.any() and state == 'on':  # noqa
+                        self.exec_logger.error('Trying to switch on some electrodes with both A and B roles. '
+                                               'This would create a short-circuit! Switching aborted.')
+                        status = False
+                        return status
 
             # check that none of M or N are the same as A or B
             # as to prevent burning the MN part which cannot take
