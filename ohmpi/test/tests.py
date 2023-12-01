@@ -104,12 +104,12 @@ class OhmPiTests():
         self.test_logger, _, _, _ = setup_test_logger(mqtt=mqtt)
         self.exec_logger, _, self.data_logger, _, self.soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
         print(msg)
+        HARDWARE_CONFIG_nc = HARDWARE_CONFIG.copy()
 
         # specify loggers when instancing the hardware
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                     'soh_logger': self.soh_logger}, hardware_config=HARDWARE_CONFIG)
 
-        HARDWARE_CONFIG_nc = HARDWARE_CONFIG.copy()
         print('config',HARDWARE_CONFIG_nc)
         for k, v in HARDWARE_CONFIG_nc.items():
             if k == 'mux':
