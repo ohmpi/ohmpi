@@ -440,6 +440,7 @@ class OhmPiTests():
             self._hw._vab_pulse(duration=injection_duration, vab=tx_volt)
             iab = self._hw.readings[-1, 3]
             vab = self._hw.tx.pwr.voltage
+            self._hw.tx.pwr._retrieve_current()
             iab_dps = self._hw.tx.pwr.current
             print(iab, iab_dps, vab)
 
