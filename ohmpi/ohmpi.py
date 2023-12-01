@@ -152,8 +152,7 @@ class OhmPi(object):
         for i in getmembers(deprecated, isfunction):
             setattr(cls, i[0], i[1])
 
-    @staticmethod
-    def append_and_save(filename: str, last_measurement: dict, fw_in_csv=None, fw_in_zip=None, cmd_id=None):
+    def append_and_save(self, filename: str, last_measurement: dict, fw_in_csv=None, fw_in_zip=None, cmd_id=None):
         """Appends and saves the last measurement dict.
 
         Parameters
@@ -185,34 +184,35 @@ class OhmPi(object):
 
         last_measurement = deepcopy(last_measurement)
         
-        # save full waveform data in a long .csv file
-        if fw_in_zip:
-            fw_filename = filename.replace('.csv', '_fw.csv')
-            if not os.path.exists(fw_filename):  # new file, write headers first
-                with open(fw_filename, 'w') as f:
-                    f.write('A,B,M,N,t,current,voltage\n')
-            # write full data
-            with open(fw_filename, 'a') as f:
-                dd = last_measurement['full_waveform']
-                aa = np.repeat(last_measurement['A'], dd.shape[0])
-                bb = np.repeat(last_measurement['B'], dd.shape[0])
-                mm = np.repeat(last_measurement['M'], dd.shape[0])
-                nn = np.repeat(last_measurement['N'], dd.shape[0])
-                fwdata = np.c_[aa, bb, mm, nn, dd]
-                np.savetxt(f, fwdata, delimiter=',', fmt=['%d', '%d', '%d', '%d', '%.3f', '%.3f', '%.3f'])
+        if 'full_waveform' in last_measurement:
+            # save full waveform data in a long .csv file
+            if fw_in_zip:
+                fw_filename = filename.replace('.csv', '_fw.csv')
+                if not os.path.exists(fw_filename):  # new file, write headers first
+                    with open(fw_filename, 'w') as f:
+                        f.write('A,B,M,N,t,current,voltage\n')
+                # write full data
+                with open(fw_filename, 'a') as f:
+                    dd = last_measurement['full_waveform']
+                    aa = np.repeat(last_measurement['A'], dd.shape[0])
+                    bb = np.repeat(last_measurement['B'], dd.shape[0])
+                    mm = np.repeat(last_measurement['M'], dd.shape[0])
+                    nn = np.repeat(last_measurement['N'], dd.shape[0])
+                    fwdata = np.c_[aa, bb, mm, nn, dd]
+                    np.savetxt(f, fwdata, delimiter=',', fmt=['%d', '%d', '%d', '%d', '%.3f', '%.3f', '%.3f'])
 
-        if fw_in_csv:
-            d = last_measurement['full_waveform']
-            n = d.shape[0]
-            if n > 1:
-                idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
-                udic = dict(zip(['u' + str(i) for i in range(n)], d[:, 1]))
-                tdic = dict(zip(['t' + str(i) for i in range(n)], d[:, 2]))
-                last_measurement.update(idic)
-                last_measurement.update(udic)
-                last_measurement.update(tdic)
+            if fw_in_csv:
+                d = last_measurement['full_waveform']
+                n = d.shape[0]
+                if n > 1:
+                    idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
+                    udic = dict(zip(['u' + str(i) for i in range(n)], d[:, 1]))
+                    tdic = dict(zip(['t' + str(i) for i in range(n)], d[:, 2]))
+                    last_measurement.update(idic)
+                    last_measurement.update(udic)
+                    last_measurement.update(tdic)
 
-        last_measurement.pop('full_waveform')
+            last_measurement.pop('full_waveform')
         
         if os.path.isfile(filename):
             # Load data file and append data to it
@@ -265,9 +265,8 @@ class OhmPi(object):
         # get all .csv file in data folder
         if survey_names is None:
             survey_names = []
-        # ddir = os.path.join(os.path.dirname(__file__), '../data/')
-        ddir = self.settings['export_dir']
-        fnames = [fname for fname in os.listdir(ddir) if fname[-4:] == '.csv']
+        ddir = os.path.dirname(self.settings['export_path'])
+        fnames = [fname for fname in os.listdir(ddir) if fname[-4:] == '.csv' and fname[-7:] != '_fw.csv']
         ddic = {}
         if cmd_id is None:
             cmd_id = 'unknown'
@@ -418,8 +417,7 @@ class OhmPi(object):
             Unique command identifier.
         """
         self.exec_logger.debug(f'Removing all data following command {cmd_id}')
-        datadir = os.path.split(self.settings['export_path'])
-        #datadir = os.path.join(os.path.dirname(__file__), '../data')
+        datadir = os.path.dirname(self.settings['export_path'])
         rmtree(datadir)
         os.mkdir(datadir)
 
@@ -524,9 +522,11 @@ class OhmPi(object):
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
                 delay = kwargs['delay']
+                if delay > injection_duration:
+                    delay = injection_duration
             else:
                 delay = injection_duration * 2/3  # TODO: check if this is ok and if last point is not taken the end of injection
-            x = np.where((self._hw.readings[:, 0] >= delay) & (self._hw.readings[:, 2] != 0))
+            x = np.where((self._hw.readings[:, 0] >= delay) & (self._hw.readings[:, 2] != 0))[0]
             Vmn = self._hw.last_vmn(delay=delay)
             Vmn_std = self._hw.last_vmn_dev(delay=delay)
             I =  self._hw.last_iab(delay=delay)
@@ -1050,7 +1050,7 @@ class OhmPi(object):
         # get absolule filename
         fnames = []
         for survey_name in survey_names:
-            fname = os.path.join(self.settings['export_path'], survey_name)
+            fname = os.path.join(os.path.dirname(self.settings['export_path']), survey_name)
             if os.path.exists(fname):
                 fnames.append(fname)
             else:
