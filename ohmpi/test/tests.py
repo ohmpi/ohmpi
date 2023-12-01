@@ -270,10 +270,12 @@ class OhmPiTests():
             mux_ids = [k for k in self._hw_nc.mux_boards.keys()]
             self.test_logger("Testing all MUX boards in MUX config.")
 
-        if isinstance(mux_id, str):
-            mux_ids = [mux_id]
         else:
-            mux_ids = mux_id
+            if isinstance(mux_id, str):
+                mux_ids = [mux_id]
+            else:
+                mux_ids = mux_id
+
         test_result = [False] * len(mux_ids)
         for i, mux_id in enumerate(mux_ids):
             mux = self._hw_nc.mux_boards[mux_id]
@@ -308,10 +310,11 @@ class OhmPiTests():
             mux_ids = [k for k in self._hw_nc.mux_boards.keys()]
             self.test_logger.info("Testing all MUX boards in MUX config.")
 
-        if isinstance(mux_id, str):
-            mux_ids = [mux_id]
         else:
-            mux_ids = mux_id
+            if isinstance(mux_id, str):
+                mux_ids = [mux_id]
+            else:
+                mux_ids = mux_id
 
         test_result = [False] * len(mux_ids)
         for i, mux_id in enumerate(mux_ids):
@@ -336,10 +339,11 @@ class OhmPiTests():
             mux_ids = [k for k in self._hw_nc.mux_boards.keys()]
             self.test_logger.info("Testing all MUX boards in MUX config.")
 
-        if isinstance(mux_id, str):
-            mux_ids = [mux_id]
         else:
-            mux_ids = mux_id
+            if isinstance(mux_id, str):
+             mux_ids = [mux_id]
+            else:
+                mux_ids = mux_id
 
         test_result = [False] * len(mux_ids)
         for i, mux_id in enumerate(mux_ids):
