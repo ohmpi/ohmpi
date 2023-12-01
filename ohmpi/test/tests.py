@@ -431,8 +431,8 @@ class OhmPiTests():
             duty_cycle = .5  # or 0
             nb_stack = 2
             delay = injection_duration * 2 / 3
-            if self.tx.voltage != tx_volt:
-                self.tx.voltage = tx_volt
+            if self._hw.tx.voltage != tx_volt:
+                self._hw.tx.voltage = tx_volt
             # turn dps_pwr_on if needed
             switch_pwr_off = False
             if self._hw.pwr.pwr_state == 'off':
