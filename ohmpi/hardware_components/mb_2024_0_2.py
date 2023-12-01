@@ -203,6 +203,9 @@ class Rx(Rx_mb_2023):
     def reset_gain(self):
         self.gain = 1/3
 
+    def reset_mcp(self):
+        self.mcp_board = MCP23008(self.connection, address=self._mcp_address)
+
     @property
     def voltage(self):
         """ Gets the voltage VMN in Volts

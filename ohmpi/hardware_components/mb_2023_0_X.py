@@ -240,10 +240,10 @@ class Rx(RxAbstract):
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = kwargs['ads_address']
         self._adc_gain = 2/3
-        self._ads_voltage = ads.ADS1115(self.connection, gain=self._adc_gain,
-                                        data_rate=SPECS['rx']['data_rate']['default'],
-                                        address=self._ads_voltage_address)
-        self._ads_voltage.mode = Mode.CONTINUOUS
+
+        if connect:
+            self.reset_ads(mode=Mode.CONTINUOUS)
+
         self._coef_p2 = kwargs['coef_p2']
         # self._voltage_max = kwargs['voltage_max']
         self._sampling_rate = kwargs['sampling_rate']
@@ -277,6 +277,11 @@ class Rx(RxAbstract):
 
     def reset_gain(self):
         self.gain = 2/3
+
+    def reset_ads(self, mode=Mode.CONTINUOUS):
+        self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
+                                    address=self._ads_current_address)
+        self._ads_voltage.mode = mode
 
     @property
     def voltage(self):
