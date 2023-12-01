@@ -143,6 +143,7 @@ class Rx(Rx_mb_2023):
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
         # I2C connection to MCP23008, for voltage
+        self._mcp_address = kwargs['mcp_address']
         # self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
         if self.connect:
             self.reset_mcp()
