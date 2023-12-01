@@ -311,7 +311,7 @@ class OhmPiTests():
                         f"Connection NOT established with MCP {i} on {mux_id}.")
         return all(test_result)
 
-    def mux_connection(self, mux_id=None):
+    def test_mux_connection(self, mux_id=None):
         self.test_logger.info(
             f"\n### Start MUX connection test ###")
 
