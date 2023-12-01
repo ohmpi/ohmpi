@@ -241,7 +241,7 @@ class Rx(RxAbstract):
         self._ads_voltage_address = kwargs['ads_address']
         self._adc_gain = 2/3
 
-        if connect:
+        if self.connect:
             self.reset_ads(mode=Mode.CONTINUOUS)
 
         self._coef_p2 = kwargs['coef_p2']
