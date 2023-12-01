@@ -107,7 +107,7 @@ class OhmPiTests():
         self.exec_logger, _, self.data_logger, _, self.soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
         print(msg)
         HARDWARE_CONFIG_nc = HARDWARE_CONFIG.copy()
-        print("Hardware_config", HARDWARE_CONFIG)
+        print("Hardware_config", HARDWARE_CONFIG_nc)
 
         # specify loggers when instancing the hardware
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
