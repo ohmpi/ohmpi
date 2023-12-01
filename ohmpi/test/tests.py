@@ -30,6 +30,8 @@ TEST_LOGGING_CONFIG = {
     'interval': 1
 }
 
+HARDWARE_CONFIG_nc = HARDWARE_CONFIG.copy()
+
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
     i2c_addresses_on_bus = bus.scan()
@@ -106,7 +108,6 @@ class OhmPiTests():
         self.test_logger, _, _, _ = setup_test_logger(mqtt=mqtt)
         self.exec_logger, _, self.data_logger, _, self.soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
         print(msg)
-        HARDWARE_CONFIG_nc = HARDWARE_CONFIG.copy()
         print("Hardware_config", HARDWARE_CONFIG_nc)
 
         # specify loggers when instancing the hardware
