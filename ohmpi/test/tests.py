@@ -400,7 +400,7 @@ class OhmPiTests():
 
         Vmn_deviation_from_offset = abs(1 - Vmn / self._hw.rx._vmn_hardware_offset) *100
 
-        self.test_logger.info(f"Test Vmn hardware offset: Vmn offset deviation from config = {Vmn_deviation_from_offset: %.3f} %")
+        self.test_logger.info(f"Test Vmn hardware offset: Vmn offset deviation from config = {Vmn_deviation_from_offset: .3f} %")
         if Vmn_deviation_from_offset <= 10.:
             test_result = True
 
@@ -450,7 +450,7 @@ class OhmPiTests():
             iab_deviation = abs(1 - iab /iab_dps) * 100
 
             self.test_logger.info(
-                f"Test r_shunt: R shunt deviation from config = {iab_deviation: %.3f} %")
+                f"Test r_shunt: R shunt deviation from config = {iab_deviation: .3f} %")
             if iab_deviation <= 10.:
                 test_result = True
             else:
