@@ -436,7 +436,7 @@ class OhmPiTests():
                 self._hw.pwr.pwr_state = 'on'
                 switch_pwr_off = True
 
-            self._hw.switch_mux(quad, roles,status='on')
+            self._hw.switch_mux(quad, roles, state='on')
             self._hw._vab_pulse(duration=injection_duration, vab=tx_volt)
             # injection = Thread(target=self._hw._inject, kwargs={'injection_duration': injection_duration, 'polarity': 1})
             # readings = Thread(target=self._hw._read_values, kwargs={'sampling_rate': self._hw.sampling_rate, 'append': False})
@@ -454,7 +454,7 @@ class OhmPiTests():
             print(iab, iab_dps, vab)
 
             # close mux path and put pin back to GND
-            self._hw.switch_mux(quad, roles, status = 'off')
+            self._hw.switch_mux(quad, roles, state = 'off')
 
             iab_deviation = abs(1 - iab /iab_dps) * 100
 
