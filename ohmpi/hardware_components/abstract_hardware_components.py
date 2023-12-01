@@ -248,7 +248,7 @@ class MuxAbstract(ABC):
             if 'A' in elec_dict.keys() and 'B' in elec_dict.keys():
                 if bypass_ab_check:
                     self.exec_logger.warning(f'Bypassing AB check: {bypass_ab_check}')
-                else
+                else:
                     out = np.in1d(elec_dict['A'], elec_dict['B'])
                     if out.any() and state == 'on':  # noqa
                         self.exec_logger.error('Trying to switch on some electrodes with both A and B roles. '
