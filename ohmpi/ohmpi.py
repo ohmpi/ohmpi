@@ -522,6 +522,8 @@ class OhmPi(object):
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
                 delay = kwargs['delay']
+                if delay > injection_duration:
+                    delay = injection_duration
             else:
                 delay = injection_duration * 2/3  # TODO: check if this is ok and if last point is not taken the end of injection
             x = np.where((self._hw.readings[:, 0] >= delay) & (self._hw.readings[:, 2] != 0))[0]
