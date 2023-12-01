@@ -272,7 +272,7 @@ class OhmPiTests():
 
     def test_mux_accessibility(self, mux_id=None):
         self.test_logger.info(
-            f"*** Start MUX accessibility test  ***")
+            f"{mux_id}: *** Start MUX accessibility test  ***")
         if mux_id is None:
             mux_ids = [k for k in self._hw_nc.mux_boards.keys()]
             self.test_logger("Testing all MUX boards in MUX config.")
@@ -310,7 +310,7 @@ class OhmPiTests():
 
     def test_mux_connectivity(self, mux_id=None):
         self.test_logger.info(
-            f"*** Start MUX connectivity test  ***")
+            f"{mux_id}: *** Start MUX connectivity test  ***")
         if mux_id is None:
             mux_ids = [k for k in self._hw_nc.mux_boards.keys()]
             self.test_logger.info("Testing all MUX boards in MUX config.")
@@ -359,16 +359,16 @@ class OhmPiTests():
         for i, mux_id in enumerate(mux_ids):
             mux = self._hw_nc.mux_boards[mux_id]
             self.test_logger.info(
-                f"*** Connection test initiated for {mux_id} with version {mux.model} ***")
+                f"{mux_id}: *** Connection test initiated for {mux_id} with version {mux.model} ***")
             accessibility_results, connectivity_results = False, False
             accessibility_results = self.test_mux_accessibility(mux_id=mux_id)
             if accessibility_results:
                 self.test_logger.info(
-                    f"Accessibility test successful. Will check if device respond...")
+                    f"{mux_id}: Accessibility test successful. Will check if device respond...")
                 connectivity_results = self.test_mux_connectivity(mux_id=mux_id)
                 if connectivity_results:
                     self.test_logger.info(
-                        f"MUX connection test successful for {mux_id} with version {mux.model}.")
+                        f"{mux_id}: MUX connection test successful for {mux_id} with version {mux.model}.")
                     test_result[i] = True
 
         return all(test_result)
