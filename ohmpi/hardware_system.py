@@ -67,7 +67,7 @@ class OhmPiHardware:
                                   (np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
         self.voltage_min = RX_CONFIG['voltage_min']
         # TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
-        print('rx_config',RX_CONFIG)
+        self.sampling_rate = RX_CONFIG['sampling_rate']
 
         # Main Controller initialization
         HARDWARE_CONFIG['ctl'].pop('model')
@@ -623,7 +623,7 @@ class OhmPiHardware:
         """
         #self.tx.polarity = polarity
         if sampling_rate is None:
-            sampling_rate = RX_CONFIG['sampling_rate']
+            sampling_rate = self.sampling_rate
         if self.tx.pwr.voltage_adjustable:
             if self.tx.voltage != vab:
                 self.tx.voltage = vab
@@ -665,7 +665,7 @@ class OhmPiHardware:
             switch_pwr_off = True
 
         if sampling_rate is None:
-            sampling_rate = RX_CONFIG['sampling_rate']
+            sampling_rate = self.sampling_rate
         if polarities is not None:
             assert len(polarities) == n_pulses
         else:
