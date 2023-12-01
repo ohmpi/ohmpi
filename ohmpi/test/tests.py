@@ -35,7 +35,6 @@ HARDWARE_CONFIG_nc = copy.deepcopy(HARDWARE_CONFIG)
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
     i2c_addresses_on_bus = bus.scan()
-    print(i2c_addresses_on_bus)
     if i2c_addr in i2c_addresses_on_bus:
         return True
     else:
@@ -134,11 +133,7 @@ class OhmPiTests():
     def test_tx_accessibility(self, devices=['mcp','ads']):
         tx = self._hw_nc.tx
         self.test_logger.info(
-            f"****************************************************************")
-        self.test_logger.info(
             f"*** Start TX accessibility test on {tx.specs['model']} board ***")
-        self.test_logger.info(
-            f"****************************************************************")
         if isinstance(devices, str):
             devices = [devices]
         test_result = [False] * len(devices)
@@ -158,11 +153,7 @@ class OhmPiTests():
     def test_tx_connectivity(self, devices=['mcp','ads']):
         tx = self._hw_nc.tx
         self.test_logger.info(
-            f"****************************************************************")
-        self.test_logger.info(
             f"*** Start TX connectivity test on {tx.specs['model']} board ***")
-        self.test_logger.info(
-            f"****************************************************************")
         if isinstance(devices, str):
             devices = [devices]
         test_result = [False] * len(devices)
@@ -202,7 +193,7 @@ class OhmPiTests():
                     connectivity_results = self.test_tx_connectivity(devices=device)
                     if connectivity_results:
                         self.test_logger.info(
-                            f"\nTX Connection test successful for {device} with address {hex(tx.specs[f'{device}_address'])}.")
+                            f"TX Connection test successful for {device} with address {hex(tx.specs[f'{device}_address'])}.")
                         test_result[i] = True
 
         return all(test_result)
@@ -210,11 +201,7 @@ class OhmPiTests():
     def test_rx_accessibility(self, devices=['mcp','ads']):
         rx = self._hw_nc.rx
         self.test_logger.info(
-            f"****************************************************************")
-        self.test_logger.info(
             f"*** Start RX accessibility test on {rx.specs['model']} board ***")
-        self.test_logger.info(
-            f"****************************************************************")
         test_result = [False] * len(devices)
 
         if isinstance(devices, str):
@@ -277,7 +264,7 @@ class OhmPiTests():
                     connectivity_results = self.test_rx_connectivity(devices=device)
                     if connectivity_results:
                         self.test_logger.info(
-                            f"\nRX connection test successful for {device} with address {hex(rx.specs[f'{device}_address'])}.")
+                            f"RX connection test successful for {device} with address {hex(rx.specs[f'{device}_address'])}.")
                         test_result[i] = True
 
         return all(test_result)
@@ -285,11 +272,7 @@ class OhmPiTests():
 
     def test_mux_accessibility(self, mux_id=None):
         self.test_logger.info(
-            f"****************************************************************")
-        self.test_logger.info(
             f"*** Start MUX accessibility test  ***")
-        self.test_logger.info(
-            f"****************************************************************")
         if mux_id is None:
             mux_ids = [k for k in self._hw_nc.mux_boards.keys()]
             self.test_logger("Testing all MUX boards in MUX config.")
@@ -306,7 +289,6 @@ class OhmPiTests():
             self.test_logger.info(
                 f"\n*** Accessibility test initiated for {mux_id} with version {mux.model} ***")
             if mux.model == 'mux_2024_0_X':
-                print(mux.model)
                 for mcp_address in mux._mcp_addresses:
                     mcp_address = int(mcp_address, 16)
                     if mcp_address is not None:
@@ -328,11 +310,7 @@ class OhmPiTests():
 
     def test_mux_connectivity(self, mux_id=None):
         self.test_logger.info(
-            f"****************************************************************")
-        self.test_logger.info(
             f"*** Start MUX connectivity test  ***")
-        self.test_logger.info(
-            f"****************************************************************")
         if mux_id is None:
             mux_ids = [k for k in self._hw_nc.mux_boards.keys()]
             self.test_logger.info("Testing all MUX boards in MUX config.")
