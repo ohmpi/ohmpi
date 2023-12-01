@@ -152,6 +152,9 @@ class Mux(MuxAbstract):
         self._mcp[0] = MCP23017(self._tca, address=int(self._mcp_addresses[0], 16))
         self._mcp[1] = MCP23017(self._tca, address=int(self._mcp_addresses[1], 16))
 
+    def reset_one(self, which=0):
+        self._mcp[which] = MCP23017(self._tca, address=int(self._mcp_addresses[which], 16))
+
     def switch_one(self, elec=None, role=None, state=None):
         MuxAbstract.switch_one(self, elec=elec, role=role, state=state)
         def activate_relay(mcp, mcp_pin, value=True):

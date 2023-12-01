@@ -88,13 +88,14 @@ class Tx(TxAbstract):
         self.current_adjustable = False
 
         # I2C connexion to MCP23008, for current injection
-        self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
+        self._mcp_address = kwargs['mcp_address']
+        self.reset_mcp()
         # ADS1115 for current measurement (AB)
         self._ads_current_address = kwargs['ads_address']
         self._ads_current_data_rate = kwargs['data_rate']
         self._adc_gain = 2 / 3
-        self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
-                                        address=self._ads_current_address)
+        self.reset_ads()
+
         self._ads_current.mode = Mode.CONTINUOUS
         self._r_shunt = kwargs['r_shunt']
         self.adc_voltage_min = kwargs['adc_voltage_min']
@@ -181,6 +182,12 @@ class Tx(TxAbstract):
     #
     # def turn_on(self):
     #     self.pwr.turn_on(self)
+
+    def reset_ads(self):
+        self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
+                                    address=self._ads_current_address)
+    def reset_mcp(self):
+        self.mcp_board = MCP23008(self.connection, address=self._mcp_address)
 
     @property
     def tx_bat(self):

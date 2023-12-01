@@ -126,6 +126,9 @@ class Mux(MuxAbstract):
         self._mcp[2] = MCP23017(self._tca[2])
         self._mcp[3] = MCP23017(self._tca[3])
 
+    def reset_one(self, which=0):
+        self._mcp[which] = MCP23017(self._tca[which])
+
     def switch_one(self, elec=None, role=None, state=None):
         MuxAbstract.switch_one(self, elec=elec, role=role, state=state)
 
