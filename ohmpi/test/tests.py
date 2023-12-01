@@ -9,6 +9,7 @@ from ohmpi.compressed_sized_timed_rotating_handler import CompressedSizedTimedRo
 import sys
 from termcolor import colored
 import traceback
+import copy
 from ohmpi.hardware_system import OhmPiHardware
 from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import HARDWARE_CONFIG
@@ -30,8 +31,7 @@ TEST_LOGGING_CONFIG = {
     'interval': 1
 }
 
-HARDWARE_CONFIG_nc = HARDWARE_CONFIG.deepcopy()
-
+HARDWARE_CONFIG_nc = copy.deepcopy(HARDWARE_CONFIG)
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
     i2c_addresses_on_bus = bus.scan()
