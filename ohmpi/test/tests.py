@@ -135,6 +135,8 @@ class OhmPiTests():
         tx = self._hw_nc.tx
         self.test_logger.info(
             f"\n### Start TX accessibility test on {tx.specs['model']} board ###")
+        if isinstance(devices, str):
+            devices = [devices]
         test_result = [False] * len(devices)
         for i, device in enumerate(devices):
             if f'{device}_address' in tx.specs:
@@ -219,6 +221,8 @@ class OhmPiTests():
         rx = self._hw_nc.rx
         self.test_logger.info(
             f"\n### Start RX connectivity test on {rx.specs['model']} board ###")
+        if isinstance(devices, str):
+            devices = [devices]
         test_result = [False] * len(devices)
         for i, device in enumerate(devices):
             if f'{device}_address' in rx.specs:
@@ -241,7 +245,6 @@ class OhmPiTests():
             f"\n### Start RX connection test on {rx.specs['model']} board ###")
         if isinstance(devices, str):
             devices = [devices]
-
         test_result = [False] * len(devices)
         for i, device in enumerate(devices):
             if f'{device}_address' in rx.specs:
