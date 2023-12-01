@@ -300,7 +300,7 @@ class OhmPiHardware:
             t_start_pulse = min(self.readings[v, 0])
             x.append(np.where((self.readings[:, 0] >= t_start_pulse + delay) & (self.readings[:, 2] != 0) & (
                         self.readings[:, 1] == pulse))[0])
-        x = np.concatenate(np.array(x))
+        x = np.concatenate(np.array(x, dtype='object'))
         return x
 
     def last_resistance(self, delay=0.):
