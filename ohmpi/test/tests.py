@@ -444,7 +444,7 @@ class OhmPiTests():
             print(iab, iab_dps)
 
             # close mux path and put pin back to GND
-            self.switch_mux_off(quad)
+            self._hw.switch_mux(quad, roles, status = 'off')
 
             iab_deviation = abs(1 - iab /iab_dps) * 100
 
