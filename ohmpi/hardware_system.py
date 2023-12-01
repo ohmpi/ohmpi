@@ -509,14 +509,14 @@ class OhmPiHardware:
                         vabs.append(new_vab)
                         # print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
                         if diff_vab < diff_vab_lim:
-                            print('stopped on vab increase too small')
+                            self.exec_logger.debug('Compute_tx_volt stopped on vab increase too small')
                     k = k + 1
                     vab_list[k] = np.min(vabs)
                     time.sleep(0.5)
                     if self.tx.pwr.voltage_adjustable:
                         self.tx.voltage = vab_list[k]
                 if k > n_steps:
-                    print('stopped on maximum number of steps reached')
+                    self.exec_logger.debug('Compute_tx_volt stopped on maximum number of steps reached')
                 vab_opt = vab_list[k]
                 # print(f'Selected Vab: {vab_opt:.2f}')
                 # if switch_pwr_off:
