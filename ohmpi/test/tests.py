@@ -324,6 +324,7 @@ class OhmPiTests():
                 f"\n### Connectivity test initiated for {mux_id} with version {mux.model} ###")
             for i in range(len(mux._mcp)):
                 try:
+                    mux.reset_i2c_ext_tca()
                     mux.reset_one(which=i)
                     self.test_logger.info(
                         f"Connection established with MCP {i} on {mux_id}.")
