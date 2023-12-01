@@ -416,6 +416,11 @@ class OhmPiTests():
             f"****************************************************************")
 
         if self._hw.tx.pwr.voltage_adjustable:
+            # check pwr is on, if not, let's turn it on
+            switch_tx_pwr_off = False
+            if self._hw.pwr_state == 'off':
+                self._hw.pwr_state = 'on'
+                switch_tx_pwr_off = True
             test_result = False
             quad = [0, 0]
             roles = ['A','B']
@@ -424,12 +429,21 @@ class OhmPiTests():
             duty_cycle = .5  # or 0
             nb_stack = 2
             delay = injection_duration * 2 / 3
+
+            # turn dps_pwr_on if needed
+            switch_pwr_off = False
+            if self._hw.pwr.pwr_state == 'off':
+                self._hw.pwr.pwr_state = 'on'
+                switch_pwr_off = True
+
             self._hw.switch_mux(quad, roles,status='on')
             self._hw._vab_pulse(duration=injection_duration, vab=tx_volt)
             iab = self._hw.readings[-1, 3]
             vab = self._hw.tx.pwr.voltage
             iab_dps = self._hw.tx.pwr.current
             print(iab, iab_dps)
+
+            # close mux path and put pin back to GND
             self.switch_mux_off(quad)
 
             iab_deviation = abs(1 - iab /iab_dps) * 100
@@ -440,6 +454,14 @@ class OhmPiTests():
                 test_result = True
             else:
                 pass
+
+            self.status = 'idle'
+            if switch_pwr_off:
+                self._hw.pwr.pwr_state = 'off'
+
+            # if power was off before measurement, let's turn if off
+            if switch_tx_pwr_off:
+                self._hw.pwr_state = 'off'
         else:
             self.test.logger.info('R shunt cannot be tested with this system configuration.')
 
