@@ -353,13 +353,14 @@ class OhmPiTests():
 
     def test_vmn_hardware_offset(self):
         test_result = False
-        quad = [0, 0, 0, 0]
+        quad = [0, 0]
+        roles = ['M', 'N']
         tx_volt = 0.
         injection_duration = .5
         duty_cycle = .5 # or 0
         nb_stack = 2
         delay = injection_duration * 2/3
-        if self.switch_mux_on(quad):
+        if self.switch_mux_on(quad,roles):
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration * 2 / duty_cycle, cycles=nb_stack,
                                      duty_cycle=duty_cycle)
         Vmn = self._hw.last_vmn(delay=delay)
@@ -376,9 +377,35 @@ class OhmPiTests():
 
     def test_r_shunt(self):
         if self._hw.tx.pwr.voltage_adjustable:
-            pass
+            test_result = False
+            quad = [0, 0]
+            roles = ['A','B']
+            tx_volt = 5.
+            injection_duration = .5
+            duty_cycle = .5  # or 0
+            nb_stack = 2
+            delay = injection_duration * 2 / 3
+            self._hw.switch_mux(quad, roles,status='on'):
+            self._hw._vab_pulse(duration=injection_duration, vab=tx_volt)
+            iab = self._hw.readings[-1, 3]
+            vab = self._hw.tx.pwr.voltage
+            iab_dps = self._hw.tx.pwr.current
+            print(iab, iab_dps)
+            self.switch_mux_off(quad)
+
+            Vmn = self._hw.last_vmn(delay=delay)
+            Vmn_std = self._hw.last_vmn_dev(delay=delay)
+
+            Iab_deviation = abs(1 - iab /iab_dps) * 100
+
+            self.test_logger.info(
+                f"Test r_shunt: R shunt deviation from config = {iab_deviation: %.3f} %")
+            if iab_deviation <= 10.:
+                test_result = True
+            else:
+                pass
         else:
-            self.exec_logger.info('r_shunt cannot be tested with this system configuration.')
+            self.exec_logger.info('R shunt cannot be tested with this system configuration.')
 
     def test_mqtt_broker(self):
         pass
