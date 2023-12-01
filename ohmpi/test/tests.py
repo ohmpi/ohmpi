@@ -1,4 +1,5 @@
 import json
+import numpy as np
 from ohmpi.config import (OHMPI_CONFIG,EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, SOH_LOGGING_CONFIG, MQTT_LOGGING_CONFIG,
                           MQTT_CONTROL_CONFIG)
 from os import path, mkdir, statvfs
@@ -437,26 +438,25 @@ class OhmPiTests():
                 switch_pwr_off = True
 
             self._hw.switch_mux(quad, roles, state='on')
-            self._hw._vab_pulse(duration=injection_duration, vab=tx_volt)
-            # injection = Thread(target=self._hw._inject, kwargs={'injection_duration': injection_duration, 'polarity': 1})
-            # readings = Thread(target=self._hw._read_values, kwargs={'sampling_rate': self._hw.sampling_rate, 'append': False})
-            # current_dps = Thread(target=self.retrieve_current_from_dps)
-            # readings.start()
-            # injection.start()
-            # readings.join()
-            # injection.join()
-            # self.tx.polarity = 0
+            # self._hw._vab_pulse(duration=injection_duration, vab=tx_volt)
+            injection = Thread(target=self._hw._inject, kwargs={'injection_duration': injection_duration, 'polarity': 1})
+            readings = Thread(target=self._hw._read_values, kwargs={'sampling_rate': self._hw.sampling_rate, 'append': False, 'test_r_shunt': True})
+            readings.start()
+            injection.start()
+            readings.join()
+            injection.join()
+            self.tx.polarity = 0
 
             iab = self._hw.readings[-1, 3]
             vab = self._hw.tx.pwr.voltage
-            self._hw.tx.pwr._retrieve_current()
-            iab_dps = self._hw.tx.pwr.current
+            # self._hw.tx.pwr._retrieve_current()
+            iab_dps = self._hw._current
             print(iab, iab_dps, vab)
 
             # close mux path and put pin back to GND
             self._hw.switch_mux(quad, roles, state = 'off')
 
-            iab_deviation = abs(1 - iab /iab_dps) * 100
+            iab_deviation = abs(1 - iab /np.mean(iab_dps)) * 100
 
             self.test_logger.info(
                 f"Test r_shunt: R shunt deviation from config = {iab_deviation: .3f} %")

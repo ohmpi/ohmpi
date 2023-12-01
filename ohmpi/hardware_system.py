@@ -251,7 +251,7 @@ class OhmPiHardware:
             pulses.update({i: {'polarity': int(r[0, 2]), 'iab': r[:, 3], 'vmn': r[:, 4]}})
         return pulses
 
-    def _read_values(self, sampling_rate=None, append=False):  # noqa
+    def _read_values(self, sampling_rate=None, append=False, test_r_shunt=False):  # noqa
         """
         Reads vmn and iab values on ADS1115 and generates full waveform dataset consisting of
         [time, pulse nr, polarity, vmn, iab]
@@ -266,6 +266,8 @@ class OhmPiHardware:
             _readings = []
         else:
             _readings = self.readings.tolist()
+        if test_r_shunt:
+            _current = []
         if sampling_rate is None:
             sampling_rate = self.rx.sampling_rate
         sample = 0
@@ -283,6 +285,9 @@ class OhmPiHardware:
             if self.tx_sync.is_set():
                 sample += 1
                 _readings.append(r)
+                if test_r_shunt:
+                    self.tx.pwr._retrieve_current()
+                    _current.append(self.tx.pwr.current)
                 sleep_time = self._start_time + datetime.timedelta(seconds=sample / sampling_rate) - lap
                 if sleep_time.total_seconds() < 0.:
                     # TODO: count how many samples were skipped to make a stat that could be used to qualify pulses
@@ -293,6 +298,7 @@ class OhmPiHardware:
         self.exec_logger.debug(f'pulse {self._pulse}: elapsed time {(lap-self._start_time).total_seconds()} s')
         self.exec_logger.debug(f'pulse {self._pulse}: total samples {len(_readings)}')
         self.readings = np.array(_readings)
+        self._current = np.array(_current)
         self._pulse += 1
         self.exec_logger.event(f'OhmPiHardware\tread_values\tend\t{datetime.datetime.utcnow()}')
 
