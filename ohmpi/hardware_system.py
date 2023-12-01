@@ -292,8 +292,19 @@ class OhmPiHardware:
         self._pulse += 1
         self.exec_logger.event(f'OhmPiHardware\tread_values\tend\t{datetime.datetime.utcnow()}')
 
+    def select_samples(self, delay=0.):
+        x = []
+        for pulse in range(int(max(self._hw.readings[:, 1]))):
+            v = np.where((self._hw.readings[:, 1] == pulse))[0]
+
+            t_start_pulse = min(self._hw.readings[v, 0])
+            x.append(np.where((k._hw.readings[:, 0] >= t_start_pulse + delay) & (self._hw.readings[:, 2] != 0) & (
+                        self._hw.readings[:, 1] == pulse))[0])
+        x = np.concatenate(np.array(x))
+        return x
+
     def last_resistance(self, delay=0.):
-        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        v = self.select_samples(delay)
         if len(v) > 1:
             # return np.mean(np.abs(self.readings[v, 4] - self.sp) / self.readings[v, 3])
             return np.mean(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3])
@@ -301,35 +312,35 @@ class OhmPiHardware:
             return np.nan
 
     def last_dev(self, delay=0.):
-        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        v = self.select_samples(delay)
         if len(v) > 1:
             return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3]) / self.last_resistance(delay=delay)
         else:
             return np.nan
 
     def last_vmn(self, delay=0.):
-        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        v = self.select_samples(delay)
         if len(v) > 1:
             return np.mean(self.readings[v, 2] * (self.readings[v, 4] - self.sp))
         else:
             return np.nan
 
     def last_vmn_dev(self, delay=0.):  # TODO: should compute std per stack because this does not account for SP...
-        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        v = self.select_samples(delay)
         if len(v) > 1:
             return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp)) / self.last_vmn(delay=delay)
         else:
             return np.nan
 
     def last_iab(self, delay=0.):
-        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        v = self.select_samples(delay)
         if len(v) > 1:
             return np.mean(self.readings[v, 3])
         else:
             return np.nan
 
     def last_iab_dev(self, delay=0.):
-        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        v = self.select_samples(delay)
         if len(v) > 1:
             return 100. * np.std(self.readings[v, 3]) / self.last_iab(delay=delay)
         else:

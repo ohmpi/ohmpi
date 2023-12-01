@@ -526,7 +526,7 @@ class OhmPi(object):
                     delay = injection_duration
             else:
                 delay = injection_duration * 2/3  # TODO: check if this is ok and if last point is not taken the end of injection
-            x = np.where((self._hw.readings[:, 0] >= delay) & (self._hw.readings[:, 2] != 0))[0]
+            x = self._hw.select_samples(delay)
             Vmn = self._hw.last_vmn(delay=delay)
             Vmn_std = self._hw.last_vmn_dev(delay=delay)
             I =  self._hw.last_iab(delay=delay)
