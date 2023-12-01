@@ -427,7 +427,7 @@ class OhmPiTests():
             quad = [1, 1]
             roles = ['A','B']
             tx_volt = 2.
-            injection_duration = .5
+            injection_duration = 1.
             duty_cycle = .5  # or 0
             nb_stack = 2
             delay = injection_duration * 2 / 3
