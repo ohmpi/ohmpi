@@ -30,8 +30,7 @@ Required components
 
 
 .. csv-table:: List of components
-   :file: ../../img/v2023.x.x/step_n_3/MUX_board_list_2_xx.csv
-   :widths: 30, 70, 70, 70, 70, 35, 35
+   :file: ../V2023.x.x/MUX_board_list_2_xx.csv
    :header-rows: 1 
    
    
@@ -148,6 +147,7 @@ Required components
    
 .. note:: 
      This step must be duplicated 4 times for every Mux card.
+
 
 
 **PART B** MUX board address

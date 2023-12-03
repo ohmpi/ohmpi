@@ -5,3 +5,11 @@
 Measurement board v2024
 =======================
 
+
+
+
+You can also include a file directly:
+
+.. raw:: html
+   :file: ../../../bomlist/ibom.html
+
