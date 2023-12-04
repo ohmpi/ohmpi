@@ -300,7 +300,8 @@ class OhmPiHardware:
         self.exec_logger.debug(f'pulse {self._pulse}: elapsed time {(lap-self._start_time).total_seconds()} s')
         self.exec_logger.debug(f'pulse {self._pulse}: total samples {len(_readings)}')
         self.readings = np.array(_readings)
-        self._current = np.array(_current)
+        if test_r_shunt:
+            self._current = np.array(_current)
         self._pulse += 1
         self.exec_logger.event(f'OhmPiHardware\tread_values\tend\t{datetime.datetime.utcnow()}')
 
@@ -506,7 +507,6 @@ class OhmPiHardware:
                         v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (self.readings[:, 1] == pulse))[0]  # NOTE : discard data aquired in the first x ms
                         iab = self.readings[v, 3]/1000.
                         vmn = np.abs(self.readings[v, 4]/1000. * self.readings[v, 2])
-                        print((vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min))
                         new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min)
                         diff_vab = np.abs(new_vab - vab_list[k])
                         vabs.append(new_vab)
@@ -514,7 +514,6 @@ class OhmPiHardware:
                         if diff_vab < diff_vab_lim:
                             print('stopped on vab increase too small')
                     k = k + 1
-                    print('vabs', vabs)
                     vab_list[k] = np.min(vabs)
                     time.sleep(0.5)
                     if self.tx.pwr.voltage_adjustable:
