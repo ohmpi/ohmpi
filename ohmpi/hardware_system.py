@@ -511,6 +511,7 @@ class OhmPiHardware:
                         if diff_vab < diff_vab_lim:
                             print('stopped on vab increase too small')
                     k = k + 1
+                    print('vabs', vabs)
                     vab_list[k] = np.min(vabs)
                     time.sleep(0.5)
                     if self.tx.pwr.voltage_adjustable:
