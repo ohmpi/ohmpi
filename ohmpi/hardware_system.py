@@ -497,6 +497,8 @@ class OhmPiHardware:
             current, voltage = 0., 0.
             diff_vab = np.inf
             if strategy == 'vmax' or strategy == 'vmin':
+                print('maximums', self.voltage_max, self.current_max)
+
                 while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
                     if strategy == 'vmax':
                         vmn_min = vmn_max
