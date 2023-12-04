@@ -439,9 +439,7 @@ class OhmPiTests():
             quad = [1, 1]
             roles = ['A','B']
             tx_volt = 2.
-            injection_duration = 1.
-            duty_cycle = .5  # or 0
-            nb_stack = 2
+            injection_duration = 2.
             delay = injection_duration * 2 / 3
             if self._hw.tx.voltage != tx_volt:
                 self._hw.tx.voltage = tx_volt
@@ -465,10 +463,10 @@ class OhmPiTests():
             injection.join()
             self._hw.tx.polarity = 0
 
-            iab = self._hw.readings[-1, 3]
+            iab = self._hw.readings[-3:, 3]
             vab = self._hw.tx.pwr.voltage
             # self._hw.tx.pwr._retrieve_current()
-            iab_dps = self._hw._current
+            iab_dps = self._hw._current [-3:]
             print(iab, iab_dps, vab)
 
             # close mux path and put pin back to GND
