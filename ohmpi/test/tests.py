@@ -388,16 +388,19 @@ class OhmPiTests():
 
     def test_vmn_hardware_offset(self):
         test_result = False
-        # quad = [0, 0]
+        quad = [1, 2]
         self._hw.rx.gain = 1/3
         vmns = np.zeros(20)
+        roles = ['M', 'N']
+        self._hw.switch_mux(quad, roles, state='on')
+
         for i in range(vmns.shape[0]):
             vmns[i] = self._hw.rx.voltage
             time.sleep(.1)
         vmn = np.mean(vmns)
         vmn_std = np.std(vmns)
+        self._hw.switch_mux(quad, roles, state='off')
 
-        # roles = ['M', 'N']
         # tx_volt = 0.
         # injection_duration = .5
         # duty_cycle = .5 # or 0
@@ -489,8 +492,35 @@ class OhmPiTests():
         else:
             self.test.logger.info('R shunt cannot be tested with this system configuration.')
 
-    def test_dg411(self):
-        self._hw.tx.gain = 1/3
+    def test_dg411_gain_ratio(self):
+        test_result = False
+        # quad = [0, 0]
+        self._hw.rx.gain = 1 / 3
+        voltages = np.zeros(10)
+        for i in range(voltages.shape[0]):
+            time.sleep(.1)
+            voltages[i] = self._hw.rx.voltage
+
+        voltage1 = np.mean(voltages[-5:])
+
+        self._hw.rx.gain = 2 / 3
+        voltages = np.zeros(10)
+        for i in range(voltages.shape[0]):
+            time.sleep(.1)
+            voltages[i] = self._hw.rx.voltage
+
+        voltage2 = np.mean(voltages[-5:])
+
+        voltage_gain_ratio = voltage2 / voltage1
+        voltage_gain_ratio_deviation = abs(1 - self._hw.rx._dg411_gain_ratio / voltage_gain_ratio) * 100
+
+        self.test_logger.info(
+            f"Test dg411: deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .3f} %")
+        if voltage_gain_ratio_deviation <= 10.:
+            test_result = True
+
+        return test_result
+
 
     def test_mqtt_broker(self):
         pass
