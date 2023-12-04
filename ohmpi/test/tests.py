@@ -115,8 +115,8 @@ class OhmPiTests():
         print("Hardware_config", HARDWARE_CONFIG_nc)
 
         # specify loggers when instancing the hardware
-        self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-                                    'soh_logger': self.soh_logger})
+        #self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+        #                            'soh_logger': self.soh_logger})
 
         print('config', HARDWARE_CONFIG_nc)
         for k, v in HARDWARE_CONFIG_nc.items():
