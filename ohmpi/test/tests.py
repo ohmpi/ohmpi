@@ -397,8 +397,8 @@ class OhmPiTests():
         for i in range(vmns.shape[0]):
             vmns[i] = (self._hw.rx.voltage * self._hw.rx._dg411_gain + self._hw.rx._bias) + self._hw.rx._vmn_hardware_offset
             time.sleep(.1)
-        vmn = np.mean(vmns)
-        vmn_std = np.std(vmns)
+        vmn = np.mean(vmns[-10:])
+        vmn_std = np.std(vmns[-10:])
         self._hw.switch_mux(quad, roles, state='off')
 
         # tx_volt = 0.
