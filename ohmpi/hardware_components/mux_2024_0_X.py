@@ -130,7 +130,6 @@ class Mux(MuxAbstract):
         for addr in self._mcp_addresses:
             assert addr in ['0x20', '0x21', '0x22', '0x23', '0x24', '0x25', '0x26', '0x27']
         self._mcp = [None, None]
-        print(self._i2c_ext_tca.scan())
         if self.connect:
             self.reset()
 
