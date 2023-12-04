@@ -38,7 +38,7 @@ HARDWARE_CONFIG_nc = copy.deepcopy(HARDWARE_CONFIG)
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
     i2c_addresses_on_bus = bus.scan()
-    print(bus,i2c_addresses_on_bus)
+    print(hex(i2c_addresses_on_bus))
     if i2c_addr in i2c_addresses_on_bus:
         return True
     else:
