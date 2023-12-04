@@ -528,10 +528,10 @@ class OhmPiTests():
         voltage_gain_ratio_deviation = abs(1 - self._hw.rx._dg411_gain_ratio / voltage_gain_ratio) * 100
 
         self.test_logger.info(
-            f"Test dg411: Measured DG411 gain ratio = {voltage_gain_ratio: .1f}")
+            f"DG411 Test: Measured DG411 gain ratio = {voltage_gain_ratio: .1f}")
 
         self.test_logger.info(
-            f"Test dg411: deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .2f} %")
+            f"DG411 Test: deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .2f} %")
         if voltage_gain_ratio_deviation <= 10.:
             test_result = True
 
