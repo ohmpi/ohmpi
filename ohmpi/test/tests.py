@@ -501,28 +501,28 @@ class OhmPiTests():
 
         self._hw.rx._dg411_gain = 1
         time.sleep(4)
-        voltages = np.zeros(10)
-        for i in range(voltages.shape[0]):
-            self._hw.tx.pin_DG0 = True
-            time.sleep(.1)
-            voltages[i] = (self._hw.rx.voltage + self._hw.rx._bias)  # + self._hw.rx._vmn_hardware_offset
+        # voltages = np.zeros(10)
+        # for i in range(voltages.shape[0]):
+        #     self._hw.tx.pin_DG0 = True
+        #     time.sleep(.1)
+        #     voltages[i] = self._hw.rx.voltage
+        #
+        #     # voltages[i] = self._hw.rx.voltage
 
-            # voltages[i] = self._hw.rx.voltage
-
-        voltage1 = np.mean(voltages[-5:])
-        print(voltages)
+        voltage1 = self._hw.rx.voltage #np.mean(voltages[-5:])
+        print(voltage1)
         self._hw.rx._dg411_gain = 0.5
-        voltages = np.zeros(10)
-        for i in range(voltages.shape[0]):
-            time.sleep(.1)
-            # self._hw.tx.pin_DG0 = True
-            voltages[i] = (self._hw.rx.voltage + self._hw.rx._bias)  # + self._hw.rx._vmn_hardware_offset
+        # voltages = np.zeros(10)
+        # for i in range(voltages.shape[0]):
+        #     time.sleep(.1)
+        #     # self._hw.tx.pin_DG0 = True
+        #     voltages[i] = self._hw.rx.voltage
+        #
+        #     # voltages[i] = self._hw.rx.voltage
+        #     self._hw.tx.pin_DG0 = False
+        # print(voltages)
 
-            # voltages[i] = self._hw.rx.voltage
-            self._hw.tx.pin_DG0 = False
-        print(voltages)
-
-        voltage2 = np.mean(voltages[-5:])
+        voltage2 = self._hw.rx.voltage #np.mean(voltages[-5:])
 
         voltage_gain_ratio = voltage1 / voltage2
         voltage_gain_ratio_deviation = abs(1 - self._hw.rx._dg411_gain_ratio / voltage_gain_ratio) * 100
