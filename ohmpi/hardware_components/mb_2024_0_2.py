@@ -159,7 +159,7 @@ class Rx(Rx_mb_2023):
         self.pin_DG0.value = True  # open
         self.pin_DG1.value = True  # open gain 1 inactive
         self.pin_DG2.value = False  # close gain 0.5 active
-        self.gain = 1/3
+        self.gain = self._adc_gain * self._dg411_gain_ratio  # 1/3 by default since self._adc_gain is equal to 2/3 and self._dg411_gain_ratio to 1/2 by default
         if not subclass_init:  # TODO: try to only log this event and not the one created by super()
             self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -183,8 +183,8 @@ class Rx(Rx_mb_2023):
 
     @gain.setter
     def gain(self, value):
-        assert value in [1/3, 2/3]
-        self._dg411_gain = value / self._adc_gain
+        assert value in [1/3, 2/3, self._adc_gain * self._dg411_gain_ratio]  #TODO: 1/3 could be removed since self._adc_gain * self._dg411_gain_ratio is 1/3 by default
+        self._dg411_gain = value / self._adc_gain  # _adc_gain is kept to 2/3 in this board version so _dg411_gain is 1 or 1/2 by default
         if self._dg411_gain == 1.:
             self.pin_DG1.value = False  # closed gain 1 active
             self.pin_DG2.value = True  # open gain 0.5 inactive
@@ -197,7 +197,7 @@ class Rx(Rx_mb_2023):
         self.exec_logger.debug(f'Setting RX gain automatically to {self.gain}')
 
     def reset_gain(self):
-        self.gain = 1/3
+        self.gain =  self._adc_gain * self._dg411_gain_ratio  # 1/3 by default since self._adc_gain is equal to 2/3 and self._dg411_gain_ratio to 1/2 by default
 
     @property
     def voltage(self):
