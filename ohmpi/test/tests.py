@@ -11,7 +11,7 @@ import sys
 from termcolor import colored
 import traceback
 import copy
-impor time
+import time
 from ohmpi.hardware_system import OhmPiHardware
 from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import HARDWARE_CONFIG
