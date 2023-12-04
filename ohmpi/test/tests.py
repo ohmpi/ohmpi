@@ -493,11 +493,13 @@ class OhmPiTests():
             self.test.logger.info('R shunt cannot be tested with this system configuration.')
 
     def test_dg411_gain_ratio(self):
+        self.test_logger.info(
+            f"****************************************************************")
+        self.test_logger.info(
+            f"*** Start DG411 gain ratio test ***")
+        self.test_logger.info(
+            f"****************************************************************")
         test_result = False
-        # quad = [0, 0]
-        # quad = [1,2]
-        roles = ["M","N"]
-        # self._hw.switch_mux(quad, roles, state='on')
 
         self._hw.rx._dg411_gain = 1
         time.sleep(4)
@@ -530,7 +532,10 @@ class OhmPiTests():
         # self._hw.switch_mux(quad, roles, state='off')
 
         self.test_logger.info(
-            f"Test dg411: deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .3f} %")
+            f"Test dg411: Measured DG411 gain ratio = {voltage_gain_ratio: .2f} %")
+
+        self.test_logger.info(
+            f"Test dg411: deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .2f} %")
         if voltage_gain_ratio_deviation <= 10.:
             test_result = True
 
