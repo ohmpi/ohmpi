@@ -103,466 +103,471 @@ def setup_test_logger(mqtt=True):
 
     return test_logger, test_log_filename, TEST_LOGGING_CONFIG['logging_level'], msg
 
-class OhmPiTests():
-    """
-    OhmPiTests class .
-    """
-    def __init__(self, mqtt=True, config=None):
-        # set loggers
-        self.test_logger, _, _, _ = setup_test_logger(mqtt=mqtt)
-        self.exec_logger, _, self.data_logger, _, self.soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
-        print(msg)
-        print("Hardware_config", HARDWARE_CONFIG_nc)
+# class OhmPiTests():
+#     """
+#     OhmPiTests class .
+#     """
+# def __init__(self, mqtt=True, config=None):
+#     # set loggers
+#     test_logger, _, _, _ = setup_test_logger(mqtt=mqtt)
+#     self.exec_logger, _, self.data_logger, _, self.soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
+#     print(msg)
+#     print("Hardware_config", HARDWARE_CONFIG_nc)
+#
+#     # specify loggers when instancing the hardware
+#     #self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+#     #                            'soh_logger': self.soh_logger})
+#
+#     print('config', HARDWARE_CONFIG_nc)
+#     for k, v in HARDWARE_CONFIG_nc.items():
+#         if k == 'mux':
+#             HARDWARE_CONFIG_nc[k]['default'].update({'connect': False})
+#         else:
+#             HARDWARE_CONFIG_nc[k].update({'connect': False})
+#
+#     self._hw_nc = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+#                                 'soh_logger': self.soh_logger}, hardware_config=HARDWARE_CONFIG_nc)
+#
+#
+#     test_logger.info('Hardware configured...')
+#     test_logger.info('OhmPi tests ready to start...')
 
-        # specify loggers when instancing the hardware
-        #self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-        #                            'soh_logger': self.soh_logger})
+def test_connections(self):
+    pass
 
-        print('config', HARDWARE_CONFIG_nc)
-        for k, v in HARDWARE_CONFIG_nc.items():
-            if k == 'mux':
-                HARDWARE_CONFIG_nc[k]['default'].update({'connect': False})
+def test_tx_accessibility(hw_nc, test_logger, devices=['mcp','ads']):
+    tx = hw_nc.tx
+    test_logger.info(
+        f"TX: *** Start TX accessibility test on {tx.specs['model']} board ***")
+    if isinstance(devices, str):
+        devices = [devices]
+    test_result = [False] * len(devices)
+    for i, device in enumerate(devices):
+        if f'{device}_address' in tx.specs:
+            if test_i2c_devices_on_bus(tx.specs[f'{device}_address'], tx.connection):
+                test_logger.info(f"{device} with address {hex(tx.specs[f'{device}_address'])} accessible on I2C bus.")
+                test_result[i] = True
             else:
-                HARDWARE_CONFIG_nc[k].update({'connect': False})
-
-        self._hw_nc = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-                                    'soh_logger': self.soh_logger}, hardware_config=HARDWARE_CONFIG_nc)
-
-
-        self.test_logger.info('Hardware configured...')
-        self.test_logger.info('OhmPi tests ready to start...')
-
-    def test_connections(self):
-        pass
-
-    def test_tx_accessibility(self, devices=['mcp','ads']):
-        tx = self._hw_nc.tx
-        self.test_logger.info(
-            f"TX: *** Start TX accessibility test on {tx.specs['model']} board ***")
-        if isinstance(devices, str):
-            devices = [devices]
-        test_result = [False] * len(devices)
-        for i, device in enumerate(devices):
-            if f'{device}_address' in tx.specs:
-                if test_i2c_devices_on_bus(tx.specs[f'{device}_address'], tx.connection):
-                    self.test_logger.info(f"{device} with address {hex(tx.specs[f'{device}_address'])} accessible on I2C bus.")
-                    test_result[i] = True
-                else:
-                    self.test_logger.info(
-                        f"TX: {device} with address {hex(tx.specs[f'{device}_address'])} NOT accessible on I2C bus.")
-            else:
-                self.test_logger.info(
-                    f"TX: {device} with address {hex(tx.specs[f'{device}_address'])} not in TX config.")
-        return all(test_result)
-
-    def test_tx_connectivity(self, devices=['mcp','ads']):
-        tx = self._hw_nc.tx
-        self.test_logger.info(
-            f"TX: *** Start TX connectivity test on {tx.specs['model']} board ***")
-        if isinstance(devices, str):
-            devices = [devices]
-        test_result = [False] * len(devices)
-        for i, device in enumerate(devices):
-            if f'{device}_address' in tx.specs:
-                try:
-                    getattr(tx, f'reset_{device}')
-                    self.test_logger.info(f"TX: Connection established with {device} with address {hex(tx.specs[f'{device}_address'])}.")
-                    test_result[i] = True
-                except:
-                    traceback.print_exc()
-                    self.test_logger.info(
-                        f"TX: Connection NOT established with {device} with address {hex(tx.specs[f'{device}_address'])}.")
-            else:
-                self.test_logger.info(
-                    f"TX: {device} with address {hex(tx.specs[f'{device}_address'])} not in TX config.")
-        return all(test_result)
-
-    def test_tx_connection(self, devices=['mcp', 'ads']):
-        tx = self._hw_nc.tx
-        self.test_logger.info(
-            f"****************************************************************")
-        self.test_logger.info(
-            f"*** Start TX connection test on {tx.specs['model']} board ***")
-        self.test_logger.info(
-            f"****************************************************************")
-        if isinstance(devices, str):
-            devices = [devices]
-        test_result = [False] * len(devices)
-        for i, device in enumerate(devices):
-            if f'{device}_address' in tx.specs:
-                accessibility_results, connectivity_results = False, False
-                accessibility_results = self.test_tx_accessibility(devices=device)
-                if accessibility_results:
-                    self.test_logger.info(
-                        f"TX: Accessibility test successful. Will check if device respond...")
-                    connectivity_results = self.test_tx_connectivity(devices=device)
-                    if connectivity_results:
-                        self.test_logger.info(
-                            f"TX: Connection test successful for {device} with address {hex(tx.specs[f'{device}_address'])}.")
-                        test_result[i] = True
-
-        return all(test_result)
-
-    def test_rx_accessibility(self, devices=['mcp','ads']):
-        rx = self._hw_nc.rx
-        self.test_logger.info(
-            f"RX: *** Start RX accessibility test on {rx.specs['model']} board ***")
-        test_result = [False] * len(devices)
-
-        if isinstance(devices, str):
-            devices = [devices]
-
-        for i, device in enumerate(devices):
-            if f'{device}_address' in rx.specs:
-                if test_i2c_devices_on_bus(rx.specs[f'{device}_address'], rx.connection):
-                    self.test_logger.info(
-                        f"RX: {device} with address {hex(rx.specs[f'{device}_address'])} accessible on I2C bus.")
-                    test_result[i] = True
-                else:
-                    self.test_logger.info(
-                        f"RX: {device} with address {hex(rx.specs[f'{device}_address'])} NOT accessible on I2C bus.")
-            else:
-                self.test_logger.info(
-                    f"RX: {device} with address {hex(rx.specs[f'{device}_address'])} not in RX config.")
-        return all(test_result)
-
-    def test_rx_connectivity(self, devices=['mcp', 'ads']):
-        rx = self._hw_nc.rx
-        self.test_logger.info(
-            f"RX: *** Start RX connectivity test on {rx.specs['model']} board ***")
-        if isinstance(devices, str):
-            devices = [devices]
-        test_result = [False] * len(devices)
-        for i, device in enumerate(devices):
-            if f'{device}_address' in rx.specs:
-                try:
-                    getattr(f'rx.reset_{device}')
-                    self.test_logger.info(
-                        f"RX: Connection established with {device} with address {hex(rx.specs[f'{device}_address'])}.")
-                    test_result[i] = True
-                except:
-                    self.test_logger.info(
-                        f"RX: Connection NOT established with {device} with address {hex(rx.specs[f'{device}_address'])}.")
-            else:
-                self.test_logger.info(
-                    f"RX: {device} with address {hex(rx.specs[f'{device}_address'])} not in RX config.")
-        return all(test_result)
-
-    def test_rx_connection(self, devices=['mcp','ads']):
-        rx = self._hw_nc.rx
-        self.test_logger.info(
-            f"****************************************************************")
-        self.test_logger.info(
-            f"*** Start RX connection test on {rx.specs['model']} board ***")
-        self.test_logger.info(
-            f"****************************************************************")
-        if isinstance(devices, str):
-            devices = [devices]
-        test_result = [False] * len(devices)
-        for i, device in enumerate(devices):
-            if f'{device}_address' in rx.specs:
-                accessibility_results, connectivity_results = False, False
-                accessibility_results = self.test_rx_accessibility(devices=device)
-                if accessibility_results:
-                    self.test_logger.info(
-                        f"RX: Accessibility test successful. Will check if device respond...")
-                    connectivity_results = self.test_rx_connectivity(devices=device)
-                    if connectivity_results:
-                        self.test_logger.info(
-                            f"RX: Connection test successful for {device} with address {hex(rx.specs[f'{device}_address'])}.")
-                        test_result[i] = True
-
-        return all(test_result)
-
-    def test_mux_accessibility(self, mux_id=None):
-        self.test_logger.info(
-            f"{mux_id}: *** Start MUX accessibility test  ***")
-        if mux_id is None:
-            mux_ids = [k for k in self._hw_nc.mux_boards.keys()]
-            self.test_logger("Testing all MUX boards in MUX config.")
-
+                test_logger.info(
+                    f"TX: {device} with address {hex(tx.specs[f'{device}_address'])} NOT accessible on I2C bus.")
         else:
-            if isinstance(mux_id, str):
-                mux_ids = [mux_id]
-            else:
-                mux_ids = mux_id
+            test_logger.info(
+                f"TX: {device} with address {hex(tx.specs[f'{device}_address'])} not in TX config.")
+    return all(test_result)
 
-        test_result = [False] * len(mux_ids)
-        for i, mux_id in enumerate(mux_ids):
-            mux = self._hw_nc.mux_boards[mux_id]
-            self.test_logger.info(
-                f"{mux_id}: *** Accessibility test initiated for {mux_id} with version {mux.model} ***")
-
-            mux.reset_i2c_ext_tca()
-            if mux._i2c_ext_tca_address is not None :
-                if test_i2c_devices_on_bus(mux._i2c_ext_tca_address, mux._connection):
-                    self.test_logger.info(
-                        f"{mux_id}: i2c extension device with address {hex(mux._i2c_ext_tca_address)} is accessible on I2C bus.")
-                else:
-                    self.test_logger.info(f"{mux_id}: i2c extension device with address {hex(mux._i2c_ext_tca_address)} is NOT accessible on I2C bus.")
-                    continue
-
-            if mux.model == 'mux_2024_0_X':
-                for mcp_address in mux._mcp_addresses:
-                    mcp_address = int(mcp_address, 16)
-                    if mcp_address is not None:
-                        print(mux.connection)
-                        if test_i2c_devices_on_bus(mcp_address, mux.connection):
-                            self.test_logger.info(
-                                f"{mux_id}: device with address {hex(mcp_address)} is accessible on I2C bus.")
-                            test_result[i] = True
-                        else:
-                            self.test_logger.info(f"{mux_id} with address {hex(mcp_address)} is NOT accessible on I2C bus.")
-
-            elif mux.model == 'mux_2023_0_X':
-                if f'mux_tca_address' in mux.specs:
-                    mux.reset_i2c_ext_tca()
-                    if test_i2c_devices_on_bus(mux.specs['mux_tca_address'], mux.connection):
-                        self.test_logger.info(f"{mux_id}: TCA device with address {hex(mux.specs['mux_tca_address'])} is accessible on I2C bus.")
-                        for c, channel in enumerate(mux._tca_channels):
-                            if test_i2c_devices_on_bus(mux.mcp_addresses[c], channel):
-                                self.test_logger.info(
-                                    f"{mux_id}: MCP device with address {hex(mux.mcp_addresses[c])} on channel {channel} is accessible on I2C bus.")
-                                test_result[i] = True
-                            else:
-                                self.test_logger.info(
-                                    f"{mux_id}: MCP device address {hex(mux.mcp_addresses[c])} on channel {channel} is NOT accessible on I2C bus.")
-                    else:
-                        self.test_logger.info(f"{mux_id}: TCA device with address {hex(mcp_address)} is NOT accessible on I2C bus.")
-        return all(test_result)
-
-
-    def test_mux_connectivity(self, mux_id=None):
-        self.test_logger.info(
-            f"{mux_id}: *** Start MUX connectivity test  ***")
-        if mux_id is None:
-            mux_ids = [k for k in self._hw_nc.mux_boards.keys()]
-            self.test_logger.info("Testing all MUX boards in MUX config.")
-
-        else:
-            if isinstance(mux_id, str):
-                mux_ids = [mux_id]
-            else:
-                mux_ids = mux_id
-
-        test_result = [False] * len(mux_ids)
-        for i, mux_id in enumerate(mux_ids):
-            mux = self._hw_nc.mux_boards[mux_id]
-            self.test_logger.info(
-                f"{mux_id}: *** Connectivity test initiated for {mux_id} with version {mux.model} ***")
-            for i in range(len(mux._mcp)):
-                try:
-                    mux.reset_i2c_ext_tca()
-                    mux.reset_one(which=i)
-                    self.test_logger.info(
-                        f"{mux_id}: Connection established with MCP {i}.")
-                except:
-                    traceback.print_exc()
-                    self.test_logger.info(
-                        f"{mux_id}: Connection NOT established with MCP {i}")
-        return all(test_result)
-
-    def test_mux_connection(self, mux_id=None):
-        self.test_logger.info(
-            f"****************************************************************")
-        self.test_logger.info(
-            f"*** Start MUX connection test ***")
-        self.test_logger.info(
-            f"****************************************************************")
-        if mux_id is None:
-            mux_ids = [k for k in self._hw_nc.mux_boards.keys()]
-            self.test_logger.info("Testing all MUX boards in MUX config.")
-
-        else:
-            if isinstance(mux_id, str):
-             mux_ids = [mux_id]
-            else:
-                mux_ids = mux_id
-
-        test_result = [False] * len(mux_ids)
-        for i, mux_id in enumerate(mux_ids):
-            mux = self._hw_nc.mux_boards[mux_id]
-            self.test_logger.info(
-                f"{mux_id}: *** Connection test initiated for {mux_id} with version {mux.model} ***")
-            accessibility_results, connectivity_results = False, False
-            accessibility_results = self.test_mux_accessibility(mux_id=mux_id)
-            if accessibility_results:
-                self.test_logger.info(
-                    f"{mux_id}: Accessibility test successful. Will check if device respond...")
-                connectivity_results = self.test_mux_connectivity(mux_id=mux_id)
-                if connectivity_results:
-                    self.test_logger.info(
-                        f"{mux_id}: MUX connection test successful for {mux_id} with version {mux.model}.")
-                    test_result[i] = True
-
-        return all(test_result)
-
-
-    def test_pwr_connection(self):
-        if self._hw_nc.tx.pwr.voltage_adjustable:
+def test_tx_connectivity(hw_nc, test_logger, devices=['mcp','ads']):
+    tx = hw_nc.tx
+    test_logger.info(
+        f"TX: *** Start TX connectivity test on {tx.specs['model']} board ***")
+    if isinstance(devices, str):
+        devices = [devices]
+    test_result = [False] * len(devices)
+    for i, device in enumerate(devices):
+        if f'{device}_address' in tx.specs:
             try:
-                pass
+                getattr(tx, f'reset_{device}')
+                test_logger.info(f"TX: Connection established with {device} with address {hex(tx.specs[f'{device}_address'])}.")
+                test_result[i] = True
             except:
                 traceback.print_exc()
+                test_logger.info(
+                    f"TX: Connection NOT established with {device} with address {hex(tx.specs[f'{device}_address'])}.")
         else:
-            self.test_logger.info('Pwr cannot be tested with this system configuration.')
+            test_logger.info(
+                f"TX: {device} with address {hex(tx.specs[f'{device}_address'])} not in TX config.")
+    return all(test_result)
 
-    def test_vmn_hardware_offset(self):
-        test_result = False
-        quad = [1, 2]
-        self._hw.rx._dg411_gain = .5
-        vmns = np.zeros(20)
-        roles = ['M', 'N']
-        self._hw.switch_mux(quad, roles, state='on')
+def test_tx_connection(hw_nc, test_logger, devices=['mcp', 'ads']):
+    tx = hw_nc.tx
+    test_logger.info(
+        f"****************************************************************")
+    test_logger.info(
+        f"*** Start TX connection test on {tx.specs['model']} board ***")
+    test_logger.info(
+        f"****************************************************************")
+    if isinstance(devices, str):
+        devices = [devices]
+    test_result = [False] * len(devices)
+    for i, device in enumerate(devices):
+        if f'{device}_address' in tx.specs:
+            accessibility_results, connectivity_results = False, False
+            accessibility_results = test_tx_accessibility(devices=device)
+            if accessibility_results:
+                test_logger.info(
+                    f"TX: Accessibility test successful. Will check if device respond...")
+                connectivity_results = test_tx_connectivity(devices=device)
+                if connectivity_results:
+                    test_logger.info(
+                        f"TX: Connection test successful for {device} with address {hex(tx.specs[f'{device}_address'])}.")
+                    test_result[i] = True
 
-        for i in range(vmns.shape[0]):
-            vmns[i] = (self._hw.rx.voltage * self._hw.rx._dg411_gain + self._hw.rx._bias) + self._hw.rx._vmn_hardware_offset
-            time.sleep(.1)
-        vmn = np.mean(vmns[-10:])
-        vmn_std = np.std(vmns[-10:])
-        self._hw.switch_mux(quad, roles, state='off')
+    return all(test_result)
 
-        # tx_volt = 0.
-        # injection_duration = .5
-        # duty_cycle = .5 # or 0
-        # nb_stack = 2
-        # delay = injection_duration * 2/3
-        # if self.switch_mux_on(quad,roles):
-        #     self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration * 2 / duty_cycle, cycles=nb_stack,
-        #                              duty_cycle=duty_cycle)
-        # vmn = self._hw.last_vmn(delay=delay)
-        # vmn_std = self._hw.last_vmn_dev(delay=delay)
-        print(vmns)
-        vmn_deviation_from_offset = abs(1 - vmn / self._hw.rx._vmn_hardware_offset) *100
-        print(vmn_deviation_from_offset)
-        self.test_logger.info(f"Test Vmn hardware offset: Vmn offset deviation from config = {vmn_deviation_from_offset: .3f} %")
-        if vmn_deviation_from_offset <= 10.:
-            test_result = True
+def test_rx_accessibility(hw_nc, test_logger, devices=['mcp','ads']):
+    rx = hw_nc.rx
+    test_logger.info(
+        f"RX: *** Start RX accessibility test on {rx.specs['model']} board ***")
+    test_result = [False] * len(devices)
 
-        return test_result
+    if isinstance(devices, str):
+        devices = [devices]
 
-
-    def test_r_shunt(self):
-        self.test_logger.info(
-            f"****************************************************************")
-        self.test_logger.info(
-            f"*** Start R shunt test ***")
-        self.test_logger.info(
-            f"****************************************************************")
-
-        if self._hw.tx.pwr.voltage_adjustable:
-            # check pwr is on, if not, let's turn it on
-            switch_tx_pwr_off = False
-            if self._hw.pwr_state == 'off':
-                self._hw.pwr_state = 'on'
-                switch_tx_pwr_off = True
-            test_result = False
-            quad = [1, 1]
-            roles = ['A','B']
-            tx_volt = .1
-            injection_duration = 2.
-            delay = injection_duration * 2 / 3
-            if self._hw.tx.voltage != tx_volt:
-                self._hw.tx.voltage = tx_volt
-            # turn dps_pwr_on if needed
-            switch_pwr_off = False
-            if self._hw.pwr.pwr_state == 'off':
-                self._hw.pwr.pwr_state = 'on'
-                switch_pwr_off = True
-
-
-            self._hw.switch_mux(quad, roles, state='on', bypass_ab_check=True)
-            self._hw.tx.pwr._voltage_max = 0.1
-            self._hw.tx.pwr._current_max_tolerance = 0.
-            self._hw.tx.pwr.current_max = 0.045  # mA
-            # self._hw._vab_pulse(duration=injection_duration, vab=tx_volt)
-            time.sleep(.5)
-            injection = Thread(target=self._hw._inject, kwargs={'injection_duration': injection_duration, 'polarity': 1})
-            readings = Thread(target=self._hw._read_values, kwargs={'sampling_rate': self._hw.sampling_rate, 'append': False, 'test_r_shunt': True})
-            readings.start()
-            injection.start()
-            readings.join()
-            injection.join()
-            self._hw.tx.polarity = 0
-
-            iab = self._hw.readings[-3:, 3]
-            vab = self._hw.tx.pwr.voltage
-            # self._hw.tx.pwr._retrieve_current()
-            iab_dps = self._hw._current [-3:]
-            print(iab, iab_dps, vab)
-
-            # close mux path and put pin back to GND
-            self._hw.switch_mux(quad, roles, state='off')
-
-            iab_deviation = abs(1 - np.mean(iab) / np.mean(iab_dps)) * 100
-
-            self.test_logger.info(
-                f"Test r_shunt: R shunt deviation from config = {iab_deviation: .3f} %")
-            if iab_deviation <= 10.:
-                test_result = True
+    for i, device in enumerate(devices):
+        if f'{device}_address' in rx.specs:
+            if test_i2c_devices_on_bus(rx.specs[f'{device}_address'], rx.connection):
+                test_logger.info(
+                    f"RX: {device} with address {hex(rx.specs[f'{device}_address'])} accessible on I2C bus.")
+                test_result[i] = True
             else:
-                pass
-
-            self._hw._current_max_tolerance = 20.
-
-            self.status = 'idle'
-            if switch_pwr_off:
-                self._hw.pwr.pwr_state = 'off'
-
-            # if power was off before measurement, let's turn if off
-            if switch_tx_pwr_off:
-                self._hw.pwr_state = 'off'
+                test_logger.info(
+                    f"RX: {device} with address {hex(rx.specs[f'{device}_address'])} NOT accessible on I2C bus.")
         else:
-            self.test_logger.info('R shunt cannot be tested with this system configuration.')
+            test_logger.info(
+                f"RX: {device} with address {hex(rx.specs[f'{device}_address'])} not in RX config.")
+    return all(test_result)
 
-    def test_dg411_gain_ratio(self):
-        self.test_logger.info(
-            f"****************************************************************")
-        self.test_logger.info(
-            f"*** Start DG411 gain ratio test ***")
-        self.test_logger.info(
-            f"****************************************************************")
+def test_rx_connectivity(hw_nc, test_logger, devices=['mcp', 'ads']):
+    rx = hw_nc.rx
+    test_logger.info(
+        f"RX: *** Start RX connectivity test on {rx.specs['model']} board ***")
+    if isinstance(devices, str):
+        devices = [devices]
+    test_result = [False] * len(devices)
+    for i, device in enumerate(devices):
+        if f'{device}_address' in rx.specs:
+            try:
+                getattr(f'rx.reset_{device}')
+                test_logger.info(
+                    f"RX: Connection established with {device} with address {hex(rx.specs[f'{device}_address'])}.")
+                test_result[i] = True
+            except:
+                test_logger.info(
+                    f"RX: Connection NOT established with {device} with address {hex(rx.specs[f'{device}_address'])}.")
+        else:
+            test_logger.info(
+                f"RX: {device} with address {hex(rx.specs[f'{device}_address'])} not in RX config.")
+    return all(test_result)
+
+def test_rx_connection(hw_nc, test_logger, devices=['mcp','ads']):
+    rx = hw_nc.rx
+    test_logger.info(
+        f"****************************************************************")
+    test_logger.info(
+        f"*** Start RX connection test on {rx.specs['model']} board ***")
+    test_logger.info(
+        f"****************************************************************")
+    if isinstance(devices, str):
+        devices = [devices]
+    test_result = [False] * len(devices)
+    for i, device in enumerate(devices):
+        if f'{device}_address' in rx.specs:
+            accessibility_results, connectivity_results = False, False
+            accessibility_results = test_rx_accessibility(devices=device)
+            if accessibility_results:
+                test_logger.info(
+                    f"RX: Accessibility test successful. Will check if device respond...")
+                connectivity_results = test_rx_connectivity(devices=device)
+                if connectivity_results:
+                    test_logger.info(
+                        f"RX: Connection test successful for {device} with address {hex(rx.specs[f'{device}_address'])}.")
+                    test_result[i] = True
+
+    return all(test_result)
+
+def test_mux_accessibility(hw_nc, test_logger, mux_id=None):
+    mux_boards = hw_nc.mux_boards
+    test_logger.info(
+        f"{mux_id}: *** Start MUX accessibility test  ***")
+    if mux_id is None:
+        mux_ids = [k for k in mux_boards.keys()]
+        test_logger("Testing all MUX boards in MUX config.")
+
+    else:
+        if isinstance(mux_id, str):
+            mux_ids = [mux_id]
+        else:
+            mux_ids = mux_id
+
+    test_result = [False] * len(mux_ids)
+    for i, mux_id in enumerate(mux_ids):
+        mux = mux_boards[mux_id]
+        test_logger.info(
+            f"{mux_id}: *** Accessibility test initiated for {mux_id} with version {mux.model} ***")
+
+        mux.reset_i2c_ext_tca()
+        if mux._i2c_ext_tca_address is not None :
+            if test_i2c_devices_on_bus(mux._i2c_ext_tca_address, mux._connection):
+                test_logger.info(
+                    f"{mux_id}: i2c extension device with address {hex(mux._i2c_ext_tca_address)} is accessible on I2C bus.")
+            else:
+                test_logger.info(f"{mux_id}: i2c extension device with address {hex(mux._i2c_ext_tca_address)} is NOT accessible on I2C bus.")
+                continue
+
+        if mux.model == 'mux_2024_0_X':
+            for mcp_address in mux._mcp_addresses:
+                mcp_address = int(mcp_address, 16)
+                if mcp_address is not None:
+                    print(mux.connection)
+                    if test_i2c_devices_on_bus(mcp_address, mux.connection):
+                        test_logger.info(
+                            f"{mux_id}: device with address {hex(mcp_address)} is accessible on I2C bus.")
+                        test_result[i] = True
+                    else:
+                        test_logger.info(f"{mux_id} with address {hex(mcp_address)} is NOT accessible on I2C bus.")
+
+        elif mux.model == 'mux_2023_0_X':
+            if f'mux_tca_address' in mux.specs:
+                mux.reset_i2c_ext_tca()
+                if test_i2c_devices_on_bus(mux.specs['mux_tca_address'], mux.connection):
+                    test_logger.info(f"{mux_id}: TCA device with address {hex(mux.specs['mux_tca_address'])} is accessible on I2C bus.")
+                    for c, channel in enumerate(mux._tca_channels):
+                        if test_i2c_devices_on_bus(mux.mcp_addresses[c], channel):
+                            test_logger.info(
+                                f"{mux_id}: MCP device with address {hex(mux.mcp_addresses[c])} on channel {channel} is accessible on I2C bus.")
+                            test_result[i] = True
+                        else:
+                            test_logger.info(
+                                f"{mux_id}: MCP device address {hex(mux.mcp_addresses[c])} on channel {channel} is NOT accessible on I2C bus.")
+                else:
+                    test_logger.info(f"{mux_id}: TCA device with address {hex(mcp_address)} is NOT accessible on I2C bus.")
+    return all(test_result)
+
+
+def test_mux_connectivity(hw_nc, test_logger, mux_id=None):
+    mux_boards = hw_nc.mux_boards
+    test_logger.info(
+        f"{mux_id}: *** Start MUX connectivity test  ***")
+    if mux_id is None:
+        mux_ids = [k for k in mux_boards.keys()]
+        test_logger.info("Testing all MUX boards in MUX config.")
+
+    else:
+        if isinstance(mux_id, str):
+            mux_ids = [mux_id]
+        else:
+            mux_ids = mux_id
+
+    test_result = [False] * len(mux_ids)
+    for i, mux_id in enumerate(mux_ids):
+        mux = mux_boards[mux_id]
+        test_logger.info(
+            f"{mux_id}: *** Connectivity test initiated for {mux_id} with version {mux.model} ***")
+        for i in range(len(mux._mcp)):
+            try:
+                mux.reset_i2c_ext_tca()
+                mux.reset_one(which=i)
+                test_logger.info(
+                    f"{mux_id}: Connection established with MCP {i}.")
+            except:
+                traceback.print_exc()
+                test_logger.info(
+                    f"{mux_id}: Connection NOT established with MCP {i}")
+    return all(test_result)
+
+def test_mux_connection(hw_nc, test_logger, mux_id=None):
+    mux_boards = hw_nc.mux_boards
+    test_logger.info(
+        f"****************************************************************")
+    test_logger.info(
+        f"*** Start MUX connection test ***")
+    test_logger.info(
+        f"****************************************************************")
+    if mux_id is None:
+        mux_ids = [k for k in mux_boards.keys()]
+        test_logger.info("Testing all MUX boards in MUX config.")
+
+    else:
+        if isinstance(mux_id, str):
+         mux_ids = [mux_id]
+        else:
+            mux_ids = mux_id
+
+    test_result = [False] * len(mux_ids)
+    for i, mux_id in enumerate(mux_ids):
+        mux = mux_boards[mux_id]
+        test_logger.info(
+            f"{mux_id}: *** Connection test initiated for {mux_id} with version {mux.model} ***")
+        accessibility_results, connectivity_results = False, False
+        accessibility_results = test_mux_accessibility(mux_id=mux_id)
+        if accessibility_results:
+            test_logger.info(
+                f"{mux_id}: Accessibility test successful. Will check if device respond...")
+            connectivity_results = test_mux_connectivity(mux_id=mux_id)
+            if connectivity_results:
+                test_logger.info(
+                    f"{mux_id}: MUX connection test successful for {mux_id} with version {mux.model}.")
+                test_result[i] = True
+
+    return all(test_result)
+
+
+def test_pwr_connection(hw_nc, test_logger):
+    tx = hw_nc.tx
+    if tx.pwr.voltage_adjustable:
+        try:
+            pass
+        except:
+            traceback.print_exc()
+    else:
+        test_logger.info('Pwr cannot be tested with this system configuration.')
+
+def test_vmn_hardware_offset(hw, test_logger):
+
+    test_result = False
+    quad = [1, 2]
+    hw.rx._dg411_gain = .5
+    vmns = np.zeros(20)
+    roles = ['M', 'N']
+    hw.switch_mux(quad, roles, state='on')
+
+    for i in range(vmns.shape[0]):
+        vmns[i] = (hw.rx.voltage * hw.rx._dg411_gain + hw.rx._bias) + hw.rx._vmn_hardware_offset
+        time.sleep(.1)
+    vmn = np.mean(vmns[-10:])
+    vmn_std = np.std(vmns[-10:])
+    hw.switch_mux(quad, roles, state='off')
+
+    # tx_volt = 0.
+    # injection_duration = .5
+    # duty_cycle = .5 # or 0
+    # nb_stack = 2
+    # delay = injection_duration * 2/3
+    # if self.switch_mux_on(quad,roles):
+    #     hw.vab_square_wave(tx_volt, cycle_duration=injection_duration * 2 / duty_cycle, cycles=nb_stack,
+    #                              duty_cycle=duty_cycle)
+    # vmn = hw.last_vmn(delay=delay)
+    # vmn_std = hw.last_vmn_dev(delay=delay)
+    print(vmns)
+    vmn_deviation_from_offset = abs(1 - vmn / hw.rx._vmn_hardware_offset) *100
+    print(vmn_deviation_from_offset)
+    test_logger.info(f"Test Vmn hardware offset: Vmn offset deviation from config = {vmn_deviation_from_offset: .3f} %")
+    if vmn_deviation_from_offset <= 10.:
+        test_result = True
+
+    return test_result
+
+
+def test_r_shunt(hw, test_logger):
+    test_logger.info(
+        f"****************************************************************")
+    test_logger.info(
+        f"*** Start R shunt test ***")
+    test_logger.info(
+        f"****************************************************************")
+
+    if hw.tx.pwr.voltage_adjustable:
+        # check pwr is on, if not, let's turn it on
+        switch_tx_pwr_off = False
+        if hw.pwr_state == 'off':
+            hw.pwr_state = 'on'
+            switch_tx_pwr_off = True
         test_result = False
+        quad = [1, 1]
+        roles = ['A','B']
+        tx_volt = .1
+        injection_duration = 2.
+        delay = injection_duration * 2 / 3
+        if hw.tx.voltage != tx_volt:
+            hw.tx.voltage = tx_volt
+        # turn dps_pwr_on if needed
+        switch_pwr_off = False
+        if hw.pwr.pwr_state == 'off':
+            hw.pwr.pwr_state = 'on'
+            switch_pwr_off = True
 
-        self._hw.rx._dg411_gain = 1
-        time.sleep(4)
-        # voltages = np.zeros(10)
-        # for i in range(voltages.shape[0]):
-        #     self._hw.tx.pin_DG0 = True
-        #     time.sleep(.1)
-        #     voltages[i] = self._hw.rx.voltage
-        #
-        #     # voltages[i] = self._hw.rx.voltage
 
-        voltage1 = self._hw.rx.voltage #np.mean(voltages[-5:])
-        self._hw.rx._dg411_gain = 0.5
-        # voltages = np.zeros(10)
-        # for i in range(voltages.shape[0]):
-        #     time.sleep(.1)
-        #     # self._hw.tx.pin_DG0 = True
-        #     voltages[i] = self._hw.rx.voltage
-        #
-        #     # voltages[i] = self._hw.rx.voltage
-        #     self._hw.tx.pin_DG0 = False
+        hw.switch_mux(quad, roles, state='on', bypass_ab_check=True)
+        hw.tx.pwr._voltage_max = 0.1
+        hw.tx.pwr._current_max_tolerance = 0.
+        hw.tx.pwr.current_max = 0.045  # mA
+        # hw._vab_pulse(duration=injection_duration, vab=tx_volt)
+        time.sleep(.5)
+        injection = Thread(target=hw._inject, kwargs={'injection_duration': injection_duration, 'polarity': 1})
+        readings = Thread(target=hw._read_values, kwargs={'sampling_rate': hw.sampling_rate, 'append': False, 'test_r_shunt': True})
+        readings.start()
+        injection.start()
+        readings.join()
+        injection.join()
+        hw.tx.polarity = 0
 
-        voltage2 = self._hw.rx.voltage #np.mean(voltages[-5:])
+        iab = hw.readings[-3:, 3]
+        vab = hw.tx.pwr.voltage
+        # hw.tx.pwr._retrieve_current()
+        iab_dps = hw._current [-3:]
+        print(iab, iab_dps, vab)
 
-        voltage_gain_ratio = voltage1 / voltage2
-        voltage_gain_ratio_deviation = abs(1 - self._hw.rx._dg411_gain_ratio / voltage_gain_ratio) * 100
+        # close mux path and put pin back to GND
+        hw.switch_mux(quad, roles, state='off')
 
-        self.test_logger.info(
-            f"DG411 Test: Measured DG411 gain ratio = {voltage_gain_ratio: .1f}")
+        iab_deviation = abs(1 - np.mean(iab) / np.mean(iab_dps)) * 100
 
-        self.test_logger.info(
-            f"DG411 Test: deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .2f} %")
-        if voltage_gain_ratio_deviation <= 10.:
+        test_logger.info(
+            f"Test r_shunt: R shunt deviation from config = {iab_deviation: .3f} %")
+        if iab_deviation <= 10.:
             test_result = True
+        else:
+            pass
 
-        return test_result
+        hw._current_max_tolerance = 20.
+
+        self.status = 'idle'
+        if switch_pwr_off:
+            hw.pwr.pwr_state = 'off'
+
+        # if power was off before measurement, let's turn if off
+        if switch_tx_pwr_off:
+            hw.pwr_state = 'off'
+    else:
+        test_logger.info('R shunt cannot be tested with this system configuration.')
+
+def test_dg411_gain_ratio(hw, test_logger):
+    test_logger.info(
+        f"****************************************************************")
+    test_logger.info(
+        f"*** Start DG411 gain ratio test ***")
+    test_logger.info(
+        f"****************************************************************")
+    test_result = False
+
+    hw.rx._dg411_gain = 1
+    time.sleep(4)
+    # voltages = np.zeros(10)
+    # for i in range(voltages.shape[0]):
+    #     hw.tx.pin_DG0 = True
+    #     time.sleep(.1)
+    #     voltages[i] = hw.rx.voltage
+    #
+    #     # voltages[i] = hw.rx.voltage
+
+    voltage1 = hw.rx.voltage #np.mean(voltages[-5:])
+    hw.rx._dg411_gain = 0.5
+    # voltages = np.zeros(10)
+    # for i in range(voltages.shape[0]):
+    #     time.sleep(.1)
+    #     # hw.tx.pin_DG0 = True
+    #     voltages[i] = hw.rx.voltage
+    #
+    #     # voltages[i] = hw.rx.voltage
+    #     hw.tx.pin_DG0 = False
+
+    voltage2 = hw.rx.voltage #np.mean(voltages[-5:])
+
+    voltage_gain_ratio = voltage1 / voltage2
+    voltage_gain_ratio_deviation = abs(1 - hw.rx._dg411_gain_ratio / voltage_gain_ratio) * 100
+
+    test_logger.info(
+        f"DG411 Test: Measured DG411 gain ratio = {voltage_gain_ratio: .1f}")
+
+    test_logger.info(
+        f"DG411 Test: deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .2f} %")
+    if voltage_gain_ratio_deviation <= 10.:
+        test_result = True
+
+    return test_result
 
 
-    def test_mqtt_broker(self):
-        pass
+def test_mqtt_broker(hw):
+    pass
 
-    def test_mux(self):
-        self._hw.test_mux()
+def test_mux(hw):
+    hw.test_mux()
