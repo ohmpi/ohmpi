@@ -391,8 +391,8 @@ class OhmPiTests():
         # quad = [0, 0]
         self._hw.rx.gain = 1/3
         vmns = np.zeros(20)
-        for i in vmns.shape[0]:
-            vmns[i] =  self._hw.rx.voltage
+        for i in range(vmns.shape[0]):
+            vmns[i] = self._hw.rx.voltage
             time.sleep(.1)
         vmn = np.mean(vmns)
         vmn_std = np.std(vmns)
