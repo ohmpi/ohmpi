@@ -502,6 +502,8 @@ class OhmPiTests():
         self._hw.rx._dg411_gain = 1
         voltages = np.zeros(10)
         self._hw.tx.pin_DG0 = True
+        self._hw.tx.reset_ads()
+
         time.sleep(1)
         for i in range(voltages.shape[0]):
             time.sleep(.1)
@@ -514,7 +516,6 @@ class OhmPiTests():
         self._hw.rx._dg411_gain = 0.5
         voltages = np.zeros(10)
         self._hw.tx.pin_DG0 = True
-        self._hw.tx.reset_ads()
 
         time.sleep(1)
         for i in range(voltages.shape[0]):
