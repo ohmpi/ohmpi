@@ -515,7 +515,7 @@ class OhmPiTests():
         for i in range(voltages.shape[0]):
             time.sleep(.2)
             self._hw.tx.pin_DG0 = True
-            voltages[i] = (self._hw.rx.voltage + self._hw.rx._bias) + self._hw.rx._vmn_hardware_offset
+            voltages[i] = (self._hw.rx.voltage + self._hw.rx._bias)  # + self._hw.rx._vmn_hardware_offset
 
             # voltages[i] = self._hw.rx.voltage
             self._hw.tx.pin_DG0 = False
