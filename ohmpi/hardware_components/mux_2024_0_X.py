@@ -164,7 +164,7 @@ class Mux(MuxAbstract):
             self.connection = adafruit_tca9548a.TCA9548A(self._connection, self._i2c_ext_tca_address)[self._i2c_ext_tca_channel]
 
     def reset_one(self, which=0):
-        self._mcp[which] = MCP23017(self._i2c_ext_tca, address=int(self._mcp_addresses[which], 16))
+        self._mcp[which] = MCP23017(self.connection, address=int(self._mcp_addresses[which], 16))
 
     def switch_one(self, elec=None, role=None, state=None):
         MuxAbstract.switch_one(self, elec=elec, role=role, state=state)
