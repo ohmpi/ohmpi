@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MUX board v2024 &mdash; OhmPi v2024rc documentation</title>
+  <title>STEP n°3: MUX board &mdash; OhmPi v2024rc documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,9 +18,7 @@
         <script src="../../_static/doctools.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Power supply" href="hw_pwr.html" />
-    <link rel="prev" title="MUX board v2023" href="mux_2023.html" /> 
+    <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,26 +40,9 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Ohmpi.html">OhmPi project</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../hardware.html">Hardware</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="hw_info.html">OhmPi electronic design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mb.html">Measurement board</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mux_2023.html">MUX board v2023</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">MUX board v2024</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#part-a-assembly-of-mux-board"><strong>PART A</strong> Assembly of MUX board</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#required-components">Required components</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#part-b-mux-board-address"><strong>PART B</strong> MUX board address</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#part-c-validation-of-mux-board"><strong>PART C</strong> Validation of MUX board</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="hw_pwr.html">Power supply</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hw_rpi.html">Raspberry Pi  configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="assembling.html">Assembling the OhmPi</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware.html">Hardware</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../software.html">Software and operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
@@ -84,10 +65,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../hardware.html">Hardware</a></li>
-      <li class="breadcrumb-item active">MUX board v2024</li>
+      <li class="breadcrumb-item active"><strong>STEP n°3:</strong> MUX board</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/source_rst/hardware/mux_2024.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/source_rst/V2023.x.x/V2023_step_03.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -99,9 +79,8 @@
 <p class="admonition-title">Warning</p>
 <p><strong>OhmPi is a participative project open to all, it requires skills in electronics and to respect the safety rules. OhmPi must be assembled in a professional context and by people competent in electronics. The OhmPi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The OhmPi team cannot be held responsible if the equipment does not work after assembly.</strong></p>
 </div>
-<section id="mux-board-v2024">
-<h1>MUX board v2024<a class="headerlink" href="#mux-board-v2024" title="Permalink to this heading"></a></h1>
-<p><strong>TO BE UPDATED</strong></p>
+<section id="step-n3-mux-board">
+<h1><strong>STEP n°3:</strong> MUX board<a class="headerlink" href="#step-n3-mux-board" title="Permalink to this heading"></a></h1>
 <p>The multiplexing of the channels is a mechanical multiplexing based on OMRON’s manufacturing relays (G5LE-1-VD 12 VDC). Each relay is combined with
 a ZVN4206A power MOFSET. The raspberry has only 30 GPIOs, which is not enough to activate all the 64 electrodes, which represent 512 GPIOs.
 We used gpio expander I2C (MCP23017). We have associated these components with an I2C multiplexer of type type TCA9548A from adafruit.
@@ -117,175 +96,44 @@ In the following presentation for an OhmPi 64 electrodes, we will use the addres
 </figure>
 <table class="docutils align-default" id="id1">
 <caption><span class="caption-text">List of components</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 8%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
-</colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>Component</p></th>
-<th class="head"><p>Number</p></th>
-<th class="head"><p>Cost per unit €</p></th>
-<th class="head"><p>Total cost €</p></th>
-<th class="head"><p>Manufacturer</p></th>
-<th class="head"><p>Manufacturer s reference</p></th>
-<th class="head"><p>Web reference</p></th>
+<tr class="row-odd"><th class="head"><p>Components;Number;Cost per unit;Total cost ;Manufacturer;Manufacturer s reference;Web reference;</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Printed circuit board</p></td>
-<td><p>4</p></td>
-<td><p>140</p></td>
-<td><p>560</p></td>
-<td><p>Asler</p></td>
-<td><ul class="simple">
-<li></li>
-</ul>
-</td>
-<td><ul class="simple">
-<li></li>
-</ul>
-</td>
+<tr class="row-even"><td><p>Printed circuit board ;4;140;560;Asler;-;-;</p></td>
 </tr>
-<tr class="row-odd"><td><p>Pin strip no ejector  16 pins</p></td>
-<td><p>16</p></td>
-<td><p>0.62</p></td>
-<td><p>9.92</p></td>
-<td><p>BLK electronic</p></td>
-<td><p>1580994</p></td>
-<td><p><a class="reference external" href="https://www.conrad.com/p/tru-components-1580994-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-16-no-of-rows-2-1-pcs-1580994">https://www.conrad.com/p/tru-components-1580994-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-16-no-of-rows-2-1-pcs-1580994</a></p></td>
+<tr class="row-odd"><td><p>Pin strip no ejector  16 pins;16;0.62;9.92;BLK electronic;10120550;https://www.conrad.com/p/tru-components-1580994-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-16-no-of-rows-2-1-pcs-1580994</p></td>
 </tr>
-<tr class="row-even"><td><p>diode-1n4007</p></td>
-<td><p>256</p></td>
-<td><p>0.091</p></td>
-<td><p>23.296</p></td>
-<td><p>Diodes Incorporated</p></td>
-<td><p>1N4007-T</p></td>
-<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Diodes-Incorporated/1N4007-T?qs=sGAEpiMZZMueQxo7L%2FBPyAkbORUUMREn">https://www.mouser.fr/ProductDetail/Diodes-Incorporated/1N4007-T?qs=sGAEpiMZZMueQxo7L%2FBPyAkbORUUMREn</a></p></td>
+<tr class="row-even"><td><p>diode-1n4007;256;0.091;23.296;Diodes Incorporated;1N4007-T;https://www.mouser.fr/ProductDetail/Diodes-Incorporated/1N4007-T?qs=sGAEpiMZZMueQxo7L%2FBPyAkbORUUMREn</p></td>
 </tr>
-<tr class="row-odd"><td><p>Pin strip no ejector  6 pins</p></td>
-<td><p>4</p></td>
-<td><p>0.39</p></td>
-<td><p>1.56</p></td>
-<td><p>BLK electronic</p></td>
-<td><p>10120550</p></td>
-<td><p><a class="reference external" href="https://www.conrad.com/p/bkl-electronic-10120550-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-6-no-of-rows-2-1-pcs-741435">https://www.conrad.com/p/bkl-electronic-10120550-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-6-no-of-rows-2-1-pcs-741435</a></p></td>
+<tr class="row-odd"><td><p>Pin strip no ejector  6 pins;4;0.39;1.56;BLK electronic;10120550;https://www.conrad.com/p/tru-components-1580994-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-16-no-of-rows-2-1-pcs-1580994</p></td>
 </tr>
-<tr class="row-even"><td><p>Dual screw terminal (5.08-mm pitch)</p></td>
-<td><p>12</p></td>
-<td><p>0.648</p></td>
-<td><p>7.776</p></td>
-<td><p>CUI Devices</p></td>
-<td><p>TB009-508-02BE</p></td>
-<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/CUI-Devices/TB009-508-02BE?qs=vLWxofP3U2wCFk5uCkWTkA%3D%3D">https://www.mouser.fr/ProductDetail/CUI-Devices/TB009-508-02BE?qs=vLWxofP3U2wCFk5uCkWTkA%3D%3D</a></p></td>
+<tr class="row-even"><td><p>Dual screw terminal (5.08-mm pitch);12;0.648;7.776;CUI Devices;TB009-508-02BE;https://www.mouser.fr/ProductDetail/CUI-Devices/TB009-508-02BE?qs=vLWxofP3U2wCFk5uCkWTkA%3D%3D</p></td>
 </tr>
-<tr class="row-odd"><td><p>Generic male header - 3 pins</p></td>
-<td><p>12</p></td>
-<td><p>0.205</p></td>
-<td><p>2.46</p></td>
-<td><p>TE Connectivity</p></td>
-<td><p>4-103321-5</p></td>
-<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/TE-Connectivity/4-103321-5?qs=5TwgZeq9E7HSYLqaljJYrw%3D%3D">https://www.mouser.fr/ProductDetail/TE-Connectivity/4-103321-5?qs=5TwgZeq9E7HSYLqaljJYrw%3D%3D</a></p></td>
+<tr class="row-odd"><td><p>Generic male header - 3 pins;12;0.205;2.46;TE Connectivity;4-103321-5;https://www.mouser.fr/ProductDetail/TE-Connectivity/4-103321-5?qs=5TwgZeq9E7HSYLqaljJYrw%3D%3D</p></td>
 </tr>
-<tr class="row-even"><td><p>MCP23017 I2C I/O Expander</p></td>
-<td><p>16</p></td>
-<td><p>2.5</p></td>
-<td><p>40</p></td>
-<td><p>Adafruit</p></td>
-<td><p>732</p></td>
-<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Adafruit/732?qs=sGAEpiMZZMsKEdP9slC0Yfx16nYdMpXJueeOGoLBlDI%3D">https://www.mouser.fr/ProductDetail/Adafruit/732?qs=sGAEpiMZZMsKEdP9slC0Yfx16nYdMpXJueeOGoLBlDI%3D</a></p></td>
+<tr class="row-even"><td><p>MCP23017 I2C I/O Expander;16;2.5;40;Adafruit;732;https://www.mouser.fr/ProductDetail/Adafruit/732?qs=sGAEpiMZZMsKEdP9slC0Yfx16nYdMpXJueeOGoLBlDI%3D</p></td>
 </tr>
-<tr class="row-odd"><td><p>Omron G5LE-1-VD 12 VDC PCB relay 12 V DC 8 A 1</p></td>
-<td><p>256</p></td>
-<td><p>1.27</p></td>
-<td><p>325.12</p></td>
-<td><p>Omron</p></td>
-<td><p>G5LE-1-VD 12 VDC</p></td>
-<td><p><a class="reference external" href="https://www.conrad.com/p/omron-g5le-1-vd-12-vdc-pcb-relay-12-v-dc-8-a-1-change-over-1-pcs-503811">https://www.conrad.com/p/omron-g5le-1-vd-12-vdc-pcb-relay-12-v-dc-8-a-1-change-over-1-pcs-503811</a></p></td>
+<tr class="row-odd"><td><p>Omron G5LE-1-VD 12 VDC PCB relay 12 V DC 8 A 1;256;1.27;325.12;Omron;G5LE-1-VD 12 VDC;https://www.conrad.com/p/omron-g5le-1-vd-12-vdc-pcb-relay-12-v-dc-8-a-1-change-over-1-pcs-503811</p></td>
 </tr>
-<tr class="row-even"><td><p>ZVN4206A   MOSFET-NCHANNEL</p></td>
-<td><p>256</p></td>
-<td><p>0.471</p></td>
-<td><p>120.576</p></td>
-<td><p>Diodes Incorporated</p></td>
-<td><p>ZVN4206A</p></td>
-<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Diodes-Incorporated/ZVN4206A?qs=vHuUswq2%252Bsz9b%2Ff6fcXt7g%3D%3D">https://www.mouser.fr/ProductDetail/Diodes-Incorporated/ZVN4206A?qs=vHuUswq2%252Bsz9b%2Ff6fcXt7g%3D%3D</a></p></td>
+<tr class="row-even"><td><p>ZVN4206A   MOSFET-NCHANNEL;256;0.471;120.576;Diodes Incorporated ;ZVN4206A;https://www.mouser.fr/ProductDetail/Diodes-Incorporated/ZVN4206A?qs=vHuUswq2%252Bsz9b%2Ff6fcXt7g%3D%3D</p></td>
 </tr>
-<tr class="row-odd"><td><p>100kΩ Resistor</p></td>
-<td><p>256</p></td>
-<td><p>0.061</p></td>
-<td><p>15.616</p></td>
-<td><p>Vishay / Beyschlag</p></td>
-<td><p>MBA02040C1003FRP00</p></td>
-<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Vishay-Beyschlag/MBA02040C1003FRP00?qs=mzRxyRlhVdt9crF7Zyf%2F5Q%3D%3D">https://www.mouser.fr/ProductDetail/Vishay-Beyschlag/MBA02040C1003FRP00?qs=mzRxyRlhVdt9crF7Zyf%2F5Q%3D%3D</a></p></td>
+<tr class="row-odd"><td><p>100k Resistor;256;0.061;15.616;Vishay / Beyschlag ;MBA02040C1003FRP00 ;https://www.mouser.fr/ProductDetail/Vishay-Beyschlag/MBA02040C1003FRP00?qs=mzRxyRlhVdt9crF7Zyf%2F5Q%3D%3D</p></td>
 </tr>
-<tr class="row-even"><td><p>Adafruit TCA9548A</p></td>
-<td><p>4</p></td>
-<td><p>5.89</p></td>
-<td><p>23.56</p></td>
-<td><p>Adafruit</p></td>
-<td><p>2717</p></td>
-<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Adafruit/2717?qs=sGAEpiMZZMsyYdr3R27aV4EQf73yOH%252Baqg%252BZ3hVktao%3D">https://www.mouser.fr/ProductDetail/Adafruit/2717?qs=sGAEpiMZZMsyYdr3R27aV4EQf73yOH%252Baqg%252BZ3hVktao%3D</a></p></td>
+<tr class="row-even"><td><p>Adafruit TCA9548A;4;5.89;23.56;Adafruit ;2717;https://www.mouser.fr/ProductDetail/Adafruit/2717?qs=sGAEpiMZZMsyYdr3R27aV4EQf73yOH%252Baqg%252BZ3hVktao%3D</p></td>
 </tr>
-<tr class="row-odd"><td><p>BKL Electronic 10120558 Pin strip no ejector Contact spacing: 2.54 mm Total number of pins: 16 No. of rows: 2 1 pc(s)</p></td>
-<td><p>16</p></td>
-<td><p>0.51</p></td>
-<td><p>8.16</p></td>
-<td><p>BLK electronic</p></td>
-<td><p>10120558</p></td>
-<td><p><a class="reference external" href="https://www.conrad.com/p/bkl-electronic-10120558-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-16-no-of-rows-2-1-pcs-741727?searchTerm=741727&amp;searchType=suggest&amp;searchSuggest=product">https://www.conrad.com/p/bkl-electronic-10120558-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-16-no-of-rows-2-1-pcs-741727?searchTerm=741727&amp;searchType=suggest&amp;searchSuggest=product</a></p></td>
+<tr class="row-odd"><td><p>BKL Electronic 10120558 Pin strip no ejector Contact spacing: 2.54 mm Total number of pins: 16 No. of rows: 2 1 pc(s);16;0.51;8.16;BLK electronic;10120558;https://www.conrad.com/p/bkl-electronic-10120558-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-16-no-of-rows-2-1-pcs-741727?searchTerm=741727&amp;searchType=suggest&amp;searchSuggest=product</p></td>
 </tr>
-<tr class="row-even"><td><p>BKL Electronic 10120862 Pin connector + strain relief Contact spacing: 2.54 mm Total number of pins: 6 No. of rows: 2 1</p></td>
-<td><p>16</p></td>
-<td><p>0.84</p></td>
-<td><p>13.44</p></td>
-<td><p>BLK electronic</p></td>
-<td><p>10120862</p></td>
-<td><p><a class="reference external" href="https://www.conrad.com/p/bkl-electronic-10120862-pin-connector-strain-relief-contact-spacing-254-mm-total-number-of-pins-6-no-of-rows-2-1-742063">https://www.conrad.com/p/bkl-electronic-10120862-pin-connector-strain-relief-contact-spacing-254-mm-total-number-of-pins-6-no-of-rows-2-1-742063</a></p></td>
+<tr class="row-even"><td><p>BKL Electronic 10120862 Pin connector strain relief Contact spacing: 2.54 mm Total number of pins: 6 No. of rows: 2 1;16;0.84;13.44;BLK electronic;10120862;https://www.conrad.com/p/bkl-electronic-10120862-pin-connector-strain-relief-contact-spacing-254-mm-total-number-of-pins-6-no-of-rows-2-1-742063</p></td>
 </tr>
-<tr class="row-odd"><td><p>BKL Electronic 10120158/10 Ribbon cable Contact spacing: 1.27 mm 16 x 0.08 mm² Multi-coloured 10 m</p></td>
-<td><p>1</p></td>
-<td><p>27</p></td>
-<td><p>27</p></td>
-<td><p>BLK electronic</p></td>
-<td><p>10120158/10</p></td>
-<td><p><a class="reference external" href="https://www.conrad.com/p/bkl-electronic-1012015810-ribbon-cable-contact-spacing-127-mm-16-x-008-mm-multi-coloured-10-m-1548658?searchTerm=1548658&amp;searchType=suggest&amp;searchSuggest=product">https://www.conrad.com/p/bkl-electronic-1012015810-ribbon-cable-contact-spacing-127-mm-16-x-008-mm-multi-coloured-10-m-1548658?searchTerm=1548658&amp;searchType=suggest&amp;searchSuggest=product</a></p></td>
+<tr class="row-odd"><td><p>BKL Electronic 10120158/10 Ribbon cable Contact spacing: 1.27 mm 16 x 0.08 mm Multi-coloured 10 m;1;27;27;BLK electronic;10120158/10;https://www.conrad.com/p/bkl-electronic-1012015810-ribbon-cable-contact-spacing-127-mm-16-x-008-mm-multi-coloured-10-m-1548658?searchTerm=1548658&amp;searchType=suggest&amp;searchSuggest=product</p></td>
 </tr>
-<tr class="row-even"><td><p>spacer 5.5 HEX 25 mm M3 male/female</p></td>
-<td><p>31</p></td>
-<td><p>2.79</p></td>
-<td><p>86.49</p></td>
-<td><p>Keystone Electronics</p></td>
-<td><p>24300</p></td>
-<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Keystone-Electronics/24300?qs=UWqYQ%2F2cZWu0ejpOzmZC2A%3D%3D">https://www.mouser.fr/ProductDetail/Keystone-Electronics/24300?qs=UWqYQ%2F2cZWu0ejpOzmZC2A%3D%3D</a></p></td>
+<tr class="row-even"><td><p>spacer 5.5 HEX 25 mm M3 male/female;31;2.79;86.49;Keystone Electronics ;24300;https://www.mouser.fr/ProductDetail/Keystone-Electronics/24300?qs=UWqYQ%2F2cZWu0ejpOzmZC2A%3D%3D</p></td>
 </tr>
-<tr class="row-odd"><td><p>Screw</p></td>
-<td><p>9</p></td>
-<td><p>0.305</p></td>
-<td><p>2.745</p></td>
-<td><p>APM HEXSEAL</p></td>
-<td><p>RM3X8MM-2701</p></td>
-<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/APM-HEXSEAL/RM3X8MM-2701?qs=JJSE%2F12mKnS3VxSDrYXUHw%3D%3D">https://www.mouser.fr/ProductDetail/APM-HEXSEAL/RM3X8MM-2701?qs=JJSE%2F12mKnS3VxSDrYXUHw%3D%3D</a></p></td>
+<tr class="row-odd"><td><p>Screw;9;0.305;2.745;APM HEXSEAL;RM3X8MM-2701;https://www.mouser.fr/ProductDetail/APM-HEXSEAL/RM3X8MM-2701?qs=JJSE%2F12mKnS3VxSDrYXUHw%3D%3D</p></td>
 </tr>
-<tr class="row-even"><td><p>spacer 5.5 HEX 25 mm M3 female/female</p></td>
-<td><p>9</p></td>
-<td><p>0.846</p></td>
-<td><p>7.614</p></td>
-<td><p>Keystone Electronics</p></td>
-<td><p>25515</p></td>
-<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Keystone-Electronics/25515?qs=UWqYQ%2F2cZWuxuhUmfr%252BZuQ%3D%3D">https://www.mouser.fr/ProductDetail/Keystone-Electronics/25515?qs=UWqYQ%2F2cZWuxuhUmfr%252BZuQ%3D%3D</a></p></td>
-</tr>
-<tr class="row-odd"><td><p>DIP dual-in-line 2*14</p></td>
-<td><p>16</p></td>
-<td><p>1.55</p></td>
-<td><p>24.8</p></td>
-<td><p>Preci-dip</p></td>
-<td><p>110-87-328-41-001101</p></td>
-<td><p><a class="reference external" href="https://www.mouser.fr/ProductDetail/Preci-dip/110-87-328-41-001101?qs=uQD7XCvsSCNr3HWD6fta8g%3D%3D">https://www.mouser.fr/ProductDetail/Preci-dip/110-87-328-41-001101?qs=uQD7XCvsSCNr3HWD6fta8g%3D%3D</a></p></td>
+<tr class="row-even"><td><p>spacer 5.5 HEX 25 mm M3 female/female;9;0.846;7.614;Keystone Electronics ;25515;https://www.mouser.fr/ProductDetail/Keystone-Electronics/25515?qs=UWqYQ%2F2cZWuxuhUmfr%252BZuQ%3D%3D</p></td>
 </tr>
 </tbody>
 </table>
@@ -555,10 +403,7 @@ measurement board.</p></td>
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="mux_2023.html" class="btn btn-neutral float-left" title="MUX board v2023" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="hw_pwr.html" class="btn btn-neutral float-right" title="Power supply" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 
