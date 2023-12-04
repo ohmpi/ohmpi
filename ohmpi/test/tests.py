@@ -387,20 +387,28 @@ class OhmPiTests():
 
     def test_vmn_hardware_offset(self):
         test_result = False
-        quad = [0, 0]
-        roles = ['M', 'N']
-        tx_volt = 0.
-        injection_duration = .5
-        duty_cycle = .5 # or 0
-        nb_stack = 2
-        delay = injection_duration * 2/3
-        if self.switch_mux_on(quad,roles):
-            self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration * 2 / duty_cycle, cycles=nb_stack,
-                                     duty_cycle=duty_cycle)
-        Vmn = self._hw.last_vmn(delay=delay)
-        Vmn_std = self._hw.last_vmn_dev(delay=delay)
+        # quad = [0, 0]
+        self._hw.rx.gain = 1/3
+        vmns = np.zeos(20)
+        for i in vmns.shape[0]:
+            vmns[i] =  self._hw.rx.voltage
+            time.sleep(.1)
+        vmn = np.mean(vmns)
+        vmn_std = np.std(vmns)
 
-        Vmn_deviation_from_offset = abs(1 - Vmn / self._hw.rx._vmn_hardware_offset) *100
+        # roles = ['M', 'N']
+        # tx_volt = 0.
+        # injection_duration = .5
+        # duty_cycle = .5 # or 0
+        # nb_stack = 2
+        # delay = injection_duration * 2/3
+        # if self.switch_mux_on(quad,roles):
+        #     self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration * 2 / duty_cycle, cycles=nb_stack,
+        #                              duty_cycle=duty_cycle)
+        # vmn = self._hw.last_vmn(delay=delay)
+        # vmn_std = self._hw.last_vmn_dev(delay=delay)
+
+        Vmn_deviation_from_offset = abs(1 - vmn / self._hw.rx._vmn_hardware_offset) *100
 
         self.test_logger.info(f"Test Vmn hardware offset: Vmn offset deviation from config = {Vmn_deviation_from_offset: .3f} %")
         if Vmn_deviation_from_offset <= 10.:
@@ -479,6 +487,9 @@ class OhmPiTests():
                 self._hw.pwr_state = 'off'
         else:
             self.test.logger.info('R shunt cannot be tested with this system configuration.')
+
+    def test_dg411(self):
+        self._hw.tx.gain = 1/3
 
     def test_mqtt_broker(self):
         pass
