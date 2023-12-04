@@ -407,11 +407,11 @@ class OhmPiTests():
         #                              duty_cycle=duty_cycle)
         # vmn = self._hw.last_vmn(delay=delay)
         # vmn_std = self._hw.last_vmn_dev(delay=delay)
-
-        Vmn_deviation_from_offset = abs(1 - vmn / self._hw.rx._vmn_hardware_offset) *100
-
-        self.test_logger.info(f"Test Vmn hardware offset: Vmn offset deviation from config = {Vmn_deviation_from_offset: .3f} %")
-        if Vmn_deviation_from_offset <= 10.:
+        print(vmns)
+        vmn_deviation_from_offset = abs(1 - vmn / self._hw.rx._vmn_hardware_offset) *100
+        print(vmn_deviation_from_offset)
+        self.test_logger.info(f"Test Vmn hardware offset: Vmn offset deviation from config = {vmn_deviation_from_offset: .3f} %")
+        if vmn_deviation_from_offset <= 10.:
             test_result = True
 
         return test_result
