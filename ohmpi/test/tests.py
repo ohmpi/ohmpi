@@ -650,10 +650,10 @@ def test_r_shunt(hw, test_logger, deviation_threshold=10., return_deviation=Fals
     """
     Test R shunt by comparing current measured by TX and current given by PWR module. Given the low resolution of the
      power module compared to the ADS resolution, the test is performed while shortcutting A and B at low voltage
-     to ensure a higher current (current_max is temporarilly set to 45 mA).
+     to ensure a higher current (current_max is temporarily set to 45 mA).
      If roles on the measurement board are connected to MUX boards, then the software creates a shortcut.
      If no MUX boards are connected, then roles A and B must be manually set in a closed circuit.
-    Test can only be performed with power source havig pwr_voltage_adjustable set to True (i.e. currently pwr_dps5005 only) and
+    Test can only be performed with power source having pwr_voltage_adjustable set to True (i.e. currently pwr_dps5005 only) and
 
     Parameters
     ----------
@@ -689,9 +689,12 @@ def test_r_shunt(hw, test_logger, deviation_threshold=10., return_deviation=Fals
             hw.pwr_state = 'on'
             switch_tx_pwr_off = True
         test_result = False
-        quad = [1, 1]
+        if hw._cabling == {}:
+            test_logger("!!! R Shunt test: No MUX board in config. Manual AB shortcut required !!!") #TODO: ask user to press button if AB are shortcut
+        else:
+            quad = [1, 1]  #TODO: change to first electrode in cabling
         roles = ['A','B']
-        tx_volt = .1
+        tx_volt = .5
         injection_duration = 2.
 
         if hw.tx.voltage != tx_volt:
@@ -701,7 +704,6 @@ def test_r_shunt(hw, test_logger, deviation_threshold=10., return_deviation=Fals
         if hw.pwr.pwr_state == 'off':
             hw.pwr.pwr_state = 'on'
             switch_pwr_off = True
-
 
         hw.switch_mux(quad, roles, state='on', bypass_ab_check=True)
         hw.tx.pwr._voltage_max = 0.1
@@ -735,9 +737,11 @@ def test_r_shunt(hw, test_logger, deviation_threshold=10., return_deviation=Fals
         else:
             pass
 
-        hw._current_max_tolerance = 20.
+        hw._current_max_tolerance = hw.specs['current_max_tolerance'] #set back default value
+        hw.tx.pwr._voltage_max = hw.specs['voltage_max'] #set back to default value
+        hw.tx.pwr.current_max = hw.specs['current_max'] #set back to default value
 
-        hw.status = 'idle'
+    hw.status = 'idle'
         if switch_pwr_off:
             hw.pwr.pwr_state = 'off'
 
