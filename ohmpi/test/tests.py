@@ -37,9 +37,10 @@ TEST_LOGGING_CONFIG = {
 HARDWARE_CONFIG_nc = copy.deepcopy(HARDWARE_CONFIG)
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
-    i2c_addresses_on_bus = bus.scan()
-    addresses = bus.scan()
-    print([hex(address) for address in addresses if address != 0x70])
+    if bus.try_lock()
+        i2c_addresses_on_bus = bus.scan()
+        addresses = bus.scan()
+        print([hex(address) for address in addresses if address != 0x70])
     if i2c_addr in i2c_addresses_on_bus:
         return True
     else:
