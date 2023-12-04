@@ -389,7 +389,7 @@ class OhmPiTests():
     def test_vmn_hardware_offset(self):
         test_result = False
         quad = [1, 2]
-        self._hw.rx.gain = 1/3
+        self._hw.rx.gain = 2/3
         vmns = np.zeros(20)
         roles = ['M', 'N']
         self._hw.switch_mux(quad, roles, state='on')
@@ -495,7 +495,7 @@ class OhmPiTests():
     def test_dg411_gain_ratio(self):
         test_result = False
         # quad = [0, 0]
-        self._hw.rx.gain = 1 / 3
+        self._hw.rx._dg411_gain = 0.5
         voltages = np.zeros(10)
         for i in range(voltages.shape[0]):
             time.sleep(.1)
@@ -503,7 +503,7 @@ class OhmPiTests():
 
         voltage1 = np.mean(voltages[-5:])
         print(voltages)
-        self._hw.rx.gain = 2 / 3
+        self._hw.rx._dg411_gain = 1
         voltages = np.zeros(10)
         for i in range(voltages.shape[0]):
             time.sleep(.1)
