@@ -297,6 +297,7 @@ class OhmPiTests():
                     mcp_address = int(mcp_address, 16)
                     if mcp_address is not None:
                         mux.reset_i2c_ext_tca()
+                        print(mux.connection)
                         if test_i2c_devices_on_bus(mcp_address, mux.connection):
                             self.test_logger.info(
                                 f"{mux_id}: device with address {hex(mcp_address)} is accessible on I2C bus.")
