@@ -9,9 +9,10 @@ from minimalmodbus import Instrument  # noqa
 # hardware characteristics and limitations
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 5., 'max': 50., 'min': 0.},
-         'voltage_min': {'default': 0},
-         'voltage_max': {'default': 0},
-         'current_max': {'default': 60.},
+         'voltage_min': {'default': 0}, # V
+         'voltage_max': {'default': 0}, # V
+         'current_max': {'default': 0.050}, # mA
+         'current_max_tolerance': {'default': 20}, # in %
          'current_adjustable': {'default': False},
          'voltage_adjustable': {'default': True},
          'pwr_latency': {'default': .5}
@@ -32,6 +33,7 @@ class Pwr(PwrAbstract):
         assert isinstance(self.connection, Instrument)
         self._voltage = kwargs['voltage']
         self._current_max = kwargs['current_max']
+        self._current_max_tolerance = kwargs['current_max_tolerance']
         self.voltage_adjustable = True
         self.current_adjustable = False
         self._current = np.nan
@@ -68,9 +70,15 @@ class Pwr(PwrAbstract):
         self._battery_voltage = self.connection.read_register(0x05, 2)
         return self._battery_voltage
 
+    @property
+    def current_max(self):
+        return self._current_max
+
+    @current_max.setter
     def current_max(self, value):  # [mA]
-        value = value * 1.2  # To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
-        self.connection.write_register(0x0001, np.round((value * 1000), 3), 0)
+        new_value = value * (1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
+        self.connection.write_register(0x0001, np.round((new_value * 1000), 3), 0)
+        self._current_max = value
 
     @property
     def pwr_state(self):
@@ -87,7 +95,7 @@ class Pwr(PwrAbstract):
             """
         if state == 'on':
             self.connection.write_register(0x09, 1)
-            self.current_max(self._current_max)
+            self.current_max = self._current_max
             self._pwr_state = 'on'
             self.exec_logger.debug(f'{self.model} is on')
             time.sleep(self._pwr_latency)
@@ -98,4 +106,4 @@ class Pwr(PwrAbstract):
             self.exec_logger.debug(f'{self.model} is off')
 
     def reload_settings(self):
-        self.current_max(self._current_max)
+        self.current_max = self._current_max
