@@ -108,6 +108,7 @@ class Mux(MuxAbstract):
         self._i2c_ext_tca = None
         if self.connect:
             self.reset_i2c_ext_tca()
+        print(self._i2c_ext_tca)
 
         # Setup MCPs
         kwargs.update({'addr2': kwargs.pop('addr2', None)})
