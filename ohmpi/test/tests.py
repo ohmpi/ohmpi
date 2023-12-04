@@ -274,7 +274,6 @@ class OhmPiTests():
 
         return all(test_result)
 
-
     def test_mux_accessibility(self, mux_id=None):
         self.test_logger.info(
             f"{mux_id}: *** Start MUX accessibility test  ***")
@@ -293,11 +292,20 @@ class OhmPiTests():
             mux = self._hw_nc.mux_boards[mux_id]
             self.test_logger.info(
                 f"{mux_id}: *** Accessibility test initiated for {mux_id} with version {mux.model} ***")
+
+            mux.reset_i2c_ext_tca()
+            if mux._i2c_ext_tca_address is not None :
+                if test_i2c_devices_on_bus(mux._i2c_ext_tca_address, mux._connection):
+                    self.test_logger.info(
+                        f"{mux_id}: i2c extension device with address {hex(mux._i2c_ext_tca_address)} is accessible on I2C bus.")
+                else:
+                    self.test_logger.info(f"{mux_id}: i2c extension device with address {hex(mux._i2c_ext_tca_address)} is NOT accessible on I2C bus.")
+                    continue
+
             if mux.model == 'mux_2024_0_X':
                 for mcp_address in mux._mcp_addresses:
                     mcp_address = int(mcp_address, 16)
                     if mcp_address is not None:
-                        mux.reset_i2c_ext_tca()
                         print(mux.connection)
                         if test_i2c_devices_on_bus(mcp_address, mux.connection):
                             self.test_logger.info(
@@ -305,14 +313,22 @@ class OhmPiTests():
                             test_result[i] = True
                         else:
                             self.test_logger.info(f"{mux_id} with address {hex(mcp_address)} is NOT accessible on I2C bus.")
+
             elif mux.model == 'mux_2023_0_X':
                 if f'mux_tca_address' in mux.specs:
                     mux.reset_i2c_ext_tca()
                     if test_i2c_devices_on_bus(mux.specs['mux_tca_address'], mux.connection):
-                        self.test_logger.info(f"{mux_id}: device with address {hex(mux.specs['mux_tca_address'])} is accessible on I2C bus.")
-                        test_result[i] = True
+                        self.test_logger.info(f"{mux_id}: TCA device with address {hex(mux.specs['mux_tca_address'])} is accessible on I2C bus.")
+                        for c, channel in enumerate(mux._tca_channels):
+                            if test_i2c_devices_on_bus(mux.mcp_addresses[c], channel):
+                                self.test_logger.info(
+                                    f"{mux_id}: MCP device with address {hex(mux.mcp_addresses[c])} on channel {channel} is accessible on I2C bus.")
+                                test_result[i] = True
+                            else:
+                                self.test_logger.info(
+                                    f"{mux_id}: MCP device address {hex(mux.mcp_addresses[c])} on channel {channel} is NOT accessible on I2C bus.")
                     else:
-                        self.test_logger.info(f"{mux_id}: device with address {hex(mcp_address)} is NOT accessible on I2C bus.")
+                        self.test_logger.info(f"{mux_id}: TCA device with address {hex(mcp_address)} is NOT accessible on I2C bus.")
         return all(test_result)
 
 
