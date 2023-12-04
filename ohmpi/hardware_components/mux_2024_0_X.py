@@ -104,7 +104,7 @@ class Mux(MuxAbstract):
         kwargs.update({'i2c_ext_tca_address': kwargs.pop('i2c_ext_tca_address', None)})
         self._i2c_ext_tca_address = kwargs['i2c_ext_tca_address']
         kwargs.update({'i2c_ext_tca_channel': kwargs.pop('i2c_ext_tca_channel', 0)})
-        self._i2c_ext_tca_channel = kwargs['i2c_ext_tca_channel']
+        self._i2c_ext_tca_channel = int(kwargs['i2c_ext_tca_channel'])
         self._i2c_ext_tca = None
         if self.connect:
             self.reset_i2c_ext_tca()
