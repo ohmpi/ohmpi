@@ -471,7 +471,7 @@ class OhmPiTests():
             print(iab, iab_dps, vab)
 
             # close mux path and put pin back to GND
-            self._hw.switch_mux(quad, roles, state = 'off')
+            self._hw.switch_mux(quad, roles, state='off')
 
             iab_deviation = abs(1 - iab /np.mean(iab_dps)) * 100
 
@@ -495,9 +495,9 @@ class OhmPiTests():
     def test_dg411_gain_ratio(self):
         test_result = False
         # quad = [0, 0]
-        quad = [1,2]
+        # quad = [1,2]
         roles = ["M","N"]
-        self._hw.switch_mux(quad, roles, state='on')
+        # self._hw.switch_mux(quad, roles, state='on')
 
         self._hw.rx._dg411_gain = 1
         voltages = np.zeros(10)
@@ -524,7 +524,7 @@ class OhmPiTests():
         voltage_gain_ratio = voltage1 / voltage2
         voltage_gain_ratio_deviation = abs(1 - self._hw.rx._dg411_gain_ratio / voltage_gain_ratio) * 100
 
-        self._hw.switch_mux(quad, roles, state='off')
+        # self._hw.switch_mux(quad, roles, state='off')
 
         self.test_logger.info(
             f"Test dg411: deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .3f} %")
