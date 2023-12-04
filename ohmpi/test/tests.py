@@ -529,7 +529,6 @@ def test_mux_connection(hw_nc, test_logger, mux_id=None):
     ----------
     hw_nc: ohmpi.OhmPiHardware
         OhmPiHardware object of which "connect" parameter is set to False
-
     test_logger: logging.Logger
         Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
     mux_id: str or None (optional)
@@ -589,8 +588,28 @@ def test_pwr_connection(hw_nc, test_logger):
     else:
         test_logger('Pwr cannot be tested with this system configuration.')
 
-def test_vmn_hardware_offset(hw, test_logger):
+def test_vmn_hardware_offset(hw, test_logger, deviation_threshold=10., return_deviation=False):
+    """
+    Test R shunt by comparing current measured by TX and current given by PWR module. Test can only be performed with
+    power source havig pwr_voltage_adjustable set to False (i.e. currently pwr_dps5005 only)
 
+    Parameters
+    ----------
+    hw: ohmpi.OhmPiHardware
+    test_logger: logging.logger
+      Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
+    deviation_threshold: float (default: 10)
+      threshold in percent below which test is successful
+    return_deviation: bool (default: False)
+      if set to True, will return estimated deviation of VMN_hardware_offset compared to config
+
+    Returns
+    -------
+    bool
+     True if test successful, False otherwise.
+    float
+      Estimated R shunt deviation from config, if return_values is set to True
+    """
     test_result = False
     quad = [1, 2]
     hw.rx._dg411_gain = .5
@@ -619,13 +638,41 @@ def test_vmn_hardware_offset(hw, test_logger):
     vmn_deviation_from_offset = abs(1 - vmn / hw.rx._vmn_hardware_offset) *100
     print(vmn_deviation_from_offset)
     test_logger(f"Test Vmn hardware offset: Vmn offset deviation from config = {vmn_deviation_from_offset: .3f} %")
-    if vmn_deviation_from_offset <= 10.:
+    if vmn_deviation_from_offset <= deviation_threshold:
         test_result = True
+    if return_deviation:
+        return test_result, vmn_deviation_from_offset
+    else:
+        return test_result
 
-    return test_result
 
+def test_r_shunt(hw, test_logger, deviation_threshold=10., return_deviation=False):
+    """
+    Test R shunt by comparing current measured by TX and current given by PWR module. Given the low resolution of the
+     power module compared to the ADS resolution, the test is performed while shortcutting A and B at low voltage
+     to ensure a higher current (current_max is temporarilly set to 45 mA).
+     If roles on the measurement board are connected to MUX boards, then the software creates a shortcut.
+     If no MUX boards are connected, then roles A and B must be manually set in a closed circuit.
+    Test can only be performed with power source havig pwr_voltage_adjustable set to True (i.e. currently pwr_dps5005 only) and
 
-def test_r_shunt(hw, test_logger):
+    Parameters
+    ----------
+    hw: ohmpi.OhmPiHardware
+    test_logger: logging.logger
+      Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
+    deviation_threshold: float (default: 10)
+      threshold in percent below which test is successful
+    return_deviation: bool (default: False)
+      if set to True, will return estimated R shunt deviation from config
+
+    Returns
+    -------
+    bool
+     True if test successful, False otherwise.
+    float
+      Estimated R shunt deviation from config, if return_values is set to True
+    """
+
     test_logger(" ")
     test_logger(
         f"****************************************************************")
@@ -646,7 +693,7 @@ def test_r_shunt(hw, test_logger):
         roles = ['A','B']
         tx_volt = .1
         injection_duration = 2.
-        delay = injection_duration * 2 / 3
+
         if hw.tx.voltage != tx_volt:
             hw.tx.voltage = tx_volt
         # turn dps_pwr_on if needed
@@ -683,14 +730,14 @@ def test_r_shunt(hw, test_logger):
 
         test_logger(
             f"Test r_shunt: R shunt deviation from config = {iab_deviation: .3f} %")
-        if iab_deviation <= 10.:
+        if iab_deviation <= deviation_threshold.:
             test_result = True
         else:
             pass
 
         hw._current_max_tolerance = 20.
 
-        self.status = 'idle'
+        hw.status = 'idle'
         if switch_pwr_off:
             hw.pwr.pwr_state = 'off'
 
@@ -700,7 +747,34 @@ def test_r_shunt(hw, test_logger):
     else:
         test_logger('R shunt cannot be tested with this system configuration.')
 
-def test_dg411_gain_ratio(hw, test_logger):
+    if return_deviation:
+        return test_result, iab_deviation
+    else:
+        return test_result
+
+def test_dg411_gain_ratio(hw, test_logger, return_deviation=False, deviation_threshold=5):
+    """
+    Test DG411 gain ratio by comparing voltage measured by ADS from RX at rest when DG411 gain is set to 1 or to value
+    of DG411_gain_ratio from config (0.5 by default).
+
+    Parameters
+    ----------
+    hw: ohmpi.OhmPiHardware
+    test_logger: logging.logger
+      Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
+    deviation_threshold: float
+      threshold in percent below which test is successful
+    return_deviation: bool (default False)
+      if set to True, will return estimated dg411 gain ratio deviation from config (value lower than 5% is acceptable)
+
+    Returns
+    -------
+    bool
+     True if test successful (i.e. if , False otherwise.
+    float
+      Estimated DG411 gain ratio deviation from config, if return_values is set to True
+    """
+
     test_logger(" ")
     test_logger(
         f"****************************************************************")
@@ -743,10 +817,13 @@ def test_dg411_gain_ratio(hw, test_logger):
 
     test_logger(
         f"DG411 Test: deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .2f} %")
-    if voltage_gain_ratio_deviation <= 10.:
+    if voltage_gain_ratio_deviation <= deviation_threshold.:
         test_result = True
 
-    return test_result
+    if return_deviation:
+        return test_result, voltage_gain_ratio_deviation
+    else
+        return test_result
 
 
 def test_mqtt_broker(hw):
