@@ -160,7 +160,7 @@ class Mux(MuxAbstract):
     def reset_i2c_ext_tca(self):
         if self._i2c_ext_tca_address is not None:
             self.connection = self._connection
-        # else:
+        else:
             self.connection = adafruit_tca9548a.TCA9548A(self._connection, self._i2c_ext_tca_address)[self._i2c_ext_tca_channel]
 
     def reset_one(self, which=0):
