@@ -495,7 +495,7 @@ class OhmPiTests():
     def test_dg411_gain_ratio(self):
         test_result = False
         # quad = [0, 0]
-        self._hw.rx._dg411_gain = 0.5
+        self._hw.rx._dg411_gain = 1
         voltages = np.zeros(10)
         for i in range(voltages.shape[0]):
             time.sleep(.1)
@@ -503,7 +503,7 @@ class OhmPiTests():
 
         voltage1 = np.mean(voltages[-5:])
         print(voltages)
-        self._hw.rx._dg411_gain = 1
+        self._hw.rx._dg411_gain = 0.5
         voltages = np.zeros(10)
         for i in range(voltages.shape[0]):
             time.sleep(.1)
@@ -512,7 +512,7 @@ class OhmPiTests():
 
         voltage2 = np.mean(voltages[-5:])
 
-        voltage_gain_ratio = voltage2 / voltage1
+        voltage_gain_ratio = voltage1 / voltage2
         voltage_gain_ratio_deviation = abs(1 - self._hw.rx._dg411_gain_ratio / voltage_gain_ratio) * 100
 
         self.test_logger.info(
