@@ -455,7 +455,7 @@ class OhmPiHardware:
             if iab_max is None:
                 iab_max = self.current_max
             if vmn_min is None:
-                iab_max = self.voltage_min
+                vmn_min = self.voltage_min
             if vab_max is None:
                 vab_max = self.voltage_max
             # print(f'Vmn max: {vmn_max}')
