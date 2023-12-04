@@ -69,7 +69,9 @@ class Mux(MuxAbstract):
         super().__init__(**kwargs)
         if not subclass_init:
             self.exec_logger.event(f'{self.model}: {self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
-        assert isinstance(self.connection, I2C)
+        self._connection = kwargs['connection']
+        self.connection = None
+        assert isinstance(self._connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
 
         kwargs.update({'roles': kwargs.pop('roles', None)})
@@ -108,7 +110,7 @@ class Mux(MuxAbstract):
         self._i2c_ext_tca = None
         if self.connect:
             self.reset_i2c_ext_tca()
-        print(self._i2c_ext_tca)
+        print(self.connection)
 
         # Setup MCPs
         kwargs.update({'addr2': kwargs.pop('addr2', None)})
@@ -150,14 +152,16 @@ class Mux(MuxAbstract):
         self.addresses = d
 
     def reset(self):
-        self._mcp[0] = MCP23017(self._i2c_ext_tca, address=int(self._mcp_addresses[0], 16))
-        self._mcp[1] = MCP23017(self._i2c_ext_tca, address=int(self._mcp_addresses[1], 16))
+        if self.connection is None:
+            self.reset_i2c_ext_tca()
+        self._mcp[0] = MCP23017(self.connection, address=int(self._mcp_addresses[0], 16))
+        self._mcp[1] = MCP23017(self.connection, address=int(self._mcp_addresses[1], 16))
 
     def reset_i2c_ext_tca(self):
-        if self._i2c_ext_tca_address is None:
-            self._i2c_ext_tca = self.connection
-        else:
-            self._i2c_ext_tca = adafruit_tca9548a.TCA9548A(self.connection, self._i2c_ext_tca_address)[self._i2c_ext_tca_channel]
+        if self._i2c_ext_tca_address is not None:
+            self.connection = self._connection
+        # else:
+            self.connection = adafruit_tca9548a.TCA9548A(self._connection, self._i2c_ext_tca_address)[self._i2c_ext_tca_channel]
 
     def reset_one(self, which=0):
         self._mcp[which] = MCP23017(self._i2c_ext_tca, address=int(self._mcp_addresses[which], 16))

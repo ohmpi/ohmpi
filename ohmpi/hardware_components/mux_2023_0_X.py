@@ -73,7 +73,10 @@ class Mux(MuxAbstract):
         super().__init__(**kwargs)
         if not subclass_init:
             self.exec_logger.event(f'{self.model}: {self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
-        assert isinstance(self.connection, I2C)
+
+        self._connection = kwargs['connection']
+        self.connection = None
+        assert isinstance(self._connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
         kwargs.update({'roles': kwargs.pop('roles', None)})
         roles = kwargs['roles']
@@ -110,6 +113,7 @@ class Mux(MuxAbstract):
         kwargs.update({'i2c_ext_tca_channel': kwargs.pop('i2c_ext_tca_channel', 0)})
         self._i2c_ext_tca_channel = kwargs['i2c_ext_tca_channel']
         self._i2c_ext_tca = None
+        self._tca = None
         self._mcp = [None, None, None, None]
         if self.connet:
             self.reset_i2c_ext_tca()
@@ -134,6 +138,9 @@ class Mux(MuxAbstract):
         self.addresses = d
 
     def reset(self):
+        if self._tca is None:
+            self.reset_i2c_ext_tca()
+            self.reset_tca()
         self._mcp[0] = MCP23017(self._tca[0])
         self._mcp[1] = MCP23017(self._tca[1])
         self._mcp[2] = MCP23017(self._tca[2])
@@ -144,11 +151,13 @@ class Mux(MuxAbstract):
 
     def reset_i2c_ext_tca(self):
         if self._i2c_ext_tca_address is None:
-            self._i2c_ext_tca = self.connection
+            self.connection = self._connection
         else:
-            self._i2c_ext_tca = adafruit_tca9548a.TCA9548A(self.connection, self._i2c_ext_tca_address)[self._i2c_ext_tca_channel]
+            self.connection = adafruit_tca9548a.TCA9548A(self._connection, self._i2c_ext_tca_address)[self._i2c_ext_tca_channel]
 
     def reset_tca(self,tca_channels):
+        if self.connection is None:
+            self.reset_i2c_ext_tca()
         self._tca = [adafruit_tca9548a.TCA9548A(self.connection, self._tca_address)[tca_channel] for tca_channel in tca_channels]
 
     def switch_one(self, elec=None, role=None, state=None):
