@@ -497,17 +497,16 @@ class OhmPiHardware:
             current, voltage = 0., 0.
             diff_vab = np.inf
             if strategy == 'vmax' or strategy == 'vmin':
-                print('maximums', self.voltage_max, self.current_max)
-
                 while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
                     if strategy == 'vmax':
                         vmn_min = vmn_max
                     vabs = []
                     self._vab_pulses(vab_list[k], sampling_rate=self.rx.sampling_rate, durations=[0.2, 0.2], polarities=[1, -1])
                     for pulse in range(2):
-                        v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (self.readings[:, 1]==pulse))[0]  # NOTE : discard data aquired in the first x ms
+                        v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (self.readings[:, 1] == pulse))[0]  # NOTE : discard data aquired in the first x ms
                         iab = self.readings[v, 3]/1000.
                         vmn = np.abs(self.readings[v, 4]/1000. * self.readings[v, 2])
+                        print((vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min))
                         new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min)
                         diff_vab = np.abs(new_vab - vab_list[k])
                         vabs.append(new_vab)
