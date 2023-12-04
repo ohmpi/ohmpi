@@ -38,6 +38,7 @@ HARDWARE_CONFIG_nc = copy.deepcopy(HARDWARE_CONFIG)
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
     i2c_addresses_on_bus = bus.scan()
+    print(bus,i2c_addresses_on_bus)
     if i2c_addr in i2c_addresses_on_bus:
         return True
     else:
@@ -295,6 +296,7 @@ class OhmPiTests():
                 for mcp_address in mux._mcp_addresses:
                     mcp_address = int(mcp_address, 16)
                     if mcp_address is not None:
+                        mux.reset_i2c_ext_tca()
                         if test_i2c_devices_on_bus(mcp_address, mux.connection):
                             self.test_logger.info(
                                 f"{mux_id}: device with address {hex(mcp_address)} is accessible on I2C bus.")
@@ -303,6 +305,7 @@ class OhmPiTests():
                             self.test_logger.info(f"{mux_id} with address {hex(mcp_address)} is NOT accessible on I2C bus.")
             elif mux.model == 'mux_2023_0_X':
                 if f'mux_tca_address' in mux.specs:
+                    mux.reset_i2c_ext_tca()
                     if test_i2c_devices_on_bus(mux.specs['mux_tca_address'], mux.connection):
                         self.test_logger.info(f"{mux_id}: device with address {hex(mux.specs['mux_tca_address'])} is accessible on I2C bus.")
                         test_result[i] = True
@@ -492,7 +495,7 @@ class OhmPiTests():
             if switch_tx_pwr_off:
                 self._hw.pwr_state = 'off'
         else:
-            self.test.logger.info('R shunt cannot be tested with this system configuration.')
+            self.test_logger.info('R shunt cannot be tested with this system configuration.')
 
     def test_dg411_gain_ratio(self):
         self.test_logger.info(
