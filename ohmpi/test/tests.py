@@ -179,12 +179,14 @@ def test_tx_connectivity(hw_nc, test_logger, devices=['mcp','ads']):
 
 def test_tx_connection(hw_nc, test_logger, devices=['mcp', 'ads']):
     tx = hw_nc.tx
+    test_logger(" ")
     test_logger(
         f"****************************************************************")
     test_logger(
         f"*** Start TX connection test on {tx.specs['model']} board ***")
     test_logger(
         f"****************************************************************")
+    test_logger(" ")
     if isinstance(devices, str):
         devices = [devices]
     test_result = [False] * len(devices)
@@ -250,12 +252,14 @@ def test_rx_connectivity(hw_nc, test_logger, devices=['mcp', 'ads']):
 
 def test_rx_connection(hw_nc, test_logger, devices=['mcp','ads']):
     rx = hw_nc.rx
+    test_logger(" ")
     test_logger(
         f"****************************************************************")
     test_logger(
         f"*** Start RX connection test on {rx.specs['model']} board ***")
     test_logger(
         f"****************************************************************")
+    test_logger(" ")
     if isinstance(devices, str):
         devices = [devices]
     test_result = [False] * len(devices)
@@ -366,12 +370,14 @@ def test_mux_connectivity(hw_nc, test_logger, mux_id=None):
 
 def test_mux_connection(hw_nc, test_logger, mux_id=None):
     mux_boards = hw_nc.mux_boards
+    test_logger(" ")
     test_logger(
         f"****************************************************************")
     test_logger(
         f"*** Start MUX connection test ***")
     test_logger(
         f"****************************************************************")
+    test_logger(" ")
     if mux_id is None:
         mux_ids = [k for k in mux_boards.keys()]
         test_logger("Testing all MUX boards in MUX config.")
@@ -448,12 +454,14 @@ def test_vmn_hardware_offset(hw, test_logger):
 
 
 def test_r_shunt(hw, test_logger):
+    test_logger(" ")
     test_logger(
         f"****************************************************************")
     test_logger(
         f"*** Start R shunt test ***")
     test_logger(
         f"****************************************************************")
+    test_logger(" ")
 
     if hw.tx.pwr.voltage_adjustable:
         # check pwr is on, if not, let's turn it on
@@ -521,12 +529,15 @@ def test_r_shunt(hw, test_logger):
         test_logger('R shunt cannot be tested with this system configuration.')
 
 def test_dg411_gain_ratio(hw, test_logger):
+    test_logger(" ")
     test_logger(
         f"****************************************************************")
     test_logger(
         f"*** Start DG411 gain ratio test ***")
     test_logger(
         f"****************************************************************")
+    test_logger(" ")
+
     test_result = False
 
     hw.rx._dg411_gain = 1
