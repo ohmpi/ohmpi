@@ -11,6 +11,7 @@ import sys
 from termcolor import colored
 import traceback
 import copy
+impor time
 from ohmpi.hardware_system import OhmPiHardware
 from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import HARDWARE_CONFIG
@@ -389,7 +390,7 @@ class OhmPiTests():
         test_result = False
         # quad = [0, 0]
         self._hw.rx.gain = 1/3
-        vmns = np.zeos(20)
+        vmns = np.zeros(20)
         for i in vmns.shape[0]:
             vmns[i] =  self._hw.rx.voltage
             time.sleep(.1)
