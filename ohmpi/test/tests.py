@@ -502,12 +502,13 @@ class OhmPiTests():
             voltages[i] = self._hw.rx.voltage
 
         voltage1 = np.mean(voltages[-5:])
-
+        print(voltages)
         self._hw.rx.gain = 2 / 3
         voltages = np.zeros(10)
         for i in range(voltages.shape[0]):
             time.sleep(.1)
             voltages[i] = self._hw.rx.voltage
+        print(voltages)
 
         voltage2 = np.mean(voltages[-5:])
 
