@@ -500,21 +500,23 @@ class OhmPiTests():
         # self._hw.switch_mux(quad, roles, state='on')
 
         self._hw.rx._dg411_gain = 1
-        voltages = np.zeros(10)
+        voltages = np.zeros(20)
         for i in range(voltages.shape[0]):
-            time.sleep(.1)
-            voltages[i] = (self._hw.rx.voltage + self._hw.rx._bias) + self._hw.rx._vmn_hardware_offset
+            self._hw.tx.pin_DG0 = True
+            time.sleep(.2)
+            voltages[i] = (self._hw.rx.voltage + self._hw.rx._bias)  # + self._hw.rx._vmn_hardware_offset
 
             # voltages[i] = self._hw.rx.voltage
 
         voltage1 = np.mean(voltages[-5:])
         print(voltages)
         self._hw.rx._dg411_gain = 0.5
-        voltages = np.zeros(10)
+        voltages = np.zeros(20)
         for i in range(voltages.shape[0]):
+            time.sleep(.2)
             self._hw.tx.pin_DG0 = True
             voltages[i] = (self._hw.rx.voltage + self._hw.rx._bias) + self._hw.rx._vmn_hardware_offset
-            time.sleep(.1)
+
             # voltages[i] = self._hw.rx.voltage
             self._hw.tx.pin_DG0 = False
         print(voltages)
