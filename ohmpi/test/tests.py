@@ -506,8 +506,10 @@ class OhmPiTests():
         self._hw.rx._dg411_gain = 0.5
         voltages = np.zeros(10)
         for i in range(voltages.shape[0]):
+            self._hw.tx.pin_DG0 = True
             time.sleep(.1)
             voltages[i] = self._hw.rx.voltage
+            self._hw.tx.pin_DG0 = False
         print(voltages)
 
         voltage2 = np.mean(voltages[-5:])
