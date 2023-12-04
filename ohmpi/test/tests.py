@@ -512,7 +512,6 @@ class OhmPiTests():
         #     # voltages[i] = self._hw.rx.voltage
 
         voltage1 = self._hw.rx.voltage #np.mean(voltages[-5:])
-        print(voltage1)
         self._hw.rx._dg411_gain = 0.5
         # voltages = np.zeros(10)
         # for i in range(voltages.shape[0]):
@@ -522,14 +521,11 @@ class OhmPiTests():
         #
         #     # voltages[i] = self._hw.rx.voltage
         #     self._hw.tx.pin_DG0 = False
-        # print(voltages)
 
         voltage2 = self._hw.rx.voltage #np.mean(voltages[-5:])
 
         voltage_gain_ratio = voltage1 / voltage2
         voltage_gain_ratio_deviation = abs(1 - self._hw.rx._dg411_gain_ratio / voltage_gain_ratio) * 100
-
-        # self._hw.switch_mux(quad, roles, state='off')
 
         self.test_logger.info(
             f"Test dg411: Measured DG411 gain ratio = {voltage_gain_ratio: .2f} %")
