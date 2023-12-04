@@ -451,7 +451,7 @@ class OhmPiTests():
 
 
             self._hw.switch_mux(quad, roles, state='on', bypass_ab_check=True)
-            self._hw.tx.pwr._voltage_max = 2.
+            self._hw.tx.pwr._voltage_max = 0.1
             self._hw.tx.pwr._current_max_tolerance = 0.
             self._hw.tx.pwr.current_max = 0.045 # mA
             # self._hw._vab_pulse(duration=injection_duration, vab=tx_volt)
