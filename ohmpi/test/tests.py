@@ -438,7 +438,7 @@ class OhmPiTests():
             test_result = False
             quad = [1, 1]
             roles = ['A','B']
-            tx_volt = 2.
+            tx_volt = 3.
             injection_duration = 2.
             delay = injection_duration * 2 / 3
             if self._hw.tx.voltage != tx_volt:
@@ -472,7 +472,7 @@ class OhmPiTests():
             # close mux path and put pin back to GND
             self._hw.switch_mux(quad, roles, state='off')
 
-            iab_deviation = abs(1 - iab /np.mean(iab_dps)) * 100
+            iab_deviation = abs(1 - np.mean(iab) /np.mean(iab_dps)) * 100
 
             self.test_logger.info(
                 f"Test r_shunt: R shunt deviation from config = {iab_deviation: .3f} %")
