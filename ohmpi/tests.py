@@ -187,6 +187,7 @@ def test_mb_connectivity(hw_nc, module_name, test_logger, devices=['mcp', 'ads']
                     f"{module_name}: Connection established with {device} with address {hex(module.specs[f'{device}_address'])}.", "green"))
                 test_result[i] = True
             except:
+                traceback.print_exc()
                 test_logger(colored(
                     f"{module_name}: Connection NOT established with {device} with address {hex(module.specs[f'{device}_address'])}.", "red"))
         else:
