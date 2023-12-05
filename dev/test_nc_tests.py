@@ -46,4 +46,5 @@ hw_nc = OhmPiHardware(**{'exec_logger': exec_logger, 'data_logger': data_logger,
 # test_mux_relays(hw, soh_logger.test, roles=["A","B"])
 test_tx_battery_voltage(hw,  soh_logger.test)
 
-parse_last_session_log("soh.log","Test","ohmpi/logs")
+last_session = parse_last_session_log("soh.log","Test","ohmpi/logs")
+print(last_session)
