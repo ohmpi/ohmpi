@@ -877,3 +877,6 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                     f"Test MUX relays MN - Electrode {electrode}: WARNING... Single roles M and N need to be manually checked while manually shortcutting M and N", "yellow"))
                 test_logger(colored(
                     f"Then call e.g.: test_mux_relays(roles=['M'], test_on='MN')", "yellow"))
+
+def test_polarity_relays():
+    pass
