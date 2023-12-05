@@ -608,7 +608,7 @@ def test_r_shunt(hw, test_logger, deviation_threshold=10., return_deviation=Fals
         vab = hw.tx.pwr.voltage
         # hw.tx.pwr._retrieve_current()
         iab_dps = hw._current [-3:]
-        print(iab, iab_dps, vab)
+        # print(iab, iab_dps, vab)
 
         # close mux path and put pin back to GND
         hw.switch_mux(quad, roles, state='off')
