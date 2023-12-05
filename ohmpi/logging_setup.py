@@ -244,6 +244,19 @@ def init_logging(exec_logger, data_logger, soh_logger, exec_logging_level, soh_l
     exec_logger.info('*** NEW SESSION STARTING ***')
     exec_logger.info('****************************')
     exec_logger.info('')
+
+    soh_logger.info('')
+    soh_logger.info('****************************')
+    soh_logger.info('*** NEW SESSION STARTING ***')
+    soh_logger.info('****************************')
+    soh_logger.info('')
+
+    data_logger.info('')
+    data_logger.info('****************************')
+    data_logger.info('*** NEW SESSION STARTING ***')
+    data_logger.info('****************************')
+    data_logger.info('')
+
     exec_logger.debug(f'Execution logging level: {exec_logging_level}')
     exec_logger.debug(f'State of health logging level: {soh_logging_level}')
     try:
