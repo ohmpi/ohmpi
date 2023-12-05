@@ -364,8 +364,8 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
     test_logger(" ")
     test_logger(
         f"****************************************************************")
-    test_logger(colored(
-        f"*** Start {module_name} connection test on {module.specs['model']} board ***", 'red'))
+    test_logger(
+        f"*** Start {module_name} connection test on {module.specs['model']} board ***")
     test_logger(
         f"****************************************************************")
     test_logger(" ")
@@ -377,12 +377,12 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
             accessibility_results, connectivity_results = False, False
             accessibility_results = test_mb_accessibility(hw_nc, module_name, test_logger, devices=device)
             if accessibility_results:
-                test_logger(
-                    f"{module}: Accessibility test successful. Will check if device respond...")
+                test_logger(colored(
+                    f"{module}: Accessibility test successful. Will check if device respond...", "green"))
                 connectivity_results = test_mb_connectivity(hw_nc, module_name, test_logger, devices=device)
                 if connectivity_results:
-                    test_logger(
-                        f"{module}: Connection test successful for {device} with address {hex(module.specs[f'{device}_address'])}.")
+                    test_logger(colored(
+                        f"{module}: Connection test successful for {device} with address {hex(module.specs[f'{device}_address'])}.", "green"))
                     test_result[i] = True
 
     return all(test_result)
@@ -430,10 +430,11 @@ def test_mux_accessibility(hw_nc, test_logger, mux_id=None):
         mux.reset_i2c_ext_tca()
         if mux._i2c_ext_tca_address is not None :
             if test_i2c_devices_on_bus(mux._i2c_ext_tca_address, mux._connection):
-                test_logger(
-                    f"{mux_id}: i2c extension device with address {hex(mux._i2c_ext_tca_address)} is accessible on I2C bus.")
+                test_logger(colored(
+                    f"{mux_id}: i2c extension device with address {hex(mux._i2c_ext_tca_address)} is accessible on I2C bus.", "green"))
             else:
-                test_logger(f"{mux_id}: i2c extension device with address {hex(mux._i2c_ext_tca_address)} is NOT accessible on I2C bus.")
+                test_logger(colored(
+                    f"{mux_id}: i2c extension device with address {hex(mux._i2c_ext_tca_address)} is NOT accessible on I2C bus.", "red"))
                 continue
 
         if mux.model == 'mux_2024_0_X':
@@ -441,11 +442,12 @@ def test_mux_accessibility(hw_nc, test_logger, mux_id=None):
                 mcp_address = int(mcp_address, 16)
                 if mcp_address is not None:
                     if test_i2c_devices_on_bus(mcp_address, mux.connection):
-                        test_logger(
-                            f"{mux_id}: device with address {hex(mcp_address)} is accessible on I2C bus.")
+                        test_logger(colored(
+                            f"{mux_id}: device with address {hex(mcp_address)} is accessible on I2C bus.", "green"))
                         test_result[i] = True
                     else:
-                        test_logger(f"{mux_id} with address {hex(mcp_address)} is NOT accessible on I2C bus.")
+                        test_logger(colored(
+                            f"{mux_id} with address {hex(mcp_address)} is NOT accessible on I2C bus.", "red"))
 
         elif mux.model == 'mux_2023_0_X':
             if f'mux_tca_address' in mux.specs:
@@ -454,14 +456,15 @@ def test_mux_accessibility(hw_nc, test_logger, mux_id=None):
                     test_logger(f"{mux_id}: TCA device with address {hex(mux.specs['mux_tca_address'])} is accessible on I2C bus.")
                     for c, channel in enumerate(mux._tca_channels):
                         if test_i2c_devices_on_bus(mux.mcp_addresses[c], channel):
-                            test_logger(
-                                f"{mux_id}: MCP device with address {hex(mux.mcp_addresses[c])} on channel {channel} is accessible on I2C bus.")
+                            test_logger(colored(
+                                f"{mux_id}: MCP device with address {hex(mux.mcp_addresses[c])} on channel {channel} is accessible on I2C bus.", "green"))
                             test_result[i] = True
                         else:
-                            test_logger(
-                                f"{mux_id}: MCP device address {hex(mux.mcp_addresses[c])} on channel {channel} is NOT accessible on I2C bus.")
+                            test_logger(colored(
+                                f"{mux_id}: MCP device address {hex(mux.mcp_addresses[c])} on channel {channel} is NOT accessible on I2C bus.", "red"))
                 else:
-                    test_logger(f"{mux_id}: TCA device with address {hex(mcp_address)} is NOT accessible on I2C bus.")
+                    test_logger(colored(
+                        f"{mux_id}: TCA device with address {hex(mcp_address)} is NOT accessible on I2C bus.", "red")
     return all(test_result)
 
 
@@ -507,12 +510,12 @@ def test_mux_connectivity(hw_nc, test_logger, mux_id=None):
             try:
                 mux.reset_i2c_ext_tca()
                 mux.reset_one(which=i)
-                test_logger(
-                    f"{mux_id}: Connection established with MCP {i}.")
+                test_logger(colored(
+                    f"{mux_id}: Connection established with MCP {i}.", "green"))
             except:
                 traceback.print_exc()
-                test_logger(
-                    f"{mux_id}: Connection NOT established with MCP {i}")
+                test_logger(colored(
+                    f"{mux_id}: Connection NOT established with MCP {i}", "red"))
     return all(test_result)
 
 def test_mux_connection(hw_nc, test_logger, mux_id=None):
@@ -569,9 +572,12 @@ def test_mux_connection(hw_nc, test_logger, mux_id=None):
                 f"{mux_id}: Accessibility test successful. Will check if device respond...")
             connectivity_results = test_mux_connectivity(hw_nc, test_logger, mux_id=mux_id)
             if connectivity_results:
-                test_logger(
-                    f"{mux_id}: MUX connection test successful for {mux_id} with version {mux.model}.")
+                test_logger(colored(
+                    f"{mux_id}: MUX connection test successful for {mux_id} with version {mux.model}.", "green"))
                 test_result[i] = True
+            else:
+                test_logger(colored(
+                    f"{mux_id}: MUX connection test NOT successful for {mux_id} with version {mux.model}.", "red"))
 
     return all(test_result)
 
@@ -584,7 +590,7 @@ def test_pwr_connection(hw_nc, test_logger):
         except:
             traceback.print_exc()
     else:
-        test_logger('Pwr cannot be tested with this system configuration.')
+        test_logger(colored('Pwr cannot be tested with this system configuration.', "orange"))
 
 def test_vmn_hardware_offset(hw, test_logger, deviation_threshold=10., return_deviation=False):
     """
