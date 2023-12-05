@@ -6,6 +6,7 @@ from ohmpi.config import (OHMPI_CONFIG,EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG,
 from ohmpi.hardware_system import OhmPiHardware
 from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import HARDWARE_CONFIG
+from ohmpi.utils import parse_last_session_log
 import copy
 
 # set loggers
@@ -40,7 +41,9 @@ hw_nc = OhmPiHardware(**{'exec_logger': exec_logger, 'data_logger': data_logger,
 #
 # test_vmn_hardware_offset(hw, soh_logger.test)
 # test_dg411_gain_ratio(hw, soh_logger.test)
-test_r_shunt(hw, soh_logger.test)
+# test_r_shunt(hw, soh_logger.test)
 
 # test_mux_relays(hw, soh_logger.test, roles=["A","B"])
 test_tx_battery_voltage(hw,  soh_logger.test)
+
+parse_last_session_log("soh.log","Test","ohmpi/logs")
