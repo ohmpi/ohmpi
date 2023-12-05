@@ -494,11 +494,11 @@ def test_vmn_hardware_offset(hw, test_logger, deviation_threshold=10., return_de
     test_logger(" ")
 
     test_result = False
-    quad = [1, 2]
+    quad = [1, 1]
     hw.rx._dg411_gain = .5
     vmns = np.zeros(20)
     roles = ['M', 'N']
-    hw.switch_mux(quad, roles, state='on')
+    hw.switch_mux(quad, roles, state='on', bypass_check=True)
 
     for i in range(vmns.shape[0]):
         vmns[i] = (hw.rx.voltage * hw.rx._dg411_gain + hw.rx._bias) + hw.rx._vmn_hardware_offset
