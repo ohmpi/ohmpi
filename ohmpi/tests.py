@@ -884,12 +884,19 @@ def test_polarity_relays():
 def test_tx_battery_voltage(hw, test_logger, threshold=11.8):
     # if hw.tx.pwr.voltage_adjustable:
     test_result = False
+    if hw.tx.pwr.voltage_adjustable:
+        switch_tx_pwr_off = False
+        if hw.pwr_state == 'off':
+            hw.pwr_state = 'on'
+            switch_tx_pwr_off = True
+
     battery_voltage = hw.tx.pwr.battery_voltage()
-    print(battery_voltage)
     if battery_voltage > threshold:
         test_logger(colored("Test TX Battery voltage = {battery_voltage: .2f}", "green"))
         test_result = True
     else:
         test_logger(colored("Test TX Battery voltage = {battery_voltage: .2f}", "green"))
 
+    if switch_tx_pwr_off:
+        hw.pwr_state = 'off'
     return test_result
