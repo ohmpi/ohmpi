@@ -811,7 +811,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                          f"Test MUX - Electrode {electrode}: Relays A and B successfully switching", "green"))
                     test_result = True
                 else:
-                     test_logger(colored(
+                    test_logger(colored(
                          f"Test MUX - Electrode {electrode}: WARNING... Relays A and B not switching properly", "orange"))
                     test_logger(colored(
                         f"Test MUX - Electrode {electrode}: WARNING... Single roles A and B need to be manually checked while manually shortcutting A and B", "orange"))
@@ -849,7 +849,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                      f"Test MUX - Electrode {electrode}: Relays M and N successfully switching", "green"))
                 test_result = True
             else:
-                 test_logger(colored(
+                test_logger(colored(
                      f"Test MUX - Electrode {electrode}: WARNING... Relays M and N not switching properly", "orange"))
                 test_logger(colored(
                     f"Test MUX - Electrode {electrode}: WARNING... Single roles M and N need to be manually checked while manually shortcutting M and N", "orange"))
