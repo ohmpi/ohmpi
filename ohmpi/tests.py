@@ -4,6 +4,7 @@ from ohmpi.config import (OHMPI_CONFIG,EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG,
                           MQTT_CONTROL_CONFIG)
 from os import path, mkdir, statvfs
 from time import gmtime
+from termcolor import colored
 import logging
 from ohmpi.mqtt_handler import MQTTHandler
 from ohmpi.compressed_sized_timed_rotating_handler import CompressedSizedTimedRotatingFileHandler
@@ -363,8 +364,8 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
     test_logger(" ")
     test_logger(
         f"****************************************************************")
-    test_logger(
-        f"*** Start {module_name} connection test on {module.specs['model']} board ***")
+    test_logger(colored(
+        f"*** Start {module_name} connection test on {module.specs['model']} board ***", 'red')
     test_logger(
         f"****************************************************************")
     test_logger(" ")
