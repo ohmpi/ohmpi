@@ -776,7 +776,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
                 tx_volt = .5  # in V
                 injection_duration = 10. * (1. / hw.sampling_rate) # 10 samples
 
-                hw.switch_mux(quad, test_roles, state='on', bypass_ab_check=True)
+                # hw.switch_mux(quad, test_roles, state='on', bypass_ab_check=True)
                 hw.tx.pwr._voltage_max = 0.2
                 hw.tx.pwr._current_max_tolerance = 0.
                 hw.tx.pwr.current_max = 0.010  # mA
