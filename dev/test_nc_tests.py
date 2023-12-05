@@ -1,4 +1,4 @@
-from tests import *
+from ohmpi.tests import *
 import numpy as np
 from ohmpi.config import (OHMPI_CONFIG,EXEC_LOGGING_CONFIG, DATA_LOGGING_CONFIG, SOH_LOGGING_CONFIG, MQTT_LOGGING_CONFIG,
                           MQTT_CONTROL_CONFIG)
@@ -29,3 +29,5 @@ hw_nc = OhmPiHardware(**{'exec_logger': exec_logger, 'data_logger': data_logger,
 
 test_logger('OhmPi tests ready to start...')
 
+
+test_mb_connection
