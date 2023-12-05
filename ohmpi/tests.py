@@ -132,9 +132,6 @@ def setup_test_logger(mqtt=True):
 #     test_logger('Hardware configured...')
 #     test_logger('OhmPi tests ready to start...')
 
-def test_connections():
-    pass
-
 # def test_tx_accessibility(hw_nc, test_logger, devices=['mcp','ads']):
 #     tx = hw_nc.tx
 #     test_logger(
@@ -826,7 +823,7 @@ def test_dg411_gain_ratio(hw, test_logger, return_deviation=False, deviation_thr
 
     if return_deviation:
         return test_result, voltage_gain_ratio_deviation
-    else
+    else:
         return test_result
 
 
@@ -834,4 +831,6 @@ def test_mqtt_broker(hw):
     pass
 
 def test_mux(hw):
+    #TODO: switch relays of role M and see if measured voltage is close to 0 then. If all True, then shortcut A and M
+    # and re-do same test
     hw.test_mux()
