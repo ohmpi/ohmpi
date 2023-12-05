@@ -805,14 +805,14 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
 
                 # close mux path and put pin back to GND
                 hw.switch_mux(quad, test_roles, state='off')
-                print(iab)
+
                 if iab > 10.: # mA
                     test_logger(colored(
-                         f"Test MUX - Electrode {electrode}: Relays A and B successfully switching", "green"))
+                         f"Test MUX - Electrode {electrode}: Relay {' and relay '.join(str(r) for r in test_roles)} successfully switching", "green"))
                     test_result = True
                 else:
                     test_logger(colored(
-                         f"Test MUX - Electrode {electrode}: WARNING... Relays A and B not switching properly", "yellow"))
+                         f"Test MUX - Electrode {electrode}: WARNING... Relay {' and relay '.join(str(r) for r in test_roles)} not switching properly", "yellow"))
                     test_logger(colored(
                         f"Test MUX - Electrode {electrode}: WARNING... Single roles A and B need to be manually checked while manually shortcutting A and B", "yellow"))
 
@@ -845,10 +845,10 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                 f"Test MUX - Electrode {electrode}: Vmn at rest = {vmn: .2f}")
             if abs(vmn) < 100:
                 test_logger(colored(
-                     f"Test MUX - Electrode {electrode}: Relays M and N successfully switching", "green"))
+                     f"Test MUX - Electrode {electrode}: Relays{' and relay '.join(str(r) for r in test_roles)} successfully switching", "green"))
                 test_result = True
             else:
                 test_logger(colored(
-                     f"Test MUX - Electrode {electrode}: WARNING... Relays M and N not switching properly", "yellow"))
+                     f"Test MUX - Electrode {electrode}: WARNING... Relays {' and relay '.join(str(r) for r in test_roles)} not switching properly", "yellow"))
                 test_logger(colored(
                     f"Test MUX - Electrode {electrode}: WARNING... Single roles M and N need to be manually checked while manually shortcutting M and N", "yellow"))
