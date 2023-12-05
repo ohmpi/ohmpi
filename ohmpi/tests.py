@@ -761,7 +761,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
             "!!! MUX relays test: No MUX board in config !!! Abort..."), "yellow")  # TODO: ask user to press button if AB are shortcut
         return
     # roles = ['A', 'B']
-    if ('A' in roles and 'B' in roles) or test_on == 'AB':
+    if ('A' in roles and 'B' in roles and test_on != 'MN') or test_on == 'AB':
         if roles.shape[0] > 2:
             test_roles = ['A', 'B']
         else:
@@ -843,7 +843,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
             test_logger(colored(
                 "test__mux_relays(roles=['A', 'B'], test_on='MN')", "yellow"))
 
-    if ('M' in roles and 'N' in roles) or test_on == 'MN':
+    if ('M' in roles and 'N' in roles and test_on != 'AB') or test_on == 'MN':
         for electrode in electrodes[:2]:
             if roles.shape[0] > 2:
                 test_roles = ['M', 'N']
