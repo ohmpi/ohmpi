@@ -779,7 +779,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                 tx_volt = .5  # in V
                 injection_duration = 5. * (1. / hw.sampling_rate) # 5 samples
 
-                # hw.switch_mux(quad, test_roles, state='on', bypass_ab_check=True)
+                hw.switch_mux(quad, test_roles, state='on', bypass_ab_check=True)
                 hw.tx.pwr._voltage_max = 0.2
                 hw.tx.pwr._current_max_tolerance = 0.
                 hw.tx.pwr.current_max = 0.010  # in A
@@ -792,7 +792,6 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                     hw.pwr.pwr_state = 'on'
                     switch_pwr_off = True
 
-                # hw._vab_pulse(duration=injection_duration, vab=tx_volt)
                 time.sleep(.2)
                 injection = Thread(target=hw._inject, kwargs={'injection_duration': injection_duration, 'polarity': 1})
                 readings = Thread(target=hw._read_values, kwargs={'sampling_rate': hw.sampling_rate, 'append': False})
@@ -806,6 +805,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
 
                 # close mux path and put pin back to GND
                 hw.switch_mux(quad, test_roles, state='off')
+                print(iab)
                 if iab > 10.: # mA
                     test_logger(colored(
                          f"Test MUX - Electrode {electrode}: Relays A and B successfully switching", "green"))
@@ -824,7 +824,6 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                 hw.status = 'idle'
                 if switch_pwr_off:
                     hw.pwr.pwr_state = 'off'
-
 
     if ('M' in roles and 'N' in roles) or test_rx:
         for electrode in electrodes[:2]:
