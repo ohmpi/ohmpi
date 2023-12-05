@@ -79,11 +79,15 @@ def create_stdout_logger(name):
     logger.setLevel(logging.DEBUG)
     if 'EVENT' not in get_logging_levels():
         add_logging_level('EVENT', logging.DEBUG + 1)
+    if 'TEST' not in get_logging_levels():
+        add_logging_level('TEST', logging.DEBUG + 1)
     return logger
 
 
 def setup_loggers(mqtt=True):
     add_logging_level('EVENT', logging.DEBUG + 1)  # TODO : check if we should set the level to DEBUG...
+    add_logging_level('TEST', logging.INFO + 1)  # TODO : check if we should set the level to DEBUG...
+
     msg = ''
     # Message logging setup
     log_path = path.join(path.dirname(__file__), 'logs')
