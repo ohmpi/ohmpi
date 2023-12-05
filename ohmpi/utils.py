@@ -145,7 +145,7 @@ def mux_2023_to_mux_2024_takeouts(elec_list):
 
     return np.vectorize(mapper.get)(elec_list)
 
-def parse_last_session_log(filename, level, directory="logs", name=None):
+def parse_log(filename, level=None, directory="logs", name=None, last=1):
 
     with open(os.path.join(directory,filename), "r") as logfile:
         lines = logfile.readlines()
@@ -155,5 +155,10 @@ def parse_last_session_log(filename, level, directory="logs", name=None):
         if "NEW SESSION STARTING" in line:
             new_session_idx.append(i)
 
-    last_session_msg = lines[new_session_idx[-1]+2]
-    return last_session_msg
+    last_session_msg = lines[new_session_idx[-last]+2]
+    if level = None:
+        last_session_msg_parsed = last_session_msg
+    else:
+        last_session_msg_parsed = last_session_msg[np.where(level in last_session_msg)]
+
+    return last_session_msg_parsed
