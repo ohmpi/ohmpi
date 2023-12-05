@@ -239,6 +239,7 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
         if f'{device}_address' in module.specs:
             accessibility_results, connectivity_results = False, False
             accessibility_results = test_mb_accessibility(hw_nc, module_name, test_logger, devices=device)
+            print(accessibility_results)
             if accessibility_results:
                 test_logger(
                     f"{module}: Accessibility test successful. Will check if device respond...")
