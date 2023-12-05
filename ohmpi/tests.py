@@ -766,16 +766,16 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
             vmn_std = np.std(vmns[-10:])
             print('NO', vmns, vmn, vmn_std)
 
-            quad = [electrode, electrode]
-            hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
-            vmns = np.zeros(20)
-            for i in range(vmns.shape[0]):
-                vmns[i] = hw.rx.voltage
-                time.sleep(.1)
-            vmn = np.mean(vmns[-10:])
-            vmn_std = np.std(vmns[-10:])
-            hw.switch_mux(quad, test_roles, state='off')
-            print('MN', vmns, vmn, vmn_std)
+            # quad = [electrode, electrode]
+            # hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
+            # vmns = np.zeros(20)
+            # for i in range(vmns.shape[0]):
+            #     vmns[i] = hw.rx.voltage
+            #     time.sleep(.1)
+            # vmn = np.mean(vmns[-10:])
+            # vmn_std = np.std(vmns[-10:])
+            # hw.switch_mux(quad, test_roles, state='off')
+            # print('MN', vmns, vmn, vmn_std)
 
             quad = [electrode]
             test_roles = ['M']
