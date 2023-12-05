@@ -159,6 +159,6 @@ def parse_log(filename, level=None, directory="logs", name=None, last=1):
     if level is None:
         last_session_msg_parsed = last_session_msg
     else:
-        last_session_msg_parsed = last_session_msg[np.where(level in last_session_msg)]
+        last_session_msg_parsed = [s for s in last_session_msg if level in s]
 
     return last_session_msg_parsed
