@@ -759,7 +759,11 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
         if 'M' in roles and 'N' in roles:
             test_roles = ['M', 'N']
             hw.rx._dg411_gain = .5
-            # time.sleep(4)
+
+            for i in range(10):
+                hw.rx.voltage
+                time.sleep(.4)
+
             vmns = np.zeros(10)
             for i in range(vmns.shape[0]):
                 time.sleep(.1)
