@@ -781,7 +781,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
             vmn = np.mean(vmns[-5:])
             vmn_std = np.std(vmns[-5:])
             hw.switch_mux(quad, test_roles, state='off')
-            print('MN', vmns, vmn, vmn_std)
+            print('MN', electrode, vmn, vmn_std)
 
 
             # quad = [electrode]
