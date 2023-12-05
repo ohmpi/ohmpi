@@ -729,7 +729,7 @@ def test_r_shunt(hw, test_logger, deviation_threshold=10., return_deviation=Fals
 
         test_logger(
             f"Test r_shunt: R shunt deviation from config = {iab_deviation: .3f} %")
-        if iab_deviation <= deviation_threshold.:
+        if iab_deviation <= deviation_threshold:
             test_result = True
         else:
             pass
