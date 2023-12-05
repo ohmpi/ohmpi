@@ -892,10 +892,10 @@ def test_tx_battery_voltage(hw, test_logger, threshold=11.8):
 
     battery_voltage = hw.tx.pwr.battery_voltage()
     if battery_voltage > threshold:
-        test_logger(colored("Test TX Battery voltage = {battery_voltage: .2f}", "green"))
+        test_logger(colored(f"Test TX Battery voltage = {battery_voltage: .2f}", "green"))
         test_result = True
     else:
-        test_logger(colored("Test TX Battery voltage = {battery_voltage: .2f}", "green"))
+        test_logger(colored(f"Test TX Battery voltage = {battery_voltage: .2f}", "green"))
 
     if switch_tx_pwr_off:
         hw.pwr_state = 'off'
