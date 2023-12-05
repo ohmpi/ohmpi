@@ -885,6 +885,7 @@ def test_tx_battery_voltage(hw, test_logger, threshold=11.8):
     # if hw.tx.pwr.voltage_adjustable:
     test_result = False
     battery_voltage = hw.tx.pwr.battery_voltage()
+    print(battery_voltage)
     if battery_voltage > threshold:
         test_logger(colored("Test TX Battery voltage = {battery_voltage: .2f}", "green"))
         test_result = True
