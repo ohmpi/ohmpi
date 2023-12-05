@@ -517,12 +517,14 @@ def test_vmn_hardware_offset(hw, test_logger, deviation_threshold=10., return_de
     #                              duty_cycle=duty_cycle)
     # vmn = hw.last_vmn(delay=delay)
     # vmn_std = hw.last_vmn_dev(delay=delay)
-    print(vmns)
-    vmn_deviation_from_offset = abs(1 - vmn / hw.rx._vmn_hardware_offset) *100
-    print(vmn_deviation_from_offset)
-    test_logger(f"Test Vmn hardware offset: Vmn offset deviation from config = {vmn_deviation_from_offset: .3f} %")
+    vmn_deviation_from_offset = abs(1 - vmn / hw.rx._vmn_hardware_offset) * 100
     if vmn_deviation_from_offset <= deviation_threshold:
+        test_logger(colored(
+            f"Test Vmn hardware offset: Vmn offset deviation from config = {vmn_deviation_from_offset: .3f} %", "green"))
         test_result = True
+    else:
+        test_logger(colored(
+        f"Test Vmn hardware offset: Warning... Vmn offset deviation from config = {vmn_deviation_from_offset: .3f} %", "orange"))
     if return_deviation:
         return test_result, vmn_deviation_from_offset
     else:
@@ -613,12 +615,13 @@ def test_r_shunt(hw, test_logger, deviation_threshold=10., return_deviation=Fals
 
         iab_deviation = abs(1 - np.mean(iab) / np.mean(iab_dps)) * 100
 
-        test_logger(
-            f"Test r_shunt: R shunt deviation from config = {iab_deviation: .3f} %")
         if iab_deviation <= deviation_threshold:
+            test_logger(colored(
+                f"Test r_shunt: R shunt deviation from config = {iab_deviation: .3f} %", "green"))
             test_result = True
         else:
-            pass
+            test_logger(colored(
+                f"Test r_shunt: Warning... R shunt deviation from config = {iab_deviation: .3f} %", "orange"))
 
         hw._current_max_tolerance = hw.tx.pwr.specs['current_max_tolerance'] #set back default value
         hw.tx.pwr._voltage_max = hw.tx.pwr.specs['voltage_max'] #set back to default value
@@ -699,13 +702,17 @@ def test_dg411_gain_ratio(hw, test_logger, return_deviation=False, deviation_thr
     voltage_gain_ratio = voltage1 / voltage2
     voltage_gain_ratio_deviation = abs(1 - hw.rx._dg411_gain_ratio / voltage_gain_ratio) * 100
 
-    test_logger(
-        f"DG411 Test: Measured DG411 gain ratio = {voltage_gain_ratio: .1f}")
-
-    test_logger(
-        f"DG411 Test: deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .2f} %")
     if voltage_gain_ratio_deviation <= deviation_threshold:
         test_result = True
+        test_logger(colored(
+            f"DG411 Test: Measured DG411 gain ratio = {voltage_gain_ratio: .1f}", "green"))
+        test_logger(colored(
+            f"DG411 Test: Warning... Deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .2f} %", "green"))
+    else:
+        test_logger(colored(
+            f"DG411 Test: Measured DG411 gain ratio = {voltage_gain_ratio: .1f}", "orange"))
+        test_logger(colored(
+        f"DG411 Test: Warning... Deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .2f} %", "orange"))
 
     if return_deviation:
         return test_result, voltage_gain_ratio_deviation
