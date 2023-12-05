@@ -511,11 +511,12 @@ def test_mux_connectivity(hw_nc, test_logger, mux_id=None):
                 mux.reset_i2c_ext_tca()
                 mux.reset_one(which=i)
                 test_logger(colored(
-                    f"{mux_id}: Connection established with MCP {i}.", "green"))
+                    f"{mux_id}: Connection established with MCP device with address {hex(mux.mcp_addresses[i])}", "green"))
+                test_result[i] = True
             except:
                 traceback.print_exc()
                 test_logger(colored(
-                    f"{mux_id}: Connection NOT established with MCP {i}", "red"))
+                    f"{mux_id}: Connection NOT established with MCP device with address {hex(mux.mcp_addresses[i])}", "red"))
     return all(test_result)
 
 def test_mux_connection(hw_nc, test_logger, mux_id=None):
