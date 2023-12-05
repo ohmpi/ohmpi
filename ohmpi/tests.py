@@ -240,15 +240,15 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
             accessibility_results = test_mb_accessibility(hw_nc, module_name, test_logger, devices=device)
             if accessibility_results:
                 test_logger(
-                    f"{module}: Accessibility test successful. Will check if device respond...")
+                    f"{module_name}: Accessibility test successful. Will check if device respond...")
                 connectivity_results = test_mb_connectivity(hw_nc, module_name, test_logger, devices=device)
                 if connectivity_results:
                     test_logger(colored(
-                        f"{module}: Connection test successful for {device} with address {hex(module.specs[f'{device}_address'])}.", "green"))
+                        f"{module_name}: Connection test successful for {device} with address {hex(module.specs[f'{device}_address'])}.", "green"))
                     test_result[i] = True
                 else:
                     test_logger(colored(
-                        f"{module}: Connection test NOT successful for {device} with address {hex(module.specs[f'{device}_address'])}.",
+                        f"{module_name}: Connection test NOT successful for {device} with address {hex(module.specs[f'{device}_address'])}.",
                         "red"))
     return all(test_result)
 
