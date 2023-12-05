@@ -144,3 +144,9 @@ def mux_2023_to_mux_2024_takeouts(elec_list):
                9: 15, 10: 13, 11: 11, 12: 9, 13: 7, 14: 5, 15: 3, 16: 1,}
 
     return np.vectorize(mapper.get)(elec_list)
+
+def parse_last_session_log(filename, level, directory="logs", name=None):
+    rows = []
+    with open(os.path.join(directory,filename), "r") as logfile:
+        rows.append(logfile.readlines())
+    print(rows)
