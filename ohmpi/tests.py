@@ -783,7 +783,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                 tx_volt = .5  # in V
                 injection_duration = 5. * (1. / hw.sampling_rate) # 5 samples
 
-                hw.switch_mux(quad, test_roles, state='on', bypass_ab_check=True)
+                hw.switch_mux(quad, test_roles, state='on', bypass_ab_check=True, bypass_check=True)
                 hw.tx.pwr._voltage_max = 0.2
                 hw.tx.pwr._current_max_tolerance = 0.
                 hw.tx.pwr.current_max = 0.010  # in A
@@ -851,7 +851,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                 test_roles = roles  # This allows to test relays of other roles which are manually connected to MN connectors of measurement board
 
             quad = [electrode] * len(test_roles)
-            hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
+            hw.switch_mux(quad, test_roles, state='on', bypass_ab_check=True, bypass_check=True)'
             vmns = np.zeros(10)
             for i in range(vmns.shape[0]):
                 vmns[i] = hw.rx.voltage
