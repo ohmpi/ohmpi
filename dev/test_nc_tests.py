@@ -40,3 +40,4 @@ test_mux_connection(hw_nc, test_logger.info)
 
 test_vmn_hardware_offset(hw,test_logger.info)
 test_dg411_gain_ratio(hw,test_logger.info)
+test_r_shunt(hw,test_logger.info)
