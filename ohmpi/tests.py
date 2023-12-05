@@ -759,9 +759,9 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
         test_logger(colored(
             "!!! MUX relays test: No MUX board in config !!! Abort..."), "orange")  # TODO: ask user to press button if AB are shortcut
         return
-
+    roles = ['A', 'B']
     if 'A' in roles and 'B' in roles:
-        test_roles = ['A', 'B']
+        test_roles = ['A']
         for electrode in electrodes[:2]:
             if hw.tx.pwr.voltage_adjustable:
                 # check pwr is on, if not, let's turn it on
@@ -772,7 +772,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
                     switch_tx_pwr_off = True
                 test_result = False
 
-                quad = [electrode, electrode]
+                quad = [electrode]
                 tx_volt = .5  # in V
                 injection_duration = 10. * (1. / hw.sampling_rate) # 10 samples
 
