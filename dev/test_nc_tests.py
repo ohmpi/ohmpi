@@ -33,11 +33,11 @@ hw_nc = OhmPiHardware(**{'exec_logger': exec_logger, 'data_logger': data_logger,
 test_logger.info('OhmPi tests ready to start...')
 
 
-test_mb_connection(hw_nc, "RX", test_logger.info)
-test_mb_connection(hw_nc, "TX", test_logger.info)
-test_mux_connection(hw_nc, test_logger.info)
+test_mb_connection(hw_nc, "RX", soh_logger.test)
+test_mb_connection(hw_nc, "TX", soh_logger.test)
+test_mux_connection(hw_nc, soh_logger.test)
 
 
-test_vmn_hardware_offset(hw,test_logger.info)
-test_dg411_gain_ratio(hw,test_logger.info)
-test_r_shunt(hw,test_logger.info)
+test_vmn_hardware_offset(hw, soh_logger.test)
+test_dg411_gain_ratio(hw, soh_logger.test)
+test_r_shunt(hw, soh_logger.test)
