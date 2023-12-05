@@ -149,6 +149,7 @@ def test_mb_accessibility(hw_nc, module_name, test_logger, devices=['mcp','ads']
         else:
             test_logger(colored(
                 f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} not in {module_name} config.", "orange"))
+    print(test_result)
     return all(test_result)
 
 def test_mb_connectivity(hw_nc, module_name, test_logger, devices=['mcp', 'ads']):
@@ -237,9 +238,8 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
     test_result = [False] * len(devices)
     for i, device in enumerate(devices):
         if f'{device}_address' in module.specs:
-            accessibility_results, connectivity_results = False, False
+            # accessibility_results, connectivity_results = False, False
             accessibility_results = test_mb_accessibility(hw_nc, module_name, test_logger, devices=device)
-            print(accessibility_results)
             if accessibility_results:
                 test_logger(
                     f"{module}: Accessibility test successful. Will check if device respond...")
