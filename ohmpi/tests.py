@@ -792,7 +792,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
                 # hw._vab_pulse(duration=injection_duration, vab=tx_volt)
                 time.sleep(.2)
                 injection = Thread(target=hw._inject, kwargs={'injection_duration': injection_duration, 'polarity': 1})
-                readings = Thread(target=hw._read_values, kwargs={'sampling_rate': hw.sampling_rate, 'append': False, 'test_r_shunt': True})
+                readings = Thread(target=hw._read_values, kwargs={'sampling_rate': hw.sampling_rate, 'append': False})
                 readings.start()
                 injection.start()
                 readings.join()
