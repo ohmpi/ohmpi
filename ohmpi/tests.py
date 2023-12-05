@@ -748,7 +748,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
         for mux_id in list_of_muxes:
             electrodes.append([c[0] for c in hw.mux_boards[mux_id].cabling.keys()])
         electrodes = np.concatenate(np.array(electrodes))
-    electrodes = np.unique(np.sort(np.arange(electrodes)))
+    electrodes = np.unique(np.sort(np.array(electrodes)))
     if roles is None:
         roles = []
         for mux_id in list_of_muxes:
