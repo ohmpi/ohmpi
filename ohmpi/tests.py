@@ -775,7 +775,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                     switch_tx_pwr_off = True
                 test_result = False
 
-                quad = [electrode]
+                quad = [electrode] * len(test_roles)
                 tx_volt = .5  # in V
                 injection_duration = 5. * (1. / hw.sampling_rate) # 5 samples
 
@@ -832,7 +832,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
             else:
                 test_roles = roles  # This allows to test relays of other roles which are manually connected to MN connectors of measurement board
 
-            quad = [electrode, electrode]
+            quad = [electrode] * len(test_roles)
             hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
             vmns = np.zeros(10)
             for i in range(vmns.shape[0]):
@@ -842,7 +842,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
             vmn_std = np.std(vmns[-5:])
             hw.switch_mux(quad, test_roles, state='off')
             test_logger(
-                f"Test MUX - Electrode {electrode}: Vmn at rest = {vmn}")
+                f"Test MUX - Electrode {electrode}: Vmn at rest = {vmn: .2f}")
             if abs(vmn) < 100:
                 test_logger(colored(
                      f"Test MUX - Electrode {electrode}: Relays M and N successfully switching", "green"))
