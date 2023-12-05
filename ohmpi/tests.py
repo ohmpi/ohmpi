@@ -464,7 +464,7 @@ def test_mux_accessibility(hw_nc, test_logger, mux_id=None):
                                 f"{mux_id}: MCP device address {hex(mux.mcp_addresses[c])} on channel {channel} is NOT accessible on I2C bus.", "red"))
                 else:
                     test_logger(colored(
-                        f"{mux_id}: TCA device with address {hex(mcp_address)} is NOT accessible on I2C bus.", "red")
+                        f"{mux_id}: TCA device with address {hex(mcp_address)} is NOT accessible on I2C bus.", "red"))
     return all(test_result)
 
 
