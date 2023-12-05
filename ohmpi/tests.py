@@ -241,7 +241,7 @@ def setup_test_logger(mqtt=True):
 #
 #     return all(test_result)
 
-def test_mb_accessibility(hw_nc, module_name, devices=['mcp','ads']):
+def test_mb_accessibility(hw_nc, module_name, test_logger, devices=['mcp','ads']):
     """
     Test accessibility to I2C devices on a measurement module (currently only mcp or ads on RX or TX).
     Test is successful if the I2C addresses of all devices being tested are visible when performing a I2C bus scan.
@@ -252,6 +252,8 @@ def test_mb_accessibility(hw_nc, module_name, devices=['mcp','ads']):
       OhmPiHardware object of which "connect" parameter is set to False
     module_name: str
       Name of module (TX or RX)
+    test_logger: logging.Logger
+      Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
     devices: str or list
       name or list of names of devices to be tested (currently can only be mcp or ads)
 
@@ -264,7 +266,7 @@ def test_mb_accessibility(hw_nc, module_name, devices=['mcp','ads']):
         module = hw_nc.tx
     elif module_name == 'RX':
         module = hw_nc.rx
-    hw_nc.soh_logger.test(
+    test_logger(
         f"{module_name}: *** Start {module_name} accessibility test on {module.specs['model']} board ***")
     test_result = [False] * len(devices)
 
@@ -274,18 +276,18 @@ def test_mb_accessibility(hw_nc, module_name, devices=['mcp','ads']):
     for i, device in enumerate(devices):
         if f'{device}_address' in module.specs:
             if test_i2c_devices_on_bus(module.specs[f'{device}_address'], module.connection):
-                hw_nc.soh_logger.test(
+                test_logger(
                     f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} accessible on I2C bus.")
                 test_result[i] = True
             else:
-                hw_nc.soh_logger.test(
+                test_logger(
                     f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} NOT accessible on I2C bus.")
         else:
-            hw_nc.soh_logger.test(
+            test_logger(
                 f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} not in {module_name} config.")
     return all(test_result)
 
-def test_mb_connectivity(hw_nc, module_name, devices=['mcp', 'ads']):
+def test_mb_connectivity(hw_nc, module_name, test_logger, devices=['mcp', 'ads']):
     """
         Test connectivity to I2C devices on a measurement module (currently only mcp or ads on RX or TX).
         Test is successful if the I2C addresses of all devices being tested are visible when performing a I2C bus scan.
@@ -296,6 +298,8 @@ def test_mb_connectivity(hw_nc, module_name, devices=['mcp', 'ads']):
           OhmPiHardware object of which "connect" parameter is set to False
         module_name: str
           Name of module (TX or RX)
+        test_logger: logging.Logger
+          Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
         devices: str or list
           name or list of names of devices to be tested (currently can only be mcp or ads)
 
@@ -308,7 +312,7 @@ def test_mb_connectivity(hw_nc, module_name, devices=['mcp', 'ads']):
         module = hw_nc.tx
     elif module_name == 'RX':
         module = hw_nc.rx
-    hw_nc.soh_logger.test(
+    test_logger(
         f"{module_name}: *** Start {module_name} connectivity test on {module.specs['model']} board ***")
     if isinstance(devices, str):
         devices = [devices]
@@ -317,18 +321,18 @@ def test_mb_connectivity(hw_nc, module_name, devices=['mcp', 'ads']):
         if f'{device}_address' in module.specs:
             try:
                 getattr(f'{module}.reset_{device}')
-                hw_nc.soh_logger.test(
-                    f"{module_name}: Connection established with {device} with address {hex(rx.specs[f'{device}_address'])}.")
+                test_logger(
+                    f"{module_name}: Connection established with {device} with address {hex(module.specs[f'{device}_address'])}.")
                 test_result[i] = True
             except:
-                hw_nc.soh_logger.test(
-                    f"{module_name}: Connection NOT established with {device} with address {hex(rx.specs[f'{device}_address'])}.")
+                test_logger(
+                    f"{module_name}: Connection NOT established with {device} with address {hex(module.specs[f'{device}_address'])}.")
         else:
-            hw_nc.soh_logger.test(
+            test_logger(
                 f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} not in {module_name} config.")
     return all(test_result)
 
-def test_mb_connection(hw_nc, module_name, devices=['mcp','ads']):
+def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
     """
     Test connection to I2C devices in RX module.
     Calls in test_rx_accessibility first and then if successful calls in test_rx_connectivity.
@@ -340,6 +344,8 @@ def test_mb_connection(hw_nc, module_name, devices=['mcp','ads']):
       OhmPiHardware object of which "connect" parameter is set to False
     module_name: str
       Name of module (TX or RX)
+    test_logger: logging.Logger
+      Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
     devices: str or list
       name or list of names of devices to be tested (currently can only be mcp or ads)
 
@@ -354,14 +360,14 @@ def test_mb_connection(hw_nc, module_name, devices=['mcp','ads']):
     elif module_name == 'RX':
         module = hw_nc.rx
 
-    hw_nc.soh_logger.test(" ")
-    hw_nc.soh_logger.test(
+    test_logger(" ")
+    test_logger(
         f"****************************************************************")
-    hw_nc.soh_logger.test(
-        f"*** Start {module_name} connection test on {rx.specs['model']} board ***")
-    hw_nc.soh_logger.test(
+    test_logger(
+        f"*** Start {module_name} connection test on {{module}.specs['model']} board ***")
+    test_logger(
         f"****************************************************************")
-    hw_nc.soh_logger.test(" ")
+    test_logger(" ")
     if isinstance(devices, str):
         devices = [devices]
     test_result = [False] * len(devices)
@@ -370,12 +376,12 @@ def test_mb_connection(hw_nc, module_name, devices=['mcp','ads']):
             accessibility_results, connectivity_results = False, False
             accessibility_results = test_mb_accessibility(module_name, devices=device)
             if accessibility_results:
-                hw_nc.soh_logger.test(
+                test_logger(
                     f"{module}: Accessibility test successful. Will check if device respond...")
                 connectivity_results = test_mb_connectivity(module_name, devices=device)
                 if connectivity_results:
-                    hw_nc.soh_logger.test(
-                        f"{module}: Connection test successful for {device} with address {hex({module}.specs[f'{device}_address'])}.")
+                    test_logger(
+                        f"{module}: Connection test successful for {device} with address {hex(module.specs[f'{device}_address'])}.")
                     test_result[i] = True
 
     return all(test_result)
