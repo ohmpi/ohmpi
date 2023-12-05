@@ -247,10 +247,10 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
     test_logger("")
     if all(test_result):
         test_logger(colored(
-            f"{module_name}: Connection test successful.", "green"))
+            f"*** {module_name}: Connection test successful ***", "green"))
     else:
         test_logger(colored(
-            f"{module_name}: Connection test NOT successful.", "red"))
+            f"*** {module_name}: Connection test NOT successful ***", "red"))
     return all(test_result)
 
 def test_mux_accessibility(hw_nc, test_logger, mux_id=None):
@@ -444,11 +444,11 @@ def test_mux_connection(hw_nc, test_logger, mux_id=None):
     test_logger("")
     if all(test_result):
         test_logger(colored(
-            f"MUX connection test successful", "green"))
+            f"*** MUX connection test successful ***", "green"))
 
     else:
         test_logger(colored(
-            f"MUX connection test NOT successful", "red"))
+            f"*** MUX connection test NOT successful ***", "red"))
 
     return all(test_result)
 
