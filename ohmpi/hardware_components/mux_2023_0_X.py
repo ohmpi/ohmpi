@@ -105,6 +105,8 @@ class Mux(MuxAbstract):
             for k, v in cabling.items():
                 if v[0] == self.board_id:
                     self.cabling.update({k: (v[1], k[1])})
+            electrodes = [k[0] for k in self.cabling.keys()]
+        self.electrodes = np.array(electrodes)
 
         self._tca_address = kwargs['tca_address']
         self._tca_channels = [i for i in np.arange(7, 3, -1)]
