@@ -620,9 +620,9 @@ def test_r_shunt(hw, test_logger, deviation_threshold=10., return_deviation=Fals
         else:
             pass
 
-        hw._current_max_tolerance = hw.specs['current_max_tolerance'] #set back default value
-        hw.tx.pwr._voltage_max = hw.specs['voltage_max'] #set back to default value
-        hw.tx.pwr.current_max = hw.specs['current_max'] #set back to default value
+        hw._current_max_tolerance = hw.tx.specs['current_max_tolerance'] #set back default value
+        hw.tx.pwr._voltage_max = hw.tx.specs['voltage_max'] #set back to default value
+        hw.tx.pwr.current_max = hw.tx.specs['current_max'] #set back to default value
 
         hw.status = 'idle'
         if switch_pwr_off:
