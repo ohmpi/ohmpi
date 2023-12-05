@@ -814,7 +814,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
 
                 # close mux path and put pin back to GND
                 hw.switch_mux(quad, test_roles, state='off')
-
+                print(iab)
                 if iab > 10.: # mA
                     test_logger(colored(
                          f"Test MUX relays AB - Electrode {electrode}: Relay {' and Relay '.join(str(r) for r in test_roles)} successfully switching", "green"))
