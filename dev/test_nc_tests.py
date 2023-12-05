@@ -9,7 +9,7 @@ from ohmpi.config import HARDWARE_CONFIG
 
 # set loggers
 mqtt = True
-# test_logger, _, _, _ = setup_test_logger(mqtt=mqtt)
+test_logger, _, _, _ = setup_test_logger(mqtt=mqtt)
 exec_logger, _, data_logger, _, soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
 print(msg)
 
@@ -28,7 +28,7 @@ hw_nc = OhmPiHardware(**{'exec_logger': exec_logger, 'data_logger': data_logger,
                             'soh_logger': soh_logger}, hardware_config=HARDWARE_CONFIG_nc)
 
 
-test_logger('OhmPi tests ready to start...')
+test_logger.info('OhmPi tests ready to start...')
 
 
 test_mb_connection(hw_nc,"RX" )
