@@ -149,7 +149,7 @@ def parse_log(filename, level=None, directory="logs", last=1):
 
     with open(os.path.join(directory,filename), "r") as logfile:
         lines = logfile.readlines()
-
+    print(lines)
     new_session_idx = []
     for i,line in enumerate(lines):
         if "NEW SESSION STARTING" in line:
