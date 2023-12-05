@@ -8,6 +8,7 @@ from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import HARDWARE_CONFIG
 
 # set loggers
+mqtt = True
 test_logger, _, _, _ = setup_test_logger(mqtt=mqtt)
 exec_logger, _, data_logger, _, soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
 print(msg)
