@@ -372,7 +372,7 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
         devices = [devices]
     test_result = [False] * len(devices)
     for i, device in enumerate(devices):
-        if f'{device}_address' in {module}.specs:
+        if f'{device}_address' in module.specs:
             accessibility_results, connectivity_results = False, False
             accessibility_results = test_mb_accessibility(module_name, devices=device)
             if accessibility_results:
