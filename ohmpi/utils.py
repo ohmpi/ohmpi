@@ -159,6 +159,7 @@ def parse_log(filename, level=None, directory="logs", last=1):
     last_sessions = {}
     for i in range(1,last+1):
         session_msg = lines[new_session_idx[-i-1]+2:new_session_idx[-i]-2]
+        print(session_msg)
         if level is None:
             last_sessions[-i] = session_msg
         else:
