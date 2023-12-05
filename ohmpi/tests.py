@@ -439,7 +439,6 @@ def test_mux_accessibility(hw_nc, test_logger, mux_id=None):
             for mcp_address in mux._mcp_addresses:
                 mcp_address = int(mcp_address, 16)
                 if mcp_address is not None:
-                    print(mux.connection)
                     if test_i2c_devices_on_bus(mcp_address, mux.connection):
                         test_logger(
                             f"{mux_id}: device with address {hex(mcp_address)} is accessible on I2C bus.")
@@ -559,6 +558,7 @@ def test_mux_connection(hw_nc, test_logger, mux_id=None):
     test_result = [False] * len(mux_ids)
     for i, mux_id in enumerate(mux_ids):
         mux = mux_boards[mux_id]
+        test_logger("")
         test_logger(
             f"{mux_id}: *** Connection test initiated for {mux_id} with version {mux.model} ***")
         accessibility_results, connectivity_results = False, False
