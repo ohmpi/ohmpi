@@ -752,17 +752,17 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
         roles = np.unique(np.sort(np.concatenate(np.array(roles))))
     print(electrodes, roles, list_of_muxes)
 
-    for electrode in electrodes[:5]:
-        if 'A' in roles and 'B' in roles:
-            test_roles = ['A', 'B']
+    if 'A' in roles and 'B' in roles:
+        test_roles = ['A', 'B']
 
-        if 'M' in roles and 'N' in roles:
+    if 'M' in roles and 'N' in roles:
+        hw.rx._dg411_gain = .5
+
+        for i in range(20):
+            hw.rx.voltage
+            time.sleep(.1)
+        for electrode in electrodes[:5]:
             test_roles = ['M', 'N']
-            hw.rx._dg411_gain = .5
-
-            for i in range(10):
-                hw.rx.voltage
-                time.sleep(.4)
 
             vmns = np.zeros(10)
             for i in range(vmns.shape[0]):
