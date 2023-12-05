@@ -132,11 +132,9 @@ def test_mb_accessibility(hw_nc, module_name, test_logger, devices=['mcp','ads']
         module = hw_nc.rx
     test_logger(
         f"{module_name}: *** Start {module_name} accessibility test on {module.specs['model']} board ***")
-    test_result = [False] * len(devices)
-
     if isinstance(devices, str):
         devices = [devices]
-
+    test_result = [False] * len(devices)
     for i, device in enumerate(devices):
         if f'{device}_address' in module.specs:
             if test_i2c_devices_on_bus(module.specs[f'{device}_address'], module.connection):
@@ -149,7 +147,6 @@ def test_mb_accessibility(hw_nc, module_name, test_logger, devices=['mcp','ads']
         else:
             test_logger(colored(
                 f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} not in {module_name} config.", "orange"))
-    print(test_result)
     return all(test_result)
 
 def test_mb_connectivity(hw_nc, module_name, test_logger, devices=['mcp', 'ads']):
