@@ -243,13 +243,13 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
                     f"{module_name}: Accessibility test successful. Will check if device respond...")
                 connectivity_results = test_mb_connectivity(hw_nc, module_name, test_logger, devices=device)
                 if connectivity_results:
-                    test_logger(colored(
-                        f"{module_name}: Connection test successful for {device} with address {hex(module.specs[f'{device}_address'])}.", "green"))
                     test_result[i] = True
-                else:
-                    test_logger(colored(
-                        f"{module_name}: Connection test NOT successful for {device} with address {hex(module.specs[f'{device}_address'])}.",
-                        "red"))
+    if all(test_result):
+        test_logger(colored(
+            f"{module_name}: Connection test successful.", "green"))
+    else:
+        test_logger(colored(
+            f"{module_name}: Connection test NOT successful.", "red"))
     return all(test_result)
 
 def test_mux_accessibility(hw_nc, test_logger, mux_id=None):
@@ -439,12 +439,14 @@ def test_mux_connection(hw_nc, test_logger, mux_id=None):
                 f"{mux_id}: Accessibility test successful. Will check if device respond...")
             connectivity_results = test_mux_connectivity(hw_nc, test_logger, mux_id=mux_id)
             if connectivity_results:
-                test_logger(colored(
-                    f"{mux_id}: MUX connection test successful for {mux_id} with version {mux.model}.", "green"))
                 test_result[i] = True
-            else:
-                test_logger(colored(
-                    f"{mux_id}: MUX connection test NOT successful for {mux_id} with version {mux.model}.", "red"))
+    if all(test_result):
+        test_logger(colored(
+            f"{mux_id}: MUX connection test successful", "green"))
+
+    else:
+        test_logger(colored(
+            f"{mux_id}: MUX connection test NOT successful", "red"))
 
     return all(test_result)
 
