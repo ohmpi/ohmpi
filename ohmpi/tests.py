@@ -374,11 +374,11 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
     for i, device in enumerate(devices):
         if f'{device}_address' in module.specs:
             accessibility_results, connectivity_results = False, False
-            accessibility_results = test_mb_accessibility(module_name, devices=device)
+            accessibility_results = test_mb_accessibility(hw_nc, module_name, test_logger, devices=device)
             if accessibility_results:
                 test_logger(
                     f"{module}: Accessibility test successful. Will check if device respond...")
-                connectivity_results = test_mb_connectivity(module_name, devices=device)
+                connectivity_results = test_mb_connectivity(hw_nc, module_name, test_logger, devices=device)
                 if connectivity_results:
                     test_logger(
                         f"{module}: Connection test successful for {device} with address {hex(module.specs[f'{device}_address'])}.")
@@ -562,11 +562,11 @@ def test_mux_connection(hw_nc, test_logger, mux_id=None):
         test_logger(
             f"{mux_id}: *** Connection test initiated for {mux_id} with version {mux.model} ***")
         accessibility_results, connectivity_results = False, False
-        accessibility_results = test_mux_accessibility(mux_id=mux_id)
+        accessibility_results = test_mux_accessibility(hw_nc, test_logger, mux_id=mux_id)
         if accessibility_results:
             test_logger(
                 f"{mux_id}: Accessibility test successful. Will check if device respond...")
-            connectivity_results = test_mux_connectivity(mux_id=mux_id)
+            connectivity_results = test_mux_connectivity(hw_nc, test_logger, mux_id=mux_id)
             if connectivity_results:
                 test_logger(
                     f"{mux_id}: MUX connection test successful for {mux_id} with version {mux.model}.")
