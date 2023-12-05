@@ -818,7 +818,7 @@ def test_dg411_gain_ratio(hw, test_logger, return_deviation=False, deviation_thr
 
     test_logger(
         f"DG411 Test: deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .2f} %")
-    if voltage_gain_ratio_deviation <= deviation_threshold.:
+    if voltage_gain_ratio_deviation <= deviation_threshold:
         test_result = True
 
     if return_deviation:
