@@ -506,17 +506,17 @@ def test_mux_connectivity(hw_nc, test_logger, mux_id=None):
         mux = mux_boards[mux_id]
         test_logger(
             f"{mux_id}: *** Connectivity test initiated for {mux_id} with version {mux.model} ***")
-        for i in range(len(mux._mcp)):
+        for m in range(len(mux._mcp)):
             try:
                 mux.reset_i2c_ext_tca()
                 mux.reset_one(which=i)
                 test_logger(colored(
-                    f"{mux_id}: Connection established with MCP device with address {hex(mux.mcp_addresses[i])}", "green"))
+                    f"{mux_id}: Connection established with MCP device with address {hex(mux._mcp_addresses[m])}", "green"))
                 test_result[i] = True
             except:
                 traceback.print_exc()
                 test_logger(colored(
-                    f"{mux_id}: Connection NOT established with MCP device with address {hex(mux.mcp_addresses[i])}", "red"))
+                    f"{mux_id}: Connection NOT established with MCP device with address {hex(mux._mcp_addresses[m])}", "red"))
     return all(test_result)
 
 def test_mux_connection(hw_nc, test_logger, mux_id=None):
