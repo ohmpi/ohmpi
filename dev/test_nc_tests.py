@@ -31,4 +31,4 @@ hw_nc = OhmPiHardware(**{'exec_logger': exec_logger, 'data_logger': data_logger,
 test_logger.info('OhmPi tests ready to start...')
 
 
-test_mb_connection(hw_nc,"RX" )
+test_mb_connection(hw_nc,"RX",test_logger.info)
