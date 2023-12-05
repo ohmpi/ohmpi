@@ -723,7 +723,37 @@ def test_dg411_gain_ratio(hw, test_logger, return_deviation=False, deviation_thr
 def test_mqtt_broker(hw):
     pass
 
-def test_mux(hw):
-    #TODO: switch relays of role M and see if measured voltage is close to 0 then. If all True, then shortcut A and M
-    # and re-do same test
-    hw.test_mux()
+def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
+
+    mux_boards = hw.mux_boards
+    test_logger(" ")
+    test_logger(
+        f"****************************************************************")
+    test_logger(
+        f"*** Start MUX connection test ***")
+    test_logger(
+        f"****************************************************************")
+    test_logger(" ")
+    if mux_id is None:
+        test_logger("Testing all MUX boards in MUX config.")
+
+        list_of_muxes = [i for i in hw.mux_boards.keys()]
+        list_of_muxes.sort()
+    else :
+        list_of_muxes = [mux_id]
+    if electrodes is None:
+        electrodes = []
+        for mux_id in list_of_muxes:
+            electrodes.append([c[0] for c in hw.mux_boards[mux_id].cabling.keys()])
+    electrodes = np.sort(np.concatenate(np.array(electrodes)))
+    if roles is None:
+        roles = []
+        for mux_id in list_of_muxes:
+            roles.append([c[1] for c in hw.mux_boards[mux_id].cabling.keys()])
+        roles = np.unique(np.concatenate(np.array(electrodes)))
+    print(electrodes, roles, list_of_muxes)
+
+    #
+    # for electrode in electrodes:
+    #     quad = [electrode, electrode]
+    #     for r in roles.reshape():
