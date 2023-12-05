@@ -144,7 +144,7 @@ def test_mb_accessibility(hw_nc, module_name, test_logger, devices=['mcp','ads']
                     f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} NOT accessible on I2C bus.", "red"))
         else:
             test_logger(colored(
-                f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} not in {module_name} config.", "orange"))
+                f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} not in {module_name} config.", "yellow"))
     return all(test_result)
 
 def test_mb_connectivity(hw_nc, module_name, test_logger, devices=['mcp', 'ads']):
@@ -190,7 +190,7 @@ def test_mb_connectivity(hw_nc, module_name, test_logger, devices=['mcp', 'ads']
                     f"{module_name}: Connection NOT established with {device} with address {hex(module.specs[f'{device}_address'])}.", "red"))
         else:
             test_logger(colored(
-                f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} NOT in {module_name} config.", "orange"))
+                f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} NOT in {module_name} config.", "yellow"))
     return all(test_result)
 
 def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
@@ -459,7 +459,7 @@ def test_pwr_connection(hw_nc, test_logger):
         except:
             traceback.print_exc()
     else:
-        test_logger(colored('Pwr cannot be tested with this system configuration.', "orange"))
+        test_logger(colored('Pwr cannot be tested with this system configuration.', "yellow"))
 
 def test_vmn_hardware_offset(hw, test_logger, deviation_threshold=10., return_deviation=False):
     """
@@ -524,7 +524,7 @@ def test_vmn_hardware_offset(hw, test_logger, deviation_threshold=10., return_de
         test_result = True
     else:
         test_logger(colored(
-        f"Test Vmn hardware offset: Warning... Vmn offset deviation from config = {vmn_deviation_from_offset: .3f} %", "orange"))
+        f"Test Vmn hardware offset: Warning... Vmn offset deviation from config = {vmn_deviation_from_offset: .3f} %", "yellow"))
     if return_deviation:
         return test_result, vmn_deviation_from_offset
     else:
@@ -624,7 +624,7 @@ def test_r_shunt(hw, test_logger, deviation_threshold=10., return_deviation=Fals
             test_result = True
         else:
             test_logger(colored(
-                f"Test r_shunt: Warning... R shunt deviation from config = {iab_deviation: .3f} %", "orange"))
+                f"Test r_shunt: Warning... R shunt deviation from config = {iab_deviation: .3f} %", "yellow"))
 
         hw._current_max_tolerance = hw.tx.pwr.specs['current_max_tolerance'] #set back default value
         hw.tx.pwr._voltage_max = hw.tx.pwr.specs['voltage_max'] #set back to default value
@@ -713,9 +713,9 @@ def test_dg411_gain_ratio(hw, test_logger, return_deviation=False, deviation_thr
             f"DG411 Test: Warning... Deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .2f} %", "green"))
     else:
         test_logger(colored(
-            f"DG411 Test: Measured DG411 gain ratio = {voltage_gain_ratio: .1f}", "orange"))
+            f"DG411 Test: Measured DG411 gain ratio = {voltage_gain_ratio: .1f}", "yellow"))
         test_logger(colored(
-        f"DG411 Test: Warning... Deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .2f} %", "orange"))
+        f"DG411 Test: Warning... Deviation of DG411 gain ratio from config = {voltage_gain_ratio_deviation: .2f} %", "yellow"))
 
     if return_deviation:
         return test_result, voltage_gain_ratio_deviation
@@ -757,7 +757,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
 
     if hw._cabling == {}:
         test_logger(colored(
-            "!!! MUX relays test: No MUX board in config !!! Abort..."), "orange")  # TODO: ask user to press button if AB are shortcut
+            "!!! MUX relays test: No MUX board in config !!! Abort..."), "yellow")  # TODO: ask user to press button if AB are shortcut
         return
     # roles = ['A', 'B']
     if ('A' in roles and 'B' in roles) or test_tx:
@@ -812,9 +812,9 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                     test_result = True
                 else:
                     test_logger(colored(
-                         f"Test MUX - Electrode {electrode}: WARNING... Relays A and B not switching properly", "orange"))
+                         f"Test MUX - Electrode {electrode}: WARNING... Relays A and B not switching properly", "yellow"))
                     test_logger(colored(
-                        f"Test MUX - Electrode {electrode}: WARNING... Single roles A and B need to be manually checked while manually shortcutting A and B", "orange"))
+                        f"Test MUX - Electrode {electrode}: WARNING... Single roles A and B need to be manually checked while manually shortcutting A and B", "yellow"))
 
                 hw._current_max_tolerance = hw.tx.pwr.specs['current_max_tolerance'] #set back default value
                 hw.tx.pwr._voltage_max = hw.tx.pwr.specs['voltage_max'] #set back to default value
@@ -850,6 +850,6 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                 test_result = True
             else:
                 test_logger(colored(
-                     f"Test MUX - Electrode {electrode}: WARNING... Relays M and N not switching properly", "orange"))
+                     f"Test MUX - Electrode {electrode}: WARNING... Relays M and N not switching properly", "yellow"))
                 test_logger(colored(
-                    f"Test MUX - Electrode {electrode}: WARNING... Single roles M and N need to be manually checked while manually shortcutting M and N", "orange"))
+                    f"Test MUX - Electrode {electrode}: WARNING... Single roles M and N need to be manually checked while manually shortcutting M and N", "yellow"))
