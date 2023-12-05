@@ -765,14 +765,17 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
             test_roles = ['A', 'B']
         else:
             test_roles = roles  # This allows to test relays of other roles which are manually connected to AB connectors of measurement board
-        for electrode in electrodes[:2]:
-            if hw.tx.pwr.voltage_adjustable:
+
+        if hw.tx.pwr.voltage_adjustable:
+            switch_tx_pwr_off = False
+            if hw.pwr_state == 'off':
+                hw.pwr_state = 'on'
+                switch_tx_pwr_off = True
+
+            for electrode in electrodes[:2]:
                 # check pwr is on, if not, let's turn it on
 
-                switch_tx_pwr_off = False
-                if hw.pwr_state == 'off':
-                    hw.pwr_state = 'on'
-                    switch_tx_pwr_off = True
+
                 test_result = False
 
                 quad = [electrode] * len(test_roles)
@@ -808,13 +811,13 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
 
                 if iab > 10.: # mA
                     test_logger(colored(
-                         f"Test MUX - Electrode {electrode}: Relay {' and relay '.join(str(r) for r in test_roles)} successfully switching", "green"))
+                         f"Test MUX relays AB - Electrode {electrode}: Relay {' and Relay '.join(str(r) for r in test_roles)} successfully switching", "green"))
                     test_result = True
                 else:
                     test_logger(colored(
-                         f"Test MUX - Electrode {electrode}: WARNING... Relay {' and relay '.join(str(r) for r in test_roles)} not switching properly", "yellow"))
+                         f"Test MUX relays AB - Electrode {electrode}: WARNING... Relay {' and Relay '.join(str(r) for r in test_roles)} not switching properly", "yellow"))
                     test_logger(colored(
-                        f"Test MUX - Electrode {electrode}: WARNING... Single roles A and B need to be manually checked while manually shortcutting A and B", "yellow"))
+                        f"Test MUX relays AB - Electrode {electrode}: WARNING... Single roles A and B need to be manually checked while manually shortcutting A and B", "yellow"))
 
                 hw._current_max_tolerance = hw.tx.pwr.specs['current_max_tolerance'] #set back default value
                 hw.tx.pwr._voltage_max = hw.tx.pwr.specs['voltage_max'] #set back to default value
@@ -822,8 +825,20 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                 time.sleep(.2)
 
                 hw.status = 'idle'
+
                 if switch_pwr_off:
                     hw.pwr.pwr_state = 'off'
+
+            # if power was off before measurement, let's turn if off
+            if switch_tx_pwr_off:
+                hw.pwr_state = 'off'
+        else:
+            test_logger(colored(
+                'WARNING... MUX AB cannot be tested with this system configuration since power is not adjustable.', 'yellow'))
+            test_logger(colored(
+                'WARNING... Please connect roles AB to AB connectors on measurmeent board and calls:', 'yellow'))
+            test_logger(colored(
+                'test__mux_relays(roles=["A", "B"], test_rx=True)', 'yellow'))
 
     if ('M' in roles and 'N' in roles) or test_rx:
         for electrode in electrodes[:2]:
@@ -842,13 +857,13 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
             vmn_std = np.std(vmns[-5:])
             hw.switch_mux(quad, test_roles, state='off')
             test_logger(
-                f"Test MUX - Electrode {electrode}: Vmn at rest = {vmn: .2f}")
+                f"Test MUX relays MN - Electrode {electrode}: Vmn at rest = {vmn: .2f}")
             if abs(vmn) < 100:
                 test_logger(colored(
-                     f"Test MUX - Electrode {electrode}: Relays{' and relay '.join(str(r) for r in test_roles)} successfully switching", "green"))
+                     f"Test MUX relays MN - Electrode {electrode}: Relay {' and Relay '.join(str(r) for r in test_roles)} successfully switching", "green"))
                 test_result = True
             else:
                 test_logger(colored(
-                     f"Test MUX - Electrode {electrode}: WARNING... Relays {' and relay '.join(str(r) for r in test_roles)} not switching properly", "yellow"))
+                     f"Test MUX relays MN - Electrode {electrode}: WARNING... Relay  {' and Relay '.join(str(r) for r in test_roles)} not switching properly", "yellow"))
                 test_logger(colored(
-                    f"Test MUX - Electrode {electrode}: WARNING... Single roles M and N need to be manually checked while manually shortcutting M and N", "yellow"))
+                    f"Test MUX relays MN - Electrode {electrode}: WARNING... Single roles M and N need to be manually checked while manually shortcutting M and N", "yellow"))
