@@ -42,4 +42,4 @@ test_logger.info('OhmPi tests ready to start...')
 # test_dg411_gain_ratio(hw, soh_logger.test)
 # test_r_shunt(hw, soh_logger.test)
 
-test_mux_relays(hw, soh_logger.test, electrodes=np.arange(4), roles=["M","N"])
+test_mux_relays(hw, soh_logger.test, electrodes=np.arange(4), roles=["A","B"])
