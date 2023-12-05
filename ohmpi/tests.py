@@ -182,7 +182,7 @@ def test_mb_connectivity(hw_nc, module_name, test_logger, devices=['mcp', 'ads']
     for i, device in enumerate(devices):
         if f'{device}_address' in module.specs:
             try:
-                getattr(f'{module}.reset_{device}')
+                getattr(f'{module}', f'reset_{device}')
                 test_logger(colored(
                     f"{module_name}: Connection established with {device} with address {hex(module.specs[f'{device}_address'])}.", "green"))
                 test_result[i] = True
