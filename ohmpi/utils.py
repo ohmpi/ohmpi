@@ -156,7 +156,7 @@ def parse_log(filename, level=None, directory="logs", name=None, last=1):
             new_session_idx.append(i)
 
     last_session_msg = lines[new_session_idx[-last]+2]
-    if level = None:
+    if level is None:
         last_session_msg_parsed = last_session_msg
     else:
         last_session_msg_parsed = last_session_msg[np.where(level in last_session_msg)]
