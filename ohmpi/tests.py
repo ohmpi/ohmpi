@@ -752,7 +752,49 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
         roles = np.unique(np.sort(np.concatenate(np.array(roles))))
     print(electrodes, roles, list_of_muxes)
 
-    #
-    # for electrode in electrodes:
-    #     quad = [electrode, electrode]
-    #     for r in roles.reshape():
+    for electrode in electrodes[:2]:
+        quad = [electrode, electrode]
+        if 'A' in roles and 'B' in roles:
+            test_roles = ['A', 'B']
+
+        if 'M' in roles and 'N' in roles:
+            test_roles = ['M', 'N']
+            vmns = np.zeros(20)
+            for i in range(vmns.shape[0]):
+                vmns[i] = hw.rx.voltage
+                time.sleep(.1)
+            vmn = np.mean(vmns[-10:])
+            vmn_std = np.std(vmns[-10:])
+            print('NO', vmns, vmn, vmn_std)
+
+            hw.switch_mux(quad, test_roles, state='on')
+            vmns = np.zeros(20)
+            for i in range(vmns.shape[0]):
+                vmns[i] = hw.rx.voltage
+                time.sleep(.1)
+            vmn = np.mean(vmns[-10:])
+            vmn_std = np.std(vmns[-10:])
+            hw.switch_mux(quad, roles, state='off')
+            print('MN', vmns, vmn, vmn_std)
+
+            test_roles = ['M']
+            hw.switch_mux(quad, test_roles, state='on')
+            vmns = np.zeros(20)
+            for i in range(vmns.shape[0]):
+                vmns[i] = hw.rx.voltage
+                time.sleep(.1)
+            vmn = np.mean(vmns[-10:])
+            vmn_std = np.std(vmns[-10:])
+            hw.switch_mux(quad, roles, state='off')
+            print('M', vmns, vmn, vmn_std)
+
+            test_roles = ['N']
+            hw.switch_mux(quad, test_roles, state='on')
+            vmns = np.zeros(20)
+            for i in range(vmns.shape[0]):
+                vmns[i] = hw.rx.voltage
+                time.sleep(.1)
+            vmn = np.mean(vmns[-10:])
+            vmn_std = np.std(vmns[-10:])
+            hw.switch_mux(quad, roles, state='off')
+            print('N', vmn, vmn_std)
