@@ -35,8 +35,6 @@ TEST_LOGGING_CONFIG = {
     'interval': 1
 }
 
-HARDWARE_CONFIG_nc = copy.deepcopy(HARDWARE_CONFIG)
-
 def test_i2c_devices_on_bus(i2c_addr, bus):
     if bus.try_lock():
         i2c_addresses_on_bus = bus.scan()
