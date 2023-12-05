@@ -104,143 +104,6 @@ def setup_test_logger(mqtt=True):
 
     return test_logger, test_log_filename, TEST_LOGGING_CONFIG['logging_level'], msg
 
-# class OhmPiTests():
-#     """
-#     OhmPiTests class .
-#     """
-# def __init__(self, mqtt=True, config=None):
-#     # set loggers
-#     test_logger, _, _, _ = setup_test_logger(mqtt=mqtt)
-#     self.exec_logger, _, self.data_logger, _, self.soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
-#     print(msg)
-#     print("Hardware_config", HARDWARE_CONFIG_nc)
-#
-#     # specify loggers when instancing the hardware
-#     #self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-#     #                            'soh_logger': self.soh_logger})
-#
-#     print('config', HARDWARE_CONFIG_nc)
-#     for k, v in HARDWARE_CONFIG_nc.items():
-#         if k == 'mux':
-#             HARDWARE_CONFIG_nc[k]['default'].update({'connect': False})
-#         else:
-#             HARDWARE_CONFIG_nc[k].update({'connect': False})
-#
-#     self._hw_nc = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-#                                 'soh_logger': self.soh_logger}, hardware_config=HARDWARE_CONFIG_nc)
-#
-#
-#     test_logger('Hardware configured...')
-#     test_logger('OhmPi tests ready to start...')
-
-# def test_tx_accessibility(hw_nc, test_logger, devices=['mcp','ads']):
-#     tx = hw_nc.tx
-#     test_logger(
-#         f"TX: *** Start TX accessibility test on {tx.specs['model']} board ***")
-#     if isinstance(devices, str):
-#         devices = [devices]
-#     test_result = [False] * len(devices)
-#     for i, device in enumerate(devices):
-#         if f'{device}_address' in tx.specs:
-#             if test_i2c_devices_on_bus(tx.specs[f'{device}_address'], tx.connection):
-#                 test_logger(f"{device} with address {hex(tx.specs[f'{device}_address'])} accessible on I2C bus.")
-#                 test_result[i] = True
-#             else:
-#                 test_logger(
-#                     f"TX: {device} with address {hex(tx.specs[f'{device}_address'])} NOT accessible on I2C bus.")
-#         else:
-#             test_logger(
-#                 f"TX: {device} with address {hex(tx.specs[f'{device}_address'])} not in TX config.")
-#     return all(test_result)
-#
-# def test_tx_connectivity(hw_nc, test_logger, devices=['mcp','ads']):
-#     """
-#     Test connectivity to I2C devices on TX (currently only mcp or ads). Test is successful if the I2C addresses of all
-#      devices being tested are visible when performing a I2C bus scan.
-#
-#     Parameters
-#     ----------
-#     hw_nc: ohmpi.OhmPiHardware
-#       OhmPiHardware object of which "connect" parameter is set to False
-#     test_logger: logging.Logger
-#       Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
-#     mux_id: str or None (optional)
-#       MUX ID name from a MUX_CONFIG used to initiate the OhmPiHardware object. If set to None, test will be performed
-#       on all MUX_boards listed in the MUX_CONFIG of hw_nc
-#
-#     Returns
-#     -------
-#     bool
-#        True if test successful, False otherwise.
-#     """
-#     tx = hw_nc.tx
-#     test_logger(
-#         f"TX: *** Start TX connectivity test on {tx.specs['model']} board ***")
-#     if isinstance(devices, str):
-#         devices = [devices]
-#     test_result = [False] * len(devices)
-#     for i, device in enumerate(devices):
-#         if f'{device}_address' in tx.specs:
-#             try:
-#                 getattr(tx, f'reset_{device}')
-#                 test_logger(f"TX: Connection established with {device} with address {hex(tx.specs[f'{device}_address'])}.")
-#                 test_result[i] = True
-#             except:
-#                 traceback.print_exc()
-#                 test_logger(
-#                     f"TX: Connection NOT established with {device} with address {hex(tx.specs[f'{device}_address'])}.")
-#         else:
-#             test_logger(
-#                 f"TX: {device} with address {hex(tx.specs[f'{device}_address'])} not in TX config.")
-#     return all(test_result)
-#
-# def test_tx_connection(hw_nc, test_logger, devices=['mcp', 'ads']):
-#     """
-#         Test connection to I2C devices in TX module.
-#         Calls in test_rx_accessibility first and then if successful calls in test_rx_connectivity.
-#         Test is successful if I2C addresses of all I2C devices being tested are visible when performing a I2C bus scan.
-#
-#         Parameters
-#         ----------
-#         hw_nc: ohmpi.OhmPiHardware
-#           OhmPiHardware object of which "connect" parameter is set to False
-#         test_logger: logging.Logger
-#           Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
-#         devices: str or list
-#           name or list of names of devices to be tested (currently can only be mcp or ads)
-#
-#         Returns
-#         -------
-#         bool
-#            True if test successful, False otherwise.
-#         """
-#
-#     tx = hw_nc.tx
-#     test_logger(" ")
-#     test_logger(
-#         f"****************************************************************")
-#     test_logger(
-#         f"*** Start TX connection test on {tx.specs['model']} board ***")
-#     test_logger(
-#         f"****************************************************************")
-#     test_logger(" ")
-#     if isinstance(devices, str):
-#         devices = [devices]
-#     test_result = [False] * len(devices)
-#     for i, device in enumerate(devices):
-#         if f'{device}_address' in tx.specs:
-#             accessibility_results, connectivity_results = False, False
-#             accessibility_results = test_tx_accessibility(devices=device)
-#             if accessibility_results:
-#                 test_logger(
-#                     f"TX: Accessibility test successful. Will check if device respond...")
-#                 connectivity_results = test_tx_connectivity(devices=device)
-#                 if connectivity_results:
-#                     test_logger(
-#                         f"TX: Connection test successful for {device} with address {hex(tx.specs[f'{device}_address'])}.")
-#                     test_result[i] = True
-#
-#     return all(test_result)
 
 def test_mb_accessibility(hw_nc, module_name, test_logger, devices=['mcp','ads']):
     """
@@ -277,15 +140,15 @@ def test_mb_accessibility(hw_nc, module_name, test_logger, devices=['mcp','ads']
     for i, device in enumerate(devices):
         if f'{device}_address' in module.specs:
             if test_i2c_devices_on_bus(module.specs[f'{device}_address'], module.connection):
-                test_logger(
-                    f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} accessible on I2C bus.")
+                test_logger(colored(
+                    f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} accessible on I2C bus.", "green"))
                 test_result[i] = True
             else:
-                test_logger(
-                    f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} NOT accessible on I2C bus.")
+                test_logger(colored(
+                    f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} NOT accessible on I2C bus.", "red"))
         else:
-            test_logger(
-                f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} not in {module_name} config.")
+            test_logger(colored(
+                f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} not in {module_name} config.", "orange"))
     return all(test_result)
 
 def test_mb_connectivity(hw_nc, module_name, test_logger, devices=['mcp', 'ads']):
@@ -322,15 +185,15 @@ def test_mb_connectivity(hw_nc, module_name, test_logger, devices=['mcp', 'ads']
         if f'{device}_address' in module.specs:
             try:
                 getattr(f'{module}.reset_{device}')
-                test_logger(
-                    f"{module_name}: Connection established with {device} with address {hex(module.specs[f'{device}_address'])}.")
+                test_logger(colored(
+                    f"{module_name}: Connection established with {device} with address {hex(module.specs[f'{device}_address'])}.", "green"))
                 test_result[i] = True
             except:
-                test_logger(
-                    f"{module_name}: Connection NOT established with {device} with address {hex(module.specs[f'{device}_address'])}.")
+                test_logger(colored(
+                    f"{module_name}: Connection NOT established with {device} with address {hex(module.specs[f'{device}_address'])}.", "red"))
         else:
-            test_logger(
-                f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} not in {module_name} config.")
+            test_logger(colored(
+                f"{module_name}: {device} with address {hex(module.specs[f'{device}_address'])} NOT in {module_name} config.", "orange"))
     return all(test_result)
 
 def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
@@ -377,14 +240,17 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
             accessibility_results, connectivity_results = False, False
             accessibility_results = test_mb_accessibility(hw_nc, module_name, test_logger, devices=device)
             if accessibility_results:
-                test_logger(colored(
-                    f"{module}: Accessibility test successful. Will check if device respond...", "green"))
+                test_logger(
+                    f"{module}: Accessibility test successful. Will check if device respond...")
                 connectivity_results = test_mb_connectivity(hw_nc, module_name, test_logger, devices=device)
                 if connectivity_results:
                     test_logger(colored(
                         f"{module}: Connection test successful for {device} with address {hex(module.specs[f'{device}_address'])}.", "green"))
                     test_result[i] = True
-
+                else:
+                    test_logger(colored(
+                        f"{module}: Connection test NOT successful for {device} with address {hex(module.specs[f'{device}_address'])}.",
+                        "red"))
     return all(test_result)
 
 def test_mux_accessibility(hw_nc, test_logger, mux_id=None):
