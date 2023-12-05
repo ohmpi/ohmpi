@@ -42,5 +42,5 @@ hw_nc = OhmPiHardware(**{'exec_logger': exec_logger, 'data_logger': data_logger,
 # test_dg411_gain_ratio(hw, soh_logger.test)
 # test_r_shunt(hw, soh_logger.test)
 
-test_mux_relays(hw, soh_logger.test, electrodes=np.arange(4), roles=["A","B"])
+test_mux_relays(hw, soh_logger.test, roles=["A","B"])
 test_tx_battery_voltage(hw,  soh_logger.test)
