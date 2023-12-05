@@ -752,18 +752,18 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
         roles = np.unique(np.sort(np.concatenate(np.array(roles))))
     print(electrodes, roles, list_of_muxes)
 
-    for electrode in electrodes[:2]:
+    for electrode in electrodes[:5]:
         if 'A' in roles and 'B' in roles:
             test_roles = ['A', 'B']
 
         if 'M' in roles and 'N' in roles:
             test_roles = ['M', 'N']
             hw.rx._dg411_gain = .5
-            time.sleep(4)
+            # time.sleep(4)
             vmns = np.zeros(10)
             for i in range(vmns.shape[0]):
-                vmns[i] = hw.rx.voltage
                 time.sleep(.1)
+                vmns[i] = hw.rx.voltage
             vmn = np.mean(vmns[-5:])
             vmn_std = np.std(vmns[-5:])
             print('NO', vmns, vmn, vmn_std)
@@ -784,8 +784,8 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
             hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
             vmns = np.zeros(10)
             for i in range(vmns.shape[0]):
-                vmns[i] = hw.rx.voltage
                 time.sleep(.1)
+                vmns[i] = hw.rx.voltage
             vmn = np.mean(vmns[-5:])
             vmn_std = np.std(vmns[-5:])
             hw.switch_mux(quad, test_roles, state='off')
@@ -796,8 +796,8 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
             hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
             vmns = np.zeros(10)
             for i in range(vmns.shape[0]):
-                vmns[i] = hw.rx.voltage
                 time.sleep(.1)
+                vmns[i] = hw.rx.voltage
             vmn = np.mean(vmns[-5:])
             vmn_std = np.std(vmns[-5:])
             hw.switch_mux(quad, test_roles, state='off')
