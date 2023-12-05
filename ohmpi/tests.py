@@ -799,7 +799,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
                 injection.join()
                 hw.tx.polarity = 0
 
-                iab = hw.readings[:,, 3]
+                iab = hw.readings[:, 3]
 
                 # close mux path and put pin back to GND
                 hw.switch_mux(quad, test_roles, state='off')
