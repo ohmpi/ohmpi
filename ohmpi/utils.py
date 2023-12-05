@@ -146,7 +146,14 @@ def mux_2023_to_mux_2024_takeouts(elec_list):
     return np.vectorize(mapper.get)(elec_list)
 
 def parse_last_session_log(filename, level, directory="logs", name=None):
-    rows = []
+
     with open(os.path.join(directory,filename), "r") as logfile:
-        rows.append(logfile.readlines())
-    print(rows)
+        lines = logfile.readlines()
+
+    new_session_idx = []
+    for i,line in enumerate(lines):
+        if "NEW SESSION STARTING" in line:
+            new_session_idx.append(i)
+
+    last_session_msg = lines[new_session_idx[-1]+2]
+    return last_session_msg
