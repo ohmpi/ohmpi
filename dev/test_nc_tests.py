@@ -12,14 +12,14 @@ import copy
 mqtt = True
 test_logger, _, _, _ = setup_test_logger(mqtt=mqtt)
 exec_logger, _, data_logger, _, soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
-print(msg)
+# print(msg)
 HARDWARE_CONFIG_nc = copy.deepcopy(HARDWARE_CONFIG)
 
 # specify loggers when instancing the hardware
 hw = OhmPiHardware(**{'exec_logger': exec_logger, 'data_logger': data_logger,
                            'soh_logger': soh_logger})
 
-print('config', HARDWARE_CONFIG_nc)
+# print('config', HARDWARE_CONFIG_nc)
 for k, v in HARDWARE_CONFIG_nc.items():
     if k == 'mux':
         HARDWARE_CONFIG_nc[k]['default'].update({'connect': False})

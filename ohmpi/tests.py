@@ -18,22 +18,22 @@ from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import HARDWARE_CONFIG
 from threading import Thread
 
-print('hardware_config_import',HARDWARE_CONFIG)
+# print('hardware_config_import',HARDWARE_CONFIG)
 
-logging_suffix = ''
-MQTT_LOGGING_CONFIG.update({'test_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/test'})
-MQTT_LOGGING_CONFIG.update({'test_logging_level': logging.DEBUG})
-
-TEST_LOGGING_CONFIG = {
-    'logging_level': logging.INFO,
-    'logging_to_console': True,
-    'log_file_logging_level': logging.DEBUG,
-    'file_name': f'test{logging_suffix}.log',
-    'max_bytes': 16777216,
-    'backup_count': 1024,
-    'when': 'd',
-    'interval': 1
-}
+# logging_suffix = ''
+# MQTT_LOGGING_CONFIG.update({'test_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/test'})
+# MQTT_LOGGING_CONFIG.update({'test_logging_level': logging.DEBUG})
+#
+# TEST_LOGGING_CONFIG = {
+#     'logging_level': logging.INFO,
+#     'logging_to_console': True,
+#     'log_file_logging_level': logging.DEBUG,
+#     'file_name': f'test{logging_suffix}.log',
+#     'max_bytes': 16777216,
+#     'backup_count': 1024,
+#     'when': 'd',
+#     'interval': 1
+# }
 
 def test_i2c_devices_on_bus(i2c_addr, bus):
     if bus.try_lock():
@@ -44,63 +44,63 @@ def test_i2c_devices_on_bus(i2c_addr, bus):
     else:
         return False
 
-def setup_test_logger(mqtt=True):
-    msg = ''
-    # Message logging setup
-    log_path = path.join(path.dirname(__file__), 'logs')
-    if not path.isdir(log_path):
-        mkdir(log_path)
-    test_log_filename = path.join(log_path, TEST_LOGGING_CONFIG['file_name'])
-
-    test_logger = logging.getLogger('test_logger')
-
-    # TEST logging setup
-    # Set message logging format and level
-    log_format = '%(asctime)-15s | %(process)d | %(levelname)s: %(message)s'
-    logging_to_console = TEST_LOGGING_CONFIG['logging_to_console']
-    test_handler = CompressedSizedTimedRotatingFileHandler(test_log_filename,
-                                                           max_bytes=TEST_LOGGING_CONFIG['max_bytes'],
-                                                           backup_count=TEST_LOGGING_CONFIG['backup_count'],
-                                                           when=TEST_LOGGING_CONFIG['when'],
-                                                           interval=TEST_LOGGING_CONFIG['interval'])
-    test_formatter = logging.Formatter(log_format)
-    test_formatter.converter = gmtime
-    test_formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
-    test_handler.setFormatter(test_formatter)
-    test_logger.addHandler(test_handler)
-    test_logger.setLevel(TEST_LOGGING_CONFIG['log_file_logging_level'])
-
-    if logging_to_console:
-        console_test_handler = logging.StreamHandler(sys.stdout)
-        console_test_handler.setLevel(TEST_LOGGING_CONFIG['logging_level'])
-        console_test_handler.setFormatter(test_formatter)
-        test_logger.addHandler(console_test_handler)
-
-    if mqtt:
-        mqtt_settings = MQTT_LOGGING_CONFIG.copy()
-        mqtt_test_logging_level = mqtt_settings.pop('test_logging_level', logging.DEBUG)
-        [mqtt_settings.pop(i, None) for i in ['client_id', 'exec_topic', 'data_topic', 'test_topic',
-                                              'data_logging_level', 'exec_logging_level']]
-        mqtt_settings.update({'topic': MQTT_LOGGING_CONFIG['test_topic']})
-        # TODO: handle the case of MQTT broker down or temporarily unavailable
-        try:
-            mqtt_test_handler = MQTTHandler(**mqtt_settings)
-            mqtt_test_handler.setLevel(mqtt_test_logging_level)
-            mqtt_test_handler.setFormatter(test_formatter)
-            test_logger.addHandler(mqtt_test_handler)
-            msg += colored(f"\n\u2611 Publishes execution as {MQTT_LOGGING_CONFIG['test_topic']} topic on the "
-                           f"{MQTT_LOGGING_CONFIG['hostname']} broker", 'blue')
-        except Exception as e:
-            msg += colored(f'\nWarning: Unable to connect to test topic on broker\n{e}', 'yellow')
-            mqtt = False
-
-    # try:
-    #     init_logging( test_logger,
-    #                  TEST_LOGGING_CONFIG['logging_level'], log_path, data_log_filename)
-    # except Exception as err:
-    #     msg += colored(f'\n\u26A0 ERROR: Could not initialize logging!\n{err}', 'red')
-
-    return test_logger, test_log_filename, TEST_LOGGING_CONFIG['logging_level'], msg
+# def setup_test_logger(mqtt=True):
+#     msg = ''
+#     # Message logging setup
+#     log_path = path.join(path.dirname(__file__), 'logs')
+#     if not path.isdir(log_path):
+#         mkdir(log_path)
+#     test_log_filename = path.join(log_path, TEST_LOGGING_CONFIG['file_name'])
+#
+#     test_logger = logging.getLogger('test_logger')
+#
+#     # TEST logging setup
+#     # Set message logging format and level
+#     log_format = '%(asctime)-15s | %(process)d | %(levelname)s: %(message)s'
+#     logging_to_console = TEST_LOGGING_CONFIG['logging_to_console']
+#     test_handler = CompressedSizedTimedRotatingFileHandler(test_log_filename,
+#                                                            max_bytes=TEST_LOGGING_CONFIG['max_bytes'],
+#                                                            backup_count=TEST_LOGGING_CONFIG['backup_count'],
+#                                                            when=TEST_LOGGING_CONFIG['when'],
+#                                                            interval=TEST_LOGGING_CONFIG['interval'])
+#     test_formatter = logging.Formatter(log_format)
+#     test_formatter.converter = gmtime
+#     test_formatter.datefmt = '%Y-%m-%d %H:%M:%S UTC'
+#     test_handler.setFormatter(test_formatter)
+#     test_logger.addHandler(test_handler)
+#     test_logger.setLevel(TEST_LOGGING_CONFIG['log_file_logging_level'])
+#
+#     if logging_to_console:
+#         console_test_handler = logging.StreamHandler(sys.stdout)
+#         console_test_handler.setLevel(TEST_LOGGING_CONFIG['logging_level'])
+#         console_test_handler.setFormatter(test_formatter)
+#         test_logger.addHandler(console_test_handler)
+#
+#     if mqtt:
+#         mqtt_settings = MQTT_LOGGING_CONFIG.copy()
+#         mqtt_test_logging_level = mqtt_settings.pop('test_logging_level', logging.DEBUG)
+#         [mqtt_settings.pop(i, None) for i in ['client_id', 'exec_topic', 'data_topic', 'test_topic',
+#                                               'data_logging_level', 'exec_logging_level']]
+#         mqtt_settings.update({'topic': MQTT_LOGGING_CONFIG['test_topic']})
+#         # TODO: handle the case of MQTT broker down or temporarily unavailable
+#         try:
+#             mqtt_test_handler = MQTTHandler(**mqtt_settings)
+#             mqtt_test_handler.setLevel(mqtt_test_logging_level)
+#             mqtt_test_handler.setFormatter(test_formatter)
+#             test_logger.addHandler(mqtt_test_handler)
+#             msg += colored(f"\n\u2611 Publishes execution as {MQTT_LOGGING_CONFIG['test_topic']} topic on the "
+#                            f"{MQTT_LOGGING_CONFIG['hostname']} broker", 'blue')
+#         except Exception as e:
+#             msg += colored(f'\nWarning: Unable to connect to test topic on broker\n{e}', 'yellow')
+#             mqtt = False
+#
+#     # try:
+#     #     init_logging( test_logger,
+#     #                  TEST_LOGGING_CONFIG['logging_level'], log_path, data_log_filename)
+#     # except Exception as err:
+#     #     msg += colored(f'\n\u26A0 ERROR: Could not initialize logging!\n{err}', 'red')
+#
+#     return test_logger, test_log_filename, TEST_LOGGING_CONFIG['logging_level'], msg
 
 
 def test_mb_accessibility(hw_nc, module_name, test_logger, devices=['mcp','ads']):
