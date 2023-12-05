@@ -244,6 +244,7 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
                 connectivity_results = test_mb_connectivity(hw_nc, module_name, test_logger, devices=device)
                 if connectivity_results:
                     test_result[i] = True
+    test_logger("")
     if all(test_result):
         test_logger(colored(
             f"{module_name}: Connection test successful.", "green"))
@@ -440,13 +441,14 @@ def test_mux_connection(hw_nc, test_logger, mux_id=None):
             connectivity_results = test_mux_connectivity(hw_nc, test_logger, mux_id=mux_id)
             if connectivity_results:
                 test_result[i] = True
+    test_logger("")
     if all(test_result):
         test_logger(colored(
-            f"{mux_id}: MUX connection test successful", "green"))
+            f"MUX connection test successful", "green"))
 
     else:
         test_logger(colored(
-            f"{mux_id}: MUX connection test NOT successful", "red"))
+            f"MUX connection test NOT successful", "red"))
 
     return all(test_result)
 
