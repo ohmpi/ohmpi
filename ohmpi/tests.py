@@ -520,11 +520,15 @@ def test_vmn_hardware_offset(hw, test_logger, deviation_threshold=10., return_de
     vmn_deviation_from_offset = abs(1 - vmn / hw.rx._vmn_hardware_offset) * 100
     if vmn_deviation_from_offset <= deviation_threshold:
         test_logger(colored(
-            f"Test Vmn hardware offset: Vmn offset deviation from config = {vmn_deviation_from_offset: .3f} %", "green"))
+            f"Test Vmn hardware offset: Vmn offset deviation from config = {vmn_deviation_from_offset: .2f} %", "green"))
         test_result = True
     else:
         test_logger(colored(
-        f"Test Vmn hardware offset: Warning... Vmn offset deviation from config = {vmn_deviation_from_offset: .3f} %", "yellow"))
+            f"Test Vmn hardware offset: WARNING... measured VMN offset = {vmn:.2f} %",
+            "yellow"))
+        test_logger(colored(
+        f"Test Vmn hardware offset: WARNING... Vmn offset deviation from config = {vmn_deviation_from_offset:.2f} %", "yellow"))
+
     if return_deviation:
         return test_result, vmn_deviation_from_offset
     else:
