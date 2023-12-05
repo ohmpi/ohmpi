@@ -483,6 +483,16 @@ def test_vmn_hardware_offset(hw, test_logger, deviation_threshold=10., return_de
     float
       Estimated R shunt deviation from config, if return_values is set to True
     """
+
+    test_logger(" ")
+    test_logger(
+        f"****************************************************************")
+    test_logger(
+        f"*** Start Vmn hardware offset test ***")
+    test_logger(
+        f"****************************************************************")
+    test_logger(" ")
+
     test_result = False
     quad = [1, 2]
     hw.rx._dg411_gain = .5
