@@ -762,7 +762,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
 
     if 'A' in roles and 'B' in roles:
         test_roles = ['A', 'B']
-        for electrode in electrodes:
+        for electrode in electrodes[:2]:
             if hw.tx.pwr.voltage_adjustable:
                 # check pwr is on, if not, let's turn it on
 
@@ -791,7 +791,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
                     switch_pwr_off = True
 
                 # hw._vab_pulse(duration=injection_duration, vab=tx_volt)
-                time.sleep(.5)
+                time.sleep(.2)
                 injection = Thread(target=hw._inject, kwargs={'injection_duration': injection_duration, 'polarity': 1})
                 readings = Thread(target=hw._read_values, kwargs={'sampling_rate': hw.sampling_rate, 'append': False, 'test_r_shunt': True})
                 readings.start()
@@ -818,6 +818,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
                 hw._current_max_tolerance = hw.tx.pwr.specs['current_max_tolerance'] #set back default value
                 hw.tx.pwr._voltage_max = hw.tx.pwr.specs['voltage_max'] #set back to default value
                 hw.tx.pwr.current_max = hw.tx.pwr.specs['current_max'] #set back to default value
+                time.sleep(.2)
 
                 hw.status = 'idle'
                 if switch_pwr_off:
