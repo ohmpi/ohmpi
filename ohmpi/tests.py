@@ -365,7 +365,7 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
     test_logger(
         f"****************************************************************")
     test_logger(colored(
-        f"*** Start {module_name} connection test on {module.specs['model']} board ***", 'red')
+        f"*** Start {module_name} connection test on {module.specs['model']} board ***", 'red'))
     test_logger(
         f"****************************************************************")
     test_logger(" ")
