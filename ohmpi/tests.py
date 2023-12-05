@@ -805,7 +805,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
                 # close mux path and put pin back to GND
                 hw.switch_mux(quad, roles, state='off')
 
-                print(iab)
+                print(iab, hw.rx.specs['sampling_rate'])
                 #
                 # if iab_deviation <= deviation_threshold:
                 #     test_logger(colored(
