@@ -772,37 +772,37 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
             vmn_std = np.std(vmns[-5:])
             print('NO', vmns, vmn, vmn_std)
 
-            # quad = [electrode, electrode]
+            quad = [electrode, electrode]
+            hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
+            vmns = np.zeros(10)
+            for i in range(vmns.shape[0]):
+                vmns[i] = hw.rx.voltage
+                time.sleep(.1)
+            vmn = np.mean(vmns[-10:])
+            vmn_std = np.std(vmns[-10:])
+            hw.switch_mux(quad, test_roles, state='off')
+            print('MN', vmns, vmn, vmn_std)
+
+            # quad = [electrode]
+            # test_roles = ['M']
             # hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
-            # vmns = np.zeros(20)
+            # vmns = np.zeros(10)
             # for i in range(vmns.shape[0]):
-            #     vmns[i] = hw.rx.voltage
             #     time.sleep(.1)
-            # vmn = np.mean(vmns[-10:])
-            # vmn_std = np.std(vmns[-10:])
+            #     vmns[i] = hw.rx.voltage
+            # vmn = np.mean(vmns[-5:])
+            # vmn_std = np.std(vmns[-5:])
             # hw.switch_mux(quad, test_roles, state='off')
-            # print('MN', vmns, vmn, vmn_std)
-
-            quad = [electrode]
-            test_roles = ['M']
-            hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
-            vmns = np.zeros(10)
-            for i in range(vmns.shape[0]):
-                time.sleep(.1)
-                vmns[i] = hw.rx.voltage
-            vmn = np.mean(vmns[-5:])
-            vmn_std = np.std(vmns[-5:])
-            hw.switch_mux(quad, test_roles, state='off')
-            print('M', vmns, vmn, vmn_std)
-
-            quad = [electrode]
-            test_roles = ['N']
-            hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
-            vmns = np.zeros(10)
-            for i in range(vmns.shape[0]):
-                time.sleep(.1)
-                vmns[i] = hw.rx.voltage
-            vmn = np.mean(vmns[-5:])
-            vmn_std = np.std(vmns[-5:])
-            hw.switch_mux(quad, test_roles, state='off')
-            print('N', vmns, vmn, vmn_std)
+            # print('M', vmns, vmn, vmn_std)
+            #
+            # quad = [electrode]
+            # test_roles = ['N']
+            # hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
+            # vmns = np.zeros(10)
+            # for i in range(vmns.shape[0]):
+            #     time.sleep(.1)
+            #     vmns[i] = hw.rx.voltage
+            # vmn = np.mean(vmns[-5:])
+            # vmn_std = np.std(vmns[-5:])
+            # hw.switch_mux(quad, test_roles, state='off')
+            # print('N', vmns, vmn, vmn_std)
