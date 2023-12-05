@@ -584,6 +584,11 @@ def test_r_shunt(hw, test_logger, deviation_threshold=10., return_deviation=Fals
 
         if hw.tx.voltage != tx_volt:
             hw.tx.voltage = tx_volt
+
+        hw.tx.pwr._voltage_max = 0.1
+        hw.tx.pwr._current_max_tolerance = 0.
+        hw.tx.pwr.current_max = 0.045  # mA
+
         # turn dps_pwr_on if needed
         switch_pwr_off = False
         if hw.pwr.pwr_state == 'off':
@@ -591,9 +596,7 @@ def test_r_shunt(hw, test_logger, deviation_threshold=10., return_deviation=Fals
             switch_pwr_off = True
 
         hw.switch_mux(quad, roles, state='on', bypass_ab_check=True)
-        hw.tx.pwr._voltage_max = 0.1
-        hw.tx.pwr._current_max_tolerance = 0.
-        hw.tx.pwr.current_max = 0.045  # mA
+
         # hw._vab_pulse(duration=injection_duration, vab=tx_volt)
         time.sleep(.5)
         injection = Thread(target=hw._inject, kwargs={'injection_duration': injection_duration, 'polarity': 1})
@@ -752,8 +755,74 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
         roles = np.unique(np.sort(np.concatenate(np.array(roles))))
     print(electrodes, roles, list_of_muxes)
 
+    if hw._cabling == {}:
+        test_logger(colored(
+            "!!! MUX relays test: No MUX board in config !!! Abort..."), "orange")  # TODO: ask user to press button if AB are shortcut
+        return
+
     if 'A' in roles and 'B' in roles:
         test_roles = ['A', 'B']
+        for electrode in electrodes:
+            if hw.tx.pwr.voltage_adjustable:
+                # check pwr is on, if not, let's turn it on
+
+                switch_tx_pwr_off = False
+                if hw.pwr_state == 'off':
+                    hw.pwr_state = 'on'
+                    switch_tx_pwr_off = True
+                test_result = False
+
+                quad = [electrode, electrode]
+                roles = ['A','B']
+                tx_volt = .5  # in V
+                injection_duration = .5  # in s
+
+                hw.switch_mux(quad, roles, state='on', bypass_ab_check=True)
+                hw.tx.pwr._voltage_max = 0.2
+                hw.tx.pwr._current_max_tolerance = 0.
+                hw.tx.pwr.current_max = 0.010  # mA
+
+                if hw.tx.voltage != tx_volt:
+                    hw.tx.voltage = tx_volt
+                # turn dps_pwr_on if needed
+                switch_pwr_off = False
+                if hw.pwr.pwr_state == 'off':
+                    hw.pwr.pwr_state = 'on'
+                    switch_pwr_off = True
+
+                # hw._vab_pulse(duration=injection_duration, vab=tx_volt)
+                time.sleep(.5)
+                injection = Thread(target=hw._inject, kwargs={'injection_duration': injection_duration, 'polarity': 1})
+                readings = Thread(target=hw._read_values, kwargs={'sampling_rate': hw.sampling_rate, 'append': False, 'test_r_shunt': True})
+                readings.start()
+                injection.start()
+                readings.join()
+                injection.join()
+                hw.tx.polarity = 0
+
+                iab = hw.readings[-3:, 3]
+
+                # close mux path and put pin back to GND
+                hw.switch_mux(quad, roles, state='off')
+
+                print(iab)
+                #
+                # if iab_deviation <= deviation_threshold:
+                #     test_logger(colored(
+                #         f"Test r_shunt: R shunt deviation from config = {iab_deviation: .3f} %", "green"))
+                #     test_result = True
+                # else:
+                #     test_logger(colored(
+                #         f"Test r_shunt: Warning... R shunt deviation from config = {iab_deviation: .3f} %", "orange"))
+
+                hw._current_max_tolerance = hw.tx.pwr.specs['current_max_tolerance'] #set back default value
+                hw.tx.pwr._voltage_max = hw.tx.pwr.specs['voltage_max'] #set back to default value
+                hw.tx.pwr.current_max = hw.tx.pwr.specs['current_max'] #set back to default value
+
+                hw.status = 'idle'
+                if switch_pwr_off:
+                    hw.pwr.pwr_state = 'off'
+
 
     if 'M' in roles and 'N' in roles:
         # hw.rx._dg411_gain = .5
