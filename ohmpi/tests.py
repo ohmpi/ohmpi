@@ -754,6 +754,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
     if electrodes is None:
         electrodes = electrodes_in_config
     else:
+        electrodes = np.array(electrodes)
         electrodes = electrodes[np.in1d(electrodes,electrodes_in_config)]
     electrodes = np.sort(electrodes)
 
