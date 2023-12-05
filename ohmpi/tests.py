@@ -756,12 +756,12 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
         test_roles = ['A', 'B']
 
     if 'M' in roles and 'N' in roles:
-        hw.rx._dg411_gain = .5
+        # hw.rx._dg411_gain = .5
 
-        for i in range(20):
-            hw.rx.voltage
-            time.sleep(.1)
-        for electrode in electrodes[:5]:
+        # for i in range(20):
+        #     hw.rx.voltage
+        #     time.sleep(.1)
+        for electrode in electrodes:
             test_roles = ['M', 'N']
 
             vmns = np.zeros(10)
@@ -778,8 +778,8 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
             for i in range(vmns.shape[0]):
                 vmns[i] = hw.rx.voltage
                 time.sleep(.1)
-            vmn = np.mean(vmns[-10:])
-            vmn_std = np.std(vmns[-10:])
+            vmn = np.mean(vmns[-5:])
+            vmn_std = np.std(vmns[-5:])
             hw.switch_mux(quad, test_roles, state='off')
             print('MN', vmns, vmn, vmn_std)
 
