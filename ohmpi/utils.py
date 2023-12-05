@@ -155,7 +155,7 @@ def parse_log(filename, level=None, directory="logs", last=1):
         if "NEW SESSION STARTING" in line:
             new_session_idx.append(i)
         new_session_idx.append(i+2)
-
+    print(new_session_idx)
     last_sessions = {}
     for i in range(1,last+1):
         session_msg = lines[new_session_idx[-i-1]+2:new_session_idx[-i]-2]
