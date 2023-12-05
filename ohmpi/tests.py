@@ -851,7 +851,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                 test_roles = roles  # This allows to test relays of other roles which are manually connected to MN connectors of measurement board
 
             quad = [electrode] * len(test_roles)
-            hw.switch_mux(quad, test_roles, state='on', bypass_ab_check=True, bypass_check=True)'
+            hw.switch_mux(quad, test_roles, state='on', bypass_ab_check=True, bypass_check=True)
             vmns = np.zeros(10)
             for i in range(vmns.shape[0]):
                 vmns[i] = hw.rx.voltage
