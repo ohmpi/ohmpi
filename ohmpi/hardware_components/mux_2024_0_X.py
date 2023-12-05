@@ -97,11 +97,14 @@ class Mux(MuxAbstract):
         electrodes = kwargs['electrodes']
         self.cabling = {}
         if cabling is None:
-            self.cabling = {(e, r): (i + 1, r) for r in roles for i, e in enumerate(electrodes)}
+            if electrodes is not None:
+                self.cabling = {(e, r): (i + 1, r) for r in roles for i, e in enumerate(electrodes)}
         else:
             for k, v in cabling.items():
                 if v[0] == self.board_id:
                     self.cabling.update({k: (v[1], k[1])})
+            electrodes = [k[0] for k in self.cabling.keys()]
+        self.electrodes = np.array(electrodes)
         # Setup TCA
         kwargs.update({'i2c_ext_tca_address': kwargs.pop('i2c_ext_tca_address', None)})
         self._i2c_ext_tca_address = kwargs['i2c_ext_tca_address']
