@@ -726,7 +726,7 @@ def test_dg411_gain_ratio(hw, test_logger, return_deviation=False, deviation_thr
 def test_mqtt_broker(hw):
     pass
 
-def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
+def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, test_tx=False, test_rx=False):
 
     mux_boards = hw.mux_boards
     test_logger(" ")
@@ -760,8 +760,11 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
             "!!! MUX relays test: No MUX board in config !!! Abort..."), "orange")  # TODO: ask user to press button if AB are shortcut
         return
     roles = ['A', 'B']
-    if 'A' in roles and 'B' in roles:
-        test_roles = ['A']
+    if ('A' in roles and 'B' in roles) or test_tx:
+        if roles.shape[0] > 2:
+            test_roles = ['A', 'B']
+        else:
+            test_roles = roles  # This allows to test relays of other roles which are manually connected to AB connectors of measurement board
         for electrode in electrodes[:2]:
             if hw.tx.pwr.voltage_adjustable:
                 # check pwr is on, if not, let's turn it on
@@ -774,12 +777,12 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
 
                 quad = [electrode]
                 tx_volt = .5  # in V
-                injection_duration = 10. * (1. / hw.sampling_rate) # 10 samples
+                injection_duration = 5. * (1. / hw.sampling_rate) # 5 samples
 
                 # hw.switch_mux(quad, test_roles, state='on', bypass_ab_check=True)
                 hw.tx.pwr._voltage_max = 0.2
                 hw.tx.pwr._current_max_tolerance = 0.
-                hw.tx.pwr.current_max = 0.010  # mA
+                hw.tx.pwr.current_max = 0.010  # in A
 
                 if hw.tx.voltage != tx_volt:
                     hw.tx.voltage = tx_volt
@@ -799,20 +802,19 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
                 injection.join()
                 hw.tx.polarity = 0
 
-                iab = hw.readings[:, 3]
+                iab = np.mean(hw.readings[-3:, 3])
 
                 # close mux path and put pin back to GND
                 hw.switch_mux(quad, test_roles, state='off')
-
-                print(iab, hw.rx.specs['sampling_rate'])
-                #
-                # if iab_deviation <= deviation_threshold:
-                #     test_logger(colored(
-                #         f"Test r_shunt: R shunt deviation from config = {iab_deviation: .3f} %", "green"))
-                #     test_result = True
-                # else:
-                #     test_logger(colored(
-                #         f"Test r_shunt: Warning... R shunt deviation from config = {iab_deviation: .3f} %", "orange"))
+                if iab > 10.: # mA
+                    test_logger(colored(
+                         f"Test MUX - Electrode {electrode}: Relays A and B successfully switching", "green"))
+                    test_result = True
+                else:
+                     test_logger(colored(
+                         f"Test MUX - Electrode {electrode}: WARNING... Relays A and B not switching properly", "orange"))
+                    test_logger(colored(
+                        f"Test MUX - Electrode {electrode}: WARNING... Single roles A and B need to be manually checked while manually shortcutting A and B", "orange"))
 
                 hw._current_max_tolerance = hw.tx.pwr.specs['current_max_tolerance'] #set back default value
                 hw.tx.pwr._voltage_max = hw.tx.pwr.specs['voltage_max'] #set back to default value
@@ -824,22 +826,12 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
                     hw.pwr.pwr_state = 'off'
 
 
-    if 'M' in roles and 'N' in roles:
-        # hw.rx._dg411_gain = .5
-
-        # for i in range(20):
-        #     hw.rx.voltage
-        #     time.sleep(.1)
+    if ('M' in roles and 'N' in roles) or test_rx:
         for electrode in electrodes:
-            test_roles = ['M', 'N']
-
-            # vmns = np.zeros(10)
-            # for i in range(vmns.shape[0]):
-            #     time.sleep(.1)
-            #     vmns[i] = hw.rx.voltage
-            # vmn = np.mean(vmns[-5:])
-            # vmn_std = np.std(vmns[-5:])
-            # print('NO', vmns, vmn, vmn_std)
+            if roles.shape[0] > 2:
+                test_roles = ['M', 'N']
+            else:
+                test_roles = roles  # This allows to test relays of other roles which are manually connected to MN connectors of measurement board
 
             quad = [electrode, electrode]
             hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
@@ -850,29 +842,14 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None):
             vmn = np.mean(vmns[-5:])
             vmn_std = np.std(vmns[-5:])
             hw.switch_mux(quad, test_roles, state='off')
-            print('MN', electrode, vmn, vmn_std)
-
-
-            # quad = [electrode]
-            # test_roles = ['M']
-            # hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
-            # vmns = np.zeros(10)
-            # for i in range(vmns.shape[0]):
-            #     time.sleep(.1)
-            #     vmns[i] = hw.rx.voltage
-            # vmn = np.mean(vmns[-5:])
-            # vmn_std = np.std(vmns[-5:])
-            # hw.switch_mux(quad, test_roles, state='off')
-            # print('M', vmns, vmn, vmn_std)
-            #
-            # quad = [electrode]
-            # test_roles = ['N']
-            # hw.switch_mux(quad, test_roles, state='on', bypass_check=True)
-            # vmns = np.zeros(10)
-            # for i in range(vmns.shape[0]):
-            #     time.sleep(.1)
-            #     vmns[i] = hw.rx.voltage
-            # vmn = np.mean(vmns[-5:])
-            # vmn_std = np.std(vmns[-5:])
-            # hw.switch_mux(quad, test_roles, state='off')
-            # print('N', vmns, vmn, vmn_std)
+            test_logger(
+                f"Test MUX - Electrode {electrode}: Vmn at rest = {vmn}")
+            if abs(vmn) < 100:
+                test_logger(colored(
+                     f"Test MUX - Electrode {electrode}: Relays M and N successfully switching", "green"))
+                test_result = True
+            else:
+                 test_logger(colored(
+                     f"Test MUX - Electrode {electrode}: WARNING... Relays M and N not switching properly", "orange"))
+                test_logger(colored(
+                    f"Test MUX - Electrode {electrode}: WARNING... Single roles M and N need to be manually checked while manually shortcutting M and N", "orange"))
