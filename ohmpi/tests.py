@@ -865,7 +865,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
             vmn_std = np.std(vmns[-5:])
             hw.switch_mux(quad, test_roles, state='off')
             test_logger(
-                f"Test MUX relays MN - Electrode {electrode}: Vmn at rest = {vmn: .2f} mV")
+                f"Test MUX relays MN - Electrode {electrode}: Vmn at rest = {vmn:.2f} mV")
             if abs(vmn) < 100:
                 test_logger(colored(
                      f"Test MUX relays MN - Electrode {electrode}: Relay {' and Relay '.join(str(r) for r in test_roles)} successfully switching", "green"))
@@ -892,10 +892,10 @@ def test_tx_battery_voltage(hw, test_logger, threshold=11.8):
 
     battery_voltage = hw.tx.pwr.battery_voltage()
     if battery_voltage > threshold:
-        test_logger(colored(f"Test TX Battery voltage = {battery_voltage: .2f}", "green"))
+        test_logger(colored(f"Test TX Battery voltage = {battery_voltage:.2f}", "green"))
         test_result = True
     else:
-        test_logger(colored(f"Test TX Battery voltage = {battery_voltage: .2f}", "green"))
+        test_logger(colored(f"Test TX Battery voltage = {battery_voltage:.2f}", "green"))
 
     if switch_tx_pwr_off:
         hw.pwr_state = 'off'
