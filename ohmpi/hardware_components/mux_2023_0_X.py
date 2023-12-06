@@ -118,7 +118,7 @@ class Mux(MuxAbstract):
         self._i2c_ext_tca = None
         self._tca = None
         self._mcp = [None, None, None, None]
-        if self.connet:
+        if self.connect:
             self.reset_i2c_ext_tca()
             self.reset_tca()
             self.reset()
