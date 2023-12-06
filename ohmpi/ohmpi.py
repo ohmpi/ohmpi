@@ -588,7 +588,7 @@ class OhmPi(object):
             #TODO: For pwr_adjustable only and perhaps in a separate function (or at _hw level)
             self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
             self._hw.tx.polarity = 1
-            time.sleep(2.0)
+            time.sleep(1.0)
             self._hw.tx.polarity = 0
             self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
         else:
