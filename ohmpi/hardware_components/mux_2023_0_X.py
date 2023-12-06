@@ -108,7 +108,7 @@ class Mux(MuxAbstract):
             electrodes = [k[0] for k in self.cabling.keys()]
         self.electrodes = np.array(electrodes)
 
-        self._tca_address = kwargs['tca_address']
+        self._tca_address = kwargs['mux_tca_address']
         self._tca_channels = [i for i in np.arange(7, 3, -1)]
         kwargs.update({'i2c_ext_tca_address': kwargs.pop('i2c_ext_tca_address', None)})
         self._i2c_ext_tca_address = kwargs['i2c_ext_tca_address']
