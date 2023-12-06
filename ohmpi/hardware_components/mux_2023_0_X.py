@@ -114,7 +114,7 @@ class Mux(MuxAbstract):
         self._i2c_ext_tca_address = kwargs['i2c_ext_tca_address']
         kwargs.update({'i2c_ext_tca_channel': kwargs.pop('i2c_ext_tca_channel', 0)})
         self._i2c_ext_tca_channel = kwargs['i2c_ext_tca_channel']
-        self._mcp_addresses = [0x20] * 4  # TODO: add assert on valid addresses..
+        self._mcp_addresses = ['0x20'] * 4  # TODO: add assert on valid addresses..
         self._i2c_ext_tca = None
         self._tca = None
         self._mcp = [None, None, None, None]
