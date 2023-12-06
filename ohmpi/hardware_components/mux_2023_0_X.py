@@ -122,7 +122,7 @@ class Mux(MuxAbstract):
             self.reset_i2c_ext_tca()
             self.reset_tca()
             self.reset()
-            # self._mcp_addresses = (kwargs.pop('mcp', '0x20'))  # TODO: add assert on valid addresses..
+        self._mcp_addresses = ['0x20'] * 4  # TODO: add assert on valid addresses..
         self.specs = kwargs
         if self.addresses is None:
             self._get_addresses()
