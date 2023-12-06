@@ -407,7 +407,7 @@ class OhmPiHardware:
         return new_vab
 
     def compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5., vab_max=None,
-                        iab_max=None, vmn_max=None, vmn_min=voltage_min, polarities=(1, -1), delay=0.05,
+                        iab_max=None, vmn_max=None, vmn_min=None, polarities=(1, -1), delay=0.05,
                         p_max=None, diff_vab_lim=2.5, n_steps=4):
         # TODO: Optimise how to pass iab_max, vab_max, vmn_min
         # TODO: Update docstring
@@ -458,6 +458,8 @@ class OhmPiHardware:
                 iab_max = current_max
             if vab_max is None:
                 vab_max = voltage_max
+            if vmn_min is None:
+                vmn_min = voltage_min
             # print(f'Vmn max: {vmn_max}')
             if p_max is None:
                 p_max = vab_max * iab_max

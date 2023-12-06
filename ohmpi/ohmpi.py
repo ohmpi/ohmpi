@@ -452,7 +452,7 @@ class OhmPi(object):
         os.system('poweroff')  # this may require admin rights
  
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
-                        autogain=True, strategy='constant', tx_volt=5., best_tx_injtime=0.1,
+                        autogain=True, strategy=None, tx_volt=None, best_tx_injtime=0.1,
                         cmd_id=None, vab_max=None, iab_max=None, vmn_max=None, vmn_min=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value, change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used in function definition
@@ -514,10 +514,22 @@ class OhmPi(object):
             injection_duration = self.settings['injection_duration']
         if duty_cycle is None:
             duty_cycle = self.settings['duty_cycle']
+        if tx_volt is None:
+            tx_volt = self.settings['tx_volt']
+        if strategy is None:
+            strategy = self.settings['strategy']
+        if vab_max is None:
+            vab_max = self.settings['vab_max']
+        if iab_max is None:
+            iab_max = self.settings['iab_max']
+        if vmn_max is None:
+            vmn_max = self.settings['vmn_max']
+        if vmn_min is None:
+            vmn_min = self.settings['vmn_min']
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
-            tx_volt = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max, iab_max=iab_max)  # TODO: use tx_volt and vmn_max instead of hardcoded values
+            tx_volt = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max, iab_max=iab_max, vmn_min=vmn_min)  # TODO: use tx_volt and vmn_max instead of hardcoded values
             time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
