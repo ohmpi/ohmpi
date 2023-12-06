@@ -7,10 +7,6 @@
     "tx_volt": 5,
     "duty_cycle": 0.5,
     "strategy": "constant",
-    "iab_max": null,
-    "vab_max": null,
-    "vmn_max": null,
-    "vmn_min": null,
     "fw_in_csv": true,
     "fw_in_zip": true,
     "export_path": "data/measurements.csv"

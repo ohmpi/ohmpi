@@ -508,23 +508,23 @@ class OhmPi(object):
         # check arguments
         if quad is None:
             quad = np.array([0, 0, 0, 0])
-        if nb_stack is None:
+        if nb_stack is None and 'nb_stack' in self.settings:
             nb_stack = self.settings['nb_stack']
-        if injection_duration is None:
+        if injection_duration is None and 'injection_duration' in self.settings:
             injection_duration = self.settings['injection_duration']
-        if duty_cycle is None:
+        if duty_cycle is None and 'duty_cycle' in self.settings:
             duty_cycle = self.settings['duty_cycle']
-        if tx_volt is None:
+        if tx_volt is None and 'tx_volt' in self.settings:
             tx_volt = self.settings['tx_volt']
-        if strategy is None:
+        if strategy is None and 'strategy' in self.settings:
             strategy = self.settings['strategy']
-        if vab_max is None:
+        if vab_max is None and 'vab_max' in self.settings:
             vab_max = self.settings['vab_max']
-        if iab_max is None:
+        if iab_max is None and 'iab_max' in self.settings:
             iab_max = self.settings['iab_max']
-        if vmn_max is None:
+        if vmn_max is None and 'vmn_max' in self.settings:
             vmn_max = self.settings['vmn_max']
-        if vmn_min is None:
+        if vmn_min is None and 'vmn_min' in self.settings:
             vmn_min = self.settings['vmn_min']
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
