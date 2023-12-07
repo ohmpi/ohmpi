@@ -37,7 +37,9 @@ class Pwr(PwrAbstract):
         self._voltage_max = kwargs['voltage_max']
         self._power_max = kwargs['power_max']
         self._current_max_tolerance = kwargs['current_max_tolerance']
+        self._pwr_state = 'off'
         if self.connect:
+            self.pwr_state = self._pwr_state
             self.voltage_default(self._voltage)
             self.current_max_default(self._current_max)
             self.current_max = self._current_max
@@ -47,7 +49,7 @@ class Pwr(PwrAbstract):
         self.voltage_adjustable = True
         self.current_adjustable = False
         self._current = np.nan
-        self._pwr_state = 'off'
+
         self._pwr_latency = kwargs['pwr_latency']
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')
@@ -101,14 +103,15 @@ class Pwr(PwrAbstract):
 
     @current_max.setter
     def current_max(self, value):
+        print('current',value)
         new_value = value * (
                     1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
-        self.connection.write_register(0x0001, np.round((new_value), 3), 3)
+        self.connection.write_register(0x0001, np.round(new_value, 3), 3)
         self._current_max = value
 
     def current_overload(self, value):  # [A]
         new_value = value * (1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
-        self.connection.write_register(0x0053, np.round((new_value), 3), 3)
+        self.connection.write_register(0x0053, np.round(new_value, 3), 3)
         self._current_max = value
 
     def current_max_default(self, value):  # [A]
