@@ -51,13 +51,13 @@ class Pwr(PwrAbstract):
     def _retrieve_current(self):
         self._current = self.connection.read_register(0x0003, 2) * 100  # in mA (not sure why but value from DPS comes in [A*10]
 
-    @property
-    def current(self):
-        return self._current
-
-    @current.setter
-    def current(self, value, **kwargs):
-        self.exec_logger.debug(f'Current cannot be set on {self.model}')
+    # @property
+    # def current(self):
+    #     return self._current
+    #
+    # @current.setter
+    # def current(self, value, **kwargs):
+    #     self.exec_logger.debug(f'Current cannot be set on {self.model}')
 
     def _retrieve_voltage(self):
         self._voltage = self.connection.read_register(0x0002, 2)
@@ -96,7 +96,7 @@ class Pwr(PwrAbstract):
     def current_max(self):
         return self._current_max
 
-    @current_max.setter
+    @current.setter
     def current_max(self, value):  # [mA]
         new_value = value * (1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
         self.connection.write_register(0x0053, np.round((new_value * 1000), 3), 0)
