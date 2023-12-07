@@ -35,7 +35,7 @@ class Pwr(PwrAbstract):
         self._voltage = kwargs['voltage']
         self._current_max = kwargs['current_max']
         self._voltage_max = kwargs['voltage_max']
-        self._power_max = kwargs['voltage_max']
+        self._power_max = kwargs['power_max']
         self._current_max_tolerance = kwargs['current_max_tolerance']
         self.current_max = self._current_max
         self.voltage_max = self._voltage_max
@@ -105,6 +105,7 @@ class Pwr(PwrAbstract):
     @property
     def voltage_max(self):
         return self._voltage_max
+
     @voltage_max.setter
     def voltage_max(self, value):  # [V]
         if value >= 51.:  # DPS 5005 maximum accepted value
@@ -113,7 +114,7 @@ class Pwr(PwrAbstract):
         self._voltage_max = value
 
     def power_max(self, value):  # [W]
-        self.connection.write_register(0x0054, int(value), 1)
+        self.connection.write_register(0x0054, np.round(value,1), 1)
 
     @property
     def pwr_state(self):
