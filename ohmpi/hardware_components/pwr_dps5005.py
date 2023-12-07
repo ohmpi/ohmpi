@@ -10,7 +10,8 @@ from minimalmodbus import Instrument  # noqa
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 5., 'max': 50., 'min': 0.},
          'voltage_min': {'default': 0}, # V
-         'voltage_max': {'default': 0}, # V
+         'voltage_max': {'default': 50}, # V
+         'power_max': {'default': 2.5}, # W
          'current_max': {'default': 0.050}, # mA
          'current_max_tolerance': {'default': 20}, # in %
          'current_adjustable': {'default': False},
@@ -33,7 +34,12 @@ class Pwr(PwrAbstract):
         assert isinstance(self.connection, Instrument)
         self._voltage = kwargs['voltage']
         self._current_max = kwargs['current_max']
+        self._voltage_max = kwargs['voltage_max']
+        self._power_max = kwargs['voltage_max']
         self._current_max_tolerance = kwargs['current_max_tolerance']
+        self.current_max(self._current_max)
+        self.voltage_max(self._voltage_max)
+        self.power_max(self._power_max)
         self.voltage_adjustable = True
         self.current_adjustable = False
         self._current = np.nan
@@ -70,15 +76,14 @@ class Pwr(PwrAbstract):
         self._battery_voltage = self.connection.read_register(0x05, 2)
         return self._battery_voltage
 
-    @property
-    def current_max(self):
-        return self._current_max
-
     @current_max.setter
     # def current_max(self, value):  # [mA]
     #     new_value = value * (1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
     #     self.connection.write_register(0x0001, np.round((new_value * 1000), 3), 0)
     #     self._current_max = value
+    @property
+    def current(self):
+        return self._current
 
     @current.setter
     def current(self, value, **kwargs):
@@ -86,6 +91,10 @@ class Pwr(PwrAbstract):
         self.connection.write_register(0x0001, int(value * 1000), 0)
         self._current = value
         # self.exec_logger.debug(f'Current cannot be set on {self.model}')
+
+    @property
+    def current_max(self):
+        return self._current_max
 
     @current_max.setter
     def current_max(self, value):  # [mA]
@@ -95,11 +104,11 @@ class Pwr(PwrAbstract):
 
     def voltage_max(self, value):  # [V]
         new_value = value * (1 + self._current_max_tolerance / 100)# To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
-        self.connection.write_register(0x0052, int(new_value * 1000), 0)
+        self.connection.write_register(0x0052, int(new_value), 0)
 
     def power_max(self, value):  # [W]
         value = value * 1.2  # To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
-        self.connection.write_register(0x0054, int(value * 1000), 0)
+        self.connection.write_register(0x0054, int(value), 0)
 
     @property
     def pwr_state(self):
