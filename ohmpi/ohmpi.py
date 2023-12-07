@@ -583,7 +583,7 @@ class OhmPi(object):
             self._hw.tx.pwr.current_max = 0.001
             self._hw.tx.pwr.power_max(0.1)
             new_quad = [quad[0], quad[0]]
-            self._hw.switch_mux(new_quad, roles=['A','B'], state='on', bypass_ab_check=True, bypass_ab_check=True)
+            self._hw.switch_mux(new_quad, roles=['A','B'], state='on', bypass_ab_check=True)
 
             # hw._vab_pulse(duration=injection_duration, vab=tx_volt)
             self._hw._inject(injection_duration=.2, polarity=1)
