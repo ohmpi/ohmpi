@@ -37,11 +37,13 @@ class Pwr(PwrAbstract):
         self._voltage_max = kwargs['voltage_max']
         self._power_max = kwargs['power_max']
         self._current_max_tolerance = kwargs['current_max_tolerance']
-        self.voltage_default(self._voltage)
-        self.current_max_default(self._current_max)
-        self.current_max = self._current_max
-        self.voltage_max = self._voltage_max
-        self.power_max(self._power_max)
+        if self.connect:
+            self.voltage_default(self._voltage)
+            self.current_max_default(self._current_max)
+            self.current_max = self._current_max
+            self.current_overload = self._current_max
+            self.voltage_max = self._voltage_max
+            self.power_max(self._power_max)
         self.voltage_adjustable = True
         self.current_adjustable = False
         self._current = np.nan
@@ -53,13 +55,13 @@ class Pwr(PwrAbstract):
     def _retrieve_current(self):
         self._current = self.connection.read_register(0x0003, 2) * 100  # in mA (not sure why but value from DPS comes in [A*10]
 
-    # @property
-    # def current(self):
-    #     return self._current
-    #
-    # @current.setter
-    # def current(self, value, **kwargs):
-    #     self.exec_logger.debug(f'Current cannot be set on {self.model}')
+    @property
+    def current(self):
+        return self._current
+
+    @current.setter
+    def current(self, value, **kwargs):
+        self.exec_logger.debug(f'Current cannot be set on {self.model}')
 
     def _retrieve_voltage(self):
         self._voltage = self.connection.read_register(0x0002, 2)
@@ -89,30 +91,23 @@ class Pwr(PwrAbstract):
         self.connection.write_register(0x0052, np.round(value, 2), 2)
         self._voltage_max = value
 
-
     def battery_voltage(self):
         self._battery_voltage = self.connection.read_register(0x05, 2)
         return self._battery_voltage
-
-    @property
-    def current(self):
-        return self._current
-
-    @current.setter
-    def current(self, value, **kwargs):
-        # value = value  # To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
-        self.connection.write_register(0x0001, np.round((value), 3), 3)
-        self._current = value
-        # self.exec_logger.debug(f'Current cannot be set on {self.model}')
 
     @property
     def current_max(self):
         return self._current_max
 
     @current_max.setter
-    def current_max(self, value):  # [A]
+    def current_max(self, value):
+        new_value = value * (
+                    1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
+        self.connection.write_register(0x0001, np.round((new_value), 3), 3)
+        self._current_max = value
+
+    def current_overload(self, value):  # [A]
         new_value = value * (1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
-        print(new_value)
         self.connection.write_register(0x0053, np.round((new_value), 3), 3)
         self._current_max = value
 

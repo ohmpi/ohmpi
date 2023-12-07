@@ -148,7 +148,7 @@ class OhmPiHardware:
             self.pwr_state = 'off'
 
         self.tx.pwr = self.pwr
-        self.tx.pwr._current_max = self.current_max
+        # self.tx.pwr._current_max = self.current_max
 
         # Initialize Muxes
         self._cabling = kwargs.pop('cabling', {})

@@ -131,7 +131,7 @@ class Tx(Tx_mb_2023):
             self._pwr_state = 'off'
 
     def current_pulse(self, current=None, length=None, polarity=1):
-        """ Generates a square voltage pulse
+        """ Generates a square current pulse. Currenttly no DPS can handle this...
 
         Parameters
         ----------
@@ -148,7 +148,7 @@ class Tx(Tx_mb_2023):
             length = self.injection_duration
         if current is not None:
             self.pwr.current = current
-        self.exec_logger.debug(f'Current pulse of {polarity*self.pwr.voltage:.3f} V for {length:.3f} s')
+        self.exec_logger.debug(f'Current pulse of {polarity*self.pwr.current:.3f} V for {length:.3f} s')
         self.inject(polarity=polarity, injection_duration=length)
         self.exec_logger.event(f'{self.model}\ttx_current_pulse\tend\t{datetime.datetime.utcnow()}')
 
