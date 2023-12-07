@@ -39,6 +39,8 @@ class Pwr(PwrAbstract):
         self._current_max_tolerance = kwargs['current_max_tolerance']
         self.current_max = self._current_max
         self.voltage_max = self._voltage_max
+        self.voltage_defaut(self._voltage)
+        self.current_max_default(self._current_max)
         self.power_max(self._power_max)
         self.voltage_adjustable = True
         self.current_adjustable = False
@@ -72,15 +74,26 @@ class Pwr(PwrAbstract):
         self.connection.write_register(0x0000, np.round(value, 2), 2)
         self._voltage = value
 
+    def voltage_default(self, value):  # [A]
+        self.connection.write_register(0x0050, np.round(value, 2), 2)
+        self._current_max = value
+
+    @property
+    def voltage_max(self):
+        return self._voltage_max
+
+    @voltage_max.setter
+    def voltage_max(self, value):  # [V]
+        if value >= 51.:  # DPS 5005 maximum accepted value
+            value = 50.99
+        self.connection.write_register(0x0052, np.round(value, 2), 2)
+        self._voltage_max = value
+
+
     def battery_voltage(self):
         self._battery_voltage = self.connection.read_register(0x05, 2)
         return self._battery_voltage
 
-    # @current_max.setter
-    # def current_max(self, value):  # [mA]
-    #     new_value = value * (1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
-    #     self.connection.write_register(0x0001, np.round((new_value * 1000), 3), 0)
-    #     self._current_max = value
     @property
     def current(self):
         return self._current
@@ -102,16 +115,11 @@ class Pwr(PwrAbstract):
         self.connection.write_register(0x0053, np.round((new_value), 3), 3)
         self._current_max = value
 
-    @property
-    def voltage_max(self):
-        return self._voltage_max
-
-    @voltage_max.setter
-    def voltage_max(self, value):  # [V]
-        if value >= 51.:  # DPS 5005 maximum accepted value
-            value = 50.99
-        self.connection.write_register(0x0052, np.round(value, 2), 2)
-        self._voltage_max = value
+    def current_max_default(self, value):  # [A]
+        new_value = value * (
+                    1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
+        self.connection.write_register(0x0051, np.round((new_value), 3), 3)
+        self._current_max = value
 
     def power_max(self, value):  # [W]
         self.connection.write_register(0x0054, np.round(value,1), 1)

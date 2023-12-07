@@ -241,11 +241,6 @@ class OhmPiHardware:
         self.tx.voltage_pulse(length=injection_duration, polarity=polarity)
         self.exec_logger.event(f'OhmPiHardware\tinject\tend\t{datetime.datetime.utcnow()}')
 
-    def _inject_current(self, polarity=1, injection_duration=None):  # TODO: deal with voltage or current pulse
-        self.exec_logger.event(f'OhmPiHardware\tinject\tbegin\t{datetime.datetime.utcnow()}')
-        self.tx.current_pulse(length=injection_duration, polarity=polarity)
-        self.exec_logger.event(f'OhmPiHardware\tinject\tend\t{datetime.datetime.utcnow()}')
-
     def _set_mux_barrier(self):
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
         for mux in self.mux_boards:
