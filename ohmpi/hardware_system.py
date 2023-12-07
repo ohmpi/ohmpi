@@ -122,8 +122,6 @@ class OhmPiHardware:
         self.tx = kwargs.pop('tx', tx_module.Tx(**HARDWARE_CONFIG['tx']))
         if isinstance(self.tx, dict):
             self.tx = tx_module.Tx(**self.tx)
-        self.tx.pwr = self.pwr
-        self.tx.pwr._current_max = self.current_max
 
         # Initialize power source
         HARDWARE_CONFIG['pwr'].pop('model')
@@ -146,6 +144,9 @@ class OhmPiHardware:
         self.pwr_state = "on"
         self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
         self.pwr_state = 'off'
+
+        self.tx.pwr = self.pwr
+        self.tx.pwr._current_max = self.current_max
 
         # Initialize Muxes
         self._cabling = kwargs.pop('cabling', {})
