@@ -100,7 +100,7 @@ class Pwr(PwrAbstract):
     def current_max(self, value):  # [mA]
         print(value)
         new_value = value # * (1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
-        self.connection.write_register(0x0053, np.round((new_value * 1000), 3), 0)
+        self.connection.write_register(0x0001, np.round((new_value * 1000), 3), 0)
         self._current_max = value
 
     def voltage_max(self, value):  # [V]
