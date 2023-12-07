@@ -99,16 +99,6 @@ class Tx(Tx_mb_2023):
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
-    @property
-    def current(self):
-        return self._current
-
-    @current.setter
-    def current(self,  value):
-        assert value >= 0.
-        self._current = value
-        self.pwr.current = value
-
     def inject(self, polarity=1, injection_duration=None):
         # add leds?
         self.pin6.value = True
