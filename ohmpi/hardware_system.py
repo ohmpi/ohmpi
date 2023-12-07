@@ -692,10 +692,10 @@ class OhmPiHardware:
         for i in range(n_pulses):
             self._vab_pulse(vab=vab, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
-        if switch_pwr_off:
-            self.tx.pwr.pwr_state = 'off'
-        # if switch_tx_pwr_off:
-        self.pwr_state = 'off'
+        # if switch_pwr_off:
+        self.tx.pwr.pwr_state = 'off'
+        if switch_tx_pwr_off:
+            self.pwr_state = 'off'
     
     def switch_mux(self, electrodes, roles=None, state='off', **kwargs):
         """Switches on multiplexer relays for given quadrupole.
