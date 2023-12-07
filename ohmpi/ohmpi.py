@@ -580,18 +580,21 @@ class OhmPi(object):
             time.sleep(.5)
             self._hw.tx.pwr._voltage_max = 0.1
             self._hw.tx.pwr._current_max_tolerance = 0.
-            self._hw.tx.pwr.current_max = 0.01  # mA
+            self._hw.tx.pwr.current_max = 0.001
+            self._hw.tx.pwr.power_max(0.1)
             new_quad = [quad[0], quad[0]]
             self._hw.switch_mux(new_quad, roles=['A','B'], state='on', bypass_ab_check=True, bypass_ab_check=True)
 
             # hw._vab_pulse(duration=injection_duration, vab=tx_volt)
-            time.sleep(.5)
             self._hw._inject(injection_duration=.2, polarity=1)
 
             self._hw.tx.polarity = 0
-
-
             self._hw.switch_mux(electrodes=new_quad, roles=['A', 'B'], state='off')
+
+            self._hw._current_max_tolerance = self._hw.tx.pwr.specs['current_max_tolerance']  # set back default value
+            self._hw.tx.pwr._voltage_max = self._hw.tx.pwr.specs['voltage_max']  # set back to default value
+            self._hw.tx.pwr.current_max = self._hw.tx.pwr.specs['current_max']  # set back to default value
+            self._hw.tx.pwr.power_max(self._hw.tx.pwr.specs['power_max'])
         else:
             self.exec_logger.info(f'Skipping {quad}')
         self.switch_mux_off(quad, cmd_id)
