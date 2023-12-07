@@ -107,7 +107,7 @@ class Tx(Tx_mb_2023):
     def current(self,  value):
         assert value >= 0.
         self._current = value
-        self.pwr.current = value:
+        self.pwr.current = value
 
     def inject(self, polarity=1, injection_duration=None):
         # add leds?
