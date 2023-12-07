@@ -10,7 +10,7 @@ from minimalmodbus import Instrument  # noqa
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 5., 'max': 50., 'min': 0.},
          'voltage_min': {'default': 0}, # V
-         'voltage_max': {'default': 50}, # V
+         'voltage_max': {'default': 51}, # V
          'power_max': {'default': 2.5}, # W
          'current_max': {'default': 0.050}, # mA
          'current_max_tolerance': {'default': 20}, # in %
@@ -88,7 +88,7 @@ class Pwr(PwrAbstract):
     @current.setter
     def current(self, value, **kwargs):
         value = value  # To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
-        self.connection.write_register(0x0001, int(value * 1000), 0)
+        self.connection.write_register(0x0001, int(value), 3)
         self._current = value
         # self.exec_logger.debug(f'Current cannot be set on {self.model}')
 
@@ -97,10 +97,9 @@ class Pwr(PwrAbstract):
         return self._current_max
 
     @current_max.setter
-    def current_max(self, value):  # [mA]
+    def current_max(self, value):  # [A]
         new_value = value * (1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
-        print(np.round((new_value * 1000), 3))
-        self.connection.write_register(0x0053, np.round((new_value * 1000), 3), 0)
+        self.connection.write_register(0x0053, np.round((new_value), 3), 3)
         self._current_max = value
 
     @property
@@ -108,9 +107,9 @@ class Pwr(PwrAbstract):
         return self._voltage_max
     @voltage_max.setter
     def voltage_max(self, value):  # [V]
-        new_value = value * (1 + self._current_max_tolerance / 100)# To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
-        print(new_value)
-        self.connection.write_register(0x0052, int(new_value)*10, 2)
+        if value > 51.:  # DPS 5005 maximum accepted value
+            value = 51.
+        self.connection.write_register(0x0052, np.round(value, 2), 2)
         self._voltage_max = value
 
     def power_max(self, value):  # [W]
