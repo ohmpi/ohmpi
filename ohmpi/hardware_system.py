@@ -120,7 +120,10 @@ class OhmPiHardware:
 
         HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                       'soh_logger': self.soh_logger})
+
+        self.pwr_state = "on"
         self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
+        self.pwr_state = 'off'
 
         # Initialize TX
         HARDWARE_CONFIG['tx'].pop('model')
