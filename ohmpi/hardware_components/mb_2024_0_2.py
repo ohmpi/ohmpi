@@ -80,7 +80,7 @@ class Tx(Tx_mb_2023):
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         self._pwr_latency = kwargs['pwr_latency']
-
+        self._current = 0
         # Initialize LEDs
         if self.connect:
             self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
