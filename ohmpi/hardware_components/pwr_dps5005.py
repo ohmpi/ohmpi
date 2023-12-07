@@ -77,7 +77,6 @@ class Pwr(PwrAbstract):
     def voltage_default(self, value):  # [A]
         print(value)
         self.connection.write_register(0x0050, np.round(value, 2), 2)
-        self._current_max = value
 
     @property
     def voltage_max(self):
