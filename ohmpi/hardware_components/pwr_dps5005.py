@@ -39,7 +39,7 @@ class Pwr(PwrAbstract):
         self._current_max_tolerance = kwargs['current_max_tolerance']
         self.current_max = self._current_max
         self.voltage_max = self._voltage_max
-        self.voltage_defaut(self._voltage)
+        self.voltage_default(self._voltage)
         self.current_max_default(self._current_max)
         self.power_max(self._power_max)
         self.voltage_adjustable = True
