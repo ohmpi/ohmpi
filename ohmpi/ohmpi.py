@@ -577,8 +577,9 @@ class OhmPi(object):
             self.data_logger.info(dd)
 
             self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
-            print('sleep')
+            self._hw.polarity = 1
             time.sleep(1.0)
+            self._hw.polarity = 0
             self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
         else:
             self.exec_logger.info(f'Skipping {quad}')

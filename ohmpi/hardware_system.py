@@ -527,8 +527,8 @@ class OhmPiHardware:
                     print('stopped on maximum number of steps reached')
                 vab_opt = vab_list[k]
                 # print(f'Selected Vab: {vab_opt:.2f}')
-                if switch_pwr_off:
-                    self.tx.pwr.pwr_state = 'off'
+                # if switch_pwr_off:
+                #     self.tx.pwr.pwr_state = 'off'
 
 
         # if strategy == 'vmax':
@@ -694,8 +694,8 @@ class OhmPiHardware:
                             append=True)
         if switch_pwr_off:
             self.tx.pwr.pwr_state = 'off'
-        if switch_tx_pwr_off:
-            self.pwr_state = 'off'
+        # if switch_tx_pwr_off:
+        self.pwr_state = 'off'
     
     def switch_mux(self, electrodes, roles=None, state='off', **kwargs):
         """Switches on multiplexer relays for given quadrupole.
