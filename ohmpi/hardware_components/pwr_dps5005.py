@@ -10,7 +10,7 @@ from minimalmodbus import Instrument  # noqa
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 5., 'max': 50., 'min': 0.},
          'voltage_min': {'default': 0}, # V
-         'voltage_max': {'default': 51}, # V
+         'voltage_max': {'default': 50.99}, # V
          'power_max': {'default': 2.5}, # W
          'current_max': {'default': 0.050}, # mA
          'current_max_tolerance': {'default': 20}, # in %
@@ -39,7 +39,7 @@ class Pwr(PwrAbstract):
         self._current_max_tolerance = kwargs['current_max_tolerance']
         self.current_max = self._current_max
         self.voltage_max = self._voltage_max
-        # self.power_max(self._power_max)
+        self.power_max(self._power_max)
         self.voltage_adjustable = True
         self.current_adjustable = False
         self._current = np.nan
@@ -107,14 +107,13 @@ class Pwr(PwrAbstract):
         return self._voltage_max
     @voltage_max.setter
     def voltage_max(self, value):  # [V]
-        if value > 51.:  # DPS 5005 maximum accepted value
-            value = 51.
+        if value >= 51.:  # DPS 5005 maximum accepted value
+            value = 50.99
         self.connection.write_register(0x0052, np.round(value, 2), 2)
         self._voltage_max = value
 
     def power_max(self, value):  # [W]
-        value = value * 1.2  # To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
-        self.connection.write_register(0x0054, int(value), 0)
+        self.connection.write_register(0x0054, int(value), 1)
 
     @property
     def pwr_state(self):
