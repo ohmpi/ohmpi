@@ -75,10 +75,31 @@ class Pwr(PwrAbstract):
         return self._current_max
 
     @current_max.setter
+    # def current_max(self, value):  # [mA]
+    #     new_value = value * (1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
+    #     self.connection.write_register(0x0001, np.round((new_value * 1000), 3), 0)
+    #     self._current_max = value
+
+    @current.setter
+    def current(self, value, **kwargs):
+        value = value  # To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
+        self.connection.write_register(0x0001, int(value * 1000), 0)
+        self._current = value
+        # self.exec_logger.debug(f'Current cannot be set on {self.model}')
+
+    @current_max.setter
     def current_max(self, value):  # [mA]
         new_value = value * (1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
-        self.connection.write_register(0x0001, np.round((new_value * 1000), 3), 0)
+        self.connection.write_register(0x0053, np.round((new_value * 1000), 3), 0)
         self._current_max = value
+
+    def voltage_max(self, value):  # [V]
+        new_value = value * (1 + self._current_max_tolerance / 100)# To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
+        self.connection.write_register(0x0052, int(new_value * 1000), 0)
+
+    def power_max(self, value):  # [W]
+        value = value * 1.2  # To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
+        self.connection.write_register(0x0054, int(value * 1000), 0)
 
     @property
     def pwr_state(self):
