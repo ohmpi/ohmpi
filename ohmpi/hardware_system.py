@@ -645,7 +645,7 @@ class OhmPiHardware:
             if self.tx.voltage != vab:
                 self.tx.voltage = vab
             if self.tx.current != 0.02:
-                self.tx.voltage = self.tx.pwr._voltage_max)
+                self.tx.voltage = self.tx.pwr._voltage_max
                 self.tx.current = 0.02
         else:
             vab = self.tx.voltage
