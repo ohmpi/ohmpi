@@ -644,9 +644,9 @@ class OhmPiHardware:
         if self.tx.pwr.voltage_adjustable:
             if self.tx.voltage != vab:
                 self.tx.voltage = vab
-            if self.tx.current != 0.02:
-                self.tx.voltage = self.tx.pwr._voltage_max
-                self.tx.current = 0.02
+            # if self.tx.current != 0.02:
+            #     self.tx.voltage = self.tx.pwr._voltage_max
+            #     self.tx.current = 0.02
         else:
             vab = self.tx.voltage
 
@@ -656,7 +656,7 @@ class OhmPiHardware:
             self.tx.pwr.pwr_state = 'on'
             switch_pwr_off = True
         # reads current and voltage during the pulse
-        injection = Thread(target=self._inject_current, kwargs={'injection_duration': duration, 'polarity': polarity})
+        injection = Thread(target=self._inject, kwargs={'injection_duration': duration, 'polarity': polarity})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
         readings.start()
         injection.start()
