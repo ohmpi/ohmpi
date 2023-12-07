@@ -130,6 +130,28 @@ class Tx(Tx_mb_2023):
             self.exec_logger.debug(f'Switching DPS off')
             self._pwr_state = 'off'
 
+    def current_pulse(self, current=None, length=None, polarity=1):
+        """ Generates a square voltage pulse
+
+        Parameters
+        ----------
+        voltage: float, optional
+            Voltage to apply in volts, tx_v_def is applied if omitted.
+        length: float, optional
+            Length of the pulse in seconds
+        polarity: 1,0,-1
+            Polarity of the pulse
+        """
+        self.exec_logger.event(f'{self.model}\ttx_current_pulse\tbegin\t{datetime.datetime.utcnow()}')
+        # self.exec_logger.info(f'injection_duration: {length}')  # TODO: delete me
+        if length is None:
+            length = self.injection_duration
+        if current is not None:
+            self.pwr.current = current
+        self.exec_logger.debug(f'Current pulse of {polarity*self.pwr.voltage:.3f} V for {length:.3f} s')
+        self.inject(polarity=polarity, injection_duration=length)
+        self.exec_logger.event(f'{self.model}\ttx_current_pulse\tend\t{datetime.datetime.utcnow()}')
+
 
 class Rx(Rx_mb_2023):
     def __init__(self, **kwargs):

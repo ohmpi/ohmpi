@@ -241,6 +241,11 @@ class OhmPiHardware:
         self.tx.voltage_pulse(length=injection_duration, polarity=polarity)
         self.exec_logger.event(f'OhmPiHardware\tinject\tend\t{datetime.datetime.utcnow()}')
 
+    def _inject_current(self, polarity=1, injection_duration=None):  # TODO: deal with voltage or current pulse
+        self.exec_logger.event(f'OhmPiHardware\tinject\tbegin\t{datetime.datetime.utcnow()}')
+        self.tx.current_pulse(length=injection_duration, polarity=polarity)
+        self.exec_logger.event(f'OhmPiHardware\tinject\tend\t{datetime.datetime.utcnow()}')
+
     def _set_mux_barrier(self):
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
         for mux in self.mux_boards:
@@ -639,6 +644,7 @@ class OhmPiHardware:
         if self.tx.pwr.voltage_adjustable:
             if self.tx.voltage != vab:
                 self.tx.voltage = vab
+                self.tx.current = 0.02
         else:
             vab = self.tx.voltage
 
@@ -648,7 +654,7 @@ class OhmPiHardware:
             self.tx.pwr.pwr_state = 'on'
             switch_pwr_off = True
         # reads current and voltage during the pulse
-        injection = Thread(target=self._inject, kwargs={'injection_duration': duration, 'polarity': polarity})
+        injection = Thread(target=self._inject_current, kwargs={'injection_duration': duration, 'polarity': polarity})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
         readings.start()
         injection.start()

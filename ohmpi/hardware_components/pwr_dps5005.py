@@ -87,8 +87,8 @@ class Pwr(PwrAbstract):
 
     @current.setter
     def current(self, value, **kwargs):
-        value = value  # To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
-        self.connection.write_register(0x0001, int(value), 3)
+        # value = value  # To set DPS max current slightly above (20%) the limit to avoid regulation artefacts
+        self.connection.write_register(0x0001, np.round((value), 3), 3)
         self._current = value
         # self.exec_logger.debug(f'Current cannot be set on {self.model}')
 
