@@ -28,6 +28,7 @@ from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import ohmpi.deprecated as deprecated
 from ohmpi.hardware_system import OhmPiHardware
+import tqdm
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
 try:
@@ -708,7 +709,7 @@ class OhmPi(object):
             n = 1
         else:
             n = self.sequence.shape[0]
-        for i in range(0, n):
+        for i in tqdm(range(0, n), "Sequence progress:":
             if self.sequence is None:
                 quad = np.array([0, 0, 0, 0])
             else:
