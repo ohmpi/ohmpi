@@ -709,7 +709,7 @@ class OhmPi(object):
             n = 1
         else:
             n = self.sequence.shape[0]
-        for i in tqdm(range(0, n), "Sequence progress:"):
+        for i in tqdm(range(0, n), "Sequence progress", unit='quadrupoles', ncols=10):
             if self.sequence is None:
                 quad = np.array([0, 0, 0, 0])
             else:
