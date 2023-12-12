@@ -129,7 +129,7 @@ class Tx(Tx_mb_2023):
             self.exec_logger.debug(f'Switching DPS off')
             self._pwr_state = 'off'
 
-    @Tx_mb_2023.property
+    @property
     def polarity(self):
         return self._polarity
 
