@@ -30,13 +30,10 @@ class Pwr(Pwr_batt):
         super().__init__(**kwargs)
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tbegin\t{datetime.datetime.utcnow()}')
-        assert isinstance(self.connection, Instrument)
         self._voltage = kwargs['voltage']
-        self._current_max = kwargs['current_max']
-        self.voltage_adjustable = False
-        self.current_adjustable = False
         self._current = np.nan
-        self._pwr_state = 'off'
-        self._pwr_latency = kwargs['pwr_latency']
+        self._switch_pwr_on_zero = True
+        # self._state = 'on'
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')
+
