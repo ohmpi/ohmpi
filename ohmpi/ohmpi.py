@@ -499,7 +499,7 @@ class OhmPi(object):
         """
         # check pwr is on, if not, let's turn it on
         switch_power_off = False
-        if self.tx.pwr.voltage_adjustable and self._hw.pwr_state == 'off':
+        if self._hw.tx.pwr.voltage_adjustable and self._hw.pwr_state == 'off':
             self._hw.pwr_state = 'on'
             switch_power_off = True
 
@@ -688,7 +688,7 @@ class OhmPi(object):
             fw_in_zip = self.settings['fw_in_zip']
 
         # switch power on
-        if self.tx.pwr.voltage_adjustable:
+        if self._hw.tx.pwr.voltage_adjustable:
             self._hw.pwr_state = 'on'
         self.status = 'running'
         self.exec_logger.debug(f'Status: {self.status}')
