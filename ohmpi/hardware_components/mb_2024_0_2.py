@@ -129,6 +129,33 @@ class Tx(Tx_mb_2023):
             self.exec_logger.debug(f'Switching DPS off')
             self._pwr_state = 'off'
 
+    @property
+    def polarity(self):
+        return self._polarity
+
+    @polarity.setter
+    def polarity(self, polarity):
+        assert polarity in [-1, 0, 1]
+        self._polarity = polarity
+        if polarity == 1:
+            if self.pwr.voltage_adjustable:
+                self.pwr_state = 'on'
+            self.pin0.value = True
+            self.pin1.value = False
+            time.sleep(self._activation_delay)
+        elif polarity == -1:
+            if self.pwr.voltage_adjustable:
+                self.pwr_state = 'on'
+            self.pin0.value = False
+            self.pin1.value = True
+            time.sleep(self._activation_delay)
+        else:
+            if self.pwr.voltage_adjustable:
+                self.pwr_state = 'off'
+            self.pin0.value = False
+            self.pin1.value = False
+            time.sleep(self._release_delay)
+
 
 class Rx(Rx_mb_2023):
     def __init__(self, **kwargs):

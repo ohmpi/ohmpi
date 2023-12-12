@@ -32,7 +32,6 @@ class Pwr(Pwr_batt):
             self.exec_logger.event(f'{self.model}\tpwr_init\tbegin\t{datetime.datetime.utcnow()}')
         self._voltage = kwargs['voltage']
         self._current = np.nan
-        self._switch_pwr_on_zero = True
         # self._state = 'on'
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')

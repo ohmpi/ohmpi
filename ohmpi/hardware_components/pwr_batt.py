@@ -26,7 +26,6 @@ class Pwr(PwrAbstract):
             self.exec_logger.event(f'{self.model}\tpwr_init\tbegin\t{datetime.datetime.utcnow()}')
         self._voltage = kwargs['voltage']
         self._current = np.nan
-        self._switch_pwr_on_zero = True
         # self._state = 'on'
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')
@@ -46,9 +45,3 @@ class Pwr(PwrAbstract):
     @voltage.setter
     def voltage(self, value):
         PwrAbstract.voltage.fset(self, value)
-
-    def voltage_pulse(self, voltage=0., length=None, polarity=1):
-        self.voltage_pulse(voltage=voltage, length=length, polarity=polarity, switch_pwr=self._switch_pwr_on_zero)
-
-    def inject(self, polarity=1, injection_duration=None):
-        self.inject(polarity=polarity, injection_duration=injection_duration, switch_pwr=self._switch_pwr_on_zero)
