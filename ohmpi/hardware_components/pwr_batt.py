@@ -47,8 +47,8 @@ class Pwr(PwrAbstract):
     def voltage(self, value):
         PwrAbstract.voltage.fset(self, value)
 
-    # def voltage_pulse(self, voltage=0., length=None, polarity=1):
-    #     self.voltage_pulse(voltage=voltage, length=length, polarity=polarity, switch_pwr=self._switch_pwr_on_zero)
+    def voltage_pulse(self, voltage=0., length=None, polarity=1):
+        self.voltage_pulse(voltage=voltage, length=length, polarity=polarity, switch_pwr=self._switch_pwr_on_zero)
 
     def inject(self, polarity=1, injection_duration=None):
         self.inject(polarity=polarity, injection_duration=injection_duration, switch_pwr=self._switch_pwr_on_zero)
