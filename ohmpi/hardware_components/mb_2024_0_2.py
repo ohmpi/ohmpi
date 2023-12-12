@@ -138,19 +138,19 @@ class Tx(Tx_mb_2023):
         assert polarity in [-1, 0, 1]
         self._polarity = polarity
         if polarity == 1:
-            if self.pwr.voltage_adjustable:
+            if not self.pwr.voltage_adjustable:
                 self.pwr_state = 'on'
             self.pin0.value = True
             self.pin1.value = False
             time.sleep(self._activation_delay)
         elif polarity == -1:
-            if self.pwr.voltage_adjustable:
+            if not self.pwr.voltage_adjustable:
                 self.pwr_state = 'on'
             self.pin0.value = False
             self.pin1.value = True
             time.sleep(self._activation_delay)
         else:
-            if self.pwr.voltage_adjustable:
+            if not self.pwr.voltage_adjustable:
                 self.pwr_state = 'off'
             self.pin0.value = False
             self.pin1.value = False
