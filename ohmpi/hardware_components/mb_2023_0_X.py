@@ -105,7 +105,7 @@ class Tx(TxAbstract):
         self.pin0.direction = Direction.OUTPUT
         self.pin1 = self.mcp_board.get_pin(1)
         self.pin1.direction = Direction.OUTPUT
-        self.polarity = 0
+        #self.polarity = 0
         self.gain = 2 / 3
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
