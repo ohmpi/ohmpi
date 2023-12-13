@@ -137,6 +137,9 @@ class OhmPiHardware:
         if isinstance(self.tx, dict):
             self.tx = tx_module.Tx(**self.tx)
         self.tx.pwr = self.pwr
+        if not self.tx.pwr.voltage_adjustable:
+            self.tx._pwr_latency = 0
+        self.tx.polarity = 0
         self.tx.pwr._current_max = current_max
 
         # Initialize Muxes
