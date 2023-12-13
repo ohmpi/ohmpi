@@ -51,7 +51,8 @@ Specifications
 
 
 
-Contents: 
+Assemble you measurement board:
+------------------------------- 
 
 .. toctree:: 
    :maxdepth: 2 
