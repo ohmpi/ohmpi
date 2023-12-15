@@ -607,8 +607,8 @@ class OhmPiHardware:
         if self.pwr_state == 'off':
             self.pwr_state = 'on'
             switch_tx_pwr_off = True
-        # if self.tx.pwr.pwr_state == 'off':
-        #     self.tx.pwr.pwr_state = 'on'
+        if self.tx.pwr.pwr_state == 'off':
+             self.tx.pwr.pwr_state = 'on'
         #     switch_pwr_off = True
 
         self._gain_auto(vab=vab)
@@ -624,8 +624,7 @@ class OhmPiHardware:
             polarities = None
         self._vab_pulses(vab, durations, sampling_rate, polarities=polarities,  append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
-        if switch_pwr_off:
-            self.tx.pwr.pwr_state = 'off'
+        self.tx.pwr.pwr_state = 'off'
         if switch_tx_pwr_off:
             self.pwr_state = 'off'
 
@@ -662,7 +661,7 @@ class OhmPiHardware:
         # switches tx pwr on if needed (relays switching dps on and off)
         if self.pwr_state == 'off':
             self.pwr_state = 'on'
-            switch_pwr_off = True
+            switch_tx_pwr_off = True
         n_pulses = len(durations)
         self.exec_logger.debug(f'n_pulses: {n_pulses}')
         if self.tx.pwr.voltage_adjustable:
