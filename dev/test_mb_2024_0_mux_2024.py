@@ -77,7 +77,7 @@ if within_ohmpi:
     print(d)
     #k._hw._plot_readings()
     print(f'OhmPiHardware: Resistance: {k._hw.last_resistance() :.2f} ohm, dev. {k._hw.last_dev():.2f} %, sp: {k._hw.sp:.2f} mV, rx bias: {k._hw.rx._bias:.2f} mV')
-    print(f'OhmPi: Resistance: {d["R [ohm]"] :.2f} ohm, dev. {d["R_std [%]"]:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
+    # print(f'OhmPi: Resistance: {d["R [ohm]"] :.2f} ohm, dev. {d["R_std [%]"]:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     k._hw._plot_readings(save_fig=False)
     # plot_exec_log('ohmpi/logs/exec.log')
 change_config('../configs/config_default.py', verbose=False)
