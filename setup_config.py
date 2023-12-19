@@ -8,6 +8,9 @@ while True:
     else:
         mb = input('Choose a measurement boards: [v2023/v2024]: ')
 
+if mb == 'v2024':
+    mb = 'v2024_0_2_'
+
 mux = None
 while True:
     if mux in ['v2023', 'v2024']:
@@ -20,10 +23,18 @@ while True:
     if nb_mux in ['0', '1', '2', '3', '4']:
         break
     else:
-        nb_mux = input('Number of multiplexers: [0, 1, 2, 3, 4]: ')
-        
-        
+        nb_mux = input('Number of multiplexers: [0/1/2/3/4]: ')
+
+pwr = None
+while True:
+    if pwr in ['battery', 'dps5005']:
+        break
+    else:
+        pwr = input('Tx power: [battery/dps5005]:')
+
 config = 'config_mb_' + mb[1:] + '_' + nb_mux + '_mux_' + mux[1:] + '.py'
+if pwr != 'battery':
+    config = config.replace('.py', '_' + pwr + '.py')
 print('Using this configuration: ' + config)
 
 import os
