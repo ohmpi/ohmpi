@@ -627,8 +627,8 @@ class OhmPiHardware:
             polarities = None
         self._vab_pulses(vab, durations, sampling_rate, polarities=polarities,  append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
-        if switch_pwr_off:
-            self.tx.pwr.pwr_state = 'off'
+        #if switch_pwr_off:
+        self.tx.pwr.pwr_state = 'off'
         if switch_tx_pwr_off:
             self.pwr_state = 'off'
 
@@ -692,8 +692,8 @@ class OhmPiHardware:
         for i in range(n_pulses):
             self._vab_pulse(vab=vab, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)
-        # if switch_pwr_off:
-        self.tx.pwr.pwr_state = 'off'
+        if switch_pwr_off:
+            self.tx.pwr.pwr_state = 'off'
         if switch_tx_pwr_off:
             self.pwr_state = 'off'
     
