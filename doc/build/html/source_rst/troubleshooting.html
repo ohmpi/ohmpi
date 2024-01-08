@@ -1,23 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Troubleshooting &mdash; OhmPi v2024rc documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=1eb482ec"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -85,22 +83,22 @@
            <div itemprop="articleBody">
              
   <section id="troubleshooting">
-<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h1>
+<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h1>
 <p><strong>TO BE REVIEWED</strong></p>
 <section id="issue-with-the-pulses-between-a-and-b">
-<h2>Issue with the pulses between A and B<a class="headerlink" href="#issue-with-the-pulses-between-a-and-b" title="Link to this heading"></a></h2>
+<h2>Issue with the pulses between A and B<a class="headerlink" href="#issue-with-the-pulses-between-a-and-b" title="Permalink to this heading"></a></h2>
 <p>In the measurement board v2023, this is likely due to the optical relays not opening or closing properly. These relays are quite fragile and, from experience, are easily damaged. Check if the optical relay are still working by measuring if they are conductor when turned on using a multimeter without connecting any electrodes to A and B.</p>
 <p>If an optical relay is broken, you will have to replace it with a new one.</p>
 <p>In the measurement board v2024, these optical relays are replaced by mechanical relays which are more robust and shoudn’t cause any issue.</p>
 </section>
 <section id="values-given-is-not-the-correct-one">
-<h2>Values given is not the correct one<a class="headerlink" href="#values-given-is-not-the-correct-one" title="Link to this heading"></a></h2>
+<h2>Values given is not the correct one<a class="headerlink" href="#values-given-is-not-the-correct-one" title="Permalink to this heading"></a></h2>
 <p>One possible cause is that the <strong>shunt resistor was burned</strong>. Once burned, the value of the resistor is not correct anymore and we advice to change it. To see if the shunt is burned, you can measure the value of the shunt resistor to see if it still has the expected value.</p>
 <p>Another possibility is that the MN voltage you are trying to measure is <strong>over the range of the ADC</strong> (+/- 4.5 V effective range for ADS1115). You can easily check that by measuring the voltage at MN with a voltmeter.</p>
 <p>In the measurement board v2024, the current sensing part is replaced by a click board. It is possible that the shunt resistance on this click board is burned due to malfunction. In this case, erroneous value of current will be given. The click board must be replaced to solve the issue.</p>
 </section>
 <section id="communication-issue-between-components">
-<h2>Communication issue between components<a class="headerlink" href="#communication-issue-between-components" title="Link to this heading"></a></h2>
+<h2>Communication issue between components<a class="headerlink" href="#communication-issue-between-components" title="Permalink to this heading"></a></h2>
 <p>Most components of the OhmPi communicate via I2C protocol. This protocol works with two lines (SDA and SCL) that <strong>must be pulled-up</strong> at rest. The pull-up resistor consist in placing a 100k (or similar values) resistor between the line and VDD (5V in this case).</p>
 <p>Check with the multimeter the voltage between SDA/SCL and the ground to see if it reaches 5V at rest. If it’s not the case, you may need stronger pull-up (smaller value of pull-up resistor).</p>
 </section>

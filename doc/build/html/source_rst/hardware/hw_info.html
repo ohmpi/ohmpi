@@ -1,23 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OhmPi electronic design &mdash; OhmPi v2024rc documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
-
-  
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=1eb482ec"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -94,9 +92,9 @@
            <div itemprop="articleBody">
              
   <section id="ohmpi-electronic-design">
-<h1>OhmPi electronic design<a class="headerlink" href="#ohmpi-electronic-design" title="Link to this heading"></a></h1>
+<h1>OhmPi electronic design<a class="headerlink" href="#ohmpi-electronic-design" title="Permalink to this heading"></a></h1>
 <section id="measurement-board">
-<h2>Measurement board<a class="headerlink" href="#measurement-board" title="Link to this heading"></a></h2>
+<h2>Measurement board<a class="headerlink" href="#measurement-board" title="Permalink to this heading"></a></h2>
 <p>The measurement board integrates different electronic components to</p>
 <ul class="simple">
 <li><p>measure the voltage at MN</p></li>
@@ -147,7 +145,7 @@ pulses from a clock (SCL) and another line to transmit data (SDA). These lines m
 pulled high using pull-up resistors (meaning at rest, there should be 5V between these lines and the ground).</p>
 </section>
 <section id="multiplexer">
-<h2>Multiplexer<a class="headerlink" href="#multiplexer" title="Link to this heading"></a></h2>
+<h2>Multiplexer<a class="headerlink" href="#multiplexer" title="Permalink to this heading"></a></h2>
 <p>Multiplexer are used to address multiple electrodes. For this they use <strong>relays</strong>
 to create an electronic path between the electrode and the entry (A, B, M, or N) on the
 measurement board. The relays are usually controlled by <strong>GPIO expander</strong> (MCP23017).

@@ -41,7 +41,7 @@ Contents:
    source_rst/gallery
    source_rst/developing_hardware_components
    source_rst/archived_version
-   source_rst/ibom.html
+
   
 
   
