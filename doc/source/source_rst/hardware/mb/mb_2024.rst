@@ -6,10 +6,16 @@ Measurement board 2024.0.2
 ===========================
 
 The 2024.0.2 measurement board has been developed to replace the 2023.0.1 measurement board. It offers superior performance compared to its predecessor. 
-The current measurement component has not evolved and presents no major differences. However, the major upgrade is the Mikroe-1887 module. Specifically, 
+The current measurement component has not evolved and presents no major differences. However, the major upgrade is the Mikroe-2C Isolator Click module ('https://www.mikroe.com/i2c-isolator-click') . Specifically, 
 it provides electrical isolation for the Vmn measurement set. This isolation allows for injection voltages (Vab) up to 200V
 
-
+.. figure:: ../../../img/mb.2024.x.x/32.jpg       
+       :width: 700px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center
+       
 **PART A** Assembly of the measurement board
 --------------------------------------------
 
@@ -18,16 +24,9 @@ Required components
 
 `Interactive BOM list <ibom.html>`_
 
-.. figure:: ../../../img/mb.2024.x.x/32.jpg       
-       :width: 700px
-       :align: center
-       :height: 450px
-       :alt: alternate text
-       :figclass: align-center 
-
 .. csv-table:: List of components
-   :file: ../../../img/v2023.x.x/step_n_2/a/measure_board_list_2_xx.csv
-   :widths: 30, 70, 70, 70, 70, 35, 35
+   :file: ../../../img/mb.2024.x.x/bom-ohmpi-mb2024.csv
+   :widths: 30, 30, 30, 30, 30, 30, 30, 30, 30
    :header-rows: 1
 
 
@@ -187,3 +186,4 @@ Description
    |        | Installation of female header, 1 by 10  pins, for ADS1115         |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
