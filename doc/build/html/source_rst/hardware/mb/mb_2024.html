@@ -111,12 +111,37 @@ it provides electrical isolation for the Vmn measurement set. This isolation all
 </figure>
 <section id="part-a-assembly-of-the-measurement-board">
 <h2><strong>PART A</strong> Assembly of the measurement board<a class="headerlink" href="#part-a-assembly-of-the-measurement-board" title="Permalink to this heading"></a></h2>
+<section id="schematics">
+<h3>Schematics<a class="headerlink" href="#schematics" title="Permalink to this heading"></a></h3>
+<p>Overview of the measurement board.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../../_images/mb.2024.0.2_page-0001.jpg"><img alt="alternate text" src="../../../_images/mb.2024.0.2_page-0001.jpg" style="width: 600px; height: 450px;" /></a>
+</figure>
+<p>Schematic of the power supply.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../../_images/mb.2024.0.2_page-0002.jpg"><img alt="alternate text" src="../../../_images/mb.2024.0.2_page-0002.jpg" style="width: 600px; height: 450px;" /></a>
+</figure>
+<p>Schematic of the dsp (digital power source) power supply.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../../_images/mb.2024.0.2_page-0003.jpg"><img alt="alternate text" src="../../../_images/mb.2024.0.2_page-0003.jpg" style="width: 600px; height: 450px;" /></a>
+</figure>
+<p>Schematic of the Vmn signal conditioning.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../../_images/mb.2024.0.2_page-0004.jpg"><img alt="alternate text" src="../../../_images/mb.2024.0.2_page-0004.jpg" style="width: 600px; height: 450px;" /></a>
+</figure>
+<p>Schematic of the current injection and measurement.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../../_images/mb.2024.0.2_page-0005.jpg"><img alt="alternate text" src="../../../_images/mb.2024.0.2_page-0005.jpg" style="width: 600px; height: 450px;" /></a>
+</figure>
+<p>Schematic of the human-machine interface.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../../_images/mb.2024.0.2_page-0006.jpg"><img alt="alternate text" src="../../../_images/mb.2024.0.2_page-0006.jpg" style="width: 600px; height: 450px;" /></a>
+</figure>
 </section>
 <section id="required-components">
-<h2>Required components<a class="headerlink" href="#required-components" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="ibom.html">Interactive BOM list</a></p>
-<table class="docutils align-default" id="id1">
-<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<h3>Required components<a class="headerlink" href="#required-components" title="Permalink to this heading"></a></h3>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 11%" />
 <col style="width: 11%" />
@@ -554,24 +579,26 @@ it provides electrical isolation for the Vmn measurement set. This isolation all
 </tbody>
 </table>
 </section>
+<section id="interactive-bom-list">
+<h3>Interactive BOM list<a class="headerlink" href="#interactive-bom-list" title="Permalink to this heading"></a></h3>
+<p><a class="reference external" href="ibom.html">Interactive BOM list</a></p>
+</section>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
-<figure class="align-center">
-<a class="reference internal image-reference" href="../../../_images/schema_measurement_board.jpg"><img alt="alternate text" src="../../../_images/schema_measurement_board.jpg" style="width: 600px; height: 450px;" /></a>
-</figure>
+<h3>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h3>
+<p>Soldering various <a class="reference external" href="https://eepower.com/resistor-guide/resistor-fundamentals/what-is-a-resistor/#">RESISTOR</a> on the measurement board PCB</p>
 <table class="docutils align-center">
 <tbody>
 <tr class="row-odd"><td rowspan="2"><p>1</p></td>
 <td><img alt="../../../_images/1.jpg" src="../../../_images/1.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Installation of female header, 1 by 10  pins, for ADS1115</p></td>
+<tr class="row-even"><td><p>Soldering thirteen 100 kOhm resistors</p></td>
 </tr>
 <tr class="row-odd"><td rowspan="2"><p>2</p></td>
 <td><img alt="../../../_images/2.jpg" src="../../../_images/2.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Installation of female header, 1 by 10  pins, for ADS1115</p></td>
+<tr class="row-even"><td><p>Soldering four 330 ohm resistors</p></td>
 </tr>
 <tr class="row-odd"><td rowspan="2"><p>3</p></td>
 <td><img alt="../../../_images/3.jpg" src="../../../_images/3.jpg" />
@@ -579,6 +606,12 @@ it provides electrical isolation for the Vmn measurement set. This isolation all
 </tr>
 <tr class="row-even"><td><p>Installation of female header, 1 by 10  pins, for ADS1115</p></td>
 </tr>
+</tbody>
+</table>
+<p>Soldering <a class="reference external" href="https://www.fluke.com/en-us/learn/blog/electrical/what-is-a-diode">DIODE</a> on the measurement board PCB</p>
+<blockquote>
+<div><table class="docutils align-default">
+<tbody>
 <tr class="row-odd"><td rowspan="2"><p>4</p></td>
 <td><img alt="../../../_images/4.jpg" src="../../../_images/4.jpg" />
 </td>
@@ -731,6 +764,8 @@ it provides electrical isolation for the Vmn measurement set. This isolation all
 </tr>
 </tbody>
 </table>
+</div></blockquote>
+</section>
 </section>
 </section>
 

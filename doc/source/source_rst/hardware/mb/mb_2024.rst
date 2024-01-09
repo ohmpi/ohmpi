@@ -19,10 +19,65 @@ it provides electrical isolation for the Vmn measurement set. This isolation all
 **PART A** Assembly of the measurement board
 --------------------------------------------
 
-Required components 
--------------------
+Schematics
+~~~~~~~~~~
 
-`Interactive BOM list <ibom.html>`_
+Overview of the measurement board.
+
+.. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0001.jpg       
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center 
+
+Schematic of the power supply.
+
+.. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0002.jpg       
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center 
+
+Schematic of the dsp (digital power source) power supply.
+
+.. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0003.jpg       
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center 
+
+Schematic of the Vmn signal conditioning.
+
+.. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0004.jpg       
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center
+
+Schematic of the current injection and measurement.
+
+.. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0005.jpg       
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center    
+
+Schematic of the human-machine interface.
+
+.. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0006.jpg       
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center    
+
+Required components 
+~~~~~~~~~~~~~~~~~~~~
 
 .. csv-table:: List of components
    :file: ../../../img/mb.2024.x.x/bom-ohmpi-mb2024.csv
@@ -30,17 +85,18 @@ Required components
    :header-rows: 1
 
 
-.. ToDo : ajouter le schéma electronique de la carte
+
+Interactive BOM list
+~~~~~~~~~~~~~~~~~~~~~  
+
+
+`Interactive BOM list <ibom.html>`_   
+
 
 Description
------------  
+~~~~~~~~~~~
 
-.. figure:: ../../../img/v2023.x.x/step_n_2/a/schema_measurement_board.jpg       
-       :width: 600px
-       :align: center
-       :height: 450px
-       :alt: alternate text
-       :figclass: align-center 
+Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundamentals/what-is-a-resistor/#>`_ on the measurement board PCB
 
 .. table::
    :align: center
@@ -48,12 +104,12 @@ Description
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/1.jpg                       |
    |      1 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Soldering thirteen 100 kOhm resistors                             |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/2.jpg                       |
    |      2 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Soldering four 330 ohm resistors                                  |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/3.jpg                       |
@@ -61,11 +117,18 @@ Description
    |        | Installation of female header, 1 by 10  pins, for ADS1115         |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+   
+Soldering `DIODE <https://www.fluke.com/en-us/learn/blog/electrical/what-is-a-diode>`_ on the measurement board PCB
+   
+   +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/4.jpg                       |
    |      4 +-------------------------------------------------------------------+
    |        | Installation of female header, 1 by 10  pins, for ADS1115         |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+
+   +--------+-------------------------------------------------------------------+  
    |        |   .. image:: ../../../img/mb.2024.x.x/5.jpg                       |
    |      5 +-------------------------------------------------------------------+
    |        | Installation of female header, 1 by 10  pins, for ADS1115         |
