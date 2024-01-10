@@ -5,7 +5,7 @@ The OhmPi V2024 software has been completely re-structured to enable increased f
 functionalities used to interact with the OhmPi instrument via a web interface, IoT
 communication protocols (e.g. MQTT) and/or directly through the Python API.
 
-.. figure:: ../../img/architecture.png
+.. figure:: ../../img/software/ohmpi_2024_architecture.png
 
      Software architecture of OhmPi V2024.
 
