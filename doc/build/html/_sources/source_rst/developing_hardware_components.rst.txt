@@ -1,7 +1,8 @@
 Software interface to new hardware components
 =============================================
 
-*** DRAFT VERSION - TO BE REVIEWED *
+*** DRAFT VERSION - TO BE REVIEWED ***
+
 This section is intended for developers of a new hardware component as part of an OhmPi system.
 
 It presents some advices and best practices that should help developing new hardware components to work
