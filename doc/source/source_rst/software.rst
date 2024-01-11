@@ -11,7 +11,7 @@ This section details describes the Python software and how to interact with an O
    Software architecture <software/architecture>
    Getting started <software/installation>
    Operation <software/operations>
-   Monitoring <software/monitoring>git push
+   Monitoring <software/monitoring>
    API reference <software/api>
 
 
