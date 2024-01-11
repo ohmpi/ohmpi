@@ -5,8 +5,8 @@ API reference
    :maxdepth: 2
    :caption: Contents:
 
-.. automodule:: ohmpi.ohmpi.OhmPi
+.. automodule:: ohmpi.ohmpi
    :members:
 
-.. automodule:: ohmpi.hardware_system.OhmPiHardware
+.. automodule:: ohmpi.hardware_system
    :members:
