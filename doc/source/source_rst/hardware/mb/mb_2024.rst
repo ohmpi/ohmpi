@@ -93,6 +93,12 @@ Interactive BOM list
 `Interactive BOM list <ibom.html>`_   
 
 
+Before starting: how to soldering 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+How to Solder Electronic Components <https://www.sciencebuddies.org/science-fair-projects/references/how-to-solder>
+
+
 Description
 ~~~~~~~~~~~
 
@@ -156,43 +162,57 @@ Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-d
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/9.jpg                       |
    |      9 +-------------------------------------------------------------------+
-   |        | cut socket for 3 THD                                              |
+   |        | Soldering cut socket for 3 THD                                    |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/10.jpg                      |
    |     10 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Soldering header socket 1 row 10 positions                        |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/11.jpg                      |
    |     11 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        |Soldering header socket 1 row 8 positions                          |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/12.jpg                      |
    |     12 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
-   |        |                                                                   |
+   |        | Soldering header socket 1 row 2, 4 and 5 positions, for the 2     |
+   |        | position cut a header socket 4 ou 5 position.                     |
+   +--------+-------------------------------------------------------------------+
+
+Information about `light-emitting diode <https://en.wikipedia.org/wiki/Light-emitting_diode>`_
+
+   
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/13.jpg                      |
    |     13 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Installation of four Light-emitting diode                         |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+   
+Information about `MOSFET (Metal Oxide Semiconductor Field Effect Transistor) <https://fr.wikiversity.org/wiki/Transistor/Transistor_MOSFET#:~:text=Le%20MOSFET%20(Metal%20Oxide%20Semiconductor,la%20construction%20de%20portes%20logiques>`_.
+   
+   +--------+-------------------------------------------------------------------+  
    |        |   .. image:: ../../../img/mb.2024.x.x/14.jpg                      |
    |     14 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Soldering MOSFET ZVN4306                                          |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+ 
+ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>
+
+   +--------+-------------------------------------------------------------------+   
    |        |   .. image:: ../../../img/mb.2024.x.x/15.jpg                      |
    |     15 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Soldering 100 nF 50V tantalum capacitor                           |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/16.jpg                      |
    |     16 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
-   |        |                                                                   |
+   |        | Soldering 1u µF 50V Electrolytic capacitor, **take care** about   |
+   |        | polarity                                                          |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/17.jpg                      |
    |     17 +-------------------------------------------------------------------+
