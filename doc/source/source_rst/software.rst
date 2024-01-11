@@ -9,7 +9,9 @@ This section details describes the Python software and how to interact with an O
 .. toctree::
 
    Software architecture <software/architecture>
-   Installation <software/installation>
-   Operating the instrument <software/operations>
-   How to contribute <software/developments>
+   Getting started <software/installation>
+   Operation <software/operations>
+   Monitoring <software/monitoring>git push
+   API reference <software/api>
+
 
