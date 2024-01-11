@@ -1,11 +1,23 @@
-Installation
-************
+Getting started
+***************
 
-Step 1: Connect to the Raspberry Pi
-===================================
+Step 1: Set up the Raspberry Pi
+===============================
+First, install an operating system on the Raspberry Pi by following the official instructions_.
+.. _instructions` : https://www.raspberrypi.com/documentation/computers/getting-started.html#install-an-operating-system
+
+Then connect to the Raspberry Pi either via ssh or using an external monitor.
+
+For all questions related to Raspberry Pi operations, please refer to the official documentation_.
+.. _documentation: https://www.raspberrypi.com/documentation/
 
 Step 2: Clone the OhmPi project
 ===============================
+
+You need to clone the OhmPi repository on the Raspberry Pi with the following command:
+.. code-block:: bash
+
+   $ git clone https://gitlab.irstea.fr/reversaal/OhmPi.git
 
 Step 3: Run the installation script
 ===================================
@@ -47,3 +59,5 @@ If you need to leave the virtual environment, simply type:
 .. code-block:: bash
    
    $ deactivate
+
+Following these steps, you are now ready to operate the OhmPi.

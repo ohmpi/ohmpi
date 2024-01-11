@@ -19,7 +19,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="next" title="Getting started" href="installation.html" />
     <link rel="prev" title="Software and operation" href="../software.html" /> 
 </head>
 
@@ -47,18 +47,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../hardware.html">Hardware</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../software.html">Software and operation</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Software architecture</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#hardware-components">Hardware components</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hardware-system">Hardware system</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#acquisition">Acquisition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hardware-system">Hardware system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hardware-components">Hardware components</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="operations.html">Configuration file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="operations.html#interfaces-and-applications">Interfaces and applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operations.html">Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="monitoring.html">Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">API reference</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developments.html">How to contribute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gallery.html">Examples of applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developing_hardware_components.html">Software interface to new hardware components</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../archived_version.html">Archived versions</a></li>
@@ -95,25 +96,21 @@
 functionalities used to interact with the OhmPi instrument via a web interface, IoT
 communication protocols (e.g. MQTT) and/or directly through the Python API.</p>
 <figure class="align-default" id="id1">
-<img alt="../../_images/architecture.png" src="../../_images/architecture.png" />
+<img alt="../../_images/ohmpi_2024_architecture.png" src="../../_images/ohmpi_2024_architecture.png" />
 <figcaption>
 <p><span class="caption-text">Software architecture of OhmPi V2024.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>The software is organised in several modules describing the system in a hierarchy including three levels of description and
 operation of the OhmPi.</p>
-<section id="hardware-components">
-<h2>Hardware components<a class="headerlink" href="#hardware-components" title="Permalink to this heading"></a></h2>
-<p>On the base level, the five main hardware components are represented by distinct classes exposing the
-components atomic functionalities. Theses classes are abstract classes in order to provide a common
-interface for different implementations of a component. From these abstract classes concrete classes
-are implemented representing the default properties, actual capabilities and ways to interact with the
-physical modules or boards.
-Improving an existing hardware component or introducing a new design may be desirable in order to,
-e.g. reduce costs, improve performance, adapt measurement range to specific applications, or
-incorporate easily available electronic components. It is at this level that software developments are
-mainly expected to occur following updates on the hardware. The component class should expose the
-minimal functionalities required by the hardware system (see below) for this type of component.</p>
+<section id="acquisition">
+<h2>Acquisition<a class="headerlink" href="#acquisition" title="Permalink to this heading"></a></h2>
+<p>On the top level, the OhmPi class (in ohmpi/ohmpi.py) includes all the higher-level methods and properties allowing to
+operate the system (e.g. acquire measurement sequences). The OhmPi class exposes the user-oriented
+API, generates logs and handles IoT messages. Generic users are expected to interact with the system
+through these higher-level functionalities, which are designed to remain as stable as possible while the
+hardware evolves. Only the introduction of new end-user functionalities should imply new
+developments at this level.</p>
 </section>
 <section id="hardware-system">
 <h2>Hardware system<a class="headerlink" href="#hardware-system" title="Permalink to this heading"></a></h2>
@@ -132,14 +129,18 @@ This part of the software architecture should remain stable if the overall syste
 evolve. However, the introduction of new functionalities at the system level or radical changes in the
 way the components work together will require adaptations at this level.</p>
 </section>
-<section id="acquisition">
-<h2>Acquisition<a class="headerlink" href="#acquisition" title="Permalink to this heading"></a></h2>
-<p>On the top level, the OhmPi class (in ohmpi/ohmpi.py) includes all the higher-level methods and properties allowing to
-operate the system (e.g. acquire measurement sequences). The OhmPi class exposes the user-oriented
-API, generates logs and handles IoT messages. Generic users are expected to interact with the system
-through these higher-level functionalities, which are designed to remain as stable as possible while the
-hardware evolves. Only the introduction of new end-user functionalities should imply new
-developments at this level. See</p>
+<section id="hardware-components">
+<h2>Hardware components<a class="headerlink" href="#hardware-components" title="Permalink to this heading"></a></h2>
+<p>On the base level, the five main hardware components are represented by distinct classes exposing the
+components atomic functionalities. Theses classes are abstract classes in order to provide a common
+interface for different implementations of a component. From these abstract classes concrete classes
+are implemented representing the default properties, actual capabilities and ways to interact with the
+physical modules or boards.
+Improving an existing hardware component or introducing a new design may be desirable in order to,
+e.g. reduce costs, improve performance, adapt measurement range to specific applications, or
+incorporate easily available electronic components. It is at this level that software developments are
+mainly expected to occur following updates on the hardware. The component class should expose the
+minimal functionalities required by the hardware system (see below) for this type of component.</p>
 </section>
 </section>
 
@@ -148,7 +149,7 @@ developments at this level. See</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../software.html" class="btn btn-neutral float-left" title="Software and operation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Getting started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

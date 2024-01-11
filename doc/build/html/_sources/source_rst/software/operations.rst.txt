@@ -1,6 +1,8 @@
+Operation
+#########
 
 Configuration file
-==================
+******************
 
 The configuration of the OhmPi file `config.py` allows to configure the OhmPi.
 A default version of `config.py` is provided in the repository.
@@ -10,10 +12,8 @@ The configuration includes setting the logging level desired for the different l
 
 One should make sure to understand the parameters before altering them. It is also recommended to keep a copy of the default configuration.
 
-
-
-Interfaces and applications
-===========================
+Interfaces
+**********
 
 Different interfaces can be used to interact with the OhmPi.
 
@@ -24,7 +24,7 @@ Available interfaces are:
 
 
 Web interface
-.............
+=============
 
 This is a user friendly graphical interface for new users as well as running quick and easy acquisitions.
 
@@ -55,31 +55,21 @@ to access the interface.
      Contact resistance check.
 
 
-
 Python interface
-................
+================
 
-This interface offers a more direct access to the software components especially well suited for testing or automation on the Raspberry Pi.
+This interface offers a more direct access to the software components, specifically suited for testing or automating acquisition.
 
-By importing the `OhmPi` class from the ohmpi.py, one can control the OhmPi using interactive IPython.
-Typically, it involves using the terminal or an Python IDE such as Thonny on the Raspberry Pi. One can also connect using
-ssh and run the Python interface (see PuTTY on Windows or ssh command on macOS/Linux).
+By importing the `OhmPi` class from the ohmpi.py, we can control the OhmPi instrument via a Python script or interactively with IPython.
+It involves using the terminal or a Python IDE such as Thonny on the Raspberry Pi. A connection can also be established via
+SSH (see PuTTY on Windows or ssh command on macOS/Linux).
 
-To access the Python API, make sure the file ohmpi.py is in the same
-directory as where you run the commands/script. The file ohmpi.py can
-be found on the OhmPi gitlab repository. We recommend downloading the
-entire repository as ohmpi.py import other .py files and default configuration
-files (.json and .py).
-
+To access the Python API, make sure that the PYTHONPATH has been correctly configured to export the location of the ohmpi module.
 
 .. code-block:: python
   :caption: Example of using the Python API to control OhmPi
 
-  import os
-  import numpy as np
-  import time
-  os.chdir("/home/pi/OhmPi")
-  from ohmpi import OhmPi
+  from ohmpi.ohmpi import OhmPi
 
   ### Define object from class OhmPi
   k = OhmPi()  # this loads default parameters from the disk
@@ -114,19 +104,19 @@ files (.json and .py).
   # k.interrupt()  # kill the asynchron sequence
 
   ### Single measurement can also be taken with
-  k.switch_mux_on([1, 4, 2, 3])
-  k.run_measurement()  # use default acquisition parameters
-  k.switch_mux_off([1, 4, 2, 3])  # don't forget this! risk of short-circuit
+  quadrupole = [1, 4, 2, 3]
+  k.run_measurement(quadrupole)  # use default acquisition parameters
 
   ### Custom or adaptative argument, see help(k.run_measurement)
-  k.run_measurement(nb_stack=4,  # do 4 stacks (8 half-cycles)
-                    injection_duration=2,  # inject for 2 seconds
-                    autogain=True)  # adapt gain of ADS to get good resolution
+  k.run_measurement(quadrupole,
+                    nb_stack=4,  # do 4 stacks (8 half-cycles)
+                    injection_duration=1,  # inject for 2 seconds
+                    duty_cycle = 0.5) # duty_cycle is
 
+For detailed usage, please see the Python API or look at the examples.
 
-
-MQTT interface
-..............
+IoT interface
+=============
 
 This is an interface designed for an advanced remote usage of the OhmPi such as remote automation, data consumption by multiple processes and interaction with other sensors in the scope of a monitoring. It is based on the MQTT protocol, designed for the Internet of Things (IoT), to interact with the OhmPi.
 
@@ -218,7 +208,7 @@ For more documentation dedicated to node-red, please refer to the Node-red `cook
 
 
 Loggers
--------
+*******
 
 Loggers have been introduced in this release. They use the excellent logging python package.
 Specific handlers have been implemented for running with ohmpi.py (one for logging to an mqtt broker (see `MQTT interface`_ for more details) and one for creating zipped rotated logs on disk).

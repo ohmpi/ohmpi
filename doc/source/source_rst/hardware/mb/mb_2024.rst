@@ -114,9 +114,12 @@ Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundame
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/3.jpg                       |
    |      3 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Soldering four 4K7 ohm resistors                                  |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+.. #TODO: correction of the picture 3
+
    
 Soldering `DIODE <https://www.fluke.com/en-us/learn/blog/electrical/what-is-a-diode>`_ on the measurement board PCB
    
@@ -126,6 +129,8 @@ Soldering `DIODE <https://www.fluke.com/en-us/learn/blog/electrical/what-is-a-di
    |        | Installation of female header, 1 by 10  pins, for ADS1115         |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-diode.html>`_ on the measurement board PCB
 
 
    +--------+-------------------------------------------------------------------+  

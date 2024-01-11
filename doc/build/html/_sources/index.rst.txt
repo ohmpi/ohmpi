@@ -36,8 +36,8 @@ Contents:
    source_rst/Ohmpi
    source_rst/hardware
    source_rst/software
-   source_rst/api
    source_rst/troubleshooting
+   source_rst/developments
    source_rst/gallery
    source_rst/developing_hardware_components
    source_rst/archived_version
