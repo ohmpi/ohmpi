@@ -57,6 +57,8 @@ def elapsed_seconds(start_time):
 
 
 class OhmPiHardware:
+    """OhmPiHardware class.
+        """
     def __init__(self, **kwargs):
         # OhmPiHardware initialization
         self.exec_logger = kwargs.pop('exec_logger', create_stdout_logger('exec_hw'))

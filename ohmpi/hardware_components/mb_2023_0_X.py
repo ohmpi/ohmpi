@@ -67,6 +67,8 @@ def _ads_1115_gain_auto(channel):  # Make it a class method ?
 
 
 class Tx(TxAbstract):
+    """TX Class
+        """
     def __init__(self, **kwargs):
         if 'model' not in kwargs.keys():
             for key in SPECS['tx'].keys():
@@ -215,6 +217,7 @@ class Tx(TxAbstract):
 
 
 class Rx(RxAbstract):
+    """RX class"""
     def __init__(self, **kwargs):
         if 'model' not in kwargs.keys():
             for key in SPECS['rx'].keys():
