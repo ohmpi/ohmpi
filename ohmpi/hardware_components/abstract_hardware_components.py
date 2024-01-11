@@ -6,6 +6,8 @@ from threading import Event, Barrier, BrokenBarrierError
 
 
 class CtlAbstract(ABC):
+    """CTlAbstract Class
+    Abstract class for controller"""
     def __init__(self, **kwargs):
         self.model = kwargs.pop('model', 'unknown CTL hardware')
         self.interfaces = None
@@ -38,6 +40,8 @@ class CtlAbstract(ABC):
 
 
 class PwrAbstract(ABC):
+    """PwrAbstract Class
+        Abstract class for Power module"""
     def __init__(self, **kwargs):
         self.model = kwargs.pop('model', 'unknown PWR hardware')
         self.exec_logger = kwargs.pop('exec_logger', None)
@@ -127,6 +131,8 @@ class PwrAbstract(ABC):
 
 
 class MuxAbstract(ABC):
+    """MUXAbstract Class
+        Abstract class for MUX"""
     def __init__(self, **kwargs):
         self.model = kwargs.pop('model', 'unknown MUX hardware')
         self.exec_logger = kwargs.pop('exec_logger', create_stdout_logger('exec_mux'))
@@ -270,6 +276,8 @@ class MuxAbstract(ABC):
 
 
 class TxAbstract(ABC):
+    """TxAbstract Class
+        Abstract class for TX module"""
     def __init__(self, **kwargs):
         self.model = kwargs.pop('model', 'unknown TX hardware')
         injection_duration = kwargs.pop('injection_duration', 1.)
@@ -447,6 +455,8 @@ class TxAbstract(ABC):
 
 
 class RxAbstract(ABC):
+    """RXAbstract Class
+        Abstract class for RX"""
     def __init__(self, **kwargs):
         self.exec_logger = kwargs.pop('exec_logger', None)
         if self.exec_logger is None:
