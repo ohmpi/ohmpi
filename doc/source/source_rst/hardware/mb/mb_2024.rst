@@ -120,13 +120,13 @@ Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundame
 
 .. #TODO: correction of the picture 3
 
-   
+ 
 Soldering `DIODE <https://www.fluke.com/en-us/learn/blog/electrical/what-is-a-diode>`_ on the measurement board PCB
    
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/4.jpg                       |
    |      4 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        |  Soldering six Diode 1N4007                                       |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
 
@@ -136,27 +136,27 @@ Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-d
    +--------+-------------------------------------------------------------------+  
    |        |   .. image:: ../../../img/mb.2024.x.x/5.jpg                       |
    |      5 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Soldering six Schottky Diode bat85 ou bat86                       |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/6.jpg                       |
    |      6 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | DIP-8 socket                                                      |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/7.jpg                       |
    |      7 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Soldering DIP-18 on the pcb measurement board                     |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/8.jpg                       |
    |      8 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Soldering DIP-16 on the pcb measurement board                     |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/9.jpg                       |
    |      9 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | cut socket for 3 THD                                              |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/10.jpg                      |
