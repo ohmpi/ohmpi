@@ -186,6 +186,7 @@ Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-d
    |        | position cut a header socket 4 ou 5 position.                     |
    +--------+-------------------------------------------------------------------+
 
+
 Information about `light-emitting diode <https://en.wikipedia.org/wiki/Light-emitting_diode>`_
 
 .. table::
@@ -198,9 +199,10 @@ Information about `light-emitting diode <https://en.wikipedia.org/wiki/Light-emi
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    
-Information about `MOSFET Metal Oxide Semiconductor Field Effect Transistor <https://fr.wikiversity.org/wiki/Transistor/Transistor_MOSFET#:~:text=Le%20MOSFET%20(Metal%20Oxide%20Semiconductor,la%20construction%20de%20portes%20logiques>`_.
+Information about `MOSFET Metal Oxide Semiconductor Field Effect Transistor <https://fr.wikiversity.org/wiki/Transistor/Transistor_MOSFET#:~:text=Le%20MOSFET%20(Metal%20Oxide%20Semiconductor,la%20construction%20de%20portes%20logiques>`_
 
- .. table::
+
+.. table::
    :align: center
 
    +--------+-------------------------------------------------------------------+  
@@ -210,10 +212,10 @@ Information about `MOSFET Metal Oxide Semiconductor Field Effect Transistor <htt
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
 
- 
- What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
 
- .. table::
+What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
+
+.. table::
    :align: center
 
    +--------+-------------------------------------------------------------------+   
