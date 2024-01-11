@@ -1,5 +1,5 @@
 Software architecture
-*********************
+#####################
 
 The OhmPi V2024 software has been completely re-structured to enable increased flexibility for both users and developers. The software is based on an object-oriented module with a class exposing the OhmPi
 functionalities used to interact with the OhmPi instrument via a web interface, IoT
@@ -12,21 +12,17 @@ communication protocols (e.g. MQTT) and/or directly through the Python API.
 The software is organised in several modules describing the system in a hierarchy including three levels of description and
 operation of the OhmPi.
 
-Hardware components
-===================
-On the base level, the five main hardware components are represented by distinct classes exposing the
-components atomic functionalities. Theses classes are abstract classes in order to provide a common
-interface for different implementations of a component. From these abstract classes concrete classes
-are implemented representing the default properties, actual capabilities and ways to interact with the
-physical modules or boards.
-Improving an existing hardware component or introducing a new design may be desirable in order to,
-e.g. reduce costs, improve performance, adapt measurement range to specific applications, or
-incorporate easily available electronic components. It is at this level that software developments are
-mainly expected to occur following updates on the hardware. The component class should expose the
-minimal functionalities required by the hardware system (see below) for this type of component.
+Acquisition
+***********
+On the top level, the OhmPi class (in ohmpi/ohmpi.py) includes all the higher-level methods and properties allowing to
+operate the system (e.g. acquire measurement sequences). The OhmPi class exposes the user-oriented
+API, generates logs and handles IoT messages. Generic users are expected to interact with the system
+through these higher-level functionalities, which are designed to remain as stable as possible while the
+hardware evolves. Only the introduction of new end-user functionalities should imply new
+developments at this level.
 
 Hardware system
-===============
+***************
 On the medium level, the OhmPiHardware class provides a mean to assemble and operate the
 acquisition system. The methods of this class orchestrate atomic operations of the system components
 in order to expose basic system functionalities such as cross-MUX switching, square wave voltage
@@ -42,11 +38,16 @@ This part of the software architecture should remain stable if the overall syste
 evolve. However, the introduction of new functionalities at the system level or radical changes in the
 way the components work together will require adaptations at this level.
 
-Acquisition
-===========
-On the top level, the OhmPi class (in ohmpi/ohmpi.py) includes all the higher-level methods and properties allowing to
-operate the system (e.g. acquire measurement sequences). The OhmPi class exposes the user-oriented
-API, generates logs and handles IoT messages. Generic users are expected to interact with the system
-through these higher-level functionalities, which are designed to remain as stable as possible while the
-hardware evolves. Only the introduction of new end-user functionalities should imply new
-developments at this level. See
+
+Hardware components
+*******************
+On the base level, the five main hardware components are represented by distinct classes exposing the
+components atomic functionalities. Theses classes are abstract classes in order to provide a common
+interface for different implementations of a component. From these abstract classes concrete classes
+are implemented representing the default properties, actual capabilities and ways to interact with the
+physical modules or boards.
+Improving an existing hardware component or introducing a new design may be desirable in order to,
+e.g. reduce costs, improve performance, adapt measurement range to specific applications, or
+incorporate easily available electronic components. It is at this level that software developments are
+mainly expected to occur following updates on the hardware. The component class should expose the
+minimal functionalities required by the hardware system (see below) for this type of component.

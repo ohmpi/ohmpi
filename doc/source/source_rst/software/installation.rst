@@ -1,8 +1,8 @@
 Getting started
-************
+***************
 
 Step 1: Set up the Raspberry Pi
-==================================
+===============================
 First, install an operating system on the Raspberry Pi by following the official instructions_.
 .. _instructions` : https://www.raspberrypi.com/documentation/computers/getting-started.html#install-an-operating-system
 
