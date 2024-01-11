@@ -128,7 +128,10 @@ Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundame
 
  
 Soldering `DIODE <https://www.fluke.com/en-us/learn/blog/electrical/what-is-a-diode>`_ on the measurement board PCB
-   
+
+.. table::
+   :align: center
+
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/4.jpg                       |
    |      4 +-------------------------------------------------------------------+
@@ -138,6 +141,8 @@ Soldering `DIODE <https://www.fluke.com/en-us/learn/blog/electrical/what-is-a-di
 
 Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-diode.html>`_ on the measurement board PCB
 
+.. table::
+   :align: center
 
    +--------+-------------------------------------------------------------------+  
    |        |   .. image:: ../../../img/mb.2024.x.x/5.jpg                       |
@@ -183,7 +188,9 @@ Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-d
 
 Information about `light-emitting diode <https://en.wikipedia.org/wiki/Light-emitting_diode>`_
 
-   
+.. table::
+   :align: center
+
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/13.jpg                      |
    |     13 +-------------------------------------------------------------------+
@@ -191,17 +198,23 @@ Information about `light-emitting diode <https://en.wikipedia.org/wiki/Light-emi
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    
-Information about `MOSFET (Metal Oxide Semiconductor Field Effect Transistor) <https://fr.wikiversity.org/wiki/Transistor/Transistor_MOSFET#:~:text=Le%20MOSFET%20(Metal%20Oxide%20Semiconductor,la%20construction%20de%20portes%20logiques>`_.
-   
+Information about `MOSFET Metal Oxide Semiconductor Field Effect Transistor <https://fr.wikiversity.org/wiki/Transistor/Transistor_MOSFET#:~:text=Le%20MOSFET%20(Metal%20Oxide%20Semiconductor,la%20construction%20de%20portes%20logiques>`_.
+
+ .. table::
+   :align: center
+
    +--------+-------------------------------------------------------------------+  
    |        |   .. image:: ../../../img/mb.2024.x.x/14.jpg                      |
    |     14 +-------------------------------------------------------------------+
-   |        | Soldering MOSFET ZVN4306                                          |
+   |        | Soldering MOSFET ZVN4206 or ZVN4306                               |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
 
  
- What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>
+ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
+
+ .. table::
+   :align: center
 
    +--------+-------------------------------------------------------------------+   
    |        |   .. image:: ../../../img/mb.2024.x.x/15.jpg                      |
@@ -214,29 +227,39 @@ Information about `MOSFET (Metal Oxide Semiconductor Field Effect Transistor) <h
    |        | Soldering 1u µF 50V Electrolytic capacitor, **take care** about   |
    |        | polarity                                                          |
    +--------+-------------------------------------------------------------------+
+
+.. warning::
+     
+     In this version, we used a shunt resistor of 2 ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor. Don't forget to change the shunt value in the config.py file (value associated to key 'R_shunt' in the OHMPI_CONFIG dict).   
+
+
+.. table::
+   :align: center
+   
+   +--------+-------------------------------------------------------------------+ 
    |        |   .. image:: ../../../img/mb.2024.x.x/17.jpg                      |
    |     17 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Soldering 2 ohms shunt resistor                                   |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/18.jpg                      |
    |     18 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Soldering IDC pins                                                |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/19.jpg                      |
    |     19 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Six screw terminals for cable connection                          |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/20.jpg                      |
    |     20 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Soldering six omron G5LE relay 5 VDC                              |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/21.jpg                      |
    |     21 +-------------------------------------------------------------------+
-   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        | Soldering header for raspberry 2 column 20 position               |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/22.jpg                      |

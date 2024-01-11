@@ -140,8 +140,8 @@ it provides electrical isolation for the Vmn measurement set. This isolation all
 </section>
 <section id="required-components">
 <h3>Required components<a class="headerlink" href="#required-components" title="Permalink to this heading"></a></h3>
-<table class="docutils align-default" id="id4">
-<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">List of components</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 11%" />
 <col style="width: 11%" />
@@ -613,8 +613,7 @@ it provides electrical isolation for the Vmn measurement set. This isolation all
 </tbody>
 </table>
 <p>Soldering <a class="reference external" href="https://www.fluke.com/en-us/learn/blog/electrical/what-is-a-diode">DIODE</a> on the measurement board PCB</p>
-<blockquote>
-<div><table class="docutils align-default">
+<table class="docutils align-center">
 <tbody>
 <tr class="row-odd"><td rowspan="2"><p>4</p></td>
 <td><img alt="../../../_images/4.jpg" src="../../../_images/4.jpg" />
@@ -624,10 +623,8 @@ it provides electrical isolation for the Vmn measurement set. This isolation all
 </tr>
 </tbody>
 </table>
-</div></blockquote>
 <p>Soldering <a class="reference external" href="https://www.electronics-tutorials.ws/diode/schottky-diode.html">SCHOTTKY DIODE</a> on the measurement board PCB</p>
-<blockquote>
-<div><table class="docutils align-default">
+<table class="docutils align-center">
 <tbody>
 <tr class="row-odd"><td rowspan="2"><p>5</p></td>
 <td><img alt="../../../_images/5.jpg" src="../../../_images/5.jpg" />
@@ -680,10 +677,8 @@ position cut a header socket 4 ou 5 position.</p></td>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
 <p>Information about <a class="reference external" href="https://en.wikipedia.org/wiki/Light-emitting_diode">light-emitting diode</a></p>
-<blockquote>
-<div><table class="docutils align-default">
+<table class="docutils align-center">
 <tbody>
 <tr class="row-odd"><td rowspan="2"><p>13</p></td>
 <td><img alt="../../../_images/13.jpg" src="../../../_images/13.jpg" />
@@ -693,24 +688,20 @@ position cut a header socket 4 ou 5 position.</p></td>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
-<p>Information about <a class="reference external" href="https://fr.wikiversity.org/wiki/Transistor/Transistor_MOSFET#:~:text=Le%20MOSFET%20(Metal%20Oxide%20Semiconductor,la%20construction%20de%20portes%20logiques">MOSFET (Metal Oxide Semiconductor Field Effect Transistor)</a>.</p>
+<p>Information about <a class="reference external" href="https://fr.wikiversity.org/wiki/Transistor/Transistor_MOSFET#:~:text=Le%20MOSFET%20(Metal%20Oxide%20Semiconductor,la%20construction%20de%20portes%20logiques">MOSFET Metal Oxide Semiconductor Field Effect Transistor</a>.</p>
 <blockquote>
-<div><blockquote>
-<div><table class="docutils align-default">
+<div><table class="docutils align-center">
 <tbody>
 <tr class="row-odd"><td rowspan="2"><p>14</p></td>
 <td><img alt="../../../_images/14.jpg" src="../../../_images/14.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Soldering MOSFET ZVN4306</p></td>
+<tr class="row-even"><td><p>Soldering MOSFET ZVN4206 or ZVN4306</p></td>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
-<p>What is a <a href="#id2"><span class="problematic" id="id3">`</span></a>CAPACITOR &lt;<a class="reference external" href="https://en.wikipedia.org/wiki/Capacitor">https://en.wikipedia.org/wiki/Capacitor</a>&gt;</p>
-<blockquote>
-<div><table class="docutils align-default">
+<p>What is a <a class="reference external" href="https://en.wikipedia.org/wiki/Capacitor">CAPACITOR</a>?</p>
+<table class="docutils align-center">
 <tbody>
 <tr class="row-odd"><td rowspan="2"><p>15</p></td>
 <td><img alt="../../../_images/15.jpg" src="../../../_images/15.jpg" />
@@ -725,35 +716,44 @@ position cut a header socket 4 ou 5 position.</p></td>
 <tr class="row-even"><td><p>Soldering 1u µF 50V Electrolytic capacitor, <strong>take care</strong> about
 polarity</p></td>
 </tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>In this version, we used a shunt resistor of 2 ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor. Don’t forget to change the shunt value in the config.py file (value associated to key ‘R_shunt’ in the OHMPI_CONFIG dict).</p>
+</div>
+<table class="docutils align-center">
+<tbody>
 <tr class="row-odd"><td rowspan="2"><p>17</p></td>
 <td><img alt="../../../_images/17.jpg" src="../../../_images/17.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Installation of female header, 1 by 10  pins, for ADS1115</p></td>
+<tr class="row-even"><td><p>Soldering 2 ohms shunt resistor</p></td>
 </tr>
 <tr class="row-odd"><td rowspan="2"><p>18</p></td>
 <td><img alt="../../../_images/18.jpg" src="../../../_images/18.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Installation of female header, 1 by 10  pins, for ADS1115</p></td>
+<tr class="row-even"><td><p>Soldering IDC pins</p></td>
 </tr>
 <tr class="row-odd"><td rowspan="2"><p>19</p></td>
 <td><img alt="../../../_images/19.jpg" src="../../../_images/19.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Installation of female header, 1 by 10  pins, for ADS1115</p></td>
+<tr class="row-even"><td><p>Six screw terminals for cable connection</p></td>
 </tr>
 <tr class="row-odd"><td rowspan="2"><p>20</p></td>
 <td><img alt="../../../_images/20.jpg" src="../../../_images/20.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Installation of female header, 1 by 10  pins, for ADS1115</p></td>
+<tr class="row-even"><td><p>Soldering six omron G5LE relay 5 VDC</p></td>
 </tr>
 <tr class="row-odd"><td rowspan="2"><p>21</p></td>
 <td><img alt="../../../_images/21.jpg" src="../../../_images/21.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>Installation of female header, 1 by 10  pins, for ADS1115</p></td>
+<tr class="row-even"><td><p>Soldering header for raspberry 2 column 20 position</p></td>
 </tr>
 <tr class="row-odd"><td rowspan="2"><p>22</p></td>
 <td><img alt="../../../_images/22.jpg" src="../../../_images/22.jpg" />
@@ -799,8 +799,6 @@ polarity</p></td>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
-</div></blockquote>
 </section>
 </section>
 </section>
