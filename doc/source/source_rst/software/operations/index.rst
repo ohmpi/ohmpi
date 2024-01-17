@@ -10,6 +10,7 @@ Contents:
 
    config
    interfaces
+   settings
    loggers
 
 
