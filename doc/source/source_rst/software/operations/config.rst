@@ -2,7 +2,12 @@
 Configuration
 *************
 
-The configuration of the OhmPi file `config.py` allows to configure the OhmPi.
+The configuration of the OhmPi file `config.py` tells the software how the hardware is set up, cabled and configured.
+In certain cases, it also allows you to define hardware specifications, such as the maximum voltage that a specific MUX board can handle.
+For general purpose, most specifications can be left on default values.
+.. warning::
+The configuration file defines how the OhmPi system is assembled and is expected to behave. It has a different purpose than the measurement settings which define the acquisition parameters. Several combinations of `settings`_ can be handled by one configuration specified in a config.py file.
+
 A default version of `config.py` is provided in the repository.
 This file should be edited to customize the configuration following the user's needs and preferences.
 A series of default configuration files are available in the configs folder. A simple helper command can help you select the appropriate configuration file depending on your version of the meausurement board and type of MUX boards.
@@ -11,8 +16,11 @@ The helper will ask you a few questions and will select the right configuration 
 
    $ python setup_config.py
 
-Still, is best practice to open the configuration file and check that the parameters are correctly configured.
+Still, it is best practice to open the configuration file and check that the parameters are correctly configured.
 Updating the configuration file manually is mandatory for custom systems combining different versions of the measurement and MUX boards.
+
+Configuration file structure
+----------------------------
 
 The configuration is written in a python file structured in a series of dictionnaries related to:
 1. OHMPI_CONFIG: the OhmPi instrument information (id of the instrument and default settings)
