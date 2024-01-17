@@ -13,6 +13,6 @@ Contents:
 
    Software architecture <architecture>
    Getting started <installation>
-   Operation <operations>
+   Operation <operations/index>
    Monitoring <monitoring>
    API reference <api>
