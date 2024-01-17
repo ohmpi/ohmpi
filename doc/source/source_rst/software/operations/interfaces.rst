@@ -26,17 +26,17 @@ Once configured, the webserver should start by itself on start and once
 connected to the Pi, the user can go to `10.3.141.1:8080 <http://10.3.141.1:8080>`_
 to access the interface.
 
-.. figure:: ../../img/http-interface-pseudo-section.png
+.. figure:: ../../../img/software/http-interface-pseudo-section.png
 
     Web interface with its interactive pseudo-section.
 
 
-.. figure:: ../../img/http-interface-evolution.png
+.. figure:: ../../../img/software/http-interface-evolution.png
 
      Evolution of quadrupole apparent resistivity with time.
 
 
-.. figure:: ../../img/http-interface-rs.png
+.. figure:: ../../../img/software/http-interface-rs.png
 
      Contact resistance check.
 
@@ -177,16 +177,16 @@ Examples incorporating execution commands and data outputs from OhmPi can be fou
 
 These examples may require installing some additional node packages in order to work properly. This can be done in the `Palette Manager <https://nodered.org/docs/user-guide/editor/palette/manager>`_ within Node-RED.
 
-.. figure:: ../../img/node-red_flow.png
+.. figure:: ../../../img/software/node-red_flow.png
 
      Example flow in node-red to interact with an OhmPi.
 
 
-.. figure:: ../../img/node-red_interface_control.png
+.. figure:: ../../../img/software/node-red_interface_control.png
 
      Example of a dashboard UI created with node-red to interact with an OhmPi - control tab.
 
-.. figure:: ../../img/node-red_interface_data.png
+.. figure:: ../../../img/software/node-red_interface_data.png
 
      Example of a dashboard UI created with node-red to interact with an OhmPi - data visualization tab.
 
