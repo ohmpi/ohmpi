@@ -1,3 +1,4 @@
+.. _settings:
 Acquisition settings
 ********************
 
