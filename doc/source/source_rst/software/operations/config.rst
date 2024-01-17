@@ -7,7 +7,10 @@ In certain cases, it also allows you to define hardware specifications, such as 
 For general purpose, most specifications can be left on default values.
 
 .. warning::
-The configuration file defines how the OhmPi system is assembled and is expected to behave. It has a different purpose than the measurement settings which define the acquisition parameters. Several combinations of :ref:`settings` can be handled by one configuration specified in a config.py file.
+  The configuration file defines how the OhmPi system is assembled and expected to behave. Not to be confused with :ref:`settings`. One configuration specified in a config.py file can handle multiple combinations of acquisition settings.
+
+Default configuration
+---------------------
 
 A default version of `config.py` is provided in the repository.
 This file should be edited to customize the configuration following the user's needs and preferences.
@@ -38,7 +41,7 @@ The configuration is written in a python file structured in a series of dictionn
    :maxdepth: 2
    :caption: Contents:
 
-.. automodule:: configs.config_default
+.. automodule:: ~configs.config_default
     :members:
     :undoc-members:
     :show-inheritance:
