@@ -7,6 +7,5 @@ API reference
 
 .. automodule:: ohmpi.ohmpi
    :members:
-
 .. automodule:: ohmpi.hardware_system
    :members:
