@@ -50,7 +50,7 @@ The configuration is written in a python file structured in a series of dictionn
    :maxdepth: 2
    :caption: Contents:
 
-.. automodule:: configs.config_default
+.. automodule:: configs.config_example
     :members:
     :undoc-members:
     :show-inheritance:
