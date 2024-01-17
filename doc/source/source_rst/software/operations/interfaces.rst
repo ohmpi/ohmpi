@@ -101,7 +101,7 @@ To access the Python API, make sure that the PYTHONPATH has been correctly confi
 
 For detailed usage, please see the Python API or look at the examples.
 
- .. _IoT-interface:
+.. _IoT-interface:
 IoT interface
 =============
 
