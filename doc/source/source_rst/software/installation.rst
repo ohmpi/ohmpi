@@ -3,12 +3,12 @@ Getting started
 
 Step 1: Set up the Raspberry Pi
 ===============================
-First, install an operating system on the Raspberry Pi by following the official instructions_.
-.. _instructions` : https://www.raspberrypi.com/documentation/computers/getting-started.html#install-an-operating-system
+First, install an operating system on the Raspberry Pi by following the official `instructions`_.
+.. _instructions : https://www.raspberrypi.com/documentation/computers/getting-started.html#install-an-operating-system
 
 Then connect to the Raspberry Pi either via ssh or using an external monitor.
 
-For all questions related to Raspberry Pi operations, please refer to the official documentation_.
+For all questions related to Raspberry Pi operations, please refer to the official d`ocumentation`_.
 .. _documentation: https://www.raspberrypi.com/documentation/
 
 Step 2: Clone the OhmPi project
