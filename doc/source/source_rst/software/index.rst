@@ -11,8 +11,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   Software architecture <software/architecture>
-   Getting started <software/installation>
-   Operation <software/operations>
-   Monitoring <software/monitoring>
-   API reference <software/api>
+   Software architecture <architecture>
+   Getting started <installation>
+   Operation <operations>
+   Monitoring <monitoring>
+   API reference <api>
