@@ -23,38 +23,185 @@ The helper will ask you a few questions and will select the right configuration 
 Still, it is best practice to open the configuration file and check that the parameters are correctly configured.
 Updating the configuration file manually is mandatory for custom systems combining different versions of the measurement and MUX boards.
 
+.. warning::
+   One should make sure to understand the parameters before altering them. It is also recommended to keep a copy of the default configuration.
+
 Configuration file structure
 ----------------------------
+
+.. code-block:: python
+  :caption: Config file header
+
+    import logging
+    from ohmpi.utils import get_platform
+
+    from paho.mqtt.client import MQTTv31  # noqa
+
+    _, on_pi = get_platform()
+    # DEFINE THE ID OF YOUR OhmPi
+    ohmpi_id = '0001' if on_pi else 'XXXX'
+    # DEFINE YOUR MQTT BROKER (DEFAULT: 'localhost')
+    mqtt_broker = 'localhost' if on_pi else 'NAME_YOUR_BROKER_WHEN_IN_SIMULATION_MODE_HERE'
+    # DEFINE THE SUFFIX TO ADD TO YOUR LOGS FILES
+    logging_suffix = ''
+
 
 The configuration is written in a python file structured in a series of dictionnaries related to:
 
 #. OHMPI_CONFIG: the OhmPi instrument information (id of the instrument and default settings).
 
+.. code-block:: python
+  :caption: OhmPi config
+
+  # OhmPi configuration
+  OHMPI_CONFIG = {
+      'id': ohmpi_id,  # Unique identifier of the OhmPi board (string), default = '0001'
+      'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
+  }
+
+
 #. HARDWARE_CONFIG: the hardware system in which the five different modules 'ctl' (controller), 'tx' (transmitter), 'rx' (receiver), 'mux' (multiplexers), 'pwr' (power).
+
+.. code-block:: python
+  :caption: Dictionnary containing the configuration of the hardware system.
+
+  r_shunt = 2.
+  HARDWARE_CONFIG = {
+      'ctl': {'model': 'raspberry_pi'}, # contains informations related to controller unit, 'raspberry_pi' only implemented so far
+      'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
+      'tx':  {'model': 'mb_2024_0_2',
+               'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
+               'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
+               'r_shunt': r_shunt,  # Shunt resistance in Ohms
+               'interface_name': 'i2c'
+              },
+      'rx':  {'model': 'mb_2024_0_2',
+               'latency': 0.010,  # latency in seconds in continuous mode
+               'sampling_rate': 50,  # number of samples per second
+               'interface_name': 'i2c'
+              },
+      'mux': {'boards':
+                  {'mux_00':
+                       {'model': 'mux_2024_0_X',
+                        'electrodes': range(1, 17),
+                        'roles': ['A', 'B', 'M', 'N'],
+                        'tca_address': None,
+                        'tca_channel': 0,
+                        'addr1': 'down',
+                        'addr2': 'down',
+                        },
+                  'mux_01':
+                       {'model': 'mux_2023_0_X',
+                        'electrodes': range(1, 64)+16,
+                       }
+                   },
+               'default': {'interface_name': 'i2c_ext',
+                           'voltage_max': 50.,
+                           'current_max': 3.}
+              }
+      }
 
 #. the logging dictionnaries divided in:
 
    * EXEC_LOGGING_CONFIG
 
+.. code-block:: python
+  :caption: Dictionnary containing the configuration of the hardware system.
+
+  # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
+  # Execution logging configuration
+  EXEC_LOGGING_CONFIG = {
+      'logging_level': logging.INFO,
+      'log_file_logging_level': logging.DEBUG,
+      'logging_to_console': True,
+      'file_name': f'exec{logging_suffix}.log',
+      'max_bytes': 262144,
+      'backup_count': 30,
+      'when': 'd',
+      'interval': 1
+  }
+
    * DATA_LOGGING_CONFIG
 
+.. code-block:: python
+  :caption: Dictionnary containing the configuration of the hardware system.
+
+  # Data logging configuration
+  DATA_LOGGING_CONFIG = {
+      'logging_level': logging.INFO,
+      'logging_to_console': True,
+      'file_name': f'data{logging_suffix}.log',
+      'max_bytes': 16777216,
+      'backup_count': 1024,
+      'when': 'd',
+      'interval': 1
+  }
+
    * SOH_LOGGING_CONFIG
+
+.. code-block:: python
+  :caption: Dictionnary containing the configuration of the hardware system.
+  # State of Health logging configuration (For a future release)
+  SOH_LOGGING_CONFIG = {
+      'logging_level': logging.INFO,
+      'log_file_logging_level': logging.DEBUG,
+      'logging_to_console': True,
+      'file_name': f'soh{logging_suffix}.log',
+      'max_bytes': 16777216,
+      'backup_count': 1024,
+      'when': 'd',
+      'interval': 1
+  }
+
 
 #. the MQTT dictionnaries divided in:
 
    * MQTT_LOGGING_CONFIG
 
+.. code-block:: python
+  :caption: Dictionnary containing the configuration of the hardware system.
+
+
+  # MQTT logging configuration parameters
+  MQTT_LOGGING_CONFIG = {
+      'hostname': mqtt_broker,
+      'port': 1883,
+      'qos': 2,
+      'retain': False,
+      'keepalive': 60,
+      'will': None,
+      'auth': {'username': 'mqtt_user', 'password': 'mqtt_password'},
+      'tls': None,
+      'protocol': MQTTv31,
+      'transport': 'tcp',
+      'client_id': f'{OHMPI_CONFIG["id"]}',
+      'exec_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/exec',
+      'exec_logging_level': logging.DEBUG,
+      'data_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/data',
+      'data_logging_level': DATA_LOGGING_CONFIG['logging_level'],
+      'soh_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/soh',
+      'soh_logging_level': SOH_LOGGING_CONFIG['logging_level']
+  }
+
+
    * MQTT_CONTROL_CONFIG
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+.. code-block:: python
+  :caption: Dictionnary containing the configuration of the hardware system.
 
-.. automodule:: configs.config_example
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-One should make sure to understand the parameters before altering them. It is also recommended to keep a copy of the default configuration.
+  # MQTT control configuration parameters
+  MQTT_CONTROL_CONFIG = {
+      'hostname': mqtt_broker,
+      'port': 1883,
+      'qos': 2,
+      'retain': False,
+      'keepalive': 60,
+      'will': None,
+      'auth': {'username': 'mqtt_user', 'password': 'mqtt_password'},
+      'tls': None,
+      'protocol': MQTTv31,
+      'transport': 'tcp',
+      'client_id': f'{OHMPI_CONFIG["id"]}',
+      'ctrl_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/ctrl'
+  }
 
