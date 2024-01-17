@@ -27,15 +27,24 @@ Configuration file structure
 ----------------------------
 
 The configuration is written in a python file structured in a series of dictionnaries related to:
+
 #. OHMPI_CONFIG: the OhmPi instrument information (id of the instrument and default settings)
+
 #. HARDWARE_CONFIG: the hardware system in which the five different modules 'ctl' (controller), 'tx' (transmitter), 'rx' (receiver), 'mux' (multiplexers), 'pwr' (power).
+
 #. the logging dictionnaries divided in:
-* EXEC_LOGGING_CONFIG
-* DATA_LOGGING_CONFIG
-*SOH_LOGGING_CONFIG
+
+   * EXEC_LOGGING_CONFIG
+
+   * DATA_LOGGING_CONFIG
+
+   *SOH_LOGGING_CONFIG
+
 #. the MQTT dictionnaries divided in:
-* MQTT_LOGGING_CONFIG
-* MQTT_CONTROL_CONFIG
+
+   * MQTT_LOGGING_CONFIG
+
+   * MQTT_CONTROL_CONFIG
 
 .. toctree::
    :maxdepth: 2
