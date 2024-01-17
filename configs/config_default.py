@@ -49,6 +49,13 @@ HARDWARE_CONFIG = {
             }
     }
 
+'''
+    Dictionnary containing the configuration of the hardware system. THis is where the five modules are declared and assembled together
+    'ctl' contains informationb related to controller unit with the following keys:
+         'model': 'raspberry_pi' only implemented so far
+         'id': ID of thje instrument '0001' by default
+'''
+
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
