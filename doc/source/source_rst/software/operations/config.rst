@@ -1,13 +1,13 @@
- .. _config:
+.. _config:
 Configuration
 *************
 
-The configuration of the OhmPi file `config.py` tells the software how the hardware is set up, cabled and configured.
+The configuration file `config.py` defines how the OhmPi system is assembled and expected to behave. It tells the software how the hardware is set up, cabled and configured.
 In certain cases, it also allows you to define hardware specifications, such as the maximum voltage that a specific MUX board can handle.
 For general purpose, most specifications can be left on default values.
 
 .. warning::
-  The configuration file defines how the OhmPi system is assembled and expected to behave. Not to be confused with :ref:`settings`. One configuration specified in a config.py file can handle multiple combinations of acquisition settings.
+  Not to be confused with :ref:`settings`. One configuration specified in a config.py file can handle multiple combinations of acquisition settings.
 
 Default configuration
 ---------------------
@@ -27,21 +27,21 @@ Configuration file structure
 ----------------------------
 
 The configuration is written in a python file structured in a series of dictionnaries related to:
-1. OHMPI_CONFIG: the OhmPi instrument information (id of the instrument and default settings)
-2. HARDWARE_CONFIG: the hardware system in which the five different modules 'ctl' (controller), 'tx' (transmitter), 'rx' (receiver), 'mux' (multiplexers), 'pwr' (power).
-3. the logging dictionnaries divided in:
-   - EXEC_LOGGING_CONFIG
-   - DATA_LOGGING_CONFIG
-   - SOH_LOGGING_CONFIG
-4. the MQTT dictionnaries divided in:
-   - MQTT_LOGGING_CONFIG
-   - MQTT_CONTROL_CONFIG
+#. OHMPI_CONFIG: the OhmPi instrument information (id of the instrument and default settings)
+#. HARDWARE_CONFIG: the hardware system in which the five different modules 'ctl' (controller), 'tx' (transmitter), 'rx' (receiver), 'mux' (multiplexers), 'pwr' (power).
+#. the logging dictionnaries divided in:
+* EXEC_LOGGING_CONFIG
+* DATA_LOGGING_CONFIG
+*SOH_LOGGING_CONFIG
+#. the MQTT dictionnaries divided in:
+* MQTT_LOGGING_CONFIG
+* MQTT_CONTROL_CONFIG
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-.. automodule:: ~configs.config_default
+.. automodule:: configs.config_default
     :members:
     :undoc-members:
     :show-inheritance:
