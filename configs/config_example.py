@@ -178,7 +178,7 @@ HARDWARE_CONFIG = {
                       },
                  'mux_01':
                      {'model': 'mux_2023_0_X',
-                      'electrodes': range(1, 64)+16,
+                      'electrodes': range(17, 65+16),
                      }
                  },
              'default': {'interface_name': 'i2c_ext',
