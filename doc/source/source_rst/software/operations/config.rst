@@ -46,12 +46,12 @@ Configuration file structure
     logging_suffix = ''
 
 
-The configuration is written in a python file structured in a series of dictionnaries related to:
+The configuration is written in a python file structured in a series of dictionaries related to:
 
 #. OHMPI_CONFIG: the OhmPi instrument information (id of the instrument and default settings).
 
 .. code-block:: python
-  :caption: OhmPi config
+  :caption: OHMPI_CONFIG: Dictionary containing basic informations about the OhmPi instrument
 
   # OhmPi configuration
   OHMPI_CONFIG = {
@@ -63,9 +63,9 @@ The configuration is written in a python file structured in a series of dictionn
 #. HARDWARE_CONFIG: the hardware system in which the five different modules 'ctl' (controller), 'tx' (transmitter), 'rx' (receiver), 'mux' (multiplexers), 'pwr' (power).
 
 .. code-block:: python
-  :caption: Dictionary containing the configuration of the hardware system.
+  :caption: HARDWARE_CONFIG: Dictionary containing configuration of the hardware system and how it is assembled.
 
-  r_shunt = 2.
+  r_shunt = 2. # Value of the shunt resistor in Ohm.
   HARDWARE_CONFIG = {
       'ctl': {'model': 'raspberry_pi'}, # contains informations related to controller unit, 'raspberry_pi' only implemented so far
       'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
@@ -104,7 +104,7 @@ The configuration is written in a python file structured in a series of dictionn
 #. the logging dictionaries divided in:
 
 .. code-block:: python
-  :caption: EXEC_LOGGING_CONFIG
+  :caption: EXEC_LOGGING_CONFIG: dictionary configuring how the execution commands are being logged by the system. Useful for debugging.
 
   # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
   # Execution logging configuration
@@ -122,7 +122,7 @@ The configuration is written in a python file structured in a series of dictionn
 
 *
 .. code-block:: python
-  :caption: DATA_LOGGING_CONFIG
+  :caption: DATA_LOGGING_CONFIG: Dictionary configuring the data logging capabilities of the system
 
   # Data logging configuration
   DATA_LOGGING_CONFIG = {
@@ -135,10 +135,9 @@ The configuration is written in a python file structured in a series of dictionn
       'interval': 1
   }
 
-   * SOH_LOGGING_CONFIG
 
 .. code-block:: python
-  :caption: Dictionary containing the configuration of the hardware system.
+  :caption: SOH_LOGGING_CONFIG: Dictionary configuring how the state of health of the system is logged
   # State of Health logging configuration (For a future release)
   SOH_LOGGING_CONFIG = {
       'logging_level': logging.INFO,
@@ -150,6 +149,7 @@ The configuration is written in a python file structured in a series of dictionn
       'when': 'd',
       'interval': 1
   }
+
 
 
 #. the MQTT dictionaries divided in:

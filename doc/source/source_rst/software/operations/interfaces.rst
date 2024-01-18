@@ -1,3 +1,4 @@
+.. _interfaces:
 Interfaces
 **********
 
