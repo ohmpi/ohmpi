@@ -198,3 +198,11 @@ The configuration is written in a python file structured in a series of dictiona
       'ctrl_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/ctrl'
   }
 
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+.. automodule:: ohmpi.configs.config_example.HARDWARE_CONFIG
+   :members:
