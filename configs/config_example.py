@@ -58,8 +58,8 @@ HARDWARE_CONFIG = {
 '''
     Dictionary configuring the hardware system. This is where the five modules are declared and assembled together.
   
-    Keys
-    ----
+    Parameters
+    ----------
     'ctl': dict
            Describing the controller unit with the following keys:
             * 'model': string
