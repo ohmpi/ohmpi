@@ -56,11 +56,17 @@ HARDWARE_CONFIG = {
     }
 
 '''
-    Dictionnary containing the configuration of the hardware system. THis is where the five modules are declared and assembled together
+    Dictionary configuring the hardware system. This is where the five modules are declared and assembled together.
+  
+    Parameters
+    ----------
     'ctl' contains informationb related to controller unit with the following keys:
-         'model': 'raspberry_pi' only implemented so far
-         'id': ID of thje instrument '0001' by default
+    'ctl': dict
+           'model': string, model type of the controller. Currently only 'raspberry_pi"
+    'pwr': dict
+            'model': string, model type of the power module. 'pwr_batt', 'pwr_dps5005"
 '''
+
 
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
