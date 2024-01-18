@@ -62,9 +62,10 @@ The configuration is written in a python file structured in a series of dictiona
 
 #. HARDWARE_CONFIG: the hardware system in which the five different modules 'ctl' (controller), 'tx' (transmitter), 'rx' (receiver), 'mux' (multiplexers), 'pwr' (power).
 
+.. autodata:: configs.config_example.HARDWARE_CONFIG
+
 .. code-block:: python
   :caption: HARDWARE_CONFIG: Dictionary containing configuration of the hardware system and how it is assembled.
-
   r_shunt = 2. # Value of the shunt resistor in Ohm.
   HARDWARE_CONFIG = {
       'ctl': {'model': 'raspberry_pi'}, # contains informations related to controller unit, 'raspberry_pi' only implemented so far
@@ -90,10 +91,6 @@ The configuration is written in a python file structured in a series of dictiona
                         'addr1': 'down',
                         'addr2': 'down',
                         },
-                  'mux_01':
-                       {'model': 'mux_2023_0_X',
-                        'electrodes': range(1, 64)+16,
-                       }
                    },
                'default': {'interface_name': 'i2c_ext',
                            'voltage_max': 50.,
@@ -198,10 +195,3 @@ The configuration is written in a python file structured in a series of dictiona
       'ctrl_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/ctrl'
   }
 
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-.. autodata:: configs.config_example.HARDWARE_CONFIG
