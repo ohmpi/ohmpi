@@ -204,4 +204,4 @@ The configuration is written in a python file structured in a series of dictiona
    :maxdepth: 2
    :caption: Contents:
 
-.. autofunction:: HARDWARE_CONFIG
+.. autofunction:: congifs.config_example.HARDWARE_CONFIG

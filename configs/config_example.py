@@ -61,10 +61,15 @@ HARDWARE_CONFIG = {
     Parameters
     ----------
     'ctl': dict
-           contains informationb related to controller unit with the following keys:
-           * 'model': string, model type of the controller. Currently only 'raspberry_pi"
+           Describing the controller unit with the following keys:
+            * 'model': string
+                       model type of the controller. Currently only 'raspberry_pi"
     'pwr': dict
-            'model': string, model type of the power module. 'pwr_batt', 'pwr_dps5005"
+           Describing the power module with the following keys:
+            * 'model': string, 
+                       model type of the power module. 'pwr_batt', 'pwr_dps5005"
+            * 'voltage': float
+                       default voltage of the
 '''
 
 
