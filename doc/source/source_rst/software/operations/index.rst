@@ -1,5 +1,5 @@
-Operation
-#########
+Operating the system
+####################
 
 This section details describes how to operate an OhmPi instrument.
 
@@ -12,5 +12,6 @@ Contents:
    interfaces
    settings
    loggers
+   monitoring
 
 

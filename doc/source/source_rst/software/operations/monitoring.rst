@@ -5,7 +5,14 @@ This section details ways to automate measurement acquisition in order to set up
 
 Repeated acquisition at fixed intervals
 =======================================
-Example run_multiple sequence script
+The easiest way to set up time-lapse acquisition is to perform repeated acquisition of a sequence at fixed intervals.
+Repeated acquisition can be initiated from the three different `interfaces`_.
+
+  ### Run multiple sequences at given time interval
+  k.settings['nb_meas'] = 3  # run sequence three times
+  k.settings['sequence_delay'] = 100 # every 100 s
+  k.run_multiple_sequences()  # asynchron
+  # k.interrupt()  # kill the asynchron sequence
 
 Scheduled acquisition using crontab
 ===================================

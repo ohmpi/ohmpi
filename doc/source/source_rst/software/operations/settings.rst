@@ -1,11 +1,10 @@
-.. _settings:
 Acquisition settings
 ********************
 
 This section details the acquisition settings that can be specified for measurement on a quadrupole.
 
-.. code-block:: json
-  :caption: Dictionnary containing the default settings contained in ´settings/default.json`
+.. code-block:: python
+  :caption: json dictionary containing the default settings contained in ´settings/default.json`
 
     {
     "injection_duration": 0.2, # injection duration of one pulse within an injection cycl
@@ -24,7 +23,7 @@ This section details the acquisition settings that can be specified for measurem
 For more information on these settings, see the API doc for :func:`ohmpi.ohmpi.OhmPi.run_measurement`, :func:`ohmpi.ohmpi.OhmPi.run_measurement` and :func:`ohmpi.ohmpi.OhmPi.run_measurement`
 
 In addition to these default settings, and for advanced users, additional settings related to the injection strategy "vmax" and "vmin" can also be specified in the json settings file as follows:
-.. code-block:: json
+.. code-block:: python
   :caption: Dictionnary containing the default settings contained in ´settings/default.json`
 
     {
@@ -34,5 +33,4 @@ In addition to these default settings, and for advanced users, additional settin
     "vmn_min": null, # minimum V_mn (in mV) bounding the vmax injection strategy. Value is capped by vmn_min from hardware config. Default is None, which means vmax strategy bounded by hardware vmn_min from hardware config.
     }
 
-For more information on these settings, see the API donc for :func:`ohmpi.ohmpi.OhmPi.run_measurement`.
-:py:meth;`ohmpi.ohmpi.OhmPi.run_measurement`.
+For more information on these settings, see the API donc for :func:`OhmPi.run_measurement`.

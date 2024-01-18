@@ -63,7 +63,7 @@ The configuration is written in a python file structured in a series of dictionn
 #. HARDWARE_CONFIG: the hardware system in which the five different modules 'ctl' (controller), 'tx' (transmitter), 'rx' (receiver), 'mux' (multiplexers), 'pwr' (power).
 
 .. code-block:: python
-  :caption: Dictionnary containing the configuration of the hardware system.
+  :caption: Dictionary containing the configuration of the hardware system.
 
   r_shunt = 2.
   HARDWARE_CONFIG = {
@@ -101,12 +101,10 @@ The configuration is written in a python file structured in a series of dictionn
               }
       }
 
-#. the logging dictionnaries divided in:
-
-   * EXEC_LOGGING_CONFIG
+#. the logging dictionaries divided in:
 
 .. code-block:: python
-  :caption: Dictionnary containing the configuration of the hardware system.
+  :caption: EXEC_LOGGING_CONFIG
 
   # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
   # Execution logging configuration
@@ -121,10 +119,10 @@ The configuration is written in a python file structured in a series of dictionn
       'interval': 1
   }
 
-   * DATA_LOGGING_CONFIG
 
+*
 .. code-block:: python
-  :caption: Dictionnary containing the configuration of the hardware system.
+  :caption: DATA_LOGGING_CONFIG
 
   # Data logging configuration
   DATA_LOGGING_CONFIG = {
@@ -140,7 +138,7 @@ The configuration is written in a python file structured in a series of dictionn
    * SOH_LOGGING_CONFIG
 
 .. code-block:: python
-  :caption: Dictionnary containing the configuration of the hardware system.
+  :caption: Dictionary containing the configuration of the hardware system.
   # State of Health logging configuration (For a future release)
   SOH_LOGGING_CONFIG = {
       'logging_level': logging.INFO,
@@ -154,13 +152,10 @@ The configuration is written in a python file structured in a series of dictionn
   }
 
 
-#. the MQTT dictionnaries divided in:
-
-   * MQTT_LOGGING_CONFIG
+#. the MQTT dictionaries divided in:
 
 .. code-block:: python
-  :caption: Dictionnary containing the configuration of the hardware system.
-
+  :caption: MQTT_LOGGING_CONFIG
 
   # MQTT logging configuration parameters
   MQTT_LOGGING_CONFIG = {
@@ -184,10 +179,8 @@ The configuration is written in a python file structured in a series of dictionn
   }
 
 
-   * MQTT_CONTROL_CONFIG
-
 .. code-block:: python
-  :caption: Dictionnary containing the configuration of the hardware system.
+  :caption: MQTT_CONTROL_CONFIG
 
   # MQTT control configuration parameters
   MQTT_CONTROL_CONFIG = {

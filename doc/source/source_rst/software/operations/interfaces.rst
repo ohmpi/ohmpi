@@ -1,12 +1,10 @@
 Interfaces
 **********
 
-Different interfaces can be used to interact with the OhmPi.
-
-Available interfaces are:
-- `Web interface`_ (=HTTP interface): run in bash: `bash run_http_interface.sh`
-- Python API: import the OhmPi class from Python script: `from ohmpi import OhmPi` (see `Python interface`_)
-- MQTT: IoT messaging through a broker (see `MQTT interface`_)
+Three interfaces can be used to interact with the OhmPi:
+* a `Web interface`_: user friendly graphical interface to achieve basic operations for everyday use, such as running a sequence or repeated sequences.
+* a `Python interface`_: based on the `api`_, the Python interface allows basic and more advanced operations such as custom acquisition strategies and automation.
+* a `IoT interface`_: based on the MQTT messaging protocol used in IoT, it is a framework to incorporate the OhmPi system within complex experiments designs comprising other IoT sensors.
 
 
 Web interface
@@ -81,12 +79,6 @@ To access the Python API, make sure that the PYTHONPATH has been correctly confi
   k.run_sequence()
   # k.run_sequence_async()  # sequence is run in a separate thread and the prompt returns immediately
   # time.sleep(2)
-  # k.interrupt()  # kill the asynchron sequence
-
-  ### Run multiple sequences at given time interval
-  k.settings['nb_meas'] = 3  # run sequence three times
-  k.settings['sequence_delay'] = 100 # every 100 s
-  k.run_multiple_sequences()  # asynchron
   # k.interrupt()  # kill the asynchron sequence
 
   ### Single measurement can also be taken with

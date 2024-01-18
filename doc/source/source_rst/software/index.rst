@@ -13,6 +13,5 @@ Contents:
 
    Software architecture <architecture>
    Getting started <installation>
-   Operation <operations/index>
-   Monitoring <monitoring>
+   Operating the system <operations/index>
    API reference <api>
