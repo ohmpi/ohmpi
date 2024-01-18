@@ -62,6 +62,14 @@ The configuration is written in a python file structured in a series of dictiona
 
 #. HARDWARE_CONFIG: the hardware system in which the five different modules 'ctl' (controller), 'tx' (transmitter), 'rx' (receiver), 'mux' (multiplexers), 'pwr' (power).
 
++------------+--------------+-----------------------------------------------------------------------------------------+
+|  Main key  |  Module_key  |                                      Value                                              |
+|            |              +============================+==============================+=============================+
+|            |              |           Type             |         Expected value       |         Description         |
++============|==============+============================+==============================+=============================+
+|  'ctl'     |  'model'     |         string             |  'raspberry_pi'              | contains informations related to controller unit, 'raspberry_pi' only implemented so far |
++------------+--------------+----------------------------+------------------------------+-----------------------------+
+
 .. autodata:: configs.config_example.HARDWARE_CONFIG
 
 .. code-block:: python
