@@ -23,7 +23,7 @@ HARDWARE_CONFIG = {
     'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
     'tx':  {'model': 'mb_2024_0_2',
              'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
-             'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
+             'current_max': 4.80/(50*r_shunt),  # Maximum current read by the current ADC on the TX board [A]
              'r_shunt': r_shunt,  # Shunt resistance in Ohms
              'interface_name': 'i2c'
             },
@@ -58,18 +58,48 @@ HARDWARE_CONFIG = {
 '''
     Dictionary configuring the hardware system. This is where the five modules are declared and assembled together.
   
-    Parameters
-    ----------
+    Keys
+    ----
     'ctl': dict
            Describing the controller unit with the following keys:
             * 'model': string
-                       model type of the controller. Currently only 'raspberry_pi"
+                       name of python module in ohmpi.hardware_components defining of the controller.
+                       Currently only 'raspberry_pi'.
     'pwr': dict
            Describing the power module with the following keys:
-            * 'model': string, 
-                       model type of the power module. 'pwr_batt', 'pwr_dps5005"
-            * 'voltage': float
-                       default voltage of the
+            * 'model' (string): Name of python module in ohmpi.hardware_components defining the power component. 
+                                Currently only 'pwr_batt' or 'pwr_dps5005'.
+            * 'voltage' (float): Default voltage in V
+            * 'interface_name' (string): Name of the interface. 'none', 'modbus'
+    'tx': dict
+          Describing the TX module with the following keys:
+            * 'model' (string): Name of python module in ohmpi.hardware_components defining the TX component.
+                                'mb_2024_0_2', mb_2023_0_X'
+            * 'voltage_max' (float): Maximum voltage supported by the TX board [V]
+            * 'current_max' (float): Maximum current read by the current ADC on the TX board [A]
+            * 'r_shunt' (float): Value of sunt resistor in Ohm.
+            * 'interface_name' (string): Name of the interface. 'none', 'modbus'
+    'rx': dict
+          Describing the RX module with the following keys:
+            * 'model' (string): Name of python module in ohmpi.hardware_components defining the RX component. 
+                                'pwr_batt', 'pwr_dps5005"
+            * 'latency' (float): Latency in seconds in continuous mode (related to ADS)
+            * 'sampling_rate' (int): Number of samples per second
+            * 'interface_name' (string): Name of the interface. 'none', 'modbus'
+    'mux': dict
+          Describing the MUX boards with the following keys:
+            * 'boards' (dict): Dictionary of dictionaries describing the MUX boards composing the MUX component. Each key is a MUX_ID of a single mux board, e.g. 'MUX_01', containing the following dictionary:
+                                * 'model' (string): name of python module in ohmpi.hardware_components defining the type of the MUX board.
+                                                  'mux_2023_0_X', 'mux_2024_0_X'
+                                * 'electrodes' (list, np.array): List of electrodes addressed by the MUX board, e.g. range(1, 65) 
+                                * 'roles' (list, string or dict): Defining the roles addressed by the MUX board
+                                * 'mux_tca_address' (string): I2C address of the MUX entry. Used by 'mux_2023_0_X' only.
+                                * 'addr1' (string): Jumper of MCP1 ('up', 'down'). used by 'mux_2024_0_X' only. 
+                                * 'addr2' (string): Jumper of MCP2 ('up', 'down'). used by 'mux_2024_0_X' only. 
+                                * 'interface_name' (string): name of interface. 
+                                                           Currently only 'i2c' or 'i2c_ext'
+            * 'default' (dict): Default values of all MUX boards. Helps not to define same options for each single MUX boards.
+    
 '''
 
 
