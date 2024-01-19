@@ -76,14 +76,16 @@ The configuration is written in a python file structured in a series of dictiona
 |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
 |          | voltage        |  Defines default output voltage in V.            | Float, e.g. 12.  | Sets 12 V as default voltage.                                   |
 |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
-|          | interface_name | Interface used for communication                 |                  |                                                                 |
-|          |                | with controller.                                 | none             | Sets no software communication (e.g. for 'pwr_batt')            |
+|          | interface_name | | Interface used for communication               | none             | Sets no software communication (e.g. for 'pwr_batt')            |
+|          |                | | with controller.                               |                  |                                                                 |
 |          |                |                                                  +------------------+-----------------------------------------------------------------+
 |          |                |                                                  | modbus           | Sets a modubs connection                                        |
 +----------+----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
-| tx       | model          | Type of transmitter.                             | mb_2024_0_2      | Load TX defined in :func:ohmpi.hardware_components.mb_2024_0_2  |
+| tx       | model          | Type of transmitter.                             | mb_2024_0_2      | | Load TX defined in                                            |
+|          |                |                                                  |                  | | :func:`ohmpi.ohmpihardware_components.mb_2024_0_2`            |
 |          |                +--------------------------------------------------+------------------+-----------------------------------------------------------------+
-|          |                |                                                  | mb_2023_0_X      | Load TX defined in :func:ohmpi.hardware_components.mb_2023_0_X  |
+|          |                |                                                  | mb_2023_0_X      | | Load TX defined in                                            |
+|          |                |                                                  |                  | | :func:`ohmpi.ohmpihardware_components.mb_2023_0_X`            |
 |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
 |          | voltage_max    | Maximum voltage supported by the TX board [V]    | Float, e.g. 50.  |                                                                 |
 |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
@@ -91,30 +93,33 @@ The configuration is written in a python file structured in a series of dictiona
 |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
 |          | r_shunt        | Value (in Ohms) of shunt resistor mounted on TX. | Float, e.g. 2.   | 2 Ohms resistor.                                                |
 |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
-|          | interface_name | Name of interface used for communication with    |                  |                                                                 |
-|          |                | controller                                       | i2c              | I2C connector 1                                                 |
+|          | interface_name | | Name of interface used for communication with  |                  |                                                                 |
+|          |                | | controller                                     | i2c              | I2C connector 1                                                 |
 |          |                +--------------------------------------------------+------------------+-----------------------------------------------------------------+
 |          |                |                                                  | i2c_ext          | I2C connector 2                                                 |
-|----------+----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
-| rx       | model          | Type of transmitter.                             | mb_2024_0_2      | Load RX defined in :func:ohmpi.hardware_components.mb_2024_0_2  |
++----------+----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
+| rx       | model          | Type of transmitter.                             | mb_2024_0_2      | | Load RX defined in                                            |
+|          |                |                                                  |                  | | :func:`ohmpi.ohmpihardware_components.mb_2024_0_2`            |
 |          +--------------- +--------------------------------------------------+------------------+-----------------------------------------------------------------+
-|          |                |                                                  | mb_2023_0_X      | Load RX defined in :func:ohmpi.hardware_components.mb_2023_0_X  |
+|          |                |                                                  | mb_2023_0_X      | | Load RX defined in                                            |
+|          |                |                                                  |                  | | :func:`ohmpi.ohmpihardware_components.mb_2024_0_2`            |
 |          |                +--------------------------------------------------+------------------+-----------------------------------------------------------------+
-|          | latency        | Latency in seconds in continuous mode            |                  |                                                                 |
-|          |                | (related to ADS)                                 | Float, e.g. 0.01 | 10 ms                                                           |
+|          | latency        | | Latency in seconds in continuous mode          |                  |                                                                 |
+|          |                | | (related to ADS)                               | Float, e.g. 0.01 | 10 ms                                                           |
 |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
 |          | sampling_rate  | Number of samples per second                     | Int, e.g. 50     |  50 samples per seconds.                                        |
 |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
-|          | interface_name | Name of interface used for communication with    |                  |                                                                 |
-|          |                | controller                                       | i2c              | I2C connector 1                                                 |
+|          | interface_name | | Name of interface used for communication with  |                  |                                                                 |
+|          |                | | controller                                     | i2c              | I2C connector 1                                                 |
 |          |                +--------------------------------------------------+------------------+-----------------------------------------------------------------+
 |          |                |                                                  | i2c_ext          | I2C connector 2                                                 |
-|----------+----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
-| mux      | boards         | Dictionary containing all MUX boards of the      |                  |                                                                 |
-|          |                | system and the associated specific configuration.| mux_id           | Dictionary                                                      |
++----------+----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
+| mux      | boards         | | Dictionary containing all MUX boards of the    |                  |                                                                 |
+|          |                | | system and the associated specific             |                  |                                                                 |
+|          |                | | configuration.                                 | mux_id           | Dictionary                                                      |
 |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
-|          | default        | Dictionary containing configuration applicable   |                  |                                                                 |
-|          |                | to all MUX boards of the systems                 | deffault_dict    | Dictionary                                                      |
+|          | default        | | Dictionary containing configuration applicable |                  |                                                                 |
+|          |                | | to all MUX boards of the systems               | deffault_dict    | Dictionary                                                      |
 +----------+----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
 
 
