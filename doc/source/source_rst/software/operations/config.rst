@@ -141,10 +141,11 @@ The configuration is written in a python file structured in a series of dictiona
     | electrodes         |   List of electrodes addressed by the MUX board  | | *array-like*,         |    Sets electrode IDs addressed by the MUX board                |
     |                    |                                                  | | e.g. range(1,65)      |                                                                 |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
-    | roles              |   roles addressed by the MUX board               | | *string, list*        | | Sets roles addressed by the MUX board.                        |
-    |                    |                                                  | | of 'A', 'B', 'M', 'N' | | If *string*, MUX addresses only 1 role (for MUX 2023)         |
-    |                    |                                                  | |                       | | For MUX 2024:                                                 |
-    |                    |                                                  | |  or *dict*, e.g.      | | * Number of roles defines if MUX set up in 2 or 4 roles mode. |
+    | roles              |   roles addressed by the MUX board               | | * *string*:           | | Sets roles addressed by the MUX board.                        |
+    |                    |                                                  | |  'A', 'B', 'M', 'N'   | | If *string*, MUX addresses only 1 role (for MUX 2023)         |
+    |                    |                                                  | | * or *list*, e.g.     | |                                                               |
+    |                    |                                                  | |    ['A, 'B']          | | For MUX 2024:                                                 |
+    |                    |                                                  | | * or *dict*, e.g.     | | * Number of roles defines if MUX set up in 2 or 4 roles mode. |
     |                    |                                                  | |  {'A':'X','B':'Y',    | | * *list* or *array* order determines physical cabling         |
     |                    |                                                  | |  'M':'XX','N':'YY'}   | | * *dict* values rely on annotation on MUX 2024 board          |
     |                    |                                                  | |                       | |   'X', 'Y', 'XX', 'YY'                                        |
