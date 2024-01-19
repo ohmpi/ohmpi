@@ -63,63 +63,24 @@ The configuration is written in a python file structured in a series of dictiona
 #. HARDWARE_CONFIG: the hardware system in which the five different modules 'ctl' (controller), 'tx' (transmitter), 'rx' (receiver), 'mux' (multiplexers), 'pwr' (power).
 
 
-.. flat-table:: flat-table example
-   :header-rows: 2
-   :stub-columns: 1
-   :widths: 1 1 2 1 2
-   :class: my-class
-   :name: my-flat-table
++----------+----------------+---------------------------------------------------+-----------------+------------------------------------------------------+
+| Main Key | Module Key     |                                                          Value                                                             |
+|          |                |===================================================+=================+======================================================+
+|          |                | Description                                       | Expected Value  | Value description                                    |
++==========+================+===================================================+========================================================================+
+| ctl      | model          | Controller of the OhmPi system.                   | raspberry_pi    | Defines a Raspberry Pi as controller.                |
++----------+----------------+---------------------------------------------------+-----------------+------------------------------------------------------+
+| pwr      | model          | Type of power unit.                               | pwr_batt        | Defines an external battery as power unit.           |
+|          |                |                                                   |-----------------+------------------------------------------------------+
+|          |                |                                                   | pwr_dps5005     | Defines an external DPS 5005 as power unit           |
++----------+----------------+---------------------------------------------------+-----------------+------------------------------------------------------+
+|          | voltage        |  Defines default output voltage in V.             | float) e.g. 12. | Sets 12 V as default voltage.                        |
++----------+----------------+---------------------------------------------------+-----------------+------------------------------------------------------+
+|          | interface_name | interface used for communication with controller. | none            | Sets no software communication (e.g. for 'pwr_batt') |
+|          |                |                                                   |-----------------+------------------------------------------------------+
+|          |                |                                                   | modbus          | Sets a modubs connection                             |
++----------+----------------+---------------------------------------------------+-----------------+------------------------------------------------------+
 
-   * - :rspan:`1` Main Key
-     - :rspan:`1` Module key
-     - :cspan:`2` Value
-
-   * - Description
-     - Expected Value
-     - Value description
-
-   * - 'ctl'
-     - 'model'
-     - Controller of the OhmPi system.
-     - 'raspberry_pi' (string)
-     - Defines a Raspberry Pi as controller.
-
-   * - :rspan:`4` 'pwr'
-     - :rspan:`1` 'model'
-     - :rspan:`1` Type of power unit.
-     - 'pwr batt'
-     - Defines an external battery as power unit.
-
-   *
-     - 'dps_5005'
-     - Defines an external DPS 5005 as power unit
-
-   *
-     - 'voltage'
-     - Defines default output voltage in V.
-     - (float) e.g. 12.
-     - Sets voltage to 12 V by default.
-
-   *
-     - :rspan:`1` 'interface_name'
-     - :rspan:`1` interface used for communication with controller.
-     - 'modbus'
-     - Sets a modubs connection
-
-   *
-     - 'none'
-     - Sets no software communication (e.g. for 'pwr_batt')
-
-
-
-
-+------------+--------------+-----------------------------------------------------------------------------------------+
-|  Main key  |  Module_key  |                                      Value                                              |
-|            |              +============================+==============================+=============================+
-|            |              |           Type             |         Expected value       |         Description         |
-+============|==============+============================+==============================+=============================+
-|  'ctl'     |  'model'     |         string             |  'raspberry_pi'              | contains informations related to controller unit, 'raspberry_pi' only implemented so far |
-+------------+--------------+----------------------------+------------------------------+-----------------------------+
 
 .. autodata:: configs.config_example.HARDWARE_CONFIG
 
