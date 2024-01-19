@@ -66,7 +66,7 @@ The configuration is written in a python file structured in a series of dictiona
 .. flat-table:: flat-table example
    :header-rows: 2
    :stub-columns: 1
-   :widths: 1 1 1 3
+   :widths: 1 1 2 1 2
    :class: my-class
    :name: my-flat-table
 
@@ -74,15 +74,38 @@ The configuration is written in a python file structured in a series of dictiona
      - :rspan:`1` Module key
      - :cspan:`2` Value
 
-   * - head Type
-     - head Expected Value
-     - head Description
+   * - Description
+     - Expected Value
+     - Value description
 
-   * - 'rx'
+   * - 'ctl'
      - 'model'
-     - string
-     - 'raspberry_pi'
-     - contains informations related to controller unit, 'raspberry_pi' only implemented so far
+     - Controller of the OhmPi system.
+     - 'raspberry_pi' (string)
+     - Defines a Raspberry Pi as controller.
+
+   * - :rspan:`5` 'pwr'
+     - :rspan:`2` 'model'
+     - :rspan:`2` Type of power unit.
+     - 'pwr batt'
+     - Defines an external battery as power unit.
+
+   * - 'dps_5005'
+     - Defines an external DPS 5005 as power unit
+
+   * - 'voltage'
+     - Defines default output voltage in V.
+     - (float) e.g. 12.
+     - Sets voltage to 12 V by default.
+
+   * - :rspan:`2` 'interface_name'
+     - :rspan:`2` interface used for communication with controller.
+     - :rspan:`2` 'modbus'
+     - Sets a modubs connection
+
+   * - 'none'
+     - Sets no software communication (e.g. for 'pwr_batt')
+
 
 
 
