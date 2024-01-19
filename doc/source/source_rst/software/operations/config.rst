@@ -84,9 +84,9 @@ The configuration is written in a python file structured in a series of dictiona
      - 'raspberry_pi' (string)
      - Defines a Raspberry Pi as controller.
 
-   * - :rspan:`5` 'pwr'
-     - :rspan:`2` 'model'
-     - :rspan:`2` Type of power unit.
+   * - :rspan:`4` 'pwr'
+     - :rspan:`1` 'model'
+     - :rspan:`1` Type of power unit.
      - 'pwr batt'
      - Defines an external battery as power unit.
 
@@ -98,9 +98,9 @@ The configuration is written in a python file structured in a series of dictiona
      - (float) e.g. 12.
      - Sets voltage to 12 V by default.
 
-   * - :rspan:`2` 'interface_name'
-     - :rspan:`2` interface used for communication with controller.
-     - :rspan:`2` 'modbus'
+   * - :rspan:`1` 'interface_name'
+     - :rspan:`1` interface used for communication with controller.
+     - :rspan:`1` 'modbus'
      - Sets a modubs connection
 
    * - 'none'
