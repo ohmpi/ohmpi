@@ -82,10 +82,10 @@ The configuration is written in a python file structured in a series of dictiona
 |          |                |                                                  | modbus           | Sets a modubs connection                                        |
 +----------+----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
 | tx       | model          | Type of transmitter.                             | mb_2024_0_2      | | Load TX defined in                                            |
-|          |                |                                                  |                  | | :func:`ohmpi.hardware_components.mb_2024_0_2`            |
+|          |                |                                                  |                  | | :func:`ohmpi.hardware_components.mb_2024_0_2`                 |
 |          |                |                                                  +------------------+-----------------------------------------------------------------+
 |          |                |                                                  | mb_2023_0_X      | | Load TX defined in                                            |
-|          |                |                                                  |                  | | :func:`ohmpi.hardware_components.mb_2023_0_X`            |
+|          |                |                                                  |                  | | :func:`ohmpi.hardware_components.mb_2023_0_X`                 |
 |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
 |          | voltage_max    | Maximum voltage supported by the TX board [V]    | Float, e.g. 50.  |                                                                 |
 |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
@@ -99,10 +99,10 @@ The configuration is written in a python file structured in a series of dictiona
 |          |                |                                                  | i2c_ext          | I2C connector 2                                                 |
 +----------+----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
 | rx       | model          | Type of transmitter.                             | mb_2024_0_2      | | Load RX defined in                                            |
-|          |                |                                                  |                  | | :func:`ohmpi.hardware_components.mb_2024_0_2`            |
+|          |                |                                                  |                  | | :func:`ohmpi.hardware_components.mb_2024_0_2`                 |
 |          |                |                                                  +------------------+-----------------------------------------------------------------+
 |          |                |                                                  | mb_2023_0_X      | | Load RX defined in                                            |
-|          |                |                                                  |                  | | :func:`ohmpi.hardware_components.mb_2024_0_2`            |
+|          |                |                                                  |                  | | :func:`ohmpi.hardware_components.mb_2024_0_2`                 |
 |          +--------------- +--------------------------------------------------+------------------+-----------------------------------------------------------------+
 |          | latency        | | Latency in seconds in continuous mode          |                  |                                                                 |
 |          |                | | (related to ADS)                               | Float, e.g. 0.01 | 10 ms                                                           |
