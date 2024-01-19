@@ -118,7 +118,7 @@ The configuration is written in a python file structured in a series of dictiona
     +----------+----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
     | mux      | boards         | | Dictionary containing all MUX boards of the    |                  |                                                                 |
     |          |                | | system and the associated specific             |                  |                                                                 |
-    |          |                | | configuration.                                 | mux_id           | Dictionary (see table_mux_config_)                                                      |
+    |          |                | | configuration.                                 | mux_id           | Dictionary (see table_mux_config_)                              |
     |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
     |          | default        | | Dictionary containing configuration applicable |                  |                                                                 |
     |          |                | | to all MUX boards of the systems               | default_dict     | Dictionary (see table_mux_config_)                              |
