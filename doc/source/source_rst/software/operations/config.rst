@@ -144,7 +144,7 @@ The configuration is written in a python file structured in a series of dictiona
     | roles              |   roles addressed by the MUX board               | | *string, list*        | | Sets roles addressed by the MUX board.                        |
     |                    |                                                  | | of 'A', 'B', 'M', 'N' | | If *string*, MUX addresses only 1 role (for MUX 2023)         |
     |                    |                                                  | |                       | | For MUX 2024:                                                 |
-    |                    |                                                  | |  or *dict*, e.g.      | | * Number of roles defines if MUX set up in 2 or 4 roles mode.|
+    |                    |                                                  | |  or *dict*, e.g.      | | * Number of roles defines if MUX set up in 2 or 4 roles mode. |
     |                    |                                                  | |  {'A':'X','B':'Y',    | | * *list* or *array* order determines physical cabling         |
     |                    |                                                  | |  'M':'XX','N':'YY'}   | | * *dict* values rely on annotation on MUX 2024 board          |
     |                    |                                                  | |                       | |   'X', 'Y', 'XX', 'YY'                                        |
