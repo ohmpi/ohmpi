@@ -62,6 +62,7 @@ The configuration is written in a python file structured in a series of dictiona
 
 #. HARDWARE_CONFIG: the hardware system in which the five different modules 'ctl' (controller), 'tx' (transmitter), 'rx' (receiver), 'mux' (multiplexers), 'pwr' (power).
 
+.. _table_hardware_config:
 .. table:: HARDWARE_CONFIG
 
     +----------+----------------+---------------------------------------------------------------------------------------------------------------------------------------+
@@ -117,15 +118,32 @@ The configuration is written in a python file structured in a series of dictiona
     +----------+----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
     | mux      | boards         | | Dictionary containing all MUX boards of the    |                  |                                                                 |
     |          |                | | system and the associated specific             |                  |                                                                 |
-    |          |                | | configuration.                                 | mux_id           | Dictionary                                                      |
+    |          |                | | configuration.                                 | mux_id           | Dictionary (see table_mux_config_)                                                      |
     |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
     |          | default        | | Dictionary containing configuration applicable |                  |                                                                 |
-    |          |                | | to all MUX boards of the systems               | deffault_dict    | Dictionary                                                      |
+    |          |                | | to all MUX boards of the systems               | default_dict     | Dictionary (see table_mux_config_)                              |
     +----------+----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
 
+.. _table_mux_config:
+.. table:: MUX board config in HARDWARE_CONFIG
 
-.. autodata:: configs.config_example.HARDWARE_CONFIG
-
+    +----------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+    | Module Key     |                                                         Value                                                                                |
+    |                +--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
+    |                | Description                                      | Expected Value          | Value description                                               |
+    +================+==================================================+=========================+=================================================================+
+    | model          | Type of Mux board.                               | mux_2024_0_X            | | Load RX defined in                                            |
+    |                |                                                  |                         | | :func:`ohmpi.hardware_components.mux_2024_0_X`                |
+    |                |                                                  +-------------------------+-----------------------------------------------------------------+
+    |                |                                                  | mux_2023_0_X            | | Load RX defined in                                            |
+    |                |                                                  |                         | | :func:`ohmpi.hardware_components.mux_2023_0_X`                |
+    +----------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
+    | electrodes     |   List of electrodes addressed by the MUX board  | | *array-like*,         |    Sets electrode IDs addressed by the MUX board                |
+    |                |                                                  | | e.g. range(1,65)      |                                                                 |
+    +----------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
+    | roles          |   roles addressed by the MUX board               | | *string, list*        |    Sets roles addressed by the MUX board                        |
+    |                |                                                  | | of 'A', 'B', 'M', 'N' |                                                                 |
+    +----------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
 .. code-block:: python
   :caption: HARDWARE_CONFIG: Dictionary containing configuration of the hardware system and how it is assembled.
   r_shunt = 2. # Value of the shunt resistor in Ohm.
