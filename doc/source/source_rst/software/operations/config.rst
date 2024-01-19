@@ -138,28 +138,27 @@ The configuration is written in a python file structured in a series of dictiona
     |                    |                                                  | mux_2023_0_X            | | Load RX defined in                                            |
     |                    |                                                  |                         | | :func:`ohmpi.hardware_components.mux_2023_0_X`                |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
-    | electrodes         |   List of electrodes addressed by the MUX board  | | *array-like*,         |    Sets electrode IDs addressed by the MUX board                |
+    | electrodes         | List of electrodes addressed by the MUX board    | | *array-like*,         |    Sets electrode IDs addressed by the MUX board                |
     |                    |                                                  | | e.g. range(1,65)      |                                                                 |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
-    | roles              |   roles addressed by the MUX board               | | * *string*:           | | Sets roles addressed by the MUX board.                        |
+    | roles              | Roles addressed by the MUX board                 | | * *string*:           | | Sets roles addressed by the MUX board.                        |
     |                    |                                                  | |  'A', 'B', 'M', 'N'   | | If *string*, MUX addresses only 1 role (for MUX 2023)         |
     |                    |                                                  | | * or *list*, e.g.     | |                                                               |
     |                    |                                                  | |    ['A, 'B']          | | For MUX 2024:                                                 |
     |                    |                                                  | | * or *dict*, e.g.     | | * Number of roles defines if MUX set up in 2 or 4 roles mode. |
     |                    |                                                  | |  {'A':'X','B':'Y',    | | * *list* or *array* order determines physical cabling         |
     |                    |                                                  | |  'M':'XX','N':'YY'}   | | * *dict* values rely on annotation on MUX 2024 board          |
-    |                    |                                                  | |                       | |   'X', 'Y', 'XX', 'YY'                                        |
-    |                    |                                                  | |                       | |                                                               |
+    |                    |                                                  |                         | |   'X', 'Y', 'XX', 'YY'                                        |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
     | voltage_max        | Maximum injected voltage managed by the MUX board| *float*, e.g. 50.       |  Sets maximum voltage to 50 V.                                  |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
     | current_max        | Maximum current [in A] managed by the MUX board  | *float*, e.g. 3.        |  Sets maximum current to 3 A.                                   |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
-    | i2c_ext_tca_address|   I2C address of I2C extension                   | None *(default)*         |   No I2C extensions cabled.                                    |
+    | i2c_ext_tca_address| I2C address of I2C extension                     | None *(default)*        |    No I2C extensions cabled.                                    |
     |                    |                                                  +-------------------------+-----------------------------------------------------------------+
     |                    |                                                  | *hex integer*, e.g. 0x71|          Address of I2C extension                               |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
-    | i2c_ext_tca_channel|   Channel of the I2C extension                   | *int* 0 - 7             |   Channel used in case I2C extension configured.                |
+    | i2c_ext_tca_channel| Channel of the I2C extension                     | *int* 0 - 7             |   Channel used in case I2C extension configured.                |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
 
 .. table:: MUX 2023 board specific config in HARDWARE_CONFIG
