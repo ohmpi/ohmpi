@@ -100,7 +100,7 @@ The configuration is written in a python file structured in a series of dictiona
 
    * - :rspan:`1` 'interface_name'
      - :rspan:`1` interface used for communication with controller.
-     - :rspan:`1` 'modbus'
+     - 'modbus'
      - Sets a modubs connection
 
    * - 'none'
