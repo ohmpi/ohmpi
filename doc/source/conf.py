@@ -39,6 +39,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'numpydoc',
     'recommonmark'
+    'linuxdoc.rstFlatTable',
 ]
 
 
