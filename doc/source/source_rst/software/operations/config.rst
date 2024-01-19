@@ -90,19 +90,23 @@ The configuration is written in a python file structured in a series of dictiona
      - 'pwr batt'
      - Defines an external battery as power unit.
 
+   *
      - 'dps_5005'
      - Defines an external DPS 5005 as power unit
 
+   *
      - 'voltage'
      - Defines default output voltage in V.
      - (float) e.g. 12.
      - Sets voltage to 12 V by default.
 
+   *
      - :rspan:`1` 'interface_name'
      - :rspan:`1` interface used for communication with controller.
      - 'modbus'
      - Sets a modubs connection
 
+   *
      - 'none'
      - Sets no software communication (e.g. for 'pwr_batt')
 
