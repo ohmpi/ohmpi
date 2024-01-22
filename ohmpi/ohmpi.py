@@ -838,11 +838,16 @@ class OhmPi(object):
         self.status = 'running'
         self.reset_mux()
 
+        # switches off measuring LED
+        self._hw.tx.measuring = 'on'
+
         # turn dps_pwr_on if needed
         switch_pwr_off = False
+
         if self._hw.pwr.pwr_state == 'off':
             self._hw.pwr.pwr_state = 'on'
             switch_pwr_off = True
+
 
         # measure all quad of the RS sequence
         for i in range(0, quads.shape[0]):
@@ -885,7 +890,10 @@ class OhmPi(object):
         self.status = 'idle'
         if switch_pwr_off:
             self._hw.pwr.pwr_state = 'off'
-        
+
+        #switches off measuring LED
+        self._hw.tx.measuring = 'off'
+
         # if power was off before measurement, let's turn if off
         if switch_tx_pwr_off:
             self._hw.pwr_state = 'off'

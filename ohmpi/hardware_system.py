@@ -609,10 +609,14 @@ class OhmPiHardware:
         if self.pwr_state == 'off':
             self.pwr_state = 'on'
             switch_tx_pwr_off = True
+
+        #Switches on measuring LED
+        self.tx.measuring = 'on'
+
         if self.tx.pwr.pwr_state == 'off':
              self.tx.pwr.pwr_state = 'on'
         #     switch_pwr_off = True
-        self.tx.measuring = 'on'
+
         self._gain_auto(vab=vab)
         assert 0. <= duty_cycle <= 1.
         if duty_cycle < 1.:
@@ -629,6 +633,7 @@ class OhmPiHardware:
         self.tx.pwr.pwr_state = 'off'
         if switch_tx_pwr_off:
             self.pwr_state = 'off'
+        # Switches off measuring LED
         self.tx.measuring = 'off'
 
     def _vab_pulse(self, vab=None, duration=1., sampling_rate=None, polarity=1, append=False):
@@ -648,6 +653,8 @@ class OhmPiHardware:
         if self.tx.pwr.pwr_state == 'off':
             self.tx.pwr.pwr_state = 'on'
             switch_pwr_off = True
+        pulse_only = False
+
         # reads current and voltage during the pulse
         injection = Thread(target=self._inject, kwargs={'injection_duration': duration, 'polarity': polarity})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
