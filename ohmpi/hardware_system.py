@@ -612,7 +612,7 @@ class OhmPiHardware:
         if self.tx.pwr.pwr_state == 'off':
              self.tx.pwr.pwr_state = 'on'
         #     switch_pwr_off = True
-
+        self.tx.measuring = 'on'
         self._gain_auto(vab=vab)
         assert 0. <= duty_cycle <= 1.
         if duty_cycle < 1.:
@@ -629,6 +629,7 @@ class OhmPiHardware:
         self.tx.pwr.pwr_state = 'off'
         if switch_tx_pwr_off:
             self.pwr_state = 'off'
+        self.tx.measuring = 'off'
 
     def _vab_pulse(self, vab=None, duration=1., sampling_rate=None, polarity=1, append=False):
         """ Gets VMN and IAB from a single voltage pulse
@@ -657,6 +658,7 @@ class OhmPiHardware:
         self.tx.polarity = 0   #TODO: is this necessary?
         if switch_pwr_off:
             self.tx.pwr.pwr_state = 'off'
+
     def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
         switch_pwr_off, switch_tx_pwr_off = False, False
 

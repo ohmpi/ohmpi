@@ -83,12 +83,17 @@ class Tx(Tx_mb_2023):
         self._pwr_latency = kwargs['pwr_latency']
 
         # Initialize LEDs
-        self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
+        self.pin4 = self.mcp_board.get_pin(4)  # OhmPi_run
         self.pin4.direction = Direction.OUTPUT
         self.pin4.value = True
-        self.pin6 = self.mcp_board.get_pin(6)
+        self.pin5 = self.mcp_board.get_pin(5)  # OhmPi_measure
+        self.pin5.direction = Direction.OUTPUT
+        self.pin5.value = False
+        self.pin6 = self.mcp_board.get_pin(6)  # OhmPi_stack
         self.pin6.direction = Direction.OUTPUT
         self.pin6.value = False
+
+        # Initialize DPS relays
         self.pin2 = self.mcp_board.get_pin(2)  # dps -
         self.pin2.direction = Direction.OUTPUT
         self.pin2.value = False
@@ -98,6 +103,17 @@ class Tx(Tx_mb_2023):
 
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
+
+    @property
+    def measuring(self):
+        return self._measuring
+    @measuring.setter
+    def measuring(self, mode="off"):
+        self.measuring = mode
+        if mode == "on":
+            self.pin5.value = True
+        elif mode == "off":
+            self.pin5.value = False
 
     def inject(self, polarity=1, injection_duration=None):
         # add leds?

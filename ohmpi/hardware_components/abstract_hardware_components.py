@@ -298,6 +298,7 @@ class TxAbstract(ABC):
         self.tx_sync = kwargs.pop('tx_sync', Event())
         self.exec_logger.debug(f'{self.model} TX initialization')
         self._pwr_state = 'off'
+        self._measuring = 'off'
 
     @property
     def gain(self):
@@ -382,6 +383,14 @@ class TxAbstract(ABC):
         assert isinstance(value, float)
         assert value >= 0.
         self._latency = value
+
+    @property
+    def measuring(self):
+        return self._measuring
+
+    @measuring.setter
+    def measuring(self, mode="off"):
+        self.measuring = mode
 
     @property
     def polarity(self):
