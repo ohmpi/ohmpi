@@ -107,9 +107,10 @@ class Tx(Tx_mb_2023):
     @property
     def measuring(self):
         return self._measuring
+
     @measuring.setter
     def measuring(self, mode="off"):
-        self.measuring = mode
+        self._measuring = mode
         if mode == "on":
             self.pin5.value = True
         elif mode == "off":
