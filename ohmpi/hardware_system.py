@@ -491,10 +491,15 @@ class OhmPiHardware:
             if self.pwr_state == 'off':
                 self.pwr_state = 'on'
                 switch_tx_pwr_off = True
+
+            # Switches on measuring LED
+            self.tx.measuring = 'on'
+
             self.tx.voltage = vab
             if self.tx.pwr.pwr_state == 'off':
                 self.tx.pwr.pwr_state = 'on'
                 switch_pwr_off = True
+
             if 1. / self.rx.sampling_rate > pulse_duration:
                 sampling_rate = 1. / pulse_duration  # TODO: check this...
             else:
@@ -611,7 +616,8 @@ class OhmPiHardware:
             switch_tx_pwr_off = True
 
         #Switches on measuring LED
-        self.tx.measuring = 'on'
+        if self.tx.measuring == 'off':
+            self.tx.measuring = 'on'
 
         if self.tx.pwr.pwr_state == 'off':
              self.tx.pwr.pwr_state = 'on'
