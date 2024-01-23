@@ -39,7 +39,6 @@ Contents:
    source_rst/troubleshooting
    source_rst/developments
    source_rst/gallery
-   source_rst/developing_hardware_components
    source_rst/archived_version
 
   
