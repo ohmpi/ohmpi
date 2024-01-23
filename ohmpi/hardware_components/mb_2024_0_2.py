@@ -69,6 +69,7 @@ def _ads_1115_gain_auto(channel):  # Make it a class method ?
 
 
 class Tx(Tx_mb_2023):
+    """TX Class"""
     def __init__(self, **kwargs):
         if 'model' not in kwargs.keys():
             for key in SPECS['tx'].keys():
@@ -83,12 +84,17 @@ class Tx(Tx_mb_2023):
         self._current = 0
         # Initialize LEDs
         if self.connect:
-            self.pin4 = self.mcp_board.get_pin(4)  # Ohmpi_run
+        self.pin4 = self.mcp_board.get_pin(4)  # OhmPi_run
             self.pin4.direction = Direction.OUTPUT
             self.pin4.value = True
-            self.pin6 = self.mcp_board.get_pin(6)
+            self.pin5 = self.mcp_board.get_pin(5)  # OhmPi_measure
+            self.pin5.direction = Direction.OUTPUT
+            self.pin5.value = False
+            self.pin6 = self.mcp_board.get_pin(6)  # OhmPi_stack
             self.pin6.direction = Direction.OUTPUT
             self.pin6.value = False
+
+            # Initialize DPS relays
             self.pin2 = self.mcp_board.get_pin(2)  # dps -
             self.pin2.direction = Direction.OUTPUT
             self.pin2.value = False
@@ -98,6 +104,18 @@ class Tx(Tx_mb_2023):
 
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
+
+    @property
+    def measuring(self):
+        return self._measuring
+
+    @measuring.setter
+    def measuring(self, mode="off"):
+        self._measuring = mode
+        if mode == "on":
+            self.pin5.value = True
+        elif mode == "off":
+            self.pin5.value = False
 
     def inject(self, polarity=1, injection_duration=None):
         # add leds?
@@ -130,6 +148,7 @@ class Tx(Tx_mb_2023):
             self.exec_logger.debug(f'Switching DPS off')
             self._pwr_state = 'off'
 
+
     def current_pulse(self, current=None, length=None, polarity=1):
         """ Generates a square current pulse. Currenttly no DPS can handle this...
 
@@ -152,8 +171,36 @@ class Tx(Tx_mb_2023):
         self.inject(polarity=polarity, injection_duration=length)
         self.exec_logger.event(f'{self.model}\ttx_current_pulse\tend\t{datetime.datetime.utcnow()}')
 
+    @property
+    def polarity(self):
+        return self._polarity
+
+    @Tx_mb_2023.polarity.setter
+    def polarity(self, polarity):
+        assert polarity in [-1, 0, 1]
+        self._polarity = polarity
+        if polarity == 1:
+            if not self.pwr.voltage_adjustable:
+                self.pwr_state = 'on'
+            self.pin0.value = True
+            self.pin1.value = False
+            time.sleep(self._activation_delay)
+        elif polarity == -1:
+            if not self.pwr.voltage_adjustable:
+                self.pwr_state = 'on'
+            self.pin0.value = False
+            self.pin1.value = True
+            time.sleep(self._activation_delay)
+        else:
+            if not self.pwr.voltage_adjustable:
+                self.pwr_state = 'off'
+            self.pin0.value = False
+            self.pin1.value = False
+            time.sleep(self._release_delay)
+
 
 class Rx(Rx_mb_2023):
+    """RX Class"""
     def __init__(self, **kwargs):
         if 'model' not in kwargs.keys():
             for key in SPECS['rx'].keys():
@@ -176,7 +223,6 @@ class Rx(Rx_mb_2023):
         self._dg411_gain = self._dg411_gain_ratio
 
         # Define pins for DG411
-        if self.connect:
             self.pin_DG0 = self.mcp_board.get_pin(0)
             self.pin_DG0.direction = Direction.OUTPUT
             self.pin_DG1 = self.mcp_board.get_pin(1)
@@ -186,7 +232,8 @@ class Rx(Rx_mb_2023):
             self.pin_DG0.value = True  # open
             self.pin_DG1.value = True  # open gain 1 inactive
             self.pin_DG2.value = False  # close gain 0.5 active
-            self.gain = 1/3
+            self.gain = self._adc_gain * self._dg411_gain_ratio  # 1/3 by default since self._adc_gain is equal to 2/3 and self._dg411_gain_ratio to 1/2 by default
+
         if not subclass_init:  # TODO: try to only log this event and not the one created by super()
             self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -210,8 +257,8 @@ class Rx(Rx_mb_2023):
 
     @gain.setter
     def gain(self, value):
-        assert value in [1/3, 2/3]
-        self._dg411_gain = value / self._adc_gain
+        assert value in [1/3, 2/3, self._adc_gain * self._dg411_gain_ratio]  #TODO: 1/3 could be removed since self._adc_gain * self._dg411_gain_ratio is 1/3 by default
+        self._dg411_gain = value / self._adc_gain  # _adc_gain is kept to 2/3 in this board version so _dg411_gain is 1 or 1/2 by default
         if self._dg411_gain == 1.:
             self.pin_DG1.value = False  # closed gain 1 active
             self.pin_DG2.value = True  # open gain 0.5 inactive
@@ -224,7 +271,7 @@ class Rx(Rx_mb_2023):
         self.exec_logger.debug(f'Setting RX gain automatically to {self.gain}')
 
     def reset_gain(self):
-        self.gain = 1/3
+        self.gain =  self._adc_gain * self._dg411_gain_ratio  # 1/3 by default since self._adc_gain is equal to 2/3 and self._dg411_gain_ratio to 1/2 by default
 
     def reset_mcp(self):
         self.mcp_board = MCP23008(self.connection, address=self._mcp_address)

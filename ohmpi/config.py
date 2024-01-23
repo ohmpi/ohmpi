@@ -1,6 +1,5 @@
 import logging
 from ohmpi.utils import get_platform
-
 from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
@@ -20,7 +19,7 @@ OHMPI_CONFIG = {
 r_shunt = 2.
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
-    'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
+    'pwr': {'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},
     'tx':  {'model': 'mb_2024_0_2',
              'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
              'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
@@ -33,15 +32,30 @@ HARDWARE_CONFIG = {
              'interface_name': 'i2c'
             },
     'mux': {'boards':
-                {'mux_00':
-                     {'model': 'mux_2024_0_X',
-                      'tca_address': None,
-                      'tca_channel': 0,
-                      'addr2': 'down',
-                      'addr1': 'down',
-                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+0, j): ('mux_00', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 12.}
+                {'mux_A':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x70,
+                      'roles': {'A': 'X'},
+                      'cabling': {(i, j): ('mux_A', i) for j in ['A'] for i in range(1, 65)},
+                      'voltage_max': 12.},
+                 'mux_B':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x71,
+                      'roles': {'B': 'X'},
+                      'cabling': {(i, j): ('mux_B', i) for j in ['B'] for i in range(1, 65)},
+                      'voltage_max': 12.},
+                 'mux_M':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x72,
+                      'roles': {'M': 'X'},
+                      'cabling': {(i, j): ('mux_M', i) for j in ['M'] for i in range(1, 65)},
+                      'voltage_max': 12.},
+                 'mux_N':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x73,
+                      'roles': {'N': 'X'},
+                      'cabling': {(i, j): ('mux_N', i) for j in ['N'] for i in range(1, 65)},
+                      'voltage_max': 12.},
                  },
              'default': {'interface_name': 'i2c_ext',
                          'voltage_max': 100.,
@@ -76,8 +90,8 @@ DATA_LOGGING_CONFIG = {
 # State of Health logging configuration (For a future release)
 SOH_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
-    'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
+    'log_file_logging_level': logging.DEBUG,
     'file_name': f'soh{logging_suffix}.log',
     'max_bytes': 16777216,
     'backup_count': 1024,

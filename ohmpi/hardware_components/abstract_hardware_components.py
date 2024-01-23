@@ -49,6 +49,8 @@ SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
          }
 
 class CtlAbstract(ABC):
+    """CTlAbstract Class
+    Abstract class for controller"""
     def __init__(self, **kwargs):
         for key in SPECS['ctl'].keys():
             kwargs = enforce_specs(kwargs, SPECS['ctl'], key)
@@ -84,6 +86,8 @@ class CtlAbstract(ABC):
 
 
 class PwrAbstract(ABC):
+    """PwrAbstract Class
+        Abstract class for Power module"""
     def __init__(self, **kwargs):
         for key in SPECS['pwr'].keys():
             kwargs = enforce_specs(kwargs, SPECS['pwr'], key)
@@ -179,6 +183,8 @@ class PwrAbstract(ABC):
 
 
 class MuxAbstract(ABC):
+    """MUXAbstract Class
+        Abstract class for MUX"""
     def __init__(self, **kwargs):
         for key in SPECS['mux'].keys():
             kwargs = enforce_specs(kwargs, SPECS['mux'], key)
@@ -336,6 +342,8 @@ class MuxAbstract(ABC):
 
 
 class TxAbstract(ABC):
+    """TxAbstract Class
+        Abstract class for TX module"""
     def __init__(self, **kwargs):
         for key in SPECS['tx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['tx'], key)
@@ -360,6 +368,8 @@ class TxAbstract(ABC):
         self._pwr_state = 'off'
         self.connect = kwargs['connect']
         self.specs = kwargs
+        self._measuring = 'off'
+
 
     @property
     def gain(self):
@@ -446,6 +456,14 @@ class TxAbstract(ABC):
         self._latency = value
 
     @property
+    def measuring(self):
+        return self._measuring
+
+    @measuring.setter
+    def measuring(self, mode="off"):
+        self.measuring = mode
+
+    @property
     def polarity(self):
         return self._polarity
 
@@ -517,6 +535,8 @@ class TxAbstract(ABC):
 
 
 class RxAbstract(ABC):
+    """RXAbstract Class
+        Abstract class for RX"""
     def __init__(self, **kwargs):
         for key in SPECS['rx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['rx'], key)

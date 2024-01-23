@@ -29,6 +29,7 @@ import ohmpi.config
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import ohmpi.deprecated as deprecated
 from ohmpi.hardware_system import OhmPiHardware
+from tqdm         import tqdm
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
 try:
@@ -156,8 +157,7 @@ class OhmPi(object):
         for i in getmembers(deprecated, isfunction):
             setattr(cls, i[0], i[1])
 
-    @staticmethod
-    def append_and_save(filename: str, last_measurement: dict, fw_in_csv=None, fw_in_zip=None, cmd_id=None):
+    def append_and_save(self, filename: str, last_measurement: dict, fw_in_csv=None, fw_in_zip=None, cmd_id=None):
         """Appends and saves the last measurement dict.
 
         Parameters
@@ -189,34 +189,35 @@ class OhmPi(object):
 
         last_measurement = deepcopy(last_measurement)
         
-        # save full waveform data in a long .csv file
-        if fw_in_zip:
-            fw_filename = filename.replace('.csv', '_fw.csv')
-            if not os.path.exists(fw_filename):  # new file, write headers first
-                with open(fw_filename, 'w') as f:
-                    f.write('A,B,M,N,t,current,voltage\n')
-            # write full data
-            with open(fw_filename, 'a') as f:
-                dd = last_measurement['full_waveform']
-                aa = np.repeat(last_measurement['A'], dd.shape[0])
-                bb = np.repeat(last_measurement['B'], dd.shape[0])
-                mm = np.repeat(last_measurement['M'], dd.shape[0])
-                nn = np.repeat(last_measurement['N'], dd.shape[0])
-                fwdata = np.c_[aa, bb, mm, nn, dd]
-                np.savetxt(f, fwdata, delimiter=',', fmt=['%d', '%d', '%d', '%d', '%.3f', '%.3f', '%.3f'])
+        if 'full_waveform' in last_measurement:
+            # save full waveform data in a long .csv file
+            if fw_in_zip:
+                fw_filename = filename.replace('.csv', '_fw.csv')
+                if not os.path.exists(fw_filename):  # new file, write headers first
+                    with open(fw_filename, 'w') as f:
+                        f.write('A,B,M,N,t,current,voltage\n')
+                # write full data
+                with open(fw_filename, 'a') as f:
+                    dd = last_measurement['full_waveform']
+                    aa = np.repeat(last_measurement['A'], dd.shape[0])
+                    bb = np.repeat(last_measurement['B'], dd.shape[0])
+                    mm = np.repeat(last_measurement['M'], dd.shape[0])
+                    nn = np.repeat(last_measurement['N'], dd.shape[0])
+                    fwdata = np.c_[aa, bb, mm, nn, dd]
+                    np.savetxt(f, fwdata, delimiter=',', fmt=['%d', '%d', '%d', '%d', '%.3f', '%.3f', '%.3f'])
 
-        if fw_in_csv:
-            d = last_measurement['full_waveform']
-            n = d.shape[0]
-            if n > 1:
-                idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
-                udic = dict(zip(['u' + str(i) for i in range(n)], d[:, 1]))
-                tdic = dict(zip(['t' + str(i) for i in range(n)], d[:, 2]))
-                last_measurement.update(idic)
-                last_measurement.update(udic)
-                last_measurement.update(tdic)
+            if fw_in_csv:
+                d = last_measurement['full_waveform']
+                n = d.shape[0]
+                if n > 1:
+                    idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
+                    udic = dict(zip(['u' + str(i) for i in range(n)], d[:, 1]))
+                    tdic = dict(zip(['t' + str(i) for i in range(n)], d[:, 2]))
+                    last_measurement.update(idic)
+                    last_measurement.update(udic)
+                    last_measurement.update(tdic)
 
-        last_measurement.pop('full_waveform')
+            last_measurement.pop('full_waveform')
         
         if os.path.isfile(filename):
             # Load data file and append data to it
@@ -269,9 +270,8 @@ class OhmPi(object):
         # get all .csv file in data folder
         if survey_names is None:
             survey_names = []
-        # ddir = os.path.join(os.path.dirname(__file__), '../data/')
-        ddir = self.settings['export_dir']
-        fnames = [fname for fname in os.listdir(ddir) if fname[-4:] == '.csv']
+        ddir = os.path.dirname(self.settings['export_path'])
+        fnames = [fname for fname in os.listdir(ddir) if fname[-4:] == '.csv' and fname[-7:] != '_fw.csv']
         ddic = {}
         if cmd_id is None:
             cmd_id = 'unknown'
@@ -422,8 +422,7 @@ class OhmPi(object):
             Unique command identifier.
         """
         self.exec_logger.debug(f'Removing all data following command {cmd_id}')
-        datadir = os.path.split(self.settings['export_path'])
-        #datadir = os.path.join(os.path.dirname(__file__), '../data')
+        datadir = os.path.dirname(self.settings['export_path'])
         rmtree(datadir)
         os.mkdir(datadir)
 
@@ -458,7 +457,7 @@ class OhmPi(object):
         os.system('poweroff')  # this may require admin rights
  
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
-                        autogain=True, strategy='constant', tx_volt=5., best_tx_injtime=0.1,
+                        autogain=True, strategy=None, tx_volt=None, best_tx_injtime=0.1,
                         cmd_id=None, vab_max=None, iab_max=None, vmn_max=None, vmn_min=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value, change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used in function definition
@@ -504,7 +503,7 @@ class OhmPi(object):
         """
         # check pwr is on, if not, let's turn it on
         switch_power_off = False
-        if self._hw.pwr_state == 'off':
+        if self._hw.tx.pwr.voltage_adjustable and self._hw.pwr_state == 'off':
             self._hw.pwr_state = 'on'
             switch_power_off = True
 
@@ -514,23 +513,37 @@ class OhmPi(object):
         # check arguments
         if quad is None:
             quad = np.array([0, 0, 0, 0])
-        if nb_stack is None:
+        if nb_stack is None and 'nb_stack' in self.settings:
             nb_stack = self.settings['nb_stack']
-        if injection_duration is None:
+        if injection_duration is None and 'injection_duration' in self.settings:
             injection_duration = self.settings['injection_duration']
-        if duty_cycle is None:
+        if duty_cycle is None and 'duty_cycle' in self.settings:
             duty_cycle = self.settings['duty_cycle']
+        if tx_volt is None and 'tx_volt' in self.settings:
+            tx_volt = self.settings['tx_volt']
+        if strategy is None and 'strategy' in self.settings:
+            strategy = self.settings['strategy']
+        if vab_max is None and 'vab_max' in self.settings:
+            vab_max = self.settings['vab_max']
+        if iab_max is None and 'iab_max' in self.settings:
+            iab_max = self.settings['iab_max']
+        if vmn_max is None and 'vmn_max' in self.settings:
+            vmn_max = self.settings['vmn_max']
+        if vmn_min is None and 'vmn_min' in self.settings:
+            vmn_min = self.settings['vmn_min']
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
-            tx_volt = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max, iab_max=iab_max)  # TODO: use tx_volt and vmn_max instead of hardcoded values
+            tx_volt = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max, iab_max=iab_max, vmn_min=vmn_min)  # TODO: use tx_volt and vmn_max instead of hardcoded values
             time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
                 delay = kwargs['delay']
+                if delay > injection_duration:
+                    delay = injection_duration
             else:
                 delay = injection_duration * 2/3  # TODO: check if this is ok and if last point is not taken the end of injection
-            x = np.where((self._hw.readings[:, 0] >= delay) & (self._hw.readings[:, 2] != 0))
+            x = self._hw.select_samples(delay)
             Vmn = self._hw.last_vmn(delay=delay)
             Vmn_std = self._hw.last_vmn_dev(delay=delay)
             I =  self._hw.last_iab(delay=delay)
@@ -576,25 +589,34 @@ class OhmPi(object):
             # log data to the data logger
             self.data_logger.info(dd)
 
-            self._hw.switch_mux(electrodes=quad, state='off')
-            time.sleep(.5)
-            self._hw.tx.pwr._voltage_max = 0.1
-            self._hw.tx.pwr._current_max_tolerance = 0.
-            self._hw.tx.pwr.current_max = 0.001
-            self._hw.tx.pwr.power_max(0.1)
-            new_quad = [quad[0], quad[0]]
-            self._hw.switch_mux(new_quad, roles=['A','B'], state='on', bypass_ab_check=True)
+            # self._hw.switch_mux(electrodes=quad, state='off')
+            # time.sleep(.5)
+            # self._hw.tx.pwr._voltage_max = 0.1
+            # self._hw.tx.pwr._current_max_tolerance = 0.
+            # self._hw.tx.pwr.current_max = 0.001
+            # self._hw.tx.pwr.power_max(0.1)
+            # new_quad = [quad[0], quad[0]]
+            # self._hw.switch_mux(new_quad, roles=['A','B'], state='on', bypass_ab_check=True)
+            #
+            # # hw._vab_pulse(duration=injection_duration, vab=tx_volt)
+            # self._hw._inject(injection_duration=.2, polarity=1)
+            #
+            # self._hw.tx.polarity = 0
+            # self._hw.switch_mux(electrodes=new_quad, roles=['A', 'B'], state='off')
+            #
+            # self._hw._current_max_tolerance = self._hw.tx.pwr.specs['current_max_tolerance']  # set back default value
+            # self._hw.tx.pwr._voltage_max = self._hw.tx.pwr.specs['voltage_max']  # set back to default value
+            # self._hw.tx.pwr.current_max = self._hw.tx.pwr.specs['current_max']  # set back to default value
+            # self._hw.tx.pwr.power_max(self._hw.tx.pwr.specs['power_max'])
 
-            # hw._vab_pulse(duration=injection_duration, vab=tx_volt)
-            self._hw._inject(injection_duration=.2, polarity=1)
+            # Discharge DPS capa (not working properly)
+            #TODO: For pwr_adjustable only and perhaps in a separate function (or at _hw level)
+            #self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
+            #self._hw.tx.polarity = 1
+            time.sleep(1.0)
+            #self._hw.tx.polarity = 0
+            #self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
 
-            self._hw.tx.polarity = 0
-            self._hw.switch_mux(electrodes=new_quad, roles=['A', 'B'], state='off')
-
-            self._hw._current_max_tolerance = self._hw.tx.pwr.specs['current_max_tolerance']  # set back default value
-            self._hw.tx.pwr._voltage_max = self._hw.tx.pwr.specs['voltage_max']  # set back to default value
-            self._hw.tx.pwr.current_max = self._hw.tx.pwr.specs['current_max']  # set back to default value
-            self._hw.tx.pwr.power_max(self._hw.tx.pwr.specs['power_max'])
         else:
             self.exec_logger.info(f'Skipping {quad}')
         self.switch_mux_off(quad, cmd_id)
@@ -691,7 +713,8 @@ class OhmPi(object):
             fw_in_zip = self.settings['fw_in_zip']
 
         # switch power on
-        self._hw.pwr_state = 'on'
+        if self._hw.tx.pwr.voltage_adjustable:
+            self._hw.pwr_state = 'on'
         self.status = 'running'
         self.exec_logger.debug(f'Status: {self.status}')
         self.exec_logger.debug(f'Measuring sequence: {self.sequence}')
@@ -712,7 +735,7 @@ class OhmPi(object):
             n = 1
         else:
             n = self.sequence.shape[0]
-        for i in range(0, n):
+        for i in tqdm(range(0, n), "Sequence progress", unit='injection', ncols=100, colour='green'):
             if self.sequence is None:
                 quad = np.array([0, 0, 0, 0])
             else:
@@ -840,11 +863,16 @@ class OhmPi(object):
         self.status = 'running'
         self.reset_mux()
 
+        # switches off measuring LED
+        self._hw.tx.measuring = 'on'
+
         # turn dps_pwr_on if needed
         switch_pwr_off = False
+
         if self._hw.pwr.pwr_state == 'off':
             self._hw.pwr.pwr_state = 'on'
             switch_pwr_off = True
+
 
         # measure all quad of the RS sequence
         for i in range(0, quads.shape[0]):
@@ -887,7 +915,10 @@ class OhmPi(object):
         self.status = 'idle'
         if switch_pwr_off:
             self._hw.pwr.pwr_state = 'off'
-        
+
+        #switches off measuring LED
+        self._hw.tx.measuring = 'off'
+
         # if power was off before measurement, let's turn if off
         if switch_tx_pwr_off:
             self._hw.pwr_state = 'off'
@@ -1070,7 +1101,7 @@ class OhmPi(object):
         # get absolule filename
         fnames = []
         for survey_name in survey_names:
-            fname = os.path.join(self.settings['export_path'], survey_name)
+            fname = os.path.join(os.path.dirname(self.settings['export_path']), survey_name)
             if os.path.exists(fname):
                 fnames.append(fname)
             else:

@@ -21,6 +21,8 @@ def elapsed_seconds(start_time):
 
 
 class OhmPiHardware:
+    """OhmPiHardware class.
+        """
     def __init__(self, **kwargs):
         # OhmPiHardware initialization
         self.exec_logger = kwargs.pop('exec_logger', create_stdout_logger('exec_hw'))
@@ -148,7 +150,11 @@ class OhmPiHardware:
             self.pwr_state = 'off'
 
         self.tx.pwr = self.pwr
-        # self.tx.pwr._current_max = self.current_max
+
+        if not self.tx.pwr.voltage_adjustable:
+            self.tx._pwr_latency = 0
+        self.tx.polarity = 0
+        self.tx.pwr._current_max = current_max
 
         # Initialize Muxes
         self._cabling = kwargs.pop('cabling', {})
@@ -310,8 +316,19 @@ class OhmPiHardware:
         self._pulse += 1
         self.exec_logger.event(f'OhmPiHardware\tread_values\tend\t{datetime.datetime.utcnow()}')
 
+    def select_samples(self, delay=0.):
+        x = []
+        for pulse in range(int(max(self.readings[:, 1]))):
+            v = np.where((self.readings[:, 1] == pulse))[0]
+            if len(v) > 0:  # to avoid pulse not recorded due to Raspberry Pi lag...
+                t_start_pulse = min(self.readings[v, 0])
+                x.append(np.where((self.readings[:, 0] >= t_start_pulse + delay) & (self.readings[:, 2] != 0) & (
+                        self.readings[:, 1] == pulse))[0])
+        x = np.concatenate(np.array(x, dtype='object'))
+        return x
+
     def last_resistance(self, delay=0.):
-        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        v = self.select_samples(delay)
         if len(v) > 1:
             # return np.mean(np.abs(self.readings[v, 4] - self.sp) / self.readings[v, 3])
             return np.mean(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3])
@@ -319,35 +336,35 @@ class OhmPiHardware:
             return np.nan
 
     def last_dev(self, delay=0.):
-        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        v = self.select_samples(delay)
         if len(v) > 1:
             return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3]) / self.last_resistance(delay=delay)
         else:
             return np.nan
 
     def last_vmn(self, delay=0.):
-        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        v = self.select_samples(delay)
         if len(v) > 1:
             return np.mean(self.readings[v, 2] * (self.readings[v, 4] - self.sp))
         else:
             return np.nan
 
     def last_vmn_dev(self, delay=0.):  # TODO: should compute std per stack because this does not account for SP...
-        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        v = self.select_samples(delay)
         if len(v) > 1:
             return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp)) / self.last_vmn(delay=delay)
         else:
             return np.nan
 
     def last_iab(self, delay=0.):
-        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        v = self.select_samples(delay)
         if len(v) > 1:
             return np.mean(self.readings[v, 3])
         else:
             return np.nan
 
     def last_iab_dev(self, delay=0.):
-        v = np.where((self.readings[:, 0] >= delay) & (self.readings[:, 2] != 0))[0]
+        v = self.select_samples(delay)
         if len(v) > 1:
             return 100. * np.std(self.readings[v, 3]) / self.last_iab(delay=delay)
         else:
@@ -374,6 +391,7 @@ class OhmPiHardware:
             return sp
 
     def _find_vab(self, vab, iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min):
+        self.exec_logger.debug('Searching best Vab...')
         iab_mean = np.mean(iab)
         iab_std = np.std(iab)
         vmn_mean = np.mean(vmn)
@@ -397,18 +415,18 @@ class OhmPiHardware:
         cond_p_max = np.sqrt(p_max * rab_lower_bound)
         cond_iab_max = rab_lower_bound * iab_max
         # print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
-        print(f'[vab_max: {vab_max:.1f}, vmn_max: {cond_vmn_max:.1f}, vmn_min: {cond_vmn_min:.1f}, p_max: {cond_p_max:.1f}, iab_max: {cond_iab_max:.1f}]')
+        self.exec_logger.debug(f'[vab_max: {vab_max:.1f}, vmn_max: {cond_vmn_max:.1f}, vmn_min: {cond_vmn_min:.1f}, p_max: {cond_p_max:.1f}, iab_max: {cond_iab_max:.1f}]')
         new_vab = np.min([vab_max, cond_vmn_max, cond_p_max, cond_iab_max])
         if new_vab == vab_max:
-            print(f'Vab {new_vab} bounded by Vab max')
+            self.exec_logger.debug(f'Vab {new_vab} bounded by Vab max')
         elif new_vab == cond_p_max:
-            print(f'Vab {vab } bounded by P max')
+            self.exec_logger.debug(f'Vab {vab } bounded by P max')
         elif new_vab == cond_iab_max:
-            print(f'Vab {vab} bounded by Iab max')
+            self.exec_logger.debug(f'Vab {vab} bounded by Iab max')
         elif new_vab == cond_vmn_max:
-            print(f'Vab {vab} bounded by Vmn max')
+            self.exec_logger.debug(f'Vab {vab} bounded by Vmn max')
         else:
-            print(f'Vab {vab} bounded by Vmn min')
+            self.exec_logger.debug(f'Vab {vab} bounded by Vmn min')
 
         return new_vab
 
@@ -492,10 +510,15 @@ class OhmPiHardware:
             if self.pwr_state == 'off':
                 self.pwr_state = 'on'
                 switch_tx_pwr_off = True
+
+            # Switches on measuring LED
+            self.tx.measuring = 'on'
+
             self.tx.voltage = vab
             if self.tx.pwr.pwr_state == 'off':
                 self.tx.pwr.pwr_state = 'on'
                 switch_pwr_off = True
+
             if 1. / self.rx.sampling_rate > pulse_duration:
                 sampling_rate = 1. / pulse_duration  # TODO: check this...
             else:
@@ -517,14 +540,14 @@ class OhmPiHardware:
                         vabs.append(new_vab)
                         # print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
                         if diff_vab < diff_vab_lim:
-                            print('stopped on vab increase too small')
+                            self.exec_logger.debug('Compute_tx_volt stopped on vab increase too small')
                     k = k + 1
                     vab_list[k] = np.min(vabs)
                     time.sleep(0.5)
                     if self.tx.pwr.voltage_adjustable:
                         self.tx.voltage = vab_list[k]
                 if k > n_steps:
-                    print('stopped on maximum number of steps reached')
+                    self.exec_logger.debug('Compute_tx_volt stopped on maximum number of steps reached')
                 vab_opt = vab_list[k]
                 # print(f'Selected Vab: {vab_opt:.2f}')
                 # if switch_pwr_off:
@@ -610,8 +633,13 @@ class OhmPiHardware:
         if self.pwr_state == 'off':
             self.pwr_state = 'on'
             switch_tx_pwr_off = True
-        # if self.tx.pwr.pwr_state == 'off':
-        #     self.tx.pwr.pwr_state = 'on'
+
+        #Switches on measuring LED
+        if self.tx.measuring == 'off':
+            self.tx.measuring = 'on'
+
+        if self.tx.pwr.pwr_state == 'off':
+             self.tx.pwr.pwr_state = 'on'
         #     switch_pwr_off = True
 
         self._gain_auto(vab=vab)
@@ -627,10 +655,12 @@ class OhmPiHardware:
             polarities = None
         self._vab_pulses(vab, durations, sampling_rate, polarities=polarities,  append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
-        #if switch_pwr_off:
+
         self.tx.pwr.pwr_state = 'off'
         if switch_tx_pwr_off:
             self.pwr_state = 'off'
+        # Switches off measuring LED
+        self.tx.measuring = 'off'
 
     def _vab_pulse(self, vab=None, duration=1., sampling_rate=None, polarity=1, append=False):
         """ Gets VMN and IAB from a single voltage pulse
@@ -652,6 +682,8 @@ class OhmPiHardware:
         if self.tx.pwr.pwr_state == 'off':
             self.tx.pwr.pwr_state = 'on'
             switch_pwr_off = True
+        pulse_only = False
+
         # reads current and voltage during the pulse
         injection = Thread(target=self._inject, kwargs={'injection_duration': duration, 'polarity': polarity})
         readings = Thread(target=self._read_values, kwargs={'sampling_rate': sampling_rate, 'append': append})
@@ -662,13 +694,14 @@ class OhmPiHardware:
         self.tx.polarity = 0   #TODO: is this necessary?
         if switch_pwr_off:
             self.tx.pwr.pwr_state = 'off'
+
     def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
         switch_pwr_off, switch_tx_pwr_off = False, False
 
         # switches tx pwr on if needed (relays switching dps on and off)
         if self.pwr_state == 'off':
             self.pwr_state = 'on'
-            switch_pwr_off = True
+            switch_tx_pwr_off = True
         n_pulses = len(durations)
         self.exec_logger.debug(f'n_pulses: {n_pulses}')
         if self.tx.pwr.voltage_adjustable:

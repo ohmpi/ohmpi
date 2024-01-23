@@ -2,6 +2,517 @@
     **OhmPi is a participative project open to all, it requires skills in electronics and to respect the safety rules. OhmPi must be assembled in a professional context and by people competent in electronics. The OhmPi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The OhmPi team cannot be held responsible if the equipment does not work after assembly.**
 
 
-Measurement board v2024
-=======================
+Measurement board 2024.0.2
+===========================
+
+The 2024.0.2 measurement board has been developed to replace the 2023.0.1 measurement board. It offers superior performance compared to its predecessor. 
+The current measurement component has not evolved and presents no major differences. However, the major upgrade is the Mikroe-2C Isolator Click module ('https://www.mikroe.com/i2c-isolator-click') . Specifically, 
+it provides electrical isolation for the Vmn measurement set. This isolation allows for injection voltages (Vab) up to 200V
+
+.. figure:: ../../../img/mb.2024.x.x/32.jpg       
+       :width: 700px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center
+       
+**PART A** Assembly of the measurement board
+--------------------------------------------
+
+Schematics
+~~~~~~~~~~
+
+Overview of the measurement board.
+
+.. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0001.jpg       
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center 
+
+Schematic of the power supply.
+
+.. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0002.jpg       
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center 
+
+Schematic of the dsp (digital power source) power supply.
+
+.. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0003.jpg       
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center 
+
+Schematic of the Vmn signal conditioning.
+
+.. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0004.jpg       
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center
+
+Schematic of the current injection and measurement.
+
+.. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0005.jpg       
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center    
+
+Schematic of the human-machine interface.
+
+.. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0006.jpg       
+       :width: 600px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center    
+
+Required components 
+~~~~~~~~~~~~~~~~~~~~
+
+.. csv-table:: List of components
+   :file: ../../../img/mb.2024.x.x/bom-ohmpi-mb2024.csv
+   :widths: 30, 30, 30, 30, 30, 30, 30, 30, 30
+   :header-rows: 1
+
+
+
+Interactive BOM list
+~~~~~~~~~~~~~~~~~~~~~  
+
+
+`Interactive BOM list <ibom.html>`_   
+
+
+Before starting: how to soldering 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+How to Solder Electronic Components <https://www.sciencebuddies.org/science-fair-projects/references/how-to-solder>
+
+
+Description
+~~~~~~~~~~~
+
+Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundamentals/what-is-a-resistor/#>`_ on the measurement board PCB
+
+.. table::
+   :align: center
+   
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/1.jpg                       |
+   |      1 +-------------------------------------------------------------------+
+   |        | Soldering thirteen 100 kOhm resistors                             |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/2.jpg                       |
+   |      2 +-------------------------------------------------------------------+
+   |        | Soldering four 330 ohm resistors                                  |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/3.jpg                       |
+   |      3 +-------------------------------------------------------------------+
+   |        | Soldering four 4K7 ohm resistors                                  |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+.. #TODO: correction of the picture 3
+
+ 
+Soldering `DIODE <https://www.fluke.com/en-us/learn/blog/electrical/what-is-a-diode>`_ on the measurement board PCB
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/4.jpg                       |
+   |      4 +-------------------------------------------------------------------+
+   |        |  Soldering six Diode 1N4007                                       |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-diode.html>`_ on the measurement board PCB
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+  
+   |        |   .. image:: ../../../img/mb.2024.x.x/5.jpg                       |
+   |      5 +-------------------------------------------------------------------+
+   |        | Soldering six Schottky Diode bat85 ou bat86                       |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/6.jpg                       |
+   |      6 +-------------------------------------------------------------------+
+   |        | DIP-8 socket                                                      |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/7.jpg                       |
+   |      7 +-------------------------------------------------------------------+
+   |        | Soldering DIP-18 on the pcb measurement board                     |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/8.jpg                       |
+   |      8 +-------------------------------------------------------------------+
+   |        | Soldering DIP-16 on the pcb measurement board                     |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/9.jpg                       |
+   |      9 +-------------------------------------------------------------------+
+   |        | Soldering cut socket for 3 THD                                    |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/10.jpg                      |
+   |     10 +-------------------------------------------------------------------+
+   |        | Soldering header socket 1 row 10 positions                        |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/11.jpg                      |
+   |     11 +-------------------------------------------------------------------+
+   |        |Soldering header socket 1 row 8 positions                          |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/12.jpg                      |
+   |     12 +-------------------------------------------------------------------+
+   |        | Soldering header socket 1 row 2, 4 and 5 positions, for the 2     |
+   |        | position cut a header socket 4 ou 5 position.                     |
+   +--------+-------------------------------------------------------------------+
+
+
+Information about `light-emitting diode <https://en.wikipedia.org/wiki/Light-emitting_diode>`_
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/13.jpg                      |
+   |     13 +-------------------------------------------------------------------+
+   |        | Installation of four Light-emitting diode                         |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   
+Information about `MOSFET Metal Oxide Semiconductor Field Effect Transistor <https://fr.wikiversity.org/wiki/Transistor/Transistor_MOSFET#:~:text=Le%20MOSFET%20(Metal%20Oxide%20Semiconductor,la%20construction%20de%20portes%20logiques>`_
+
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+  
+   |        |   .. image:: ../../../img/mb.2024.x.x/14.jpg                      |
+   |     14 +-------------------------------------------------------------------+
+   |        | Soldering MOSFET ZVN4206 or ZVN4306                               |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+
+What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+   
+   |        |   .. image:: ../../../img/mb.2024.x.x/15.jpg                      |
+   |     15 +-------------------------------------------------------------------+
+   |        | Soldering 100 nF 50V tantalum capacitor                           |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/16.jpg                      |
+   |     16 +-------------------------------------------------------------------+
+   |        | Soldering 1u µF 50V Electrolytic capacitor, **take care** about   |
+   |        | polarity                                                          |
+   +--------+-------------------------------------------------------------------+
+
+.. warning::
+     
+     In this version, we used a shunt resistor of 2 ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor. Don't forget to change the shunt value in the config.py file (value associated to key 'R_shunt' in the OHMPI_CONFIG dict).   
+
+
+.. table::
+   :align: center
+   
+   +--------+-------------------------------------------------------------------+ 
+   |        |   .. image:: ../../../img/mb.2024.x.x/17.jpg                      |
+   |     17 +-------------------------------------------------------------------+
+   |        | Soldering 2 ohms shunt resistor                                   |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/18.jpg                      |
+   |     18 +-------------------------------------------------------------------+
+   |        | Soldering IDC pins                                                |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/19.jpg                      |
+   |     19 +-------------------------------------------------------------------+
+   |        | Six screw terminals for cable connection                          |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/20.jpg                      |
+   |     20 +-------------------------------------------------------------------+
+   |        | Soldering six omron G5LE relay 5 VDC                              |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/21.jpg                      |
+   |     21 +-------------------------------------------------------------------+
+   |        | Soldering header for raspberry 2 column 20 position               |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+What is a `Op-Amp <https://en.wikipedia.org/wiki/Operational_amplifier>`_?
+
+In addition, the notch allows to provid  human visual identification of the orientation of the package.
+
+
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/22.jpg                      |
+   |     22 +-------------------------------------------------------------------+
+   |        | Fix the OP27 on the socket DIP-8, **the notch must face upwards** |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/23.jpg                      |
+   |     23 +-------------------------------------------------------------------+
+   |        | Installation of REF03 reference voltage (2.5v) **the notch must** |
+   |        | **face the right side**                                           |
+   +--------+-------------------------------------------------------------------+
+
+what is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?   
+   
+   +--------+-------------------------------------------------------------------+   
+   |        |   .. image:: ../../../img/mb.2024.x.x/24.jpg                      |
+   |     24 +-------------------------------------------------------------------+
+   |        | Fix the DG411 **the notch must face the left side**               |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/25.jpg                      |
+   |     25 +-------------------------------------------------------------------+
+   |        | Installation of MCP23008, **take care about the notch**           |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/26.jpg                      |
+   |     26 +-------------------------------------------------------------------+
+   |        | Installation of the Three THD, install the good reference at      |
+   |        | the godd place follow the yellow box                              |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/27.jpg                      |
+   |     27 +-------------------------------------------------------------------+
+   |        | Installation of female header, 1 by 10  pins, for ADS1115         |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/28.jpg                      |
+   |     28 +-------------------------------------------------------------------+
+   |        | Installation of I2C level ajuster                                 |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/29.jpg                      |
+   |     28 +-------------------------------------------------------------------+
+   |        | Installation of I2C level ajuster                                 |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/mb.2024.x.x/30.jpg                      |
+   |     28 +-------------------------------------------------------------------+
+   |        | Installation of I2C level ajuster                                 |
+   |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+
+
+**PART B** Start-up of the measurement board
+====================================================== 
+
+
++------------------------------------------------------------------------+
+| **Required components**                                                | 
++------------------------------------------------------------------------+
+
+.. csv-table:: List of components
+   :file: ../../../img/v2023.x.x/step_n_2/b/test_2_xx.csv
+   :widths: 30, 70, 70, 70, 70, 35, 35
+   :header-rows: 1
+
+.. table::
+   :align: center
+   
+   +--------+-------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/b/001.jpg      |
+   |1       +-------------------------------------------------------------+
+   |        | Shutdown the raspberry Pi and unplug the power supply       | 
+   |        |                                                             |                                                                       
+   +--------+-------------------------------------------------------------+
+   
+.. table::
+   :align: center
+   
+   +--------+---------------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/b/001.jpg                    |
+   |2       +---------------------------------------------------------------------------+
+   |        | Mounting the bottom spacers on the Raspberry Pi (male/female, 11mm, M3)   | 
+   |        |                                                                           |                                                                       
+   +--------+---------------------------------------------------------------------------+
+
+.. table::
+   :align: center
+   
+   +--------+---------------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/b/002.jpg                    |
+   |3       +---------------------------------------------------------------------------+
+   |        | Mounting the upper spacers on the Raspberry Pi (female/female, 11mm, M3)  | 
+   |        |                                                                           |                                                                       
+   +--------+---------------------------------------------------------------------------+
+
+.. table::
+   :align: center
+   
+   +--------+-------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/b/003.jpg      |
+   |4       +-------------------------------------------------------------+
+   |        | Mounting the OhmPi's measurement board on the Raspberry Pi  | 
+   |        |                                                             |                                                                       
+   +--------+-------------------------------------------------------------+
+
+.. table::
+   :align: center
+   
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/b/004.jpg     |
+   |5       +------------------------------------------------------------+
+   |        | Mounting the OhmPi's measurement board on the Raspberry Pi | 
+   |        |                                                            |
+   +--------+------------------------------------------------------------+   
+
+.. table::
+   :align: center
+   
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/b/005.jpg     |
+   |6       +------------------------------------------------------------+
+   |        | Plug the power supply into a socket and connect it to your | 
+   |        | Raspberry Pi's power port.                                 |
+   +--------+------------------------------------------------------------+  
+
+
+**PART C** Check the measurement board
+====================================================== 
+
+ Run the terminal, and write
+
+ .. code-block:: python
+
+     i2cdetect -y 1
+
+.. table::
+   :align: center
+   
+   +--------+---------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/c/i2cdetect.png  |
+   |1       +---------------------------------------------------------------+
+   |        |If everything is working, three I2C addresses should appear    | 
+   |        |on the screen.                                                 |                                                                       
+   +--------+---------------------------------------------------------------+
+
+
+
+Setting up an equivalent electronic circuit, for this you will need: 
+ * 4 1kOhm resistor (R2)
+ * 1 220 Ohm resistor (R1)
+ * 1 small padboard
+ * Spool of solder
+ 
+ .. table::
+   :align: left
+ 
+   +--------+---------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/c/ref_circuit.png|
+   |2       +---------------------------------------------------------------+
+   |        | Schematic of equivalent electronic circuit test               |                                                                       
+   +--------+---------------------------------------------------------------+
+   
+.. table::
+   :align: center
+ 
+   +--------+--------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/c/20210905_122820.jpg |
+   |3       +--------------------------------------------------------------------+
+   |        | Prepare the equivalent electronic circuit test                     |                                                                       
+   +--------+--------------------------------------------------------------------+ 
+
+  
+.. table::
+   :align: center
+ 
+   +--------+--------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/c/20210905_123034.jpg |
+   |4       +--------------------------------------------------------------------+
+   |        |  Prepare the battery connections and the terminals.                |                                                                       
+   +--------+--------------------------------------------------------------------+ 
+
+
+.. table::
+   :align: center
+ 
+   +--------+--------------------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/c/20210905_132856.jpg             |
+   |5       +--------------------------------------------------------------------------------+
+   |        | Soldering cables and terminals                                                 |                                                                       
+   +--------+--------------------------------------------------------------------------------+ 
+
+
+.. table::
+   :align: center
+ 
+   +--------+--------------------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/c/Inked20211206_150522_LI.jpg     |
+   |6       +--------------------------------------------------------------------------------+
+   |        |Install the red cables on the +12V terminal and black cable                     |                                                                       
+   |        |on the ground terminal. Connect to two different 12V                            |
+   |        |batteries                                                                       |
+   +--------+--------------------------------------------------------------------------------+ 
+
+.. table::
+   :align: center
+ 
+   +--------+--------------------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/c/Inked20211206_150522_LI2.jpg    |
+   |7       +--------------------------------------------------------------------------------+
+   |        | Connect the equivalent electronic circuit test                                 |                                                                       
+   |        |                                                                                |
+   +--------+--------------------------------------------------------------------------------+
+   
+   
+.. table::
+   :align: center
+ 
+   +--------+-------------------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/c/thonny_first_interface.jpg     |
+   |8       +-------------------------------------------------------------------------------+
+   |        | Run the Thonny Interpreter                                                    |                    
+   |        |                                                                               |
+   +--------+-------------------------------------------------------------------------------+   
+
+
+.. table::
+   :align: center
+ 
+   +--------+------------------------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_2/c/20211206_144334.jpg           |
+   |9       +------------------------------------------------------------------------------+
+   |        | Run sample_measurement_example.py example, if everything                     |                    
+   |        | works you should  get the following result (220 Ohm)                         |
+   +--------+------------------------------------------------------------------------------+ 
+
+
+   **PART C** FAQ
+======================================================
+
+Pouquoi je ne vois pas mes I2C?
+
+La carte ne fonctionne pas?
+
+Les led des modules mikroe ne s'éclaire pas?
 

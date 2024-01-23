@@ -11,3 +11,4 @@ paho-mqtt
 termcolor
 pandas
 matplotlib
+tqdm
