@@ -154,7 +154,7 @@ class OhmPiHardware:
         if not self.tx.pwr.voltage_adjustable:
             self.tx._pwr_latency = 0
         self.tx.polarity = 0
-        self.tx.pwr._current_max = current_max
+        self.tx.pwr._current_max = self.current_max
 
         # Initialize Muxes
         self._cabling = kwargs.pop('cabling', {})
