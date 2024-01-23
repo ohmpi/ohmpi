@@ -84,7 +84,7 @@ class Tx(Tx_mb_2023):
         self._current = 0
         # Initialize LEDs
         if self.connect:
-        self.pin4 = self.mcp_board.get_pin(4)  # OhmPi_run
+            self.pin4 = self.mcp_board.get_pin(4)  # OhmPi_run
             self.pin4.direction = Direction.OUTPUT
             self.pin4.value = True
             self.pin5 = self.mcp_board.get_pin(5)  # OhmPi_measure
