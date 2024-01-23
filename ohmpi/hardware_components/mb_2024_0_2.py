@@ -223,6 +223,7 @@ class Rx(Rx_mb_2023):
         self._dg411_gain = self._dg411_gain_ratio
 
         # Define pins for DG411
+        if self.connect:
             self.pin_DG0 = self.mcp_board.get_pin(0)
             self.pin_DG0.direction = Direction.OUTPUT
             self.pin_DG1 = self.mcp_board.get_pin(1)
