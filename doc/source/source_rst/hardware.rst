@@ -16,8 +16,8 @@ You can then upgrade your measurment board or power supply for specific applicat
    :maxdepth: 2 
 
    hardware/hw_info
-   hardware/mb
-   hardware/mux
+   hardware/hw_mb
+   hardware/hw_mux
    hardware/hw_pwr
    hardware/hw_rpi
    hardware/assembling_mb2023_MUX_2023_12V
