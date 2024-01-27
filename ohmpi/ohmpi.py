@@ -798,7 +798,7 @@ class OhmPi(object):
     # TODO: we could build a smarter RS-Check by selecting adjacent electrodes based on their locations and try to
     #  isolate electrodes that are responsible for high resistances (ex: AB high, AC low, BC high
     #  -> might be a problem at B (cf what we did with WofE)
-    def rs_check(self, tx_volt=5.0, cmd_id=None):
+    def rs_check(self, tx_volt=5.0, cmd_id=None, couple=None):
         # TODO: add a default value for rs-check in config.py import it in ohmpi.py and add it in rs_check definition
         """Checks contact resistances.
         Strategy: we just open A and B, measure the current and using vAB set or
@@ -808,6 +808,7 @@ class OhmPi(object):
         ----------
         tx_volt : float
             Voltage of the injection.
+        couple  : array, for selecting a couple of electrode for checking resistance
         cmd_id : str, optional
             Unique command identifier.
         """
@@ -819,17 +820,20 @@ class OhmPi(object):
 
         # create custom sequence where MN == AB
         # we only check the electrodes which are in the sequence (not all might be connected)
-        if self.sequence is None:
-            quads = np.array([[1, 2, 0, 0]], dtype=np.uint32)
+        if couple is None:
+            if self.sequence is None:
+                quads = np.array([[1, 2, 0, 0]], dtype=np.uint32)
+            else:
+                elec = np.sort(np.unique(self.sequence.flatten()))  # assumed order
+                quads = np.vstack([
+                    elec[:-1],
+                    elec[1:],
+                    elec[:-1],
+                    elec[1:],
+                ]).T
         else:
-            elec = np.sort(np.unique(self.sequence.flatten()))  # assumed order
-            quads = np.vstack([
-                elec[:-1],
-                elec[1:],
-                elec[:-1],
-                elec[1:],
-            ]).T
-        
+            quads = np.array([[couple[0], couple[1], 0, 0]], dtype=np.uint32)
+           
         # create filename to store RS
         export_path_rs = self.settings['export_path'].replace('.csv', '') \
                          + '_' + datetime.now().strftime('%Y%m%dT%H%M%S') + '_rs.csv'
@@ -1067,7 +1071,7 @@ class OhmPi(object):
             from scipy.interpolate import griddata  # noqa
             import pandas as pd  #noqa
             import sys
-            sys.path.append(os.path.join(pdir, '../../resipy/src/'))
+            sys.path.append(os.path.join(pdir, '/home/pi/resipy/src'))
             from resipy import Project  # noqa
         except Exception as e:
             self.exec_logger.error('Cannot import ResIPy, scipy or Pandas, error: ' + str(e))
@@ -1099,7 +1103,7 @@ class OhmPi(object):
         self.exec_logger.info('ResIPy: import surveys')
         k = Project(typ='R2')  # invert in a temporary directory that will be erased afterwards
         if len(survey_names) == 1:
-            k.createSurvey(fnames[0], parser=ohmpiParser)
+            k.createSurvey(fnames[0], parser=ohmpiParser)            
         elif len(survey_names) > 0 and reg_mode == 0:
             k.createBatchSurvey(fnames, parser=ohmpiParser)
         elif len(survey_names) > 0 and reg_mode > 0:
