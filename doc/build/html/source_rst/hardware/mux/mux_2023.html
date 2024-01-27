@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="MUX board v2024" href="mux_2024.html" />
-    <link rel="prev" title="Measurement board" href="../mux.html" /> 
+    <link rel="prev" title="MUX board" href="../hw_mux.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,11 +46,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../Ohmpi.html">OhmPi project</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../hardware.html">Hardware</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../hw_info.html">OhmPi electronic design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../mb.html">Measurement board</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../mux.html">Measurement board</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../mux.html#recognize-the-version-of-the-measurement-board">Recognize the version of the measurement board</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../mux.html#specifications">Specifications</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../mux.html#assemble-you-measurement-board">Assemble you measurement board:</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../hw_mb.html">Measurement board</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../hw_mux.html">MUX board</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../hw_mux.html#recognize-the-version-of-the-measurement-board">Recognize the version of the measurement board</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hw_mux.html#specifications">Specifications</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../hw_mux.html#assemble-you-mux-board">Assemble you MUX board:</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">MUX board v2023</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mux_2024.html">MUX board v2024</a></li>
 </ul>
@@ -58,8 +58,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../hw_pwr.html">Power supply</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../hw_rpi.html">Raspberry Pi  configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../assembling.html">Assembling the OhmPi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hw_rpi.html">Raspberry Pi  components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../assembling_mb2023_MUX_2023_12V.html">Assembling the OhmPi (mb2023 mux2023 12V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../assembling_mb2024_MUX_2023_dps5005.html">Assembling the OhmPi (mb2023 mux2023 12V)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../software/index.html">Software and operation</a></li>
@@ -84,7 +85,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../hardware.html">Hardware</a></li>
-          <li class="breadcrumb-item"><a href="../mux.html">Measurement board</a></li>
+          <li class="breadcrumb-item"><a href="../hw_mux.html">MUX board</a></li>
       <li class="breadcrumb-item active">MUX board v2023</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/source_rst/hardware/mux/mux_2023.rst.txt" rel="nofollow"> View page source</a>
@@ -488,85 +489,13 @@ electrode name on the mux board (B).</p></td>
 </tbody>
 </table>
 </section>
-<section id="part-c-validation-of-mux-board">
-<h2><strong>PART C</strong> Validation of MUX board<a class="headerlink" href="#part-c-validation-of-mux-board" title="Permalink to this heading"></a></h2>
-<p>The first step is to test the Mux boards before assembling them definitively.
-To test the Mux boards, it will be necessary first to make a simplified assembly of the Mux board and the measurement board.</p>
-<p>The first thing to do is to prepare a 50 cm long flat wire with two 6-poles connectors.</p>
-<blockquote>
-<div><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td rowspan="2"><p>1</p></td>
-<td><img alt="../../../_images/20211207_115706.jpg" src="../../../_images/20211207_115706.jpg" />
-</td>
-</tr>
-<tr class="row-even"><td><p>Build a cable with 6 contacts with 6 pins connector.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td rowspan="2"><p>2</p></td>
-<td><img alt="../../../_images/20220124_142929.jpg" src="../../../_images/20220124_142929.jpg" />
-</td>
-</tr>
-<tr class="row-even"><td><p>Prepare the measurement board and the first mux board by
-example the card with address 0x71.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td rowspan="2"><p>3</p></td>
-<td><img alt="../../../_images/20220124_143105.jpg" src="../../../_images/20220124_143105.jpg" />
-</td>
-</tr>
-<tr class="row-even"><td><p>Connect the 12V power supply cables to the MUX board
-without powering the board.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td rowspan="2"><p>4</p></td>
-<td><img alt="../../../_images/20220207_154111.jpg" src="../../../_images/20220207_154111.jpg" />
-</td>
-</tr>
-<tr class="row-even"><td><p>Connect the 12V power supply screw terminal of the mux
-board to the 12V screw terminal power supply of the
-measurement board.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td rowspan="2"><p>5</p></td>
-<td><img alt="../../../_images/20220124_143823.jpg" src="../../../_images/20220124_143823.jpg" />
-</td>
-</tr>
-<tr class="row-even"><td><p>Connect the 6-contact cable</p></td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
-<p>Start your 12V power supply, the raspberry must start.</p>
-<p>Run the terminal and write:</p>
-<blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">i2cdetect</span> <span class="o">-</span><span class="n">y</span> <span class="mi">1</span>
-</pre></div>
-</div>
-</div></blockquote>
-<p>Three addresses should appear, including the address of the MUX board you have selected. This implies that your board has been detected.</p>
-<p>Open the script called “test_mux_board.py”.</p>
-<p>Run the script</p>
-</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../mux.html" class="btn btn-neutral float-left" title="Measurement board" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../hw_mux.html" class="btn btn-neutral float-left" title="MUX board" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="mux_2024.html" class="btn btn-neutral float-right" title="MUX board v2024" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
