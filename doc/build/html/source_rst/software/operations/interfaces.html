@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interfaces &mdash; OhmPi v2024rc documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Acquisition settings" href="settings.html" />
+    <link rel="prev" title="Configuration" href="config.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            OhmPi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../Ohmpi.html">OhmPi project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware.html">Hardware</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Software and operation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html">Software architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html">Getting started</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Operating the system</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="config.html">Configuration</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Interfaces</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web-interface">Web interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#python-interface">Python interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#iot-interface">IoT interface</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="settings.html">Acquisition settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="loggers.html">Loggers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="monitoring.html">Monitoring application</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">API reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developments.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gallery.html">Examples of applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../archived_version.html">Archived versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OhmPi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Software and operation</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Operating the system</a></li>
+      <li class="breadcrumb-item active">Interfaces</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source_rst/software/operations/interfaces.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="interfaces">
+<span id="id1"></span><h1>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading"></a></h1>
+<p>Three interfaces can be used to interact with the OhmPi:
+* a <a class="reference internal" href="#web-interface">Web interface</a>: user friendly graphical interface to achieve basic operations for everyday use, such as running a sequence or repeated sequences.
+* a <a class="reference internal" href="#python-interface">Python interface</a>: based on the <a href="#id16"><span class="problematic" id="id17">`api`_</span></a>, the Python interface allows basic and more advanced operations such as custom acquisition strategies and automation.
+* a <a class="reference internal" href="#id3">IoT interface</a>: based on the MQTT messaging protocol used in IoT, it is a framework to incorporate the OhmPi system within complex experiments designs comprising other IoT sensors.</p>
+<section id="web-interface">
+<h2>Web interface<a class="headerlink" href="#web-interface" title="Permalink to this heading"></a></h2>
+<p>This is a user friendly graphical interface for new users as well as running quick and easy acquisitions.</p>
+<p>The Raspberry Pi of the OhmPi is used as a Wi-Fi Access Point (AP) and runs
+a small webserver to serve the ‘index.html’ interface. Using a laptop or
+a mobile phone connected to the Wi-Fi of the Raspberry Pi, one can see this
+interface, upload sequences, change parameters, run a sequence and download data.</p>
+<p>To configure the Raspberry Pi to act as an access point and run
+the webserver automatically on start, see instructions on <a class="reference external" href="https://raspap.com/">raspap.com</a> and in ‘runOnStart.sh’.</p>
+<p>Once configured, the webserver should start by itself on start and once
+connected to the Pi, the user can go to <a class="reference external" href="http://10.3.141.1:8080">10.3.141.1:8080</a>
+to access the interface.</p>
+<figure class="align-default" id="id4">
+<img alt="img/software/http-interface-pseudo-section.png" src="img/software/http-interface-pseudo-section.png" />
+<figcaption>
+<p><span class="caption-text">Web interface with its interactive pseudo-section.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id5">
+<img alt="img/software/http-interface-evolution.png" src="img/software/http-interface-evolution.png" />
+<figcaption>
+<p><span class="caption-text">Evolution of quadrupole apparent resistivity with time.</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id6">
+<img alt="img/software/http-interface-rs.png" src="img/software/http-interface-rs.png" />
+<figcaption>
+<p><span class="caption-text">Contact resistance check.</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="python-interface">
+<h2>Python interface<a class="headerlink" href="#python-interface" title="Permalink to this heading"></a></h2>
+<p>This interface offers a more direct access to the software components, specifically suited for testing or automating acquisition.</p>
+<p>By importing the <cite>OhmPi</cite> class from the ohmpi.py, we can control the OhmPi instrument via a Python script or interactively with IPython.
+It involves using the terminal or a Python IDE such as Thonny on the Raspberry Pi. A connection can also be established via
+SSH (see PuTTY on Windows or ssh command on macOS/Linux).</p>
+<p>To access the Python API, make sure that the PYTHONPATH has been correctly configured to export the location of the ohmpi module.</p>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">Example of using the Python API to control OhmPi</span><a class="headerlink" href="#id7" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ohmpi.ohmpi</span> <span class="kn">import</span> <span class="n">OhmPi</span>
+
+<span class="c1">### Define object from class OhmPi</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">OhmPi</span><span class="p">()</span>  <span class="c1"># this loads default parameters from the disk</span>
+
+<span class="c1">### Default parameters can also be edited manually</span>
+<span class="n">k</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;injection_duration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># injection time in seconds</span>
+<span class="n">k</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;nb_stack&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># one stack is two half-cycles</span>
+<span class="n">k</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;nbr_meas&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># number of time the sequence is repeated</span>
+
+<span class="c1">### Update settings if needed</span>
+<span class="n">k</span><span class="o">.</span><span class="n">update_settings</span><span class="p">({</span><span class="s2">&quot;injection_duration&quot;</span><span class="p">:</span><span class="mf">0.2</span><span class="p">})</span>
+
+<span class="c1">### Set or load sequence</span>
+<span class="n">k</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>    <span class="c1"># set numpy array of shape (n,4)</span>
+<span class="c1"># k.set_sequence(&#39;1 2 3 4\n2 3 4 5&#39;)    # call function set_sequence and pass a string</span>
+<span class="c1"># k.load_sequence(&#39;ABMN.txt&#39;)    # load sequence from a local file</span>
+
+<span class="c1">### Run contact resistance check</span>
+<span class="n">k</span><span class="o">.</span><span class="n">rs_check</span><span class="p">()</span>
+
+<span class="c1">### Run sequence (synchronously - it will wait that all</span>
+<span class="c1"># sequence is measured before returning the prompt</span>
+<span class="n">k</span><span class="o">.</span><span class="n">run_sequence</span><span class="p">()</span>
+<span class="c1"># k.run_sequence_async()  # sequence is run in a separate thread and the prompt returns immediately</span>
+<span class="c1"># time.sleep(2)</span>
+<span class="c1"># k.interrupt()  # kill the asynchron sequence</span>
+
+<span class="c1">### Single measurement can also be taken with</span>
+<span class="n">quadrupole</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">k</span><span class="o">.</span><span class="n">run_measurement</span><span class="p">(</span><span class="n">quadrupole</span><span class="p">)</span>  <span class="c1"># use default acquisition parameters</span>
+
+<span class="c1">### Custom or adaptative argument, see help(k.run_measurement)</span>
+<span class="n">k</span><span class="o">.</span><span class="n">run_measurement</span><span class="p">(</span><span class="n">quadrupole</span><span class="p">,</span>
+                  <span class="n">nb_stack</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>  <span class="c1"># do 4 stacks (8 half-cycles)</span>
+                  <span class="n">injection_duration</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># inject for 2 seconds</span>
+                  <span class="n">duty_cycle</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="c1"># duty_cycle is</span>
+</pre></div>
+</div>
+</div>
+<p>For detailed usage, please see the Python API or look at the examples.</p>
+</section>
+<section id="iot-interface">
+<span id="id3"></span><h2>IoT interface<a class="headerlink" href="#iot-interface" title="Permalink to this heading"></a></h2>
+<p>This is an interface designed for an advanced remote usage of the OhmPi such as remote automation, data consumption by multiple processes and interaction with other sensors in the scope of a monitoring. It is based on the MQTT protocol, designed for the Internet of Things (IoT), to interact with the OhmPi.</p>
+<p>This option allows interacting remotely with a single OhmPi, a network of OhmPis, as well as auxiliary instruments and sensors. The communication is based on a publish/subscribe approach and involves a MQTT broker.</p>
+<p>An example of MQTT broker that can be used is <a class="reference external" href="https://mosquitto.org/">Mosquitto</a>. Depending on the monitoring needs, an MQTT broker can be set up locally on the Raspberry Pi, on a local network or any remote server reachable through the net. A local Mosquitto broker can be set up and enabled to run as a service on the OhmPi using the bash script install_local_mqtt_broker.sh.</p>
+<p>MQTT messages include logging messages from the OhmPi and commands sent to the OhmPi. These messages can be examined easily using a third party software such as <a class="reference external" href="http://mqtt-explorer.com/">MQTT Explorer</a>.</p>
+<p>Commands sent on the broker are received by the ohmpi.py script that runs on the OhmPi (make sure ohmpi.py starts on reboot) and further processed.
+MQTT commands are sent in JSON format following the Python API with kwargs as illustrated below:</p>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">Updating acquisition settings.</span><a class="headerlink" href="#id8" title="Permalink to this code"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>{
+  &quot;cmd_id&quot;: &quot;3fzxv121UITwGjWYgcz4xw&quot;,
+  &quot;cmd&quot;: &quot;update_settings&quot;, Depending on the experiment needs, MQTT brokers can be set up locally on the Raspberry Pi or on a local or remote server.
+  &quot;kwargs&quot;: {
+    &quot;config&quot;: {
+      &quot;nb_meas&quot;: 2,
+      &quot;nb_electrodes&quot;: 10,
+      &quot;nb_stack&quot;: 2,
+      &quot;injection_duration&quot;: 2,
+      &quot;sequence_delay&quot;: 100
+    }
+  }
+}
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">Check contact resistances</span><a class="headerlink" href="#id9" title="Permalink to this code"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;cmd_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3fzxv121UITwGjWYgcz4xw&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rs_check&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">Running a sequence.</span><a class="headerlink" href="#id10" title="Permalink to this code"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;cmd_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3fzxv121UITwGjWYgcz4Yw&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_sequence&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text">Running same sequence multiple times (nb_meas).</span><a class="headerlink" href="#id11" title="Permalink to this code"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;cmd_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3fzxv121UITwGjWYgcz4Yw&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_multiple_sequences&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-text">Interrupt current acquisition.</span><a class="headerlink" href="#id12" title="Permalink to this code"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;cmd_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3fzxv121UITwGjWYgcz4xw&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;interrupt&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>Custom processing of messages and tailor-made dashboards for monitoring experiments may be designed using a browser-based flow editor such as <a class="reference external" href="http://mqtt-explorer.com/">Node-red</a>.
+This may help designing complex IoT experiments and monitoring systems in which OhmPi is a component.</p>
+<p>Examples incorporating execution commands and data outputs from OhmPi can be found in the OhmPi examples. Once Node-RED is installed on the OhmPi, these examples can be accessed separately by running a command in the console such as :</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">node-red basic_ohmpi_flows_node-red.json</span>
+</pre></div>
+</div>
+<p>These examples may require installing some additional node packages in order to work properly. This can be done in the <a class="reference external" href="https://nodered.org/docs/user-guide/editor/palette/manager">Palette Manager</a> within Node-RED.</p>
+<figure class="align-default" id="id13">
+<img alt="img/software/node-red_flow.png" src="img/software/node-red_flow.png" />
+<figcaption>
+<p><span class="caption-text">Example flow in node-red to interact with an OhmPi.</span><a class="headerlink" href="#id13" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id14">
+<img alt="img/software/node-red_interface_control.png" src="img/software/node-red_interface_control.png" />
+<figcaption>
+<p><span class="caption-text">Example of a dashboard UI created with node-red to interact with an OhmPi - control tab.</span><a class="headerlink" href="#id14" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id15">
+<img alt="img/software/node-red_interface_data.png" src="img/software/node-red_interface_data.png" />
+<figcaption>
+<p><span class="caption-text">Example of a dashboard UI created with node-red to interact with an OhmPi - data visualization tab.</span><a class="headerlink" href="#id15" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>For more documentation dedicated to node-red, please refer to the Node-red <a class="reference external" href="https://cookbook.nodered.org/">cookbooks</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="config.html" class="btn btn-neutral float-left" title="Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="settings.html" class="btn btn-neutral float-right" title="Acquisition settings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, the OhmPi Team..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

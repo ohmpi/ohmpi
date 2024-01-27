@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acquisition settings &mdash; OhmPi v2024rc documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Loggers" href="loggers.html" />
+    <link rel="prev" title="Interfaces" href="interfaces.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            OhmPi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../Ohmpi.html">OhmPi project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware.html">Hardware</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Software and operation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../architecture.html">Software architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html">Getting started</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Operating the system</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="config.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interfaces.html">Interfaces</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Acquisition settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="loggers.html">Loggers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="monitoring.html">Monitoring application</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">API reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developments.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gallery.html">Examples of applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../archived_version.html">Archived versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OhmPi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Software and operation</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Operating the system</a></li>
+      <li class="breadcrumb-item active">Acquisition settings</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source_rst/software/operations/settings.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="acquisition-settings">
+<span id="settings"></span><h1>Acquisition settings<a class="headerlink" href="#acquisition-settings" title="Permalink to this heading"></a></h1>
+<p>This section details the acquisition settings that can be specified for measurement on a quadrupole.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">json dictionary containing the default settings contained in ´settings/default.json`</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="p">{</span>
+  <span class="s2">&quot;injection_duration&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span> <span class="c1"># injection duration of one pulse within an injection cycl</span>
+  <span class="s2">&quot;nb_stack&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="c1"># number of injection cycles (e.g. &#39;nb_stack&#39;=1 means one positive and one negative pulse)</span>
+  <span class="s2">&quot;sampling_interval&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="c1"># sampling interval in ms</span>
+  <span class="s2">&quot;tx_volt&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="c1"># injection voltage in V for strategy &#39;constant&#39; or starting V_AB for strategy &#39;vmax&#39; or &#39;vmin&#39;</span>
+  <span class="s2">&quot;duty_cycle&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="c1"># duty cycle for the injection (0-1)</span>
+  <span class="s2">&quot;strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="c1"># injection strategy (&quot;constant&quot;, &quot;vmax&quot; or &quot;vmin&quot;)</span>
+  <span class="s2">&quot;fw_in_csv&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span> <span class="c1"># full waveform saved in a the main csv file. Read by run_sequence()</span>
+  <span class="s2">&quot;fw_in_zip&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span> <span class="c1"># full waveform saved in a separate zip file. Read by run_sequence()</span>
+  <span class="s2">&quot;export_path&quot;</span><span class="p">:</span> <span class="s2">&quot;data/measurements.csv&quot;</span> <span class="c1"># path for data output. Read by run_sequence()</span>
+  <span class="s2">&quot;nb_meas&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="c1"># number of sequences repeated when calling run_mutlitple_sequences()</span>
+  <span class="s2">&quot;sequence_delay&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="c1"># sleeping time between repeated sequences when calling run_multiple_sequences()</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>For more information on these settings, see the API doc for <code class="xref py py-func docutils literal notranslate"><span class="pre">ohmpi.ohmpi.OhmPi.run_measurement()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">ohmpi.ohmpi.OhmPi.run_measurement()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">ohmpi.ohmpi.OhmPi.run_measurement()</span></code></p>
+<p>In addition to these default settings, and for advanced users, additional settings related to the injection strategy “vmax” and “vmin” can also be specified in the json settings file as follows:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="field-list">
+<dt class="field-odd">caption<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionnary containing the default settings contained in ´settings/default.json`</p>
+<p>{
+“vab_max”: null, # maximum V_AB (in V) bounding the vmax injection strategy. Value is capped by vab_max from hardware config. Default is None, which means vmax strategy bounded by hardware vab_max from hardware config.
+“iab_max”: null, # maximum I_AB (in mA) bounding the vmax injection strategy. Value is capped by iab_max from hardware config. Default is None, which means vmax strategy bounded by hardware iab_max from hardware config.
+“vmn_max”: null, # maximum V_mn (in mV) bounding the vmax injection strategy. Value is capped by vmn_max from hardware config. Default is None, which means vmax strategy bounded by hardware vmn_max from hardware config.
+“vmn_min”: null, # minimum V_mn (in mV) bounding the vmax injection strategy. Value is capped by vmn_min from hardware config. Default is None, which means vmax strategy bounded by hardware vmn_min from hardware config.
+}</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>For more information on these settings, see the API donc for <code class="xref py py-func docutils literal notranslate"><span class="pre">OhmPi.run_measurement()</span></code>.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="interfaces.html" class="btn btn-neutral float-left" title="Interfaces" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="loggers.html" class="btn btn-neutral float-right" title="Loggers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, the OhmPi Team..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -17,10 +17,10 @@ You can then upgrade your measurment board or power supply for specific applicat
 
    hardware/hw_info
    hardware/mb
-   hardware/mux_2023
-   hardware/mux_2024
+   hardware/mux
    hardware/hw_pwr
    hardware/hw_rpi
-   hardware/assembling
+   hardware/assembling_mb2023_MUX_2023_12V
+   hardware/assembling_mb2024_MUX_2023_dps5005.rst
 
   
