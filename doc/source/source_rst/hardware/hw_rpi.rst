@@ -1,14 +1,9 @@
 .. warning::
     **OhmPi is a participative project open to all, it requires skills in electronics and to respect the safety rules. OhmPi must be assembled in a professional context and by people competent in electronics. The OhmPi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The OhmPi team cannot be held responsible if the equipment does not work after assembly.**
 
-
-Raspberry Pi  configuration 
 *******************************************
-
-
-
-**PART A:** OS installation  
-=============================
+Raspberry Pi  components 
+*******************************************
 
 +----------------------------------------------------+---------------+
 | **Required components**                            | **Quantity**  | 
@@ -35,123 +30,7 @@ For this step, the installation instructions are well described on the Raspberry
 3. or you can visit this `website <https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up>`.  
 
 .. note:: 
-     All the development tests were performed on Raspberry Pi 3 Model B, we used the following version of Raspbian:
+     All the development tests were performed on Raspberry Pi 3 Model B and Raspberry Pi 4 Model B
 
-     .. figure:: ../../img/v2023.x.x/step_n_1/raspbian_version.jpg
-       :width: 800px
-       :align: center
-       :height: 400px
-       :alt: alternate text
-       :figclass: align-center
+**To install the Raspberry Pi, please refer to the** :ref:`Getting started` section.
 
-
-
-.. warning::
-     Once the OS has been installed,  **1-wire, spi and GPIO remote option** must be deactivated and **I2C option** must be activated via the Raspbian GUI settings menu. Failure to carry out this task may cause damage to the relay shield cards during measurements.
-
-
-
-**PART B:** Virtual Environment and packages
-============================================
-
-A virtual environment is a way to have multiple, parallel instances of the Python interpreter, each with different package sets and different configurations. 
-Each virtual environment contains a discrete copy of the Python interpreter, including copies of its support utilities. It also protects your system in case of problems with the packages.
-
-All dependencies are specified in requirements.txt
-
-.. note:: 
-     All instructions below should be typed in the terminal
-
-It is first necessary to ensure that the libatlas-base-dev library is installed:
-
-.. code-block:: python
-
-     sudo apt-get install libatlas-base-dev
-
-We strongly recommend users to create a virtual environment to run the code and installed all required dependencies. It can be done either in a directory gathering all virtual environments used on the computer or within the ohmpy directory.
-
-Create the virtual environment:
-
-.. code-block:: python
-
-     python3 -m venv ohmpy
-
-Activate it using the following command:
-
-.. code-block:: python
-
-     source ohmpy/bin/activate
-
-Install packages within the virtual environment. Installing the following package should be sufficient to meet dependencies:
-
-.. code-block:: python
-     
-     export CFLAGS=-fcommon
-     sudo pip install RPi.GPIO adafruit-blinka numpy pandas adafruit-circuitpython-ads1x15 adafruit-circuitpython-tca9548a adafruit-circuitpython-mcp230xx gpiozero
-
-Check that requirements are met using 
-
-.. code-block:: python
-
-     pip list
-
-You should run you code within the virtual environment
-to leave the virtual environment simply type:
-
-.. code-block:: python
-
-     deactivate
-
-
-**PART C:** Activate virtual environment on Thonny (Python IDE)  (on Raspberry Pi)
-====================================================================================
-
-If you decided to use a virtual environment, it is necessary to setup Thonny Python IDE the first time you use it.
-
-1- Run the Thonny Python IDE software, Click on raspberry access **menu > programming> Thonny pythonIDE**
-
-2- Thonny opens, Python runs on the root (Python 3.7.3 (/usr/bin/python3))
-
-.. figure:: ../../img/v2023.x.x/step_n_1/thonny_first_interface.jpg
-       :width: 600px
-       :align: center
-       :height: 450px
-       :alt: alternate text
-       :figclass: align-center
-
-3-Click on **Run>select interpreter**, a new window opens click on interpret
-
-.. figure:: ../../img/v2023.x.x/step_n_1/thonny_option.jpg
-       :width: 600px
-       :align: center
-       :height: 450px
-       :alt: alternate text
-       :figclass: align-center
-
-4-On the new open windows select **alternative Python3 or virtual environment**
-
-.. figure:: ../../img/v2023.x.x/step_n_1/thonny_interpreter.jpg
-       :width: 600px
-       :align: center
-       :height: 450px
-       :alt: alternate text
-       :figclass: align-center
-
-5- New buttons appeared, selected **"locate another python executable "**
-
-6- A new window opens, find the folder where there is the python 3 file in the virtual environment folder previously created **/home/pi/ohmpi/bin/python3**.
-
-7- In the **known interpreter** tab the path of the virtual environment should appear
-
-.. figure:: ../../img/v2023.x.x/step_n_1//thonny_interpreter_folder.jpg
-       :width: 600px
-       :align: center
-       :height: 450px
-       :alt: alternate text
-       :figclass: align-center
-
-8- Close the window by clicking on **ok**.
-
-9- Close Thonny to save modifications
-
- 
