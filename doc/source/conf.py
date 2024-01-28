@@ -23,7 +23,7 @@ from shutil import copyfile
 # -- Project information -----------------------------------------------------
 
 project = 'OhmPi'
-copyright = '2022, the OhmPi Team.'
+copyright = '2022-2024, the OhmPi Team.'
 author = 'Rémi CLEMENT'
 
 # The full version, including alpha/beta/rc tags
@@ -74,4 +74,6 @@ html_static_path = ['_static']
 
 
 master_doc = 'index'
+
+
 
