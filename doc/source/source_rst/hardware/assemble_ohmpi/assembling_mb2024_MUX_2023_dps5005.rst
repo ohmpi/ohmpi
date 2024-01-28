@@ -240,3 +240,53 @@ TODO :list on tools and components
    |      32+------------------------------------------------------------+
    |        |Fit 3 flat washers and nuts (M3) for measurement board.     |  
    +--------+------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2024.x.x/11.jpg                 |
+   |      33+------------------------------------------------------------+
+   |        |Connect 12V and GND cable from Mux to Measurement board     |  
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2024.x.x/12.jpg                 |
+   |      34+------------------------------------------------------------+
+   |        |The choice is yours: position or fix the DPS 5005.          |  
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2024.x.x/13.jpg                 |
+   |      35+------------------------------------------------------------+
+   |        |Prepare two wires ( 30 cm, 1.5 mm², black and red), and     |
+   |        |                                                            |
+   |        |and install two banana plugs                                |
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2024.x.x/14.jpg                 |
+   |      36+------------------------------------------------------------+
+   |        |This is optional, but you could install a switch on         |
+   |        |                                                            |
+   |        |the cable connecting to the 12V RX battery.                 |
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2024.x.x/15.jpg                 |
+   |      37+------------------------------------------------------------+
+   |        |Prepare two wires ( ~15 cm, 1.5 mm², black and red), and    |
+   |        |                                                            |
+   |        |and install two banana plugs and connect the measurement    |
+   |        |                                                            |
+   |        |board and the input of DPH5005 (on the back side)           |
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2024.x.x/16.jpg                 |
+   |      38+------------------------------------------------------------+
+   |        |Prepare two wires ( ~20 cm, 1.5 mm², black and red), and    |
+   |        |                                                            |
+   |        |and install two banana plugs and connect the measurement    |
+   |        |                                                            |
+   |        |board (DPS+ and GND) and the output of DPH5005 (front side) |
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2024.x.x/17.jpg                 |
+   |      39+------------------------------------------------------------+
+   |        |slide ribbon cable between MUX N and PCV plate, and connect |
+   |        |                                                            |
+   |        |ribbon cable to IDC connector                               |
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2024.x.x/18.jpg                 |
+   |      40+------------------------------------------------------------+
+   |        |Do not connect the MUX electrode cables to the measurement  |  
+   |        |                                                            |
+   |        |board.                                                      |
+   +--------+------------------------------------------------------------+
+
+   
