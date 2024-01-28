@@ -195,209 +195,48 @@ TODO :list on tools and components
    |      22+------------------------------------------------------------+
    |        |Tie the A, B, M and N wires together                        |                            
    +--------+------------------------------------------------------------+   
-
-.. table::
-   :align: center
-   :widths: 10 30
-
-   +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_24.jpg |
+   |        |   .. image:: ../../../img/v2024.x.x/1.jpg                  |
    |      23+------------------------------------------------------------+
-   |        |Cut a PVC plate with the following minimum dimensions :     |  
-   |        |200 mm * 150 mm * 5 mm                                      |                       
+   |        |Cut a PVC/wood plate with the following minimum dimensions :|  
+   |        |410 mm * 280 mm * 4 mm,                                     |
+   |        |                                                            |
+   |        |and drill hole (M 3.5 mm)                                   |                       
    +--------+------------------------------------------------------------+ 
-
-
-.. table::
-   :align: center
-   :widths: 10 30
-
-   +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_25.jpg |
+   |        |   .. image:: ../../../img/v2024.x.x/2.jpg                  |
    |      24+------------------------------------------------------------+
-   |        |Drill the plate to mount it on the remaining metal spacers. |  
-   |        |Do not tighten the assembly.                                |                       
-   +--------+------------------------------------------------------------+    
-   
-.. table::
-   :align: center
-   :widths: 10 30
-
-   +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_26.jpg |
+   |        |Fix the PVC plate                                           |  
+   +--------+------------------------------------------------------------+ 
+   |        |   .. image:: ../../../img/v2024.x.x/3.jpg                  |
    |      25+------------------------------------------------------------+
-   |        |Position the Raspberry Pi (RPI) board on the plate so that  |  
-   |        |you can access the USB ports. Mark the holes of the RPI     |
-   |        |board on the plate for mounting.                            |
-   +--------+------------------------------------------------------------+
-
-
-.. table::
-   :align: center
-   :widths: 10 30
-
-   +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_27.jpg |
+   |        |Drill holes for fixing Raspberry Pi and measurement board   |  
+   +--------+------------------------------------------------------------+ 
+   |        |   .. image:: ../../../img/v2024.x.x/4.jpg                  |
    |      26+------------------------------------------------------------+
-   |        |Add spacers on the PVC plate.                               |     
-   +--------+------------------------------------------------------------+ 
-
-.. table::
-   :align: center
-   :widths: 10 30
-
+   |        |Install spacer for Raspberry Pi on the pvc plate            |  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_28.jpg |
+   |        |   .. image:: ../../../img/v2024.x.x/5.jpg                  |
    |      27+------------------------------------------------------------+
-   |        |Attach the PVC plate to the metal spacers with washers      |     
-   |        |and nuts.                                                   |                                
-   +--------+------------------------------------------------------------+  
-
-.. table::
-   :align: center
-   :widths: 10 30
-
+   |        |Install spacer for measurement board on the pvc plate       |  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_29.jpg |
+   |        |   .. image:: ../../../img/v2024.x.x/6.jpg                  |
    |      28+------------------------------------------------------------+
-   |        |Position and fix the RPI card on the spacers                |     
-   +--------+------------------------------------------------------------+     
-   
-   
-.. table::
-   :align: center
-   :widths: 10 30
-
+   |        |Fit 9 flat washers and nuts (M3)                            |  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_30.jpg |
+   |        |   .. image:: ../../../img/v2024.x.x/7.jpg                  |
    |      29+------------------------------------------------------------+
-   |        |Add spacers on the RPI board. The red (12V) and black (GND) |     
-   |        |wires coming out of the "M" MUX board must pass under       |    
-   |        |the RPI board.                                              |        
-   +--------+------------------------------------------------------------+ 
-
-.. table::
-   :align: center
-   :widths: 10 30
-
+   |        |Install Raspberry Pi                                        |  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_31.jpg |
+   |        |   .. image:: ../../../img/v2024.x.x/8.jpg                  |
    |      30+------------------------------------------------------------+
-   |        |Place the measurement board on the RPI GPIO outputs and on  |
-   |        |the pre-positioned spacers. Note that LEDs are present on   |
-   |        |this measurement board with an associated resistance simply |
-   |        |for testing purposes (do not consider this temporary        |
-   |        |modification of the board). Same for the orange wire        |
-   |        |present on the board.                                       |
-   +--------+------------------------------------------------------------+  
-
-
-.. table::
-   :align: center
-   :widths: 10 30
-
+   |        |Fit 4 spacers (female/female, M3, 11 mm)                    |  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_32.jpg |
+   |        |   .. image:: ../../../img/v2024.x.x/9.jpg                  |
    |      31+------------------------------------------------------------+
-   |        |Connect the wires " A " (here yellow), " B " (here purple), |
-   |        |" M " (here brown) and " N " (here blue) on the             |
-   |        |corresponding terminal blocks on the measurement board.     |
-   |        |Connect the 6 wires ribbon cable on the measurement board   |
-   |        |by passing under the PVC plate.Connect the red and black    |                                                 
-   |        |wires to the 12 V and GND terminal block.                   |   
-   +--------+------------------------------------------------------------+   
-
-.. table::
-   :align: center
-   :widths: 10 30
-
+   |        |Install the measurement board on the Raspberry Pi,          |  
+   |        |                                                            |
+   |        |     and fix the 4 screws (M3).                             |
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_33.jpg |
+   |        |   .. image:: ../../../img/v2024.x.x/10.jpg                 |
    |      32+------------------------------------------------------------+
-   |        |Top view of the assembly. Add clips to secure the wires     |     
-   |        |together.                                                   |
-   +--------+------------------------------------------------------------+ 
-
-.. table::
-   :align: center
-   :widths: 10 30
-
+   |        |Fit 3 flat washers and nuts (M3) for measurement board.     |  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_34.jpg |
-   |      33+------------------------------------------------------------+
-   |        |Second view.                                                |     
-   +--------+------------------------------------------------------------+    
-   
-   
-.. table::
-   :align: center
-   :widths: 10 30
-
-   +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_35.jpg |
-   |      34+------------------------------------------------------------+
-   |        |Zoom in on the connection of the M and N wires.             |     
-   +--------+------------------------------------------------------------+ 
-   
-
-.. table::
-   :align: center
-   :widths: 10 30
-
-   +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_36.jpg |
-   |      35+------------------------------------------------------------+
-   |        |Zoom in on the connection of the A and B wires.             |     
-   +--------+------------------------------------------------------------+ 
-
-
-.. table::
-   :align: center
-   :widths: 10 30
-
-   +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_37.jpg |
-   |      36+------------------------------------------------------------+
-   |        |Zoom in on the connection of the « 12V » and « GND » wires. |     
-   +--------+------------------------------------------------------------+ 
-
-.. table::
-   :align: center
-   :widths: 10 30
-
-   +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_38.jpg |
-   |      37+------------------------------------------------------------+
-   |        |Fixing the measurement board on the spacers present on the  |
-   |        |RPI board.                                                  |
-   +--------+------------------------------------------------------------+
-   
-.. table::
-   :align: center
-   :widths: 10 30
-
-   +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_39.jpg |
-   |      38+------------------------------------------------------------+
-   |        |Place the SD card containing the OS and the pre-installed   |
-   |        |programs. Connect a mouse and a keyboard to the USB inputs  |
-   |        |of the RPI board. Connect a monitor to the HDMI output of   |
-   |        |the RPI board.                                              |                                                  
-   +--------+------------------------------------------------------------+   
-
-   
-.. table::
-   :align: center
-   :widths: 10 30
-
-   +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_40.jpg |
-   |      39+------------------------------------------------------------+
-   |        |Connect the red and black cables of board A to a 12V        |
-   |        |battery or other laboratory power supply delivering a 12VDC |
-   |        |voltage.                                                    |
-   |        |Enjoy                                                       |
-   +--------+------------------------------------------------------------+  
-
-   
-   
