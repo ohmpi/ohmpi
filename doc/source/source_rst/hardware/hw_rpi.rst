@@ -32,5 +32,5 @@ For this step, the installation instructions are well described on the Raspberry
 .. note:: 
      All the development tests were performed on Raspberry Pi 3 Model B and Raspberry Pi 4 Model B
 
-**To install the Raspberry Pi, please refer to the** :ref:`Getting started` section.
+**To install the Raspberry Pi, please refer to the** :ref:`Getting-started` section.
 

@@ -28,10 +28,14 @@ It needs to be connected to a 12V battery and can be controlled using `modbus` b
        :alt: DPH-5005 image
        :figclass: align-center 
 
-To assemble DPS 5005, please follow the links:
+To assemble DPH 5005, please follow the links:
  `DPH 5005 manuel <https://joy-it.net/files/files/Produkte/JT-DPH5005/JT-DPH5005-Manual.pdf>`_
 
  `DPH 5005 case manuel <https://joy-it.net/files/files/Produkte/JT-DPS-Case/JT-DPS-Case-Manual_20200220.pdf>`_
 
+.. Note::
+    **Change the Baudrate from 9600 to 19200**, press and maintain **SET**, and start DPH-5005, you acces to a new menu change **BAUD** 
+
+
 .. warning::
-    **Only use DPS 5005 with the measurement board V2024
+    **Only use DPS 5005 with the measurement board V2024**

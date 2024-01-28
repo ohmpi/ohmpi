@@ -247,6 +247,8 @@ TODO :list on tools and components
    |        |   .. image:: ../../../img/v2024.x.x/12.jpg                 |
    |      34+------------------------------------------------------------+
    |        |The choice is yours: position or fix the DPS 5005.          |  
+   |        |                                                            |
+   |        |connect USB cable between DPS 5005 and Raspberry Pi         |
    +--------+------------------------------------------------------------+
    |        |   .. image:: ../../../img/v2024.x.x/13.jpg                 |
    |      35+------------------------------------------------------------+
@@ -288,5 +290,64 @@ TODO :list on tools and components
    |        |                                                            |
    |        |board.                                                      |
    +--------+------------------------------------------------------------+
+   |        |.. image:: ../../../img/v2024.x.x/ref_circuit.png           |
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2024.x.x/19.jpg                 |
+   |      40+------------------------------------------------------------+
+   |        |Connect a equivalent circuit                                |  
+   |        |                                                            |
+   |        |R2=1kOhm R1=100 ohm                                         |
+   +--------+------------------------------------------------------------+
 
+.. warning::
+      At this point in the build, we consider that you have followed the instructions in :ref:`Getting-started` section
+
+
+Please connect both 12 V Battery for RX and TX.
+
+For direct use of Raspberry Pi Connect Screen, mouse and keybord, for remote control use SSH or VNC.
+
+Now it is possible to carry out the first test on a reference circuit.
+
+Write de following python script your OhmPi folder
+
+.. code-block:: python
    
+   import os
+   import numpy as np
+   import time
+   import matplotlib.pyplot as plt
+   os.chdir("/home/pi/OhmPi")
+   from ohmpi.ohmpi import OhmPi
+   k = OhmPi()
+
+
+
+.. table::
+   :align: center
+   :widths: 10 30
+   
+   +--------+------------------------------------------------------------+
+   |        |   .. image:: ../../../img/v2024.x.x/test_01.png            |
+   |      41+------------------------------------------------------------+
+   |        |If everything is ok, you get the message upper, if not      | 
+   |        |                                                            |                                                                   
+   |        |check all cable, and battery or refer to troubleshooting    |
+   +--------+------------------------------------------------------------+
+
+
+.. code-block:: python
+   
+   k.test_mux()
+
+You should hear each of the 256 MUX board relays activate and deactivate 1 at a time.
+
+.. code-block:: python
+   
+   k.run_measurement(quad=[1,4,2,3], tx_volt = 5., strategy = 'constant', dutycycle=0.5)
+
+A measurement will start, and you should obtain your first measurement, with a value of R = 100 ohm (R1 on the equivalent circuit).
+
+If not check, your cable connexion and batteries
+
+You can now connect the 4 cables of each MUX to the screw terminals of the measurement board identified ABMN.

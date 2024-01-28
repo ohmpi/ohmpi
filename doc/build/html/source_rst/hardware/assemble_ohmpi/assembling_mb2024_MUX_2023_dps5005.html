@@ -381,7 +381,9 @@ together.</p>
 <td><img alt="../../../_images/121.jpg" src="../../../_images/121.jpg" />
 </td>
 </tr>
-<tr class="row-even"><td><p>The choice is yours: position or fix the DPS 5005.</p></td>
+<tr class="row-even"><td><p>The choice is yours: position or fix the DPS 5005.</p>
+<p>connect USB cable between DPS 5005 and Raspberry Pi</p>
+</td>
 </tr>
 <tr class="row-odd"><td rowspan="2"><p>35</p></td>
 <td><img alt="../../../_images/131.jpg" src="../../../_images/131.jpg" />
@@ -433,8 +435,63 @@ together.</p>
 <p>board.</p>
 </td>
 </tr>
+<tr class="row-odd"><td></td>
+<td><img alt="../../../_images/ref_circuit1.png" src="../../../_images/ref_circuit1.png" />
+</td>
+</tr>
+<tr class="row-even"><td rowspan="2"><p>40</p></td>
+<td><img alt="../../../_images/191.jpg" src="../../../_images/191.jpg" />
+</td>
+</tr>
+<tr class="row-odd"><td><p>Connect a equivalent circuit</p>
+<p>R2=1kOhm R1=100 ohm</p>
+</td>
+</tr>
 </tbody>
 </table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>At this point in the build, we consider that you have followed the instructions in <a class="reference internal" href="../../software/installation.html#getting-started"><span class="std std-ref">Getting started</span></a> section</p>
+</div>
+<p>Please connect both 12 V Battery for RX and TX.</p>
+<p>For direct use of Raspberry Pi Connect Screen, mouse and keybord, for remote control use SSH or VNC.</p>
+<p>Now it is possible to carry out the first test on a reference circuit.</p>
+<p>Write de following python script your OhmPi folder</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s2">&quot;/home/pi/OhmPi&quot;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ohmpi.ohmpi</span> <span class="kn">import</span> <span class="n">OhmPi</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">OhmPi</span><span class="p">()</span>
+</pre></div>
+</div>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>41</p></td>
+<td><img alt="../../../_images/test_01.png" src="../../../_images/test_01.png" />
+</td>
+</tr>
+<tr class="row-even"><td><p>If everything is ok, you get the message upper, if not</p>
+<p>check all cable, and battery or refer to troubleshooting</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">k</span><span class="o">.</span><span class="n">test_mux</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You should hear each of the 256 MUX board relays activate and deactivate 1 at a time.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">k</span><span class="o">.</span><span class="n">run_measurement</span><span class="p">(</span><span class="n">quad</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">tx_volt</span> <span class="o">=</span> <span class="mf">5.</span><span class="p">,</span> <span class="n">strategy</span> <span class="o">=</span> <span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">dutycycle</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A measurement will start, and you should obtain your first measurement, with a value of R = 100 ohm (R1 on the equivalent circuit).</p>
+<p>If not check, your cable connexion and batteries</p>
+<p>You can now connect the 4 cables of each MUX to the screw terminals of the measurement board identified ABMN.</p>
 </section>
 
 
