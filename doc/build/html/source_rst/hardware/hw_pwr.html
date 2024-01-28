@@ -19,8 +19,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Raspberry Pi configuration" href="hw_rpi.html" />
-    <link rel="prev" title="Measurement board" href="mb.html" /> 
+    <link rel="next" title="Raspberry Pi components" href="hw_rpi.html" />
+    <link rel="prev" title="MUX board v2024" href="mux/mux_2024.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,14 +46,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../Ohmpi.html">OhmPi project</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../hardware.html">Hardware</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="hw_info.html">OhmPi electronic design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mb.html">Measurement board</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw_mb.html">Measurement board</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw_mux.html">MUX board</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Power supply</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#v-battery">12V battery</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#regulated-power-supply-dps5005">Regulated power supply (DPS5005)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#digital-power-supply-dph5005">Digital power supply (DPH5005)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="hw_rpi.html">Raspberry Pi  configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="assembling.html">Assembling the OhmPi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw_rpi.html">Raspberry Pi  components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw_ohmpi.html">Build your Ohmpi</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../software/index.html">Software and operation</a></li>
@@ -88,7 +89,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="power-supply">
+  <div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>OhmPi is a participative project open to all, it requires skills in electronics and to respect the safety rules. OhmPi must be assembled in a professional context and by people competent in electronics. The OhmPi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The OhmPi team cannot be held responsible if the equipment does not work after assembly.</strong></p>
+</div>
+<section id="power-supply">
 <h1>Power supply<a class="headerlink" href="#power-supply" title="Permalink to this heading"></a></h1>
 <p>Two sources of power are available now:
 - a 12V battery
@@ -98,10 +103,22 @@
 <p>When injecting, we actually connect the + and - of the battery to the A, B electrodes.
 Hence, we can only inject 12V maximum.</p>
 </section>
-<section id="regulated-power-supply-dps5005">
-<h2>Regulated power supply (DPS5005)<a class="headerlink" href="#regulated-power-supply-dps5005" title="Permalink to this heading"></a></h2>
+<section id="digital-power-supply-dph5005">
+<h2>Digital power supply (DPH5005)<a class="headerlink" href="#digital-power-supply-dph5005" title="Permalink to this heading"></a></h2>
 <p>This alimentation enables us to inject up to 50 V and also to regulate the current.
 It needs to be connected to a 12V battery and can be controlled using <cite>modbus</cite> by the raspberrypi.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/DPH_5005.png"><img alt="DPH-5005 image" src="../../_images/DPH_5005.png" style="width: 400px; height: 300px;" /></a>
+</figure>
+<dl>
+<dt>To assemble DPS 5005, please follow the links:</dt><dd><p><a class="reference external" href="https://joy-it.net/files/files/Produkte/JT-DPH5005/JT-DPH5005-Manual.pdf">DPH 5005 manuel</a></p>
+<p><a class="reference external" href="https://joy-it.net/files/files/Produkte/JT-DPS-Case/JT-DPS-Case-Manual_20200220.pdf">DPH 5005 case manuel</a></p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><a href="#id1"><span class="problematic" id="id2">**</span></a>Only use DPS 5005 with the measurement board V2024</p>
+</div>
 </section>
 </section>
 
@@ -109,8 +126,8 @@ It needs to be connected to a 12V battery and can be controlled using <cite>modb
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="mb.html" class="btn btn-neutral float-left" title="Measurement board" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="hw_rpi.html" class="btn btn-neutral float-right" title="Raspberry Pi configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mux/mux_2024.html" class="btn btn-neutral float-left" title="MUX board v2024" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hw_rpi.html" class="btn btn-neutral float-right" title="Raspberry Pi components" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

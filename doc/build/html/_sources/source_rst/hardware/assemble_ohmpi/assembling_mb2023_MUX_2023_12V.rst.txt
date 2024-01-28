@@ -10,7 +10,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
    
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_1.jpg     |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_1.jpg  |
    |      1 +------------------------------------------------------------+
    |        |Cut 4 ribbon cables composed of 16 wires each to the proper | 
    |        |length (about 1.5m). Each wire corresponds to an electrode. |                                                                      
@@ -20,7 +20,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_2.jpg     |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_2.jpg  |
    |      2 +------------------------------------------------------------+
    |        |Crimp the ribbon cable on the corresponding idc connector   | 
    |        |with a suitable clamp. Pay attention to the direction of    |
@@ -32,7 +32,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_3.jpg     |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_3.jpg  |
    |      3 +------------------------------------------------------------+
    |        |Example of IDC connector mounting. The wires should run as  | 
    |        |perpendicular as possible to the IDC connector.             |                                                                      
@@ -42,7 +42,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_4.jpg     |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_4.jpg  |
    |      4 +------------------------------------------------------------+
    |        |Same for a 6 wires ribbon cable of 1 m length.              | 
    |        |                                                            |                                                                      
@@ -52,7 +52,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_5.jpg     |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_5.jpg  |
    |      5 +------------------------------------------------------------+
    |        |Cut the ribbon cable flush with the IDC connector.          | 
    |        |                                                            |                                                                      
@@ -62,12 +62,12 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_6.jpg     |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_6.jpg  |
    |      6 +------------------------------------------------------------+
    |        |Position 9 spacers above the MUX board, and 9 spacers below |
    |        |                                                            |                                                                      
    +        +------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_7.jpg     |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_7.jpg  |
    |        +------------------------------------------------------------+
    |        |Profile view for mounting the spacers above and below.      | 
    |        |                                                            |                                                                      
@@ -77,7 +77,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_8.jpg     |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_8.jpg  |
    |      7 +------------------------------------------------------------+
    |        |Cut a 50 cm long wire of any color (here yellow). Strip and | 
    |        |tin each end of the wire. Install the wire "A" on the screw |
@@ -88,7 +88,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_9.jpg     |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_9.jpg  |
    |      8 +------------------------------------------------------------+
    |        |Cut a red wire and a black wire of 50 cm length. Strip, tin | 
    |        |and position the wires on the left screw terminal as shown  |
@@ -100,7 +100,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_10.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_10.jpg |
    |      9 +------------------------------------------------------------+
    |        |Mount the 4 ribbon cables (16-wires each) with IDC          | 
    |        |connectors. A small noise is often heard when the IDC       |
@@ -112,7 +112,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_11.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_11.jpg |
    |      10+------------------------------------------------------------+
    |        |Mount the ribbon cables with 6-wires with the corresponding | 
    |        |IDC connectors                                              |
@@ -123,7 +123,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_12.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_12.jpg |
    |      11+------------------------------------------------------------+
    |        |Cut a red wire and a black wire of 10 cm length. Strip and  | 
    |        |tin the wires at the ends. Mount the red wire on the 12V    |
@@ -135,7 +135,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_13.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_13.jpg |
    |      12+------------------------------------------------------------+
    |        |Mount and fix the second MUX board "B" on the first with    | 
    |        |the help of 9 spacers.                                      |
@@ -148,7 +148,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_14.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_14.jpg |
    |      13+------------------------------------------------------------+
    |        |Cut, strip and tin a red wire and a black wire of 10 cm     | 
    |        |length. Mount the wires on the left screw terminal.         |
@@ -163,7 +163,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_15.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_15.jpg |
    |      14+------------------------------------------------------------+
    |        |Crimp a 16 wires IDC connector on the ribbon cable at about | 
    |        |15 cm from the previous connector. Please, pay attention to |
@@ -176,7 +176,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_16.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_16.jpg |
    |      15+------------------------------------------------------------+
    |        |Repeat the operation for the other 3 ribbon cables.         |                  
    +--------+------------------------------------------------------------+ 
@@ -185,7 +185,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_17.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_17.jpg |
    |      16+------------------------------------------------------------+
    |        |Repeat the operation for the 6 wires ribbon cable.          |                  
    +--------+------------------------------------------------------------+ 
@@ -194,7 +194,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_18.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_18.jpg |
    |      17+------------------------------------------------------------+
    |        |Cut a 50 cm long wire "here purple" (Color not relevant but | 
    |        |to be defined). Strip and tin the wire at its ends.         |
@@ -207,7 +207,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_19.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_19.jpg |
    |      18+------------------------------------------------------------+
    |        |Repeat all these operations for the third MUX board         | 
    |        |called "M".                                                 |           
@@ -218,7 +218,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_20.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_20.jpg |
    |      19+------------------------------------------------------------+
    |        |Repeat the operations for the fourth MUX Boards. Attention, | 
    |        |it is necessary to position 5 different spacers (here nylon |
@@ -232,7 +232,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_21.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_21.jpg |
    |      20+------------------------------------------------------------+
    |        |When mounting the 4th MUX board ("N"), screws can be placed |
    |        |on the nylon spacers to fix the boards together. Note that  |
@@ -249,7 +249,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_22.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_22.jpg |
    |      21+------------------------------------------------------------+
    |        |Cut a red wire and a black wire of one meter length. Place  | 
    |        |the red wire on terminal “12V” and the black wire on        |
@@ -262,7 +262,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_23.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_23.jpg |
    |      22+------------------------------------------------------------+
    |        |Tie the A, B, M and N wires together                        |                            
    +--------+------------------------------------------------------------+   
@@ -271,7 +271,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_24.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_24.jpg |
    |      23+------------------------------------------------------------+
    |        |Cut a PVC plate with the following minimum dimensions :     |  
    |        |200 mm * 150 mm * 5 mm                                      |                       
@@ -282,7 +282,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_25.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_25.jpg |
    |      24+------------------------------------------------------------+
    |        |Drill the plate to mount it on the remaining metal spacers. |  
    |        |Do not tighten the assembly.                                |                       
@@ -292,7 +292,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_26.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_26.jpg |
    |      25+------------------------------------------------------------+
    |        |Position the Raspberry Pi (RPI) board on the plate so that  |  
    |        |you can access the USB ports. Mark the holes of the RPI     |
@@ -304,7 +304,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_27.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_27.jpg |
    |      26+------------------------------------------------------------+
    |        |Add spacers on the PVC plate.                               |     
    +--------+------------------------------------------------------------+ 
@@ -313,7 +313,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_28.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_28.jpg |
    |      27+------------------------------------------------------------+
    |        |Attach the PVC plate to the metal spacers with washers      |     
    |        |and nuts.                                                   |                                
@@ -323,7 +323,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_29.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_29.jpg |
    |      28+------------------------------------------------------------+
    |        |Position and fix the RPI card on the spacers                |     
    +--------+------------------------------------------------------------+     
@@ -333,7 +333,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_30.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_30.jpg |
    |      29+------------------------------------------------------------+
    |        |Add spacers on the RPI board. The red (12V) and black (GND) |     
    |        |wires coming out of the "M" MUX board must pass under       |    
@@ -344,7 +344,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_31.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_31.jpg |
    |      30+------------------------------------------------------------+
    |        |Place the measurement board on the RPI GPIO outputs and on  |
    |        |the pre-positioned spacers. Note that LEDs are present on   |
@@ -359,7 +359,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_32.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_32.jpg |
    |      31+------------------------------------------------------------+
    |        |Connect the wires " A " (here yellow), " B " (here purple), |
    |        |" M " (here brown) and " N " (here blue) on the             |
@@ -373,7 +373,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_33.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_33.jpg |
    |      32+------------------------------------------------------------+
    |        |Top view of the assembly. Add clips to secure the wires     |     
    |        |together.                                                   |
@@ -383,7 +383,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_34.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_34.jpg |
    |      33+------------------------------------------------------------+
    |        |Second view.                                                |     
    +--------+------------------------------------------------------------+    
@@ -393,7 +393,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_35.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_35.jpg |
    |      34+------------------------------------------------------------+
    |        |Zoom in on the connection of the M and N wires.             |     
    +--------+------------------------------------------------------------+ 
@@ -403,7 +403,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_36.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_36.jpg |
    |      35+------------------------------------------------------------+
    |        |Zoom in on the connection of the A and B wires.             |     
    +--------+------------------------------------------------------------+ 
@@ -413,7 +413,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_37.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_37.jpg |
    |      36+------------------------------------------------------------+
    |        |Zoom in on the connection of the « 12V » and « GND » wires. |     
    +--------+------------------------------------------------------------+ 
@@ -422,7 +422,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_38.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_38.jpg |
    |      37+------------------------------------------------------------+
    |        |Fixing the measurement board on the spacers present on the  |
    |        |RPI board.                                                  |
@@ -432,7 +432,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_39.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_39.jpg |
    |      38+------------------------------------------------------------+
    |        |Place the SD card containing the OS and the pre-installed   |
    |        |programs. Connect a mouse and a keyboard to the USB inputs  |
@@ -445,7 +445,7 @@ Assembling the OhmPi (mb2023 mux2023 12V)
    :align: center
 
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../img/v2023.x.x/step_n_4/step_4_40.jpg    |
+   |        |   .. image:: ../../../img/v2023.x.x/step_n_4/step_4_40.jpg |
    |      39+------------------------------------------------------------+
    |        |Connect the red and black cables of board A to a 12V        |
    |        |battery or other laboratory power supply delivering a 12VDC |
