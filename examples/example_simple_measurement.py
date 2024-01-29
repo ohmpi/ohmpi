@@ -12,14 +12,10 @@ k.update_settings({"injection_duration":0.2})
 
 ### Set or load sequence
 k.sequence = np.array([[1,2,3,4]])    # set numpy array of shape (n,4)
-# k.set_sequence('1 2 3 4\n2 3 4 5')    # call function set_sequence and pass a string
-# k.load_sequence('ABMN.txt')    # load sequence from a local file
+# k.load_sequence('sequences/ABMN.txt')    # load sequence from a local file
 
 ### Run contact resistance check
 # k.rs_check()
 
 ### Run sequence
 k.run_sequence()
-# k.run_sequence_async()
-# time.sleep(2)
-# k.interrupt()
