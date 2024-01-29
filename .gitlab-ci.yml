@@ -7,7 +7,7 @@ pages:
   - apt-get update
   - apt-get install --assume-yes pandoc
   - pip install numpy pandas termcolor paho-mqtt zmq  # top import of Ohmpi.py
-  - pip install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark
+  - pip install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark linuxdoc
   - cp configs/config_default.py ohmpi/config.py  # only compile doc with dummy if not on rpi with correct config.py
   - cd doc
   - make html
