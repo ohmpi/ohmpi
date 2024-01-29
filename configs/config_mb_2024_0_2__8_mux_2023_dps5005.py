@@ -52,7 +52,6 @@ HARDWARE_CONFIG = {
                       'mux_tca_address': 0x73,
                       'roles': 'N',
                       'electrodes': range(1,65),
-                      # 'cabling': {(i, j): ('mux_N', i) for j in ['N'] for i in range(1, 65)},
                       },
                  'mux_A2':
                      {'model': 'mux_2023_0_X',
@@ -74,7 +73,6 @@ HARDWARE_CONFIG = {
                       'mux_tca_address': 0x77,
                       'roles': 'N',
                       'electrodes': range(65,129),
-                      #'cabling': {(i+64, j): ('mux_N2', i) for j in ['N'] for i in range(1, 65)},
                       },
                  },
              'default': {'interface_name': 'i2c_ext',
