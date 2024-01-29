@@ -1,6 +1,7 @@
 image: python:3.9-bullseye
 # This file is a template, and might need editing before it works on your project.
 # Full project: https://gitlab.com/pages/plain-html
+
 pages:
   stage: deploy
   script:
@@ -21,3 +22,15 @@ pages:
     - public/
   only:
   - master
+
+before_script:
+  - apt-get update -y
+  - apt-get install -y jq curl
+
+make-badge:
+  stage: deploy
+  script:
+    - version=$(cat version.txt)
+    - version_badge_id=$(curl --header "PRIVATE-TOKEN:${API_TOKEN}" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/badges | jq -c 'map(select(.name | contains("version")))[0].id')
+    - curl --request PUT --header "PRIVATE-TOKEN:${API_TOKEN}" --data "image_url=https://img.shields.io/badge/version-${version}-blue" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/badges/${version_badge_id}
+
