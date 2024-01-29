@@ -154,12 +154,6 @@ The configuration is written in a python file structured in a series of dictiona
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
     | current_max        | Maximum current [in A] managed by the MUX board  | *float*, e.g. 3.        |  Sets maximum current to 3 A.                                   |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
-    | i2c_ext_tca_address| I2C address of I2C extension                     | None *(default)*        |    No I2C extensions cabled.                                    |
-    |                    |                                                  +-------------------------+-----------------------------------------------------------------+
-    |                    |                                                  | *hex integer*, e.g. 0x71|          Address of I2C extension                               |
-    +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
-    | i2c_ext_tca_channel| Channel of the I2C extension                     | *int* 0 - 7             |   Channel used in case I2C extension configured.                |
-    +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
 
 .. table:: MUX 2023 board specific config in HARDWARE_CONFIG
 
@@ -168,7 +162,7 @@ The configuration is written in a python file structured in a series of dictiona
     |                    +--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
     |                    | Description                                      | Expected Value          | Value description                                               |
     +====================+==================================================+=========================+=================================================================+
-    | mux_tca_address    | I2C address of MUX board                         | | *hex integer*         |          Address of MUX board                                   |
+    |  tca_address    | I2C address of MUX board                         | | *hex integer*         |          Address of MUX board                                   |
     |                    |                                                  | | 0x70 - 0x77           |                                                                 |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
 
@@ -184,6 +178,12 @@ The configuration is written in a python file structured in a series of dictiona
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
     | addr2              | Physical position of jumper on addr1             | | *string* 'up' or 'down| | This will compute I2C address of MUX board based on addr1     |
     |                    |                                                  |                         | | and addr 2 configuration.                                     |
+    +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
+    |    tca_address     | I2C address of I2C extension                     | None *(default)*        |    No I2C extensions cabled.                                    |
+    |                    |                                                  +-------------------------+-----------------------------------------------------------------+
+    |                    |                                                  | *hex integer*, e.g. 0x71|          Address of I2C extension                               |
+    +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
+    |     tca_channel    | Channel of the I2C extension                     | *int* 0 - 7             |   Channel used in case I2C extension configured.                |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
 
 Here's an example of the HARDWARE_CONFIG:
