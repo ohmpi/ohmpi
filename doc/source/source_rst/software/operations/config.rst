@@ -186,6 +186,7 @@ The configuration is written in a python file structured in a series of dictiona
     |                    |                                                  |                         | | and addr 2 configuration.                                     |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
 
+Here's an example of the HARDWARE_CONFIG:
 
 .. code-block:: python
   :caption: HARDWARE_CONFIG: Dictionary containing configuration of the hardware system and how it is assembled.
@@ -207,7 +208,7 @@ The configuration is written in a python file structured in a series of dictiona
       'mux': {'boards':
                   {'mux_00':
                        {'model': 'mux_2024_0_X',
-                        'electrodes': range(1, 17),
+                        'electrodes': range(1, 9),
                         'roles': ['A', 'B', 'M', 'N'],
                         'tca_address': None,
                         'tca_channel': 0,
@@ -221,7 +222,8 @@ The configuration is written in a python file structured in a series of dictiona
               }
       }
 
-#. the logging dictionaries divided in:
+
+The logging dictionaries divided in:
 
 .. code-block:: python
   :caption: EXEC_LOGGING_CONFIG: dictionary configuring how the execution commands are being logged by the system. Useful for debugging.
@@ -272,7 +274,7 @@ The configuration is written in a python file structured in a series of dictiona
 
 
 
-#. the MQTT dictionaries divided in:
+The MQTT dictionaries divided in:
 
 .. code-block:: python
   :caption: MQTT_LOGGING_CONFIG
