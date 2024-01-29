@@ -1,7 +1,7 @@
 import logging
 from ohmpi.utils import get_platform
 
-from paho.mqtt.client import MQTTv31
+from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
 # DEFINE THE ID OF YOUR OhmPi
@@ -17,40 +17,58 @@ OHMPI_CONFIG = {
     'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
 }
 
+r_shunt = 2.
 HARDWARE_CONFIG = {
-    'ctl': {'model' : 'raspberry_pi'},
-    'pwr': {'model' : 'pwr_batt', 'voltage': 12.},
-    'tx' : {'model' : 'mb_2023_0_X',
-             'mcp_board_address': 0x20,
-             'voltage_max': 12., # Maximum voltage supported by the TX board [V]
-             'current_max': 4800 / 50 / 2,  # Maximum current supported by the TX board [mA]
-             'r_shunt': 2  # Shunt resistance in Ohms
-            },
-    'rx' : {'model': 'mb_2023_0_X',
-             'coef_p2': 2.50,  # slope for current conversion for ADS.P2, measurement in V/V
-             'sampling_rate': 100.,  # Hz
-             'nb_samples': 20,  # Max value 10 # was named integer before...
-            },
-    'mux':  # default properties are system properties that will be
-            # overwritten by board properties defined at the board level within the board model file
-            # both will be overwritten by properties specified in the board dict below. Use with caution...
+    'ctl': {'model': 'raspberry_pi'},
+    'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
+    'tx': {'model': 'mb_2023_0_X',
+           'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
+           'current_max': 4.80 / (50 * r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
+           'r_shunt': r_shunt,  # Shunt resistance in Ohms
+           'interface_name': 'i2c'
+           },
+    'rx': {'model': 'mb_2023_0_X',
+           'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
+           'sampling_rate': 50.,  # number of samples per second
+           'interface_name': 'i2c',
+           },
+    'mux':  # default properties given in config are system properties that will be
+    # overwritten by properties defined in each the board dict below.
+    # if defined in board specs, values out of specs will be bounded to remain in specs
+    # omitted properties in config will be set to board specs default values if they exist
         {'boards':
-                {'mux_1':
-                     {'model': 'mux_2024_0_X', # 'ohmpi_i2c_mux64_v1.01',
-                      'tca_address': None,
-                      'tca_channel': 0,
-                      'addr2': 'up',
-                      'addr1': 'up',
-                      'roles': {'A': 'X', 'B': 'Y'},
-                      'voltage_max': 12.
-                }},
-            'default': {'voltage_max': 100., 'current_max': 3.}}
+             {'mux_A':
+                  {'model': 'mux_2023_0_X',
+                   'mux_tca_address': 0x70,
+                   'roles': 'A',
+                   'electrodes': range(1, 65)},
+              'mux_B':
+                  {'model': 'mux_2023_0_X',
+                   'mux_tca_address': 0x71,
+                   'roles': 'B',
+                   'electrodes': range(1, 65)},
+              'mux_M':
+                  {'model': 'mux_2023_0_X',
+                   'mux_tca_address': 0x72,
+                   'roles': 'M',
+                   'electrodes': range(1, 65)},
+              'mux_N':
+                  {'model': 'mux_2023_0_X',
+                   'mux_tca_address': 0x73,
+                   'roles': 'N',
+                   'electrodes': range(1, 65),
+                   }
+              },
+         'default': {'interface_name': 'i2c',
+                     'voltage_max': 12.,
+                     'current_max': 3.}
+         }
 }
 
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
-    'logging_level': logging.INFO,
+    'logging_level': logging.INFO,  # TODO: set logging level back to INFO
     'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',

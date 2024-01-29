@@ -1,6 +1,5 @@
 import logging
 from ohmpi.utils import get_platform
-
 from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
@@ -20,60 +19,69 @@ OHMPI_CONFIG = {
 r_shunt = 2.
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
-    'pwr': {'model': 'pwr_dps5005', 'voltage': 12., 'interface_name': 'modbus'},
-    'tx':  {'model': 'mb_2023_0_X',
+    'pwr': {'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},
+    'tx':  {'model': 'mb_2024_0_2',
              'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
-             'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
+             'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [mA]
              'r_shunt': r_shunt,  # Shunt resistance in Ohms
              'interface_name': 'i2c'
             },
-    'rx':  {'model': 'mb_2023_0_X',
-            'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
-            'sampling_rate': 50.,  # number of samples per second
-            'interface_name': 'i2c',
+    'rx':  {'model': 'mb_2024_0_2',
+             'latency': 0.010,  # latency in seconds in continuous mode
+             'sampling_rate': 50,  # number of samples per second
+             'interface_name': 'i2c'
             },
-    'mux':  # default properties given in config are system properties that will be
-            # overwritten by properties defined in each the board dict below.
-            # if defined in board specs, values out of specs will be bounded to remain in specs
-            # omitted properties in config will be set to board specs default values if they exist
-            {'boards': {'mux_02':
+    'mux': {'boards':
+                {'mux_A':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x70,
+                      'roles': 'A',
+                      'electrodes': range(1, 65)},
+                 'mux_B':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x71,
+                      'roles': 'B',
+                      'electrodes': range(1, 65)},
+                 'mux_M':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x72,
+                      'roles': 'M',
+                      'electrodes': range(1, 65)},
+                 'mux_N':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x73,
+                      'roles': 'N',
+                      'electrodes': range(1, 65),
+                      },
+                 'mux_01':
                      {'model': 'mux_2024_0_X',
-                      'tca_address': None,
-                      'tca_channel': 0,
-                      'addr2': 'up',
-                      'addr1': 'up',
-                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+8, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 50.},
-                'mux_03':
-                     {'model': 'mux_2024_0_X',
-                      'tca_address': None,
-                      'tca_channel': 0,
+                      'roles': ['A', 'B'],
+                      'electrodes': range(1, 17),
                       'addr2': 'down',
-                      'addr1': 'up',
-                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+16, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 50.},
-                 'mux_05':
-                     {'model': 'mux_2024_0_X',
-                      'tca_address': None,
-                      'tca_channel': 0,
-                      'addr2': 'up',
                       'addr1': 'down',
-                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+0, j): ('mux_05', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 50.},
-                },
-             'default': {'interface_name': 'i2c',
-                         'voltage_max': 100.,
+                      'tca_address': None,
+                      'tca_channel': 0
+                      },
+                 'mux_02':
+                     {'model': 'mux_2024_0_X',
+                      'roles': ['A', 'B'],
+                      'electrodes': range(17, 33),
+                      'addr1': 'up',
+                      'addr2': 'dpwn',
+                      'tca_address': None,
+                      'tca_channel': 0
+                      },
+                 },
+             'default': {'interface_name': 'i2c_ext',
+                         'voltage_max': 50.,
                          'current_max': 3.}
-             }
-}
+            }
+    }
 
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
-    'logging_level': logging.DEBUG,  # TODO: set logging level back to INFO
+    'logging_level': logging.INFO,
     'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',

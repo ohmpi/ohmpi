@@ -37,9 +37,7 @@ HARDWARE_CONFIG = {
             # if defined in board specs, values out of specs will be bounded to remain in specs
             # omitted properties in config will be set to board specs default values if they exist
             {'boards': {},
-             'default': {'interface_name': 'i2c',
-                         'voltage_max': 100.,
-                         'current_max': 3.}
+             'default': {}
              }
 }
 

@@ -34,16 +34,18 @@ HARDWARE_CONFIG = {
     'mux': {'boards':
                 {'mux_01':
                      {'model': 'mux_2024_0_X',
-                      'roles': ['A', 'B', 'M', 'N'],
-                      'electrodes': range(1, 9),
+                      'roles': ['A', 'B'],
+                      'electrodes': range(1, 17),
+                      'addr2': 'down',
+                      'addr1': 'down',
                       'tca_address': None,
                       'tca_channel': 0,
-                      'addr2': 'down',
-                      'addr1': 'down'}
+                      'interface_name': 'i2c_ext',
+                      'voltage_max': 50.,
+                      'current_max': 3.
+                      },
                  },
-             'default': {'interface_name': 'i2c_ext',
-                         'voltage_max': 50.,
-                         'current_max': 3.}
+             'default': {}
             }
     }
 
