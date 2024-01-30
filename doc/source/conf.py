@@ -15,6 +15,7 @@
 import os
 import sys
 sys.path.append(os.path.abspath('../../'))
+sys.path.append(os.path.abspath('../rpi_dummy_modules/'))
 # import ohmpi  # import Ohmpi module to be documented in api.rst by numpydoc
 import sphinx_rtd_theme
 

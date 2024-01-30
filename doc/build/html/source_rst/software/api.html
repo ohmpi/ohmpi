@@ -50,7 +50,41 @@
 <li class="toctree-l2"><a class="reference internal" href="architecture.html">Software architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html">Getting started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="operations/index.html">Operating the system</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">API reference</a><ul class="simple">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi"><code class="docutils literal notranslate"><span class="pre">OhmPi</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.append_and_save"><code class="docutils literal notranslate"><span class="pre">OhmPi.append_and_save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.download_data"><code class="docutils literal notranslate"><span class="pre">OhmPi.download_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.get_data"><code class="docutils literal notranslate"><span class="pre">OhmPi.get_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.interrupt"><code class="docutils literal notranslate"><span class="pre">OhmPi.interrupt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.load_sequence"><code class="docutils literal notranslate"><span class="pre">OhmPi.load_sequence()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.quit"><code class="docutils literal notranslate"><span class="pre">OhmPi.quit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.remove_data"><code class="docutils literal notranslate"><span class="pre">OhmPi.remove_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.repeat_sequence"><code class="docutils literal notranslate"><span class="pre">OhmPi.repeat_sequence()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.reset_mux"><code class="docutils literal notranslate"><span class="pre">OhmPi.reset_mux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.restart"><code class="docutils literal notranslate"><span class="pre">OhmPi.restart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.rs_check"><code class="docutils literal notranslate"><span class="pre">OhmPi.rs_check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.run_inversion"><code class="docutils literal notranslate"><span class="pre">OhmPi.run_inversion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.run_measurement"><code class="docutils literal notranslate"><span class="pre">OhmPi.run_measurement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.run_multiple_sequences"><code class="docutils literal notranslate"><span class="pre">OhmPi.run_multiple_sequences()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.run_sequence"><code class="docutils literal notranslate"><span class="pre">OhmPi.run_sequence()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.run_sequence_async"><code class="docutils literal notranslate"><span class="pre">OhmPi.run_sequence_async()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.sequence"><code class="docutils literal notranslate"><span class="pre">OhmPi.sequence</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.set_sequence"><code class="docutils literal notranslate"><span class="pre">OhmPi.set_sequence()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.shutdown"><code class="docutils literal notranslate"><span class="pre">OhmPi.shutdown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.switch_mux_off"><code class="docutils literal notranslate"><span class="pre">OhmPi.switch_mux_off()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.switch_mux_on"><code class="docutils literal notranslate"><span class="pre">OhmPi.switch_mux_on()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.test_mux"><code class="docutils literal notranslate"><span class="pre">OhmPi.test_mux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.update_settings"><code class="docutils literal notranslate"><span class="pre">OhmPi.update_settings()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ohmpi.hardware_system.OhmPiHardware"><code class="docutils literal notranslate"><span class="pre">OhmPiHardware</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.hardware_system.OhmPiHardware.compute_tx_volt"><code class="docutils literal notranslate"><span class="pre">OhmPiHardware.compute_tx_volt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.hardware_system.OhmPiHardware.reset_mux"><code class="docutils literal notranslate"><span class="pre">OhmPiHardware.reset_mux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.hardware_system.OhmPiHardware.switch_mux"><code class="docutils literal notranslate"><span class="pre">OhmPiHardware.switch_mux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.hardware_system.OhmPiHardware.test_mux"><code class="docutils literal notranslate"><span class="pre">OhmPiHardware.test_mux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ohmpi.hardware_system.OhmPiHardware.vab_square_wave"><code class="docutils literal notranslate"><span class="pre">OhmPiHardware.vab_square_wave()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -90,6 +124,715 @@
 <span id="api"></span><h1>API reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
+<p id="module-ohmpi.ohmpi">created on January 6, 2020.
+Updates dec 2023; in-depth refactoring May 2023.
+Hardware: Licensed under CERN-OHL-S v2 or any later version
+Software: Licensed under the GNU General Public License v3.0
+Ohmpi.py is a program to control a low-cost and open hardware resistivity meters within the OhmPi project by
+Rémi CLEMENT (INRAE), Vivien DUBOIS (INRAE), Hélène GUYARD (IGE), Nicolas FORQUET (INRAE), Yannick FARGIER (IFSTTAR)
+Olivier KAUFMANN (UMONS), Arnaud WATLET (UMONS) and Guillaume BLANCHY (FNRS/ULiege).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ohmpi.ohmpi.</span></span><span class="sig-name descname"><span class="pre">OhmPi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mqtt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi" title="Link to this definition"></a></dt>
+<dd><p>OhmPi class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.sequence" title="ohmpi.ohmpi.OhmPi.sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sequence</span></code></a></dt><dd><p>Gets sequence</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.append_and_save" title="ohmpi.ohmpi.OhmPi.append_and_save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">append_and_save</span></code></a>(filename, last_measurement)</p></td>
+<td><p>Appends and saves the last measurement dict.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.download_data" title="ohmpi.ohmpi.OhmPi.download_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_data</span></code></a>([cmd_id])</p></td>
+<td><p>Create a zip of the data folder to then download it easily.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.get_data" title="ohmpi.ohmpi.OhmPi.get_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_data</span></code></a>([survey_names, cmd_id])</p></td>
+<td><p>Get available data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.interrupt" title="ohmpi.ohmpi.OhmPi.interrupt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interrupt</span></code></a>([cmd_id])</p></td>
+<td><p>Interrupts the acquisition.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.load_sequence" title="ohmpi.ohmpi.OhmPi.load_sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_sequence</span></code></a>(filename[, cmd_id])</p></td>
+<td><p>Reads quadrupole sequence from file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.quit" title="ohmpi.ohmpi.OhmPi.quit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quit</span></code></a>([cmd_id])</p></td>
+<td><p>Quits OhmPi.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.remove_data" title="ohmpi.ohmpi.OhmPi.remove_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_data</span></code></a>([cmd_id])</p></td>
+<td><p>Remove all data in the ´export_path´ folder on the raspberrypi.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.repeat_sequence" title="ohmpi.ohmpi.OhmPi.repeat_sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repeat_sequence</span></code></a>(**kwargs)</p></td>
+<td><p>Identical to run_multiple_sequences().</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.reset_mux" title="ohmpi.ohmpi.OhmPi.reset_mux"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_mux</span></code></a>([cmd_id])</p></td>
+<td><p>Switches off all multiplexer relays.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.restart" title="ohmpi.ohmpi.OhmPi.restart"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart</span></code></a>([cmd_id])</p></td>
+<td><p>Restarts the Raspberry Pi.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.rs_check" title="ohmpi.ohmpi.OhmPi.rs_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rs_check</span></code></a>([tx_volt, cmd_id, couple])</p></td>
+<td><p>Checks contact resistances.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.run_inversion" title="ohmpi.ohmpi.OhmPi.run_inversion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_inversion</span></code></a>([survey_names, elec_spacing])</p></td>
+<td><p>Run a simple 2D inversion using ResIPy (<a class="reference external" href="https://gitlab.com/hkex/resipy">https://gitlab.com/hkex/resipy</a>).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.run_measurement" title="ohmpi.ohmpi.OhmPi.run_measurement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_measurement</span></code></a>([quad, nb_stack, ...])</p></td>
+<td><p>Measures on a quadrupole and returns a dictionnary with the transfer resistance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.run_multiple_sequences" title="ohmpi.ohmpi.OhmPi.run_multiple_sequences"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_multiple_sequences</span></code></a>([sequence_delay, ...])</p></td>
+<td><p>Runs multiple sequences in a separate thread for monitoring mode.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.run_sequence" title="ohmpi.ohmpi.OhmPi.run_sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sequence</span></code></a>([fw_in_csv, fw_in_zip, cmd_id])</p></td>
+<td><p>Runs sequence synchronously (=blocking on main thread).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.run_sequence_async" title="ohmpi.ohmpi.OhmPi.run_sequence_async"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sequence_async</span></code></a>([cmd_id])</p></td>
+<td><p>Runs the sequence in a separate thread. Can be stopped by 'OhmPi.interrupt()'.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.set_sequence" title="ohmpi.ohmpi.OhmPi.set_sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_sequence</span></code></a>([sequence, cmd_id])</p></td>
+<td><p>Sets the sequence to acquire.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.shutdown" title="ohmpi.ohmpi.OhmPi.shutdown"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shutdown</span></code></a>([cmd_id])</p></td>
+<td><p>Shutdown the Raspberry Pi.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.switch_mux_off" title="ohmpi.ohmpi.OhmPi.switch_mux_off"><code class="xref py py-obj docutils literal notranslate"><span class="pre">switch_mux_off</span></code></a>(quadrupole[, cmd_id])</p></td>
+<td><p>Switches off multiplexer relays for given quadrupole.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.switch_mux_on" title="ohmpi.ohmpi.OhmPi.switch_mux_on"><code class="xref py py-obj docutils literal notranslate"><span class="pre">switch_mux_on</span></code></a>(quadrupole[, bypass_check, cmd_id])</p></td>
+<td><p>Switches on multiplexer relays for given quadrupole.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.test_mux" title="ohmpi.ohmpi.OhmPi.test_mux"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_mux</span></code></a>([activation_time, mux_id, cmd_id])</p></td>
+<td><p>Interactive method to test the multiplexer boards.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ohmpi.ohmpi.OhmPi.update_settings" title="ohmpi.ohmpi.OhmPi.update_settings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_settings</span></code></a>(settings[, cmd_id])</p></td>
+<td><p>Updates acquisition settings from a json file or dictionary.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>get_deprecated_methods</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>measure</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>read_quad</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>stop</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.append_and_save">
+<span class="sig-name descname"><span class="pre">append_and_save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_measurement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fw_in_csv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fw_in_zip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.append_and_save" title="Link to this definition"></a></dt>
+<dd><p>Appends and saves the last measurement dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>filename</strong><span class="classifier">str</span></dt><dd><p>Filename of the .csv.</p>
+</dd>
+<dt><strong>last_measurement</strong><span class="classifier">dict</span></dt><dd><p>Last measurement taken in the form of a python dictionary.</p>
+</dd>
+<dt><strong>fw_in_csv</strong><span class="classifier">bool, optional</span></dt><dd><p>Wether to save the full-waveform data in the .csv (one line per quadrupole).
+As these readings have different lengths for different quadrupole, the data are padded with NaN.
+If None, default is read from default.json.</p>
+</dd>
+<dt><strong>fw_in_zip</strong><span class="classifier">bool, optional</span></dt><dd><p>Wether to save the full-waveform data in a separate .csv in long format to be zipped to
+spare space. If None, default is read from default.json.</p>
+</dd>
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.download_data">
+<span class="sig-name descname"><span class="pre">download_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.download_data" title="Link to this definition"></a></dt>
+<dd><p>Create a zip of the data folder to then download it easily.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">survey_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.get_data" title="Link to this definition"></a></dt>
+<dd><p>Get available data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>survey_names</strong><span class="classifier">list of str, optional</span></dt><dd><p>List of filenames already available from the html interface. So
+their content won’t be returned again. Only files not in the list
+will be read.</p>
+</dd>
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.interrupt">
+<span class="sig-name descname"><span class="pre">interrupt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.interrupt" title="Link to this definition"></a></dt>
+<dd><p>Interrupts the acquisition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.load_sequence">
+<span class="sig-name descname"><span class="pre">load_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.load_sequence" title="Link to this definition"></a></dt>
+<dd><p>Reads quadrupole sequence from file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>filename</strong><span class="classifier">str</span></dt><dd><p>Path of the .csv or .txt file with A, B, M and N electrodes.
+Electrode index start at 1.</p>
+</dd>
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>sequence</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>Array of shape (number quadrupoles * 4).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.quit">
+<span class="sig-name descname"><span class="pre">quit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.quit" title="Link to this definition"></a></dt>
+<dd><p>Quits OhmPi.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.remove_data">
+<span class="sig-name descname"><span class="pre">remove_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.remove_data" title="Link to this definition"></a></dt>
+<dd><p>Remove all data in the ´export_path´ folder on the raspberrypi.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.repeat_sequence">
+<span class="sig-name descname"><span class="pre">repeat_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.repeat_sequence" title="Link to this definition"></a></dt>
+<dd><p>Identical to run_multiple_sequences().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.reset_mux">
+<span class="sig-name descname"><span class="pre">reset_mux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.reset_mux" title="Link to this definition"></a></dt>
+<dd><p>Switches off all multiplexer relays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.restart">
+<span class="sig-name descname"><span class="pre">restart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.restart" title="Link to this definition"></a></dt>
+<dd><p>Restarts the Raspberry Pi.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.rs_check">
+<span class="sig-name descname"><span class="pre">rs_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx_volt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">couple</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.rs_check" title="Link to this definition"></a></dt>
+<dd><p>Checks contact resistances.
+Strategy: we just open A and B, measure the current and using vAB set or
+assumed (12V assumed for battery), we compute Rab.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>tx_volt</strong><span class="classifier">float</span></dt><dd><p>Voltage of the injection.</p>
+</dd>
+<dt><strong>couple</strong><span class="classifier">array, for selecting a couple of electrode for checking resistance</span></dt><dd></dd>
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.run_inversion">
+<span class="sig-name descname"><span class="pre">run_inversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">survey_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elec_spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.run_inversion" title="Link to this definition"></a></dt>
+<dd><p>Run a simple 2D inversion using ResIPy (<a class="reference external" href="https://gitlab.com/hkex/resipy">https://gitlab.com/hkex/resipy</a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>survey_names</strong><span class="classifier">list of string, optional</span></dt><dd><p>Filenames of the survey to be inverted (including extension).</p>
+</dd>
+<dt><strong>elec_spacing</strong><span class="classifier">float (optional)</span></dt><dd><p>Electrode spacing in meters. We assume same electrode spacing everywhere. Default is 1 m.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">optional</span></dt><dd><p>Additional keyword arguments passed to <cite>resipy.Project.invert()</cite>. For instance
+<cite>reg_mode</cite> == 0 for batch inversion, <cite>reg_mode == 2</cite> for time-lapse inversion.
+See ResIPy document for more information on options available
+(<a class="reference external" href="https://hkex.gitlab.io/resipy/">https://hkex.gitlab.io/resipy/</a>).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>xzv</strong><span class="classifier">list of dict</span></dt><dd><p>Each dictionnary with key ‘x’ and ‘z’ for the centroid of the elements and ‘v’
+for the values in resistivity of the elements.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.run_measurement">
+<span class="sig-name descname"><span class="pre">run_measurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_stack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">injection_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duty_cycle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autogain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tx_volt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">best_tx_injtime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vab_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iab_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmn_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmn_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.run_measurement" title="Link to this definition"></a></dt>
+<dd><p>Measures on a quadrupole and returns a dictionnary with the transfer resistance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>quad</strong><span class="classifier">iterable (list of int)</span></dt><dd><p>Quadrupole to measure, just for labelling. Only switch_mux_on/off
+really create the route to the electrodes.</p>
+</dd>
+<dt><strong>nb_stack</strong><span class="classifier">int, optional</span></dt><dd><p>Number of stacks. A stack is considered two pulses (one
+positive, one negative). If 0, we will look for the best voltage.</p>
+</dd>
+<dt><strong>injection_duration</strong><span class="classifier">int, optional</span></dt><dd><p>Injection time in seconds.</p>
+</dd>
+<dt><strong>duty_cycle</strong><span class="classifier">float, optional</span></dt><dd><p>Duty cycle (default=0.5) of injection square wave.</p>
+</dd>
+<dt><strong>strategy</strong><span class="classifier">str, optional, default: constant</span></dt><dd><p>Define injection strategy (if power is adjustable, otherwise constant tx_volt, generally 12V battery is used).
+Either:
+- vmax : compute Vab to reach a maximum Vmn_max and Iab without exceeding vab_max
+- vmin : compute Vab to reach at least Vmn_min
+- constant : apply given Vab (tx_volt)
+Safety check (i.e. short voltage pulses) performed prior to injection to ensure
+injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
+To bypass safety check before injection, tx_volt should be set equal to vab_max (not recpommanded)</p>
+</dd>
+<dt><strong>vab_max</strong><span class="classifier">str, optional</span></dt><dd><p>Maximum injection voltage.
+Default value set by config or boards specs</p>
+</dd>
+<dt><strong>iab_max</strong><span class="classifier">str, optional</span></dt><dd><p>Maximum current applied.
+Default value set by config or boards specs</p>
+</dd>
+<dt><strong>vmn_max</strong><span class="classifier">str, optional</span></dt><dd><p>Maximum Vmn allowed.
+Default value set by config or boards specs</p>
+</dd>
+<dt><strong>vmn_min</strong></dt><dd><p>Minimum Vmn desired (used in strategy vmin).
+Default value set by config or boards specs</p>
+</dd>
+<dt><strong>tx_volt</strong><span class="classifier">float, optional  # TODO: change tx_volt to Vab</span></dt><dd><p>For power adjustable only. If specified, voltage will be imposed.</p>
+</dd>
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.run_multiple_sequences">
+<span class="sig-name descname"><span class="pre">run_multiple_sequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_meas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fw_in_csv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fw_in_zip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.run_multiple_sequences" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Runs multiple sequences in a separate thread for monitoring mode.</dt><dd><p>Can be stopped by ‘OhmPi.interrupt()’.
+Additional arguments are passed to run_measurement().</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sequence_delay</strong><span class="classifier">int, optional</span></dt><dd><p>Number of seconds at which the sequence must be started from each others.</p>
+</dd>
+<dt><strong>nb_meas</strong><span class="classifier">int, optional</span></dt><dd><p>Number of time the sequence must be repeated.</p>
+</dd>
+<dt><strong>fw_in_csv</strong><span class="classifier">bool, optional</span></dt><dd><p>Wether to save the full-waveform data in the .csv (one line per quadrupole).
+As these readings have different lengths for different quadrupole, the data are padded with NaN.
+If None, default is read from default.json.</p>
+</dd>
+<dt><strong>fw_in_zip</strong><span class="classifier">bool, optional</span></dt><dd><p>Wether to save the full-waveform data in a separate .csv in long format to be zipped to
+spare space. If None, default is read from default.json.</p>
+</dd>
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>See help(OhmPi.run_measurement) for more info.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.run_sequence">
+<span class="sig-name descname"><span class="pre">run_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_in_csv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fw_in_zip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.run_sequence" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Runs sequence synchronously (=blocking on main thread).</dt><dd><p>Additional arguments are passed to run_measurement().</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>fw_in_csv</strong><span class="classifier">bool, optional</span></dt><dd><p>Wether to save the full-waveform data in the .csv (one line per quadrupole).
+As these readings have different lengths for different quadrupole, the data are padded with NaN.
+If None, default is read from default.json.</p>
+</dd>
+<dt><strong>fw_in_zip</strong><span class="classifier">bool, optional</span></dt><dd><p>Wether to save the full-waveform data in a separate .csv in long format to be zipped to
+spare space. If None, default is read from default.json.</p>
+</dd>
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.run_sequence_async">
+<span class="sig-name descname"><span class="pre">run_sequence_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.run_sequence_async" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Runs the sequence in a separate thread. Can be stopped by ‘OhmPi.interrupt()’.</dt><dd><p>Additional arguments are passed to run_measurement().</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.sequence">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sequence</span></span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.sequence" title="Link to this definition"></a></dt>
+<dd><p>Gets sequence</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.set_sequence">
+<span class="sig-name descname"><span class="pre">set_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.set_sequence" title="Link to this definition"></a></dt>
+<dd><p>Sets the sequence to acquire.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sequence</strong><span class="classifier">list of list or array_like</span></dt><dd><p>Sequence of quadrupoles (list of list or array_like).</p>
+</dd>
+<dt><strong>cmd_id: str, optional</strong></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.shutdown">
+<span class="sig-name descname"><span class="pre">shutdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.shutdown" title="Link to this definition"></a></dt>
+<dd><p>Shutdown the Raspberry Pi.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.switch_mux_off">
+<span class="sig-name descname"><span class="pre">switch_mux_off</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quadrupole</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.switch_mux_off" title="Link to this definition"></a></dt>
+<dd><p>Switches off multiplexer relays for given quadrupole.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>quadrupole</strong><span class="classifier">list of 4 int</span></dt><dd><p>List of 4 integers representing the electrode numbers.</p>
+</dd>
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.switch_mux_on">
+<span class="sig-name descname"><span class="pre">switch_mux_on</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quadrupole</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bypass_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.switch_mux_on" title="Link to this definition"></a></dt>
+<dd><p>Switches on multiplexer relays for given quadrupole.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>quadrupole</strong><span class="classifier">list of 4 int</span></dt><dd><p>List of 4 integers representing the electrode numbers.</p>
+</dd>
+<dt><strong>bypass_check: bool, optional</strong></dt><dd><p>Bypasses checks for A==M or A==N or B==M or B==N (i.e. used for rs-check).</p>
+</dd>
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.test_mux">
+<span class="sig-name descname"><span class="pre">test_mux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">activation_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mux_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.test_mux" title="Link to this definition"></a></dt>
+<dd><p>Interactive method to test the multiplexer boards.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>activation_time</strong><span class="classifier">float, optional</span></dt><dd><p>Time in seconds during which the relays are activated.</p>
+</dd>
+<dt><strong>mux_id</strong><span class="classifier">str, optional</span></dt><dd><p>ID of the mux_board to test.</p>
+</dd>
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.ohmpi.OhmPi.update_settings">
+<span class="sig-name descname"><span class="pre">update_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.ohmpi.OhmPi.update_settings" title="Link to this definition"></a></dt>
+<dd><p>Updates acquisition settings from a json file or dictionary.
+Parameters can be:
+- nb_electrodes (number of electrode used, if 4, no MUX needed)
+- injection_duration (in seconds)
+- nb_meas (total number of times the sequence will be run)
+- sequence_delay (delay in second between each sequence run)
+- nb_stack (number of stack for each quadrupole measurement)
+- strategy (injection strategy: constant, vmax, vmin)
+- duty_cycle (injection duty cycle comprised between 0.5 - 1)
+- export_path (path where to export the data, timestamp will be added to filename)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>settings</strong><span class="classifier">str, dict</span></dt><dd><p>Path to the .json settings file or dictionary of settings.</p>
+</dd>
+<dt><strong>cmd_id</strong><span class="classifier">str, optional</span></dt><dd><p>Unique command identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-ohmpi.hardware_system"></span><dl class="py class">
+<dt class="sig sig-object py" id="ohmpi.hardware_system.OhmPiHardware">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ohmpi.hardware_system.</span></span><span class="sig-name descname"><span class="pre">OhmPiHardware</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.hardware_system.OhmPiHardware" title="Link to this definition"></a></dt>
+<dd><p>OhmPiHardware class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>pulses</strong></dt><dd></dd>
+<dt><strong>pwr_state</strong></dt><dd></dd>
+<dt><strong>sp</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.hardware_system.OhmPiHardware.compute_tx_volt" title="ohmpi.hardware_system.OhmPiHardware.compute_tx_volt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_tx_volt</span></code></a>([pulse_duration, strategy, ...])</p></td>
+<td><p>Estimates best Tx voltage based on different strategies.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ohmpi.hardware_system.OhmPiHardware.reset_mux" title="ohmpi.hardware_system.OhmPiHardware.reset_mux"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_mux</span></code></a>()</p></td>
+<td><p>Switches off all multiplexer relays.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.hardware_system.OhmPiHardware.switch_mux" title="ohmpi.hardware_system.OhmPiHardware.switch_mux"><code class="xref py py-obj docutils literal notranslate"><span class="pre">switch_mux</span></code></a>(electrodes[, roles, state])</p></td>
+<td><p>Switches on multiplexer relays for given quadrupole.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ohmpi.hardware_system.OhmPiHardware.test_mux" title="ohmpi.hardware_system.OhmPiHardware.test_mux"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_mux</span></code></a>([channel, activation_time])</p></td>
+<td><p>Interactive method to test the multiplexer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ohmpi.hardware_system.OhmPiHardware.vab_square_wave" title="ohmpi.hardware_system.OhmPiHardware.vab_square_wave"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vab_square_wave</span></code></a>(vab, cycle_duration[, ...])</p></td>
+<td><p>Performs a Vab injection following a square wave and records full waveform data.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>calibrate_rx_bias</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>last_dev</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>last_iab</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>last_iab_dev</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>last_resistance</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>last_vmn</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>last_vmn_dev</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>select_samples</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.hardware_system.OhmPiHardware.compute_tx_volt">
+<span class="sig-name descname"><span class="pre">compute_tx_volt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pulse_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vmax'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tx_volt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vab_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iab_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmn_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmn_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">-1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_vab_lim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.hardware_system.OhmPiHardware.compute_tx_volt" title="Link to this definition"></a></dt>
+<dd><p>Estimates best Tx voltage based on different strategies.
+At first a half-cycle is made for a short duration with a fixed
+known voltage. This gives us Iab and Rab. We also measure Vmn.
+A constant c = vmn/iab is computed (only depends on geometric
+factor and ground resistivity, that doesn’t change during a
+quadrupole). Then depending on the strategy, we compute which
+vab to inject to reach the minimum/maximum Iab current or
+min/max Vmn.
+This function also compute the polarity on Vmn (on which pin
+of the ADS1115 we need to measure Vmn to get the positive value).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>pulse_duration</strong><span class="classifier">float, optional</span></dt><dd><p>Time in seconds for the pulse used to compute Rab.</p>
+</dd>
+<dt><strong>strategy</strong><span class="classifier">str, optional</span></dt><dd><p>Either:
+- vmax : compute Vab to reach a maximum Iab without exceeding vab_max
+- vmin : compute Vab to reach at least vmn_min
+- constant : apply given Vab</p>
+</dd>
+<dt><strong>tx_volt</strong><span class="classifier">float, optional</span></dt><dd><p>Voltage to apply for guessing the best voltage. 5 V applied
+by default. If strategy “constant” is chosen, constant voltage
+to applied is “tx_volt”.</p>
+</dd>
+<dt><strong>vab_max</strong><span class="classifier">float, optional</span></dt><dd><p>Maximum injection voltage to apply to tx (used by all strategies)</p>
+</dd>
+<dt><strong>vmn_min</strong><span class="classifier">float, optional</span></dt><dd><p>Minimum voltage target for rx (used by vmin strategy)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>vab</strong><span class="classifier">float</span></dt><dd><p>Proposed Vab according to the given strategy.</p>
+</dd>
+<dt>polarity:</dt><dd><p>Polarity of VMN relative to polarity of VAB</p>
+</dd>
+<dt><strong>rab</strong><span class="classifier">float</span></dt><dd><p>Resistance between injection electrodes</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.hardware_system.OhmPiHardware.reset_mux">
+<span class="sig-name descname"><span class="pre">reset_mux</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.hardware_system.OhmPiHardware.reset_mux" title="Link to this definition"></a></dt>
+<dd><p>Switches off all multiplexer relays.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.hardware_system.OhmPiHardware.switch_mux">
+<span class="sig-name descname"><span class="pre">switch_mux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">electrodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'off'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.hardware_system.OhmPiHardware.switch_mux" title="Link to this definition"></a></dt>
+<dd><p>Switches on multiplexer relays for given quadrupole.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>electrodes</strong><span class="classifier">list</span></dt><dd><p>List of integers representing the electrode ids.</p>
+</dd>
+<dt><strong>roles</strong><span class="classifier">list, optional</span></dt><dd><p>List of roles of electrodes, optional</p>
+</dd>
+<dt><strong>state</strong><span class="classifier">str, optional</span></dt><dd><p>Either ‘on’ or ‘off’.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.hardware_system.OhmPiHardware.test_mux">
+<span class="sig-name descname"><span class="pre">test_mux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.hardware_system.OhmPiHardware.test_mux" title="Link to this definition"></a></dt>
+<dd><p>Interactive method to test the multiplexer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>channel</strong><span class="classifier">tuple, optional</span></dt><dd><p>(electrode_nr, role) to test.</p>
+</dd>
+<dt><strong>activation_time</strong><span class="classifier">float, optional</span></dt><dd><p>Time in seconds during which the relays are activated.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ohmpi.hardware_system.OhmPiHardware.vab_square_wave">
+<span class="sig-name descname"><span class="pre">vab_square_wave</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycle_duration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duty_cycle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ohmpi.hardware_system.OhmPiHardware.vab_square_wave" title="Link to this definition"></a></dt>
+<dd><p>Performs a Vab injection following a square wave and records full waveform data. Calls in function Vab_pulses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>vab: float,</strong></dt><dd><p>Injection voltage [V]</p>
+</dd>
+<dt><strong>cycle_duration: float</strong></dt><dd><p>Duration of one cycle within the square wave (in seconds)</p>
+</dd>
+<dt><strong>sampling_rate: float, None Default None</strong></dt><dd><p>Sampling rate for Rx readings</p>
+</dd>
+<dt><strong>cycles: integer, Default: 3</strong></dt><dd><p>Number of cycles</p>
+</dd>
+<dt><strong>polarity: 1, 0 , -1</strong></dt><dd><p>Starting polarity</p>
+</dd>
+<dt><strong>duty_cycle: float (0 to 1)</strong></dt><dd><p>Duty cycle of injection wave</p>
+</dd>
+<dt><strong>append: bool, Default: False</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
