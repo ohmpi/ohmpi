@@ -11,11 +11,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=1eb482ec"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -33,6 +33,7 @@
           
           <a href="../../../index.html" class="icon icon-home">
             OhmPi
+              <img src="../../../_static/LOGO_OHMPI.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -100,7 +101,7 @@
 <p><strong>OhmPi is a participative project open to all, it requires skills in electronics and to respect the safety rules. OhmPi must be assembled in a professional context and by people competent in electronics. The OhmPi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The OhmPi team cannot be held responsible if the equipment does not work after assembly.</strong></p>
 </div>
 <section id="mux-board-v2024">
-<h1>MUX board v2024<a class="headerlink" href="#mux-board-v2024" title="Permalink to this heading"></a></h1>
+<h1>MUX board v2024<a class="headerlink" href="#mux-board-v2024" title="Link to this heading"></a></h1>
 <p>The MUX board v2024 uses the same technology than the MUX board v2023, i.e. mechanical multiplexing. However it introduces
 a new level of flexibility by addressing multiple roles (A, B, M, N), which allows to build OhmPi system with multiple of 8 electrodes.
 Users can physically configure the MUX board to address 2 roles (A, B or M, N) or 4 roles (A, B, M, N). With only 32 relays,
@@ -111,12 +112,133 @@ A newly introduced I2C extension board (featuring a TCA9548A multiplexer) allows
 In theory, up to 8 I2C extension boards can be connected to the measurement board, which would allow to pilot 2048 electrodes.
 For obvious practical reasons, such a configuration couldn’t be tested and is likely to be limited by the I2C bus being phisically too long,
 which would prevent to reach so many GPIOs.
+The MUX board v2024 also comes with both IDC connectors and screw connectors for the electrode takeouts, which allows to directly connect the electrode arrays to the board.
 In an effort to mitigate supply shortages, a last addition concerns the power mosfet associated with the relays,
 with the possibility to mount two types of components depending on market availability: either ZVN4206A or STP16NF06L.</p>
 <p>Here, we will present how to assemble and configure a 32-electrode system, based on 4 MUX-board v2024 set up to address 2 roles / 16 electrodes each.</p>
-<section id="assembly-of-mux-board-2024">
-<h2>Assembly of MUX board 2024<a class="headerlink" href="#assembly-of-mux-board-2024" title="Permalink to this heading"></a></h2>
-<p><strong>TODO</strong></p>
+<section id="part-a-assembly-of-mux-board-2024">
+<h2><strong>PART A</strong> Assembly of MUX board 2024<a class="headerlink" href="#part-a-assembly-of-mux-board-2024" title="Link to this heading"></a></h2>
+<section id="required-components">
+<h3>Required components<a class="headerlink" href="#required-components" title="Link to this heading"></a></h3>
+<figure class="align-center">
+<img alt="alternate text" src="../../../_images/MUX_v2024_components.jpg" />
+</figure>
+</section>
+<section id="mounting-components-on-pcb-board">
+<h3>Mounting components on PCB board<a class="headerlink" href="#mounting-components-on-pcb-board" title="Link to this heading"></a></h3>
+<p>MUX board v2024 PCB (mux.2024.0.0).</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>1</p></td>
+<td><img alt="../../../_images/111.jpg" src="../../../_images/111.jpg" />
+</td>
+</tr>
+</tbody>
+</table>
+<p>Mount the 100 kOhm resistors.
+.. table:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="n">align</span><span class="p">:</span> <span class="n">center</span>
+
+<span class="o">+--------+--------------------------------------------------------------------------------+</span>
+<span class="o">|</span>    <span class="mi">2</span>   <span class="o">|</span>   <span class="o">..</span> <span class="n">image</span><span class="p">::</span> <span class="o">../../../</span><span class="n">img</span><span class="o">/</span><span class="n">mux</span><span class="mf">.2024.0</span><span class="o">.</span><span class="n">x</span><span class="o">/</span><span class="mf">2.</span><span class="n">jpg</span>                                   <span class="o">|</span>
+<span class="o">+--------+--------------------------------------------------------------------------------+</span>
+</pre></div>
+</div>
+<p>Mount the diodes.
+.. table:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="n">align</span><span class="p">:</span> <span class="n">center</span>
+
+<span class="o">+--------+--------------------------------------------------------------------------------+</span>
+<span class="o">|</span>    <span class="mi">2</span>   <span class="o">|</span>   <span class="o">..</span> <span class="n">image</span><span class="p">::</span> <span class="o">../../../</span><span class="n">img</span><span class="o">/</span><span class="n">mux</span><span class="mf">.2024.0</span><span class="o">.</span><span class="n">x</span><span class="o">/</span><span class="mf">3.</span><span class="n">jpg</span>                                   <span class="o">|</span>
+<span class="o">+--------+--------------------------------------------------------------------------------+</span>
+</pre></div>
+</div>
+<p>Mount the mosfets. You can chose between ZVN4206A or STP16NF06L.
+.. table:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="n">align</span><span class="p">:</span> <span class="n">center</span>
+
+<span class="o">+--------+--------------------------------------------------------------------------------+</span>
+<span class="o">|</span>    <span class="mi">2</span>   <span class="o">|</span>   <span class="o">..</span> <span class="n">image</span><span class="p">::</span> <span class="o">../../../</span><span class="n">img</span><span class="o">/</span><span class="n">mux</span><span class="mf">.2024.0</span><span class="o">.</span><span class="n">x</span><span class="o">/</span><span class="mf">4.</span><span class="n">jpg</span>                                   <span class="o">|</span>
+<span class="o">+--------+--------------------------------------------------------------------------------+</span>
+</pre></div>
+</div>
+<p>Mount the MCP23017 sockets and the capacitors.
+.. table:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="n">align</span><span class="p">:</span> <span class="n">center</span>
+
+<span class="o">+--------+--------------------------------------------------------------------------------+</span>
+<span class="o">|</span>    <span class="mi">2</span>   <span class="o">|</span>   <span class="o">..</span> <span class="n">image</span><span class="p">::</span> <span class="o">../../../</span><span class="n">img</span><span class="o">/</span><span class="n">mux</span><span class="mf">.2024.0</span><span class="o">.</span><span class="n">x</span><span class="o">/</span><span class="mf">5.</span><span class="n">jpg</span>                                   <span class="o">|</span>
+<span class="o">+--------+--------------------------------------------------------------------------------+</span>
+</pre></div>
+</div>
+<p>Mount the screw connectors and the IDC connectors. Note that if a board is dedicated to be
+configured in 2-role mode, the electrode takeouts can be mounted with 8 screw connectors only
+(on electrodes 1-8) and potentially a 8 position IDC connector for the IDC takeout.</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>2</p></td>
+<td><img alt="../../../_images/61.jpg" src="../../../_images/61.jpg" />
+</td>
+</tr>
+</tbody>
+</table>
+<p>Mount the relays.
+.. table:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="n">align</span><span class="p">:</span> <span class="n">center</span>
+
+<span class="o">+--------+--------------------------------------------------------------------------------+</span>
+<span class="o">|</span>    <span class="mi">2</span>   <span class="o">|</span>   <span class="o">..</span> <span class="n">image</span><span class="p">::</span> <span class="o">../../../</span><span class="n">img</span><span class="o">/</span><span class="n">mux</span><span class="mf">.2024.0</span><span class="o">.</span><span class="n">x</span><span class="o">/</span><span class="mf">7.</span><span class="n">jpg</span>                                   <span class="o">|</span>
+<span class="o">+--------+--------------------------------------------------------------------------------+</span>
+</pre></div>
+</div>
+</section>
+<section id="defining-role-configuration">
+<h3>Defining role configuration<a class="headerlink" href="#defining-role-configuration" title="Link to this heading"></a></h3>
+<p>The MUX board v2024 can be configured in 2- or 4-role mode. This means that one board can either address
+16 electrodes on 2 roles (X,Y for A,B or M,N), or 8 electrodes on 4 roles (labelled X,Y,XX,YY for A,B,M,N).
+An OhmPi system can manage a combination of 2-role and 4-role MUX boards as long as the 2-role boards come in pairs
+(e.g. 2 2-role MUX and 1 4-role MUX for 24 electrodes).</p>
+<section id="role-configuration">
+<h4>2-role configuration<a class="headerlink" href="#role-configuration" title="Link to this heading"></a></h4>
+<p>This configuration is the prefered way to build systems with an even number of MUX boards (for 16, 32, 48 electrodes).
+However, when assembling an OhmPi, keep in mind that 2-role mode MUX boards have to come in pairs.</p>
+<p>To enable the 2-role mode, 2 “roles” solder jumpers have to be bridged in the front side of the PCB next to the roles connector.
+To do so, the two jumper pads of each bridge have to be soldered together. This will connect roles X and roles XX together,
+as well as roles Y and YY together. In this way, the board is configure in 2-role mode.
+You can verify that the pair of roles X - XX and Y - YY are well connected by doing continuity checks with a digital voltmeter.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Make sure that the 8 “electrodes” solder jumpers at the back of the PCB are NOT bridged to avoid risks of shortcuts !</p>
+</div>
+</section>
+<section id="id1">
+<h4>4-role configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p>Configuring a board in 4-role mode enables to use an odd number of MUX board (for systems with 8, 24, 40, 56,… electrodes).
+To do so, the 8 “electrodes” solder jumpers at the back of the PCB have to be bridged. In this way relays of electrodes
+relays of the following electrodes are paired together (albeit on different roles A, B, M and N): 1-16, 2-15, 3-14, 4-13, 5-12, 6-11, 7-10, 8-9.
+You can verify that these combinations are connected together by continuity checks with a digital voltmeter.
+It is best practice to only mount 8 screw connectors on the electrodes takeouts (and potentially only a 8 position IDC connector)
+to avoid confusion when cabling the system.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Make sure that the two “roles” solder jumpers at the front remain NOT bridged to avoid risks of shortcuts !</p>
+</div>
+</section>
+</section>
+</section>
+<section id="part-b-assembling-mux-boards-in-an-ohmpi-system">
+<h2><strong>PART B</strong> Assembling MUX boards in an OhmPi system<a class="headerlink" href="#part-b-assembling-mux-boards-in-an-ohmpi-system" title="Link to this heading"></a></h2>
+<p>The cabling of several MUX boards v2024 within an OhmPi system is entirely dependent on the role configuration of each board.
+* 2-role MUX boards have to come in pairs. The 16 electrodes takeouts of each pair have to be cabled together. This is easily done with a ribbon cable</p>
+<blockquote>
+<div><p>plugged on the 16-way IDC connectors of the pair of boards. This also allows to stack two boards together leaving the screw connectors of the board on the top
+accessible to connect wires from the electrode arrays.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>4-role MUX boards don’t have to come in pairs. The 4 roles of each board have to be connected to the other 4 roles of the system (and at least to the ABMN connector on the meausremnt board).
+The electrodes connectors can only be used to address the first 8 or the last 8 positions.
+This is critical if wanting to connect the electrodes via the IDC connectors, which whill have to be carefully cabled.</p></li>
+</ul>
 </section>
 </section>
 

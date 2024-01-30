@@ -11,11 +11,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=1eb482ec"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -33,6 +33,7 @@
           
           <a href="../../../index.html" class="icon icon-home">
             OhmPi
+              <img src="../../../_static/LOGO_OHMPI.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -96,7 +97,7 @@
            <div itemprop="articleBody">
              
   <section id="configuration">
-<span id="config"></span><h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h1>
+<span id="config"></span><h1>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h1>
 <p>The configuration file <cite>config.py</cite> defines how the OhmPi system is assembled and expected to behave. It tells the software how the hardware is set up, cabled and configured.
 In certain cases, it also allows you to define hardware specifications, such as the maximum voltage that a specific MUX board can handle.
 For general purpose, most specifications can be left on default values.</p>
@@ -105,7 +106,7 @@ For general purpose, most specifications can be left on default values.</p>
 <p>Not to be confused with <a class="reference internal" href="settings.html#settings"><span class="std std-ref">Acquisition settings</span></a>. One configuration specified in a config.py file can handle multiple combinations of acquisition settings.</p>
 </div>
 <section id="default-configuration">
-<h2>Default configuration<a class="headerlink" href="#default-configuration" title="Permalink to this heading"></a></h2>
+<h2>Default configuration<a class="headerlink" href="#default-configuration" title="Link to this heading"></a></h2>
 <p>A default version of <cite>config.py</cite> is provided in the repository.
 This file should be edited to customize the configuration following the user’s needs and preferences.
 A series of default configuration files are available in the configs folder. A simple helper command can help you select the appropriate configuration file depending on your version of the meausurement board and type of MUX boards.
@@ -122,9 +123,9 @@ Updating the configuration file manually is mandatory for custom systems combini
 </div>
 </section>
 <section id="configuration-file-structure">
-<h2>Configuration file structure<a class="headerlink" href="#configuration-file-structure" title="Permalink to this heading"></a></h2>
+<h2>Configuration file structure<a class="headerlink" href="#configuration-file-structure" title="Link to this heading"></a></h2>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">Config file header</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">Config file header</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="kn">import</span> <span class="nn">logging</span>
   <span class="kn">from</span> <span class="nn">ohmpi.utils</span> <span class="kn">import</span> <span class="n">get_platform</span>
 
@@ -145,7 +146,7 @@ Updating the configuration file manually is mandatory for custom systems combini
 <li><p>OHMPI_CONFIG: the OhmPi instrument information (id of the instrument and default settings).</p></li>
 </ol>
 <div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">OHMPI_CONFIG: Dictionary containing basic informations about the OhmPi instrument</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">OHMPI_CONFIG: Dictionary containing basic informations about the OhmPi instrument</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># OhmPi configuration</span>
 <span class="n">OHMPI_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">ohmpi_id</span><span class="p">,</span>  <span class="c1"># Unique identifier of the OhmPi board (string), default = &#39;0001&#39;</span>
@@ -158,7 +159,7 @@ Updating the configuration file manually is mandatory for custom systems combini
 <li><p>HARDWARE_CONFIG: the hardware system in which the five different modules ‘ctl’ (controller), ‘tx’ (transmitter), ‘rx’ (receiver), ‘mux’ (multiplexers), ‘pwr’ (power).</p></li>
 </ol>
 <span id="table-hardware-config"></span><table class="docutils align-default" id="id3">
-<caption><span class="caption-text">HARDWARE_CONFIG</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text">HARDWARE_CONFIG</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head" rowspan="2"><p>Main Key</p></th>
 <th class="head" rowspan="2"><p>Module Key</p></th>
@@ -312,7 +313,7 @@ Updating the configuration file manually is mandatory for custom systems combini
 </tbody>
 </table>
 <span id="table-mux-config"></span><table class="docutils align-default" id="id4">
-<caption><span class="caption-text">MUX board general config in HARDWARE_CONFIG</span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text">MUX board general config in HARDWARE_CONFIG</span><a class="headerlink" href="#id4" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head" rowspan="2"><p>Module Key</p></th>
 <th class="head" colspan="3"><p>Value</p></th>
@@ -390,46 +391,10 @@ Updating the configuration file manually is mandatory for custom systems combini
 <td><p><em>float</em>, e.g. 3.</p></td>
 <td><p>Sets maximum current to 3 A.</p></td>
 </tr>
-<tr class="row-odd"><td rowspan="2"><p>i2c_ext_tca_address</p></td>
-<td rowspan="2"><p>I2C address of I2C extension</p></td>
-<td><p>None <em>(default)</em></p></td>
-<td><p>No I2C extensions cabled.</p></td>
-</tr>
-<tr class="row-even"><td><p><em>hex integer</em>, e.g. 0x71</p></td>
-<td><p>Address of I2C extension</p></td>
-</tr>
-<tr class="row-odd"><td><p>i2c_ext_tca_channel</p></td>
-<td><p>Channel of the I2C extension</p></td>
-<td><p><em>int</em> 0 - 7</p></td>
-<td><p>Channel used in case I2C extension configured.</p></td>
-</tr>
 </tbody>
 </table>
 <table class="docutils align-default" id="id5">
-<caption><span class="caption-text">MUX 2023 board specific config in HARDWARE_CONFIG</span><a class="headerlink" href="#id5" title="Permalink to this table"></a></caption>
-<thead>
-<tr class="row-odd"><th class="head" rowspan="2"><p>Module Key</p></th>
-<th class="head" colspan="3"><p>Value</p></th>
-</tr>
-<tr class="row-even"><th class="head"><p>Description</p></th>
-<th class="head"><p>Expected Value</p></th>
-<th class="head"><p>Value description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-odd"><td><p>mux_tca_address</p></td>
-<td><p>I2C address of MUX board</p></td>
-<td><div class="line-block">
-<div class="line"><em>hex integer</em></div>
-<div class="line">0x70 - 0x77</div>
-</div>
-</td>
-<td><p>Address of MUX board</p></td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default" id="id6">
-<caption><span class="caption-text">MUX 2024 board specific config in HARDWARE_CONFIG</span><a class="headerlink" href="#id6" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text">MUX 2024 board specific config in HARDWARE_CONFIG</span><a class="headerlink" href="#id5" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head" rowspan="2"><p>Module Key</p></th>
 <th class="head" colspan="3"><p>Value</p></th>
@@ -464,13 +429,25 @@ Updating the configuration file manually is mandatory for custom systems combini
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td rowspan="2"><p>tca_address</p></td>
+<td rowspan="2"><p>I2C address of I2C extension</p></td>
+<td><p>None <em>(default)</em></p></td>
+<td><p>No I2C extensions cabled.</p></td>
+</tr>
+<tr class="row-even"><td><p><em>hex integer</em>, e.g. 0x71</p></td>
+<td><p>Address of I2C extension</p></td>
+</tr>
+<tr class="row-odd"><td><p>tca_channel</p></td>
+<td><p>Channel of the I2C extension</p></td>
+<td><p><em>int</em> 0 - 7</p></td>
+<td><p>Channel used in case I2C extension configured.</p></td>
+</tr>
 </tbody>
 </table>
-<ol class="arabic simple">
-<li><p>the logging dictionaries divided in:</p></li>
-</ol>
-<div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text">EXEC_LOGGING_CONFIG: dictionary configuring how the execution commands are being logged by the system. Useful for debugging.</span><a class="headerlink" href="#id7" title="Permalink to this code"></a></div>
+<p>Here’s an example of the HARDWARE_CONFIG:</p>
+<p>The logging dictionaries divided in:</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">EXEC_LOGGING_CONFIG: dictionary configuring how the execution commands are being logged by the system. Useful for debugging.</span><a class="headerlink" href="#id6" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS</span>
 <span class="c1"># Execution logging configuration</span>
 <span class="n">EXEC_LOGGING_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
@@ -489,8 +466,8 @@ Updating the configuration file manually is mandatory for custom systems combini
 <ul class="simple">
 <li></li>
 </ul>
-<div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-text">DATA_LOGGING_CONFIG: Dictionary configuring the data logging capabilities of the system</span><a class="headerlink" href="#id8" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">DATA_LOGGING_CONFIG: Dictionary configuring the data logging capabilities of the system</span><a class="headerlink" href="#id7" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Data logging configuration</span>
 <span class="n">DATA_LOGGING_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;logging_level&#39;</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
@@ -504,11 +481,9 @@ Updating the configuration file manually is mandatory for custom systems combini
 </pre></div>
 </div>
 </div>
-<ol class="arabic simple">
-<li><p>the MQTT dictionaries divided in:</p></li>
-</ol>
-<div class="literal-block-wrapper docutils container" id="id9">
-<div class="code-block-caption"><span class="caption-text">MQTT_LOGGING_CONFIG</span><a class="headerlink" href="#id9" title="Permalink to this code"></a></div>
+<p>The MQTT dictionaries divided in:</p>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">MQTT_LOGGING_CONFIG</span><a class="headerlink" href="#id8" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MQTT logging configuration parameters</span>
 <span class="n">MQTT_LOGGING_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;hostname&#39;</span><span class="p">:</span> <span class="n">mqtt_broker</span><span class="p">,</span>
@@ -532,8 +507,8 @@ Updating the configuration file manually is mandatory for custom systems combini
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id10">
-<div class="code-block-caption"><span class="caption-text">MQTT_CONTROL_CONFIG</span><a class="headerlink" href="#id10" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">MQTT_CONTROL_CONFIG</span><a class="headerlink" href="#id9" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MQTT control configuration parameters</span>
 <span class="n">MQTT_CONTROL_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;hostname&#39;</span><span class="p">:</span> <span class="n">mqtt_broker</span><span class="p">,</span>

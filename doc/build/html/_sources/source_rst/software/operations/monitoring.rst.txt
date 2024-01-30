@@ -8,6 +8,7 @@ Repeated acquisition at fixed intervals
 The easiest way to set up time-lapse acquisition is to perform repeated acquisition of a sequence at fixed intervals.
 Repeated acquisition can be initiated from the three different `interfaces`_.
 
+.. code-block:: python
   ### Run multiple sequences at given time interval
   k.settings['nb_meas'] = 3  # run sequence three times
   k.settings['sequence_delay'] = 100 # every 100 s

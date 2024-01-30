@@ -11,11 +11,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=1eb482ec"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -33,6 +33,7 @@
           
           <a href="../../../index.html" class="icon icon-home">
             OhmPi
+              <img src="../../../_static/LOGO_OHMPI.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -97,26 +98,19 @@
            <div itemprop="articleBody">
              
   <section id="monitoring-application">
-<h1>Monitoring application<a class="headerlink" href="#monitoring-application" title="Permalink to this heading"></a></h1>
+<h1>Monitoring application<a class="headerlink" href="#monitoring-application" title="Link to this heading"></a></h1>
 <p>This section details ways to automate measurement acquisition in order to set up the OhmPi as a monitoring tool.</p>
 <section id="repeated-acquisition-at-fixed-intervals">
-<h2>Repeated acquisition at fixed intervals<a class="headerlink" href="#repeated-acquisition-at-fixed-intervals" title="Permalink to this heading"></a></h2>
+<h2>Repeated acquisition at fixed intervals<a class="headerlink" href="#repeated-acquisition-at-fixed-intervals" title="Link to this heading"></a></h2>
 <p>The easiest way to set up time-lapse acquisition is to perform repeated acquisition of a sequence at fixed intervals.
 Repeated acquisition can be initiated from the three different <a href="#id1"><span class="problematic" id="id2">`interfaces`_</span></a>.</p>
-<blockquote>
-<div><p>### Run multiple sequences at given time interval
-k.settings[‘nb_meas’] = 3  # run sequence three times
-k.settings[‘sequence_delay’] = 100 # every 100 s
-k.run_multiple_sequences()  # asynchron
-# k.interrupt()  # kill the asynchron sequence</p>
-</div></blockquote>
 </section>
 <section id="scheduled-acquisition-using-crontab">
-<h2>Scheduled acquisition using crontab<a class="headerlink" href="#scheduled-acquisition-using-crontab" title="Permalink to this heading"></a></h2>
+<h2>Scheduled acquisition using crontab<a class="headerlink" href="#scheduled-acquisition-using-crontab" title="Link to this heading"></a></h2>
 <p>Example run_sequence script and crontab screenshot</p>
 </section>
 <section id="iot-acquisition-and-sensor-trigger">
-<h2>IoT acquisition and sensor trigger<a class="headerlink" href="#iot-acquisition-and-sensor-trigger" title="Permalink to this heading"></a></h2>
+<h2>IoT acquisition and sensor trigger<a class="headerlink" href="#iot-acquisition-and-sensor-trigger" title="Link to this heading"></a></h2>
 <p>Example node-red experiment</p>
 </section>
 </section>

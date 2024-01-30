@@ -11,11 +11,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=1eb482ec"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -33,6 +33,7 @@
           
           <a href="../../../index.html" class="icon icon-home">
             OhmPi
+              <img src="../../../_static/LOGO_OHMPI.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -92,10 +93,10 @@
            <div itemprop="articleBody">
              
   <section id="acquisition-settings">
-<span id="settings"></span><h1>Acquisition settings<a class="headerlink" href="#acquisition-settings" title="Permalink to this heading"></a></h1>
+<span id="settings"></span><h1>Acquisition settings<a class="headerlink" href="#acquisition-settings" title="Link to this heading"></a></h1>
 <p>This section details the acquisition settings that can be specified for measurement on a quadrupole.</p>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">json dictionary containing the default settings contained in ´settings/default.json`</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">json dictionary containing the default settings contained in ´settings/default.json`</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="p">{</span>
   <span class="s2">&quot;injection_duration&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span> <span class="c1"># injection duration of one pulse within an injection cycl</span>
   <span class="s2">&quot;nb_stack&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="c1"># number of injection cycles (e.g. &#39;nb_stack&#39;=1 means one positive and one negative pulse)</span>
@@ -112,7 +113,7 @@
 </pre></div>
 </div>
 </div>
-<p>For more information on these settings, see the API doc for <code class="xref py py-func docutils literal notranslate"><span class="pre">ohmpi.ohmpi.OhmPi.run_measurement()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">ohmpi.ohmpi.OhmPi.run_measurement()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">ohmpi.ohmpi.OhmPi.run_measurement()</span></code></p>
+<p>For more information on these settings, see the API doc for <a class="reference internal" href="../api.html#ohmpi.ohmpi.OhmPi.run_measurement" title="ohmpi.ohmpi.OhmPi.run_measurement"><code class="xref py py-func docutils literal notranslate"><span class="pre">ohmpi.ohmpi.OhmPi.run_measurement()</span></code></a>, <a class="reference internal" href="../api.html#ohmpi.ohmpi.OhmPi.run_measurement" title="ohmpi.ohmpi.OhmPi.run_measurement"><code class="xref py py-func docutils literal notranslate"><span class="pre">ohmpi.ohmpi.OhmPi.run_measurement()</span></code></a> and <a class="reference internal" href="../api.html#ohmpi.ohmpi.OhmPi.run_measurement" title="ohmpi.ohmpi.OhmPi.run_measurement"><code class="xref py py-func docutils literal notranslate"><span class="pre">ohmpi.ohmpi.OhmPi.run_measurement()</span></code></a></p>
 <p>In addition to these default settings, and for advanced users, additional settings related to the injection strategy “vmax” and “vmin” can also be specified in the json settings file as follows:
 .. code-block:: python</p>
 <blockquote>

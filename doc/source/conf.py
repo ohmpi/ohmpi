@@ -15,6 +15,7 @@
 import os
 import sys
 sys.path.append(os.path.abspath('../../'))
+sys.path.append(os.path.abspath('../rpi_dummy_modules/'))
 # import ohmpi  # import Ohmpi module to be documented in api.rst by numpydoc
 import sphinx_rtd_theme
 
@@ -57,7 +58,7 @@ exclude_patterns = []
 
 
 # -- Options for HTML output -------------------------------------------------
-html_logo = '../img/logo/ohmpi/LOGO_OHMPI.png'
+html_logo = 'img/logo/ohmpi/LOGO_OHMPI.png'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
