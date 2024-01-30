@@ -2,7 +2,7 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from ohmpi.utils import change_config
-change_config('../configs/config_mb_2023_4_mux_2023.py', verbose=False)
+change_config('../configs/config_mb_2023__4_mux_2023.py', verbose=False)
 import importlib
 import os
 import time
