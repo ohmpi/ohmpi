@@ -89,7 +89,7 @@ class Tx(TxAbstract):
         self.voltage_adjustable = False
         self.current_adjustable = False
 
-        # I2C connexion to MCP23008, for current injection
+        # I2C connection to MCP23008, for current injection
         self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
         # ADS1115 for current measurement (AB)
         self._ads_current_address = kwargs['ads_address']

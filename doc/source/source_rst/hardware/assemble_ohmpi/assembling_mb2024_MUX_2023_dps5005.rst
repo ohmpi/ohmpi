@@ -348,6 +348,6 @@ You should hear each of the 256 MUX board relays activate and deactivate 1 at a 
 
 A measurement will start, and you should obtain your first measurement, with a value of R = 100 ohm (R1 on the equivalent circuit).
 
-If not check, your cable connexion and batteries
+If not check, your cable connection and batteries
 
 You can now connect the 4 cables of each MUX to the screw terminals of the measurement board identified ABMN.
