@@ -451,7 +451,10 @@ class OhmPi(object):
         """
         self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
         os.system('poweroff')  # this may require admin rights
- 
+
+    def plot_last_fw(self, save_fig=True, filename=None):
+        self._hw.plot_readings(save_fig=save_fig, filename=filename)
+
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
                         autogain=True, strategy=None, tx_volt=None, best_tx_injtime=0.1,
                         cmd_id=None, vab_max=None, iab_max=None, vmn_max=None, vmn_min=None, **kwargs):

@@ -560,7 +560,7 @@ class OhmPiHardware:
         #     polarity = 1
         return vab_opt
 
-    def _plot_readings(self, save_fig=False):
+    def _plot_readings(self, save_fig=False, filename=None):
         # Plot graphs
         warnings.filterwarnings("ignore", category=DeprecationWarning)
         fig, ax = plt.subplots(nrows=5, sharex=True)
@@ -578,7 +578,10 @@ class OhmPiHardware:
         ax[4].set_ylabel('SP [mV]')
         # fig.legend()
         if save_fig:
-            fig.savefig(f'figures/test.png')
+            if filename is None:
+                fig.savefig(f'figures/test.png')
+            else:
+                fig.savefig(filename)
         else:
             plt.show()
         warnings.resetwarnings()
