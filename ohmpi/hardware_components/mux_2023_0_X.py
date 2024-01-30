@@ -67,7 +67,6 @@ class Mux(MuxAbstract):
             subclass_init = False
         else:
             subclass_init = True
-        kwargs.update({'cabling': kwargs.pop('cabling', default_mux_cabling)})
         super().__init__(**kwargs)
         if not subclass_init:
             self.exec_logger.event(f'{self.model}: {self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
@@ -79,7 +78,7 @@ class Mux(MuxAbstract):
             roles = ['A'] # NOTE: defaults to 1-role
         elif isinstance(roles, str):
             roles = [roles]
-        if isinstance(roles,dict): # roles if config are already formatted as {'A':'X'}
+        if isinstance(roles, dict): # roles if config are already formatted as {'A':'X'}
             self._roles = roles
         else:
             self._roles = {roles[0]:'X'}
