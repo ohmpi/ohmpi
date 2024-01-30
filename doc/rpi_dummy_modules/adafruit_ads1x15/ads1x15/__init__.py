@@ -1,3 +1,2 @@
-# dummy board module
-
+# dummy module
 Mode = None

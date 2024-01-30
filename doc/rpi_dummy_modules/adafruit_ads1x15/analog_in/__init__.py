@@ -1,3 +1,2 @@
-# dummy board module
-
+# dummy module
 AnalogIn = None

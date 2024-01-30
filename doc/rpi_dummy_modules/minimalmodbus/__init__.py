@@ -1,5 +1,3 @@
-# dummy board module
-
+# dummy module
 MODE_RTU = None
 Instrument = None
-

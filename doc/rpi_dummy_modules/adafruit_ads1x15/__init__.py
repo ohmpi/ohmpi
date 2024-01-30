@@ -1,3 +1,1 @@
-# dummy board module
-
-
+# dummy module

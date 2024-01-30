@@ -1,3 +1,2 @@
-# dummy board module
-
+# dummy module
 MCP23008 = None
