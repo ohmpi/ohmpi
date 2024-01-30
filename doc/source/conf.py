@@ -57,7 +57,7 @@ exclude_patterns = []
 
 
 # -- Options for HTML output -------------------------------------------------
-html_logo = '../img/logo/ohmpi/LOGO_OHMPI.png'
+html_logo = 'img/logo/ohmpi/LOGO_OHMPI.png'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
