@@ -15,13 +15,20 @@ OHMPI_CONFIG = {
     'id': ohmpi_id,  # Unique identifier of the OhmPi board (string)
     'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
 }
+
 r_shunt = 2.
+
+# default properties of system components that will be
+# overwritten by properties defined in each the board dict below.
+# if bounds are defined in board specs, values out of specs will be bounded to remain in specs
+# omitted properties in config will be set to board specs default values if they exist
+
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},
     'tx':  {'model': 'mb_2024_0_2',
              'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
-             'current_max': 4.8/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
+             'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
              'r_shunt': r_shunt,  # Shunt resistance in Ohms
              'interface_name': 'i2c',
              'vmn_hardware_offset': 2501.
@@ -29,7 +36,7 @@ HARDWARE_CONFIG = {
     'rx':  {'model': 'mb_2024_0_2',
              'latency': 0.010,  # latency in seconds in continuous mode
              'sampling_rate': 50,  # number of samples per second
-             'interface_name': 'i2c'
+             'interface_name': 'i2c',
             },
     'mux': {'boards':
                 {'mux_01':
@@ -39,7 +46,7 @@ HARDWARE_CONFIG = {
                       'addr1': 'up',
                       'addr2': 'up',
                       'tca_address': None,
-                      'tca_channel': 0},
+                      'tca_channel': 0,},
                  'mux_02':
                      {'model': 'mux_2024_0_X',
                       'electrodes': range(9, 17),
@@ -47,7 +54,7 @@ HARDWARE_CONFIG = {
                       'addr1': 'down',
                       'addr2': 'up',
                       'tca_address': None,
-                      'tca_channel': 0},
+                      'tca_channel': 0,},
                  'mux_03':
                      {'model': 'mux_2024_0_X',
                       'electrodes': range(17, 25),
@@ -55,15 +62,15 @@ HARDWARE_CONFIG = {
                       'addr1': 'up',
                       'addr2': 'down',
                       'tca_address': None,
-                      'tca_channel': 0},
+                      'tca_channel': 0,},
                 'mux_04':
                      {'model': 'mux_2024_0_X',
-                      'electrodes': range(25, 32),
+                      'electrodes': range(25, 33),
                       'roles': ['A', 'B', 'M', 'N'],
                       'addr1': 'down',
                       'addr2': 'down',
                       'tca_address': None,
-                      'tca_channel': 0},
+                      'tca_channel': 0,},
                  },
              'default': {'interface_name': 'i2c_ext',
                          'voltage_max': 50.,
