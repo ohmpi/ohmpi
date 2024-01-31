@@ -30,6 +30,7 @@ typ = 'mod'
 try:
     importlib.import_module('ohmpi.ohmpi')
     print('============= ok, no more import error detected =========')
+    exit(0)
 except ImportError as e:
     error = e
     typ = 'mod'
@@ -46,3 +47,4 @@ if error is not None:
             createAttribute(a[1], a[3])
     elif typ == 'attr':
         createAttribute(a[3], a[1])
+exit(1)
