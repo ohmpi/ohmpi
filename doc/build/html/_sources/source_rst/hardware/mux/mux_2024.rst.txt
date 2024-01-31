@@ -71,7 +71,7 @@ Mount the diodes.
    :align: center
 
    +--------+--------------------------------------------------------------------------------+
-   |    3  |   .. image:: ../../../img/mux.2024.0.x/3.jpg                                   |
+   |    3   |   .. image:: ../../../img/mux.2024.0.x/3.jpg                                   |
    +--------+--------------------------------------------------------------------------------+
 
 Mount the mosfets. You can chose between ZVN4206A or STP16NF06L.
@@ -171,7 +171,7 @@ assuming that the MUX boards are powered and correctly connected to the measurem
 
 .. code-block:: bash
 
-   $ i2cdetect -y 4
+   i2cdetect -y 4
 
 Replace "-y 4" by "-y 1" if the MUX is plugged on the "board" IDC connector, or if plugged in to a mb.2023.0.X board.
 

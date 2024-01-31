@@ -308,6 +308,14 @@ with the possibility to mount two types of components depending on market availa
 </tbody>
 </table>
 <p>Mount the diodes.</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>3</p></td>
+<td><img alt="../../../_images/34.jpg" src="../../../_images/34.jpg" />
+</td>
+</tr>
+</tbody>
+</table>
 <p>Mount the mosfets. You can chose between ZVN4206A or STP16NF06L.</p>
 <table class="docutils align-center">
 <tbody>
@@ -428,7 +436,7 @@ There is 4 possible combinations for the jumpers which give the following addres
 <p>The jumper positions of each (‘up’ or ‘down’ have to be carefully filled in the configuration file). One can check the I2C
 addresses visible on the I2C bus by typing the following command on the Raspberry Pi terminal,
 assuming that the MUX boards are powered and correctly connected to the measurement board:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>i2cdetect<span class="w"> </span>-y<span class="w"> </span><span class="m">4</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>i2cdetect<span class="w"> </span>-y<span class="w"> </span><span class="m">4</span>
 </pre></div>
 </div>
 <p>Replace “-y 4” by “-y 1” if the MUX is plugged on the “board” IDC connector, or if plugged in to a mb.2023.0.X board.</p>
