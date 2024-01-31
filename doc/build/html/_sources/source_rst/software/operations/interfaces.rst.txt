@@ -113,11 +113,11 @@ Commands sent on the broker are received by the ohmpi.py script that runs on the
 MQTT commands are sent in JSON format following the Python API with kwargs as illustrated below:
 
 .. code-block:: json
-  :caption: Updating acquisition settings.
+  :caption: Updating acquisition settings. Depending on the experiment needs, MQTT brokers can be set up locally on the Raspberry Pi or on a local or remote server.
 
   {
     "cmd_id": "3fzxv121UITwGjWYgcz4xw",
-    "cmd": "update_settings", Depending on the experiment needs, MQTT brokers can be set up locally on the Raspberry Pi or on a local or remote server.
+    "cmd": "update_settings",
     "kwargs": {
       "config": {
         "nb_meas": 2,

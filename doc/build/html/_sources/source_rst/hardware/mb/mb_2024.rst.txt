@@ -40,7 +40,7 @@ Schematic of the power supply.
        :alt: alternate text
        :figclass: align-center 
 
-Schematic of the dsp (digital power source) power supply.
+Schematic of the DPS (digital power source) power supply.
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0003.jpg       
        :width: 600px
@@ -90,7 +90,7 @@ Interactive BOM list
 ~~~~~~~~~~~~~~~~~~~~~  
 
 
-`Interactive BOM list <ibom.html>`_   
+`Interactive BOM list <../../../_static/ibom.html>`_   
 
 
 Before starting: how to soldering 
