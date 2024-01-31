@@ -1,6 +1,5 @@
 import logging
 from ohmpi.utils import get_platform
-
 from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
@@ -33,28 +32,33 @@ HARDWARE_CONFIG = {
              'interface_name': 'i2c'
             },
     'mux': {'boards':
-                {'mux_00':
-                     {'model': 'mux_2024_0_X',
-                      'tca_address': None,
-                      'tca_channel': 0,
-                      'addr2': 'down',
-                      'addr1': 'down',
-                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+0, j): ('mux_00', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 12.}
+                {'mux_A':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x70,
+                      'roles': 'A',
+                      'electrodes': range(1, 65)},
+                 'mux_B':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x71,
+                      'roles': 'B',
+                      'electrodes': range(1, 65)},
+                 'mux_M':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x72,
+                      'roles': 'M',
+                      'electrodes': range(1, 65)},
+                 'mux_N':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x73,
+                      'roles': 'N',
+                      'electrodes': range(1, 65),
+                      }
                  },
              'default': {'interface_name': 'i2c_ext',
-                         'voltage_max': 100.,
+                         'voltage_max': 50.,
                          'current_max': 3.}
             }
     }
-
-'''
-    Dictionnary containing the configuration of the hardware system. THis is where the five modules are declared and assembled together
-    'ctl' contains informationb related to controller unit with the following keys:
-         'model': 'raspberry_pi' only implemented so far
-         'id': ID of thje instrument '0001' by default
-'''
 
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
@@ -83,8 +87,8 @@ DATA_LOGGING_CONFIG = {
 # State of Health logging configuration (For a future release)
 SOH_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
-    'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
+    'log_file_logging_level': logging.DEBUG,
     'file_name': f'soh{logging_suffix}.log',
     'max_bytes': 16777216,
     'backup_count': 1024,

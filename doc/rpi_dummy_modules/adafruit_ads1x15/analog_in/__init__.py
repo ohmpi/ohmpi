@@ -1,0 +1,2 @@
+# dummy module
+AnalogIn = None

@@ -32,45 +32,44 @@ HARDWARE_CONFIG = {
              'interface_name': 'i2c'
             },
     'mux': {'boards':
-                {'mux_06':
+                {'mux_01':
                      {'model': 'mux_2024_0_X',
                       'roles': ['A', 'B'],
                       'electrodes': range(1, 17),
+                      'addr1': 'up',
+                      'addr2': 'up',
                       'tca_address': None,
-                      'tca_channel': 0,
-                      'addr2': 'down',
-                      'addr1': 'down',
-                      'interface_name': 'i2c_ext'},
-                 'mux_03':
+                      'tca_channel': 0
+                      },
+                 'mux_02':
+                     {'model': 'mux_2024_0_X',
+                      'roles': ['M', 'N'],
+                      'electrodes': range(1, 17),
+                      'addr1': 'donw',
+                      'addr2': 'up',
+                      'tca_address': None,
+                      'tca_channel': 0
+                      },
+                'mux_03':
                      {'model': 'mux_2024_0_X',
                       'roles': ['A', 'B'],
                       'electrodes': range(17, 33),
                       'tca_address': None,
                       'tca_channel': 0,
-                      'addr2': 'up',
+                      'addr1': 'up',
+                      'addr2': 'down',
+                      'interface_name': 'i2c'},
+                'mux_04':
+                     {'model': 'mux_2024_0_X',
+                      'roles': ['M', 'N'],
+                      'electrodes': range(17,33),
                       'addr1': 'down',
-                      'interface_name': 'i2c_ext'}
-                 },
-                {'mux_06':
-                 {'model': 'mux_2024_0_X',
-                  'roles': ['M', 'N'],
-                  'electrodes': range(1, 17),
-                  'tca_address': None,
-                  'tca_channel': 0,
-                  'addr2': 'down',
-                  'addr1': 'down',
-                  'interface_name': 'i2c'},
-                'mux_03':
-                 {'model': 'mux_2024_0_X',
-                  'roles': ['M', 'N'],
-                  'electrodes': range(17,33),
-                  'tca_address': None,
-                  'tca_channel': 0,
-                  'addr2': 'up',
-                  'addr1': 'down',
-                  'interface_name': 'i2c'}
+                      'addr2': 'down',
+                      'tca_address': None,
+                      'tca_channel': 0,
+                      }
              },
-             'default': {
+             'default': {'interface_name': 'i2c_ext',
                          'voltage_max': 50.,
                          'current_max': 3.}
             }

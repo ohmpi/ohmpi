@@ -12,6 +12,7 @@ Here is a non exhaustive wish list of new hardware features that are planned/hop
 Contributors are welcomed to  join forces to make this list come true, or propose new ideas by creating a new issue in the Gitlab repository.
 
 Wish list of hardware developments:
+
 - Automatic selection of shunt resistors in a set of shunt resistances (hardware)
 - Add analog low-pass filter on receiver (hardware)
 - Battery recharge manager for monitoring (hardware)
@@ -24,6 +25,7 @@ If the new developments purely concern the software (e.g. bug fix, new acquisiti
 git best practices by first creating an new issue and then create a local branch linked to this issue. Once the new feature is implemented, a pull request can be initiated.
 
 Here is a series of software developments that are planned/hoped:
+
 - Sequence generator (software)
 - Calculate time-variable SP effects (software)
 - Calculate IP from full-waveform (software)
@@ -76,5 +78,27 @@ Hardware components API
    :maxdepth: 2
    :caption: Contents:
 
-.. automodule:: ohmpi.hardware_components
+.. automodule:: ohmpi.hardware_components.abstract_hardware_components
    :members:
+
+.. automodule:: ohmpi.hardware_components.mb_2023_0_X
+   :members:
+
+.. automodule:: ohmpi.hardware_components.mb_2024_0_2
+   :members:
+
+.. automodule:: ohmpi.hardware_components.mux_2023_0_X
+   :members:
+
+.. automodule:: ohmpi.hardware_components.mux_2024_0_X
+   :members:
+
+.. automodule:: ohmpi.hardware_components.pwr_batt
+   :members:
+
+.. automodule:: ohmpi.hardware_components.pwr_dps5005
+   :members:
+
+.. automodule:: ohmpi.hardware_components.raspberry_pi
+   :members:
+

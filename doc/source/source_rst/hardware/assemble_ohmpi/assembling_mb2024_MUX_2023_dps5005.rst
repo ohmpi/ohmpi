@@ -3,7 +3,7 @@
     **OhmPi is a participative project open to all, it requires skills in electronics and to respect the safety rules. OhmPi must be assembled in a professional context and by people competent in electronics. The OhmPi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The OhmPi team cannot be held responsible if the equipment does not work after assembly.**
 
 
-Assembling the OhmPi (mb2024 mux2023 DSP5005V)
+Assembling the OhmPi (mb2024 mux2023 DSP5005)
 ***********************************************
 
 
@@ -348,6 +348,6 @@ You should hear each of the 256 MUX board relays activate and deactivate 1 at a 
 
 A measurement will start, and you should obtain your first measurement, with a value of R = 100 ohm (R1 on the equivalent circuit).
 
-If not check, your cable connexion and batteries
+If not check, your cable connection and batteries
 
 You can now connect the 4 cables of each MUX to the screw terminals of the measurement board identified ABMN.

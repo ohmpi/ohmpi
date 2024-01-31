@@ -560,7 +560,7 @@ class OhmPiHardware:
         #     polarity = 1
         return vab_opt
 
-    def _plot_readings(self, save_fig=False):
+    def _plot_readings(self, save_fig=False, filename=None):
         # Plot graphs
         warnings.filterwarnings("ignore", category=DeprecationWarning)
         fig, ax = plt.subplots(nrows=5, sharex=True)
@@ -578,7 +578,10 @@ class OhmPiHardware:
         ax[4].set_ylabel('SP [mV]')
         # fig.legend()
         if save_fig:
-            fig.savefig(f'figures/test.png')
+            if filename is None:
+                fig.savefig(f'figures/test.png')
+            else:
+                fig.savefig(filename)
         else:
             plt.show()
         warnings.resetwarnings()
@@ -589,12 +592,11 @@ class OhmPiHardware:
 
     def vab_square_wave(self, vab, cycle_duration, sampling_rate=None, cycles=3, polarity=1, duty_cycle=1.,
                         append=False):
-        """
-        Performs a Vab injection following a square wave and records full waveform data. Calls in function Vab_pulses.
+        """Performs a Vab injection following a square wave and records full waveform data. Calls in function Vab_pulses.
 
         Parameters
         ----------
-        vab: float,
+        vab: float
             Injection voltage [V]
         cycle_duration: float
             Duration of one cycle within the square wave (in seconds)
@@ -606,7 +608,8 @@ class OhmPiHardware:
             Starting polarity
         duty_cycle: float (0 to 1)
             Duty cycle of injection wave
-        append: bool, Default: False
+        append: bool, optional
+            Default: False
         """
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
         switch_pwr_off, switch_tx_pwr_off = False, False

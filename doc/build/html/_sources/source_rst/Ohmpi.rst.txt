@@ -8,45 +8,40 @@ OhmPi project
         :height: 350 px
         :alt: Logo OhmPi
 
-
-|  
-
-**Authors:** 
-------------
+Authors 
+********
 | Rémi CLEMENT, Vivien DUBOIS, Nicolas Forquet, INRAE, REVERSAAL, Villeurbanne, France
 | Olivier KAUFMANN, Arnaud WATLET, Université de Mons, Mons, Belgium
 | Yannick FARGIER, GERS-RRO, Univ Gustave Eiffel, IFSTTAR, Lyon, France
 | Hélène GUYARD, IGE Grenoble, Université Grenoble Alpes, Grenoble, France
-| Guillaume BLANCHY, ILVO, Merelbeke, Belgium
+| Guillaume BLANCHY, ULiège, Liège Belgium
 
 
-**Partners:**
--------------
+Partners
+********
 
 .. table::
    :align: center
   
    +-------------------------------------------------------+---------------------------------------------------------+---------------------------------------------------+
-   |   .. image:: ../img/Logo/partners/logo_inrae.jpg      |  .. image:: ../img/Logo/partners/logo_univ_gustave.png  |   .. image:: ../img/Logo/partners/logo_ilvo.png   |
+   |   .. image:: ../img/logo/partners/logo_inrae.jpg      |  .. image:: ../img/logo/partners/logo_univ_gustave.png  |   .. image:: ../img/logo/partners/logo_uliege.png |
    +-------------------------------------------------------+---------------------------------------------------------+---------------------------------------------------+
-   |   .. image:: ../img/Logo/partners/logo_univ_mons.png  |  .. image:: ../img/Logo/partners/ige.png                |                                                   |              
+   |   .. image:: ../img/logo/partners/logo_univ_mons.png  |  .. image:: ../img/logo/partners/ige.png                |                                                   |              
    +-------------------------------------------------------+---------------------------------------------------------+---------------------------------------------------+
    
   
 
-**Citing OhmPi:** 
------------------
+Citing OhmPi 
+************
 
-|
 
 *Rémi Clement, Yannick Fargier, Vivien Dubois, Julien Gance, Emile Gros, et al.. OhmPi: An open*
 *source data logger for dedicated applications of electrical resistivity imaging at the small and laboratory*
 *scale. HardwareX, Elsevier, 2020, 8, 24 p. ff10.1016/j.ohx.2020.e00122ff.*
 
-|
    
-**Introduction :** 
-------------------
+Introduction 
+************
 
 .. warning::
     OhmPi is a participative project open to all, it requires skills in electronics and to respect the safety rules. 
@@ -72,3 +67,5 @@ to the near surface scientific community.
 
 .. note:: 
    Anyone who wants to get involved is welcome to join the OhmPi project!
+
+`PDF version of the documentation <../_static/ohmpi.pdf>`_

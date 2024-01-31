@@ -6,7 +6,10 @@ This section details ways to automate measurement acquisition in order to set up
 Repeated acquisition at fixed intervals
 =======================================
 The easiest way to set up time-lapse acquisition is to perform repeated acquisition of a sequence at fixed intervals.
-Repeated acquisition can be initiated from the three different `interfaces`_.
+Repeated acquisition can be initiated from the three different :ref:`interfaces`.
+
+.. code-block:: python
+  :caption: Example of code for monitoring.
 
   ### Run multiple sequences at given time interval
   k.settings['nb_meas'] = 3  # run sequence three times

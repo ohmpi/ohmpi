@@ -1,4 +1,5 @@
 .. _config:
+
 Configuration
 *************
 
@@ -16,9 +17,10 @@ A default version of `config.py` is provided in the repository.
 This file should be edited to customize the configuration following the user's needs and preferences.
 A series of default configuration files are available in the configs folder. A simple helper command can help you select the appropriate configuration file depending on your version of the meausurement board and type of MUX boards.
 The helper will ask you a few questions and will select the right configuration for your case. It can be called in via the terminal as
+
 .. code-block:: bash
 
-   $ python setup_config.py
+   python setup_config.py
 
 Still, it is best practice to open the configuration file and check that the parameters are correctly configured.
 Updating the configuration file manually is mandatory for custom systems combining different versions of the measurement and MUX boards.
@@ -154,12 +156,6 @@ The configuration is written in a python file structured in a series of dictiona
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
     | current_max        | Maximum current [in A] managed by the MUX board  | *float*, e.g. 3.        |  Sets maximum current to 3 A.                                   |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
-    | i2c_ext_tca_address| I2C address of I2C extension                     | None *(default)*        |    No I2C extensions cabled.                                    |
-    |                    |                                                  +-------------------------+-----------------------------------------------------------------+
-    |                    |                                                  | *hex integer*, e.g. 0x71|          Address of I2C extension                               |
-    +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
-    | i2c_ext_tca_channel| Channel of the I2C extension                     | *int* 0 - 7             |   Channel used in case I2C extension configured.                |
-    +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
 
 .. table:: MUX 2023 board specific config in HARDWARE_CONFIG
 
@@ -168,7 +164,7 @@ The configuration is written in a python file structured in a series of dictiona
     |                    +--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
     |                    | Description                                      | Expected Value          | Value description                                               |
     +====================+==================================================+=========================+=================================================================+
-    | mux_tca_address    | I2C address of MUX board                         | | *hex integer*         |          Address of MUX board                                   |
+    |  mux_tca_address   | I2C address of MUX board                         | | *hex integer*         |          Address of MUX board                                   |
     |                    |                                                  | | 0x70 - 0x77           |                                                                 |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
 
@@ -180,15 +176,23 @@ The configuration is written in a python file structured in a series of dictiona
     |                    | Description                                      | Expected Value          | Value description                                               |
     +====================+==================================================+=========================+=================================================================+
     | addr1              | Physical position of jumper on addr1             | | *string* 'up' or 'down| | This will compute I2C address of MUX board based on addr1     |
-    |                    |                                                  |                         | | and addr 2 configuration.                                     |
+    |                    |                                                  |                         | | and addr 2 configuration. See :ref:`mux2024addresses`.        |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
     | addr2              | Physical position of jumper on addr1             | | *string* 'up' or 'down| | This will compute I2C address of MUX board based on addr1     |
-    |                    |                                                  |                         | | and addr 2 configuration.                                     |
+    |                    |                                                  |                         | | and addr 2 configuration. See :ref:`mux2024addresses`.        |
+    +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
+    |    tca_address     | I2C address of I2C extension                     | None *(default)*        |    No I2C extensions cabled.                                    |
+    |                    |                                                  +-------------------------+-----------------------------------------------------------------+
+    |                    |                                                  | *hex integer*, e.g. 0x71|          Address of I2C extension                               |
+    +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
+    |     tca_channel    | Channel of the I2C extension                     | *int* 0 - 7             |   Channel used in case I2C extension configured.                |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
 
+Here's an example of the HARDWARE_CONFIG:
 
 .. code-block:: python
   :caption: HARDWARE_CONFIG: Dictionary containing configuration of the hardware system and how it is assembled.
+  
   r_shunt = 2. # Value of the shunt resistor in Ohm.
   HARDWARE_CONFIG = {
       'ctl': {'model': 'raspberry_pi'}, # contains informations related to controller unit, 'raspberry_pi' only implemented so far
@@ -207,7 +211,7 @@ The configuration is written in a python file structured in a series of dictiona
       'mux': {'boards':
                   {'mux_00':
                        {'model': 'mux_2024_0_X',
-                        'electrodes': range(1, 17),
+                        'electrodes': range(1, 9),
                         'roles': ['A', 'B', 'M', 'N'],
                         'tca_address': None,
                         'tca_channel': 0,
@@ -221,7 +225,8 @@ The configuration is written in a python file structured in a series of dictiona
               }
       }
 
-#. the logging dictionaries divided in:
+
+The logging dictionaries divided in:
 
 .. code-block:: python
   :caption: EXEC_LOGGING_CONFIG: dictionary configuring how the execution commands are being logged by the system. Useful for debugging.
@@ -240,7 +245,7 @@ The configuration is written in a python file structured in a series of dictiona
   }
 
 
-*
+
 .. code-block:: python
   :caption: DATA_LOGGING_CONFIG: Dictionary configuring the data logging capabilities of the system
 
@@ -258,6 +263,7 @@ The configuration is written in a python file structured in a series of dictiona
 
 .. code-block:: python
   :caption: SOH_LOGGING_CONFIG: Dictionary configuring how the state of health of the system is logged
+  
   # State of Health logging configuration (For a future release)
   SOH_LOGGING_CONFIG = {
       'logging_level': logging.INFO,
@@ -272,7 +278,7 @@ The configuration is written in a python file structured in a series of dictiona
 
 
 
-#. the MQTT dictionaries divided in:
+The MQTT dictionaries divided in:
 
 .. code-block:: python
   :caption: MQTT_LOGGING_CONFIG

@@ -8,10 +8,10 @@ Hardware
 This section contains the documentation needed to build an OhmPi.
 The OhmPi is composed of different modules:
 
-- a measurements board ('mb'): that measures the current and voltage and modulates modulate the injected current
-- 0, 1, ... or n multiplexer boards ('mux'): that address different electrodes
-- a power supply ('pwr'): either a 12V battery or a more advanced power supply where we can control the voltage/current
-- a general controller ('ctrl'): to control the measurement board, multiplexer boards and power supply (=raspberrypi)
+- a measurements board (``mb``): that measures the current and voltage and modulates the injected current
+- 0, 1, ... or n multiplexer boards (``mux``): that address different electrodes
+- a power supply (``pwr``): either a 12V battery or a more advanced power supply where we can control the voltage/current
+- a general controller (``ctrl``): to control the measurement board, multiplexer boards and power supply (=raspberrypi)
 
 These module exists in different versions and can be combined using a configuration file.
 You can then upgrade your measurement board or power supply for specific applications.

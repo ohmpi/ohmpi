@@ -1,10 +1,12 @@
 .. _interfaces:
+
 Interfaces
 **********
 
 Three interfaces can be used to interact with the OhmPi:
+
 * a `Web interface`_: user friendly graphical interface to achieve basic operations for everyday use, such as running a sequence or repeated sequences.
-* a `Python interface`_: based on the `api`_, the Python interface allows basic and more advanced operations such as custom acquisition strategies and automation.
+* a `Python interface`_: based on the :ref:`api`, the Python interface allows basic and more advanced operations such as custom acquisition strategies and automation.
 * a `IoT interface`_: based on the MQTT messaging protocol used in IoT, it is a framework to incorporate the OhmPi system within complex experiments designs comprising other IoT sensors.
 
 
@@ -12,18 +14,16 @@ Web interface
 =============
 
 This is a user friendly graphical interface for new users as well as running quick and easy acquisitions.
+The webinterface enables to upload sequences, change parameters, run a sequence and download data.
+To start the interface, open the terminal in the OhmPi folder and type:
 
-The Raspberry Pi of the OhmPi is used as a Wi-Fi Access Point (AP) and runs
-a small webserver to serve the 'index.html' interface. Using a laptop or
-a mobile phone connected to the Wi-Fi of the Raspberry Pi, one can see this
-interface, upload sequences, change parameters, run a sequence and download data.
+.. code-block:: bash
 
-To configure the Raspberry Pi to act as an access point and run
-the webserver automatically on start, see instructions on `raspap.com <https://raspap.com/>`_ and in 'runOnStart.sh'.
+    ./run_http_interface.sh
 
-Once configured, the webserver should start by itself on start and once
-connected to the Pi, the user can go to `10.3.141.1:8080 <http://10.3.141.1:8080>`_
-to access the interface.
+The Raspberry Pi of the OhmPi is runs
+a small webserver to serve the 'index.html' interface. This interface can be accessed
+locally by opening a browser on the Raspberry Pi and going to `http://localhost:8000`.
 
 .. figure:: ../../../img/software/http-interface-pseudo-section.png
 
@@ -40,6 +40,16 @@ to access the interface.
      Contact resistance check.
 
 
+Alternatively to a local webserver, the Raspberry Pi can be configured as a used as a Wi-Fi Access Point (AP).
+Then other laptop or mobile devices can connect to the WiFi of the Raspberry Pi and
+interact with the webinterface. To configure the Raspberry Pi to act as an access point and run
+the webserver automatically on start, see instructions on `raspap.com <https://raspap.com/>`_ and in 'run_http_interface_on_start.txt'.
+
+Once configured, the webserver should start by itself on start and once
+connected to the Pi, the user can go to `10.3.141.1:8080 <http://10.3.141.1:8080>`_
+to access the interface.
+
+
 Python interface
 ================
 
@@ -49,7 +59,17 @@ By importing the `OhmPi` class from the ohmpi.py, we can control the OhmPi instr
 It involves using the terminal or a Python IDE such as Thonny on the Raspberry Pi. A connection can also be established via
 SSH (see PuTTY on Windows or ssh command on macOS/Linux).
 
-To access the Python API, make sure that the PYTHONPATH has been correctly configured to export the location of the ohmpi module.
+To access the Python API, make sure that:
+- the PYTHONPATH has been correctly configured to export the location of the ohmpi module;
+- you are in the Python environment created earlier (*souce ohmpy/bin/activate*)
+
+Both of these can be done by executing
+
+.. code-block:: bash
+
+  source env.sh
+
+
 
 .. code-block:: python
   :caption: Example of using the Python API to control OhmPi
@@ -92,9 +112,10 @@ To access the Python API, make sure that the PYTHONPATH has been correctly confi
                     injection_duration=1,  # inject for 2 seconds
                     duty_cycle = 0.5) # duty_cycle is
 
-For detailed usage, please see the Python API or look at the examples.
+For detailed usage, please see the :ref:`api` or look in the 'examples' folder.
 
 .. _IoT-interface:
+
 IoT interface
 =============
 
@@ -110,11 +131,11 @@ Commands sent on the broker are received by the ohmpi.py script that runs on the
 MQTT commands are sent in JSON format following the Python API with kwargs as illustrated below:
 
 .. code-block:: json
-  :caption: Updating acquisition settings.
+  :caption: Updating acquisition settings. Depending on the experiment needs, MQTT brokers can be set up locally on the Raspberry Pi or on a local or remote server.
 
   {
     "cmd_id": "3fzxv121UITwGjWYgcz4xw",
-    "cmd": "update_settings", Depending on the experiment needs, MQTT brokers can be set up locally on the Raspberry Pi or on a local or remote server.
+    "cmd": "update_settings",
     "kwargs": {
       "config": {
         "nb_meas": 2,

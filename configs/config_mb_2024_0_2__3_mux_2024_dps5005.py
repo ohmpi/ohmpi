@@ -32,36 +32,33 @@ HARDWARE_CONFIG = {
              'interface_name': 'i2c'
             },
     'mux': {'boards':
-                {'mux_02':
+                {'mux_01':
                      {'model': 'mux_2024_0_X',
+                      'electrodes': range(1, 9),
+                      'roles': ['A', 'B', 'M', 'N'],
+                      'addr1': 'down',
+                      'addr2': 'down',
                       'tca_address': None,
-                      'tca_channel': 0,
+                      'tca_channel': 0},
+                 'mux_02':
+                     {'model': 'mux_2024_0_X',
+                      'electrodes': range(9, 17),
+                      'roles': ['A', 'B', 'M', 'N'],
+                      'addr1': 'down',
                       'addr2': 'up',
-                      'addr1': 'up',
-                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+8, j): ('mux_02', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 50.},
+                      'tca_address': None,
+                      'tca_channel': 0},
                  'mux_03':
                      {'model': 'mux_2024_0_X',
-                      'tca_address': None,
-                      'tca_channel': 0,
-                      'addr2': 'down',
+                      'electrodes': range(17, 25),
+                      'roles': ['A', 'B', 'M', 'N'],
                       'addr1': 'up',
-                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+16, j): ('mux_03', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 50.},
-                 'mux_05':
-                     {'model': 'mux_2024_0_X',
+                      'addr2': 'down',
                       'tca_address': None,
-                      'tca_channel': 0,
-                      'addr2': 'up',
-                      'addr1': 'down',
-                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+0, j): ('mux_05', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 50.},
+                      'tca_channel': 0}
                  },
              'default': {'interface_name': 'i2c_ext',
-                         'voltage_max': 100.,
+                         'voltage_max': 50.,
                          'current_max': 3.}
             }
     }
