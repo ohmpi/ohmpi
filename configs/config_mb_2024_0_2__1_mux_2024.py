@@ -33,10 +33,10 @@ HARDWARE_CONFIG = {
             },
     'mux': {'boards':
                 {'model': 'mux_2024_0_X',
-                 'roles': ['A', 'B'],
-                 'electrodes': range(1, 17),
+                 'roles': ['A', 'B', 'M', 'N'],
+                 'electrodes': range(1, 9),
+                 'addr1': 'up',
                  'addr2': 'down',
-                 'addr1': 'down',
                  'tca_address': None,
                  'tca_channel': 0,
                  'interface_name': 'i2c_ext',

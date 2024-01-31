@@ -57,17 +57,17 @@ HARDWARE_CONFIG = {
                      {'model': 'mux_2024_0_X',
                       'roles': ['A', 'B'],
                       'electrodes': range(1, 17),
-                      'addr2': 'down',
-                      'addr1': 'down',
+                      'addr1': 'up',
+                      'addr2': 'up',
                       'tca_address': None,
                       'tca_channel': 0
                       },
                  'mux_02':
                      {'model': 'mux_2024_0_X',
-                      'roles': ['A', 'B'],
-                      'electrodes': range(17, 33),
-                      'addr1': 'up',
-                      'addr2': 'dpwn',
+                      'roles': ['M', 'N'],
+                      'electrodes': range(1, 17),
+                      'addr1': 'down',
+                      'addr2': 'up',
                       'tca_address': None,
                       'tca_channel': 0
                       },
