@@ -25,10 +25,10 @@ from shutil import copyfile
 
 project = 'OhmPi'
 copyright = '2022-2024, the OhmPi Team.'
-author = 'Rémi CLEMENT'
+author = 'OhmPi Team'
 
 # The full version, including alpha/beta/rc tags
-release = 'v2024rc'
+release = 'v2024'
 
 
 # -- General configuration ---------------------------------------------------

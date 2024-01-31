@@ -87,6 +87,5 @@ if os.path.exists('configs/' + config):
     print('*' * 93)
 
 else:
-    print('Error: configuration not found')
-
-
+    print('The configuration you have selected cannot be set by this tool.\n'
+          'You probably requested a configuration that makes little sense in most cases.')

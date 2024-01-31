@@ -2,7 +2,7 @@ Loggers
 *******
 
 Loggers have been introduced in this release. They use the excellent logging python package.
-Specific handlers have been implemented for running with ohmpi.py (one for logging to an mqtt broker (see :ref:`IoT-interface` for more details) and one for creating zipped rotated logs on disk).
+Specific handlers have been implemented for running with ohmpi.py (one for logging to an MQTT broker (see :ref:`IoT-interface` for more details) and one for creating zipped rotated logs on disk).
 
 Two loggers have been defined. The first one is dedicated to log operations execution. It is named exec_logger. The second one, named data_logger, is dedicated to log data. A third one is planned to log the state of health (SOH) of the system in a future version.
 

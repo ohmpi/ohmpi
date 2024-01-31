@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Software architecture &mdash; OhmPi v2024rc documentation</title>
+  <title>Software architecture &mdash; OhmPi v2024 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=1eb482ec"></script>
+        <script src="../../_static/documentation_options.js?v=0f4c9207"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -91,20 +91,20 @@
              
   <section id="software-architecture">
 <h1>Software architecture<a class="headerlink" href="#software-architecture" title="Link to this heading"></a></h1>
-<p>The OhmPi V2024 software has been completely re-structured to enable increased flexibility for both users and developers. The software is based on an object-oriented module with a class exposing the OhmPi
+<p>The OhmPi v2024 software has been completely re-structured to enable increased flexibility for both users and developers. The software is based on an object-oriented module with a class exposing the OhmPi
 functionalities used to interact with the OhmPi instrument via a web interface, IoT
 communication protocols (e.g. MQTT) and/or directly through the Python API.</p>
 <figure class="align-default" id="id1">
 <img alt="../../_images/ohmpi_2024_architecture.png" src="../../_images/ohmpi_2024_architecture.png" />
 <figcaption>
-<p><span class="caption-text">Software architecture of OhmPi V2024.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+<p><span class="caption-text">Software architecture of OhmPi v2024.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>The software is organised in several modules describing the system in a hierarchy including three levels of description and
 operation of the OhmPi.</p>
 <section id="acquisition">
 <h2>Acquisition<a class="headerlink" href="#acquisition" title="Link to this heading"></a></h2>
-<p>On the top level, the OhmPi class (in ohmpi/ohmpi.py) includes all the higher-level methods and properties allowing to
+<p>On the top level, the <code class="docutils literal notranslate"><span class="pre">OhmPi</span></code> class (in ohmpi/ohmpi.py) includes all the higher-level methods and properties allowing to
 operate the system (e.g. acquire measurement sequences). The OhmPi class exposes the user-oriented
 API, generates logs and handles IoT messages. Generic users are expected to interact with the system
 through these higher-level functionalities, which are designed to remain as stable as possible while the
@@ -113,13 +113,13 @@ developments at this level.</p>
 </section>
 <section id="hardware-system">
 <h2>Hardware system<a class="headerlink" href="#hardware-system" title="Link to this heading"></a></h2>
-<p>On the medium level, the OhmPiHardware class provides a mean to assemble and operate the
+<p>On the medium level, the <code class="docutils literal notranslate"><span class="pre">OhmPiHardware</span></code> class provides a mean to assemble and operate the
 acquisition system. The methods of this class orchestrate atomic operations of the system components
 in order to expose basic system functionalities such as cross-MUX switching, square wave voltage
 injection or full waveform voltage and current reading during injection cycles. These functionalities
 are implemented using synchronization mechanisms between threads in order to insure that each
 component keeps in step with the others.
-The whole system is described in a configuration file listing the hardware components and versions
+The whole system is described in a <em>configuration file</em> listing the hardware components and versions
 used. Through a dynamic import mechanism the modules containing the classes corresponding with
 the physical hardware modules of a particular OhmPi system are instantiated and associated with the
 system object instantiated from the OhmPiHardware class. In this way, it is relatively simple to build
@@ -139,7 +139,7 @@ Improving an existing hardware component or introducing a new design may be desi
 e.g. reduce costs, improve performance, adapt measurement range to specific applications, or
 incorporate easily available electronic components. It is at this level that software developments are
 mainly expected to occur following updates on the hardware. The component class should expose the
-minimal functionalities required by the hardware system (see below) for this type of component.</p>
+minimal functionalities required by the hardware system for this type of component.</p>
 </section>
 </section>
 

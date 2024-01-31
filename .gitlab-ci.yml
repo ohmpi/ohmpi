@@ -13,7 +13,9 @@ pages:
   - cd doc
   - make html
   
-  # also make latex? pdf?
+   # also make latexpdf (to be tested)
+  - make latexpdf
+  - mv build/latex/ohmpi.pdf source/_static/ohmpi.pdf
   - cd ..
   - mv doc/build/html/ public/
   - ls public/

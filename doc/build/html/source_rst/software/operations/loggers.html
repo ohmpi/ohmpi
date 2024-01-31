@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Loggers &mdash; OhmPi v2024rc documentation</title>
+  <title>Loggers &mdash; OhmPi v2024 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=1eb482ec"></script>
+        <script src="../../../_static/documentation_options.js?v=0f4c9207"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -95,7 +95,7 @@
   <section id="loggers">
 <h1>Loggers<a class="headerlink" href="#loggers" title="Link to this heading"></a></h1>
 <p>Loggers have been introduced in this release. They use the excellent logging python package.
-Specific handlers have been implemented for running with ohmpi.py (one for logging to an mqtt broker (see <a class="reference internal" href="interfaces.html#iot-interface"><span class="std std-ref">IoT interface</span></a> for more details) and one for creating zipped rotated logs on disk).</p>
+Specific handlers have been implemented for running with ohmpi.py (one for logging to an MQTT broker (see <a class="reference internal" href="interfaces.html#iot-interface"><span class="std std-ref">IoT interface</span></a> for more details) and one for creating zipped rotated logs on disk).</p>
 <p>Two loggers have been defined. The first one is dedicated to log operations execution. It is named exec_logger. The second one, named data_logger, is dedicated to log data. A third one is planned to log the state of health (SOH) of the system in a future version.</p>
 <p>By default, logs are written to the console (print-like), stored locally in files (a zip is created after some time i.e. every day and/or when the size of the log exceeds a maximum size) and sent to an MQTT broker. Different logging levels may be defined for the different logs and handlers in the <a class="reference internal" href="config.html#config"><span class="std std-ref">Configuration</span></a>.</p>
 <p>Advanced users may write new handlers and edit the <cite>setup_loggers.py</cite> file to customize the logging mechanisms to their needs.</p>

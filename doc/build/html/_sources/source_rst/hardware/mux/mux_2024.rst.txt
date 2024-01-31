@@ -71,7 +71,7 @@ Mount the diodes.
    :align: center
 
    +--------+--------------------------------------------------------------------------------+
-   |    2   |   .. image:: ../../../img/mux.2024.0.x/3.jpg                                   |
+   |    3   |   .. image:: ../../../img/mux.2024.0.x/3.jpg                                   |
    +--------+--------------------------------------------------------------------------------+
 
 Mount the mosfets. You can chose between ZVN4206A or STP16NF06L.
@@ -80,7 +80,7 @@ Mount the mosfets. You can chose between ZVN4206A or STP16NF06L.
    :align: center
 
    +--------+--------------------------------------------------------------------------------+
-   |    2   |   .. image:: ../../../img/mux.2024.0.x/4.jpg                                   |
+   |    4   |   .. image:: ../../../img/mux.2024.0.x/4.jpg                                   |
    +--------+--------------------------------------------------------------------------------+
 
 Mount the MCP23017 sockets and the capacitors.
@@ -89,7 +89,7 @@ Mount the MCP23017 sockets and the capacitors.
    :align: center
 
    +--------+--------------------------------------------------------------------------------+
-   |    2   |   .. image:: ../../../img/mux.2024.0.x/5.jpg                                   |
+   |    5   |   .. image:: ../../../img/mux.2024.0.x/5.jpg                                   |
    +--------+--------------------------------------------------------------------------------+
 
 Mount the screw connectors and the IDC connectors. Note that if a board is dedicated to be
@@ -100,7 +100,7 @@ configured in 2-role mode, the electrode takeouts can be mounted with 8 screw co
    :align: center
 
    +--------+--------------------------------------------------------------------------------+
-   |    2   |   .. image:: ../../../img/mux.2024.0.x/6.jpg                                   |
+   |    6   |   .. image:: ../../../img/mux.2024.0.x/6.jpg                                   |
    +--------+--------------------------------------------------------------------------------+
 
 Mount the relays.
@@ -109,7 +109,7 @@ Mount the relays.
    :align: center
 
    +--------+--------------------------------------------------------------------------------+
-   |    2   |   .. image:: ../../../img/mux.2024.0.x/7.jpg                                   |
+   |    7   |   .. image:: ../../../img/mux.2024.0.x/7.jpg                                   |
    +--------+--------------------------------------------------------------------------------+
 
 Defining role configuration
@@ -144,6 +144,36 @@ to avoid confusion when cabling the system.
 .. warning::
   Make sure that the two "roles" solder jumpers at the front remain NOT bridged to avoid risks of shortcuts !
 
+.. _mux2024addresses:
+
+MUX board addresses
+-------------------
+Each MUX board v2024 comes with 2 I/O expanders MCP23017, addressing 16 relays each. They expose a pair of two I2C addresses on the I2C bus in the range 0x20 - 0x27.
+Two 2-way jumpers placed on the 3-pin headers next to the IDC connector at the bottom of the board allow to shift the addesses two by two.
+There is 4 possible combinations for the jumpers which give the following addresses:
+
++-------------------+-------------------+-------------+
+| | Jumper position | | Jumper position | |    I2C    |
+| |   Addr1         | | addresses       | | addresses |
++-------------------+-------------------+-------------+
+|        Up         |        Up         | 0x20 - 0x21 |
++-------------------+-------------------+-------------+
+|       Down        |        Up         | 0x22 - 0x23 |
++-------------------+-------------------+-------------+
+|        Up         |       Down        | 0x24 - 0x25 |
++-------------------+-------------------+-------------+
+|       Down        |       Down        | 0x26 - 0x27 |
++-------------------+-------------------+-------------+
+
+The jumper positions of each ('up' or 'down' have to be carefully filled in the configuration file). One can check the I2C
+addresses visible on the I2C bus by typing the following command on the Raspberry Pi terminal,
+assuming that the MUX boards are powered and correctly connected to the measurement board:
+
+.. code-block:: bash
+
+   i2cdetect -y 4
+
+Replace "-y 4" by "-y 1" if the MUX is plugged on the "board" IDC connector, or if plugged in to a mb.2023.0.X board.
 
 **PART B** Assembling MUX boards in an OhmPi system
 ===================================================
@@ -153,7 +183,7 @@ The cabling of several MUX boards v2024 within an OhmPi system is entirely depen
 * 2-role MUX boards have to come in pairs. The 16 electrodes takeouts of each pair have to be cabled together. This is easily done with a ribbon cable
   plugged on the 16-way IDC connectors of the pair of boards. This also allows to stack two boards together leaving the screw connectors of the board on the top
   accessible to connect wires from the electrode arrays.
-* 4-role MUX boards don't have to come in pairs. The 4 roles of each board have to be connected to the other 4 roles of the system (and at least to the ABMN connector on the meausremnt board).
+* 4-role MUX boards do not have to come in pairs. The 4 roles of each board have to be connected to the other 4 roles of the system (and at least to the ABMN connector on the meausremnt board).
   The electrodes connectors can only be used to address the first 8 or the last 8 positions.
   This is critical if wanting to connect the electrodes via the IDC connectors, which whill have to be carefully cabled.
 

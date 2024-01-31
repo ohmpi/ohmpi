@@ -4,6 +4,10 @@
 API reference
 #############
 
+.. image:: ../../../img/software/hardware_classes.png
+
+  Schematic of the main classes architecture.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

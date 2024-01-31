@@ -27,7 +27,7 @@ For this step, the installation instructions are well described on the Raspberry
 
 2. The authors recommend installing the latest stable and complete version of Raspberry Pi OS (Previously called Raspbian) by using Raspberry Pi Imager.
 
-3. or you can visit this `website <https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up>`.  
+3. or you can visit this `website <https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up>`_.  
 
 .. note:: 
      All the development tests were performed on Raspberry Pi 3 Model B and Raspberry Pi 4 Model B

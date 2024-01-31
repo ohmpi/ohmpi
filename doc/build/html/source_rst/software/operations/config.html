@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Configuration &mdash; OhmPi v2024rc documentation</title>
+  <title>Configuration &mdash; OhmPi v2024 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=1eb482ec"></script>
+        <script src="../../../_static/documentation_options.js?v=0f4c9207"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -110,11 +110,10 @@ For general purpose, most specifications can be left on default values.</p>
 <p>A default version of <cite>config.py</cite> is provided in the repository.
 This file should be edited to customize the configuration following the user’s needs and preferences.
 A series of default configuration files are available in the configs folder. A simple helper command can help you select the appropriate configuration file depending on your version of the meausurement board and type of MUX boards.
-The helper will ask you a few questions and will select the right configuration for your case. It can be called in via the terminal as
-.. code-block:: bash</p>
-<blockquote>
-<div><p>$ python setup_config.py</p>
-</div></blockquote>
+The helper will ask you a few questions and will select the right configuration for your case. It can be called in via the terminal as</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>setup_config.py
+</pre></div>
+</div>
 <p>Still, it is best practice to open the configuration file and check that the parameters are correctly configured.
 Updating the configuration file manually is mandatory for custom systems combining different versions of the measurement and MUX boards.</p>
 <div class="admonition warning">
@@ -436,7 +435,7 @@ Updating the configuration file manually is mandatory for custom systems combini
 </td>
 <td><div class="line-block">
 <div class="line">This will compute I2C address of MUX board based on addr1</div>
-<div class="line">and addr 2 configuration.</div>
+<div class="line">and addr 2 configuration. See <a class="reference internal" href="../../hardware/mux/mux_2024.html#mux2024addresses"><span class="std std-ref">MUX board addresses</span></a>.</div>
 </div>
 </td>
 </tr>
@@ -448,7 +447,7 @@ Updating the configuration file manually is mandatory for custom systems combini
 </td>
 <td><div class="line-block">
 <div class="line">This will compute I2C address of MUX board based on addr1</div>
-<div class="line">and addr 2 configuration.</div>
+<div class="line">and addr 2 configuration. See <a class="reference internal" href="../../hardware/mux/mux_2024.html#mux2024addresses"><span class="std std-ref">MUX board addresses</span></a>.</div>
 </div>
 </td>
 </tr>

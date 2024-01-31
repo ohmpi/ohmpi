@@ -17,9 +17,10 @@ A default version of `config.py` is provided in the repository.
 This file should be edited to customize the configuration following the user's needs and preferences.
 A series of default configuration files are available in the configs folder. A simple helper command can help you select the appropriate configuration file depending on your version of the meausurement board and type of MUX boards.
 The helper will ask you a few questions and will select the right configuration for your case. It can be called in via the terminal as
+
 .. code-block:: bash
 
-   $ python setup_config.py
+   python setup_config.py
 
 Still, it is best practice to open the configuration file and check that the parameters are correctly configured.
 Updating the configuration file manually is mandatory for custom systems combining different versions of the measurement and MUX boards.
@@ -175,10 +176,10 @@ The configuration is written in a python file structured in a series of dictiona
     |                    | Description                                      | Expected Value          | Value description                                               |
     +====================+==================================================+=========================+=================================================================+
     | addr1              | Physical position of jumper on addr1             | | *string* 'up' or 'down| | This will compute I2C address of MUX board based on addr1     |
-    |                    |                                                  |                         | | and addr 2 configuration.                                     |
+    |                    |                                                  |                         | | and addr 2 configuration. See :ref:`mux2024addresses`.        |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
     | addr2              | Physical position of jumper on addr1             | | *string* 'up' or 'down| | This will compute I2C address of MUX board based on addr1     |
-    |                    |                                                  |                         | | and addr 2 configuration.                                     |
+    |                    |                                                  |                         | | and addr 2 configuration. See :ref:`mux2024addresses`.        |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
     |    tca_address     | I2C address of I2C extension                     | None *(default)*        |    No I2C extensions cabled.                                    |
     |                    |                                                  +-------------------------+-----------------------------------------------------------------+
