@@ -175,10 +175,10 @@ The configuration is written in a python file structured in a series of dictiona
     |                    | Description                                      | Expected Value          | Value description                                               |
     +====================+==================================================+=========================+=================================================================+
     | addr1              | Physical position of jumper on addr1             | | *string* 'up' or 'down| | This will compute I2C address of MUX board based on addr1     |
-    |                    |                                                  |                         | | and addr 2 configuration.                                     |
+    |                    |                                                  |                         | | and addr 2 configuration. See :ref:`mux2024addresses`.        |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
     | addr2              | Physical position of jumper on addr1             | | *string* 'up' or 'down| | This will compute I2C address of MUX board based on addr1     |
-    |                    |                                                  |                         | | and addr 2 configuration.                                     |
+    |                    |                                                  |                         | | and addr 2 configuration. See :ref:`mux2024addresses`.        |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
     |    tca_address     | I2C address of I2C extension                     | None *(default)*        |    No I2C extensions cabled.                                    |
     |                    |                                                  +-------------------------+-----------------------------------------------------------------+
