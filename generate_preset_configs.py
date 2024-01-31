@@ -278,7 +278,7 @@ for mb, v_mb in options['mb'].items():
                     s += footer
                     print(f'*** Preparing {config_filename} ***')
                     print(f'\n{s}')
-                    with open(f'tmp_to_be_deleted/{config_filename}', mode='wt') as config_file:
+                    with open(f'configs/{config_filename}', mode='wt') as config_file:
                         config_file.write(s)
                 else:
                     print(f'### skipping {config_filename} ###')
