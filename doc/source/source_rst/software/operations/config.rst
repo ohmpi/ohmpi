@@ -17,9 +17,10 @@ A default version of `config.py` is provided in the repository.
 This file should be edited to customize the configuration following the user's needs and preferences.
 A series of default configuration files are available in the configs folder. A simple helper command can help you select the appropriate configuration file depending on your version of the meausurement board and type of MUX boards.
 The helper will ask you a few questions and will select the right configuration for your case. It can be called in via the terminal as
+
 .. code-block:: bash
 
-   $ python setup_config.py
+   python setup_config.py
 
 Still, it is best practice to open the configuration file and check that the parameters are correctly configured.
 Updating the configuration file manually is mandatory for custom systems combining different versions of the measurement and MUX boards.

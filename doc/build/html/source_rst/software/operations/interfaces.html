@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interfaces &mdash; OhmPi v2024rc documentation</title>
+  <title>Interfaces &mdash; OhmPi v2024 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=1eb482ec"></script>
+        <script src="../../../_static/documentation_options.js?v=0f4c9207"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -102,21 +102,20 @@
 <p>Three interfaces can be used to interact with the OhmPi:</p>
 <ul class="simple">
 <li><p>a <a class="reference internal" href="#web-interface">Web interface</a>: user friendly graphical interface to achieve basic operations for everyday use, such as running a sequence or repeated sequences.</p></li>
-<li><p>a <a class="reference internal" href="#python-interface">Python interface</a>: based on the <cite>api_</cite>, the Python interface allows basic and more advanced operations such as custom acquisition strategies and automation.</p></li>
+<li><p>a <a class="reference internal" href="#python-interface">Python interface</a>: based on the <a class="reference internal" href="../api.html#api"><span class="std std-ref">API reference</span></a>, the Python interface allows basic and more advanced operations such as custom acquisition strategies and automation.</p></li>
 <li><p>a <a class="reference internal" href="#id3">IoT interface</a>: based on the MQTT messaging protocol used in IoT, it is a framework to incorporate the OhmPi system within complex experiments designs comprising other IoT sensors.</p></li>
 </ul>
 <section id="web-interface">
 <h2>Web interface<a class="headerlink" href="#web-interface" title="Link to this heading"></a></h2>
-<p>This is a user friendly graphical interface for new users as well as running quick and easy acquisitions.</p>
-<p>The Raspberry Pi of the OhmPi is used as a Wi-Fi Access Point (AP) and runs
-a small webserver to serve the ‘index.html’ interface. Using a laptop or
-a mobile phone connected to the Wi-Fi of the Raspberry Pi, one can see this
-interface, upload sequences, change parameters, run a sequence and download data.</p>
-<p>To configure the Raspberry Pi to act as an access point and run
-the webserver automatically on start, see instructions on <a class="reference external" href="https://raspap.com/">raspap.com</a> and in ‘runOnStart.sh’.</p>
-<p>Once configured, the webserver should start by itself on start and once
-connected to the Pi, the user can go to <a class="reference external" href="http://10.3.141.1:8080">10.3.141.1:8080</a>
-to access the interface.</p>
+<p>This is a user friendly graphical interface for new users as well as running quick and easy acquisitions.
+The webinterface enables to upload sequences, change parameters, run a sequence and download data.
+To start the interface, open the terminal in the OhmPi folder and type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./run_http_interface.sh
+</pre></div>
+</div>
+<p>The Raspberry Pi of the OhmPi is runs
+a small webserver to serve the ‘index.html’ interface. This interface can be accessed
+locally by opening a browser on the Raspberry Pi and going to <cite>http://localhost:8000</cite>.</p>
 <figure class="align-default" id="id4">
 <img alt="../../../_images/http-interface-pseudo-section.png" src="../../../_images/http-interface-pseudo-section.png" />
 <figcaption>
@@ -135,6 +134,13 @@ to access the interface.</p>
 <p><span class="caption-text">Contact resistance check.</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
 </figcaption>
 </figure>
+<p>Alternatively to a local webserver, the Raspberry Pi can be configured as a used as a Wi-Fi Access Point (AP).
+Then other laptop or mobile devices can connect to the WiFi of the Raspberry Pi and
+interact with the webinterface. To configure the Raspberry Pi to act as an access point and run
+the webserver automatically on start, see instructions on <a class="reference external" href="https://raspap.com/">raspap.com</a> and in ‘run_http_interface_on_start.txt’.</p>
+<p>Once configured, the webserver should start by itself on start and once
+connected to the Pi, the user can go to <a class="reference external" href="http://10.3.141.1:8080">10.3.141.1:8080</a>
+to access the interface.</p>
 </section>
 <section id="python-interface">
 <h2>Python interface<a class="headerlink" href="#python-interface" title="Link to this heading"></a></h2>
@@ -142,7 +148,13 @@ to access the interface.</p>
 <p>By importing the <cite>OhmPi</cite> class from the ohmpi.py, we can control the OhmPi instrument via a Python script or interactively with IPython.
 It involves using the terminal or a Python IDE such as Thonny on the Raspberry Pi. A connection can also be established via
 SSH (see PuTTY on Windows or ssh command on macOS/Linux).</p>
-<p>To access the Python API, make sure that the PYTHONPATH has been correctly configured to export the location of the ohmpi module.</p>
+<p>To access the Python API, make sure that:
+- the PYTHONPATH has been correctly configured to export the location of the ohmpi module;
+- you are in the Python environment created earlier (<em>souce ohmpy/bin/activate</em>)</p>
+<p>Both of these can be done by executing</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>env.sh
+</pre></div>
+</div>
 <div class="literal-block-wrapper docutils container" id="id7">
 <div class="code-block-caption"><span class="caption-text">Example of using the Python API to control OhmPi</span><a class="headerlink" href="#id7" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ohmpi.ohmpi</span> <span class="kn">import</span> <span class="n">OhmPi</span>
@@ -185,7 +197,7 @@ SSH (see PuTTY on Windows or ssh command on macOS/Linux).</p>
 </pre></div>
 </div>
 </div>
-<p>For detailed usage, please see the Python API or look at the examples.</p>
+<p>For detailed usage, please see the <a class="reference internal" href="../api.html#api"><span class="std std-ref">API reference</span></a> or look in the ‘examples’ folder.</p>
 </section>
 <section id="iot-interface">
 <span id="id3"></span><h2>IoT interface<a class="headerlink" href="#iot-interface" title="Link to this heading"></a></h2>

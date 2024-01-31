@@ -67,3 +67,5 @@ to the near surface scientific community.
 
 .. note:: 
    Anyone who wants to get involved is welcome to join the OhmPi project!
+
+`PDF version of the documentation <../_static/ohmpi.pdf>`_ (note the latest version is always the html one)

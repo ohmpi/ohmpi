@@ -55,7 +55,7 @@ And add the following line:
 Replace *<username>* by your username on the Raspberry Pi (e.g.: /home/pi/OhmPi).
 
 Step 4: Activate the *ohmpy* virtual environment
-==============================================
+================================================
 Before operating the instrument, we need to activate the *ohmpy* virtual environment with the following command:
 
 .. code-block:: bash
