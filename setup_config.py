@@ -1,5 +1,5 @@
 
-print('This assistent helps you configure a basic system with a measurement board and from 0 to 4 mux of the same type. For more complex configuration with multiple mux of different types, please have a look in the configs/ folder.')
+print('This assistant helps you configure a basic system with a measurement board and from 0 to 4 mux of the same type. For more complex configuration with multiple mux of different types, please have a look in the configs/ folder.')
 
 mb = None
 while True:
@@ -36,6 +36,9 @@ config = 'config_mb_' + mb[1:] + '_' + nb_mux + '_mux_' + mux[1:] + '.py'
 if pwr != 'battery':
     config = config.replace('.py', '_' + pwr + '.py')
 print('Using this configuration: ' + config)
+
+if mux == 'v2024':
+    print('for mux2024, you will additionally need to configure the role of each mux (2 role AB or MN or 4 roles ABMN), please refer the online documentation to edit your config.py')
 
 import os
 import shutil
