@@ -1,4 +1,5 @@
 .. _settings:
+
 Acquisition settings
 ********************
 
@@ -24,8 +25,9 @@ This section details the acquisition settings that can be specified for measurem
 For more information on these settings, see the API doc for :func:`ohmpi.ohmpi.OhmPi.run_measurement`, :func:`ohmpi.ohmpi.OhmPi.run_measurement` and :func:`ohmpi.ohmpi.OhmPi.run_measurement`
 
 In addition to these default settings, and for advanced users, additional settings related to the injection strategy "vmax" and "vmin" can also be specified in the json settings file as follows:
+
 .. code-block:: python
-  :caption: Dictionnary containing the default settings contained in ´settings/default.json`
+  :caption: Dictionnary containing the default settings contained in ``settings/default.json``
 
     {
     "vab_max": null, # maximum V_AB (in V) bounding the vmax injection strategy. Value is capped by vab_max from hardware config. Default is None, which means vmax strategy bounded by hardware vab_max from hardware config.

@@ -152,7 +152,7 @@ Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-d
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/6.jpg                       |
    |      6 +-------------------------------------------------------------------+
-   |        | Soldering five DIP-8 sockets                                                      |
+   |        | Soldering five DIP-8 sockets                                      |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/7.jpg                       |
@@ -230,7 +230,7 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/16.jpg                      |
    |     16 +-------------------------------------------------------------------+
-   |        | Soldering ten 1u µF 50V Electrolytic capacitors, **pay attention**|
+   |        | Soldering ten 1 µF 50V Electrolytic capacitors, **pay attention** |
    |        | to capacitor polarity                                             |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
@@ -301,7 +301,7 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
    |        |   .. image:: ../../../img/mb.2024.x.x/25.jpg                      |
    |     25 +-------------------------------------------------------------------+
    |        | Place the MCP23008 on its DIP-16 socket                           |
-   |        | **pay attention to the notches orientation**
+   |        | **pay attention to the notches orientation**                      |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/26.jpg                      |

@@ -103,7 +103,17 @@
 <section id="repeated-acquisition-at-fixed-intervals">
 <h2>Repeated acquisition at fixed intervals<a class="headerlink" href="#repeated-acquisition-at-fixed-intervals" title="Link to this heading"></a></h2>
 <p>The easiest way to set up time-lapse acquisition is to perform repeated acquisition of a sequence at fixed intervals.
-Repeated acquisition can be initiated from the three different <a href="#id1"><span class="problematic" id="id2">`interfaces`_</span></a>.</p>
+Repeated acquisition can be initiated from the three different <cite>interfaces_</cite>.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Example of code for monitoring.</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">### Run multiple sequences at given time interval</span>
+<span class="n">k</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;nb_meas&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># run sequence three times</span>
+<span class="n">k</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;sequence_delay&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># every 100 s</span>
+<span class="n">k</span><span class="o">.</span><span class="n">run_multiple_sequences</span><span class="p">()</span>  <span class="c1"># asynchron</span>
+<span class="c1"># k.interrupt()  # kill the asynchron sequence</span>
+</pre></div>
+</div>
+</div>
 </section>
 <section id="scheduled-acquisition-using-crontab">
 <h2>Scheduled acquisition using crontab<a class="headerlink" href="#scheduled-acquisition-using-crontab" title="Link to this heading"></a></h2>

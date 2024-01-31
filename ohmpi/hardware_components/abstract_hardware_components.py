@@ -333,16 +333,16 @@ class TxAbstract(ABC):
 
     @abstractmethod
     def inject(self, polarity=1, injection_duration=None, switch_pwr=False):
-        """
-        Abstract method to define injection
+        """Abstract method to define injection.
+
         Parameters
         ----------
         polarity: int, default 1
-            Injection polarity, can be eiter  1, 0 or -1
+            Injection polarity, can be eiter  1, 0 or -1.
         injection_duration: float, default None
-            Injection duration in seconds
+            Injection duration in seconds.
         switch_pwr: bool
-            switches on and off tx.pwr
+            Switch on and off tx.pwr.
         """
         assert polarity in [-1, 0, 1]
         if injection_duration is None:

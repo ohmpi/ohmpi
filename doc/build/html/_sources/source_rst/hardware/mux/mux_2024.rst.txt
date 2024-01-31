@@ -39,7 +39,7 @@ Required components
 
 .. csv-table:: List of components
    :file: ../mux/MUX_board_2024.csv
-   :widths: 30, 70, 70, 70, 70, 35, 35,1
+   :widths: 30, 70, 70, 70, 70, 35, 35
    :header-rows: 1
 
 
@@ -57,6 +57,7 @@ MUX board v2024 PCB (mux.2024.0.0).
 
 
 Mount the 100 kOhm resistors.
+
 .. table::
    :align: center
 
@@ -65,6 +66,7 @@ Mount the 100 kOhm resistors.
    +--------+--------------------------------------------------------------------------------+
 
 Mount the diodes.
+
 .. table::
    :align: center
 
@@ -73,6 +75,7 @@ Mount the diodes.
    +--------+--------------------------------------------------------------------------------+
 
 Mount the mosfets. You can chose between ZVN4206A or STP16NF06L.
+
 .. table::
    :align: center
 
@@ -81,6 +84,7 @@ Mount the mosfets. You can chose between ZVN4206A or STP16NF06L.
    +--------+--------------------------------------------------------------------------------+
 
 Mount the MCP23017 sockets and the capacitors.
+
 .. table::
    :align: center
 
@@ -100,6 +104,7 @@ configured in 2-role mode, the electrode takeouts can be mounted with 8 screw co
    +--------+--------------------------------------------------------------------------------+
 
 Mount the relays.
+
 .. table::
    :align: center
 
@@ -144,6 +149,7 @@ to avoid confusion when cabling the system.
 ===================================================
 
 The cabling of several MUX boards v2024 within an OhmPi system is entirely dependent on the role configuration of each board.
+
 * 2-role MUX boards have to come in pairs. The 16 electrodes takeouts of each pair have to be cabled together. This is easily done with a ribbon cable
   plugged on the 16-way IDC connectors of the pair of boards. This also allows to stack two boards together leaving the screw connectors of the board on the top
   accessible to connect wires from the electrode arrays.

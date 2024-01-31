@@ -1,10 +1,12 @@
 .. _interfaces:
+
 Interfaces
 **********
 
 Three interfaces can be used to interact with the OhmPi:
+
 * a `Web interface`_: user friendly graphical interface to achieve basic operations for everyday use, such as running a sequence or repeated sequences.
-* a `Python interface`_: based on the `api`_, the Python interface allows basic and more advanced operations such as custom acquisition strategies and automation.
+* a `Python interface`_: based on the `api_`, the Python interface allows basic and more advanced operations such as custom acquisition strategies and automation.
 * a `IoT interface`_: based on the MQTT messaging protocol used in IoT, it is a framework to incorporate the OhmPi system within complex experiments designs comprising other IoT sensors.
 
 
@@ -95,6 +97,7 @@ To access the Python API, make sure that the PYTHONPATH has been correctly confi
 For detailed usage, please see the Python API or look at the examples.
 
 .. _IoT-interface:
+
 IoT interface
 =============
 

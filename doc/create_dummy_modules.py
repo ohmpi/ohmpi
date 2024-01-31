@@ -29,6 +29,14 @@ typ = 'mod'
 # cannot do a for loop as the "environment" is not reloaded
 try:
     importlib.import_module('ohmpi.ohmpi')
+    importlib.import_module('ohmpi.hardware_components.abstract_hardware_components')
+    importlib.import_module('ohmpi.hardware_components.mb_2023_0_X')
+    importlib.import_module('ohmpi.hardware_components.mb_2024_0_2')
+    importlib.import_module('ohmpi.hardware_components.mux_2023_0_X')
+    importlib.import_module('ohmpi.hardware_components.mux_2024_0_X')
+    importlib.import_module('ohmpi.hardware_components.pwr_batt')
+    importlib.import_module('ohmpi.hardware_components.pwr_dps5005')
+    importlib.import_module('ohmpi.hardware_components.raspberry_pi')
     print('============= ok, no more import error detected =========')
     exit(0)
 except ImportError as e:

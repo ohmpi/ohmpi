@@ -1,4 +1,5 @@
 .. _config:
+
 Configuration
 *************
 
@@ -162,7 +163,7 @@ The configuration is written in a python file structured in a series of dictiona
     |                    +--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
     |                    | Description                                      | Expected Value          | Value description                                               |
     +====================+==================================================+=========================+=================================================================+
-    |  tca_address    | I2C address of MUX board                         | | *hex integer*         |          Address of MUX board                                   |
+    |  mux_tca_address   | I2C address of MUX board                         | | *hex integer*         |          Address of MUX board                                   |
     |                    |                                                  | | 0x70 - 0x77           |                                                                 |
     +--------------------+--------------------------------------------------+-------------------------+-----------------------------------------------------------------+
 
@@ -190,6 +191,7 @@ Here's an example of the HARDWARE_CONFIG:
 
 .. code-block:: python
   :caption: HARDWARE_CONFIG: Dictionary containing configuration of the hardware system and how it is assembled.
+  
   r_shunt = 2. # Value of the shunt resistor in Ohm.
   HARDWARE_CONFIG = {
       'ctl': {'model': 'raspberry_pi'}, # contains informations related to controller unit, 'raspberry_pi' only implemented so far
@@ -242,7 +244,7 @@ The logging dictionaries divided in:
   }
 
 
-*
+
 .. code-block:: python
   :caption: DATA_LOGGING_CONFIG: Dictionary configuring the data logging capabilities of the system
 
@@ -260,6 +262,7 @@ The logging dictionaries divided in:
 
 .. code-block:: python
   :caption: SOH_LOGGING_CONFIG: Dictionary configuring how the state of health of the system is logged
+  
   # State of Health logging configuration (For a future release)
   SOH_LOGGING_CONFIG = {
       'logging_level': logging.INFO,

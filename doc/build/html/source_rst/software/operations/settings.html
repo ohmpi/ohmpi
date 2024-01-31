@@ -114,21 +114,18 @@
 </div>
 </div>
 <p>For more information on these settings, see the API doc for <a class="reference internal" href="../api.html#ohmpi.ohmpi.OhmPi.run_measurement" title="ohmpi.ohmpi.OhmPi.run_measurement"><code class="xref py py-func docutils literal notranslate"><span class="pre">ohmpi.ohmpi.OhmPi.run_measurement()</span></code></a>, <a class="reference internal" href="../api.html#ohmpi.ohmpi.OhmPi.run_measurement" title="ohmpi.ohmpi.OhmPi.run_measurement"><code class="xref py py-func docutils literal notranslate"><span class="pre">ohmpi.ohmpi.OhmPi.run_measurement()</span></code></a> and <a class="reference internal" href="../api.html#ohmpi.ohmpi.OhmPi.run_measurement" title="ohmpi.ohmpi.OhmPi.run_measurement"><code class="xref py py-func docutils literal notranslate"><span class="pre">ohmpi.ohmpi.OhmPi.run_measurement()</span></code></a></p>
-<p>In addition to these default settings, and for advanced users, additional settings related to the injection strategy “vmax” and “vmin” can also be specified in the json settings file as follows:
-.. code-block:: python</p>
-<blockquote>
-<div><dl class="field-list">
-<dt class="field-odd">caption<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dictionnary containing the default settings contained in ´settings/default.json`</p>
-<p>{
-“vab_max”: null, # maximum V_AB (in V) bounding the vmax injection strategy. Value is capped by vab_max from hardware config. Default is None, which means vmax strategy bounded by hardware vab_max from hardware config.
-“iab_max”: null, # maximum I_AB (in mA) bounding the vmax injection strategy. Value is capped by iab_max from hardware config. Default is None, which means vmax strategy bounded by hardware iab_max from hardware config.
-“vmn_max”: null, # maximum V_mn (in mV) bounding the vmax injection strategy. Value is capped by vmn_max from hardware config. Default is None, which means vmax strategy bounded by hardware vmn_max from hardware config.
-“vmn_min”: null, # minimum V_mn (in mV) bounding the vmax injection strategy. Value is capped by vmn_min from hardware config. Default is None, which means vmax strategy bounded by hardware vmn_min from hardware config.
-}</p>
-</dd>
-</dl>
-</div></blockquote>
+<p>In addition to these default settings, and for advanced users, additional settings related to the injection strategy “vmax” and “vmin” can also be specified in the json settings file as follows:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Dictionnary containing the default settings contained in <code class="docutils literal notranslate"><span class="pre">settings/default.json</span></code></span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="p">{</span>
+  <span class="s2">&quot;vab_max&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span> <span class="c1"># maximum V_AB (in V) bounding the vmax injection strategy. Value is capped by vab_max from hardware config. Default is None, which means vmax strategy bounded by hardware vab_max from hardware config.</span>
+  <span class="s2">&quot;iab_max&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span> <span class="c1"># maximum I_AB (in mA) bounding the vmax injection strategy. Value is capped by iab_max from hardware config. Default is None, which means vmax strategy bounded by hardware iab_max from hardware config.</span>
+  <span class="s2">&quot;vmn_max&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span> <span class="c1"># maximum V_mn (in mV) bounding the vmax injection strategy. Value is capped by vmn_max from hardware config. Default is None, which means vmax strategy bounded by hardware vmn_max from hardware config.</span>
+  <span class="s2">&quot;vmn_min&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span> <span class="c1"># minimum V_mn (in mV) bounding the vmax injection strategy. Value is capped by vmn_min from hardware config. Default is None, which means vmax strategy bounded by hardware vmn_min from hardware config.</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <p>For more information on these settings, see the API donc for <code class="xref py py-func docutils literal notranslate"><span class="pre">OhmPi.run_measurement()</span></code>.</p>
 </section>
 
