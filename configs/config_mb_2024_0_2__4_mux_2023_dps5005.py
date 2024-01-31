@@ -17,6 +17,12 @@ OHMPI_CONFIG = {
 }
 
 r_shunt = 2.
+
+# default properties of system components that will be
+# overwritten by properties defined in each the board dict below.
+# if bounds are defined in board specs, values out of specs will be bounded to remain in specs
+# omitted properties in config will be set to board specs default values if they exist
+
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},
@@ -24,42 +30,45 @@ HARDWARE_CONFIG = {
              'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
              'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
              'r_shunt': r_shunt,  # Shunt resistance in Ohms
-             'interface_name': 'i2c'
+             'interface_name': 'i2c',
+             'vmn_hardware_offset': 2500.
             },
     'rx':  {'model': 'mb_2024_0_2',
              'latency': 0.010,  # latency in seconds in continuous mode
              'sampling_rate': 50,  # number of samples per second
-             'interface_name': 'i2c'
+             'interface_name': 'i2c',
             },
     'mux': {'boards':
-                {'mux_A':
+                 'mux_A':
                      {'model': 'mux_2023_0_X',
                       'mux_tca_address': 0x70,
                       'roles': 'A',
-                      'electrodes': range(1, 65)},
+                      'electrodes': range(1, 65),
+                      },
                  'mux_B':
                      {'model': 'mux_2023_0_X',
                       'mux_tca_address': 0x71,
                       'roles': 'B',
-                      'electrodes': range(1, 65)},
+                      'electrodes': range(1, 65),
+                      },
                  'mux_M':
                      {'model': 'mux_2023_0_X',
                       'mux_tca_address': 0x72,
                       'roles': 'M',
-                      'electrodes': range(1, 65)},
+                      'electrodes': range(1, 65),
+                      },
                  'mux_N':
                      {'model': 'mux_2023_0_X',
                       'mux_tca_address': 0x73,
                       'roles': 'N',
                       'electrodes': range(1, 65),
-                      },
+                      }
                  },
              'default': {'interface_name': 'i2c_ext',
-                         'voltage_max': 100.,
+                         'voltage_max': 50.,
                          'current_max': 3.}
             }
-    }
-
+}
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {

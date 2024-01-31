@@ -25,57 +25,29 @@ r_shunt = 2.
 
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
-    'pwr': {'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},
-    'tx':  {'model': 'mb_2024_0_2',
+    'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
+    'tx':  {'model': 'mb_2023_0_X',
              'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
              'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
              'r_shunt': r_shunt,  # Shunt resistance in Ohms
-             'interface_name': 'i2c',
-             'vmn_hardware_offset': 2500.
+             'interface_name': 'i2c'
             },
-    'rx':  {'model': 'mb_2024_0_2',
-             'latency': 0.010,  # latency in seconds in continuous mode
-             'sampling_rate': 50,  # number of samples per second
-             'interface_name': 'i2c',
+    'rx':  {'model': 'mb_2023_0_X',
+            'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
+            'sampling_rate': 50.,  # number of samples per second
+            'interface_name': 'i2c',
             },
     'mux': {'boards':
-                 'mux_01':
+                {'mux_01':
                      {'model': 'mux_2024_0_X',
-                      'roles': ['A', 'B'],
-                      'electrodes': range(1, 17),
-                      'addr1': 'down',
+                      'electrodes': range(1, 9),
+                      'roles': ['A', 'B', 'M', 'N'],
+                      'addr1': 'up',
                       'addr2': 'up',
                       'tca_address': None,
-                      'tca_channel': 0,
-                      },
-                 'mux_02':
-                     {'model': 'mux_2024_0_X',
-                      'roles': ['M', 'N'],
-                      'electrodes': range(1, 17),
-                      'addr1': 'up',
-                      'addr2': 'down',
-                      'tca_address': None,
-                      'tca_channel': 0,
-                      },
-                'mux_03':
-                     {'model': 'mux_2024_0_X',
-                      'roles': ['A', 'B'],
-                      'electrodes': range(17, 33),
-                      'addr1': 'up',
-                      'addr2': 'down',
-                      'tca_address': None,
                       'tca_channel': 0,},
-                'mux_04':
-                     {'model': 'mux_2024_0_X',
-                      'roles': ['M', 'N'],
-                      'electrodes': range(17, 33),
-                      'addr1': 'down',
-                      'addr2': 'down',
-                      'tca_address': None,
-                      'tca_channel': 0,
-                      }
                  },
-             'default': {'interface_name': 'i2c_ext',
+             'default': {'interface_name': 'i2c',
                          'voltage_max': 50.,
                          'current_max': 3.}
             }

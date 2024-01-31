@@ -1,6 +1,5 @@
 import logging
 from ohmpi.utils import get_platform
-
 from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
@@ -18,6 +17,12 @@ OHMPI_CONFIG = {
 }
 
 r_shunt = 2.
+
+# default properties of system components that will be
+# overwritten by properties defined in each the board dict below.
+# if bounds are defined in board specs, values out of specs will be bounded to remain in specs
+# omitted properties in config will be set to board specs default values if they exist
+
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
@@ -32,19 +37,14 @@ HARDWARE_CONFIG = {
             'sampling_rate': 50.,  # number of samples per second
             'interface_name': 'i2c',
             },
-    'mux':  # default properties given in config are system properties that will be
-            # overwritten by properties defined in each the board dict below.
-            # if defined in board specs, values out of specs will be bounded to remain in specs
-            # omitted properties in config will be set to board specs default values if they exist
-            {'boards': {},
+    'mux':  {'boards': {},
              'default': {}
              }
 }
-
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
-    'logging_level': logging.DEBUG,  # TODO: set logging level back to INFO
+    'logging_level': logging.INFO,
     'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',
