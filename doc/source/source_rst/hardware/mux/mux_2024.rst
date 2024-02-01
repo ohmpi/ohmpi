@@ -154,7 +154,7 @@ There is 4 possible combinations for the jumpers which give the following addres
 
 +-------------------+-------------------+-------------+
 | | Jumper position | | Jumper position | |    I2C    |
-| |   Addr1         | | addresses       | | addresses |
+| |   Addr1         | | Addr2           | | addresses |
 +-------------------+-------------------+-------------+
 |        Up         |        Up         | 0x20 - 0x21 |
 +-------------------+-------------------+-------------+
