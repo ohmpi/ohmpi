@@ -24,6 +24,8 @@ OHMPI: Open source and open hardware resistivity-meter
     * General tutorials
 
 .. image:: img/logo/ohmpi/LOGO_OHMPI.png
+   :width: 168px
+   :height: 94px
    :align: left
 
 Contents: 
