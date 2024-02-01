@@ -4,7 +4,7 @@
 API reference
 #############
 
-.. image:: ../../../img/software/hardware_classes.png
+.. image:: ../../img/software/hardware_classes.png
 
   Schematic of the main classes architecture.
 
