@@ -83,7 +83,8 @@ if os.path.exists('configs/' + config):
     # print('\n'+'_'*100)
     print('\n'+'*' * 93)
     print('*** You may customize the configuration of your OhmPi by editing the ohmpi/config.py file ***')
-    print('***     You should change the username and password used to connect to the mqtt broker    ***')
+    print('***   The MQTT communication can be encrypted with TLS/SSL but it is not set by default   ***')
+    print('***  You should then change the username and password used to connect to the mqtt broker  ***')
     print('***     Make sure you understand what you are doing to avoid damaging to your system      ***')
     print('*' * 93)
 
