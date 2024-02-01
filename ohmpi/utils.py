@@ -141,8 +141,8 @@ def mux_2023_to_mux_2024_takeouts(elec_list):
 
     """
 
-    mapper = { 1: 2, 2: 4, 3: 6, 4: 8, 5: 10, 6: 12, 7: 14, 8: 16,
-               9: 15, 10: 13, 11: 11, 12: 9, 13: 7, 14: 5, 15: 3, 16: 1,}
+    mapper = {1: 2, 2: 4, 3: 6, 4: 8, 5: 10, 6: 12, 7: 14, 8: 16,
+              9: 15, 10: 13, 11: 11, 12: 9, 13: 7, 14: 5, 15: 3, 16: 1, }
 
     return np.vectorize(mapper.get)(elec_list)
 
@@ -443,7 +443,8 @@ MQTT_CONTROL_CONFIG = {
                         s += footer
                         print(f'*** Preparing {config_filename} ***')
                         print(f'\n{s}')
-                        with open(f'configs/{config_filename}', mode='wt') as config_file: # TODO: check how to set the path so that this is not dependent of the current directory
+                        config_filename = os.path.join(os.path.dirname(__file__), f'../configs/{config_filename}')
+                        with open(f'{config_filename}', mode='wt') as config_file:
                             config_file.write(s)
                     else:
                         print(f'### skipping {config_filename} ###')
