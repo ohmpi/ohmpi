@@ -453,7 +453,7 @@ class OhmPi(object):
         os.system('poweroff')  # this may require admin rights
 
     def plot_last_fw(self, save_fig=True, filename=None):
-        self._hw.plot_readings(save_fig=save_fig, filename=filename)
+        self._hw._plot_readings(save_fig=save_fig, filename=filename)
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
                         autogain=True, strategy=None, tx_volt=None, best_tx_injtime=0.1,
