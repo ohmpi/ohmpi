@@ -4,7 +4,7 @@
 API reference
 #############
 
-.. figure:: ../../../img/software/hardware_classes.png
+.. figure:: ../../img/software/hardware_classes.png
 
 .. toctree::
    :maxdepth: 2
