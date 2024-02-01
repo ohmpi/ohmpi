@@ -16,6 +16,11 @@ The OhmPi is composed of different modules:
 These module exists in different versions and can be combined using a configuration file.
 You can then upgrade your measurement board or power supply for specific applications.
 
+.. image:: ../../../img/Hardware_structure.png
+
+  OhmPi hardware flowchart.
+
+
 .. toctree:: 
    :maxdepth: 2 
 

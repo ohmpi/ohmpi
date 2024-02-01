@@ -15,10 +15,6 @@ Some general explanation about the components is given below to help you underst
 the general electronics of the OhmPi. For more details, we redirect the reader to
 the datasheet of each component.
 
-.. image:: ../../../img/Hardware_structure.png
-
-  OhmPi hardware flowchart.
-
 **Measuring voltage**
 
 Voltage measurement is typically done through an **ADC (Analog to Digital Converter)**.
