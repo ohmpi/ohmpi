@@ -61,6 +61,7 @@ class Pwr(PwrAbstract):
 
     @voltage.setter
     def voltage(self, value):
+        value = float(value)
         self.connection.write_register(0x0000, value, 2)
         self._voltage = value
 
