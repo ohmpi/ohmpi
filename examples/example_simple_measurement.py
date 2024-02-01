@@ -18,3 +18,4 @@ quad = [1,4,2,3]    # set numpy array of shape (n,4)
 
 # Run sequence
 k.run_measurement(quad)
+k.plot_last_fw()
