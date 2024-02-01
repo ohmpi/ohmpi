@@ -27,19 +27,19 @@ HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
     'tx':  {'model': 'mb_2023_0_X',
-             'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
-             'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
-             'r_shunt': r_shunt,  # Shunt resistance in Ohms
-             'interface_name': 'i2c'
-            },
+                 'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
+                 'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
+                 'r_shunt': r_shunt,  # Shunt resistance in Ohms
+                 'interface_name': 'i2c'
+                },
     'rx':  {'model': 'mb_2023_0_X',
-            'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
-            'sampling_rate': 50.,  # number of samples per second
-            'interface_name': 'i2c',
-            },
+                'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
+                'sampling_rate': 50.,  # number of samples per second
+                'interface_name': 'i2c',
+                },
     'mux':  {'boards': {},
-             'default': {}
-             }
+                 'default': {}
+            }
 }
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
