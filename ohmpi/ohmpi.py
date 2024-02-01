@@ -452,7 +452,14 @@ class OhmPi(object):
         self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
         os.system('poweroff')  # this may require admin rights
 
-    def plot_last_fw(self, save_fig=True, filename=None):
+    def plot_last_fw(self, save_fig=False, filename=None):
+        """Plots last full waveform measurement
+
+        Parameters
+        ----------
+        save_fig: boolean, optional - default (False)
+        filename: str, optional. Path to save plot. By default figures/test.png"""
+
         self._hw._plot_readings(save_fig=save_fig, filename=filename)
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
