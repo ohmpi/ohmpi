@@ -90,8 +90,10 @@ class Pwr(PwrAbstract):
             self.connection.write_register(0x09, 1)
             self.current_max(self._current_max)
             self._pwr_state = 'on'
+            self.exec_logger.event(f'{self.model}\tpwr_latency\tbegin\t{datetime.datetime.utcnow()}')
             self.exec_logger.debug(f'{self.model} is on')
             time.sleep(self._pwr_latency)
+            self.exec_logger.event(f'{self.model}\tpwr_latency\tend\t{datetime.datetime.utcnow()}')
 
         elif state == 'off':
             self.connection.write_register(0x09, 0)

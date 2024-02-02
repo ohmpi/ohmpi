@@ -372,7 +372,7 @@ class OhmPiHardware:
             return sp
 
     def _find_vab(self, vab, iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min):
-        self.exec_logger.debug('Searching best Vab...')
+        self.exec_logger.debug('Searching for the best Vab...')
         iab_mean = np.mean(iab)
         iab_std = np.std(iab)
         vmn_mean = np.mean(vmn)
