@@ -6,7 +6,7 @@ pages:
   stage: deploy
   script:
   - apt-get update
-  - apt-get install --assume-yes pandoc texlive
+  - apt-get install --assume-yes pandoc
   - pip install numpy pandas termcolor paho-mqtt zmq  # top import of Ohmpi.py
   - pip install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark linuxdoc
   - cp configs/config_default.py ohmpi/config.py  # only compile doc with dummy if not on rpi with correct config.py
@@ -14,8 +14,8 @@ pages:
   - make html
   
    # also make latexpdf (to be tested)
-  - make latexpdf
-  - mv build/latex/ohmpi.pdf source/_static/ohmpi.pdf
+#  - make latexpdf
+#  - mv build/latex/ohmpi.pdf source/_static/ohmpi.pdf
   - cd ..
   - mv doc/build/html/ public/
   - ls public/
