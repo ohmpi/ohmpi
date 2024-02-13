@@ -28,7 +28,7 @@ HARDWARE_CONFIG = {
             },
     'rx':  {'model': 'mb_2024_0_2',
              'latency': 0.010,  # latency in seconds in continuous mode
-             'sampling_rate': 50,  # number of samples per second
+             'sampling_rate': 200,  # number of samples per second
              'interface_name': 'i2c'
             },
     'mux': {'boards':
