@@ -561,6 +561,24 @@ class OhmPiHardware:
         #     polarity = 1
         return vab_opt
 
+    def discharge_pwr(self, quad=None, strategy='constant'):
+        if self.tx.pwr.voltage_adjustable:
+           #TODO: implement strategy to discharge pwr based on hardware version => variable in TX should tell if it can discharge the pwr or not
+           ### if no discharge relays then apply previous strategy (activate briefly AB relays)
+           ### if discharge relay manually add on mb_2024_0_2, then should not activate AB relays but simply wait for automatic discharge
+           ### if mb_20240_1_X then TX should handle the pwr discharge
+
+           # self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
+           # self._hw.tx.polarity = 1
+           if strategy == 'constant':
+               pass
+           elif strategy == 'vmax' or strategy == 'vmin':
+              time.sleep(1.0)
+           # self._hw.tx.polarity = 0
+           # self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
+
+
+
     def _plot_readings(self, save_fig=False, filename=None):
         # Plot graphs
         warnings.filterwarnings("ignore", category=DeprecationWarning)

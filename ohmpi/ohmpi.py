@@ -595,11 +595,12 @@ class OhmPi(object):
             # log data to the data logger
             self.data_logger.info(dd)
 
-            # Discharge DPS capa (not working properly)
-            #TODO: For pwr_adjustable only and perhaps in a separate function (or at _hw level)
+            # Discharge DPS capa
+            #TODO: For pwr_adjustable only and dependent on TX version so should be placed at PWR level (or at _hw level)
+            self._hw.discharge_pwr(quad=quad, strategy=strategy)
             #self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
             #self._hw.tx.polarity = 1
-            time.sleep(1.0)
+            # time.sleep(1.0)
             #self._hw.tx.polarity = 0
             #self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
         else:
