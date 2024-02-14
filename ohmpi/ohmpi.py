@@ -28,7 +28,7 @@ from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import ohmpi.deprecated as deprecated
 from ohmpi.hardware_system import OhmPiHardware
-from tqdm         import tqdm
+from tqdm import tqdm
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
 try:

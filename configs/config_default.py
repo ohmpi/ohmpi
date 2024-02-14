@@ -28,7 +28,7 @@ HARDWARE_CONFIG = {
             },
     'rx':  {'model': 'mb_2024_0_2',
              'latency': 0.010,  # latency in seconds in continuous mode
-             'sampling_rate': 50,  # number of samples per second
+             'sampling_rate': 200,  # number of samples per second
              'interface_name': 'i2c'
             },
     'mux': {'boards':
@@ -64,7 +64,7 @@ HARDWARE_CONFIG = {
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
-    'log_file_logging_level': logging.DEBUG,
+    'log_file_logging_level': logging.INFO,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',
     'max_bytes': 262144,
@@ -110,7 +110,7 @@ MQTT_LOGGING_CONFIG = {
     'transport': 'tcp',
     'client_id': f'{OHMPI_CONFIG["id"]}',
     'exec_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/exec',
-    'exec_logging_level': logging.DEBUG,
+    'exec_logging_level': EXEC_LOGGING_CONFIG['logging_level'],
     'data_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/data',
     'data_logging_level': DATA_LOGGING_CONFIG['logging_level'],
     'soh_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/soh',

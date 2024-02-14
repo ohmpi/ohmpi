@@ -14,7 +14,7 @@ from ohmpi.utils import enforce_specs
 # hardware characteristics and limitations
 # voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
 SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
-                'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
+                'sampling_rate': {'min': 0., 'default': 100., 'max': 500.},
                 'data_rate': {'default': 860.},
                 'bias':  {'min': -5000., 'default': 0., 'max': 5000.},
                 'coef_p2': {'default': 2.50},
