@@ -524,7 +524,8 @@ class OhmPiHardware:
                             self.exec_logger.debug('Compute_tx_volt stopped on vab increase too small')
                     k = k + 1
                     vab_list[k] = np.min(vabs)
-                    time.sleep(0.5)
+                    time.sleep(0.2) #TODO: replace this by discharging DPS on resistor with relay on GPIO5 (at least for strategy vmin,
+                                    # but might be useful in vmax when last vab too high...)
                     if self.tx.pwr.voltage_adjustable:
                         self.tx.voltage = vab_list[k]
                 if k > n_steps:
