@@ -28,7 +28,7 @@ from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import ohmpi.deprecated as deprecated
 from ohmpi.hardware_system import OhmPiHardware
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
 try:
@@ -1186,7 +1186,7 @@ else:
 
 current_time = datetime.now()
 print(f'local date and time : {current_time.strftime("%Y-%m-%d %H:%M:%S")}')
-OhmPi.get_deprecated_methods()
+OhmPi.get_deprecated_methods()  # TODO: check if this could be removed...
 
 # for testing
 if __name__ == "__main__":
