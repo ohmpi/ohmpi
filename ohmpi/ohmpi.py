@@ -541,7 +541,7 @@ class OhmPi(object):
         d = {}
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
             tx_volt = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max, iab_max=iab_max, vmn_min=vmn_min)  # TODO: use tx_volt and vmn_max instead of hardcoded values
-            time.sleep(0.5)  # to wait for pwr discharge
+            # time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
                 delay = kwargs['delay']
