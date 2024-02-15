@@ -62,8 +62,10 @@ class Pwr(PwrAbstract):
     @voltage.setter
     def voltage(self, value):
         value = float(value)
+        assert self._voltage_min <= value <= self._voltage_max
         self.exec_logger.event(f'{self.model}\tset_voltage\tbegin\t{datetime.datetime.utcnow()}')
-        self.connection.write_register(0x0000, value, 2)
+        if value != self._voltage:
+            self.connection.write_register(0x0000, value, 2)
         self.exec_logger.event(f'{self.model}\tset_voltage\tend\t{datetime.datetime.utcnow()}')
         self._voltage = value
 
