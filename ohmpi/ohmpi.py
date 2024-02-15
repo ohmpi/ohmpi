@@ -595,6 +595,7 @@ class OhmPi(object):
             dd['cmd_id'] = str(cmd_id)
 
             # log data to the data logger
+            print('\n')
             self.data_logger.info(dd)
 
             # Discharge DPS capa
