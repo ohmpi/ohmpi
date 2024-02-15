@@ -10,13 +10,12 @@ from minimalmodbus import Instrument  # noqa
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 12., 'max': 50., 'min': 0.},
          'voltage_min': {'default': 0},
-         'voltage_max': {'default': 0},
+         'voltage_max': {'default': 50},
          'current_max': {'default': 60.},
          'current_adjustable': {'default': False},
          'voltage_adjustable': {'default': True},
          'pwr_latency': {'default': .5}
          }
-
 
 class Pwr(PwrAbstract):
     def __init__(self, **kwargs):
