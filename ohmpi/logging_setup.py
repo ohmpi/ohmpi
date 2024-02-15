@@ -129,7 +129,7 @@ def setup_loggers(mqtt=True):
             mqtt_soh_handler.setLevel(mqtt_soh_logging_level)
             mqtt_soh_handler.setFormatter(soh_formatter)
             soh_logger.addHandler(mqtt_soh_handler)
-            msg += colored(f"\n\u2611 Publishes execution as {MQTT_LOGGING_CONFIG['soh_topic']} topic on the "
+            msg += colored(f"\n\u2611 Publishes state of heath as {MQTT_LOGGING_CONFIG['soh_topic']} topic on the "
                            f"{MQTT_LOGGING_CONFIG['hostname']} broker", 'blue')
         except Exception as e:
             msg += colored(f'\nWarning: Unable to connect to soh topic on broker\n{e}', 'yellow')
