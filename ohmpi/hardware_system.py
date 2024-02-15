@@ -524,10 +524,10 @@ class OhmPiHardware:
                             self.exec_logger.debug('Compute_tx_volt stopped on vab increase too small')
                     k = k + 1
                     vab_list[k] = np.min(vabs)
-                    self.exec_logger.event('OhmPiHardware\t_compute_tx_volt\tbegin\tsleep')
+                    self.exec_logger.event(f'OhmPiHardware\t_compute_tx_volt_sleep\tbegin\t{datetime.datetime.utcnow()}')
                     time.sleep(0.2) #TODO: replace this by discharging DPS on resistor with relay on GPIO5 (at least for strategy vmin,
                                     # but might be useful in vmax when last vab too high...)
-                    self.exec_logger.event('OhmPiHardware\t_compute_tx_volt\tend\tsleep')
+                    self.exec_logger.event(f'OhmPiHardware\t_compute_tx_volt_sleep\tend\t{datetime.datetime.utcnow()}')
                     if self.tx.pwr.voltage_adjustable:
                         self.tx.voltage = vab_list[k]
                 if k > n_steps:
