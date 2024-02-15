@@ -166,11 +166,13 @@ class Tx(TxAbstract):
         assert polarity in [-1, 0, 1]
         self._polarity = polarity
         if polarity == 1:
-            self.pin0.value = True
             self.pin1.value = False
+            time.sleep(self._release_delay)
+            self.pin0.value = True
             time.sleep(self._activation_delay)
         elif polarity == -1:
             self.pin0.value = False
+            time.sleep(self._release_delay)
             self.pin1.value = True
             time.sleep(self._activation_delay)
         else:
