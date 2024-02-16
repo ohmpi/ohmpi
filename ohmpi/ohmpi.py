@@ -463,7 +463,7 @@ class OhmPi(object):
         self._hw._plot_readings(save_fig=save_fig, filename=filename)
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
-                        autogain=True, strategy=None, tx_volt=None, best_tx_injtime=0.1,
+                        autogain=True, strategy=_plot_readingsNone, tx_volt=None, best_tx_injtime=0.1,
                         cmd_id=None, vab_max=None, iab_max=None, vmn_max=None, vmn_min=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value,
         #  change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
@@ -590,7 +590,7 @@ class OhmPi(object):
                 "R_std [%]": R_std,
                 "Ps [mV]": self._hw.sp,
                 "nbStack": nb_stack,
-                "Tx [V]": tx_volt,
+                "Tx [V]": vab,
                 "CPU temp [degC]": self._hw.ctl.cpu_temperature,
                 "Nb samples [-]": len(self._hw.readings[x, 2]),  # TODO: use only samples after a delay in each pulse
                 "full_waveform": self._hw.readings[:, [0, -2, -1]],
