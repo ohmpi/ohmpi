@@ -49,7 +49,6 @@ voltage_max = np.min([TX_CONFIG['voltage_max'],
                       np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
 voltage_min = RX_CONFIG['voltage_min']
 # TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
-self.sp
 
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
