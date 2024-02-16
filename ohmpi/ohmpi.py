@@ -540,7 +540,14 @@ class OhmPi(object):
             vmn_min = self.settings['vmn_min']
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
-        if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
+        switch_mux_on = Thread(target=self.switch_mux_on, args=(quad), kwargs={'bypass_check':bypass_check, 'cmd_id':cmd_id})
+        switch_pwr_on = Thread(target=setattr, args=(self._hw.tx.pwr, 'pwr_state', 'on'))
+        switch_mux_on.start()
+        switch_pwr_on.start()
+        switch_mux_on.join()
+        switch_pwr_on.join()
+        status = switch_mux_on._return
+        if status:
             tx_volt = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
                                                iab_max=iab_max, vmn_min=vmn_min)
             # time.sleep(0.5)  # to wait for pwr discharge
@@ -613,6 +620,9 @@ class OhmPi(object):
         # if power was off before measurement, let's turn if off
         if switch_power_off:
             self._hw.pwr_state = 'off'
+
+        if strategy == 'vmax':
+            self._hw.tx.pwr.pwr_state = 'off'
 
         return d
 
