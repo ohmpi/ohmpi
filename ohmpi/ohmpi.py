@@ -541,8 +541,12 @@ class OhmPi(object):
             vmn_min = self.settings['vmn_min']
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
+
+        def switch_mux_on(queue,quad,bypass_check,cmd_id):
+            result = self.switch_mux_on(quad, bypass_check, cmd_id)  # Function that returns the value you want to return
+            queue.put(result)
         q = Queue()
-        switch_mux_on = Thread(target=self.switch_mux_on, args=(quad, q), kwargs={'bypass_check':bypass_check, 'cmd_id':cmd_id})
+        switch_mux_on = Thread(target=switch_mux_on, args=(q,quad,bypass_check,cmd_id))
         switch_pwr_on = Thread(target=setattr, args=(self._hw.tx.pwr, 'pwr_state', 'on'))
         switch_mux_on.start()
         switch_pwr_on.start()
