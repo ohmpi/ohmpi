@@ -299,7 +299,7 @@ class OhmPiHardware:
 
     def select_samples(self, delay=0.):
         x = []
-        for pulse in range(int(max(self.readings[:, 1])) + 1):
+        for pulse in np.unique(self.readings[:, 1]):
             v = np.where((self.readings[:, 1] == pulse))[0]
             if len(v) > 0:  # to avoid pulse not recorded due to Raspberry Pi lag...
                 t_start_pulse = min(self.readings[v, 0])
@@ -368,8 +368,8 @@ class OhmPiHardware:
                                      'negative pulse')
             return 0.
         else:
-            n_pulses = int(np.max(self.readings[v, 1]))
-            polarity = np.array([np.median(self.readings[v][self.readings[v, 1] == i, 2]) for i in range(n_pulses + 1)])
+            n_pulses = np.unique(self.readings[v, 1])
+            polarity = np.array([np.median(self.readings[v][self.readings[v, 1] == i, 2]) for i in n_pulses])
             mean_vmn = []
             for i in range(n_pulses + 1):
                 mean_vmn.append(np.mean(self.readings[v][self.readings[v, 1] == i, 4]))
