@@ -362,8 +362,8 @@ class OhmPiHardware:
 
     def last_sp(self, delay=0.):  # TODO: allow for different strategies for computing sp (i.e. when sp drift is not linear)
         v = self.select_samples(delay)
-        if self.readings.shape == (0,) or len(self.readings[self.readings[v, 2] == 1, :]) < 1 or \
-                len(self.readings[self.readings[v, 2] == -1, :]) < 1:
+        if self.readings.shape == (0,) or len(self.readings[self.readings[v, 2] == 1, v]) < 1 or \
+                len(self.readings[self.readings[v, 2] == -1, v]) < 1:
             self.exec_logger.warning('Unable to compute sp: readings should at least contain one positive and one '
                                      'negative pulse')
             return 0.
