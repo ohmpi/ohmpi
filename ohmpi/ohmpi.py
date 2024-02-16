@@ -558,6 +558,8 @@ class OhmPi(object):
                                                iab_max=iab_max, vmn_min=vmn_min)
             # time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
+            self.switch_mux_off(quad, cmd_id)
+
             if 'delay' in kwargs.keys():
                 delay = kwargs['delay']
                 if delay > injection_duration:
@@ -611,22 +613,21 @@ class OhmPi(object):
             print('\r')
             self.data_logger.info(dd)
 
-            # Discharge DPS capa
-            # TODO: For pwr_adjustable only and dependent on TX version so should be placed at PWR level (or at _hw level)
-            self._hw.discharge_pwr(quad=quad, strategy=strategy)
-            # self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
-            # self._hw.tx.polarity = 1
-            # time.sleep(1.0)
-            # self._hw.tx.polarity = 0
-            # self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
+            # if strategy not constant, then switch dps off (button) in case following measurement within sequence
+            # TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
+            if (strategy == 'vmax' or strategy == 'vmin') and vab - tx_volt > 5.:  # if starting tx_volt was too far (> 5 V) from actual vab, then turn pwr off
+                self._hw.tx.pwr.pwr_state = 'off'
+
+                # Discharge DPS capa
+                # TODO: For pwr_adjustable only and dependent on TX version so should be placed at PWR level (or at _hw level)
+                self._hw.discharge_pwr(quad=quad, strategy=strategy)
+                # self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
+                # self._hw.tx.polarity = 1
+                # time.sleep(1.0)
+                # self._hw.tx.polarity = 0
+                # self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
         else:
             self.exec_logger.info(f'Skipping {quad}')
-        self.switch_mux_off(quad, cmd_id)
-
-        # if strategy not constant, then switch dps off (button) in case following measurement within sequence
-        #TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
-        if (strategy == 'vmax' or strategy == 'vmin') and vab - tx_volt > 5.: # if starting tx_volt was too far (> 5 V) from actual vab, then turn pwr off
-            self._hw.tx.pwr.pwr_state = 'off'
 
         # if power was off before measurement, let's turn if off
         if switch_power_off:

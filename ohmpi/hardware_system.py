@@ -573,23 +573,13 @@ class OhmPiHardware:
         #     polarity = 1
         return vab_opt
 
-    def discharge_pwr(self, quad=None, strategy='constant'):
+    def discharge_pwr(self):
         if self.tx.pwr.voltage_adjustable:
             #TODO: implement strategy to discharge pwr based on hardware version => variable in TX should tell if it can discharge the pwr or not
-            ### if no discharge relays then apply previous strategy (activate briefly AB relays)
             ### if discharge relay manually add on mb_2024_0_2, then should not activate AB relays but simply wait for automatic discharge
             ### if mb_20240_1_X then TX should handle the pwr discharge
 
-            # self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
-            # self._hw.tx.polarity = 1
-            if strategy == 'constant':
-                pass
-            elif strategy == 'vmax' or strategy == 'vmin':
-                time.sleep(1.0)
-           # self._hw.tx.polarity = 0
-           # self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
-
-
+            time.sleep(1.0)
 
     def _plot_readings(self, save_fig=False, filename=None):
         # Plot graphs
@@ -655,7 +645,7 @@ class OhmPiHardware:
 
         if self.tx.pwr.pwr_state == 'off':
              self.tx.pwr.pwr_state = 'on'
-        #     switch_pwr_off = True
+             switch_pwr_off = True
 
         self._gain_auto(vab=vab)
         assert 0. <= duty_cycle <= 1.
@@ -670,7 +660,8 @@ class OhmPiHardware:
             polarities = [-int(polarity * np.heaviside(i % 2, -1.)) for i in range(2 * cycles)]
         self._vab_pulses(vab, durations, sampling_rate, polarities=polarities,  append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
-        self.tx.pwr.pwr_state = 'off'
+        if switch_pwr_off:
+            self.tx.pwr.pwr_state = 'off'
         if switch_tx_pwr_off:
             self.pwr_state = 'off'
         # Switches off measuring LED
