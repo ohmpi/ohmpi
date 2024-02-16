@@ -369,10 +369,10 @@ class OhmPiHardware:
             return 0.
         else:
             n_pulses = int(np.max(self.readings[v, 1]))
-            polarity = np.array([np.median(self.readings[self.readings[v, 1] == i, 2]) for i in range(n_pulses + 1)])
+            polarity = np.array([np.median(self.readings[v][self.readings[v, 1] == i, 2]) for i in range(n_pulses + 1)])
             mean_vmn = []
             for i in range(n_pulses + 1):
-                mean_vmn.append(np.mean(self.readings[self.readings[v, 1] == i, 4]))
+                mean_vmn.append(np.mean(self.readings[v][self.readings[v, 1] == i, 4]))
             mean_vmn = np.array(mean_vmn)
             self.sp = np.mean(mean_vmn[np.ix_(polarity == 1)] + mean_vmn[np.ix_(polarity == -1)]) / 2
             # return sp
