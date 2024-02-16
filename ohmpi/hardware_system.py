@@ -662,7 +662,7 @@ class OhmPiHardware:
             polarities[0::2] = pol
         else:
             durations = [cycle_duration / 2] * 2 * cycles
-            polarities = None
+            polarities = [-int(polarity * np.heaviside(i % 2, -1.)) for i in range(2 * cycles)]
         self._vab_pulses(vab, durations, sampling_rate, polarities=polarities,  append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
         self.tx.pwr.pwr_state = 'off'
@@ -725,7 +725,7 @@ class OhmPiHardware:
         if polarities is not None:
             assert len(polarities) == n_pulses
         else:
-            polarities = [-int(self.tx.polarity * np.heaviside(i % 2, -1.)) for i in range(n_pulses)]
+            polarities = [-int(self.tx.polarity * np.heaviside(i % 2, -1.)) for i in range(n_pulses)] #TODO: this doesn't work if tx.polarity=0 which is the case at init...
         if not append:
             self._clear_values()
         for i in range(n_pulses):
