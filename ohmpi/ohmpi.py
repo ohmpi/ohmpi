@@ -19,6 +19,7 @@ import pandas as pd
 from zipfile import ZipFile
 from shutil import rmtree, make_archive
 from threading import Thread
+from queue import Queue
 from inspect import getmembers, isfunction
 from datetime import datetime
 from termcolor import colored
@@ -540,13 +541,14 @@ class OhmPi(object):
             vmn_min = self.settings['vmn_min']
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
-        switch_mux_on = Thread(target=self.switch_mux_on, args=(quad), kwargs={'bypass_check':bypass_check, 'cmd_id':cmd_id})
+        q = Queue()
+        switch_mux_on = Thread(target=self.switch_mux_on, args=(quad, q), kwargs={'bypass_check':bypass_check, 'cmd_id':cmd_id})
         switch_pwr_on = Thread(target=setattr, args=(self._hw.tx.pwr, 'pwr_state', 'on'))
         switch_mux_on.start()
         switch_pwr_on.start()
         switch_mux_on.join()
         switch_pwr_on.join()
-        status = switch_mux_on._return
+        status = q.get()
         if status:
             tx_volt = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
                                                iab_max=iab_max, vmn_min=vmn_min)
