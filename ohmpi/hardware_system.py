@@ -66,7 +66,7 @@ class OhmPiHardware:
         self.soh_logger = kwargs.pop('soh_logger', create_stdout_logger('soh_hw'))
         self.tx_sync = Event()
 
-        # Main Controller initializationself.sp
+        # Main Controller initialization
         HARDWARE_CONFIG['ctl'].pop('model')
         HARDWARE_CONFIG['ctl'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                        'soh_logger': self.soh_logger})
@@ -360,7 +360,6 @@ class OhmPiHardware:
         else:
             return np.nan
 
-    @property
     def last_sp(self, delay=0.):  # TODO: allow for different strategies for computing sp (i.e. when sp drift is not linear)
         v = self.select_samples(delay)
         if self.readings.shape == (0,) or len(self.readings[self.readings[v, 2] == 1, :]) < 1 or \
