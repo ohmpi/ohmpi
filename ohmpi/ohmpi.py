@@ -463,7 +463,7 @@ class OhmPi(object):
         self._hw._plot_readings(save_fig=save_fig, filename=filename)
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
-                        autogain=True, strategy=_plot_readingsNone, tx_volt=None, best_tx_injtime=0.1,
+                        autogain=True, strategy=None, tx_volt=None, best_tx_injtime=0.1,
                         cmd_id=None, vab_max=None, iab_max=None, vmn_max=None, vmn_min=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value,
         #  change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
