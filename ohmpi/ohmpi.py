@@ -554,10 +554,10 @@ class OhmPi(object):
         switch_pwr_on.join()
         status = q.get()
         if status:
-            tx_volt = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
+            vab = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
                                                iab_max=iab_max, vmn_min=vmn_min)
             # time.sleep(0.5)  # to wait for pwr discharge
-            self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
+            self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
             if 'delay' in kwargs.keys():
                 delay = kwargs['delay']
                 if delay > injection_duration:
@@ -623,12 +623,14 @@ class OhmPi(object):
             self.exec_logger.info(f'Skipping {quad}')
         self.switch_mux_off(quad, cmd_id)
 
+        # if strategy not constant, then switch dps off (button) in case following measurement within sequence
+        #TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
+        if (strategy == 'vmax' or strategy == 'vmin') and vab - tx_volt > 5.: # if starting tx_volt was too far (> 5 V) from actual vab, then turn pwr off
+            self._hw.tx.pwr.pwr_state = 'off'
+
         # if power was off before measurement, let's turn if off
         if switch_power_off:
             self._hw.pwr_state = 'off'
-
-        if strategy == 'vmax':
-            self._hw.tx.pwr.pwr_state = 'off'
 
         return d
 
