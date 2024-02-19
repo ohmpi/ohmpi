@@ -17,7 +17,7 @@ try:
     from ohmpi.config import OHMPI_CONFIG
     k = OhmPi(settings=OHMPI_CONFIG['settings'])
     import os
-    k.load_sequence(os.path.join(os.path.dirname(__file__), '../sequences/wenner16.txt'))
+    k.load_sequence(os.path.join(os.path.dirname(__file__), './sequences/wenner16.txt'))
     k.reset_mux()
     #k.run_multiple_sequences(sequence_delay=20, nb_meas=3)
 

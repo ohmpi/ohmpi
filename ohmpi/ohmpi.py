@@ -19,6 +19,7 @@ import pandas as pd
 from zipfile import ZipFile
 from shutil import rmtree, make_archive
 from threading import Thread
+from queue import Queue
 from inspect import getmembers, isfunction
 from datetime import datetime
 from termcolor import colored
@@ -28,7 +29,7 @@ from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import ohmpi.deprecated as deprecated
 from ohmpi.hardware_system import OhmPiHardware
-from tqdm         import tqdm
+from tqdm.auto import tqdm
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
 try:
@@ -41,7 +42,7 @@ except Exception as error:
     print(colored(f'Unexpected error: {error}', 'red'))
     arm64_imports = None
 
-VERSION = '3.0.0-beta'
+VERSION = 'v2024.0.0'
 
 
 class OhmPi(object):
@@ -80,7 +81,7 @@ class OhmPi(object):
 
         # default acquisition settings
         self.settings = {}
-        self.update_settings(os.path.join(os.path.split(os.path.dirname(__file__))[0],'settings/default.json'))
+        self.update_settings(os.path.join(os.path.split(os.path.dirname(__file__))[0], 'settings/default.json'))
 
         # read in acquisition settings
         if settings is not None:
@@ -227,7 +228,6 @@ class OhmPi(object):
                 w.writeheader()
                 w.writerow(last_measurement)
 
-
     @staticmethod
     def _find_identical_in_line(quads):
         """Finds quadrupole where A and B are identical.
@@ -275,7 +275,7 @@ class OhmPi(object):
             if ((fname != 'readme.txt')
                     and ('_rs' not in fname)
                     and (fname.replace('.csv', '') not in survey_names)):
-                #try:
+                # try:
                 # reading headers
                 with open(os.path.join(ddir, fname), 'r') as f:
                     headers = f.readline().split(',')
@@ -295,7 +295,7 @@ class OhmPi(object):
                     'n': data[:, 3].astype(int).tolist(),
                     'rho': data[:, 4].tolist(),
                 }
-                #except Exception as e:
+                # except Exception as e:
                 #    print(fname, ':', e)
         rdic = {'cmd_id': cmd_id, 'data': ddic}
         self.data_logger.info(json.dumps(rdic))
@@ -452,14 +452,23 @@ class OhmPi(object):
         self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
         os.system('poweroff')  # this may require admin rights
 
-    def plot_last_fw(self, save_fig=True, filename=None):
-        self._hw.plot_readings(save_fig=save_fig, filename=filename)
+    def plot_last_fw(self, save_fig=False, filename=None):
+        """Plots last full waveform measurement
+
+        Parameters
+        ----------
+        save_fig: boolean, optional - default (False)
+        filename: str, optional. Path to save plot. By default figures/test.png"""
+
+        self._hw._plot_readings(save_fig=save_fig, filename=filename)
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
                         autogain=True, strategy=None, tx_volt=None, best_tx_injtime=0.1,
                         cmd_id=None, vab_max=None, iab_max=None, vmn_max=None, vmn_min=None, **kwargs):
-        # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value, change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
-        # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used in function definition
+        # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value,
+        #  change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
+        # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used
+        #  in function definition
         """Measures on a quadrupole and returns a dictionnary with the transfer resistance.
 
         Parameters
@@ -479,7 +488,8 @@ class OhmPi(object):
             Either:
             - vmax : compute Vab to reach a maximum Vmn_max and Iab without exceeding vab_max
             - vmin : compute Vab to reach at least Vmn_min
-            - constant : apply given Vab (tx_volt)
+            - constant : apply given Vab (tx_volt) but checks if expected readings not out-of-range
+            - full_constant: apply given Vab (tx_volt) with no out-of-range checks for optimising duration at the risk of out-of-range readings
             Safety check (i.e. short voltage pulses) performed prior to injection to ensure
             injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
             To bypass safety check before injection, tx_volt should be set equal to vab_max (not recpommanded)
@@ -532,21 +542,39 @@ class OhmPi(object):
             vmn_min = self.settings['vmn_min']
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
-        if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
-            tx_volt = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max, iab_max=iab_max, vmn_min=vmn_min)  # TODO: use tx_volt and vmn_max instead of hardcoded values
-            time.sleep(0.5)  # to wait for pwr discharge
-            self._hw.vab_square_wave(tx_volt, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
+
+        def switch_mux_on(queue,quad,bypass_check,cmd_id):
+            result = self.switch_mux_on(quad, bypass_check, cmd_id)  # Function that returns the value you want to return
+            queue.put(result)
+        q = Queue()
+        switch_mux_on = Thread(target=switch_mux_on, args=(q,quad,bypass_check,cmd_id))
+        switch_pwr_on = Thread(target=setattr, args=(self._hw.tx.pwr, 'pwr_state', 'on'))
+        switch_mux_on.start()
+        switch_pwr_on.start()
+        switch_mux_on.join()
+        switch_pwr_on.join()
+        status = q.get()
+        if status:
+            if strategy == 'full_constant':
+                vab = tx_volt
+            else:
+                vab = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
+                                               iab_max=iab_max, vmn_min=vmn_min)
+            # time.sleep(0.5)  # to wait for pwr discharge
+            self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
+            self.switch_mux_off(quad, cmd_id)
+
             if 'delay' in kwargs.keys():
                 delay = kwargs['delay']
                 if delay > injection_duration:
                     delay = injection_duration
             else:
-                delay = injection_duration * 2/3  # TODO: check if this is ok and if last point is not taken the end of injection
+                delay = injection_duration * 2/3  # TODO: check if this is ok and if last point is not taken at the end of injection
             x = self._hw.select_samples(delay)
             Vmn = self._hw.last_vmn(delay=delay)
             Vmn_std = self._hw.last_vmn_dev(delay=delay)
-            I =  self._hw.last_iab(delay=delay)
-            I_std =  self._hw.last_iab_dev(delay=delay)
+            I = self._hw.last_iab(delay=delay)
+            I_std = self._hw.last_iab_dev(delay=delay)
             R = self._hw.last_resistance(delay=delay)
             R_std = self._hw.last_dev(delay=delay)
             d = {
@@ -562,7 +590,7 @@ class OhmPi(object):
                 "R_std [%]": R_std,
                 "Ps [mV]": self._hw.sp,
                 "nbStack": nb_stack,
-                "Tx [V]": tx_volt,
+                "Tx [V]": vab,
                 "CPU temp [degC]": self._hw.ctl.cpu_temperature,
                 "Nb samples [-]": len(self._hw.readings[x, 2]),  # TODO: use only samples after a delay in each pulse
                 "full_waveform": self._hw.readings[:, [0, -2, -1]],
@@ -586,18 +614,24 @@ class OhmPi(object):
             dd['cmd_id'] = str(cmd_id)
 
             # log data to the data logger
+            print('\r')
             self.data_logger.info(dd)
 
-            # Discharge DPS capa (not working properly)
-            #TODO: For pwr_adjustable only and perhaps in a separate function (or at _hw level)
-            #self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
-            #self._hw.tx.polarity = 1
-            time.sleep(1.0)
-            #self._hw.tx.polarity = 0
-            #self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
+            # if strategy not constant, then switch dps off (button) in case following measurement within sequence
+            # TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
+            if (strategy == 'vmax' or strategy == 'vmin') and vab - tx_volt > 5.:  # if starting tx_volt was too far (> 5 V) from actual vab, then turn pwr off
+                self._hw.tx.pwr.pwr_state = 'off'
+
+                # Discharge DPS capa
+                # TODO: For pwr_adjustable only and dependent on TX version so should be placed at PWR level (or at _hw level)
+                self._hw.discharge_pwr()
+                # self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='on')
+                # self._hw.tx.polarity = 1
+                # time.sleep(1.0)
+                # self._hw.tx.polarity = 0
+                # self._hw.switch_mux(electrodes=quad[0:2], roles=['A', 'B'], state='off')
         else:
             self.exec_logger.info(f'Skipping {quad}')
-        self.switch_mux_off(quad, cmd_id)
 
         # if power was off before measurement, let's turn if off
         if switch_power_off:
@@ -611,7 +645,7 @@ class OhmPi(object):
         self.run_multiple_sequences(**kwargs)
 
     def run_multiple_sequences(self, sequence_delay=None, nb_meas=None, fw_in_csv=None,
-    fw_in_zip=None, cmd_id=None, **kwargs):
+                               fw_in_zip=None, cmd_id=None, **kwargs):
         """Runs multiple sequences in a separate thread for monitoring mode.
            Can be stopped by 'OhmPi.interrupt()'.
            Additional arguments are passed to run_measurement().
@@ -705,7 +739,7 @@ class OhmPi(object):
                 '.csv', f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
         else:
             filename = self.settings["export_path"].replace('.csv',
-                                                        f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
+                                                            f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
         self.exec_logger.debug(f'Saving to {filename}')
 
         # measure all quadrupole of the sequence
@@ -754,7 +788,7 @@ class OhmPi(object):
                 xs = x[0].split(',')
                 f.write(','.join(xs[:icol]))
                 f.write(',')
-                for i, col in enumerate(['t', 'i','v']):
+                for i, col in enumerate(['t', 'i', 'v']):
                     f.write(','.join([col + str(j) for j in range(nreadings)]))
                     if col == 'v':
                         f.write('\n')
@@ -855,7 +889,6 @@ class OhmPi(object):
             self._hw.pwr.pwr_state = 'on'
             switch_pwr_off = True
 
-
         # measure all quad of the RS sequence
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole
@@ -867,7 +900,7 @@ class OhmPi(object):
             time.sleep(0.2)
 
             # compute resistance measured (= contact resistance)
-            rab = abs(vab*1000 / current) / 1000 # kOhm
+            rab = abs(vab*1000 / current) / 1000  # kOhm
             
             # create a message as dictionnary to be used by the html interface
             msg = {
@@ -888,7 +921,7 @@ class OhmPi(object):
             self.append_and_save(export_path_rs, {
                 'A': quad[0],
                 'B': quad[1],
-                'RS [kOhm]': np.round(rab,3),
+                'RS [kOhm]': np.round(rab, 3),
             })
 
             # close mux path and put pin back to GND
@@ -898,7 +931,7 @@ class OhmPi(object):
         if switch_pwr_off:
             self._hw.pwr.pwr_state = 'off'
 
-        #switches off measuring LED
+        # switches off measuring LED
         self._hw.tx.measuring = 'off'
 
         # if power was off before measurement, let's turn if off
@@ -971,7 +1004,7 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier.
         """
-        self.reset_mux()  # all mux boards should be reset even if we only want to test one otherwise we might create a shortcut
+        self.reset_mux()  # NOTE: all mux boards should be reset even if we only want to test one go avoid shortcuts
         if mux_id is None:
             self._hw.test_mux(activation_time=activation_time)
         else:
@@ -1072,7 +1105,7 @@ class OhmPi(object):
         pdir = os.path.dirname(__file__)
         try:
             from scipy.interpolate import griddata  # noqa
-            import pandas as pd  #noqa
+            import pandas as pd  # noqa
             import sys
             sys.path.append(os.path.join(pdir, '/home/pi/resipy/src'))
             from resipy import Project  # noqa
@@ -1090,7 +1123,7 @@ class OhmPi(object):
                 self.exec_logger.warning(fname + ' not found')
         
         # define a parser for the "ohmpi" format
-        def ohmpiParser(fname):
+        def ohmpi_parser(fname):
             df = pd.read_csv(fname)
             df = df.rename(columns={'A': 'a', 'B': 'b', 'M': 'm', 'N': 'n'})
             df['vp'] = df['Vmn [mV]']
@@ -1100,17 +1133,17 @@ class OhmPi(object):
             emax = np.max(df[['a', 'b', 'm', 'n']].values)
             elec = np.zeros((emax, 3))
             elec[:, 0] = np.arange(emax) * elec_spacing
-            return elec, df[['a','b','m','n','vp','i','resist','ip']]
+            return elec, df[['a', 'b', 'm', 'n', 'vp', 'i', 'resist', 'ip']]
                 
         # run inversion
         self.exec_logger.info('ResIPy: import surveys')
         k = Project(typ='R2')  # invert in a temporary directory that will be erased afterwards
         if len(survey_names) == 1:
-            k.createSurvey(fnames[0], parser=ohmpiParser)            
+            k.createSurvey(fnames[0], parser=ohmpi_parser)
         elif len(survey_names) > 0 and reg_mode == 0:
-            k.createBatchSurvey(fnames, parser=ohmpiParser)
+            k.createBatchSurvey(fnames, parser=ohmpi_parser)
         elif len(survey_names) > 0 and reg_mode > 0:
-            k.createTimeLapseSurvey(fnames, parser=ohmpiParser)
+            k.createTimeLapseSurvey(fnames, parser=ohmpi_parser)
         self.exec_logger.info('ResIPy: generate mesh')
         k.createMesh('trian', cl=elec_spacing/5)
         self.exec_logger.info('ResIPy: invert survey')
@@ -1178,7 +1211,7 @@ else:
 
 current_time = datetime.now()
 print(f'local date and time : {current_time.strftime("%Y-%m-%d %H:%M:%S")}')
-OhmPi.get_deprecated_methods()
+OhmPi.get_deprecated_methods()  # TODO: check if this could be removed...
 
 # for testing
 if __name__ == "__main__":

@@ -17,46 +17,50 @@ OHMPI_CONFIG = {
 }
 
 r_shunt = 2.
+
+# default properties of system components that will be
+# overwritten by properties defined in each the board dict below.
+# if bounds are defined in board specs, values out of specs will be bounded to remain in specs
+# omitted properties in config will be set to board specs default values if they exist
+
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
-    'tx':  {'model': 'mb_2023_0_X',
-             'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
-             'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
-             'r_shunt': r_shunt,  # Shunt resistance in Ohms
-             'interface_name': 'i2c'
-            },
-    'rx':  {'model': 'mb_2023_0_X',
-            'coef_p2': 2.50,  # slope for conversion for ADS, measurement in V/V
-            'sampling_rate': 50.,  # number of samples per second
-            'interface_name': 'i2c',
-            },
+    'tx':  {'model': 'mb_2024_0_2',
+                 'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
+                 'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
+                 'r_shunt': r_shunt,  # Shunt resistance in Ohms
+                 'interface_name': 'i2c',
+                 'vmn_hardware_offset': 2500.
+                },
+    'rx':  {'model': 'mb_2024_0_2',
+                 'latency': 0.010,  # latency in seconds in continuous mode
+                 'sampling_rate': 200,  # number of samples per second
+                 'interface_name': 'i2c',
+                },
     'mux': {'boards':
                 {'mux_01':
-                     {'model': 'mux_2024_0_X',
-                      'roles': ['A', 'B'],
-                      'electrodes': range(1, 17),
-                      'addr2': 'down',
-                      'addr1': 'down',
-                      'tca_address': None,
-                      'tca_channel': 0,
-                      'interface_name': 'i2c_ext',
-                      'voltage_max': 50.,
-                      'current_max': 3.
-                      },
+                         {'model': 'mux_2024_0_X',
+                          'electrodes': range(1, 9),
+                          'roles': ['A', 'B', 'M', 'N'],
+                          'addr1': 'up',
+                          'addr2': 'up',
+                          'tca_address': None,
+                          'tca_channel': 0,},
                  },
-             'default': {}
-            }
-    }
-
+            'default': {'interface_name': 'i2c_ext',
+                             'voltage_max': 50.,
+                             'current_max': 3.}
+                }
+}
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
-    'log_file_logging_level': logging.DEBUG,
+    'log_file_logging_level': logging.INFO,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',
-    'max_bytes': 262144,
+    'max_bytes': 2097152,
     'backup_count': 30,
     'when': 'd',
     'interval': 1
@@ -77,7 +81,7 @@ DATA_LOGGING_CONFIG = {
 SOH_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
     'logging_to_console': True,
-    'log_file_logging_level': logging.DEBUG,
+    'log_file_logging_level': logging.INFO,
     'file_name': f'soh{logging_suffix}.log',
     'max_bytes': 16777216,
     'backup_count': 1024,
@@ -99,7 +103,7 @@ MQTT_LOGGING_CONFIG = {
     'transport': 'tcp',
     'client_id': f'{OHMPI_CONFIG["id"]}',
     'exec_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/exec',
-    'exec_logging_level': logging.DEBUG,
+    'exec_logging_level': EXEC_LOGGING_CONFIG['logging_level'],
     'data_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/data',
     'data_logging_level': DATA_LOGGING_CONFIG['logging_level'],
     'soh_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/soh',

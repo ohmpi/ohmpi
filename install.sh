@@ -50,6 +50,9 @@ echo "socket_domain ipv4" | sudo tee -a /etc/mosquitto/mosquitto.conf
 echo "allow_anonymous true" | sudo tee -a /etc/mosquitto/mosquitto.conf
 echo -e "\n${txtgrn}>>> Current configuration stored in /etc/mosquitto/mosquitto.conf is displayed below${txtdef}" 
 
+echo "adding a symbolic link to data" | ln -s ./ohmpi/data data
+echo "adding symbolic links to logs" | ln -s ./ohmpi/logs logs
+
 cat /etc/mosquitto/mosquitto.conf
 
 echo "------------- Create config.py file -----------"

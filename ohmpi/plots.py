@@ -36,7 +36,7 @@ def plot_exec_log(exec_log,names=None,last_session=True):  # TODO: select sessio
     for i, cat in enumerate(names.keys()):
         y = 0
         for j, n in enumerate(names[cat]):
-            cmap = matplotlib.cm.get_cmap('tab20')
+            cmap = matplotlib.colormaps['tab20']
             colors = [cmap(c/len(names[cat])) for c in range(len(names[cat]))]
             event_ids = np.where((name == n) & (category == cat))[0]
             y += 1

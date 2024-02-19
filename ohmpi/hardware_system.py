@@ -50,7 +50,6 @@ voltage_max = np.min([TX_CONFIG['voltage_max'],
 voltage_min = RX_CONFIG['voltage_min']
 # TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
 
-
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
     return lap.total_seconds()
@@ -171,6 +170,7 @@ class OhmPiHardware:
                 update_dict(self._cabling, {k: (mux_id, k[0])})   #TODO: in theory k[0] is not needed in values
         # Complete OhmPiHardware initialization
         self.readings = np.array([])  # time series of acquired data
+        self.sp = None # init SP
         self._start_time = None  # time of the beginning of a readings acquisition
         self._pulse = 0  # pulse number
         self.exec_logger.event(f'OhmPiHardware\tinit\tend\t{datetime.datetime.utcnow()}')
@@ -299,17 +299,20 @@ class OhmPiHardware:
 
     def select_samples(self, delay=0.):
         x = []
-        for pulse in range(int(max(self.readings[:, 1]))):
+        for pulse in np.unique(self.readings[:, 1]):
             v = np.where((self.readings[:, 1] == pulse))[0]
             if len(v) > 0:  # to avoid pulse not recorded due to Raspberry Pi lag...
                 t_start_pulse = min(self.readings[v, 0])
                 x.append(np.where((self.readings[:, 0] >= t_start_pulse + delay) & (self.readings[:, 2] != 0) & (
                         self.readings[:, 1] == pulse))[0])
         x = np.concatenate(np.array(x, dtype='object'))
+        x = x.astype('int32')
         return x
 
     def last_resistance(self, delay=0.):
         v = self.select_samples(delay)
+        if self.sp is None:
+            self.last_sp(delay=delay)
         if len(v) > 1:
             # return np.mean(np.abs(self.readings[v, 4] - self.sp) / self.readings[v, 3])
             return np.mean(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3])
@@ -318,6 +321,8 @@ class OhmPiHardware:
 
     def last_dev(self, delay=0.):
         v = self.select_samples(delay)
+        if self.sp is None:
+            self.last_sp(delay=delay)
         if len(v) > 1:
             return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp) / self.readings[v, 3]) / self.last_resistance(delay=delay)
         else:
@@ -325,6 +330,8 @@ class OhmPiHardware:
 
     def last_vmn(self, delay=0.):
         v = self.select_samples(delay)
+        if self.sp is None:
+            self.last_sp(delay=delay)
         if len(v) > 1:
             return np.mean(self.readings[v, 2] * (self.readings[v, 4] - self.sp))
         else:
@@ -332,6 +339,8 @@ class OhmPiHardware:
 
     def last_vmn_dev(self, delay=0.):  # TODO: should compute std per stack because this does not account for SP...
         v = self.select_samples(delay)
+        if self.sp is None:
+            self.last_sp(delay=delay)
         if len(v) > 1:
             return 100. * np.std(self.readings[v, 2] * (self.readings[v, 4] - self.sp)) / self.last_vmn(delay=delay)
         else:
@@ -351,28 +360,25 @@ class OhmPiHardware:
         else:
             return np.nan
 
-    @property
-    def sp(self):  # TODO: allow for different strategies for computing sp (i.e. when sp drift is not linear)
+    def last_sp(self, delay=0.):  # TODO: allow for different strategies for computing sp (i.e. when sp drift is not linear)
+        v = self.select_samples(delay)
         if self.readings.shape == (0,) or len(self.readings[self.readings[:, 2] == 1, :]) < 1 or \
                 len(self.readings[self.readings[:, 2] == -1, :]) < 1:
             self.exec_logger.warning('Unable to compute sp: readings should at least contain one positive and one '
                                      'negative pulse')
             return 0.
         else:
-            n_pulses = int(np.max(self.readings[:, 1]))
-            polarity = np.array([np.median(self.readings[self.readings[:, 1] == i, 2]) for i in range(n_pulses + 1)])
+            n_pulses = np.unique(self.readings[v, 1])
+            polarity = np.array([np.median(self.readings[v][self.readings[v, 1] == i, 2]) for i in n_pulses])
             mean_vmn = []
-            mean_iab = []
-            for i in range(n_pulses + 1):
-                mean_vmn.append(np.mean(self.readings[self.readings[:, 1] == i, 4]))
-                mean_iab.append(np.mean(self.readings[self.readings[:, 1] == i, 3]))
+            for pulse in n_pulses:
+                mean_vmn.append(np.mean(self.readings[v][self.readings[v, 1] == pulse, 4]))
             mean_vmn = np.array(mean_vmn)
-            mean_iab = np.array(mean_iab)
-            sp = np.mean(mean_vmn[np.ix_(polarity == 1)] + mean_vmn[np.ix_(polarity == -1)]) / 2
-            return sp
+            self.sp = np.mean(mean_vmn[np.ix_(polarity == 1)] + mean_vmn[np.ix_(polarity == -1)]) / 2
+            # return sp
 
     def _find_vab(self, vab, iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min):
-        self.exec_logger.debug('Searching best Vab...')
+        self.exec_logger.debug('Searching for the best Vab...')
         iab_mean = np.mean(iab)
         iab_std = np.std(iab)
         vmn_mean = np.mean(vmn)
@@ -508,6 +514,14 @@ class OhmPiHardware:
             diff_vab = np.inf
             if strategy == 'vmax' or strategy == 'vmin':
                 while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
+                    if k>0:
+                        self.exec_logger.event(
+                            f'OhmPiHardware\t_compute_tx_volt_sleep\tbegin\t{datetime.datetime.utcnow()}')
+                        time.sleep(
+                            0.2)  # TODO: replace this by discharging DPS on resistor with relay on GPIO5 (at least for strategy vmin,
+                        # but might be useful in vmax when last vab too high...)
+                        self.exec_logger.event(
+                            f'OhmPiHardware\t_compute_tx_volt_sleep\tend\t{datetime.datetime.utcnow()}')
                     if strategy == 'vmax':
                         vmn_min = vmn_max
                     vabs = []
@@ -524,7 +538,6 @@ class OhmPiHardware:
                             self.exec_logger.debug('Compute_tx_volt stopped on vab increase too small')
                     k = k + 1
                     vab_list[k] = np.min(vabs)
-                    time.sleep(0.5)
                     if self.tx.pwr.voltage_adjustable:
                         self.tx.voltage = vab_list[k]
                 if k > n_steps:
@@ -559,6 +572,14 @@ class OhmPiHardware:
         # else:
         #     polarity = 1
         return vab_opt
+
+    def discharge_pwr(self):
+        if self.tx.pwr.voltage_adjustable:
+            #TODO: implement strategy to discharge pwr based on hardware version => variable in TX should tell if it can discharge the pwr or not
+            ### if discharge relay manually add on mb_2024_0_2, then should not activate AB relays but simply wait for automatic discharge
+            ### if mb_20240_1_X then TX should handle the pwr discharge
+
+            time.sleep(1.0)
 
     def _plot_readings(self, save_fig=False, filename=None):
         # Plot graphs
@@ -624,7 +645,7 @@ class OhmPiHardware:
 
         if self.tx.pwr.pwr_state == 'off':
              self.tx.pwr.pwr_state = 'on'
-        #     switch_pwr_off = True
+             switch_pwr_off = True
 
         self._gain_auto(vab=vab)
         assert 0. <= duty_cycle <= 1.
@@ -636,10 +657,11 @@ class OhmPiHardware:
             polarities[0::2] = pol
         else:
             durations = [cycle_duration / 2] * 2 * cycles
-            polarities = None
+            polarities = [-int(polarity * np.heaviside(i % 2, -1.)) for i in range(2 * cycles)]
         self._vab_pulses(vab, durations, sampling_rate, polarities=polarities,  append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
-        self.tx.pwr.pwr_state = 'off'
+        if switch_pwr_off:
+            self.tx.pwr.pwr_state = 'off'
         if switch_tx_pwr_off:
             self.pwr_state = 'off'
         # Switches off measuring LED
@@ -699,9 +721,10 @@ class OhmPiHardware:
         if polarities is not None:
             assert len(polarities) == n_pulses
         else:
-            polarities = [-int(self.tx.polarity * np.heaviside(i % 2, -1.)) for i in range(n_pulses)]
+            polarities = [-int(self.tx.polarity * np.heaviside(i % 2, -1.)) for i in range(n_pulses)] #TODO: this doesn't work if tx.polarity=0 which is the case at init...
         if not append:
             self._clear_values()
+            self.sp = None  # re-initialise SP before new Vab_pulses
         for i in range(n_pulses):
             self._vab_pulse(vab=vab, duration=durations[i], sampling_rate=sampling_rate, polarity=polarities[i],
                             append=True)

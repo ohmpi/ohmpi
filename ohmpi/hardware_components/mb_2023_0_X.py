@@ -14,7 +14,7 @@ from ohmpi.utils import enforce_specs
 # hardware characteristics and limitations
 # voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
 SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
-                'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
+                'sampling_rate': {'min': 0., 'default': 100., 'max': 500.},
                 'data_rate': {'default': 860.},
                 'bias':  {'min': -5000., 'default': 0., 'max': 5000.},
                 'coef_p2': {'default': 2.50},
@@ -166,11 +166,13 @@ class Tx(TxAbstract):
         assert polarity in [-1, 0, 1]
         self._polarity = polarity
         if polarity == 1:
-            self.pin0.value = True
             self.pin1.value = False
+            time.sleep(self._release_delay)
+            self.pin0.value = True
             time.sleep(self._activation_delay)
         elif polarity == -1:
             self.pin0.value = False
+            time.sleep(self._release_delay)
             self.pin1.value = True
             time.sleep(self._activation_delay)
         else:

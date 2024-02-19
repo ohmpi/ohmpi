@@ -4,9 +4,7 @@
 API reference
 #############
 
-.. image:: ../../../img/software/hardware_classes.png
-
-  Schematic of the main classes architecture.
+.. figure:: ../../img/software/hardware_classes.png
 
 .. toctree::
    :maxdepth: 2
@@ -14,5 +12,6 @@ API reference
 
 .. automodule:: ohmpi.ohmpi
    :members:
+
 .. automodule:: ohmpi.hardware_system
    :members:

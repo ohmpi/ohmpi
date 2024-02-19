@@ -25,7 +25,7 @@ r_shunt = 2.
 
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
-    'pwr': {'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},
+    'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},
     'tx':  {'model': 'mb_2024_0_2',
                  'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
                  'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
@@ -53,6 +53,14 @@ HARDWARE_CONFIG = {
                           'roles': ['A', 'B', 'M', 'N'],
                           'addr1': 'down',
                           'addr2': 'up',
+                          'tca_address': None,
+                          'tca_channel': 0,},
+                 'mux_03':
+                         {'model': 'mux_2024_0_X',
+                          'electrodes': range(17, 25),
+                          'roles': ['A', 'B', 'M', 'N'],
+                          'addr1': 'up',
+                          'addr2': 'down',
                           'tca_address': None,
                           'tca_channel': 0,},
                  },

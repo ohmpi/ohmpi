@@ -10,11 +10,11 @@ from minimalmodbus import Instrument  # noqa
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 12., 'max': 50., 'min': 0.},
          'voltage_min': {'default': 0},
-         'voltage_max': {'default': 0},
+         'voltage_max': {'default': 50},
          'current_max': {'default': 60.},
          'current_adjustable': {'default': False},
          'voltage_adjustable': {'default': True},
-         'pwr_latency': {'default': .5}
+         'pwr_latency': {'default': 0.}
          }
 
 
@@ -61,7 +61,12 @@ class Pwr(PwrAbstract):
 
     @voltage.setter
     def voltage(self, value):
-        self.connection.write_register(0x0000, value, 2)
+        value = float(value)
+        assert self._voltage_min <= value <= self._voltage_max
+        self.exec_logger.event(f'{self.model}\tset_voltage\tbegin\t{datetime.datetime.utcnow()}')
+        if value != self._voltage:
+            self.connection.write_register(0x0000, value, 2)
+        self.exec_logger.event(f'{self.model}\tset_voltage\tend\t{datetime.datetime.utcnow()}')
         self._voltage = value
 
     def battery_voltage(self):
@@ -86,15 +91,23 @@ class Pwr(PwrAbstract):
                 'on', 'off'
             """
         if state == 'on':
-            self.connection.write_register(0x09, 1)
-            self.current_max(self._current_max)
-            self._pwr_state = 'on'
+            if self._pwr_state != 'on':
+                self.exec_logger.event(f'{self.model}\tpwr_state_on\tbegin\t{datetime.datetime.utcnow()}')
+                self.connection.write_register(0x09, 1)
+                self.exec_logger.event(f'{self.model}\tpwr_state_on\tend\t{datetime.datetime.utcnow()}')
+                # self.current_max(self._current_max)
+                self._pwr_state = 'on'
+                self.exec_logger.event(f'{self.model}\tpwr_latency\tbegin\t{datetime.datetime.utcnow()}')
+                time.sleep(self._pwr_latency)
+                self.exec_logger.event(f'{self.model}\tpwr_latency\tend\t{datetime.datetime.utcnow()}')
             self.exec_logger.debug(f'{self.model} is on')
-            time.sleep(self._pwr_latency)
 
         elif state == 'off':
-            self.connection.write_register(0x09, 0)
-            self._pwr_state = 'off'
+            if self._pwr_state != 'off':
+                self.exec_logger.event(f'{self.model}\tpwr_state_off\tbegin\t{datetime.datetime.utcnow()}')
+                self.connection.write_register(0x09, 0)
+                self._pwr_state = 'off'
+                self.exec_logger.event(f'{self.model}\tpwr_state_off\tend\t{datetime.datetime.utcnow()}')
             self.exec_logger.debug(f'{self.model} is off')
 
     def reload_settings(self):
