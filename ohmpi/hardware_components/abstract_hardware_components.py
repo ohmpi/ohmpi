@@ -390,7 +390,7 @@ class TxAbstract(ABC):
 
     @measuring.setter
     def measuring(self, mode="off"):
-        self.measuring = mode
+        self._measuring = mode
 
     @property
     def polarity(self):

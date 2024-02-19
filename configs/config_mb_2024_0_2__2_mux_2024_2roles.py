@@ -35,7 +35,7 @@ HARDWARE_CONFIG = {
                 },
     'rx':  {'model': 'mb_2024_0_2',
                  'latency': 0.010,  # latency in seconds in continuous mode
-                 'sampling_rate': 50,  # number of samples per second
+                 'sampling_rate': 200,  # number of samples per second
                  'interface_name': 'i2c',
                 },
     'mux': {'boards':
@@ -70,7 +70,7 @@ EXEC_LOGGING_CONFIG = {
     'log_file_logging_level': logging.INFO,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',
-    'max_bytes': 262144,
+    'max_bytes': 2097152,
     'backup_count': 30,
     'when': 'd',
     'interval': 1
