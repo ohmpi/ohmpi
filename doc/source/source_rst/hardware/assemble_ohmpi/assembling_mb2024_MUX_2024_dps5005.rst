@@ -18,7 +18,7 @@ It is also best to having tested each MUX board individually before mounting the
 
 .. table::
    :align: center
-   :widths: 10 30
+   :widths: 3 30
    
    +---+--------------------------------------------------------------------------------------------------------+
    |1  |   .. image:: ../../../img/mux.2024.0.x/9.jpg                                                           |
