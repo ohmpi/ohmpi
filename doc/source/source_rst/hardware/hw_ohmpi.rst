@@ -46,6 +46,6 @@ Assemble OhmPi systems
    :maxdepth: 1 
 
    OhmPi v2024 64 electrodes <assemble_ohmpi/assembling_mb2024_MUX_2023_dps5005.rst>
-   OhmPi Lite v2024 <assemble_ohmpi/assembling_mb2024_MUX_2024_dps5005.rst>
+   OhmPi Lite v2024 (32 electrodes) <assemble_ohmpi/assembling_mb2024_MUX_2024_dps5005.rst>
    OhmPi v2023 <assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst>
 
