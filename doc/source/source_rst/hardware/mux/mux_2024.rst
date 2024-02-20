@@ -185,7 +185,7 @@ The cabling of several MUX boards v2024 within an OhmPi system is entirely depen
 * 2-role MUX boards have to come in pairs. The 16 electrodes takeouts of each pair have to be cabled together. This is easily done with a ribbon cable
   plugged on the 16-way IDC connectors of the pair of boards. This also allows to stack two boards together leaving the screw connectors of the board on the top
   accessible to connect wires from the electrode arrays.
-* 4-role MUX boards do not have to come in pairs. The 4 roles of each board have to be connected to the other 4 roles of the system (and at least to the ABMN connector on the meausremnt board).
+* 4-role MUX boards do not have to come in pairs. The 4 roles of each board have to be connected to the other 4 roles of the system (and at least to the ABMN connector on the measurement board).
   The electrodes connectors can only be used to address the first 8 or the last 8 positions.
   This is critical if wanting to connect the electrodes via the IDC connectors, which whill have to be carefully cabled.
 
