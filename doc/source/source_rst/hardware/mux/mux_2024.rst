@@ -119,6 +119,8 @@ The MUX board v2024 can be configured in 2- or 4-role mode. This means that one 
 An OhmPi system can manage a combination of 2-role and 4-role MUX boards as long as the 2-role boards come in pairs
 (e.g. 2 2-role MUX and 1 4-role MUX for 24 electrodes).
 
+.. _2_roles:
+
 2-role configuration
 `````````````````````
 This configuration is the prefered way to build systems with an even number of MUX boards (for 16, 32, 48 electrodes).
