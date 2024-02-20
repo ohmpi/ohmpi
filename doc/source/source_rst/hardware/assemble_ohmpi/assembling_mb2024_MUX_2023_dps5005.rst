@@ -302,6 +302,7 @@ TODO :list on tools and components
 .. warning::
       At this point in the build, we consider that you have followed the instructions in :ref:`Getting-started` section
 
+
 .. _first_steps:
 
 Please connect both 12 V Battery for RX and TX.
