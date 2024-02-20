@@ -6,7 +6,7 @@
 Assembling an OhmPi Lite (32 electrodes)
 ****************************************
 
-**1 mb2024 + 4 mux2024 + 1 DSP 5005**
+**1 mb2024 + 4 mux2024 + 1 DPS 5005**
 
 Here, we present how to build a 32-electrode OhmPi system using 1 mb.2024, 4 MUX.2024 and 1 DPS5005.
 This tutorial aims to illustrate one way of assembling a system using the MUX 2024 boards.

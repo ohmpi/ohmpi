@@ -28,7 +28,7 @@ Recommanded configurations
 |Less than 32 electrodes for   |mb v2024                        |Mux v2024           |Raspberry Pi 4 Model B  | 12V Battery              |                        |
 |laboratory monitoring         |                                |                    |                        |                          |                        |
 +------------------------------+--------------------------------+--------------------+------------------------+--------------------------+------------------------+
-|Less than 32 electrodes for   |mb v2024                        |Mux v2024           |Raspberry Pi 4 Model B  | DSP5005                  |                        |
+|Less than 32 electrodes for   |mb v2024                        |Mux v2024           |Raspberry Pi 4 Model B  | DPS5005                  |                        |
 |field monitoring              |                                |                    |                        |                          |                        |
 +------------------------------+--------------------------------+--------------------+------------------------+--------------------------+------------------------+
 |more than 64 electrodes for   |mb v2024                        |Mux v2023           |Raspberry Pi 4 Model B  | DPS5005                  |                        |
