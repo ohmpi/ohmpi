@@ -114,6 +114,7 @@ Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundame
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/2.jpg                       |
+   |        |                                                                   |
    |      2 +-------------------------------------------------------------------+
    |        | Soldering four 330 ohm resistors                                  |
    |        |                                                                   |
@@ -123,8 +124,6 @@ Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundame
    |        | Soldering four 4K7 ohm resistors                                  |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
-
-.. #TODO: correction of the picture 3
 
  
 Soldering `DIODE <https://www.fluke.com/en-us/learn/blog/electrical/what-is-a-diode>`_ on the measurement board PCB
@@ -230,7 +229,7 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/16.jpg                      |
    |     16 +-------------------------------------------------------------------+
-   |        | Soldering ten 1 µF 50V Electrolytic capacitors, **pay attention** |
+   |        | Soldering ten 10 µF 50V Electrolytic capacitors, **pay attention**|
    |        | to capacitor polarity                                             |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
@@ -317,13 +316,13 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/28.jpg                      |
    |     28 +-------------------------------------------------------------------+
-   |        | Place the I2C isolator add-on board                               |
-   |        | **make sure you have right selection**  according to the red box  |
+   |        | Place the two I2C level adjusters                                 |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/29.jpg                      |
    |     29 +-------------------------------------------------------------------+
-   |        | Place the two I2C level adjusters                                 |
+   |        | Place the I2C isolator add-on board                               |
+   |        | **make sure you have right selection**  according to the red box  |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/30.jpg                      |
