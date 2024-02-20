@@ -3,8 +3,8 @@
     **OhmPi is a participative project open to all, it requires skills in electronics and to respect the safety rules. OhmPi must be assembled in a professional context and by people competent in electronics. The OhmPi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The OhmPi team cannot be held responsible if the equipment does not work after assembly.**
 
 
-Assembling the OhmPi (mb2024 mux2023 DSP5005)
-***********************************************
+Assembling the 64-electrode OhmPi (mb2024 + mux2023 + DSP5005)
+**************************************************************
 
 
 TODO :list on tools and components
@@ -302,6 +302,7 @@ TODO :list on tools and components
 .. warning::
       At this point in the build, we consider that you have followed the instructions in :ref:`Getting-started` section
 
+.. _first_steps:
 
 Please connect both 12 V Battery for RX and TX.
 

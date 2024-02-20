@@ -39,11 +39,14 @@ Another possible combination is to use MUX v2023 with MUX v2024 together.
 
 Examples of OHMPI assembly in different versions.
 
+Assemble OhmPi systems
+**********************
 
 .. toctree:: 
    :maxdepth: 1 
 
    assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst
    assemble_ohmpi/assembling_mb2024_MUX_2023_dps5005.rst
+   assemble_ohmpi/assembling_mb2024_MUX_2024_dps5005.rst
 
 
