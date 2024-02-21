@@ -35,12 +35,13 @@ Recommanded configurations
 | | laboratory (only Rhoa)      |                                |                    |                          |                          |                                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
 
-Another possible combination is to use MUX v2023 with MUX v2024 together.
+Another possible combination is to use MUX v2023 with MUX v2024 together, which allows to add series of 8 electrodes to a 64-electrode system.
+This could be handful if ones is looking to build e.g. a 96 electrode system, which would therefore feature 4 MUX 2023 (64 electrodes) + 4 MUX 2024 (32 electrodes).
 
-Below we showcase examples of OHMPI systems assemblies in different versions.
+Below we detail examples of OHMPI systems assemblies in different versions.
 
-OhmPi systems assembly tutorial
-*******************************
+OhmPi systems assembly tutorials
+********************************
 
 .. toctree:: 
    :maxdepth: 1 
