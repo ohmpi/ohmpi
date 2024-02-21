@@ -593,7 +593,7 @@ class OhmPi(object):
                 "full_waveform": self._hw.readings[:, [0, -2, -1]],
                 "I_std [%]": I_std,
                 "Vmn_std [%]": Vmn_std,
-                "R_ab [kOhm]": tx_volt / I
+                "R_ab [kOhm]": vab / I
             }
 
             # to the data logger
