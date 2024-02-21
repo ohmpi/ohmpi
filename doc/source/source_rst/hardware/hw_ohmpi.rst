@@ -16,31 +16,31 @@ Recommanded configurations
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
 |Applications                   |Measurement Board               |Mux                 |Raspberry Pi              | Power supply             |Config file name                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
-| |64 or more electrodes         |mb v2024                        |Mux v2023           | | Raspberry Pi 3 Model B | DPS5005                 | config_mb_2024_0_2__4_mux_2023_dps5005.py        |
-| |for field monitoring         |                                |                    | | or 4 model B           |                          |                                                  |
+| | 64 or more electrodes       |mb v2024                        |Mux v2023           | | Raspberry Pi 3 Model B | DPS5005                  | config_mb_2024_0_2__4_mux_2023_dps5005.py        |
+| | for field monitoring        |                                |                    | | or 4 model B           |                          |                                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
-| |8, 16, 32, 48 electrodes     |mb v2024                        |Mux v2024           | | Raspberry Pi 3 Model B | DPS5005                  | config_mb_2024_0_2__4_mux_2024_2roles_dps5005.py |
-| |for field monitoring         |                                |                    | | or 4 model B           |                          |                                                  |
+| | 8, 16, 32, 48 electrodes    |mb v2024                        |Mux v2024           | | Raspberry Pi 3 Model B | DPS5005                  | config_mb_2024_0_2__4_mux_2024_2roles_dps5005.py |
+| | for field monitoring        |                                |                    | | or 4 model B           |                          |                                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
-| |8, 16, 32, 48 electrodes     |mb v2024                        |Mux v2024           | | Raspberry Pi 3 Model B | 12V Battery              | config_mb_2024_0_2__4_mux_2024_2roles.py         |
-| |for laboratory monitoring    |                                |                    | | or 4 model B           |                          |                                                  |
+| | 8, 16, 32, 48 electrodes    |mb v2024                        |Mux v2024           | | Raspberry Pi 3 Model B | 12V Battery              | config_mb_2024_0_2__4_mux_2024_2roles.py         |
+| | for laboratory monitoring   |                                |                    | | or 4 model B           |                          |                                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
-| |4 electrodes concrete sample |mb v2024                        |None                |Raspberry Pi 3 Model B    | DPS5005                  | config_mb_2024_0_2_dps5005.py                    |
-| |Laboratory (Rhoa and IP)     |                                |                    |                          |                          |                                                  |
+| | 4 electrodes concrete sample|mb v2024                        |None                |Raspberry Pi 3 Model B    | DPS5005                  | config_mb_2024_0_2_dps5005.py                    |
+| | Laboratory (Rhoa and IP)    |                                |                    |                          |                          |                                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
-| |4 electrodes soil sample     |mb v2024                        |None                |Raspberry Pi 3 Model B    | 12V Battery              | config_mb_2024_0_2.py.                           |
-| |laboratory (Rhoa and IP)     |                                |                    |                          |                          |                                                  |
+| | 4 electrodes soil sample    |mb v2024                        |None                |Raspberry Pi 3 Model B    | 12V Battery              | config_mb_2024_0_2.py.                           |
+| | laboratory (Rhoa and IP)    |                                |                    |                          |                          |                                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
-| |4 electrodes-soil sample     |mb v2023                        |None                |Raspberry Pi 3 Model B    | 12V Battery              | config_mb_2023.py                                |
-| |laboratory (only Rhoa)       |                                |                    |                          |                          |                                                  |
+| | 4 electrodes-soil sample    |mb v2023                        |None                |Raspberry Pi 3 Model B    | 12V Battery              | config_mb_2023.py                                |
+| | laboratory (only Rhoa)      |                                |                    |                          |                          |                                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
 
 Another possible combination is to use MUX v2023 with MUX v2024 together.
 
 Below we showcase examples of OHMPI systems assemblies in different versions.
 
-Assemble OhmPi systems
-**********************
+OhmPi systems assembly tutorial
+*******************************
 
 .. toctree:: 
    :maxdepth: 1 
