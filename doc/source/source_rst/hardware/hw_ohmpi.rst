@@ -49,3 +49,4 @@ Assemble OhmPi systems
    OhmPi Lite v2024 (32 electrodes) <assemble_ohmpi/assembling_mb2024_MUX_2024_dps5005.rst>
    OhmPi v2023 <assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst>
 
+.. image:: ../../../img/ohmpi_systems_examples.jpg
