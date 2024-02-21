@@ -555,10 +555,7 @@ class OhmPi(object):
         switch_pwr_on.join()
         status = q.get()
         if status:
-            if strategy == 'full_constant':
-                vab = tx_volt
-            else:
-                vab = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
+            vab = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
                                                iab_max=iab_max, vmn_min=vmn_min)
             # time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
