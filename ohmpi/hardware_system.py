@@ -462,7 +462,13 @@ class OhmPiHardware:
         """
         tx_volt = np.abs(tx_volt)
         vab_opt = tx_volt
-        if self.tx.pwr.voltage_adjustable:
+
+        if not self.tx.pwr.voltage_adjustable:
+            vab_opt = self.tx.pwr.voltage
+        else:
+            if strategy == 'full_constant':
+                return tx_volt
+
             if vmn_max is None:
                 vmn_max = self.rx._voltage_max / 1000.
             if iab_max is None:

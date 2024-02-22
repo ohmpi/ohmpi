@@ -181,11 +181,8 @@ Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-d
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/12.jpg                      |
    |     12 +-------------------------------------------------------------------+
-   |        | Soldering one header socket with 1 row and 2 positions, three     |
-   |        | header sockets with 1 row and 4 positions and two header sockets  |
-   |        | with 1 row and 5 positions.                                       |
-   |        | N.B. For the 2 positions header socket cut a header socket 4      |
-   |        | or 5 positions.                                                   |
+   |        | Soldering 1 header (1 row, 2 positions -> cut a bigger one),      |
+   |        | 3 * 1r4p and 2 * 1r5p.                                            |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
 

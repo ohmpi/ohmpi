@@ -2,10 +2,11 @@
 .. warning::
     **OhmPi is a participative project open to all, it requires skills in electronics and to respect the safety rules. OhmPi must be assembled in a professional context and by people competent in electronics. The OhmPi team cannot be held responsible for any material or human damage which would be associated with the use or the assembly of OHMPI. The OhmPi team cannot be held responsible if the equipment does not work after assembly.**
 
+.. _ohmpi_v2024:
 
-Assembling the OhmPi (mb2024 mux2023 DSP5005)
-***********************************************
-
+Assembling the 64-electrode OhmPi
+*********************************
+**1 mb2024 + 4 mux2023 + 1 DPS 500)**
 
 TODO :list on tools and components
 
@@ -195,74 +196,74 @@ TODO :list on tools and components
    |      22+------------------------------------------------------------+
    |        |Tie the A, B, M and N wires together                        |                            
    +--------+------------------------------------------------------------+   
-   |        |   .. image:: ../../../img/v2024.x.x/1.jpg                  |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/1.jpg         |
    |      23+------------------------------------------------------------+
    |        |Cut a PVC/wood plate with the following minimum dimensions :|  
    |        |410 mm * 280 mm * 4 mm,                                     |
    |        |                                                            |
    |        |and drill hole (M 3.5 mm)                                   |                       
    +--------+------------------------------------------------------------+ 
-   |        |   .. image:: ../../../img/v2024.x.x/2.jpg                  |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/2.jpg         |
    |      24+------------------------------------------------------------+
    |        |Fix the PVC plate                                           |  
    +--------+------------------------------------------------------------+ 
-   |        |   .. image:: ../../../img/v2024.x.x/3.jpg                  |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/3.jpg         |
    |      25+------------------------------------------------------------+
    |        |Drill holes for fixing Raspberry Pi and measurement board   |  
    +--------+------------------------------------------------------------+ 
-   |        |   .. image:: ../../../img/v2024.x.x/4.jpg                  |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/4.jpg         |
    |      26+------------------------------------------------------------+
    |        |Install spacer for Raspberry Pi on the pvc plate            |  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/5.jpg                  |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/5.jpg         |
    |      27+------------------------------------------------------------+
    |        |Install spacer for measurement board on the pvc plate       |  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/6.jpg                  |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/6.jpg         |
    |      28+------------------------------------------------------------+
    |        |Fit 9 flat washers and nuts (M3)                            |  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/7.jpg                  |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/7.jpg         |
    |      29+------------------------------------------------------------+
    |        |Install Raspberry Pi                                        |  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/8.jpg                  |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/8.jpg         |
    |      30+------------------------------------------------------------+
    |        |Fit 4 spacers (female/female, M3, 11 mm)                    |  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/9.jpg                  |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/9.jpg         |
    |      31+------------------------------------------------------------+
    |        |Install the measurement board on the Raspberry Pi,          |  
    |        |                                                            |
    |        |     and fix the 4 screws (M3).                             |
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/10.jpg                 |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/10.jpg        |
    |      32+------------------------------------------------------------+
    |        |Fit 3 flat washers and nuts (M3) for measurement board.     |  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/11.jpg                 |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/11.jpg        |
    |      33+------------------------------------------------------------+
    |        |Connect 12V and GND cable from Mux to Measurement board     |  
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/12.jpg                 |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/12.jpg        |
    |      34+------------------------------------------------------------+
    |        |The choice is yours: position or fix the DPS 5005.          |  
    |        |                                                            |
    |        |connect USB cable between DPS 5005 and Raspberry Pi         |
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/13.jpg                 |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/13.jpg        |
    |      35+------------------------------------------------------------+
    |        |Prepare two wires ( 30 cm, 1.5 mm², black and red), and     |
    |        |                                                            |
    |        |and install two banana plugs                                |
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/14.jpg                 |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/14.jpg        |
    |      36+------------------------------------------------------------+
    |        |This is optional, but you could install a switch on         |
    |        |                                                            |
    |        |the cable connecting to the 12V RX battery.                 |
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/15.jpg                 |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/15.jpg        |
    |      37+------------------------------------------------------------+
    |        |Prepare two wires ( ~15 cm, 1.5 mm², black and red), and    |
    |        |                                                            |
@@ -270,7 +271,7 @@ TODO :list on tools and components
    |        |                                                            |
    |        |board and the input of DPH5005 (on the back side)           |
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/16.jpg                 |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/16.jpg        |
    |      38+------------------------------------------------------------+
    |        |Prepare two wires ( ~20 cm, 1.5 mm², black and red), and    |
    |        |                                                            |
@@ -278,21 +279,21 @@ TODO :list on tools and components
    |        |                                                            |
    |        |board (DPS+ and GND) and the output of DPH5005 (front side) |
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/17.jpg                 |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/17.jpg        |
    |      39+------------------------------------------------------------+
    |        |slide ribbon cable between MUX N and PCV plate, and connect |
    |        |                                                            |
    |        |ribbon cable to IDC connector                               |
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/18.jpg                 |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/18.jpg        |
    |      40+------------------------------------------------------------+
    |        |Do not connect the MUX electrode cables to the measurement  |  
    |        |                                                            |
    |        |board.                                                      |
    +--------+------------------------------------------------------------+
-   |        |.. image:: ../../../img/v2024.x.x/ref_circuit.png           |
+   |        |.. image:: ../../../img/v2024.x.x/ohmpi_64/ref_circuit.png  |
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/19.jpg                 |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/19.jpg        |
    |      40+------------------------------------------------------------+
    |        |Connect a equivalent circuit                                |  
    |        |                                                            |
@@ -328,7 +329,7 @@ Write de following python script your OhmPi folder
    :widths: 10 30
    
    +--------+------------------------------------------------------------+
-   |        |   .. image:: ../../../img/v2024.x.x/test_01.png            |
+   |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/test_01.png   |
    |      41+------------------------------------------------------------+
    |        |If everything is ok, you get the message upper, if not      | 
    |        |                                                            |                                                                   
