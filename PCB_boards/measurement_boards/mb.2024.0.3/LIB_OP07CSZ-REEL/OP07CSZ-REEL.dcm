@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP OP07CSZ-REEL
+D Precision OpAmps General Purpose 1 +/-3V ~ 18V 600kHz 0.3 V/us SOIC-8_150mil RoHS
+K
+F https://www.analog.com/media/en/technical-documentation/data-sheets/OP07.pdf
+$ENDCMP
+#
+#End Doc Library

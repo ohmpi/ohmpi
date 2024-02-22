@@ -1,7 +1,6 @@
 (sym_lib_table
   (version 7)
-  (lib (name "1085")(type "KiCad")(uri "${KIPRJMOD}/1085/1085.kicad_sym")(options "")(descr ""))
+  (lib (name "1085")(type "KiCad")(uri "${LIB}/1085.kicad_sym")(options "")(descr ""))
   (lib (name "THD_15-1222N")(type "KiCad")(uri "${KIPRJMOD}/THD_15-1222N/THD_15-1222N.kicad_sym")(options "")(descr ""))
   (lib (name "THD_15-1211N")(type "KiCad")(uri "${KIPRJMOD}/THD_15-1211N/THD_15-1211N.kicad_sym")(options "")(descr ""))
-  (lib (name "ZVN4206ASTZ")(type "KiCad")(uri "${KIPRJMOD}/LIB_ZVN4206ASTZ/ZVN4206ASTZ/KiCad/ZVN4206ASTZ.kicad_sym")(options "")(descr ""))
 )

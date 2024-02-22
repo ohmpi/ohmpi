@@ -4,5 +4,4 @@
   (lib (name "ohmpi_logo")(type "KiCad")(uri "${KIPRJMOD}/ohmpi_logo")(options "")(descr ""))
   (lib (name "THD_15-1211N")(type "KiCad")(uri "${KIPRJMOD}/THD_15-1211N")(options "")(descr ""))
   (lib (name "THD_15-1222N")(type "KiCad")(uri "${KIPRJMOD}/THD_15-1222N")(options "")(descr ""))
-  (lib (name "ZVN4206ASTZ")(type "KiCad")(uri "${KIPRJMOD}/LIB_ZVN4206ASTZ/ZVN4206ASTZ/KiCad")(options "")(descr ""))
 )
