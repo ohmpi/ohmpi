@@ -17,7 +17,9 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'current_max': {'default': 3.},
          'activation_delay': {'default': 0.01},
          'release_delay': {'default': 0.005},
-         'mux_tca_address': {'default': 0x70}
+         'mux_tca_address': {'default': 0x70},
+         # 'i2c_ext_tca_address': {'default': None},
+         # 'i2c_ext_tca_channel': {'default': 0},
          }
 
 # defaults to role 'A' cabling electrodes from 1 to 64
@@ -70,9 +72,13 @@ class Mux(MuxAbstract):
         super().__init__(**kwargs)
         if not subclass_init:
             self.exec_logger.event(f'{self.model}: {self.board_id}\tmux_init\tbegin\t{datetime.datetime.utcnow()}')
-        assert isinstance(self.connection, I2C)
+
+        self._connection = kwargs['connection']
+        self.connection = None
+        assert isinstance(self._connection, I2C)
         self.exec_logger.debug(f'configuration: {kwargs}')
-        roles = kwargs.pop('roles', None)
+        kwargs.update({'roles': kwargs.pop('roles', None)})
+        roles = kwargs['roles']
 
         if roles is None:
             roles = ['A'] # NOTE: defaults to 1-role
@@ -87,8 +93,10 @@ class Mux(MuxAbstract):
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.model}: {self._roles} !')
             self._mode = ''
-        cabling = kwargs.pop('cabling', None)
-        electrodes = kwargs.pop('electrodes', None)
+        kwargs.update({'cabling': kwargs.pop('cabling', None)})
+        cabling = kwargs['cabling']
+        kwargs.update({'electrodes': kwargs.pop('electrodes', None)})
+        electrodes = kwargs['electrodes']
         self.cabling = {}
         if cabling is None:
             self.cabling = {(e, r): (i + 1, r) for r in roles for i, e in enumerate(electrodes)}
@@ -96,10 +104,24 @@ class Mux(MuxAbstract):
             for k, v in cabling.items():
                 if v[0] == self.board_id:
                     self.cabling.update({k: (v[1], k[1])})
-        self._tca = [adafruit_tca9548a.TCA9548A(self.connection, kwargs['mux_tca_address'])[i] for i in np.arange(7, 3, -1)]
-        # self._mcp_addresses = (kwargs.pop('mcp', '0x20'))  # TODO: add assert on valid addresses..
+            electrodes = [k[0] for k in self.cabling.keys()]
+        self.electrodes = np.array(electrodes)
+
+        self._tca_address = kwargs['mux_tca_address']
+        self._tca_channels = [i for i in np.arange(7, 3, -1)]
+        kwargs.update({'i2c_ext_tca_address': kwargs.pop('i2c_ext_tca_address', None)})
+        self._i2c_ext_tca_address = kwargs['i2c_ext_tca_address']
+        kwargs.update({'i2c_ext_tca_channel': kwargs.pop('i2c_ext_tca_channel', 0)})
+        self._i2c_ext_tca_channel = kwargs['i2c_ext_tca_channel']
+        self._mcp_addresses = ['0x20'] * 4  # TODO: add assert on valid addresses..
+        self._i2c_ext_tca = None
+        self._tca = None
         self._mcp = [None, None, None, None]
-        self.reset()
+        if self.connect:
+            self.reset_i2c_ext_tca()
+            self.reset_tca()
+            self.reset()
+        self.specs = kwargs
         if self.addresses is None:
             self._get_addresses()
         self.exec_logger.debug(f'{self.board_id} addresses: {self.addresses}')
@@ -116,10 +138,27 @@ class Mux(MuxAbstract):
         self.addresses = d
 
     def reset(self):
+        if self._tca is None:
+            self.reset_i2c_ext_tca()
+            self.reset_tca()
         self._mcp[0] = MCP23017(self._tca[0])
         self._mcp[1] = MCP23017(self._tca[1])
         self._mcp[2] = MCP23017(self._tca[2])
         self._mcp[3] = MCP23017(self._tca[3])
+
+    def reset_one(self, which=0):
+        self._mcp[which] = MCP23017(self._tca[which])
+
+    def reset_i2c_ext_tca(self):
+        if self._i2c_ext_tca_address is None:
+            self.connection = self._connection
+        else:
+            self.connection = adafruit_tca9548a.TCA9548A(self._connection, self._i2c_ext_tca_address)[self._i2c_ext_tca_channel]
+
+    def reset_tca(self):
+        if self.connection is None:
+            self.reset_i2c_ext_tca()
+        self._tca = [adafruit_tca9548a.TCA9548A(self.connection, self._tca_address)[tca_channel] for tca_channel in self._tca_channels]
 
     def switch_one(self, elec=None, role=None, state=None):
         MuxAbstract.switch_one(self, elec=elec, role=role, state=state)

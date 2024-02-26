@@ -9,46 +9,11 @@ except Exception:
 from ohmpi.hardware_components.abstract_hardware_components import CtlAbstract
 from ohmpi.logging_setup import create_stdout_logger
 from ohmpi.utils import update_dict
-from ohmpi.config import HARDWARE_CONFIG
+from ohmpi.config import HARDWARE_CONFIG as HC
 from threading import Thread, Event, Barrier, BrokenBarrierError
 import warnings
 
 # plt.switch_backend('agg')  # for thread safe operations...
-
-# Define the default controller, a distinct controller could be defined for each tx, rx or mux board
-# when using a distinct controller, the specific controller definition must be included in the component configuration
-ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
-pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
-tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
-rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
-
-MUX_DEFAULT = HARDWARE_CONFIG['mux']['default']
-MUX_CONFIG = HARDWARE_CONFIG['mux']['boards']
-for k, v in MUX_CONFIG.items():
-    MUX_CONFIG[k].update({'id': k})
-    for k2, v2 in MUX_DEFAULT.items():
-        MUX_CONFIG[k].update({k2: MUX_CONFIG[k].pop(k2, v2)})
-
-TX_CONFIG = HARDWARE_CONFIG['tx']
-for k, v in tx_module.SPECS['tx'].items():
-    try:
-        TX_CONFIG.update({k: TX_CONFIG.pop(k, v['default'])})
-    except Exception as e:
-        print(f'Cannot set value {v} in TX_CONFIG[{k}]:\n{e}')
-
-RX_CONFIG = HARDWARE_CONFIG['rx']
-for k, v in rx_module.SPECS['rx'].items():
-    try:
-        RX_CONFIG.update({k: RX_CONFIG.pop(k, v['default'])})
-    except Exception as e:
-        print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
-
-current_max = np.min([TX_CONFIG['current_max'],  HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
-                      np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
-voltage_max = np.min([TX_CONFIG['voltage_max'],
-                      np.min(np.hstack((np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
-voltage_min = RX_CONFIG['voltage_min']
-# TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
 
 def elapsed_seconds(start_time):
     lap = datetime.datetime.utcnow() - start_time
@@ -65,6 +30,48 @@ class OhmPiHardware:
         self.data_logger = kwargs.pop('exec_logger', create_stdout_logger('data_hw'))
         self.soh_logger = kwargs.pop('soh_logger', create_stdout_logger('soh_hw'))
         self.tx_sync = Event()
+        self.hardware_config = kwargs.pop('hardware_config', HC)
+        HARDWARE_CONFIG = self.hardware_config
+        print('hardware_config', HARDWARE_CONFIG)
+        # Define the default controller, a distinct controller could be defined for each tx, rx or mux board
+        # when using a distinct controller, the specific controller definition must be included in the component configuration
+        ctl_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["ctl"]["model"]}')
+        pwr_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["pwr"]["model"]}')
+        tx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["tx"]["model"]}')
+        rx_module = importlib.import_module(f'ohmpi.hardware_components.{HARDWARE_CONFIG["rx"]["model"]}')
+
+        MUX_DEFAULT = HARDWARE_CONFIG['mux']['default']
+        MUX_CONFIG = HARDWARE_CONFIG['mux']['boards']
+        for k, v in MUX_CONFIG.items():
+            MUX_CONFIG[k].update({'id': k})
+            for k2, v2 in MUX_DEFAULT.items():
+                MUX_CONFIG[k].update({k2: MUX_CONFIG[k].pop(k2, v2)})
+
+        TX_CONFIG = HARDWARE_CONFIG['tx']
+        for k, v in tx_module.SPECS['tx'].items():
+            try:
+                TX_CONFIG.update({k: TX_CONFIG.pop(k, v['default'])})
+            except Exception as e:
+                print(f'Cannot set value {v} in TX_CONFIG[{k}]:\n{e}')
+
+        RX_CONFIG = HARDWARE_CONFIG['rx']
+        for k, v in rx_module.SPECS['rx'].items():
+            try:
+                RX_CONFIG.update({k: RX_CONFIG.pop(k, v['default'])})
+            except Exception as e:
+                print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
+
+        self.current_max = np.min([TX_CONFIG['current_max'], HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
+                              np.min(np.hstack(
+                                  (np.inf, [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
+        self.voltage_max = np.min([TX_CONFIG['voltage_max'],
+                              np.min(np.hstack(
+                                  (np.inf, [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
+
+        print('maximums', self.voltage_max, self.current_max)
+        self.voltage_min = RX_CONFIG['voltage_min']
+        # TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
+        self.sampling_rate = RX_CONFIG['sampling_rate']
 
         # Main Controller initialization
         HARDWARE_CONFIG['ctl'].pop('model')
@@ -97,26 +104,6 @@ class OhmPiHardware:
         HARDWARE_CONFIG['tx'].pop('ctl', None)
         self.rx = kwargs.pop('rx', rx_module.Rx(**HARDWARE_CONFIG['rx']))
 
-        # Initialize power source
-        HARDWARE_CONFIG['pwr'].pop('model')
-        HARDWARE_CONFIG['pwr'].update(**HARDWARE_CONFIG['pwr'])  # NOTE: Explain why this is needed or delete me
-        HARDWARE_CONFIG['pwr'].update({'ctl': HARDWARE_CONFIG['pwr'].pop('ctl', self.ctl)})
-        HARDWARE_CONFIG['pwr'].update({'current_max': current_max})
-        if isinstance(HARDWARE_CONFIG['pwr']['ctl'], dict):
-            ctl_mod = HARDWARE_CONFIG['pwr']['ctl'].pop('model', self.ctl)
-            if isinstance(ctl_mod, str):
-                ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
-            HARDWARE_CONFIG['pwr']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['pwr']['ctl'])
-        #if 'interface_name' in HARDWARE_CONFIG['pwr']:
-        HARDWARE_CONFIG['pwr'].update({
-            'connection': HARDWARE_CONFIG['pwr'].pop(
-                'connection', HARDWARE_CONFIG['pwr']['ctl'].interfaces[
-                    HARDWARE_CONFIG['pwr'].pop('interface_name', None)])})
-
-        HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-                                      'soh_logger': self.soh_logger})
-        self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
-
         # Initialize TX
         HARDWARE_CONFIG['tx'].pop('model')
         HARDWARE_CONFIG['tx'].update(**HARDWARE_CONFIG['tx'])
@@ -137,11 +124,38 @@ class OhmPiHardware:
         self.tx = kwargs.pop('tx', tx_module.Tx(**HARDWARE_CONFIG['tx']))
         if isinstance(self.tx, dict):
             self.tx = tx_module.Tx(**self.tx)
+
+        # Initialize power source
+        HARDWARE_CONFIG['pwr'].pop('model')
+        HARDWARE_CONFIG['pwr'].update(**HARDWARE_CONFIG['pwr'])  # NOTE: Explain why this is needed or delete me
+        HARDWARE_CONFIG['pwr'].update({'ctl': HARDWARE_CONFIG['pwr'].pop('ctl', self.ctl)})
+        HARDWARE_CONFIG['pwr'].update({'current_max': self.current_max})
+        if isinstance(HARDWARE_CONFIG['pwr']['ctl'], dict):
+            ctl_mod = HARDWARE_CONFIG['pwr']['ctl'].pop('model', self.ctl)
+            if isinstance(ctl_mod, str):
+                ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
+            HARDWARE_CONFIG['pwr']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['pwr']['ctl'])
+        # if 'interface_name' in HARDWARE_CONFIG['pwr']:
+        HARDWARE_CONFIG['pwr'].update({
+            'connection': HARDWARE_CONFIG['pwr'].pop(
+                'connection', HARDWARE_CONFIG['pwr']['ctl'].interfaces[
+                    HARDWARE_CONFIG['pwr'].pop('interface_name', None)])})
+
+        HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+                                       'soh_logger': self.soh_logger})
+        if self.tx.specs['connect']:
+            self.pwr_state = "on"
+        self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
+        if self.tx.specs['connect']:
+            self.pwr_state = 'off'
+
         self.tx.pwr = self.pwr
+
         if not self.tx.pwr.voltage_adjustable:
             self.tx._pwr_latency = 0
-        self.tx.polarity = 0
-        self.tx.pwr._current_max = current_max
+        if self.tx.specs['connect']:
+            self.tx.polarity = 0
+        self.tx.pwr._current_max = self.current_max
 
         # Initialize Muxes
         self._cabling = kwargs.pop('cabling', {})
@@ -252,7 +266,7 @@ class OhmPiHardware:
             pulses.update({i: {'polarity': int(r[0, 2]), 'iab': r[:, 3], 'vmn': r[:, 4]}})
         return pulses
 
-    def _read_values(self, sampling_rate=None, append=False):  # noqa
+    def _read_values(self, sampling_rate=None, append=False, test_r_shunt=False):  # noqa
         """
         Reads vmn and iab values on ADS1115 and generates full waveform dataset consisting of
         [time, pulse nr, polarity, vmn, iab]
@@ -267,6 +281,8 @@ class OhmPiHardware:
             _readings = []
         else:
             _readings = self.readings.tolist()
+        if test_r_shunt:
+            _current = []
         if sampling_rate is None:
             sampling_rate = self.rx.sampling_rate
         sample = 0
@@ -284,6 +300,9 @@ class OhmPiHardware:
             if self.tx_sync.is_set():
                 sample += 1
                 _readings.append(r)
+                if test_r_shunt:
+                    self.tx.pwr._retrieve_current()
+                    _current.append(self.tx.pwr.current)
                 sleep_time = self._start_time + datetime.timedelta(seconds=sample / sampling_rate) - lap
                 if sleep_time.total_seconds() < 0.:
                     # TODO: count how many samples were skipped to make a stat that could be used to qualify pulses
@@ -294,6 +313,8 @@ class OhmPiHardware:
         self.exec_logger.debug(f'pulse {self._pulse}: elapsed time {(lap-self._start_time).total_seconds()} s')
         self.exec_logger.debug(f'pulse {self._pulse}: total samples {len(_readings)}')
         self.readings = np.array(_readings)
+        if test_r_shunt:
+            self._current = np.array(_current)
         self._pulse += 1
         self.exec_logger.event(f'OhmPiHardware\tread_values\tend\t{datetime.datetime.utcnow()}')
 
@@ -472,11 +493,11 @@ class OhmPiHardware:
             if vmn_max is None:
                 vmn_max = self.rx._voltage_max / 1000.
             if iab_max is None:
-                iab_max = current_max
-            if vab_max is None:
-                vab_max = voltage_max
+                iab_max = self.current_max
             if vmn_min is None:
-                vmn_min = voltage_min
+                vmn_min = self.voltage_min
+            if vab_max is None:
+                vab_max = self.voltage_max
             # print(f'Vmn max: {vmn_max}')
             if p_max is None:
                 p_max = vab_max * iab_max
@@ -533,7 +554,7 @@ class OhmPiHardware:
                     vabs = []
                     self._vab_pulses(vab_list[k], sampling_rate=self.rx.sampling_rate, durations=[0.2, 0.2], polarities=[1, -1])
                     for pulse in range(2):
-                        v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (self.readings[:, 1]==pulse))[0]  # NOTE : discard data aquired in the first x ms
+                        v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (self.readings[:, 1] == pulse))[0]  # NOTE : discard data aquired in the first x ms
                         iab = self.readings[v, 3]/1000.
                         vmn = np.abs(self.readings[v, 4]/1000. * self.readings[v, 2])
                         new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min)
@@ -678,7 +699,7 @@ class OhmPiHardware:
         """
         #self.tx.polarity = polarity
         if sampling_rate is None:
-            sampling_rate = RX_CONFIG['sampling_rate']
+            sampling_rate = self.sampling_rate
         if self.tx.pwr.voltage_adjustable:
             if self.tx.voltage != vab:
                 self.tx.voltage = vab
@@ -723,7 +744,7 @@ class OhmPiHardware:
             switch_pwr_off = True
 
         if sampling_rate is None:
-            sampling_rate = RX_CONFIG['sampling_rate']
+            sampling_rate = self.sampling_rate
         if polarities is not None:
             assert len(polarities) == n_pulses
         else:

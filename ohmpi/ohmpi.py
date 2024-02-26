@@ -48,7 +48,7 @@ VERSION = 'v2024.0.0'
 class OhmPi(object):
     """OhmPi class.
     """
-    def __init__(self, settings=None, sequence=None, mqtt=True):
+    def __init__(self, settings=None, sequence=None, mqtt=True, config=None):
         """Construct the ohmpi object.
 
         Parameters
@@ -76,7 +76,7 @@ class OhmPi(object):
 
         # specify loggers when instancing the hardware
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-                                    'soh_logger': self.soh_logger})
+                                    'soh_logger': self.soh_logger}, hardware_config=config.HARDWARE_CONFIG)
         self.exec_logger.info('Hardware configured...')
 
         # default acquisition settings
@@ -228,6 +228,7 @@ class OhmPi(object):
                 w.writeheader()
                 w.writerow(last_measurement)
 
+
     @staticmethod
     def _find_identical_in_line(quads):
         """Finds quadrupole where A and B are identical.
@@ -275,7 +276,7 @@ class OhmPi(object):
             if ((fname != 'readme.txt')
                     and ('_rs' not in fname)
                     and (fname.replace('.csv', '') not in survey_names)):
-                # try:
+                #try:
                 # reading headers
                 with open(os.path.join(ddir, fname), 'r') as f:
                     headers = f.readline().split(',')
@@ -842,7 +843,6 @@ class OhmPi(object):
         ----------
         tx_volt : float
             Voltage of the injection.
-        couple  : array, for selecting a couple of electrode for checking resistance
         cmd_id : str, optional
             Unique command identifier.
         """
@@ -867,7 +867,7 @@ class OhmPi(object):
                 ]).T
         else:
             quads = np.array([[couple[0], couple[1], 0, 0]], dtype=np.uint32)
-           
+
         # create filename to store RS
         export_path_rs = self.settings['export_path'].replace('.csv', '') \
                          + '_' + datetime.now().strftime('%Y%m%dT%H%M%S') + '_rs.csv'

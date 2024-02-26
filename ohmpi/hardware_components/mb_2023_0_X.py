@@ -89,26 +89,31 @@ class Tx(TxAbstract):
         self.voltage_adjustable = False
         self.current_adjustable = False
 
-        # I2C connection to MCP23008, for current injection
-        self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
+        # I2C connexion to MCP23008, for current injection
+        self._mcp_address = kwargs['mcp_address']
+        if self.connect:
+            self.reset_mcp()
         # ADS1115 for current measurement (AB)
         self._ads_current_address = kwargs['ads_address']
         self._ads_current_data_rate = kwargs['data_rate']
         self._adc_gain = 2 / 3
-        self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
-                                        address=self._ads_current_address)
-        self._ads_current.mode = Mode.CONTINUOUS
+        if self.connect:
+            self.reset_ads()
+            self._ads_current.mode = Mode.CONTINUOUS
+
         self._r_shunt = kwargs['r_shunt']
         self.adc_voltage_min = kwargs['adc_voltage_min']
         self.adc_voltage_max = kwargs['adc_voltage_max']
 
         # Relays for pulse polarity
-        self.pin0 = self.mcp_board.get_pin(0)
-        self.pin0.direction = Direction.OUTPUT
-        self.pin1 = self.mcp_board.get_pin(1)
-        self.pin1.direction = Direction.OUTPUT
-        #self.polarity = 0
-        self.gain = 2 / 3
+        if self.connect:
+            self.pin0 = self.mcp_board.get_pin(0)
+            self.pin0.direction = Direction.OUTPUT
+            self.pin1 = self.mcp_board.get_pin(1)
+            self.pin1.direction = Direction.OUTPUT
+            # self.polarity = 0
+            self.gain = 2 / 3
+
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -186,6 +191,14 @@ class Tx(TxAbstract):
     # def turn_on(self):
     #     self.pwr.turn_on(self)
 
+    def reset_ads(self, mode=Mode.CONTINUOUS):
+        self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
+                                    address=self._ads_current_address)
+        self._ads_current.mode = mode
+
+    def reset_mcp(self):
+        self.mcp_board = MCP23008(self.connection, address=self._mcp_address)
+
     @property
     def tx_bat(self):
         if np.isnan(self.pwr.battery_voltage):
@@ -234,11 +247,12 @@ class Rx(RxAbstract):
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = kwargs['ads_address']
+        self._ads_voltage_data_rate = kwargs['data_rate']
         self._adc_gain = 2/3
-        self._ads_voltage = ads.ADS1115(self.connection, gain=self._adc_gain,
-                                        data_rate=SPECS['rx']['data_rate']['default'],
-                                        address=self._ads_voltage_address)
-        self._ads_voltage.mode = Mode.CONTINUOUS
+
+        if self.connect:
+            self.reset_ads(mode=Mode.CONTINUOUS)
+
         self._coef_p2 = kwargs['coef_p2']
         # self._voltage_max = kwargs['voltage_max']
         self._sampling_rate = kwargs['sampling_rate']
@@ -272,6 +286,11 @@ class Rx(RxAbstract):
 
     def reset_gain(self):
         self.gain = 2/3
+
+    def reset_ads(self, mode=Mode.CONTINUOUS):
+        self._ads_voltage = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_voltage_data_rate,
+                                    address=self._ads_voltage_address)
+        self._ads_voltage.mode = mode
 
     @property
     def voltage(self):

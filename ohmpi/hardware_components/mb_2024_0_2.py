@@ -81,25 +81,26 @@ class Tx(Tx_mb_2023):
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
         self._pwr_latency = kwargs['pwr_latency']
-
+        self._current = 0
         # Initialize LEDs
-        self.pin4 = self.mcp_board.get_pin(4)  # OhmPi_run
-        self.pin4.direction = Direction.OUTPUT
-        self.pin4.value = True
-        self.pin5 = self.mcp_board.get_pin(5)  # OhmPi_measure
-        self.pin5.direction = Direction.OUTPUT
-        self.pin5.value = False
-        self.pin6 = self.mcp_board.get_pin(6)  # OhmPi_stack
-        self.pin6.direction = Direction.OUTPUT
-        self.pin6.value = False
+        if self.connect:
+            self.pin4 = self.mcp_board.get_pin(4)  # OhmPi_run
+            self.pin4.direction = Direction.OUTPUT
+            self.pin4.value = True
+            self.pin5 = self.mcp_board.get_pin(5)  # OhmPi_measure
+            self.pin5.direction = Direction.OUTPUT
+            self.pin5.value = False
+            self.pin6 = self.mcp_board.get_pin(6)  # OhmPi_stack
+            self.pin6.direction = Direction.OUTPUT
+            self.pin6.value = False
 
-        # Initialize DPS relays
-        self.pin2 = self.mcp_board.get_pin(2)  # dps -
-        self.pin2.direction = Direction.OUTPUT
-        self.pin2.value = False
-        self.pin3 = self.mcp_board.get_pin(3)  # dps -
-        self.pin3.direction = Direction.OUTPUT
-        self.pin3.value = False
+            # Initialize DPS relays
+            self.pin2 = self.mcp_board.get_pin(2)  # dps -
+            self.pin2.direction = Direction.OUTPUT
+            self.pin2.value = False
+            self.pin3 = self.mcp_board.get_pin(3)  # dps -
+            self.pin3.direction = Direction.OUTPUT
+            self.pin3.value = False
 
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
@@ -147,6 +148,29 @@ class Tx(Tx_mb_2023):
             self.exec_logger.debug(f'Switching DPS off')
             self._pwr_state = 'off'
 
+
+    def current_pulse(self, current=None, length=None, polarity=1):
+        """ Generates a square current pulse. Currenttly no DPS can handle this...
+
+        Parameters
+        ----------
+        voltage: float, optional
+            Voltage to apply in volts, tx_v_def is applied if omitted.
+        length: float, optional
+            Length of the pulse in seconds
+        polarity: 1,0,-1
+            Polarity of the pulse
+        """
+        self.exec_logger.event(f'{self.model}\ttx_current_pulse\tbegin\t{datetime.datetime.utcnow()}')
+        # self.exec_logger.info(f'injection_duration: {length}')  # TODO: delete me
+        if length is None:
+            length = self.injection_duration
+        if current is not None:
+            self.pwr.current = current
+        self.exec_logger.debug(f'Current pulse of {polarity*self.pwr.current:.3f} V for {length:.3f} s')
+        self.inject(polarity=polarity, injection_duration=length)
+        self.exec_logger.event(f'{self.model}\ttx_current_pulse\tend\t{datetime.datetime.utcnow()}')
+
     @property
     def polarity(self):
         return self._polarity
@@ -188,7 +212,10 @@ class Rx(Rx_mb_2023):
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
         # I2C connection to MCP23008, for voltage
-        self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
+        self._mcp_address = kwargs['mcp_address']
+        # self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
+        if self.connect:
+            self.reset_mcp()
         # ADS1115 for voltage measurement (MN)
         self._coef_p2 = 1.
         # Define default DG411 gain
@@ -196,16 +223,18 @@ class Rx(Rx_mb_2023):
         self._dg411_gain = self._dg411_gain_ratio
 
         # Define pins for DG411
-        self.pin_DG0 = self.mcp_board.get_pin(0)
-        self.pin_DG0.direction = Direction.OUTPUT
-        self.pin_DG1 = self.mcp_board.get_pin(1)
-        self.pin_DG1.direction = Direction.OUTPUT
-        self.pin_DG2 = self.mcp_board.get_pin(2)
-        self.pin_DG2.direction = Direction.OUTPUT
-        self.pin_DG0.value = True  # open
-        self.pin_DG1.value = True  # open gain 1 inactive
-        self.pin_DG2.value = False  # close gain 0.5 active
-        self.gain = self._adc_gain * self._dg411_gain_ratio  # 1/3 by default since self._adc_gain is equal to 2/3 and self._dg411_gain_ratio to 1/2 by default
+        if self.connect:
+            self.pin_DG0 = self.mcp_board.get_pin(0)
+            self.pin_DG0.direction = Direction.OUTPUT
+            self.pin_DG1 = self.mcp_board.get_pin(1)
+            self.pin_DG1.direction = Direction.OUTPUT
+            self.pin_DG2 = self.mcp_board.get_pin(2)
+            self.pin_DG2.direction = Direction.OUTPUT
+            self.pin_DG0.value = True  # open
+            self.pin_DG1.value = True  # open gain 1 inactive
+            self.pin_DG2.value = False  # close gain 0.5 active
+            self.gain = self._adc_gain * self._dg411_gain_ratio  # 1/3 by default since self._adc_gain is equal to 2/3 and self._dg411_gain_ratio to 1/2 by default
+
         if not subclass_init:  # TODO: try to only log this event and not the one created by super()
             self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -244,6 +273,9 @@ class Rx(Rx_mb_2023):
 
     def reset_gain(self):
         self.gain =  self._adc_gain * self._dg411_gain_ratio  # 1/3 by default since self._adc_gain is equal to 2/3 and self._dg411_gain_ratio to 1/2 by default
+
+    def reset_mcp(self):
+        self.mcp_board = MCP23008(self.connection, address=self._mcp_address)
 
     @property
     def voltage(self):

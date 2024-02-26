@@ -79,11 +79,15 @@ def create_stdout_logger(name):
     logger.setLevel(logging.DEBUG)
     if 'EVENT' not in get_logging_levels():
         add_logging_level('EVENT', logging.DEBUG + 1)
+    if 'TEST' not in get_logging_levels():
+        add_logging_level('TEST', logging.DEBUG + 1)
     return logger
 
 
 def setup_loggers(mqtt=True):
     add_logging_level('EVENT', logging.DEBUG + 1)  # TODO : check if we should set the level to DEBUG...
+    add_logging_level('TEST', logging.INFO + 1)  # TODO : check if we should set the level to DEBUG...
+
     msg = ''
     # Message logging setup
     log_path = path.join(path.dirname(__file__), 'logs')
@@ -240,6 +244,19 @@ def init_logging(exec_logger, data_logger, soh_logger, exec_logging_level, soh_l
     exec_logger.info('*** NEW SESSION STARTING ***')
     exec_logger.info('****************************')
     exec_logger.info('')
+
+    soh_logger.info('')
+    soh_logger.info('****************************')
+    soh_logger.info('*** NEW SESSION STARTING ***')
+    soh_logger.info('****************************')
+    soh_logger.info('')
+
+    data_logger.info('')
+    data_logger.info('****************************')
+    data_logger.info('*** NEW SESSION STARTING ***')
+    data_logger.info('****************************')
+    data_logger.info('')
+
     exec_logger.debug(f'Execution logging level: {exec_logging_level}')
     exec_logger.debug(f'State of health logging level: {soh_logging_level}')
     try:
