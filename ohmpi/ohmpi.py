@@ -26,6 +26,7 @@ from termcolor import colored
 from logging import DEBUG
 from ohmpi.utils import get_platform
 from ohmpi.logging_setup import setup_loggers
+import ohmpi.config
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import ohmpi.deprecated as deprecated
 from ohmpi.hardware_system import OhmPiHardware
