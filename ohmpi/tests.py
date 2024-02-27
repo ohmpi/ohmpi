@@ -789,7 +789,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
                 switch_tx_pwr_off = True
             for e, electrode in enumerate(electrodes):
                 quad = [electrode] * len(test_roles)
-                tx_volt = .5  # in V
+                tx_volt = .2  # in V
                 injection_duration = 5. * (1. / hw.sampling_rate) # 5 samples
 
                 hw.switch_mux(quad, test_roles, state='on', bypass_ab_check=True, bypass_check=True)
