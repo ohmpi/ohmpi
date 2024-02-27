@@ -585,7 +585,8 @@ class OhmPiHardware:
             ### if discharge relay manually add on mb_2024_0_2, then should not activate AB relays but simply wait for automatic discharge
             ### if mb_20240_1_X then TX should handle the pwr discharge
 
-            time.sleep(1.0)
+            # time.sleep(1.0)
+            self.tx.discharge_pwr()
 
     def _plot_readings(self, save_fig=False, filename=None):
         # Plot graphs

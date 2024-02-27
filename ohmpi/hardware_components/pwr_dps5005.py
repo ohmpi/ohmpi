@@ -14,7 +14,8 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'current_max': {'default': 60.},
          'current_adjustable': {'default': False},
          'voltage_adjustable': {'default': True},
-         'pwr_latency': {'default': 0.}
+         'pwr_latency': {'default': 4.},
+         'pwr_discharge_latency': {'default': 1.}
          }
 
 
@@ -37,6 +38,7 @@ class Pwr(PwrAbstract):
         self._current = np.nan
         self._pwr_state = 'off'
         self._pwr_latency = kwargs['pwr_latency']
+        self._pwr_discharge_latency = kwargs['pwr_discharge_latency']
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -97,9 +99,9 @@ class Pwr(PwrAbstract):
                 self.exec_logger.event(f'{self.model}\tpwr_state_on\tend\t{datetime.datetime.utcnow()}')
                 # self.current_max(self._current_max)
                 self._pwr_state = 'on'
-                self.exec_logger.event(f'{self.model}\tpwr_latency\tbegin\t{datetime.datetime.utcnow()}')
-                time.sleep(self._pwr_latency)
-                self.exec_logger.event(f'{self.model}\tpwr_latency\tend\t{datetime.datetime.utcnow()}')
+                # self.exec_logger.event(f'{self.model}\tpwr_latency\tbegin\t{datetime.datetime.utcnow()}')
+                # time.sleep(self._pwr_latency)
+                # self.exec_logger.event(f'{self.model}\tpwr_latency\tend\t{datetime.datetime.utcnow()}')
             self.exec_logger.debug(f'{self.model} is on')
 
         elif state == 'off':
