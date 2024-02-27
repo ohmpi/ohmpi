@@ -455,9 +455,16 @@ def test_mux_connection(hw_nc, test_logger, mux_id=None):
 
 def test_pwr_connection(hw_nc, test_logger):
     tx = hw_nc.tx
+    pwr = hw_nc.pwr
     if tx.pwr.voltage_adjustable:
         try:
-            pass
+            if pwr.specs['interface_name'] == 'modbus':
+                pwr.specs['ctl'].reset_modbus()
+        except:
+            traceback.print_exc()
+            test_logger(colored(
+                f"{module_name}: Connection NOT established with {device} with address {hex(module.specs[f'{device}_address'])}.",
+                "red"))
         except:
             traceback.print_exc()
     else:
