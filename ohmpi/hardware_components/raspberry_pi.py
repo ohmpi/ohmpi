@@ -51,8 +51,9 @@ class Ctl(CtlAbstract):
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize Extended I2C:\n{e}')
 
+        self.reset_modbus()
 
-
+    def reset_modbus(self):
         # modbus
         try:
             self.interfaces['modbus'] = minimalmodbus.Instrument(port=kwargs['modbus_port'],
@@ -65,6 +66,7 @@ class Ctl(CtlAbstract):
             self.interfaces['modbus'].mode = kwargs['modbus_mode']  # RTU mode
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize Extended modbus:\n{e}')
+            self.interfaces['modbus'] = None
 
         platform, on_pi = get_platform()
         assert on_pi
