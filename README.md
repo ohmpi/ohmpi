@@ -15,12 +15,12 @@ To activate the environment and set the necessary `$PYTHONPATH` variable, you ca
 
 `source env.sh`
 
-More examples are provided in the **[documentation](https://ohmpi.gitlab.com/ohmpi)**.
+More examples are provided in the **[documentation](https://ohmpi.gitlab.io/ohmpi/)**.
 
 
 ## Gallery
 
-A few pictures of the components of the OhmPi. More in the [**DOCUMENTATION**](https://ohmpi.gitlab.com/ohmpi)!
+A few pictures of the components of the OhmPi. More in the [**DOCUMENTATION**](https://ohmpi.gitlab.io/ohmpi/)!
 
 ![measurment board](doc/source/img/mb.2024.x.x/32.jpg)
 *Measurement board (v2024).*
