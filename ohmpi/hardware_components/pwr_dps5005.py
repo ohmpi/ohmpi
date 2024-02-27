@@ -31,7 +31,7 @@ class Pwr(PwrAbstract):
         super().__init__(**kwargs)
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tbegin\t{datetime.datetime.utcnow()}')
-        assert isinstance(self.connection, Instrument)
+
         self._voltage = kwargs['voltage']
         self._current_max = kwargs['current_max']
         self._voltage_max = kwargs['voltage_max']
@@ -39,6 +39,7 @@ class Pwr(PwrAbstract):
         self._current_max_tolerance = kwargs['current_max_tolerance']
         self._pwr_state = 'off'
         if self.connect:
+            assert isinstance(self.connection, Instrument)
             self.pwr_state = self._pwr_state
             self.voltage_default(self._voltage)
             self.current_max_default(self._current_max)
