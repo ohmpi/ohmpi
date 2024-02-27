@@ -22,59 +22,61 @@ Assembly of the measurement board
 Schematics
 ~~~~~~~~~~
 
-Overview of the measurement board.
+
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0001.jpg       
-       :width: 600px
-       :align: center
-       :height: 450px
-       :alt: alternate text
-       :figclass: align-center 
-
-Schematic of the power supply.
+   :width: 600px
+   :align: center
+   :height: 450px
+   :alt: alternate text
+   :figclass: align-center 
+   
+   Overview of the measurement board.
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0002.jpg       
-       :width: 600px
-       :align: center
-       :height: 450px
-       :alt: alternate text
-       :figclass: align-center 
+   :width: 600px
+   :align: center
+   :height: 450px
+   :alt: alternate text
+   :figclass: align-center 
 
-Schematic of the DPS (digital power source) power supply.
+   Schematic of the power supply.
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0003.jpg       
-       :width: 600px
-       :align: center
-       :height: 450px
-       :alt: alternate text
-       :figclass: align-center 
+   :width: 600px
+   :align: center
+   :height: 450px
+   :alt: alternate text
+   :figclass: align-center 
 
-Schematic of the Vmn signal conditioning.
+   Schematic of the DPS (digital power source) power supply.
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0004.jpg       
-       :width: 600px
-       :align: center
-       :height: 450px
-       :alt: alternate text
-       :figclass: align-center
+   :width: 600px
+   :align: center
+   :height: 450px
+   :alt: alternate text
+   :figclass: align-center
 
-Schematic of the current injection and measurement.
+   Schematic of the Vmn signal conditioning.
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0005.jpg       
-       :width: 600px
-       :align: center
-       :height: 450px
-       :alt: alternate text
-       :figclass: align-center    
+   :width: 600px
+   :align: center
+   :height: 450px
+   :alt: alternate text
+   :figclass: align-center    
 
-Schematic of the human-machine interface.
+   Schematic of the current injection and measurement.
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0006.jpg       
-       :width: 600px
-       :align: center
-       :height: 450px
-       :alt: alternate text
-       :figclass: align-center    
+   :width: 600px
+   :align: center
+   :height: 450px
+   :alt: alternate text
+   :figclass: align-center    
+
+   Schematic of the human-machine interface.
 
 Required components 
 ~~~~~~~~~~~~~~~~~~~~
@@ -104,6 +106,7 @@ Description
 
 Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundamentals/what-is-a-resistor/#>`_ on the measurement board PCB
 
+
 .. table::
    :align: center
    
@@ -113,11 +116,21 @@ Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundame
    |        | Soldering thirteen 100 kOhm resistors                             |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/2.jpg                       |
    |        |                                                                   |
    |      2 +-------------------------------------------------------------------+
    |        | Soldering four 330 ohm resistors                                  |
    |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/3.jpg                       |
    |      3 +-------------------------------------------------------------------+
@@ -149,35 +162,70 @@ Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-d
    |        | Soldering two Schottky diodes bat85 ou bat86                      |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/6.jpg                       |
    |      6 +-------------------------------------------------------------------+
    |        | Soldering five DIP-8 sockets                                      |
    |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/7.jpg                       |
    |      7 +-------------------------------------------------------------------+
    |        | Soldering two DIP-18 sockets                                      |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/8.jpg                       |
    |      8 +-------------------------------------------------------------------+
    |        | Soldering one DIP-16 sockets                                      |
    |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/9.jpg                       |
    |      9 +-------------------------------------------------------------------+
    |        | Soldering twelve cut sockets for 3 THD                            |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/10.jpg                      |
    |     10 +-------------------------------------------------------------------+
    |        | Soldering header socket 1 row 10 positions                        |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/11.jpg                      |
    |     11 +-------------------------------------------------------------------+
    |        | Soldering two header sockets with 1 row and 8 positions           |
    |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/12.jpg                      |
    |     12 +-------------------------------------------------------------------+
@@ -224,6 +272,11 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
    |        | Soldering eleven 100 nF 50V tantalum capacitors                   |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/16.jpg                      |
    |     16 +-------------------------------------------------------------------+
    |        | Soldering ten 10 µF 50V Electrolytic capacitors, **pay attention**|
@@ -245,21 +298,41 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
    |        | Soldering the 2 ohms shunt resistor                               |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/18.jpg                      |
    |     18 +-------------------------------------------------------------------+
    |        | Soldering the two IDC 6 pins connectors.                          |
    |        | **pay attention to the connectors orientation**                   |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/19.jpg                      |
    |     19 +-------------------------------------------------------------------+
    |        | Soldering six screw terminals for cable connection                |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/20.jpg                      |
    |     20 +-------------------------------------------------------------------+
    |        | Soldering six omron G5LE relays 5 VDC                             |
    |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/21.jpg                      |
    |     21 +-------------------------------------------------------------------+
@@ -271,6 +344,8 @@ What is a `Op-Amp <https://en.wikipedia.org/wiki/Operational_amplifier>`_?
 
 In addition, the notch provides a way to visually identify the orientation of the package.
 
+.. table::
+   :align: center
 
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/22.jpg                      |
@@ -278,6 +353,11 @@ In addition, the notch provides a way to visually identify the orientation of th
    |        | Place the three OP27 on their DIP-8 sockets                       |
    |        | **the notch must face upwards**                                   |
    |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/23.jpg                      |
    |     23 +-------------------------------------------------------------------+
@@ -287,12 +367,20 @@ In addition, the notch provides a way to visually identify the orientation of th
    +--------+-------------------------------------------------------------------+
 
 What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
-   
+
+.. table::
+   :align: center
+
    +--------+-------------------------------------------------------------------+   
    |        |   .. image:: ../../../img/mb.2024.x.x/24.jpg                      |
    |     24 +-------------------------------------------------------------------+
    |        | Place the DG411 **the notch must face the left side**             |
    |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/25.jpg                      |
    |     25 +-------------------------------------------------------------------+
@@ -300,27 +388,52 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
    |        | **pay attention to the notches orientation**                      |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/26.jpg                      |
    |     26 +-------------------------------------------------------------------+
    |        | Place the Three THD, install the right reference at               |
    |        | the right place according to the yellow boxes                     |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/27.jpg                      |
    |     27 +-------------------------------------------------------------------+
    |        | Place the ADS1115 board on its female header 1x10 pins            |
    |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/28.jpg                      |
    |     28 +-------------------------------------------------------------------+
    |        | Place the two I2C level adjusters                                 |
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
+   +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/29.jpg                      |
    |     29 +-------------------------------------------------------------------+
    |        | Place the I2C isolator add-on board                               |
    |        | **make sure you have right selection**  according to the red box  |
    |        |                                                                   |
+   +--------+-------------------------------------------------------------------+
+
+.. table::
+   :align: center
+
    +--------+-------------------------------------------------------------------+
    |        |   .. image:: ../../../img/mb.2024.x.x/30.jpg                      |
    |     30 +-------------------------------------------------------------------+
