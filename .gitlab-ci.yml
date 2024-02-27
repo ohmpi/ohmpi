@@ -10,9 +10,9 @@ pages:
   - pip install numpy pandas termcolor paho-mqtt zmq tqdm  # top import of Ohmpi.py
   - pip install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark linuxdoc
   - cd doc
-  - make html
   - make latexpdf
   - mv build/latex/ohmpi.pdf source/_static/ohmpi.pdf
+  - make html
   - cd ..
   - mv doc/build/html/ public/
   - ls public/
