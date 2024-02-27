@@ -53,7 +53,7 @@ class Ctl(CtlAbstract):
 
         self.reset_modbus()
 
-    def reset_modbus(self):
+    def reset_modbus(self,**kwargs):
         # modbus
         try:
             self.interfaces['modbus'] = minimalmodbus.Instrument(port=kwargs['modbus_port'],
