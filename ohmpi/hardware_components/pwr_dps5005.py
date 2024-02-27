@@ -68,7 +68,7 @@ class Pwr(PwrAbstract):
         self.exec_logger.event(f'{self.model}\tset_voltage\tbegin\t{datetime.datetime.utcnow()}')
         if value != self._voltage:
             self.connection.write_register(0x0000, value, 2)
-            time.sleep(1 - (value/self._voltage))  # wait to enable DPS to reach new voltage as a function of difference between new and previous voltage
+            time.sleep(1 - max([0,(self._voltage/value)]))  # wait to enable DPS to reach new voltage as a function of difference between new and previous voltage
         self.exec_logger.event(f'{self.model}\tset_voltage\tend\t{datetime.datetime.utcnow()}')
         self._voltage = value
 
