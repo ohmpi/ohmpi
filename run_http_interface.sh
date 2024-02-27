@@ -1,3 +1,3 @@
 export PYTHONPATH=`pwd`
 source $PYTHONPATH/ohmpy/bin/activate
-python start_mqtt_html.py
+python3 start_mqtt_html.py
