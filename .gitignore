@@ -8,4 +8,5 @@ ohmpy/*
 logs/*
 sequence.txt
 /Proposition interface.odp
-
+doc/build/*
+doc/_static/*.pdf

@@ -33,6 +33,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         <!-- <button id="removeDataBtn" type="button" class="btn btn-danger">Clear data</button> -->
         <button id="rmDataModal" type="button" class="btn btn-danger" data-toggle="modal" data-target="#rmModal">Clear data</button>
         <button id="getDataBtn" type="button" class="btn btn-info">Get data</button>
+        <div><b id='connection'>Connecting...</b></div>
         <div class="form-check">
             <input id="dataRetrievalCheck" class="form-check-input" type="checkbox" value="">
             <label class="form-check-label" for="dataRetrievalCheck">
@@ -189,13 +190,16 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         let commands = {} // store commands and their id
         let callbacks = {} // store callback (might not be needed)
         let invertedData = [{
-            rho: [[10, 10.625, 12.5, 15.625, 20],
-                    [5.625, 6.25, 8.125, 11.25, 15.625],
-                    [2.5, 3.125, 5., 8.125, 12.5],
-                    [0.625, 1.25, 3.125, 6.25, 10.625],
-                    [0, 0.625, 2.5, 5.625, 10]],
-            x: [-9, -6, -5 , -3, -1],
-            y: [0, 1, 4, 5, 7],
+            // rho: [[10, 10.625, 12.5, 15.625, 20],
+            //         [5.625, 6.25, 8.125, 11.25, 15.625],
+            //         [2.5, 3.125, 5., 8.125, 12.5],
+            //         [0.625, 1.25, 3.125, 6.25, 10.625],
+            //         [0, 0.625, 2.5, 5.625, 10]],
+            // x: [-9, -6, -5 , -3, -1],
+            // y: [0, 1, 4, 5, 7],
+            rho: [],
+            x: [],
+            y: []
         }] // store inverted data
 
         // function with MQTT
@@ -227,9 +231,11 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             message = new Paho.MQTT.Message("Hello from index.html")
             message.destinationName = topic_ctrl
             client.send(message)
+            document.getElementById('connection').innerText = 'Connected'
         }
 
         function onConnectionLost(responseObject) {
+            document.getElementById('connection').innerText = 'Connecting...'
             if (responseObject.errorCode !== 0)
                 console.log("onConnectionLost:" + responseObject.errorMessage)
                 console.log("trying to reconnect...")
@@ -660,7 +666,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             surveySelect.value = surveyNames[surveyNames.length - 1]
             
             // call the function directly
-            // (as progammatically chaging the value does not trigger the event)
+            // (as progammatically changing the value does not trigger the event)
             surveySelectFunc({'target': surveySelect})
 
             // update list of survey for inversion
