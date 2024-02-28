@@ -36,7 +36,6 @@ SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
                 'r_shunt':  {'min': 0.001, 'default': 2.},
                 'activation_delay': {'default': 0.010},  # Max turn on time of OMRON G5LE-1 5VDC relays
                 'release_delay': {'default': 0.005},  # Max turn off time of OMRON G5LE-1 5VDC relays = 1ms
-                'pwr_latency': {'default': 4.}
                 }}
 
 # TODO: move low_battery spec in pwr
@@ -80,8 +79,7 @@ class Tx(Tx_mb_2023):
         super().__init__(**kwargs)
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
-        self._pwr_latency = kwargs['pwr_latency']
-        self._current = 0
+
         # Initialize LEDs
         if self.connect:
             self.pin4 = self.mcp_board.get_pin(4)  # OhmPi_run
@@ -117,6 +115,13 @@ class Tx(Tx_mb_2023):
         elif mode == "off":
             self.pin5.value = False
 
+    def discharge_pwr(self, latency=None):
+        if latency is None:
+            latency = self.pwr._pwr_discharge_latency
+
+        time.sleep(latency)
+
+
     def inject(self, polarity=1, injection_duration=None):
         # add leds?
         self.pin6.value = True
@@ -141,7 +146,8 @@ class Tx(Tx_mb_2023):
             self.pin3.value = True
             self.exec_logger.debug(f'Switching DPS on')
             self._pwr_state = 'on'
-            time.sleep(self._pwr_latency) # from pwr specs
+            time.sleep(self.pwr._pwr_latency) # from pwr specs
+
         elif state == 'off':
             self.pin2.value = False
             self.pin3.value = False

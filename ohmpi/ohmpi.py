@@ -441,9 +441,9 @@ class OhmPi(object):
     def download_data(self, cmd_id=None):
         """Create a zip of the data folder to then download it easily.
         """
-        datadir = os.path.split(self.settings['export_path'])
-        # datadir = os.path.join(os.path.dirname(__file__), '../data/')
-        make_archive(datadir, 'zip', 'data')
+        datadir, _ = os.path.split(self.settings['export_path'])
+        zippath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
+        make_archive(zippath, 'zip', datadir)
         self.data_logger.info(json.dumps({'download': 'ready'}))
 
     def shutdown(self, cmd_id=None):
@@ -1065,6 +1065,75 @@ class OhmPi(object):
             export_dir = os.path.split(os.path.dirname(__file__))[0]
             self.settings['export_path'] = os.path.join(export_dir, self.settings['export_path'])
 
+    def export(self, fnames=None, outputdir=None, ftype='bert', elec_spacing=1):
+        """Export surveys stored in the 'data/' folder into an output
+        folder.
+
+        Parameters
+        ----------
+        fnames : list of str, optional
+            List of path (not filename) to survey in ohmpi format to be converted.
+        outputdir : str, optional
+            Path of the output directory where the new files are stored. If None,
+            a directory called 'output' is created in OhmPi.
+        ftype : str, optional
+            Type of export. To be chosen between:
+            - bert (same as pygimli)
+            - pygimli (same as bert)
+            - protocol (for resipy, R2 codes)
+        elec_spacing : float, optional
+            Electrode spacing in meters. Same electrode spacing is assumed.
+        """
+        # handle parameters default values
+        if fnames is None:
+            datadir = os.path.join(os.path.dirname(__file__), '../data/')
+            fnames = [os.path.join(datadir, f) for f in os.listdir(datadir) if f[-4:] == '.csv']
+        if outputdir is None:
+            outputdir = os.path.join(os.path.dirname(__file__), '../output/')
+            if os.path.exists(outputdir) is False:
+                os.mkdir(outputdir)
+        
+        # define parser
+        def ohmpi_parser(fname):
+            df = pd.read_csv(fname)
+            df = df.rename(columns={'A': 'a', 'B': 'b', 'M': 'm', 'N': 'n'})
+            df['vp'] = df['Vmn [mV]']
+            df['i'] = df['I [mA]']
+            df['resist'] = df['vp']/df['i']
+            df['ip'] = np.nan
+            emax = np.max(df[['a', 'b', 'm', 'n']].values)
+            elec = np.zeros((emax, 3))
+            elec[:, 0] = np.arange(emax) * elec_spacing
+            return elec, df[['a', 'b', 'm', 'n', 'vp', 'i', 'resist', 'ip']]
+        
+        # read all files and save them in the desired format
+        for fname in tqdm(fnames):
+            try:
+                elec, df = ohmpi_parser(fname)
+                fout = os.path.join(outputdir, os.path.basename(fname).replace('.csv', ''))
+                if ftype == 'protocol':
+                    fout = fout + '.dat'
+                    with open(fout, 'w') as f:
+                        f.write('{:d}\n'.format(df.shape[0]))
+                    with open(fout, 'a') as f:
+                        df['index'] = np.arange(1, df.shape[0]+1)
+                        df[['index', 'a', 'b', 'm', 'n', 'resist']].to_csv(
+                            f, index=False, sep=' ', header=False)
+                elif ftype == 'bert' or ftype == 'pygimli':
+                    fout = fout + '.dat'
+                    with open(fout, 'w') as f:
+                        f.write('{:d} # positions electrodes\n'.format(elec.shape[0]))
+                        f.write('#\tx\ty\tz\n')
+                        for j in range(elec.shape[0]):
+                            f.write('{:.2f}\t{:.2f}\t{:.2f}\n'.format(*elec[j, :]))
+                        f.write('{:d} # number of data\n'.format(df.shape[0]))
+                        f.write('#\ta\tb\tm\tn\tR\n')
+                    with open(fout, 'a') as f:
+                        df[['a', 'b', 'm', 'n', 'resist']].to_csv(
+                            f, index=False, sep='\t', header=False)
+            except Exception as e:
+                print('export(): could not save file', fname)
+
     def run_inversion(self, survey_names=None, elec_spacing=1, **kwargs):
         """Run a simple 2D inversion using ResIPy (https://gitlab.com/hkex/resipy).
         
@@ -1108,7 +1177,7 @@ class OhmPi(object):
             from scipy.interpolate import griddata  # noqa
             import pandas as pd  # noqa
             import sys
-            sys.path.append(os.path.join(pdir, '/home/pi/resipy/src'))
+            sys.path.append(os.path.join(pdir, '../../resipy/src'))
             from resipy import Project  # noqa
         except Exception as e:
             self.exec_logger.error('Cannot import ResIPy, scipy or Pandas, error: ' + str(e))
