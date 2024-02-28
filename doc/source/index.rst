@@ -41,7 +41,8 @@ Contents:
    source_rst/gallery
    source_rst/archived_version
 
-  
+
+`PDF version of this documentation <_static/ohmpi.pdf>`_
 
   
 
