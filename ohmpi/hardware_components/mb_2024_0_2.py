@@ -151,6 +151,7 @@ class Tx(Tx_mb_2023):
 
         elif state == 'off':
             self.exec_logger.event(f'{self.model}\ttx_pwr_state_off\tbegin\t{datetime.datetime.utcnow()}')
+            self.pwr.pwr_state = 'off'
             self.pin2.value = False
             self.pin3.value = False
             self.exec_logger.debug(f'Switching DPS off')
