@@ -25,7 +25,10 @@ echo "----------- Setting RPi parameters (I2C, GPIO, ...) --------"
 
 # install a second i2c bus
 sudo apt-get install -y i2c-tools
+echo "Setting up second I2C bus for old RPi OS versions... This might not work for newer RPi OS versions..."
 echo -e "[all]\ndtoverlay=i2c-gpio,bus=4,i2c_gpio_delay_us=1,i2c_gpio_sda=22,i2c_gpio_scl=23" | sudo tee -a /boot/config.txt
+echo "Setting up second I2C bus for newer RPi OS versions... This might not work for older RPi OS versions..."
+echo -e "[all]\ndtoverlay=i2c-gpio,bus=4,i2c_gpio_delay_us=1,i2c_gpio_sda=22,i2c_gpio_scl=23" | sudo tee -a /boot/firmware/config.txt
 
 echo "-------------- Install local MQTT broker --------------"
 

@@ -139,7 +139,7 @@ class OhmPiHardware:
             self.tx = tx_module.Tx(**self.tx)
         self.tx.pwr = self.pwr
         if not self.tx.pwr.voltage_adjustable:
-            self.tx._pwr_latency = 0
+            self.tx.pwr._pwr_latency = 0
         self.tx.polarity = 0
         self.tx.pwr._current_max = current_max
 
@@ -585,10 +585,16 @@ class OhmPiHardware:
             ### if discharge relay manually add on mb_2024_0_2, then should not activate AB relays but simply wait for automatic discharge
             ### if mb_20240_1_X then TX should handle the pwr discharge
 
-            time.sleep(1.0)
+            # time.sleep(1.0)
+            self.tx.discharge_pwr()
 
     def _plot_readings(self, save_fig=False, filename=None):
         # Plot graphs
+        flag = False
+        if self.sp is None:
+            flag = True
+            print('self.sp is None, setting it 0')
+            self.sp = 0
         warnings.filterwarnings("ignore", category=DeprecationWarning)
         fig, ax = plt.subplots(nrows=5, sharex=True)
         ax[0].plot(self.readings[:, 0], self.readings[:, 3], '-r', marker='.', label='iab')
@@ -603,6 +609,8 @@ class OhmPiHardware:
         ax[3].set_ylabel('R [ohm]')
         ax[4].plot(self.readings[v, 0], np.ones_like(self.readings[v, 0]) * self.sp, '-k', marker='.', label='SP [mV]')
         ax[4].set_ylabel('SP [mV]')
+        if flag:  # if it was None, we put it back to None to not interfere with the rest
+            self.sp = None
         # fig.legend()
         if save_fig:
             if filename is None:

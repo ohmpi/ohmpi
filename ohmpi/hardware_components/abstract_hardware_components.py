@@ -62,6 +62,7 @@ class PwrAbstract(ABC):
         self.switchable = False
         self.connection = kwargs.pop('connection', None)
         self._battery_voltage = np.nan
+        self._pwr_discharge_latency = np.nan
 
     @property
     @abstractmethod
@@ -391,6 +392,17 @@ class TxAbstract(ABC):
     @measuring.setter
     def measuring(self, mode="off"):
         self._measuring = mode
+
+    def discharge_pwr(self, latency=None):
+        if self.pwr.voltage_adjustable:
+            if latency is None:
+                latency = self.pwr._pwr_discharge_latency
+            self.exec_logger.debug(f'Pwr discharge initiated for {latency} s')
+
+            time.sleep(latency)
+
+        else:
+            self.exec_logger.debug(f'Pwr discharge not supported by {self.pwr.model}')
 
     @property
     def polarity(self):
