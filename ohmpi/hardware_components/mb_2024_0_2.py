@@ -141,17 +141,21 @@ class Tx(Tx_mb_2023):
                 'on', 'off'
             """
         if state == 'on':
+            self.exec_logger.event(f'{self.model}\ttx_pwr_state_on\tbegin\t{datetime.datetime.utcnow()}')
             self.pin2.value = True
             self.pin3.value = True
             self.exec_logger.debug(f'Switching DPS on')
             self._pwr_state = 'on'
             time.sleep(self.pwr._pwr_latency) # from pwr specs
+            self.exec_logger.event(f'{self.model}\ttx_pwr_state_on\tend\t{datetime.datetime.utcnow()}')
 
         elif state == 'off':
+            self.exec_logger.event(f'{self.model}\ttx_pwr_state_off\tbegin\t{datetime.datetime.utcnow()}')
             self.pin2.value = False
             self.pin3.value = False
             self.exec_logger.debug(f'Switching DPS off')
             self._pwr_state = 'off'
+            self.exec_logger.event(f'{self.model}\ttx_pwr_state_off\tend\t{datetime.datetime.utcnow()}')
 
     @property
     def polarity(self):
