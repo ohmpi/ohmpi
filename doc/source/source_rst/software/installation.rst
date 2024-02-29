@@ -15,6 +15,8 @@ Then connect to the Raspberry Pi either via ssh or using an external monitor.
 
 For all questions related to Raspberry Pi operations, please refer to the official `documentation <https://www.raspberrypi.com/documentation/>`_
 
+In the "Raspberry Pi Configuration" (graphically: start button > Preferences > Raspberry Pi Configuration; in command line: `raspi-config` ), in the 'Interfaces' tab, make sure **I2C is enabled**. That will allow the Pi to communicate with the OhmPi measurement board.
+
 Step 2: Clone the OhmPi project
 ===============================
 
@@ -22,12 +24,20 @@ You need to clone the OhmPi repository on the Raspberry Pi with the following co
 
 .. code-block:: bash
 
-   git clone https://gitlab.irstea.fr/reversaal/OhmPi.git
+   git clone https://gitlab.com/ohmpi/ohmpi.git
+
+Note that the project moved from the Gitlab IRSTEA to gitlab.com in January 2024. The Gitlab IRSTEA is synced as a read-only clone from the gitlab.com.
 
 Step 3: Run the installation script
 ===================================
 
-Simply navigate to the OhmPi folder and run the following command on the terminal:
+Simply navigate to the OhmPi folder:
+
+.. code-block:: bash
+
+   cd ohmpi
+
+And run the following command on the terminal:
 
 .. code-block:: bash
 
@@ -36,7 +46,7 @@ Simply navigate to the OhmPi folder and run the following command on the termina
 The install script:
 
 - creates an **python virtual environment** called "ohmpy" in which all dependencies will be installed;
-- installs all **dependecies** specified in requirements.txt;
+- installs all **dependencies** specified in requirements.txt;
 - installs a **local MQTT broker** which will be used to centralize all the communication between the hardware, the software and the interfaces;
 - configures the **I2C buses** on the Raspberry Pi.
 
