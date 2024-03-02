@@ -1140,7 +1140,7 @@ class OhmPi(object):
         # handle parameters default values
         if fnames is None:
             datadir = os.path.join(os.path.dirname(__file__), '../data/')
-            fnames = [os.path.join(datadir, f) for f in os.listdir(datadir) if f[-4:] == '.csv']
+            fnames = [os.path.join(datadir, f) for f in os.listdir(datadir) if (f[-4:] == '.csv' and f[-7:] != '_rs.csv')]
         if outputdir is None:
             outputdir = os.path.join(os.path.dirname(__file__), '../output/')
         if os.path.exists(outputdir) is False:
