@@ -29,6 +29,8 @@ from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import ohmpi.deprecated as deprecated
 from ohmpi.hardware_system import OhmPiHardware
+from ohmpi.sequence import (dpdp1, dpdp2, wenner_alpha, wenner_beta, wenner,
+                          wenner_gamma, schlum1, schlum2, multigrad)
 from tqdm.auto import tqdm
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
@@ -227,6 +229,59 @@ class OhmPi(object):
                 w = csv.DictWriter(f, last_measurement.keys())
                 w.writeheader()
                 w.writerow(last_measurement)
+
+    def create_sequence(self, nelec, params=[('dpdp', 1, 8)], ireciprocal=False, fpath=None):
+        """Creates a sequence of quadrupole. The sequence is saved automatically
+        to sequences/mysequence.csv and used within OhmPi class. Several type of
+        sequence or sequence with different parameters can be combined together.
+
+        Parameters
+        ----------
+        nelec : int
+            Number of electrodes.
+        params : list of tuple, optional
+            Each tuple is the form (<array_name>, param1, param2, ...)
+            Dipole spacing is specified in terms of "number of electrode spacing".
+            Dipole spacing is often referred to 'a'. Number of levels is a multiplier
+            of 'a', often refere to 'n'. For multigradient array, an additional parameter
+            's' is needed.
+            Types of sequences available are :
+            - ('wenner', a)
+            - ('dpdp', a, n)
+            - ('schlum', a, n)
+            - ('multigrad', a, n, s)
+        ireciprocal : bool, optional
+            If True, will add reciprocal quadrupoles (so MNAB) to the sequence.
+        fpath : str, optional
+            Path where to save the sequence (including filename and extension). By
+            default, sequence is saved in ohmpi/sequences/sequence.txt.
+        """
+        # dictionnary of function to create sequence
+        fdico = {
+            'dpdp': dpdp1, 
+            'wenner': wenner,
+            'schlum': schlum1,
+            'multigrad': multigrad,
+        }
+        # check arguments
+        if fpath is None:
+            fpath = os.path.join(os.path.dirname(__file__), '../sequences/sequence.txt')
+        qs = []
+
+        # create sequence
+        for p in params:
+            pok = [int(p[i]) for i in np.arange(1, len(p))]  # make sure all are int
+            qs.append(fdico[p[0]](nelec, *pok).values.astype(int))
+        quad = np.vstack(qs)
+
+        # add reciprocal
+        if ireciprocal:
+            quad = np.r_[quad, quad[[2, 3, 0, 1]]]
+        self.sequence = quad
+
+        # save sequence
+        np.savetxt(fpath, self.sequence, delimiter=' ', fmt='%d')
+        print('{:d} quadrupoles generated.'.format(self.sequence.shape[0]))
 
     @staticmethod
     def _find_identical_in_line(quads):
@@ -1086,8 +1141,9 @@ class OhmPi(object):
             fnames = [os.path.join(datadir, f) for f in os.listdir(datadir) if f[-4:] == '.csv']
         if outputdir is None:
             outputdir = os.path.join(os.path.dirname(__file__), '../output/')
-            if os.path.exists(outputdir) is False:
-                os.mkdir(outputdir)
+        if os.path.exists(outputdir) is False:
+            os.mkdir(outputdir)
+        ftype = ftype.lower()
         
         # define parser
         def ohmpi_parser(fname):
