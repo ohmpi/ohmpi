@@ -273,10 +273,12 @@ class OhmPi(object):
             pok = [int(p[i]) for i in np.arange(1, len(p))]  # make sure all are int
             qs.append(fdico[p[0]](nelec, *pok).values.astype(int))
         quad = np.vstack(qs)
+        if len(quad.shape) == 1:  # only one quadrupole
+            quad = quad[None, :]
 
         # add reciprocal
         if ireciprocal:
-            quad = np.r_[quad, quad[[2, 3, 0, 1]]]
+            quad = np.r_[quad, quad[:, [2, 3, 0, 1]]]
         self.sequence = quad
 
         # save sequence
@@ -1138,7 +1140,7 @@ class OhmPi(object):
         # handle parameters default values
         if fnames is None:
             datadir = os.path.join(os.path.dirname(__file__), '../data/')
-            fnames = [os.path.join(datadir, f) for f in os.listdir(datadir) if f[-4:] == '.csv']
+            fnames = [os.path.join(datadir, f) for f in os.listdir(datadir) if (f[-4:] == '.csv' and f[-7:] != '_rs.csv')]
         if outputdir is None:
             outputdir = os.path.join(os.path.dirname(__file__), '../output/')
         if os.path.exists(outputdir) is False:

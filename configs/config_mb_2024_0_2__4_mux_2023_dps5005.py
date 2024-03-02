@@ -64,7 +64,7 @@ HARDWARE_CONFIG = {
                           'electrodes': range(1, 65),
                           }
                  },
-            'default': {'interface_name': 'i2c',
+            'default': {'interface_name': 'i2c_ext',
                              'voltage_max': 50.,
                              'current_max': 3.}
                 }
