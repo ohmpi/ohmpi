@@ -148,6 +148,12 @@ class Tx(Tx_mb_2023):
             self._pwr_state = 'on'
             time.sleep(self.pwr._pwr_latency) # from pwr specs
             self.exec_logger.event(f'{self.model}\ttx_pwr_state_on\tend\t{datetime.datetime.utcnow()}')
+            self.pwr.battery_voltage()
+            if self.pwr.voltage_adjustable:
+                if self.pwr._battery_voltage < 11.8:
+                    self.exec_logger.warning(f'TX Battery voltage from {self.pwr.model} = {self.pwr._battery_voltage} V')
+                else:
+                    self.exec_logger.info(f'TX Battery voltage from {self.pwr.model} = {self.pwr._battery_voltage} V')
 
         elif state == 'off':
             self.exec_logger.event(f'{self.model}\ttx_pwr_state_off\tbegin\t{datetime.datetime.utcnow()}')
