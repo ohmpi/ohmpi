@@ -92,7 +92,7 @@ if within_ohmpi:
     # A, B, M, N = (32, 29, 31, 30)
     k.reset_mux()
     k.load_sequence('sequences/ABMN2.txt')
-    k.run_sequence(tx_volt=50, injection_duration=1., nb_stack=2, duty_cycle=0.5)
+    k.run_sequence(vab=50, injection_duration=1., nb_stack=2, duty_cycle=0.5)
     print('using OhmPi')
     #d = k.run_measurement([A, B, M, N], injection_duration=1., nb_stack=2, duty_cycle=0.5)
     # print(d)
