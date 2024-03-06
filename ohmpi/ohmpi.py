@@ -58,7 +58,7 @@ class OhmPi(object):
         settings : dict, optional
             Dictionnary of parameters. Possible parameters with their default values:
             `{'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
-            'nb_stack': 1, 'sampling_interval': 2, 'tx_volt': 5, 'duty_cycle': 0.5,
+            'nb_stack': 1, 'sampling_interval': 2, 'vab': 5, 'duty_cycle': 0.5,
             'strategy': 'constant', 'export_path': None
         sequence : str, optional
             Path of the .csv or .txt file with A, B, M and N electrodes.
@@ -520,12 +520,12 @@ class OhmPi(object):
         self._hw._plot_readings(save_fig=save_fig, filename=filename)
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
-                        autogain=True, strategy=None, tx_volt=None, best_tx_injtime=0.1,
+                        autogain=True, strategy=None, tx_volt=None, vab=None, best_tx_injtime=0.1,
                         cmd_id=None, vab_max=None, iab_max=None, vmn_max=None, vmn_min=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value,
         #  change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used
-        #  in function definition
+        #  in function definition -> (GB) default values are in self.settings.
         """Measures on a quadrupole and returns a dictionnary with the transfer resistance.
 
         Parameters
@@ -541,15 +541,15 @@ class OhmPi(object):
         duty_cycle : float, optional
             Duty cycle (default=0.5) of injection square wave.
         strategy : str, optional, default: constant
-            Define injection strategy (if power is adjustable, otherwise constant tx_volt, generally 12V battery is used).
+            Define injection strategy (if power is adjustable, otherwise constant vab, generally 12V battery is used).
             Either:
             - vmax : compute Vab to reach a maximum Vmn_max and Iab without exceeding vab_max
             - vmin : compute Vab to reach at least Vmn_min
-            - constant : apply given Vab (tx_volt) but checks if expected readings not out-of-range
-            - full_constant: apply given Vab (tx_volt) with no out-of-range checks for optimising duration at the risk of out-of-range readings
+            - constant : apply given Vab but checks if expected readings not out-of-range
+            - full_constant: apply given Vab with no out-of-range checks for optimising duration at the risk of out-of-range readings
             Safety check (i.e. short voltage pulses) performed prior to injection to ensure
             injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
-            To bypass safety check before injection, tx_volt should be set equal to vab_max (not recpommanded)
+            To bypass safety check before injection, vab should be set equal to vab_max (not recpommanded)
         vab_max : str, optional
             Maximum injection voltage.
             Default value set by config or boards specs
@@ -562,7 +562,9 @@ class OhmPi(object):
         vmn_min :
             Minimum Vmn desired (used in strategy vmin).
             Default value set by config or boards specs
-        tx_volt : float, optional  # TODO: change tx_volt to Vab
+        tx_volt : float, optional  # deprecated
+            For power adjustable only. If specified, voltage will be imposed.
+        vab : float, optional
             For power adjustable only. If specified, voltage will be imposed.
         cmd_id : str, optional
             Unique command identifier.
@@ -587,6 +589,11 @@ class OhmPi(object):
             duty_cycle = self.settings['duty_cycle']
         if tx_volt is None and 'tx_volt' in self.settings:
             tx_volt = self.settings['tx_volt']
+        if vab is None and 'vab' in self.settings:
+            vab = self.settings['vab']
+        if vab is None and tx_volt is not None:
+            warnings.warn('"tx_volt" argument is deprecated and will be removed in future version. Use "vab" instead to set the transmitter voltage in volts.', DeprecationWarning)
+            vab = tx_volt
         if strategy is None and 'strategy' in self.settings:
             strategy = self.settings['strategy']
         if vab_max is None and 'vab_max' in self.settings:
@@ -612,7 +619,7 @@ class OhmPi(object):
         switch_pwr_on.join()
         status = q.get()
         if status:
-            vab = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
+            vab = self._hw.compute_vab(vab=vab, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
                                                iab_max=iab_max, vmn_min=vmn_min)
             # time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
@@ -673,7 +680,7 @@ class OhmPi(object):
 
             # if strategy not constant, then switch dps off (button) in case following measurement within sequence
             # TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
-            if (strategy == 'vmax' or strategy == 'vmin') and vab - tx_volt > 5.:  # if starting tx_volt was too far (> 5 V) from actual vab, then turn pwr off
+            if (strategy == 'vmax' or strategy == 'vmin') and vab - vab > 5.:  # if starting vab was too far (> 5 V) from actual vab, then turn pwr off
                 self._hw.tx.pwr.pwr_state = 'off'
 
                 # Discharge DPS capa
@@ -889,7 +896,7 @@ class OhmPi(object):
     # TODO: we could build a smarter RS-Check by selecting adjacent electrodes based on their locations and try to
     #  isolate electrodes that are responsible for high resistances (ex: AB high, AC low, BC high
     #  -> might be a problem at B (cf what we did with WofE)
-    def rs_check(self, tx_volt=5.0, cmd_id=None, couple=None):
+    def rs_check(self, vab=5, cmd_id=None, couple=None, tx_volt=None):
         # TODO: add a default value for rs-check in config.py import it in ohmpi.py and add it in rs_check definition
         """Checks contact resistances.
         Strategy: we just open A and B, measure the current and using vAB set or
@@ -897,12 +904,20 @@ class OhmPi(object):
 
         Parameters
         ----------
-        tx_volt : float
+        vab : float, optional
             Voltage of the injection.
         couple  : array, for selecting a couple of electrode for checking resistance
         cmd_id : str, optional
             Unique command identifier.
+        tx_volt : float, optional DEPRECATED
+            Save as vab.
         """
+        # check arguments
+        if tx_volt is not None:
+            warnings.warn('"tx_volt" is deprecated and will be removed in future version. Please use "vab" instead.',
+                DeprecationWarning)
+            vab = tx_volt
+
         # check pwr is on, if not, let's turn it on
         switch_tx_pwr_off = False
         if self._hw.pwr_state == 'off':
@@ -947,7 +962,7 @@ class OhmPi(object):
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole
             self._hw.switch_mux(electrodes=list(quads[i, :2]), roles=['A', 'B'], state='on')
-            self._hw._vab_pulse(duration=0.2, vab=tx_volt)
+            self._hw._vab_pulse(duration=0.2, vab=vab)
             current = self._hw.readings[-1, 3]
             vab = self._hw.tx.pwr.voltage
             print(vab, current)
@@ -1106,7 +1121,7 @@ class OhmPi(object):
                 self.exec_logger.debug('Acquisition parameters updated: ' + str(self.settings))
                 self.status = 'idle (acquisition updated)'
             except Exception as e:  # noqa
-                self.exec_logger.warning('Unable to update settings.')
+                self.exec_logger.warning('Unable to update settings. Error: ' + str(e))
                 self.status = 'idle (unable to update settings)'
         else:
             self.exec_logger.warning('Settings are missing...')

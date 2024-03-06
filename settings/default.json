@@ -4,7 +4,7 @@
     "sequence_delay": 1,
     "nb_stack": 1,
     "sampling_interval": 2,
-    "tx_volt": 5,
+    "vab": 5,
     "duty_cycle": 0.5,
     "strategy": "constant",
     "fw_in_csv": true,

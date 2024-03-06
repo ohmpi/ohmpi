@@ -77,16 +77,16 @@ if part_of_hardware_system:
 if within_ohmpi:
     from ohmpi.ohmpi import OhmPi
     # from ohmpi.plots import plot_exec_log
-
     print('Starting test with OhmPi.')
     k = OhmPi()
-    # A, B, M, N = (32, 29, 31, 30)
-    # k.reset_mux()
+    time.sleep(2)
+    k.reset_mux()
     # k.create_sequence(nelec=6, params=[('wenner', 1)], ireciprocal=True)
+    # k.rs_check()
     # print(k.sequence)
-    # k.run_sequence(cycles=1, tx_vold=5, cycle_duration=0.2)
+    # k.run_sequence(cycles=1, vab=5, strategy='constant', injection_duration=1)
     # k.plot_last_fw()
-    k.export(ftype='bert')
+    # k.export(ftype='bert')
     # k.export(fnames=['data/measurements_20240226T180635.csv'], ftype='bert')
     # k.download_data()
     # k.test_mux(mux_id='mux_03')
@@ -99,6 +99,7 @@ if within_ohmpi:
     # k._hw._plot_readings()
     # A, B, M, N = (1, 4, 2, 3)
     # A, B, M, N = (5, 8, 6, 7)
+    # A, B, M, N = (32, 29, 31, 30)
     # k._hw.switch_mux([A, B, M, N], state='on')
     # k._hw.vab_square_wave(5., cycle_duration=0.500, cycles=2, duty_cycle=0.5) 
     # k._hw.switch_mux([A, B, M, N], state='off')
@@ -106,8 +107,9 @@ if within_ohmpi:
     # if k._hw.sp is None:
         # k._hw.sp = 0  # if not off-time, sp is None
     # k._hw._plot_readings()
-    # k.load_sequence('sequences/test_circuit_1423.txt')
-    # k.run_sequence(tx_volt=5, injection_duration=1., nb_stack=2, duty_cycle=0.5)
+    k.load_sequence('sequences/wenner1-16.txt')
+    k.run_multiple_sequences(nb_meas=2)
+    # k.run_sequence(vab=5, injection_duration=.2, nb_stack=1, duty_cycle=1)
     print('using OhmPi')
     #d = k.run_measurement([A, B, M, N], injection_duration=1., nb_stack=2, duty_cycle=0.5)
     #print(d)

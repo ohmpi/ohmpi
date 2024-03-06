@@ -417,9 +417,9 @@ class OhmPiHardware:
 
         return new_vab
 
-    def compute_tx_volt(self, pulse_duration=0.1, strategy='vmax', tx_volt=5., vab_max=None,
-                        iab_max=None, vmn_max=None, vmn_min=None, polarities=(1, -1), delay=0.05,
-                        p_max=None, diff_vab_lim=2.5, n_steps=4):
+    def compute_vab(self, pulse_duration=0.1, strategy='vmax', vab=5., vab_max=None,
+                    iab_max=None, vmn_max=None, vmn_min=None, polarities=(1, -1), delay=0.05,
+                    p_max=None, diff_vab_lim=2.5, n_steps=4):
         # TODO: Optimise how to pass iab_max, vab_max, vmn_min
         # TODO: Update docstring
         """Estimates best Tx voltage based on different strategies.
@@ -442,10 +442,10 @@ class OhmPiHardware:
             - vmax : compute Vab to reach a maximum Iab without exceeding vab_max
             - vmin : compute Vab to reach at least vmn_min
             - constant : apply given Vab
-        tx_volt : float, optional
+        vab : float, optional
             Voltage to apply for guessing the best voltage. 5 V applied
             by default. If strategy "constant" is chosen, constant voltage
-            to applied is "tx_volt".
+            to applied is "vab".
         vab_max : float, optional
             Maximum injection voltage to apply to tx (used by all strategies)
         vmn_min : float, optional
@@ -460,14 +460,14 @@ class OhmPiHardware:
         rab : float
             Resistance between injection electrodes
         """
-        tx_volt = np.abs(tx_volt)
-        vab_opt = tx_volt
+        vab_opt = np.abs(vab)
 
         if not self.tx.pwr.voltage_adjustable:
             vab_opt = self.tx.pwr.voltage
         else:
-            if strategy == 'full_constant':
-                return tx_volt
+            # TODO what is "full_constant"? maybe just a typo?
+            if strategy == 'full_constant' or strategy == 'constant':
+                return vab
 
             if vmn_max is None:
                 vmn_max = self.rx._voltage_max / 1000.
@@ -483,13 +483,13 @@ class OhmPiHardware:
 
             vab_max = np.abs(vab_max)
             vmn_min = np.abs(vmn_min)
-            # tx_volt = np.abs(tx_volt)
+
             # Set gain at min
             self.rx.reset_gain()
-            # vab_opt = tx_volt
-            if tx_volt >= vab_max:
+
+            if vab >= vab_max:
                 strategy = 'constant'
-            vab = np.min([np.abs(tx_volt), vab_max])
+            vab = np.min([np.abs(vab), vab_max])
             if strategy == 'constant':
                 vab_max = vab
                 vab = vab * .9
@@ -522,12 +522,12 @@ class OhmPiHardware:
                 while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
                     if k>0:
                         self.exec_logger.event(
-                            f'OhmPiHardware\t_compute_tx_volt_sleep\tbegin\t{datetime.datetime.utcnow()}')
+                            f'OhmPiHardware\t_compute_vab_sleep\tbegin\t{datetime.datetime.utcnow()}')
                         time.sleep(
                             0.2)  # TODO: replace this by discharging DPS on resistor with relay on GPIO5 (at least for strategy vmin,
                         # but might be useful in vmax when last vab too high...)
                         self.exec_logger.event(
-                            f'OhmPiHardware\t_compute_tx_volt_sleep\tend\t{datetime.datetime.utcnow()}')
+                            f'OhmPiHardware\t_compute_vab_sleep\tend\t{datetime.datetime.utcnow()}')
                     if strategy == 'vmax':
                         vmn_min = vmn_max
                     vabs = []
@@ -541,13 +541,13 @@ class OhmPiHardware:
                         vabs.append(new_vab)
                         # print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
                         if diff_vab < diff_vab_lim:
-                            self.exec_logger.debug('Compute_tx_volt stopped on vab increase too small')
+                            self.exec_logger.debug('Compute_vab stopped on vab increase too small')
                     k = k + 1
                     vab_list[k] = np.min(vabs)
                     if self.tx.pwr.voltage_adjustable:
                         self.tx.voltage = vab_list[k]
                 if k > n_steps:
-                    self.exec_logger.debug('Compute_tx_volt stopped on maximum number of steps reached')
+                    self.exec_logger.debug('Compute_vab stopped on maximum number of steps reached')
                 vab_opt = vab_list[k]
                 # print(f'Selected Vab: {vab_opt:.2f}')
                 # if switch_pwr_off:
