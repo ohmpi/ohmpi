@@ -1,3 +1,4 @@
+ohmpi/config.py
 .idea/*
 data/*
 **/.ipynb_notebooks/**
