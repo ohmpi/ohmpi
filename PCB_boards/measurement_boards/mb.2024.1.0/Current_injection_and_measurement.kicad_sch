@@ -1432,7 +1432,7 @@
     (pin "4" (uuid 658ece85-f6ac-443c-8bd5-d55b4416f4ff))
     (pin "5" (uuid 95bab50d-38c0-4662-8b48-6e6b048f277e))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "K6") (unit 1)
         )
@@ -1446,7 +1446,7 @@
     (property "Reference" "D3" (at 49.53 34.29 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "1N4001" (at 49.53 36.83 90)
+    (property "Value" "1N4007" (at 49.53 36.83 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" (at 46.99 35.56 0)
@@ -1467,7 +1467,7 @@
     (pin "1" (uuid 6c5bc7dd-9346-4d1b-a951-3b9bdfd837ed))
     (pin "2" (uuid 5dca16d2-8008-40c9-b59a-713caee80830))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "D3") (unit 1)
         )
@@ -1499,7 +1499,7 @@
     (pin "4" (uuid 543f5f9d-45dc-4e3c-84b4-a26539e82b70))
     (pin "5" (uuid e1d62af7-a433-4aa5-8a2c-f8a51803dba3))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "K5") (unit 1)
         )
@@ -1531,7 +1531,7 @@
     (pin "4" (uuid d18b9c89-d837-4078-8a18-e9ce95cd1878))
     (pin "5" (uuid f167c14e-b890-49f3-902a-4b1ffb5aa3f1))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "K7") (unit 1)
         )
@@ -1588,7 +1588,7 @@
     (pin "2" (uuid a1043dc1-226a-4aa8-ae77-85400c56b743))
     (pin "3" (uuid f5ec4707-d648-4d01-90a6-9ae3579273b3))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "Q4") (unit 1)
         )
@@ -1617,7 +1617,7 @@
     (pin "1" (uuid 24d98d8d-3712-4419-8e32-4c566291fbad))
     (pin "2" (uuid e84827d1-8064-4111-b251-83131fdb5f98))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "R15") (unit 1)
         )
@@ -1646,7 +1646,7 @@
     (pin "1" (uuid 98549bb3-17d8-4eb3-a2a0-94a2b94e5b96))
     (pin "2" (uuid 5f3f44c0-3242-462a-af06-74af73d54637))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "R6") (unit 1)
         )
@@ -1675,7 +1675,7 @@
     (pin "1" (uuid ce5375b4-e901-4e06-b8f5-f696b66b2914))
     (pin "2" (uuid 8b6d9a8c-3400-449e-95ea-5d510b7a9c4c))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "R16") (unit 1)
         )
@@ -1732,7 +1732,7 @@
     (pin "2" (uuid 80b9cf27-6673-425a-b115-ccc156472f2c))
     (pin "3" (uuid 899f3b15-b4bd-4024-a9b0-25e4bf86d358))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "Q6") (unit 1)
         )
@@ -1789,7 +1789,7 @@
     (pin "2" (uuid 0c1cee0d-3698-4f8f-92db-03dd6eb47a06))
     (pin "3" (uuid ea6ca3ce-9603-431e-8043-e6e51a3c67da))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "Q3") (unit 1)
         )
@@ -1817,7 +1817,7 @@
     )
     (pin "1" (uuid bd34a2d6-8f32-47da-9f1f-528f84b8fae5))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "J20") (unit 1)
         )
@@ -1846,7 +1846,7 @@
     (pin "1" (uuid 5f90baf3-e284-4907-ba60-c0c861cd5b52))
     (pin "2" (uuid 3f81b3bf-5b2a-4445-a0d2-a134362b88ab))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "J14") (unit 1)
         )
@@ -1860,7 +1860,7 @@
     (property "Reference" "D8" (at 114.3 106.68 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "1N4001" (at 114.3 109.22 90)
+    (property "Value" "1N4007" (at 114.3 109.22 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" (at 111.76 107.95 0)
@@ -1881,7 +1881,7 @@
     (pin "1" (uuid 9e8bf83e-da88-4b9d-b91e-83a64a818e08))
     (pin "2" (uuid f44ab015-5e2c-47e9-b6a2-eba49864fa60))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "D8") (unit 1)
         )
@@ -1909,7 +1909,7 @@
     )
     (pin "1" (uuid 70194f8c-9957-498e-8d58-3aa2c5ed1e8f))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "J21") (unit 1)
         )
@@ -1944,7 +1944,7 @@
     (pin "7" (uuid 5b904f5d-9fd5-4c08-9b12-45f7b1d4001c))
     (pin "8" (uuid e262494b-9c2c-4f92-8e9f-5c5257577462))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "J15") (unit 1)
         )
@@ -2001,7 +2001,7 @@
     (pin "2" (uuid 6e9f2822-d273-4edf-aa04-77de6d1eade0))
     (pin "3" (uuid 0e0687b9-c1c0-46d1-a305-e7d4e10560f2))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "Q7") (unit 1)
         )
@@ -2015,7 +2015,7 @@
     (property "Reference" "D9" (at 238.76 31.75 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "1N4001" (at 238.76 34.29 90)
+    (property "Value" "1N4007" (at 238.76 34.29 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" (at 236.22 33.02 0)
@@ -2036,7 +2036,7 @@
     (pin "1" (uuid 1cb745e4-536c-456c-a1a3-cc8b7f73c818))
     (pin "2" (uuid 967f4709-8811-43cb-8751-9582b7bd13fc))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "D9") (unit 1)
         )
@@ -2065,7 +2065,7 @@
     (pin "1" (uuid 021b1378-5b90-4457-b9d1-09a575b32b98))
     (pin "2" (uuid 5d1f5e5a-dc72-4645-a79d-20466faa5417))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "R7") (unit 1)
         )
@@ -2094,7 +2094,7 @@
     (pin "1" (uuid a991753e-6a5c-491a-9395-998d0bc3a3f4))
     (pin "2" (uuid ff755c1c-c142-4710-862d-8b63b73c9cf7))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "R9") (unit 1)
         )
@@ -2108,7 +2108,7 @@
     (property "Reference" "D4" (at 49.53 106.68 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "1N4001" (at 49.53 109.22 90)
+    (property "Value" "1N4007" (at 49.53 109.22 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" (at 46.99 107.95 0)
@@ -2129,7 +2129,7 @@
     (pin "1" (uuid c1fcb2c6-1356-4de0-a884-cf70a006e4fc))
     (pin "2" (uuid f8762be6-b5c0-4452-ba32-138ec7926de1))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "D4") (unit 1)
         )
@@ -2161,7 +2161,7 @@
     (pin "4" (uuid e211e913-fa61-4286-8f0b-ea09a0399d45))
     (pin "5" (uuid 35273b66-9512-4378-9fd2-4d0a8046dba8))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "K3") (unit 1)
         )
@@ -2221,7 +2221,7 @@
     (pin "MH1" (uuid e238418d-017a-459d-ae92-e653a245ae5e))
     (pin "MH2" (uuid 43994094-28e7-4b2a-8317-80409a33c7c4))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "U5") (unit 1)
         )
@@ -2256,7 +2256,7 @@
     (pin "7" (uuid e19e3b7c-5684-469f-ae0c-46651b2ac2c3))
     (pin "8" (uuid 6c65ca25-c6b6-4733-80fc-1167ab970a77))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "J12") (unit 1)
         )
@@ -2282,7 +2282,7 @@
     (pin "1" (uuid 29633166-9407-4c28-ae2d-3114078fe1db))
     (pin "2" (uuid e5be2945-8438-4651-86c8-03da917f4251))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "R8") (unit 1)
         )
@@ -2296,7 +2296,7 @@
     (property "Reference" "D7" (at 114.3 34.29 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "1N4001" (at 114.3 36.83 90)
+    (property "Value" "1N4007" (at 114.3 36.83 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" (at 111.76 35.56 0)
@@ -2317,7 +2317,7 @@
     (pin "1" (uuid 8c5c0570-32d4-4f2e-a268-608a6aae9239))
     (pin "2" (uuid dcc5df37-b017-41b8-8494-c04fa466d1d0))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "D7") (unit 1)
         )
@@ -2349,7 +2349,7 @@
     (pin "4" (uuid 10993b80-9f84-461b-8e40-efef841ce1d6))
     (pin "5" (uuid e6a9e5aa-b353-486d-854b-519efc834f13))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "K4") (unit 1)
         )
@@ -2378,7 +2378,7 @@
     (pin "1" (uuid 9998ca18-876f-45fd-9248-202469cb3e4e))
     (pin "2" (uuid ab0e0d39-df75-4561-8ac7-aab529e414bf))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "SH1") (unit 1)
         )
@@ -2435,7 +2435,7 @@
     (pin "2" (uuid 82d6ea2c-f104-4157-9d91-5c921667e9d3))
     (pin "3" (uuid bef52416-987f-4ecd-afb2-d07bb9eaea99))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/3a1d549c-401c-4ddf-9a51-4b7588f9097f"
           (reference "Q5") (unit 1)
         )

@@ -215,7 +215,7 @@
     (pin "1" (uuid cf1fe2d7-fd6c-4c4d-8884-04555b31b467))
     (pin "2" (uuid ec74ac25-ecdd-4927-af79-8fd9b1383cc3))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/b5055e4e-7413-40b3-89ed-dfdcecf2a97c"
           (reference "R10") (unit 1)
         )
@@ -244,7 +244,7 @@
     (pin "1" (uuid 9a41115d-255e-4c29-8651-03f1999f54d7))
     (pin "2" (uuid faeeb4d6-42ec-46e7-9c97-7330afc2d230))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/b5055e4e-7413-40b3-89ed-dfdcecf2a97c"
           (reference "R13") (unit 1)
         )
@@ -273,7 +273,7 @@
     (pin "1" (uuid 02cd59ce-d85c-4733-9cca-a2a96a98d11a))
     (pin "2" (uuid 4ec280a7-a3d2-4fc1-89db-6e6fa6d89971))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/b5055e4e-7413-40b3-89ed-dfdcecf2a97c"
           (reference "LED9-OHMPI-RUN-1") (unit 1)
         )
@@ -302,7 +302,7 @@
     (pin "1" (uuid 820dab0d-fab0-42ec-8a15-991a41b794f1))
     (pin "2" (uuid 49de15ea-a06d-494e-9c4d-c7474f5de1c5))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/b5055e4e-7413-40b3-89ed-dfdcecf2a97c"
           (reference "LED11-OHMPI-STACK1") (unit 1)
         )
@@ -331,7 +331,7 @@
     (pin "1" (uuid 2e27f5a8-801c-4032-8d4d-303864b78d53))
     (pin "2" (uuid 775bd048-1b4d-483d-9209-5a8857d25302))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/b5055e4e-7413-40b3-89ed-dfdcecf2a97c"
           (reference "LED12-LOW-TX-BATTERY1") (unit 1)
         )
@@ -360,7 +360,7 @@
     (pin "1" (uuid 00243991-047d-4ce6-a6f5-48f153aae1ae))
     (pin "2" (uuid 72241f57-3735-4f0a-8da3-9d568fcbc5b9))
     (instances
-      (project "mb.2024.0.3"
+      (project "mb.2024.1.0"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/b5055e4e-7413-40b3-89ed-dfdcecf2a97c"
           (reference "R12") (unit 1)
         )
