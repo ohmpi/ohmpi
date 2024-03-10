@@ -375,7 +375,7 @@
     (pin "3" (uuid b05bedc5-c9ad-4c5a-9ffd-92ed63a5570d))
     (pin "9" (uuid d493db89-d6bf-4f07-8a3f-b02caa822701))
     (instances
-      (project "mb.2024.0.2"
+      (project "mb.2024.0.3"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/9f60bb1d-ca92-41d5-b592-f34396aa7479"
           (reference "PS2") (unit 1)
         )
@@ -400,7 +400,7 @@
     )
     (pin "1" (uuid 03afeb1d-4c9e-48cb-8771-72e2e1e6744d))
     (instances
-      (project "mb.2024.0.2"
+      (project "mb.2024.0.3"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/9f60bb1d-ca92-41d5-b592-f34396aa7479"
           (reference "#PWR04") (unit 1)
         )
@@ -448,7 +448,7 @@
     (pin "3" (uuid 6c8ea74a-8d1a-4b3b-98ff-a9e5558bce09))
     (pin "9" (uuid bce5f30d-4f31-4e83-899a-7f7b43a1d12f))
     (instances
-      (project "mb.2024.0.2"
+      (project "mb.2024.0.3"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/9f60bb1d-ca92-41d5-b592-f34396aa7479"
           (reference "PS1") (unit 1)
         )
@@ -505,7 +505,7 @@
     (pin "3" (uuid 0312bb08-fb5c-4f83-bafe-0937318b3cec))
     (pin "9" (uuid af67964f-5151-4e80-aa47-c26024a49276))
     (instances
-      (project "mb.2024.0.2"
+      (project "mb.2024.0.3"
         (path "/62d2b953-c7cc-4d07-805d-38225011d95a/9f60bb1d-ca92-41d5-b592-f34396aa7479"
           (reference "PS3") (unit 1)
         )
