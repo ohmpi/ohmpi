@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ZVN4206ASTZ
+D N-Channel 60 V 600mA (Ta) 700mW (Ta) Through Hole E-Line (TO-92 compatible)
+K
+F https://www.diodes.com/assets/Datasheets/ZVN4206A.pdf
+$ENDCMP
+#
+#End Doc Library
