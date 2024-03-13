@@ -55,8 +55,7 @@ MUX board v2024 PCB (mux.2024.0.0).
    |    1   |   .. image:: ../../../img/mux.2024.0.x/1.jpg                                   |
    +--------+--------------------------------------------------------------------------------+
 
-
-Mount the 100 kOhm resistors.
+Mount the diodes.
 
 .. table::
    :align: center
@@ -65,7 +64,7 @@ Mount the 100 kOhm resistors.
    |    2   |   .. image:: ../../../img/mux.2024.0.x/2.jpg                                   |
    +--------+--------------------------------------------------------------------------------+
 
-Mount the diodes.
+Mount the 100 kOhm resistors.
 
 .. table::
    :align: center
@@ -75,6 +74,10 @@ Mount the diodes.
    +--------+--------------------------------------------------------------------------------+
 
 Mount the mosfets. You can chose between ZVN4206A or STP16NF06L.
+
+.. warning::
+    In the PCB v2024.0.1, the white footprint of the ZVN4206A is upside-down. Please double check that the "drain" pint of the ZVN goes to the relay and the "source" pin goes to the ground. In doubt, refer to the ZVN datasheet. The white footprint on the PCB is corrected in v2024.0.2.
+
 
 .. table::
    :align: center
