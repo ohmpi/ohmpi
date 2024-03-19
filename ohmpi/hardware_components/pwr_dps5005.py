@@ -44,9 +44,9 @@ class Pwr(PwrAbstract):
         self._pwr_latency = kwargs['pwr_latency']
         self._pwr_discharge_latency = kwargs['pwr_discharge_latency']
         self._pwr_state = 'off'
-        assert isinstance(self.connection, Instrument)
 
-        # if self.connect:
+        if self.connect:
+            assert isinstance(self.connection, Instrument)
         #     self.pwr_state = self._pwr_state
 
         if not subclass_init:
