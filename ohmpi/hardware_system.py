@@ -104,6 +104,24 @@ class OhmPiHardware:
         HARDWARE_CONFIG['tx'].pop('ctl', None)
         self.rx = kwargs.pop('rx', rx_module.Rx(**HARDWARE_CONFIG['rx']))
 
+        # Initialize power source
+        HARDWARE_CONFIG['pwr'].pop('model')
+        HARDWARE_CONFIG['pwr'].update(**HARDWARE_CONFIG['pwr'])  # NOTE: Explain why this is needed or delete me
+        HARDWARE_CONFIG['pwr'].update({'ctl': HARDWARE_CONFIG['pwr'].pop('ctl', self.ctl)})
+        HARDWARE_CONFIG['pwr'].update({'current_max': self.current_max})
+        if isinstance(HARDWARE_CONFIG['pwr']['ctl'], dict):
+            ctl_mod = HARDWARE_CONFIG['pwr']['ctl'].pop('model', self.ctl)
+            if isinstance(ctl_mod, str):
+                ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
+            HARDWARE_CONFIG['pwr']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['pwr']['ctl'])
+        # if 'interface_name' in HARDWARE_CONFIG['pwr']:
+        HARDWARE_CONFIG['pwr'].update({
+            'connection': HARDWARE_CONFIG['pwr'].pop(
+                'connection', HARDWARE_CONFIG['pwr']['ctl'].interfaces[
+                    HARDWARE_CONFIG['pwr'].pop('interface_name', None)])})
+
+        HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
+                                       'soh_logger': self.soh_logger})
         # Initialize TX
         HARDWARE_CONFIG['tx'].pop('model')
         HARDWARE_CONFIG['tx'].update(**HARDWARE_CONFIG['tx'])
@@ -125,24 +143,7 @@ class OhmPiHardware:
         if isinstance(self.tx, dict):
             self.tx = tx_module.Tx(**self.tx)
 
-        # Initialize power source
-        HARDWARE_CONFIG['pwr'].pop('model')
-        HARDWARE_CONFIG['pwr'].update(**HARDWARE_CONFIG['pwr'])  # NOTE: Explain why this is needed or delete me
-        HARDWARE_CONFIG['pwr'].update({'ctl': HARDWARE_CONFIG['pwr'].pop('ctl', self.ctl)})
-        HARDWARE_CONFIG['pwr'].update({'current_max': self.current_max})
-        if isinstance(HARDWARE_CONFIG['pwr']['ctl'], dict):
-            ctl_mod = HARDWARE_CONFIG['pwr']['ctl'].pop('model', self.ctl)
-            if isinstance(ctl_mod, str):
-                ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
-            HARDWARE_CONFIG['pwr']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['pwr']['ctl'])
-        # if 'interface_name' in HARDWARE_CONFIG['pwr']:
-        HARDWARE_CONFIG['pwr'].update({
-            'connection': HARDWARE_CONFIG['pwr'].pop(
-                'connection', HARDWARE_CONFIG['pwr']['ctl'].interfaces[
-                    HARDWARE_CONFIG['pwr'].pop('interface_name', None)])})
-
-        HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-                                       'soh_logger': self.soh_logger})
+       # Join tX and pwr
         if self.tx.specs['connect']:
             self.pwr_state = "on"
         self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
