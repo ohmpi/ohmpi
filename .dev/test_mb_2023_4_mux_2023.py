@@ -89,7 +89,7 @@ if within_ohmpi:
     k.reset_mux()
     # k.run_multiple_sequences(sequence_delay=20, nb_meas=3)
     k.run_sequence(injection_duration=0.2)
-    # k.rs_check(tx_volt=4)
+    # k.rs_check(vab=4)
     # k.test_mux(mux_id=None, activation_time=0.2)
     # k._hw.switch_mux([A, B, M, N], state='on')
     # k._hw.vab_square_wave(12.,1., cycles=2)

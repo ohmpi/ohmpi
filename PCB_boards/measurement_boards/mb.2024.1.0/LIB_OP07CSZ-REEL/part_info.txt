@@ -1,0 +1,9 @@
+Manufacturer=Analog Devices
+PartNumber=OP07CSZ-REEL
+PartCategory=Integrated Circuit
+PackageCategory=Small Outline Packages
+PinCount=8
+Version=1.1
+Released=2022-03-10 07:56:23
+Downloaded=2023-07-05 12:15:49
+3D=Y

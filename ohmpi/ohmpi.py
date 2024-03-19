@@ -30,7 +30,10 @@ import ohmpi.config
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import ohmpi.deprecated as deprecated
 from ohmpi.hardware_system import OhmPiHardware
+from ohmpi.sequence import (dpdp1, dpdp2, wenner_alpha, wenner_beta, wenner,
+                          wenner_gamma, schlum1, schlum2, multigrad)
 from tqdm.auto import tqdm
+import warnings
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
 try:
@@ -57,7 +60,7 @@ class OhmPi(object):
         settings : dict, optional
             Dictionnary of parameters. Possible parameters with their default values:
             `{'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
-            'nb_stack': 1, 'sampling_interval': 2, 'tx_volt': 5, 'duty_cycle': 0.5,
+            'nb_stack': 1, 'sampling_interval': 2, 'vab': 5, 'duty_cycle': 0.5,
             'strategy': 'constant', 'export_path': None
         sequence : str, optional
             Path of the .csv or .txt file with A, B, M and N electrodes.
@@ -232,6 +235,60 @@ class OhmPi(object):
                 w.writeheader()
                 w.writerow(last_measurement)
 
+    def create_sequence(self, nelec, params=[('dpdp', 1, 8)], ireciprocal=False, fpath=None):
+        """Creates a sequence of quadrupole. The sequence is saved automatically
+        to sequences/mysequence.csv and used within OhmPi class. Several type of
+        sequence or sequence with different parameters can be combined together.
+
+        Parameters
+        ----------
+        nelec : int
+            Number of electrodes.
+        params : list of tuple, optional
+            Each tuple is the form (<array_name>, param1, param2, ...)
+            Dipole spacing is specified in terms of "number of electrode spacing".
+            Dipole spacing is often referred to 'a'. Number of levels is a multiplier
+            of 'a', often refere to 'n'. For multigradient array, an additional parameter
+            's' is needed.
+            Types of sequences available are :
+            - ('wenner', a)
+            - ('dpdp', a, n)
+            - ('schlum', a, n)
+            - ('multigrad', a, n, s)
+        ireciprocal : bool, optional
+            If True, will add reciprocal quadrupoles (so MNAB) to the sequence.
+        fpath : str, optional
+            Path where to save the sequence (including filename and extension). By
+            default, sequence is saved in ohmpi/sequences/sequence.txt.
+        """
+        # dictionnary of function to create sequence
+        fdico = {
+            'dpdp': dpdp1,
+            'wenner': wenner,
+            'schlum': schlum1,
+            'multigrad': multigrad,
+        }
+        # check arguments
+        if fpath is None:
+            fpath = os.path.join(os.path.dirname(__file__), '../sequences/sequence.txt')
+        qs = []
+
+        # create sequence
+        for p in params:
+            pok = [int(p[i]) for i in np.arange(1, len(p))]  # make sure all are int
+            qs.append(fdico[p[0]](nelec, *pok).values.astype(int))
+        quad = np.vstack(qs)
+        if len(quad.shape) == 1:  # only one quadrupole
+            quad = quad[None, :]
+
+        # add reciprocal
+        if ireciprocal:
+            quad = np.r_[quad, quad[:, [2, 3, 0, 1]]]
+        self.sequence = quad
+
+        # save sequence
+        np.savetxt(fpath, self.sequence, delimiter=' ', fmt='%d')
+        print('{:d} quadrupoles generated.'.format(self.sequence.shape[0]))
 
     @staticmethod
     def _find_identical_in_line(quads):
@@ -280,7 +337,7 @@ class OhmPi(object):
             if ((fname != 'readme.txt')
                     and ('_rs' not in fname)
                     and (fname.replace('.csv', '') not in survey_names)):
-                #try:
+                # try:
                 # reading headers
                 with open(os.path.join(ddir, fname), 'r') as f:
                     headers = f.readline().split(',')
@@ -468,12 +525,12 @@ class OhmPi(object):
         self._hw._plot_readings(save_fig=save_fig, filename=filename)
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
-                        autogain=True, strategy=None, tx_volt=None, best_tx_injtime=0.1,
+                        autogain=True, strategy=None, tx_volt=None, vab=None, best_tx_injtime=0.1,
                         cmd_id=None, vab_max=None, iab_max=None, vmn_max=None, vmn_min=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value,
         #  change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used
-        #  in function definition
+        #  in function definition -> (GB) default values are in self.settings.
         """Measures on a quadrupole and returns a dictionnary with the transfer resistance.
 
         Parameters
@@ -489,15 +546,15 @@ class OhmPi(object):
         duty_cycle : float, optional
             Duty cycle (default=0.5) of injection square wave.
         strategy : str, optional, default: constant
-            Define injection strategy (if power is adjustable, otherwise constant tx_volt, generally 12V battery is used).
+            Define injection strategy (if power is adjustable, otherwise constant vab, generally 12V battery is used).
             Either:
             - vmax : compute Vab to reach a maximum Vmn_max and Iab without exceeding vab_max
             - vmin : compute Vab to reach at least Vmn_min
-            - constant : apply given Vab (tx_volt) but checks if expected readings not out-of-range
-            - full_constant: apply given Vab (tx_volt) with no out-of-range checks for optimising duration at the risk of out-of-range readings
+            - constant : apply given Vab but checks if expected readings not out-of-range
+            - full_constant: apply given Vab with no out-of-range checks for optimising duration at the risk of out-of-range readings
             Safety check (i.e. short voltage pulses) performed prior to injection to ensure
             injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
-            To bypass safety check before injection, tx_volt should be set equal to vab_max (not recpommanded)
+            To bypass safety check before injection, vab should be set equal to vab_max (not recpommanded)
         vab_max : str, optional
             Maximum injection voltage.
             Default value set by config or boards specs
@@ -510,7 +567,9 @@ class OhmPi(object):
         vmn_min :
             Minimum Vmn desired (used in strategy vmin).
             Default value set by config or boards specs
-        tx_volt : float, optional  # TODO: change tx_volt to Vab
+        tx_volt : float, optional  # deprecated
+            For power adjustable only. If specified, voltage will be imposed.
+        vab : float, optional
             For power adjustable only. If specified, voltage will be imposed.
         cmd_id : str, optional
             Unique command identifier.
@@ -535,6 +594,11 @@ class OhmPi(object):
             duty_cycle = self.settings['duty_cycle']
         if tx_volt is None and 'tx_volt' in self.settings:
             tx_volt = self.settings['tx_volt']
+        if vab is None and 'vab' in self.settings:
+            vab_requested = self.settings['vab']
+        if vab is None and tx_volt is not None:
+            warnings.warn('"tx_volt" argument is deprecated and will be removed in future version. Use "vab" instead to set the transmitter voltage in volts.', DeprecationWarning)
+            vab_requested = tx_volt
         if strategy is None and 'strategy' in self.settings:
             strategy = self.settings['strategy']
         if vab_max is None and 'vab_max' in self.settings:
@@ -560,7 +624,7 @@ class OhmPi(object):
         switch_pwr_on.join()
         status = q.get()
         if status:
-            vab = self._hw.compute_tx_volt(tx_volt=tx_volt, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
+            vab = self._hw.compute_vab(vab=vab_requested, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
                                                iab_max=iab_max, vmn_min=vmn_min)
             # time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
@@ -621,7 +685,7 @@ class OhmPi(object):
 
             # if strategy not constant, then switch dps off (button) in case following measurement within sequence
             # TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
-            if (strategy == 'vmax' or strategy == 'vmin') and vab - tx_volt > 5.:  # if starting tx_volt was too far (> 5 V) from actual vab, then turn pwr off
+            if (strategy == 'vmax' or strategy == 'vmin') and vab - vab_requested > 5.:  # if starting vab was too far (> 5 V) from actual vab, then turn pwr off
                 self._hw.tx.pwr.pwr_state = 'off'
 
                 # Discharge DPS capa
@@ -837,7 +901,7 @@ class OhmPi(object):
     # TODO: we could build a smarter RS-Check by selecting adjacent electrodes based on their locations and try to
     #  isolate electrodes that are responsible for high resistances (ex: AB high, AC low, BC high
     #  -> might be a problem at B (cf what we did with WofE)
-    def rs_check(self, tx_volt=5.0, cmd_id=None, couple=None):
+    def rs_check(self, vab=5, cmd_id=None, couple=None, tx_volt=None):
         # TODO: add a default value for rs-check in config.py import it in ohmpi.py and add it in rs_check definition
         """Checks contact resistances.
         Strategy: we just open A and B, measure the current and using vAB set or
@@ -845,11 +909,20 @@ class OhmPi(object):
 
         Parameters
         ----------
-        tx_volt : float
+        vab : float, optional
             Voltage of the injection.
+        couple  : array, for selecting a couple of electrode for checking resistance
         cmd_id : str, optional
             Unique command identifier.
+        tx_volt : float, optional DEPRECATED
+            Save as vab.
         """
+        # check arguments
+        if tx_volt is not None:
+            warnings.warn('"tx_volt" is deprecated and will be removed in future version. Please use "vab" instead.',
+                DeprecationWarning)
+            vab = tx_volt
+
         # check pwr is on, if not, let's turn it on
         switch_tx_pwr_off = False
         if self._hw.pwr_state == 'off':
@@ -871,7 +944,7 @@ class OhmPi(object):
                 ]).T
         else:
             quads = np.array([[couple[0], couple[1], 0, 0]], dtype=np.uint32)
-
+           
         # create filename to store RS
         export_path_rs = self.settings['export_path'].replace('.csv', '') \
                          + '_' + datetime.now().strftime('%Y%m%dT%H%M%S') + '_rs.csv'
@@ -894,7 +967,7 @@ class OhmPi(object):
         for i in range(0, quads.shape[0]):
             quad = quads[i, :]  # quadrupole
             self._hw.switch_mux(electrodes=list(quads[i, :2]), roles=['A', 'B'], state='on')
-            self._hw._vab_pulse(duration=0.2, vab=tx_volt)
+            self._hw._vab_pulse(duration=0.2, vab=vab)
             current = self._hw.readings[-1, 3]
             vab = self._hw.tx.pwr.voltage
             print(vab, current)
@@ -1053,7 +1126,7 @@ class OhmPi(object):
                 self.exec_logger.debug('Acquisition parameters updated: ' + str(self.settings))
                 self.status = 'idle (acquisition updated)'
             except Exception as e:  # noqa
-                self.exec_logger.warning('Unable to update settings.')
+                self.exec_logger.warning('Unable to update settings. Error: ' + str(e))
                 self.status = 'idle (unable to update settings)'
         else:
             self.exec_logger.warning('Settings are missing...')
@@ -1087,12 +1160,13 @@ class OhmPi(object):
         # handle parameters default values
         if fnames is None:
             datadir = os.path.join(os.path.dirname(__file__), '../data/')
-            fnames = [os.path.join(datadir, f) for f in os.listdir(datadir) if f[-4:] == '.csv']
+            fnames = [os.path.join(datadir, f) for f in os.listdir(datadir) if (f[-4:] == '.csv' and f[-7:] != '_rs.csv')]
         if outputdir is None:
             outputdir = os.path.join(os.path.dirname(__file__), '../output/')
-            if os.path.exists(outputdir) is False:
-                os.mkdir(outputdir)
-        
+        if os.path.exists(outputdir) is False:
+            os.mkdir(outputdir)
+        ftype = ftype.lower()
+
         # define parser
         def ohmpi_parser(fname):
             df = pd.read_csv(fname)
@@ -1105,7 +1179,7 @@ class OhmPi(object):
             elec = np.zeros((emax, 3))
             elec[:, 0] = np.arange(emax) * elec_spacing
             return elec, df[['a', 'b', 'm', 'n', 'vp', 'i', 'resist', 'ip']]
-        
+
         # read all files and save them in the desired format
         for fname in tqdm(fnames):
             try:

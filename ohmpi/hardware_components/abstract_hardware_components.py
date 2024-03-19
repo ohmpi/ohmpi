@@ -112,6 +112,7 @@ class PwrAbstract(ABC):
         self.switchable = False
         self.connection = kwargs['connection']
         self._battery_voltage = np.nan
+        self._pwr_discharge_latency = np.nan
         self.connect = kwargs['connect']
         self.specs = kwargs
 

@@ -115,13 +115,6 @@ class Tx(Tx_mb_2023):
         elif mode == "off":
             self.pin5.value = False
 
-    def discharge_pwr(self, latency=None):
-        if latency is None:
-            latency = self.pwr._pwr_discharge_latency
-
-        time.sleep(latency)
-
-
     def inject(self, polarity=1, injection_duration=None):
         # add leds?
         self.pin6.value = True
@@ -142,17 +135,28 @@ class Tx(Tx_mb_2023):
                 'on', 'off'
             """
         if state == 'on':
+            self.exec_logger.event(f'{self.model}\ttx_pwr_state_on\tbegin\t{datetime.datetime.utcnow()}')
             self.pin2.value = True
             self.pin3.value = True
             self.exec_logger.debug(f'Switching DPS on')
             self._pwr_state = 'on'
             time.sleep(self.pwr._pwr_latency) # from pwr specs
+            self.exec_logger.event(f'{self.model}\ttx_pwr_state_on\tend\t{datetime.datetime.utcnow()}')
+            self.pwr.battery_voltage()
+            if self.pwr.voltage_adjustable:
+                if self.pwr._battery_voltage < 11.8:
+                    self.exec_logger.warning(f'TX Battery voltage from {self.pwr.model} = {self.pwr._battery_voltage} V')
+                else:
+                    self.exec_logger.info(f'TX Battery voltage from {self.pwr.model} = {self.pwr._battery_voltage} V')
 
         elif state == 'off':
+            self.exec_logger.event(f'{self.model}\ttx_pwr_state_off\tbegin\t{datetime.datetime.utcnow()}')
+            self.pwr.pwr_state = 'off'
             self.pin2.value = False
             self.pin3.value = False
             self.exec_logger.debug(f'Switching DPS off')
             self._pwr_state = 'off'
+            self.exec_logger.event(f'{self.model}\ttx_pwr_state_off\tend\t{datetime.datetime.utcnow()}')
 
 
     def current_pulse(self, current=None, length=None, polarity=1):

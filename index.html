@@ -173,6 +173,25 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             </div>
             </div>
         </div>
+
+        <!-- Modal for connection to MQTT server -->
+        <div class="modal fade" id="mqttModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="connection">Connecting...</h5>
+                <!-- in the future, we could add a username, password and connect button-->
+                </div>
+                <div class="modal-body">
+                    <p>Connecting to the MQTT server, please wait.</p>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button id="connectBtn" type="button" class="btn btn-danger" data-dismiss="modal">Connect</button>
+                </div> -->
+            </div>
+            </div>
+        </div>
+
         <footer>v0.3.0</footer>
     </div>
 
