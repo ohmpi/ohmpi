@@ -492,7 +492,7 @@ def test_pwr_accessibility(hw_nc, test_logger):
                 f"PWR: {pwr.specs['model']} NOT accessible via modbus.",
                 "red"))
     else:
-        test_logger(colored(f'PWR module cannot be tested on {pwr.specs['model']}', "yellow"))
+        test_logger(colored(f"PWR module cannot be tested on {pwr.specs['model']}", "yellow"))
 
     return test_result
 
