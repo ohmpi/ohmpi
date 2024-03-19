@@ -334,15 +334,15 @@ def test_mux_accessibility(hw_nc, test_logger, mux_id=None):
     return all(test_result)
 
 
-def test_mux_connectivity(hw_nc, test_logger, mux_id=None):
+def test_mux_connectivity(hw, test_logger, mux_id=None):
     """
     Test connectivity to one or all MUX boards in config. Test is successful if all I2C multiplexers or switches
      being tested are responsive.
 
     Parameters
     ----------
-    hw_nc: ohmpi.OhmPiHardware
-        OhmPiHardware object of which "connect" parameter is set to False
+    hw: ohmpi.OhmPiHardware
+        OhmPiHardware object of which "connect" parameter is set to True
     test_logger: logging.Logger
         Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
     mux_id: str or None (optional)
