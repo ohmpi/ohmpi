@@ -32,6 +32,7 @@ from ohmpi.hardware_system import OhmPiHardware
 from ohmpi.sequence import (dpdp1, dpdp2, wenner_alpha, wenner_beta, wenner,
                           wenner_gamma, schlum1, schlum2, multigrad)
 from tqdm.auto import tqdm
+import warnings
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
 try:
