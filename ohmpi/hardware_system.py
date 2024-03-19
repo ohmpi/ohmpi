@@ -547,14 +547,13 @@ class OhmPiHardware:
             diff_vab = np.inf
             if strategy == 'vmax' or strategy == 'vmin':
                 while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
-                    if k>0:
-                        self.exec_logger.event(
-                            f'OhmPiHardware\t_compute_vab_sleep\tbegin\t{datetime.datetime.utcnow()}')
-                        time.sleep(
-                            0.2)  # TODO: replace this by discharging DPS on resistor with relay on GPIO5 (at least for strategy vmin,
-                        # but might be useful in vmax when last vab too high...)
-                        self.exec_logger.event(
-                            f'OhmPiHardware\t_compute_vab_sleep\tend\t{datetime.datetime.utcnow()}')
+                    self.exec_logger.event(
+                        f'OhmPiHardware\t_compute_vab_sleep\tbegin\t{datetime.datetime.utcnow()}')
+                    time.sleep(
+                        0.2)  # TODO: replace this by discharging DPS on resistor with relay on GPIO5 (at least for strategy vmin,
+                    # but might be useful in vmax when last vab too high...)
+                    self.exec_logger.event(
+                        f'OhmPiHardware\t_compute_vab_sleep\tend\t{datetime.datetime.utcnow()}')
                     if strategy == 'vmax':
                         vmn_min = vmn_max
                     vabs = []

@@ -19,7 +19,6 @@ import pandas as pd
 from zipfile import ZipFile
 from shutil import rmtree, make_archive
 from threading import Thread
-from queue import Queue
 from inspect import getmembers, isfunction
 from datetime import datetime
 from termcolor import colored
@@ -612,18 +611,8 @@ class OhmPi(object):
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
 
-        def switch_mux_on(queue,quad,bypass_check,cmd_id):
-            result = self.switch_mux_on(quad, bypass_check, cmd_id)  # Function that returns the value you want to return
-            queue.put(result)
-        q = Queue()
-        switch_mux_on = Thread(target=switch_mux_on, args=(q,quad,bypass_check,cmd_id))
-        switch_pwr_on = Thread(target=setattr, args=(self._hw.tx.pwr, 'pwr_state', 'on'))
-        switch_mux_on.start()
-        switch_pwr_on.start()
-        switch_mux_on.join()
-        switch_pwr_on.join()
-        status = q.get()
-        if status:
+        if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
+
             vab = self._hw.compute_vab(vab=vab_requested, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
                                                iab_max=iab_max, vmn_min=vmn_min)
             # time.sleep(0.5)  # to wait for pwr discharge
