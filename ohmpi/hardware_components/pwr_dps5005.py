@@ -38,22 +38,17 @@ class Pwr(PwrAbstract):
         self._voltage_max = kwargs['voltage_max']
         self._power_max = kwargs['power_max']
         self._current_max_tolerance = kwargs['current_max_tolerance']
-        self._pwr_state = 'off'
-        if self.connect:
-            assert isinstance(self.connection, Instrument)
-            self.pwr_state = self._pwr_state
-            self.voltage_default(self._voltage)
-            self.current_max_default(self._current_max)
-            self.current_max = self._current_max
-            self.current_overload = self._current_max
-            self.voltage_max = self._voltage_max
-            self.power_max(self._power_max)
         self.voltage_adjustable = True
         self.current_adjustable = False
         self._current = np.nan
-        self._pwr_state = 'off'
         self._pwr_latency = kwargs['pwr_latency']
         self._pwr_discharge_latency = kwargs['pwr_discharge_latency']
+        self._pwr_state = 'off'
+        assert isinstance(self.connection, Instrument)
+
+        # if self.connect:
+        #     self.pwr_state = self._pwr_state
+
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -166,4 +161,9 @@ class Pwr(PwrAbstract):
             self.exec_logger.debug(f'{self.model} is off')
 
     def reload_settings(self):
+        self.voltage_default(self._voltage)
+        self.voltage_max = self._voltage_max
+        self.current_max_default(self._current_max)
         self.current_max = self._current_max
+        self.current_overload(self._current_max)
+        self.power_max(self._power_max)

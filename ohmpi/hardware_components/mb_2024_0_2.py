@@ -141,6 +141,8 @@ class Tx(Tx_mb_2023):
             self.exec_logger.debug(f'Switching DPS on')
             self._pwr_state = 'on'
             time.sleep(self.pwr._pwr_latency) # from pwr specs
+            self.pwr.pwr_state = 'off'
+            self.pwr.reload_settings()
             self.exec_logger.event(f'{self.model}\ttx_pwr_state_on\tend\t{datetime.datetime.utcnow()}')
             self.pwr.battery_voltage()
             if self.pwr.voltage_adjustable:
