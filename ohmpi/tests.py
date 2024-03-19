@@ -536,7 +536,7 @@ def test_pwr_connectivity(hw_nc, test_logger):
                 f"PWR: Connection NOT established with {pwr.specs['model']}.",
                 "red"))
     else:
-        test_logger(colored(f'PWR module cannot be tested on {pwr.specs['model']}', "yellow"))
+        test_logger(colored(f"PWR module cannot be tested on {pwr.specs['model']}", "yellow"))
 
     return test_result
 
