@@ -129,7 +129,7 @@ def test_mb_accessibility(hw_nc, module_name, test_logger, devices=['mcp','ads']
     elif module_name == 'RX':
         module = hw_nc.rx
     test_logger(
-        f"{module_name}: *** Startin {module_name} accessibility test on {module.specs['model']} board ***")
+        f"{module_name}: *** Starting {module_name} accessibility test on {module.specs['model']} board ***")
     if isinstance(devices, str):
         devices = [devices]
     test_result = [False] * len(devices)
@@ -173,7 +173,7 @@ def test_mb_connectivity(hw_nc, module_name, test_logger, devices=['mcp', 'ads']
     elif module_name == 'RX':
         module = hw_nc.rx
     test_logger(
-        f"{module_name}: *** Startin {module_name} connectivity test on {module.specs['model']} board ***")
+        f"{module_name}: *** Starting {module_name} connectivity test on {module.specs['model']} board ***")
     if isinstance(devices, str):
         devices = [devices]
     test_result = [False] * len(devices)
@@ -225,7 +225,7 @@ def test_mb_connection(hw_nc, module_name, test_logger, devices=['mcp','ads']):
     test_logger(
         f"****************************************************************")
     test_logger(
-        f"*** Startin {module_name} connection test on {module.specs['model']} board ***")
+        f"*** Starting {module_name} connection test on {module.specs['model']} board ***")
     test_logger(
         f"****************************************************************")
     test_logger(" ")
@@ -274,7 +274,7 @@ def test_mux_accessibility(hw_nc, test_logger, mux_id=None):
 
     mux_boards = hw_nc.mux_boards
     test_logger(
-        f"{mux_id}: *** Startin MUX accessibility test  ***")
+        f"{mux_id}: *** Starting MUX accessibility test  ***")
     if mux_id is None:
         mux_ids = [k for k in mux_boards.keys()]
         test_logger("Testing all MUX boards in MUX config.")
@@ -356,7 +356,7 @@ def test_mux_connectivity(hw_nc, test_logger, mux_id=None):
     """
     mux_boards = hw_nc.mux_boards
     test_logger(
-        f"{mux_id}: *** Startin MUX connectivity test  ***")
+        f"{mux_id}: *** Starting MUX connectivity test  ***")
     if mux_id is None:
         mux_ids = [k for k in mux_boards.keys()]
         test_logger("Testing all MUX boards in MUX config.")
@@ -413,7 +413,7 @@ def test_mux_connection(hw_nc, test_logger, mux_id=None):
     test_logger(
         f"****************************************************************")
     test_logger(
-        f"*** Startin MUX connection test ***")
+        f"*** Starting MUX connection test ***")
     test_logger(
         f"****************************************************************")
     test_logger(" ")
@@ -476,23 +476,23 @@ def test_pwr_accessibility(hw_nc, test_logger):
     test_result = False
 
     test_logger(
-        f"PWR: *** Startin accessibility test on {pwr.specs['model']} ***")
+        f"PWR: *** Starting accessibility test on {pwr.specs['model']} ***")
 
     if tx.pwr.voltage_adjustable:
         try:
             if pwr.specs['interface_name'] == 'modbus':
                 pwr.specs['ctl'].reset_modbus()
                 test_logger(colored(
-                    f"PWR: {pwr.specs.model} is accessible via modbus.",
+                    f"PWR: {pwr.specs['model']} is accessible via modbus.",
                     "green"))
                 test_result = True
         except:
             traceback.print_exc()
             test_logger(colored(
-                f"PWR: {pwr.specs.model} NOT accessible via modbus.",
+                f"PWR: {pwr.specs['model']} NOT accessible via modbus.",
                 "red"))
     else:
-        test_logger(colored(f'PWR module cannot be tested on {pwr.specs.model}', "yellow"))
+        test_logger(colored(f'PWR module cannot be tested on {pwr.specs['model']}', "yellow"))
 
     return test_result
 
@@ -519,24 +519,24 @@ def test_pwr_connectivity(hw_nc, test_logger):
     test_result = False
 
     test_logger(
-        f"PWR: *** Startin connectivity test on {pwr.specs['model']} ***")
+        f"PWR: *** Starting connectivity test on {pwr.specs['model']} ***")
 
     if tx.pwr.voltage_adjustable:
         try:
             tx.pwr_state = 'on'
             tx.pwr_state = 'off'
             test_logger(colored(
-                f"PWR: Connection established with {pwr.specs.model}.",
+                f"PWR: Connection established with {pwr.specs['model']}.",
                 "green"))
             test_result = True
 
         except:
             traceback.print_exc()
             test_logger(colored(
-                f"PWR: Connection NOT established with {pwr.specs.model}.",
+                f"PWR: Connection NOT established with {pwr.specs['model']}.",
                 "red"))
     else:
-        test_logger(colored(f'PWR module cannot be tested on {pwr.specs.model}', "yellow"))
+        test_logger(colored(f'PWR module cannot be tested on {pwr.specs['model']}', "yellow"))
 
     return test_result
 
@@ -804,7 +804,7 @@ def test_dg411_gain_ratio(hw, test_logger, return_deviation=False, deviation_thr
     test_logger(
         f"****************************************************************")
     test_logger(
-        f"*** Startin DG411 gain ratio test ***")
+        f"*** Starting DG411 gain ratio test ***")
     test_logger(
         f"****************************************************************")
     test_logger(" ")
@@ -865,7 +865,7 @@ def test_mux_relays(hw, test_logger, mux_id=None, electrodes=None, roles=None, t
     test_logger(
         f"****************************************************************")
     test_logger(
-        f"*** Startin MUX relays test ***")
+        f"*** Starting MUX relays test ***")
     test_logger(
         f"****************************************************************")
     test_logger(" ")
