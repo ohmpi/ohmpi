@@ -454,6 +454,23 @@ def test_mux_connection(hw_nc, test_logger, mux_id=None):
 
 
 def test_pwr_accessibility(hw_nc, test_logger):
+    """
+        Test accessibility of PWR module by checking if USB port available.
+        Test is successful if USB plugged in.
+
+        Parameters
+        ----------
+        hw_nc: ohmpi.OhmPiHardware
+          OhmPiHardware object of which "connect" parameter is set to False
+        test_logger: logging.Logger
+          Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
+
+        Returns
+        -------
+        bool
+           True if test successful, False otherwise.
+        """
+
     tx = hw_nc.tx
     pwr = hw_nc.pwr
     test_result = False
@@ -480,6 +497,23 @@ def test_pwr_accessibility(hw_nc, test_logger):
     return test_result
 
 def test_pwr_connectivity(hw_nc, test_logger):
+    """
+        Test connectivity to PWR module, by attempting to switch it on (and reloading settings).
+        Test is successful if modbus connection can be established  (only DPS_5005 supported)
+
+        Parameters
+        ----------
+        hw_nc: ohmpi.OhmPiHardware
+          OhmPiHardware object of which "connect" parameter is set to False
+        test_logger: logging.Logger
+          Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
+
+        Returns
+        -------
+        bool
+           True if test successful, False otherwise.
+        """
+
     tx = hw_nc.tx
     pwr = hw_nc.pwr
     test_result = False
@@ -539,11 +573,11 @@ def test_pwr_connection(hw_nc, test_logger):
     test_logger(" ")
 
     test_result = False
-    accessibility_results = test_mb_accessibility(hw_nc, test_logger)
+    accessibility_results = test_pwr_accessibility(hw_nc, test_logger)
     if accessibility_results:
         test_logger(
             f"PWR: Accessibility test successful. Will check if device respond...")
-        connectivity_results = test_mb_connectivity(hw_nc, test_logger)
+        connectivity_results = test_pwr_connectivity(hw_nc, test_logger)
         if connectivity_results:
             test_result = True
     if test_result:
