@@ -114,6 +114,16 @@ def parse_log(log):
     session = np.array(session)
     return time, process_id, tag, msg, session
 
+def filter_log(filename, level=None, directory="logs", last=1):
+    time, process_id, tag, msg, session = parse_log(os.path.join(directory, filename))
+    time, process_id, tag, msg, session = time[tag == level], process_id[tag == level], \
+            tag[tag == level], msg[tag == level]
+
+    time_filt, process_id_filt, tag_filt, msg_filt = time[session >= max(session)-last], process_id[session >= max(session)-last], \
+            tag[session >= max(session)-last], msg[session >= max(session)-last]
+
+    return time_filt, process_id_filt, tag_filt, msg_filt
+
 
 def mux_2024_to_mux_2023_takeouts(elec_list):
     """ Updates cabling for mux v2024 so that takeouts are similar to takeouts from mux v2023.
