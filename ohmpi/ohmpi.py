@@ -590,10 +590,10 @@ class OhmPi(object):
         if tx_volt is None and 'tx_volt' in self.settings:
             tx_volt = self.settings['tx_volt']
         if vab is None and 'vab' in self.settings:
-            vab = self.settings['vab']
+            vab_requested = self.settings['vab']
         if vab is None and tx_volt is not None:
             warnings.warn('"tx_volt" argument is deprecated and will be removed in future version. Use "vab" instead to set the transmitter voltage in volts.', DeprecationWarning)
-            vab = tx_volt
+            vab_requested = tx_volt
         if strategy is None and 'strategy' in self.settings:
             strategy = self.settings['strategy']
         if vab_max is None and 'vab_max' in self.settings:
@@ -619,7 +619,7 @@ class OhmPi(object):
         switch_pwr_on.join()
         status = q.get()
         if status:
-            vab = self._hw.compute_vab(vab=vab, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
+            vab = self._hw.compute_vab(vab=vab_requested, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
                                                iab_max=iab_max, vmn_min=vmn_min)
             # time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
@@ -680,7 +680,7 @@ class OhmPi(object):
 
             # if strategy not constant, then switch dps off (button) in case following measurement within sequence
             # TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
-            if (strategy == 'vmax' or strategy == 'vmin') and vab - vab > 5.:  # if starting vab was too far (> 5 V) from actual vab, then turn pwr off
+            if (strategy == 'vmax' or strategy == 'vmin') and vab - vab_requested > 5.:  # if starting vab was too far (> 5 V) from actual vab, then turn pwr off
                 self._hw.tx.pwr.pwr_state = 'off'
 
                 # Discharge DPS capa
