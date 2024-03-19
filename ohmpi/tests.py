@@ -334,15 +334,15 @@ def test_mux_accessibility(hw_nc, test_logger, mux_id=None):
     return all(test_result)
 
 
-def test_mux_connectivity(hw, test_logger, mux_id=None):
+def test_mux_connectivity(hw_nc, test_logger, mux_id=None):
     """
     Test connectivity to one or all MUX boards in config. Test is successful if all I2C multiplexers or switches
      being tested are responsive.
 
     Parameters
     ----------
-    hw: ohmpi.OhmPiHardware
-        OhmPiHardware object of which "connect" parameter is set to True
+    hw_nc: ohmpi.OhmPiHardware
+        OhmPiHardware object of which "connect" parameter is set to False
     test_logger: logging.Logger
         Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
     mux_id: str or None (optional)
@@ -496,15 +496,15 @@ def test_pwr_accessibility(hw_nc, test_logger):
 
     return test_result
 
-def test_pwr_connectivity(hw_nc, test_logger):
+def test_pwr_connectivity(hw, test_logger):
     """
         Test connectivity to PWR module, by attempting to switch it on (and reloading settings).
         Test is successful if modbus connection can be established  (only DPS_5005 supported)
 
         Parameters
         ----------
-        hw_nc: ohmpi.OhmPiHardware
-          OhmPiHardware object of which "connect" parameter is set to False
+        hw: ohmpi.OhmPiHardware
+          OhmPiHardware object of which "connect" parameter is set to True
         test_logger: logging.Logger
           Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
 
@@ -514,8 +514,8 @@ def test_pwr_connectivity(hw_nc, test_logger):
            True if test successful, False otherwise.
         """
 
-    tx = hw_nc.tx
-    pwr = hw_nc.pwr
+    tx = hw.tx
+    pwr = hw.pwr
     test_result = False
 
     test_logger(
@@ -540,7 +540,7 @@ def test_pwr_connectivity(hw_nc, test_logger):
 
     return test_result
 
-def test_pwr_connection(hw_nc, test_logger):
+def test_pwr_connection(hw, hw_nc, test_logger):
     """
         Test connection to PWR module
         Calls in test_pwr_accessibility first and then if successful calls in test_owr_connectivity.
@@ -548,6 +548,8 @@ def test_pwr_connection(hw_nc, test_logger):
 
         Parameters
         ----------
+        hw: ohmpi.OhmPiHardware
+          OhmPiHardware object of which "connect" parameter is set to True
         hw_nc: ohmpi.OhmPiHardware
           OhmPiHardware object of which "connect" parameter is set to False
         test_logger: logging.Logger
@@ -577,7 +579,7 @@ def test_pwr_connection(hw_nc, test_logger):
     if accessibility_results:
         test_logger(
             f"PWR: Accessibility test successful. Will check if device respond...")
-        connectivity_results = test_pwr_connectivity(hw_nc, test_logger)
+        connectivity_results = test_pwr_connectivity(hw, test_logger)
         if connectivity_results:
             test_result = True
     if test_result:
