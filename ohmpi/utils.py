@@ -117,7 +117,7 @@ def parse_log(log):
 def filter_log(filename, level=None, directory="logs", last=1):
     time, process_id, tag, msg, session = parse_log(os.path.join(directory, filename))
     time, process_id, tag, msg, session = time[tag == level], process_id[tag == level], \
-            tag[tag == level], msg[tag == level]
+            tag[tag == level], msg[tag == level], session[tag == level]
 
     time_filt, process_id_filt, tag_filt, msg_filt = time[session >= max(session)-last], process_id[session >= max(session)-last], \
             tag[session >= max(session)-last], msg[session >= max(session)-last]
