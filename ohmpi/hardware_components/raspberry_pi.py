@@ -66,7 +66,7 @@ class Ctl(CtlAbstract):
             self.interfaces['modbus'].mode = kwargs['modbus_mode']  # RTU mode
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize Extended modbus:\n{e}')
-            self.interfaces['modbus'] = None
+            # self.interfaces['modbus'] = None
 
         platform, on_pi = get_platform()
         assert on_pi
