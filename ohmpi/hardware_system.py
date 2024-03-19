@@ -144,11 +144,11 @@ class OhmPiHardware:
         HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                        'soh_logger': self.soh_logger})
 
-        if self.tx.specs['connect']:
-            self.pwr_state = "on"
+        # if self.tx.specs['connect']:
+        #     self.pwr_state = "on"
         self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
-        if self.tx.specs['connect']:
-            self.pwr_state = 'off'
+        # if self.tx.specs['connect']:
+        #     self.pwr_state = 'off'
 
        # Join tX and pwr
         self.tx.pwr = self.pwr
