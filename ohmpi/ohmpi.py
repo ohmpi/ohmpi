@@ -23,7 +23,7 @@ from inspect import getmembers, isfunction
 from datetime import datetime
 from termcolor import colored
 from logging import DEBUG
-from ohmpi.utils import get_platform
+from ohmpi.utils import get_platform, sequence_random_sampler
 from ohmpi.logging_setup import setup_loggers
 import ohmpi.config
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
@@ -312,6 +312,52 @@ class OhmPi(object):
 
         return output
 
+    def find_optimal_vab_for_sequence(self, which='mean', n_samples=10, **kwargs):
+        """
+        Find optimal Vab based on sample sequence in order to run sequence with fixed Vab.
+        Returns Vab
+        Parameters
+        ----------
+        which : str
+                Which vab to keep, either "min", "max", "mean" (or other similar numpy method e.g. median)
+                If applying strategy "full_constant" based on vab_opt, safer to chose "min"
+        n_samples: int
+                number of samples to keep within loaded sequence
+
+        kwargs : kwargs passed to Ohmpi.run_sequence
+
+        Returns
+        -------
+        Vab_opt : float [in V]
+                Optimal Vab value
+        """
+        if self.sequence is None:
+            self.sequence = np.array([[0, 0, 0, 0]])
+        self.status = 'running'
+        vabs = []
+        sequence_sample = sequence_random_sampler(self.sequence, n_samples=n_samples)
+        n = sequence_sample.shape[0]
+        if self._hw.tx.pwr.voltage_adjustable:
+            self._hw.pwr_state = 'on'
+
+        for i in tqdm(range(0, n), "Sequence progress", unit='injection', ncols=100, colour='green'):
+            quad = sequence_sample[i, :]  # quadrupole
+            if self.status == 'stopping':
+                break
+            acquired_data = self.run_measurement(quad=quad, strategy='vmax', **kwargs)
+            vabs.append(acquired_data["Tx [V]"])
+        if self._hw.tx.pwr.voltage_adjustable:
+            self._hw.pwr_state = 'off'
+        vabs = np.array(vabs)
+        print(vabs)
+        vab_opt = getattr(np, which)(vabs)
+
+        # reset to idle if we didn't interrupt the sequence
+        if self.status != 'stopping':
+            self.status = 'idle'
+
+        return vab_opt
+
     def get_data(self, survey_names=None, cmd_id=None):
         """Get available data.
         
@@ -582,6 +628,7 @@ class OhmPi(object):
         self.exec_logger.debug('Starting measurement')
         self.exec_logger.debug('Waiting for data')
 
+        vab_requested = vab
         # check arguments
         if quad is None:
             quad = np.array([0, 0, 0, 0])
