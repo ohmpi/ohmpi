@@ -470,11 +470,6 @@ def sequence_random_sampler(sequence, n_samples=10):
     spacing_mn = np.abs(sequence[:, 3] - sequence[:, 2])
     spacing_an = np.abs(sequence[:, 0] - sequence[:, 3])
 
-    for i, (ab, bm, mn, an) in enumerate(
-            zip(np.unique(spacing_ab), np.unique(spacing_bm), np.unique(spacing_mn), np.unique(spacing_an))):
-        print(ab, bm, mn, an)
-        print(sequence[np.where((spacing_ab == ab) & (spacing_bm == bm) & (spacing_mn == mn) & (spacing_an == an))])
-
     array_types = 0
     arrays = {}
     for ab in np.sort(np.unique(spacing_ab)):
