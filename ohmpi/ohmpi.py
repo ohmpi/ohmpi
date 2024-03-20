@@ -308,6 +308,47 @@ class OhmPi(object):
 
         return output
 
+    def find_optimal_vab_for_sequence(self, which='mean', n_samples=10, **kwargs):
+        """
+        Find optimal Vab based on sample sequence in order to run sequence with fixed Vab.
+        Returns Vab
+        Parameters
+        ----------
+        which : str
+                Which vab to keep, either "min", "max", "mean" (or other similar numpy method e.g. median)
+                If applying strategy "full_constant" based on vab_opt, safer to chose "min"
+        n_samples: int
+                number of samples to keep within loaded sequence
+
+        kwargs : kwargs passed to Ohmpi.run_sequence
+
+        Returns
+        -------
+        Vab_opt : float [in V]
+                Optimal Vab value
+        """
+        if self.sequence is None:
+            self.sequence = np.array([[0, 0, 0, 0]])
+        self.status = 'running'
+        vabs = []
+        sequence_sample = sequence_sampler(self.sequence, n_samples=n_samples, spacings=spacings)
+        n = sequence_sample.shape[0]
+        for i in tqdm(range(0, n), "Sequence progress", unit='injection', ncols=100, colour='green'):
+            quad = self.sequence[i, :]  # quadrupole
+            if self.status == 'stopping':
+                break
+            acquired_data = self.run_measurement(quad=quad, **kwargs)
+            vabs.append(acquired_data["Tx [V]"])
+        vabs = np.array(vabs)
+
+        vab_opt = getattr(np, which)(vabs)
+
+        # reset to idle if we didn't interrupt the sequence
+        if self.status != 'stopping':
+            self.status = 'idle'
+
+        return vab_opt
+
     def get_data(self, survey_names=None, cmd_id=None):
         """Get available data.
         

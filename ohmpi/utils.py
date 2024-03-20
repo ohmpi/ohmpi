@@ -448,3 +448,71 @@ MQTT_CONTROL_CONFIG = {
                             config_file.write(s)
                     else:
                         print(f'### skipping {config_filename} ###')
+
+
+def sequence_random_sampler(sequence, n_samples=10):
+    """
+    Downsample sequence randomly
+    Parameters
+    ----------
+    sequence
+    n_samples
+
+    Returns
+    -------
+
+    """
+
+    import random
+
+    spacing_ab = np.abs(sequence[:, 1] - sequence[:, 0])
+    spacing_bm = np.abs(sequence[:, 2] - sequence[:, 1])
+    spacing_mn = np.abs(sequence[:, 3] - sequence[:, 2])
+    spacing_an = np.abs(sequence[:, 0] - sequence[:, 3])
+
+    for i, (ab, bm, mn, an) in enumerate(
+            zip(np.unique(spacing_ab), np.unique(spacing_bm), np.unique(spacing_mn), np.unique(spacing_an))):
+        print(ab, bm, mn, an)
+        print(sequence[np.where((spacing_ab == ab) & (spacing_bm == bm) & (spacing_mn == mn) & (spacing_an == an))])
+
+    array_types = 0
+    arrays = {}
+    for ab in np.sort(np.unique(spacing_ab)):
+        for bm in np.sort(np.unique(spacing_bm)):
+            for mn in np.sort(np.unique(spacing_mn)):
+                for an in np.sort(np.unique(spacing_an)):
+                    seq = sequence[
+                        np.where((spacing_ab == ab) & (spacing_bm == bm) & (spacing_mn == mn) & (spacing_an == an))]
+                    if len(seq) > 0:
+                        arrays[array_types] = seq
+                        array_types += 1
+
+    if n_samples < array_types:
+        n_samples = array_types
+    sizes = np.ones(array_types)
+
+    if n_samples > array_types:
+        length_dict = np.array([len(arrays[k]) for k in range(array_types)])
+        additional_samples = n_samples - array_types
+        additional_sizes = (additional_samples // array_types) * (
+                    (length_dict / np.sum(length_dict)) * array_types) // 1 + (
+                                       (length_dict / np.sum(length_dict)) * array_types) // 1
+        sizes = sizes + additional_sizes
+        sizes = sizes.astype(int)
+
+        if n_samples - np.sum(sizes) > 0:
+            adds = np.zeros(array_types)
+            adds[np.where((length_dict - sizes) > 0)[0][
+                random.sample(range(len(np.where((length_dict - sizes) > 0)[0])), n_samples - np.sum(sizes))]] = 1
+            sizes = sizes + adds
+
+    sizes = sizes.astype(int)
+    quads = np.array([])
+    for i, (size, key) in enumerate(zip(sizes, arrays)):
+        samples = random.sample(range(len(arrays[key])), size)
+        if i == 0:
+            quads = arrays[key][samples]
+        else:
+            quads = np.vstack((quads, arrays[key][samples]))
+
+    return quads
