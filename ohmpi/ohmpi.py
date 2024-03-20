@@ -624,6 +624,7 @@ class OhmPi(object):
         self.exec_logger.debug('Starting measurement')
         self.exec_logger.debug('Waiting for data')
 
+        vab_requested = vab
         # check arguments
         if quad is None:
             quad = np.array([0, 0, 0, 0])
