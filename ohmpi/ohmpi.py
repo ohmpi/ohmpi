@@ -337,7 +337,7 @@ class OhmPi(object):
             self._hw.pwr_state = 'on'
 
         for i in tqdm(range(0, n), "Sequence progress", unit='injection', ncols=100, colour='green'):
-            quad = self.sequence[i, :]  # quadrupole
+            quad = sequence_sample[i, :]  # quadrupole
             if self.status == 'stopping':
                 break
             acquired_data = self.run_measurement(quad=quad, strategy='vmax', **kwargs)
