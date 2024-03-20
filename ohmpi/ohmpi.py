@@ -343,7 +343,7 @@ class OhmPi(object):
             acquired_data = self.run_measurement(quad=quad, strategy='vmax', **kwargs)
             vabs.append(acquired_data["Tx [V]"])
         if self._hw.tx.pwr.voltage_adjustable:
-            self._hw.pwr_state = 'on'
+            self._hw.pwr_state = 'off'
         vabs = np.array(vabs)
         print(vabs)
         vab_opt = getattr(np, which)(vabs)
