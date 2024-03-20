@@ -23,7 +23,7 @@ from inspect import getmembers, isfunction
 from datetime import datetime
 from termcolor import colored
 from logging import DEBUG
-from ohmpi.utils import get_platform
+from ohmpi.utils import get_platform, sequence_sampler
 from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import ohmpi.deprecated as deprecated
@@ -340,7 +340,7 @@ class OhmPi(object):
             acquired_data = self.run_measurement(quad=quad, **kwargs)
             vabs.append(acquired_data["Tx [V]"])
         vabs = np.array(vabs)
-
+        print(vabs)
         vab_opt = getattr(np, which)(vabs)
 
         # reset to idle if we didn't interrupt the sequence
