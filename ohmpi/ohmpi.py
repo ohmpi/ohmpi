@@ -333,12 +333,17 @@ class OhmPi(object):
         vabs = []
         sequence_sample = sequence_random_sampler(self.sequence, n_samples=n_samples)
         n = sequence_sample.shape[0]
+        if self._hw.tx.pwr.voltage_adjustable:
+            self._hw.pwr_state = 'on'
+
         for i in tqdm(range(0, n), "Sequence progress", unit='injection', ncols=100, colour='green'):
             quad = self.sequence[i, :]  # quadrupole
             if self.status == 'stopping':
                 break
-            acquired_data = self.run_measurement(quad=quad, **kwargs)
+            acquired_data = self.run_measurement(quad=quad, strategy='vmax', **kwargs)
             vabs.append(acquired_data["Tx [V]"])
+        if self._hw.tx.pwr.voltage_adjustable:
+            self._hw.pwr_state = 'on'
         vabs = np.array(vabs)
         print(vabs)
         vab_opt = getattr(np, which)(vabs)
