@@ -3,7 +3,7 @@ import numpy as np
 import time
 os.chdir("/home/pi/OhmPi")
 from ohmpi.ohmpi import OhmPi
-from ohmpi.utils import sequence_sampler
+from ohmpi.utils import sequence_random_sampler
 
 # Define object from class OhmPi
 k = OhmPi()
@@ -17,7 +17,7 @@ k.update_settings({"nb_stack": 2})
 # Set or load sequence
 k.create_sequence(32)    # set numpy array of shape (n,4)
 # k.load_sequence('sequences/ABMN.txt')    # load sequence from a local file
-print(sequence_sampler(k.sequence),n_samples=20)
+print(sequence_random_sampler(k.sequence),n_samples=20)
 vab = k.find_optimal_vab_for_sequence(n_samples=20)
 
 # Run contact resistance check

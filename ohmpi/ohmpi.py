@@ -23,7 +23,7 @@ from inspect import getmembers, isfunction
 from datetime import datetime
 from termcolor import colored
 from logging import DEBUG
-from ohmpi.utils import get_platform, sequence_sampler
+from ohmpi.utils import get_platform, sequence_random_sampler
 from ohmpi.logging_setup import setup_loggers
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import ohmpi.deprecated as deprecated
@@ -331,7 +331,7 @@ class OhmPi(object):
             self.sequence = np.array([[0, 0, 0, 0]])
         self.status = 'running'
         vabs = []
-        sequence_sample = sequence_sampler(self.sequence, n_samples=n_samples, spacings=spacings)
+        sequence_sample = sequence_random_sampler(self.sequence, n_samples=n_samples)
         n = sequence_sample.shape[0]
         for i in tqdm(range(0, n), "Sequence progress", unit='injection', ncols=100, colour='green'):
             quad = self.sequence[i, :]  # quadrupole
