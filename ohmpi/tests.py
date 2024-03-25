@@ -1039,3 +1039,22 @@ def test_tx_battery_voltage(hw, test_logger, threshold=11.8):
     if switch_tx_pwr_off:
         hw.pwr_state = 'off'
     return test_result
+
+def contact_resistance_test_board(sequence, logger=None):
+    """ Checks and updates sequence for contact resistance test board
+
+    Parameters
+    ----------
+    sequence: np.array (2D) or list
+    logger=:logging.logger
+            Logger to be used to record test outputs and results, e.g. soh_logger.TEST or test_logger.info
+    """
+    sequence = np.array(sequence)
+    cond = np.where((np.sum(sequence[:, :2] % 2, axis=1) == 1) & (np.sum(sequence[:, 2:] % 2, axis=1) == 1))[0]
+    sequence_ok = sequence[cond]
+
+    if logger is not None:
+        logger(colored(f"Contact resistance test board check: emoved {(sequence.shape[0] - sequence_ok.shape[0])} "
+                       f"quadrupoles from sequence", "red"))
+
+    return sequence_ok
