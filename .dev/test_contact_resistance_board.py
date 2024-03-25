@@ -10,6 +10,7 @@ k = OhmPi()
 
 # Set or load sequence
 sequence = np.array([np.array([1,2,3,4])+k for k in range(29)]) # [[1,2,3,4],[2,3,4,5]...] but can actually make other combinations of AB to increase number of contact resistance tested
+sequence = np.vstack([sequence,np.array([[30,31,1,2],[31,32,2,3]])])
 k.sequence = contact_resistance_test_board(sequence) # checks if sequence contains potential shortcut quads (AB odd odd or even even)
 
 # Run contact resistance check
