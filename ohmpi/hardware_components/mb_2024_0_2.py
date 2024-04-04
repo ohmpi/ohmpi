@@ -258,7 +258,8 @@ class Rx(Rx_mb_2023):
         self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
     def _dg411_gain_auto(self):
-        if self.voltage < self._vmn_hardware_offset :
+        #TODO: Check condition (see #177)
+        if self.voltage < self._vmn_hardware_offset:
             self._dg411_gain = 1.
         else:
             self._dg411_gain = self._dg411_gain_ratio
