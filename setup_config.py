@@ -42,7 +42,7 @@ while True:
 
 pwr = None
 while True:
-    if pwr in ['battery', 'dps5005']:
+    if pwr in ['battery', 'dph5005']:
         break
     else:
         pwr = input('Tx power: [battery/dph5005]:')

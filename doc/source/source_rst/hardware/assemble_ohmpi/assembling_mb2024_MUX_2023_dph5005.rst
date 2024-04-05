@@ -6,7 +6,7 @@
 
 Assembling the 64-electrode OhmPi
 *********************************
-**1 mb2024 + 4 mux2023 + 1 DPS 500)**
+**1 mb2024 + 4 mux2023 + 1 DPH5005)**
 
 TODO :list on tools and components
 
@@ -247,9 +247,9 @@ TODO :list on tools and components
    +--------+------------------------------------------------------------+
    |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/12.jpg        |
    |      34+------------------------------------------------------------+
-   |        |The choice is yours: position or fix the DPS 5005.          |  
+   |        |The choice is yours: position or fix the DPH5005.          |  
    |        |                                                            |
-   |        |connect USB cable between DPS 5005 and Raspberry Pi         |
+   |        |connect USB cable between DPH5005 and Raspberry Pi         |
    +--------+------------------------------------------------------------+
    |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/13.jpg        |
    |      35+------------------------------------------------------------+
@@ -291,7 +291,7 @@ TODO :list on tools and components
    |        |                                                            |
    |        |board.                                                      |
    +--------+------------------------------------------------------------+
-   |        |.. image:: ../../../img/v2024.x.x/ohmpi_64/ref_circuit.png  |
+   |        | .. image:: ../../../img/v2024.x.x/ohmpi_64/ref_circuit.png |
    +--------+------------------------------------------------------------+
    |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/19.jpg        |
    |      40+------------------------------------------------------------+

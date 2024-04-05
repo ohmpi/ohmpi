@@ -1,2 +1,3 @@
 # dummy module
-MCP23008 = None
+from unittest.mock import Mock
+MCP23008 = Mock()
