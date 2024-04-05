@@ -19,7 +19,7 @@ except ModuleNotFoundError:
           'To run this script, type the following command in the terminal from the directory where you '
           'installed ohmpi : \npython3 setup_config.py\n'
           'If you deleted your config.py file by mistake, you should find a backup in configs/config_backup.py')
-    sys.exit()
+    sys.exit(-1)
 from threading import Thread, Event, Barrier, BrokenBarrierError
 import warnings
 

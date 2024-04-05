@@ -25,7 +25,16 @@ from termcolor import colored
 from logging import DEBUG
 from ohmpi.utils import get_platform, sequence_random_sampler
 from ohmpi.logging_setup import setup_loggers
-import ohmpi.config
+import sys
+try:
+    import ohmpi.config
+except ModuleNotFoundError:
+    print('The system configuration file is missing or broken. If you have not yet defined your system configuration, '
+          'you can create a configuration file by using the python setup_config script. '
+          'To run this script, type the following command in the terminal from the directory where you '
+          'installed ohmpi : \npython3 setup_config.py\n'
+          'If you deleted your config.py file by mistake, you should find a backup in configs/config_backup.py')
+    sys.exit(-1)
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import ohmpi.deprecated as deprecated
 from ohmpi.hardware_system import OhmPiHardware
@@ -108,12 +117,12 @@ class OhmPi(object):
                                    f" on {MQTT_CONTROL_CONFIG['hostname']} broker")
 
             def connect_mqtt() -> mqtt_client:
-                def on_connect(mqttclient, userdata, flags, rc):
-                    if rc == 0:
+                def on_connect(mqttclient, userdata, flags, reason_code, properties):
+                    if reason_code == 0:
                         self.exec_logger.debug(f"Successfully connected to control broker:"
                                                f" {MQTT_CONTROL_CONFIG['hostname']}")
                     else:
-                        self.exec_logger.warning(f'Failed to connect to control broker. Return code : {rc}')
+                        self.exec_logger.warning(f'Failed to connect to control broker. Return code : {reason_code}')
 
                 client = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)
                 client.username_pw_set(MQTT_CONTROL_CONFIG['auth'].get('username'),
