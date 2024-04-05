@@ -176,20 +176,20 @@ def generate_preset_configs(configs_to_generate=None):
                                'config_mb_2023__1_mux_2024_4roles.py', 'config_mb_2023__2_mux_2024_4roles.py',
                                'config_mb_2023__3_mux_2024_4roles.py', 'config_mb_2023__4_mux_2024_4roles.py',
                                'config_mb_2023__2_mux_2024_2roles.py', 'config_mb_2023__4_mux_2024_2roles.py',
-                               'config_mb_2024_0_2.py', 'config_mb_2024_0_2_dps5005.py',
-                               'config_mb_2024_0_2__4_mux_2023.py', 'config_mb_2024_0_2__4_mux_2023_dps5005.py',
+                               'config_mb_2024_0_2.py', 'config_mb_2024_0_2_dph5005.py',
+                               'config_mb_2024_0_2__4_mux_2023.py', 'config_mb_2024_0_2__4_mux_2023_dph5005.py',
                                'config_mb_2024_0_2__1_mux_2024_4roles.py',
-                               'config_mb_2024_0_2__1_mux_2024_4roles_dps5005.py',
+                               'config_mb_2024_0_2__1_mux_2024_4roles_dph5005.py',
                                'config_mb_2024_0_2__2_mux_2024_4roles.py',
-                               'config_mb_2024_0_2__2_mux_2024_4roles_dps5005.py',
+                               'config_mb_2024_0_2__2_mux_2024_4roles_dph5005.py',
                                'config_mb_2024_0_2__2_mux_2024_2roles.py',
-                               'config_mb_2024_0_2__2_mux_2024_2roles_dps5005.py',
+                               'config_mb_2024_0_2__2_mux_2024_2roles_dph5005.py',
                                'config_mb_2024_0_2__3_mux_2024_4roles.py',
-                               'config_mb_2024_0_2__3_mux_2024_4roles_dps5005.py',
+                               'config_mb_2024_0_2__3_mux_2024_4roles_dph5005.py',
                                'config_mb_2024_0_2__4_mux_2024_4roles.py',
-                               'config_mb_2024_0_2__4_mux_2024_4roles_dps5005.py',
+                               'config_mb_2024_0_2__4_mux_2024_4roles_dph5005.py',
                                'config_mb_2024_0_2__4_mux_2024_2roles.py',
-                               'config_mb_2024_0_2__4_mux_2024_2roles_dps5005.py'
+                               'config_mb_2024_0_2__4_mux_2024_2roles_dph5005.py'
                                ]
 
     header = """import logging
@@ -223,7 +223,7 @@ HARDWARE_CONFIG = {
 
     r_shunt = 2.
     options = {'pwr': {'battery': """{'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},""",
-                       'dps5005': """{'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},"""
+                       'dph5005': """{'model': 'pwr_dph5005', 'voltage': 3., 'interface_name': 'modbus'},"""
                        },
                'mb': {'mb_2024_0_2': {'tx': """{'model': 'mb_2024_0_2',
                  'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]

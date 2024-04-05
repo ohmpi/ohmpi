@@ -13,7 +13,7 @@ logging_suffix = ''
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': ohmpi_id,  # Unique identifier of the OhmPi board (string)
-    'settings': 'settings/default.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
+    'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
 }
 
 r_shunt = 2.
@@ -25,7 +25,7 @@ r_shunt = 2.
 
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
-    'pwr': {'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},
+    'pwr': {'model': 'pwr_dph5005', 'voltage': 3., 'interface_name': 'modbus'},
     'tx':  {'model': 'mb_2024_0_2',
                  'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
                  'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
@@ -38,30 +38,9 @@ HARDWARE_CONFIG = {
                  'sampling_rate': 200,  # number of samples per second
                  'interface_name': 'i2c',
                 },
-    'mux': {'boards':
-                 {'mux_01':
-                         {'model': 'mux_2024_0_X',
-                          'roles': ['A', 'B'],
-                          'electrodes': range(1, 17),
-                          'addr1': 'up',
-                          'addr2': 'up',
-                          'tca_address': None,
-                          'tca_channel': 0,
-                          },
-                 'mux_02':
-                         {'model': 'mux_2024_0_X',
-                          'roles': ['M', 'N'],
-                          'electrodes': range(1, 17),
-                          'addr1': 'down',
-                          'addr2': 'up',
-                          'tca_address': None,
-                          'tca_channel': 0,
-                          },
-                 },
-            'default': {'interface_name': 'i2c_ext',
-                             'voltage_max': 50.,
-                             'current_max': 3.}
-                }
+    'mux':  {'boards': {},
+                 'default': {}
+            }
 }
 # SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
 # Execution logging configuration

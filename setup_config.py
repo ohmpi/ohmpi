@@ -45,7 +45,7 @@ while True:
     if pwr in ['battery', 'dps5005']:
         break
     else:
-        pwr = input('Tx power: [battery/dps5005]:')
+        pwr = input('Tx power: [battery/dph5005]:')
 
 config = ('config_mb_' + mb[1:] + '_' + nb_mux + '_mux_' + mux[1:])
 if roles is not None:
