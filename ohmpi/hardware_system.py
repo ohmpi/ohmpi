@@ -601,7 +601,7 @@ class OhmPiHardware:
                         vmn_min = vmn_max
                     vabs = []
                     self._vab_pulses(vab_list[k], sampling_rate=self.rx.sampling_rate,
-                                     durations=[pulse_duration, pulse_duration], polarities=polarities)
+                                     durations=[pulse_duration, pulse_duration], polarities=polarities, append=True)
                     for pulse in range(len(polarities)):
                         v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (
                                     self.readings[:, 1] == pulse))[0]  # NOTE : discard data acquired in the first x ms
