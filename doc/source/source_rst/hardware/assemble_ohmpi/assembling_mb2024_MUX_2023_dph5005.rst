@@ -247,9 +247,9 @@ TODO :list on tools and components
    +--------+------------------------------------------------------------+
    |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/12.jpg        |
    |      34+------------------------------------------------------------+
-   |        |The choice is yours: position or fix the DPH5005.          |  
+   |        |The choice is yours: position or fix the DPH5005.           |  
    |        |                                                            |
-   |        |connect USB cable between DPH5005 and Raspberry Pi         |
+   |        |connect USB cable between DPH5005 and Raspberry Pi          |
    +--------+------------------------------------------------------------+
    |        |   .. image:: ../../../img/v2024.x.x/ohmpi_64/13.jpg        |
    |      35+------------------------------------------------------------+

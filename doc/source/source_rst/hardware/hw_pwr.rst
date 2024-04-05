@@ -42,4 +42,4 @@ To assemble DPH5005, please follow the links:
     **Only use DPH5005 with the measurement board v2024**
 
 .. warning::
-    **We sometimes refer to DPS (Digital Power Supply) as a general power supply different from the 12V battery. But this does not refer to the DPS5005 component (step down DC/DC). The component used in the documentation is the DPH5005 (boost DC/DC converter).**
+    **We sometimes refer to DPS (Digital Power Supply) as a general power supply different from the 12V battery. But this DOES NOT refer to the DPS5005 component (step down DC/DC). The component used in the documentation is the DPH5005 (boost DC/DC converter).**
