@@ -349,7 +349,7 @@ class OhmPi(object):
         if self._hw.tx.pwr.voltage_adjustable:
             self._hw.pwr_state = 'off'
         vabs = np.array(vabs)
-        print(vabs)
+        # print(vabs)
         vab_opt = getattr(np, which)(vabs)
 
         # reset to idle if we didn't interrupt the sequence
@@ -1006,7 +1006,6 @@ class OhmPi(object):
             self._hw._vab_pulse(duration=0.2, vab=vab)
             current = self._hw.readings[-1, 3]
             vab = self._hw.tx.pwr.voltage
-            print(vab, current)
             time.sleep(0.2)
 
             # compute resistance measured (= contact resistance)
