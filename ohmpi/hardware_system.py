@@ -2,6 +2,7 @@ import importlib
 import datetime
 import time
 import numpy as np
+import sys
 
 try:
     import matplotlib.pyplot as plt
@@ -10,7 +11,14 @@ except Exception:  # noqa
 from ohmpi.hardware_components.abstract_hardware_components import CtlAbstract
 from ohmpi.logging_setup import create_stdout_logger
 from ohmpi.utils import update_dict
-from ohmpi.config import HARDWARE_CONFIG as HC
+try:
+    from ohmpi.config import HARDWARE_CONFIG as HC
+except:
+    print('A problem has occurred while importing the system configuration. Please check the ohmpi/config.py '
+          'configuration file. If you have not yet defined your system configuration, you can create a new '
+          'configuration file by using the python setup_config script. To run this script, type the following command'
+          ' in the terminal from the directory where you installed ohmpi : \npython3 setup_config.py')
+    sys.exit()
 from threading import Thread, Event, Barrier, BrokenBarrierError
 import warnings
 
