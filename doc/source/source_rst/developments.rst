@@ -96,7 +96,7 @@ Hardware components API
 .. automodule:: ohmpi.hardware_components.pwr_batt
    :members:
 
-.. automodule:: ohmpi.hardware_components.pwr_dps5005
+.. automodule:: ohmpi.hardware_components.pwr_dph5005
    :members:
 
 .. automodule:: ohmpi.hardware_components.raspberry_pi

@@ -16,16 +16,16 @@ Recommended configurations
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
 |Applications                   |Measurement Board               |Mux                 |Raspberry Pi              | Power supply             |Config file name                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
-| | 64 or more electrodes       |mb v2024                        |Mux v2023           | | Raspberry Pi 3 Model B | DPS5005                  | config_mb_2024_0_2__4_mux_2023_dps5005.py        |
+| | 64 or more electrodes       |mb v2024                        |Mux v2023           | | Raspberry Pi 3 Model B | DPH5005                  | config_mb_2024_0_2__4_mux_2023_dph5005.py        |
 | | for field monitoring        |                                |                    | | or 4 model B           |                          |                                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
-| | 8, 16, 32, 48 electrodes    |mb v2024                        |Mux v2024           | | Raspberry Pi 3 Model B | DPS5005                  | config_mb_2024_0_2__4_mux_2024_2roles_dps5005.py |
+| | 8, 16, 32, 48 electrodes    |mb v2024                        |Mux v2024           | | Raspberry Pi 3 Model B | DPH5005                  | config_mb_2024_0_2__4_mux_2024_2roles_dph5005.py |
 | | for field monitoring        |                                |                    | | or 4 model B           |                          |                                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
 | | 8, 16, 32, 48 electrodes    |mb v2024                        |Mux v2024           | | Raspberry Pi 3 Model B | 12V Battery              | config_mb_2024_0_2__4_mux_2024_2roles.py         |
 | | for laboratory monitoring   |                                |                    | | or 4 model B           |                          |                                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
-| | 4 electrodes concrete sample|mb v2024                        |None                |Raspberry Pi 3 Model B    | DPS5005                  | config_mb_2024_0_2_dps5005.py                    |
+| | 4 electrodes concrete sample|mb v2024                        |None                |Raspberry Pi 3 Model B    | DPH5005                  | config_mb_2024_0_2_dph5005.py                    |
 | | Laboratory (Rhoa and IP)    |                                |                    |                          |                          |                                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
 | | 4 electrodes soil sample    |mb v2024                        |None                |Raspberry Pi 3 Model B    | 12V Battery              | config_mb_2024_0_2.py.                           |
@@ -46,8 +46,8 @@ OhmPi systems assembly tutorials
 .. toctree:: 
    :maxdepth: 1 
 
-   OhmPi v2024 64 electrodes + DPS <assemble_ohmpi/assembling_mb2024_MUX_2023_dps5005.rst>
-   OhmPi Lite v2024 (32 electrodes) + DPS <assemble_ohmpi/assembling_mb2024_MUX_2024_dps5005.rst>
+   OhmPi v2024 64 electrodes + DPH5005 <assemble_ohmpi/assembling_mb2024_MUX_2023_dph5005.rst>
+   OhmPi Lite v2024 (32 electrodes) + DPH5005 <assemble_ohmpi/assembling_mb2024_MUX_2024_dph5005.rst>
    OhmPi v2023 + 12V battery <assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst>
 
 .. image:: ../../img/ohmpi_systems_examples.jpg

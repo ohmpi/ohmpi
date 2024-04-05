@@ -8,7 +8,7 @@ Power supply
 Two sources of power are available now:
 
 - a 12V battery
-- a regulated power supply (DPS5005)
+- a regulated power supply (DPH5005)
 
 12V battery
 =================
@@ -26,17 +26,20 @@ It needs to be connected to a 12V battery and can be controlled using `modbus` b
        :width: 400px
        :align: center
        :height: 300px
-       :alt: DPH-5005 image
+       :alt: DPH5005 image
        :figclass: align-center 
 
-To assemble DPH 5005, please follow the links:
- `DPH 5005 manual <https://joy-it.net/files/files/Produkte/JT-DPH5005/JT-DPH5005-Manual.pdf>`_
+To assemble DPH5005, please follow the links:
+ `DPH5005 manual <https://joy-it.net/files/files/Produkte/JT-DPH5005/JT-DPH5005-Manual.pdf>`_
 
- `DPH 5005 case manual <https://joy-it.net/files/files/Produkte/JT-DPS-Case/JT-DPS-Case-Manual_20200220.pdf>`_
+ `DPH5005 case manual <https://joy-it.net/files/files/Produkte/JT-DPS-Case/JT-DPS-Case-Manual_20200220.pdf>`_
 
 .. Note::
-    **Change the Baudrate from 9600 to 19200**, press and maintain **SET**, and start DPH-5005, you acces to a new menu change **BAUD** 
+    **Change the Baudrate from 9600 to 19200**, press and maintain **SET**, and start DPH5005, you acces to a new menu change **BAUD** 
 
 
 .. warning::
-    **Only use DPS 5005 with the measurement board v2024**
+    **Only use DPH5005 with the measurement board v2024**
+
+.. warning::
+    **We sometimes refer to DPS (Digital Power Supply) as a general power supply different from the 12V battery. But this does not refer to the DPS5005 component (step down DC/DC). The component used in the documentation is the DPH5005 (boost DC/DC converter).**
