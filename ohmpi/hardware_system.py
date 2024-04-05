@@ -13,11 +13,12 @@ from ohmpi.logging_setup import create_stdout_logger
 from ohmpi.utils import update_dict
 try:
     from ohmpi.config import HARDWARE_CONFIG as HC
-except:
-    print('A problem has occurred while importing the system configuration. Please check the ohmpi/config.py '
-          'configuration file. If you have not yet defined your system configuration, you can create a new '
-          'configuration file by using the python setup_config script. To run this script, type the following command'
-          ' in the terminal from the directory where you installed ohmpi : \npython3 setup_config.py')
+except ModuleNotFoundError:
+    print('The system configuration file is missing. If you have not yet defined your system configuration, '
+          'you can create a configuration file by using the python setup_config script. '
+          'To run this script, type the following command in the terminal from the directory where you '
+          'installed ohmpi : \npython3 setup_config.py\n'
+          'If you deleted your config.py file by mistake, you should find a backup in configs/config_backup.py')
     sys.exit()
 from threading import Thread, Event, Barrier, BrokenBarrierError
 import warnings
