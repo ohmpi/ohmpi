@@ -663,7 +663,8 @@ class OhmPi(object):
             vab = self._hw.compute_vab(vab=vab_requested, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
                                                iab_max=iab_max, vmn_min=vmn_min)
             # time.sleep(0.5)  # to wait for pwr discharge
-            self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
+            self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack,
+                                     duty_cycle=duty_cycle, **kwargs.get('vab_square_wave', {}))
             self.switch_mux_off(quad, cmd_id)
 
             if 'delay' in kwargs.keys():
