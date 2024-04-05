@@ -499,7 +499,7 @@ def test_pwr_accessibility(hw_nc, test_logger):
 def test_pwr_connectivity(hw, test_logger):
     """
         Test connectivity to PWR module, by attempting to switch it on (and reloading settings).
-        Test is successful if modbus connection can be established  (only DPS_5005 supported)
+        Test is successful if modbus connection can be established  (only DPH_5005 supported)
 
         Parameters
         ----------
@@ -544,7 +544,7 @@ def test_pwr_connection(hw, hw_nc, test_logger):
     """
         Test connection to PWR module
         Calls in test_pwr_accessibility first and then if successful calls in test_owr_connectivity.
-        Test is successful if USB plugged in and modbus connection can be established  (only DPS_5005 supported)
+        Test is successful if USB plugged in and modbus connection can be established  (only DPH_5005 supported)
 
         Parameters
         ----------

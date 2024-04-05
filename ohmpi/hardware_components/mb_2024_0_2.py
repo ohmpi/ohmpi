@@ -160,7 +160,6 @@ class Tx(Tx_mb_2023):
             self._pwr_state = 'off'
             self.exec_logger.event(f'{self.model}\ttx_pwr_state_off\tend\t{datetime.datetime.utcnow()}')
 
-
     def current_pulse(self, current=None, length=None, polarity=1):
         """ Generates a square current pulse. Currenttly no DPS can handle this...
 
@@ -258,8 +257,7 @@ class Rx(Rx_mb_2023):
         self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
     def _dg411_gain_auto(self):
-        #TODO: Check condition (see #177)
-        if self.voltage < self._vmn_hardware_offset:
+        if -self._vmn_hardware_offset < self.voltage + self.bias < self._vmn_hardware_offset:
             self._dg411_gain = 1.
         else:
             self._dg411_gain = self._dg411_gain_ratio

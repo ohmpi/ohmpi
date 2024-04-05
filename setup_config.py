@@ -42,7 +42,7 @@ while True:
 
 pwr = None
 while True:
-    if pwr in ['battery', 'dps5005']:
+    if pwr in ['battery', 'dph5005']:
         break
     else:
         pwr = input('Tx power: [battery/dph5005]:')
@@ -59,9 +59,14 @@ print('Using this configuration: ' + config)
 
 if os.path.exists('configs/' + config):
     shutil.copyfile('configs/' + config, 'ohmpi/config.py')
+    shutil.copyfile('configs/' + config, 'configs/config_backup.py')
     from ohmpi.config import HARDWARE_CONFIG, r_shunt, ohmpi_id
     print(f'Your configuration has been set. Your OhmPi id is set to {ohmpi_id}.')
+    print(f'The configuration file is stored in ohmpi/config.py, a backup copy is stored in configs/config_backup.py')
     print('You should now carefully verify that the configuration file fits your hardware setup.\n')
+    if pwr != 'battery':
+        print("It is advised to set a temporary limit on injection voltage while conducting the initial tests."
+              " To do so, add 'voltage': 2. in the 'pwr' value of the HARDWARE_CONFIG dictionary in ohmpi.config.py")
     k = 1
     if check_r_shunt:
         print(f'{k}. Check that the value of the shunt resistor value is {r_shunt} Ohm as stated in the config file.')
