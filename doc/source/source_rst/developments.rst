@@ -11,25 +11,10 @@ Developing hardware components
 Here is a non exhaustive wish list of new hardware features that are planned/hoped to be developed in the future.
 Contributors are welcomed to  join forces to make this list come true, or propose new ideas by creating a new issue in the Gitlab repository.
 
-Wish list of hardware developments:
-
-- Automatic selection of shunt resistors in a set of shunt resistances (hardware)
-- Add analog low-pass filter on receiver (hardware)
-- Battery recharge manager for monitoring (hardware)
-- Multi-channel acquisition (hardware)
-- Control OhmPi via microcontroller (hardware)
-
 Developing software features
 ****************************
 If the new developments purely concern the software (e.g. bug fix, new acquisition strategy, etc.), then please follow the
 git best practices by first creating an new issue and then create a local branch linked to this issue. Once the new feature is implemented, a pull request can be initiated.
-
-Here is a series of software developments that are planned/hoped:
-
-- Sequence generator (software)
-- Calculate time-variable SP effects (software)
-- Calculate IP from full-waveform (software)
-- Pseudo multi-channel acquisition (software)
 
 Software interface to new hardware components
 *********************************************
