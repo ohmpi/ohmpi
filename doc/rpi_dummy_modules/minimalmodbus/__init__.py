@@ -1,3 +1,4 @@
 # dummy module
-MODE_RTU = None
-Instrument = None
+from unittest.mock import Mock
+Instrument = Mock()
+MODE_RTU = Mock()

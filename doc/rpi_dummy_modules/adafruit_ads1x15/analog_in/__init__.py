@@ -1,2 +1,3 @@
 # dummy module
-AnalogIn = None
+from unittest.mock import Mock
+AnalogIn = Mock()

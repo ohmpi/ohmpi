@@ -1,2 +1,3 @@
 # dummy module
-Mode = None
+from unittest.mock import Mock
+Mode = Mock()
