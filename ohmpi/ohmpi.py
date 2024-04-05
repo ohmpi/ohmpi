@@ -117,12 +117,12 @@ class OhmPi(object):
                                    f" on {MQTT_CONTROL_CONFIG['hostname']} broker")
 
             def connect_mqtt() -> mqtt_client:
-                def on_connect(mqttclient, userdata, flags, reason_code, properties):
-                    if reason_code == 0:
+                def on_connect(mqttclient, userdata, flags, rc):
+                    if rc == 0:
                         self.exec_logger.debug(f"Successfully connected to control broker:"
                                                f" {MQTT_CONTROL_CONFIG['hostname']}")
                     else:
-                        self.exec_logger.warning(f'Failed to connect to control broker. Return code : {reason_code}')
+                        self.exec_logger.warning(f'Failed to connect to control broker. Return code : {rc}')
 
                 client = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)
                 client.username_pw_set(MQTT_CONTROL_CONFIG['auth'].get('username'),
