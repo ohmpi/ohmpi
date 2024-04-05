@@ -14,7 +14,7 @@ from ohmpi.utils import update_dict
 try:
     from ohmpi.config import HARDWARE_CONFIG as HC
 except ModuleNotFoundError:
-    print('The system configuration file is missing. If you have not yet defined your system configuration, '
+    print('The system configuration file is missing or broken. If you have not yet defined your system configuration, '
           'you can create a configuration file by using the python setup_config script. '
           'To run this script, type the following command in the terminal from the directory where you '
           'installed ohmpi : \npython3 setup_config.py\n'
