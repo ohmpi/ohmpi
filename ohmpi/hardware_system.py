@@ -36,7 +36,7 @@ class OhmPiHardware:
         self.tx_sync = Event()
         self.hardware_config = kwargs.pop('hardware_config', HC)
         HARDWARE_CONFIG = self.hardware_config
-        print('hardware_config', HARDWARE_CONFIG)
+        self.exec_logger.debug(f'Hardware config: {HARDWARE_CONFIG}')
         # Define the default controller, a distinct controller could be defined for each tx, rx or mux board
         # when using a distinct controller, the specific controller definition must be included in the component
         # configuration
@@ -637,7 +637,7 @@ class OhmPiHardware:
         flag = False
         if self.sp is None:
             flag = True
-            print('self.sp is None, setting it 0')
+            self.exec_logger.info('self.sp is None, setting it to 0')
             self.sp = 0
         warnings.filterwarnings("ignore", category=DeprecationWarning)
         fig, ax = plt.subplots(nrows=5, sharex=True)
