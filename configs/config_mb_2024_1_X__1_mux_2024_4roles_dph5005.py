@@ -26,14 +26,14 @@ r_shunt = 2.
 HARDWARE_CONFIG = {
     'ctl': {'model': 'raspberry_pi'},
     'pwr': {'model': 'pwr_dph5005', 'voltage': 2., 'interface_name': 'modbus'},
-    'tx':  {'model': 'mb_2024_0_2',
+    'tx':  {'model': 'mb_2024_1_X',
                  'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
                  'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
                  'r_shunt': r_shunt,  # Shunt resistance in Ohms
                  'interface_name': 'i2c',
                  'vmn_hardware_offset': 2500.
                 },
-    'rx':  {'model': 'mb_2024_0_2',
+    'rx':  {'model': 'mb_2024_1_X',
                  'latency': 0.010,  # latency in seconds in continuous mode
                  'sampling_rate': 200,  # number of samples per second
                  'interface_name': 'i2c',

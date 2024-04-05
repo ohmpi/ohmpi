@@ -189,7 +189,21 @@ def generate_preset_configs(configs_to_generate=None):
                                'config_mb_2024_0_2__4_mux_2024_4roles.py',
                                'config_mb_2024_0_2__4_mux_2024_4roles_dph5005.py',
                                'config_mb_2024_0_2__4_mux_2024_2roles.py',
-                               'config_mb_2024_0_2__4_mux_2024_2roles_dph5005.py'
+                               'config_mb_2024_0_2__4_mux_2024_2roles_dph5005.py',
+                               'config_mb_2024_1_X.py', 'config_mb_2024_1_X_dph5005.py',
+                               'config_mb_2024_1_X__4_mux_2023.py', 'config_mb_2024_1_X__4_mux_2023_dph5005.py',
+                               'config_mb_2024_1_X__1_mux_2024_4roles.py',
+                               'config_mb_2024_1_X__1_mux_2024_4roles_dph5005.py',
+                               'config_mb_2024_1_X__2_mux_2024_4roles.py',
+                               'config_mb_2024_1_X__2_mux_2024_4roles_dph5005.py',
+                               'config_mb_2024_1_X__2_mux_2024_2roles.py',
+                               'config_mb_2024_1_X__2_mux_2024_2roles_dph5005.py',
+                               'config_mb_2024_1_X__3_mux_2024_4roles.py',
+                               'config_mb_2024_1_X__3_mux_2024_4roles_dph5005.py',
+                               'config_mb_2024_1_X__4_mux_2024_4roles.py',
+                               'config_mb_2024_1_X__4_mux_2024_4roles_dph5005.py',
+                               'config_mb_2024_1_X__4_mux_2024_2roles.py',
+                               'config_mb_2024_1_X__4_mux_2024_2roles_dph5005.py'
                                ]
 
     header = """import logging
@@ -223,9 +237,21 @@ HARDWARE_CONFIG = {
 
     r_shunt = 2.
     options = {'pwr': {'battery': """{'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},""",
-                       'dph5005': """{'model': 'pwr_dph5005', 'voltage': 3., 'interface_name': 'modbus'},"""
+                       'dph5005': """{'model': 'pwr_dph5005', 'voltage': 2., 'interface_name': 'modbus'},"""
                        },
-               'mb': {'mb_2024_0_2': {'tx': """{'model': 'mb_2024_0_2',
+               'mb': {'mb_2024_1_X': {'tx': """{'model': 'mb_2024_1_X',
+                 'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
+                 'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
+                 'r_shunt': r_shunt,  # Shunt resistance in Ohms
+                 'interface_name': 'i2c',
+                 'vmn_hardware_offset': 2500.
+                }""",
+                                      'rx': """{'model': 'mb_2024_1_X',
+                 'latency': 0.010,  # latency in seconds in continuous mode
+                 'sampling_rate': 200,  # number of samples per second
+                 'interface_name': 'i2c',
+                }"""},
+                      'mb_2024_0_2': {'tx': """{'model': 'mb_2024_0_2',
                  'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
                  'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
                  'r_shunt': r_shunt,  # Shunt resistance in Ohms
@@ -351,6 +377,11 @@ HARDWARE_CONFIG = {
                              'current_max': 3.}
                 }\n}\n""",
                   'mb_2024_0_2': """\n                 },
+            'default': {'interface_name': 'i2c_ext',
+                             'voltage_max': 50.,
+                             'current_max': 3.}
+                }\n}\n""",
+                  'mb_2024_1_X': """\n                 },
             'default': {'interface_name': 'i2c_ext',
                              'voltage_max': 50.,
                              'current_max': 3.}
