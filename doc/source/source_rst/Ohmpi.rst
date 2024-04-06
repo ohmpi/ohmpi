@@ -8,9 +8,6 @@ OhmPi project
         :height: 188px
         :alt: Logo OhmPi
 
-Introduction
-************
-
 .. warning::
     OhmPi is a participative project open to all, it requires skills in electronics and to respect the safety rules.
     OhmPi must be assembled in a professional context and by people competent in electronics. The OhmPi team cannot be
@@ -21,15 +18,18 @@ Introduction
     FOR A PARTICULAR PURPOSE. Please see the CERN-OHL-P v2 for applicable conditions.
 
 
+Introduction
+************
 
-This documentation presents the development of a low-cost, open hardware \
-resistivity meter to provide the scientific community with a robust \
-and flexible tool for small-scale experiments. Called OhmPi, this basic resistivity meter\
-features current injection and measurement functions associated with a multiplexer \
-that allows performing automatic measurements with up to 64 electrodes.\
-OhmPi's philosophy is to provide a fully open source and open hardware tool\
-to the near surface scientific community.
+The OhmPi project was initiated to develop an open-source, open-hardware resistivity meter,
+particularly designed for the research community, education, and humanitarian or not-for-profit organisations.
+In the last decade, geoelectrical monitoring has become a popular tool to study and monitor
+physical processes in hydrology. As novel applications emerge, the need for more accessible and flexible acquisition systems
+grows in the research community. The flexibility and adaptability of OhmPi makes it particularly suited to
+develop novel acquisition strategies or design innovative small-scale monitoring experiments.
 
+.. note::
+   Anyone who wants to get involved is welcome to join the OhmPi project!
 
 Authors 
 ********
@@ -62,9 +62,5 @@ Citing OhmPi
 *source data logger for dedicated applications of electrical resistivity imaging at the small and laboratory*
 *scale. HardwareX, Elsevier, 2020, 8, 24 p. ff10.1016/j.ohx.2020.e00122ff.*
 
- 
-
-.. note:: 
-   Anyone who wants to get involved is welcome to join the OhmPi project!
 
 `PDF version of the documentation <../_static/ohmpi.pdf>`_ (note the latest version is always the html one)
