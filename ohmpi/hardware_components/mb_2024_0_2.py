@@ -257,7 +257,7 @@ class Rx(Rx_mb_2023):
         self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
 
     def _dg411_gain_auto(self):
-        if -self._vmn_hardware_offset < self.voltage + self.bias < self._vmn_hardware_offset:
+        if -0.8 * self._vmn_hardware_offset < self.voltage + self.bias < 0.8 * self._vmn_hardware_offset:
             self._dg411_gain = 1.
         else:
             self._dg411_gain = self._dg411_gain_ratio
@@ -283,7 +283,7 @@ class Rx(Rx_mb_2023):
         self.exec_logger.debug(f'Setting RX gain automatically to {self.gain}')
 
     def reset_gain(self):
-        self.gain =  self._adc_gain * self._dg411_gain_ratio  # 1/3 by default since self._adc_gain is equal to 2/3 and self._dg411_gain_ratio to 1/2 by default
+        self.gain = self._adc_gain * self._dg411_gain_ratio  # 1/3 by default since self._adc_gain is equal to 2/3 and self._dg411_gain_ratio to 1/2 by default
 
     def reset_mcp(self):
         self.mcp_board = MCP23008(self.connection, address=self._mcp_address)
