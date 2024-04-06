@@ -23,22 +23,22 @@ OHMPI: Open source and open hardware resistivity-meter
     * Release guidelines
     * General tutorials
 
-.. image:: img/logo/ohmpi/LOGO_OHMPI.png
-   :width: 168px
-   :height: 94px
-   :align: left
-
 Contents: 
 
 .. toctree:: 
-   :maxdepth: 2 
-
+   :maxdepth: 1
    source_rst/Ohmpi
+
+.. toctree::
+   :maxdepth: 2
    source_rst/hardware
    source_rst/software/index
    source_rst/troubleshooting
    source_rst/developments
    source_rst/gallery
+
+.. toctree::
+   :maxdepth: 1
    source_rst/archived_version
 
 
