@@ -124,7 +124,8 @@ class OhmPi(object):
                     else:
                         self.exec_logger.warning(f'Failed to connect to control broker. Return code : {rc}')
 
-                client = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)
+                client = mqtt_client.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION1,
+                                            client_id=f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)
                 client.username_pw_set(MQTT_CONTROL_CONFIG['auth'].get('username'),
                                        MQTT_CONTROL_CONFIG['auth']['password'])
                 client.on_connect = on_connect
