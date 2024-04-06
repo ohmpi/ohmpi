@@ -22,35 +22,37 @@ resistivity meter to provide the scientific community with a robust
 and flexible tool for small-scale experiments. Called OhmPi, this basic resistivity meter
 features current injection and measurement functions associated with a multiplexer
 that allows performing automatic measurements.
-OhmPi's philosophy is to provide a fully open source and open hardware tool
-to the near surface scientific community.
-
-The following sections presents the hardware and software characteristics of OhmPi, and details how to build
-a system from scratch and operate it.
 
 Contents:
 
-.. toctree:: 
+.. toctree::
    :maxdepth: 1
+   :caption: Introduction
 
    source_rst/Ohmpi
 
 .. toctree::
    :maxdepth: 2
+   :caption: Building and operating OhmPi
 
    source_rst/hardware
    source_rst/software/index
 
 .. toctree::
    :maxdepth: 1
+   :caption: Additional resources
 
    source_rst/troubleshooting
    source_rst/developments
    source_rst/gallery
    source_rst/archived_version
 
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: References
 
-Official repository: https://gitlab.com/ohmpi/ohmpi
+   Link to OhmPi Repository <https://gitlab.com/ohmpi/ohmpi>
 
 `PDF version of this documentation <_static/ohmpi.pdf>`_
 
