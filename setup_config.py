@@ -16,6 +16,8 @@ while True:
 
 if mb == 'v2024':
     mb = 'v2024_1_X_'  # NOTE: used to be set to mb_2024_0_2 by default
+    print(f'Using board version {mb}. If you are using another version of this board,'
+          f' make sure to update your config.py file.\n')
 
 mux = None
 while True:
