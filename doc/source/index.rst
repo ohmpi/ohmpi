@@ -15,15 +15,16 @@ OHMPI: Open source and open hardware resistivity-meter
     :Date start: July 2016	
     :Authors: **Rémi CLEMENT, Nicolas FORQUET, Yannick FARGIER, Vivien DUBOIS, Hélène GUYARD, Olivier KAUFMANN, Guillaume BLANCHY, Arnaud WATLET**
     :Target: users, researchers and developers 
-    :tatus: some mature, some in progress
+    :Status: some mature, some in progress
 
 This documentation presents the development of a low-cost, open hardware
 resistivity meter to provide the scientific community with a robust
-and flexible tool for small-scale experiments. Called OhmPi, this basic resistivity meter
+and flexible tool for small-scale experiments. Called OhmPi, this resistivity meter
 features current injection and measurement functions associated with a multiplexer
 that allows performing automatic measurements.
 
-Contents:
+Contents
+********
 
 .. toctree::
    :maxdepth: 1
