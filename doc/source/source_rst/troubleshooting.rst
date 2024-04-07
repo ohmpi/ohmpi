@@ -1,7 +1,7 @@
 Troubleshooting
 ********************
 
-We encourage users to report any issue, or bugs as an issue in the `official repository on GitLab <https://gitlab.com/ohmpi/ohmpi/-/issues>`.
+We encourage users to report any issue, or bugs as an issue in the `official repository on GitLab <https://gitlab.com/ohmpi/ohmpi/-/issues>`_.
 Please have a look at existing open and closed issues before posting a new one.
 We've compiled here below a list of common issues and and explanations on how to fix them.
 
