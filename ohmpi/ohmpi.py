@@ -671,7 +671,7 @@ class OhmPi(object):
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
 
             vab = self._hw.compute_vab(vab=vab_requested, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
-                                               iab_max=iab_max, vmn_min=vmn_min)
+                                               iab_max=iab_max, vmn_min=vmn_min, **kwargs.get('compute_vab', {}))
             # time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack,
                                      duty_cycle=duty_cycle, **kwargs.get('vab_square_wave', {}))
@@ -868,7 +868,8 @@ class OhmPi(object):
             if self.status == 'stopping':
                 break
             # run a measurement
-            acquired_data = self.run_measurement(quad=quad, **kwargs)
+            kw = {'compute_vab':{'quad_id': i, 'filename': filename}}
+            acquired_data = self.run_measurement(quad=quad, **kw, **kwargs)
 
             # add command_id in dataset
             acquired_data.update({'cmd_id': cmd_id})

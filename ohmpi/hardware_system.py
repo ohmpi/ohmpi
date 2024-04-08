@@ -3,6 +3,7 @@ import datetime
 import time
 import numpy as np
 import sys
+import os
 
 try:
     import matplotlib.pyplot as plt
@@ -491,7 +492,7 @@ class OhmPiHardware:
 
     def compute_vab(self, pulse_duration=0.1, strategy='vmax', vab=5., vab_max=None,
                     iab_max=None, vmn_max=None, vmn_min=None, polarities=(1, -1), delay=0.05,
-                    p_max=None, diff_vab_lim=2.5, n_steps=4):
+                    p_max=None, diff_vab_lim=2.5, n_steps=4, filename=None, quad_id=0):
         """ Estimates best Vab voltage based on different strategies.
         In "vmax" and "vmin" strategies, we iteratively increase/decrease the vab while
         checking vmn < vmn_max, vmn > vmn_min and iab < iab_max. We do a maximum of n_steps
@@ -611,6 +612,7 @@ class OhmPiHardware:
                     vabs = []
                     self._vab_pulses(vab_list[k], sampling_rate=self.rx.sampling_rate,
                                      durations=[pulse_duration, pulse_duration], polarities=polarities)
+                    readings = self.readings
                     for pulse in range(len(polarities)):
                         v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (
                                     self.readings[:, 1] == pulse))[0]  # NOTE : discard data acquired in the first x ms
@@ -619,6 +621,7 @@ class OhmPiHardware:
                         new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min)
                         diff_vab = np.abs(new_vab - vab_list[k])
                         vabs.append(new_vab)
+                        readings = np.vstack([readings, self.readings])
                         # print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
                         if diff_vab < diff_vab_lim:
                             self.exec_logger.debug('Compute_vab stopped on vab increase too small')
@@ -626,6 +629,8 @@ class OhmPiHardware:
                     vab_list[k] = np.min(vabs)
                     if self.tx.pwr.voltage_adjustable:
                         self.tx.voltage = vab_list[k]
+                if filename is not None:
+                    np.save(os.path.join(filename[:-4],str(quad_id)+'.npy'), readings)
                 if k > n_steps:
                     self.exec_logger.debug('Compute_vab stopped on maximum number of steps reached')
                 vab_opt = vab_list[k]
