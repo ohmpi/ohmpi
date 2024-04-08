@@ -34,7 +34,8 @@ def elapsed_seconds(start_time):
 
 class OhmPiHardware:
     """OhmPiHardware class.
-        """
+    A class to operate the system of assembled components as defined in the ohmpi/config.py file
+    """
 
     def __init__(self, **kwargs):
         # OhmPiHardware initialization
@@ -85,7 +86,6 @@ class OhmPiHardware:
                                         [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
 
         self.vmn_min = RX_CONFIG['voltage_min']
-        # TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
         self.sampling_rate = RX_CONFIG['sampling_rate']
 
         # Main Controller initialization
