@@ -221,7 +221,7 @@ logging_suffix = ''
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': ohmpi_id,  # Unique identifier of the OhmPi board (string)
-    'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
+    'settings': 'settings/default.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
 }
 
 r_shunt = 2.

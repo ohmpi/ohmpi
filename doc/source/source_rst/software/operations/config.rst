@@ -58,7 +58,7 @@ The configuration is written in a python file structured in a series of dictiona
   # OhmPi configuration
   OHMPI_CONFIG = {
       'id': ohmpi_id,  # Unique identifier of the OhmPi board (string), default = '0001'
-      'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
+      'settings': 'settings/default.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
   }
 
 
