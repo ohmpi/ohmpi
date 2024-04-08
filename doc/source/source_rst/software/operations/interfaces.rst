@@ -147,7 +147,6 @@ MQTT commands are sent in JSON format following the Python API with kwargs as il
     }
   }
 
-
 .. code-block:: json
   :caption: Check contact resistances
 
