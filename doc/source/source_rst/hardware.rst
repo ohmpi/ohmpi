@@ -6,6 +6,7 @@ Hardware
 ********
 
 This section contains the documentation needed to build an OhmPi.
+
 The OhmPi is composed of different modules:
 
 - a measurements board (``mb``): that measures the current and voltage and modulates the injected current
@@ -22,7 +23,8 @@ You can then upgrade your measurement board or power supply for specific applica
 
 
 .. toctree:: 
-   :maxdepth: 2 
+   :maxdepth: 2
+   :caption: Contents
 
    hardware/hw_info
    hardware/hw_mb

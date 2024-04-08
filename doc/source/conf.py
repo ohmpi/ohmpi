@@ -72,6 +72,12 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+html_context = {
+    "display_gitlab": True, # Integrate Gitlab
+    "gitlab_repo": "ohmpi/ohmpi", # Repo name
+    "gitlab_version": "master", # Version
+    "conf_py_path": "/doc/source/", # Path in the checkout to the docs root
+}
 
 
 master_doc = 'index'
