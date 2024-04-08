@@ -75,16 +75,16 @@ class OhmPiHardware:
             except Exception as e:
                 print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
 
-        self.current_max = np.min([TX_CONFIG['current_max'], HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
-                                   np.min(np.hstack(
+        self.iab_max = np.min([TX_CONFIG['current_max'], HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
+                               np.min(np.hstack(
                                        (np.inf,
                                         [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))])
-        self.voltage_max = np.min([TX_CONFIG['voltage_max'],
-                                   np.min(np.hstack(
+        self.vab_max = np.min([TX_CONFIG['voltage_max'],
+                               np.min(np.hstack(
                                        (np.inf,
                                         [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
 
-        self.voltage_min = RX_CONFIG['voltage_min']
+        self.vmn_min = RX_CONFIG['voltage_min']
         # TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
         self.sampling_rate = RX_CONFIG['sampling_rate']
 
@@ -144,7 +144,7 @@ class OhmPiHardware:
         HARDWARE_CONFIG['pwr'].pop('model')
         HARDWARE_CONFIG['pwr'].update(**HARDWARE_CONFIG['pwr'])  # NOTE: Explain why this is needed or delete me
         HARDWARE_CONFIG['pwr'].update({'ctl': HARDWARE_CONFIG['pwr'].pop('ctl', self.ctl)})
-        HARDWARE_CONFIG['pwr'].update({'current_max': self.current_max})
+        HARDWARE_CONFIG['pwr'].update({'current_max': self.iab_max})
         if isinstance(HARDWARE_CONFIG['pwr']['ctl'], dict):
             ctl_mod = HARDWARE_CONFIG['pwr']['ctl'].pop('model', self.ctl)
             if isinstance(ctl_mod, str):
@@ -174,7 +174,7 @@ class OhmPiHardware:
             self.tx.pwr._pwr_latency = 0
         if self.tx.specs['connect']:
             self.tx.polarity = 0
-        self.tx.pwr._current_max = self.current_max
+        self.tx.pwr._current_max = self.iab_max
 
         # Initialize Muxes
         self._cabling = kwargs.pop('cabling', {})
@@ -554,11 +554,11 @@ class OhmPiHardware:
             if vmn_max is None:
                 vmn_max = self.rx._voltage_max / 1000.
             if iab_max is None:
-                iab_max = self.current_max
+                iab_max = self.iab_max
             if vmn_min is None:
-                vmn_min = self.voltage_min
+                vmn_min = self.vmn_min
             if vab_max is None:
-                vab_max = self.voltage_max
+                vab_max = self.vab_max
             # print(f'Vmn max: {vmn_max}')
             if p_max is None:
                 p_max = vab_max * iab_max
