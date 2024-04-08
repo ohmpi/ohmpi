@@ -630,6 +630,7 @@ class OhmPiHardware:
                     if self.tx.pwr.voltage_adjustable:
                         self.tx.voltage = vab_list[k]
                 if filename is not None:
+                    os.makedirs(filename[:-4], exist_ok=True)
                     np.save(os.path.join(filename[:-4],str(quad_id)+'.npy'), readings)
                 if k > n_steps:
                     self.exec_logger.debug('Compute_vab stopped on maximum number of steps reached')
