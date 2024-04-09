@@ -614,8 +614,9 @@ class OhmPiHardware:
                                      durations=[pulse_duration, pulse_duration], polarities=polarities)
                     readings = self.readings
                     for pulse in range(len(polarities)):
-                        v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (
-                                    self.readings[:, 1] == pulse))[0]  # NOTE : discard data acquired in the first x ms
+                        # v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (
+                        #             self.readings[:, 1] == pulse))[0]  # NOTE : discard data acquired in the first x ms
+                        v = self.select_samples(delay=delay)
                         iab = self.readings[v, 3] / 1000.
                         vmn = np.abs(self.readings[v, 4] / 1000. * self.readings[v, 2])
                         new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min)
@@ -627,7 +628,8 @@ class OhmPiHardware:
                             self.exec_logger.debug('Compute_vab stopped on vab increase too small')
                         if filename is not None:
                             os.makedirs(filename[:-4], exist_ok=True)
-                            np.save(os.path.join(filename[:-4],f'quad{quad_id}_step{k}_pulse{pulse}.npy'), self.readings)
+                            np.save(os.path.join(filename[:-4], f'quad{quad_id}_step{k}_pulse{pulse}.npy'),
+                                    self.readings)
                     k = k + 1
                     vab_list[k] = np.min(vabs)
                     if self.tx.pwr.voltage_adjustable:
