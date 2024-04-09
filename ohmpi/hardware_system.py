@@ -493,11 +493,11 @@ class OhmPiHardware:
         else:
             self.exec_logger.debug(f'Vab {vab} bounded by Vmn min')
         r = new_vab / vab
-        self.exec_logger.debug(f'iab: [{iab_lower_bound * r:.4f}, {iab_upper_bound * r:.4f}] A,',
-              f'vmn : [{vmn_lower_bound * r:.3f}, {vmn_upper_bound * r:.3f}] V,',
-              f'p : [{vmn_lower_bound * iab_lower_bound * r ** 2:.2f}, {vmn_upper_bound * iab_upper_bound * r ** 2:.2f}] W, ',
-              f'Rab : [{rab_lower_bound}, {rab_upper_bound}] Ohms, R : [{r_lower_bound}, {r_upper_bound}] Ohms\n',
-              f'-> Selecting {new_vab:.2f} V.')
+        self.exec_logger.debug(f'iab: [{iab_lower_bound * r:.4f}, {iab_upper_bound * r:.4f}] A,')
+        self.exec_logger.debug(f'vmn : [{vmn_lower_bound * r:.3f}, {vmn_upper_bound * r:.3f}] V,')
+        self.exec_logger.debug(f'p : [{vmn_lower_bound * iab_lower_bound * r ** 2:.2f}, {vmn_upper_bound * iab_upper_bound * r ** 2:.2f}] W, ')
+        self.exec_logger.debug(f'Rab : [{rab_lower_bound}, {rab_upper_bound}] Ohms, R : [{r_lower_bound}, {r_upper_bound}] Ohms\n')
+        self.exec_logger.debug(f'-> Selecting {new_vab:.2f} V.')
         return new_vab
 
     def compute_vab(self, pulse_duration=0.1, strategy='vmax', vab=5., vab_max=None, vab_min=None,
