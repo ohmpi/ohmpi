@@ -625,8 +625,9 @@ class OhmPiHardware:
                     self._vab_pulses(vab_list[k], sampling_rate=self.rx.sampling_rate,
                                      durations=[pulse_duration, pulse_duration], polarities=polarities)
                     for pulse in range(len(polarities)):
-                        v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (
-                                    self.readings[:, 1] == pulse))[0]  # NOTE : discard data acquired in the first x ms
+                        # v = np.where((self.readings[:, 0] > delay) & (self.readings[:, 2] != 0) & (
+                        #             self.readings[:, 1] == pulse))[0]  # NOTE : discard data acquired in the first x ms
+                        v = self.select_samples(delay=delay)
                         iab = self.readings[v, 3] / 1000.
                         vmn = np.abs(self.readings[v, 4] / 1000. * self.readings[v, 2])
                         new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, vab_min, iab_max, vmn_max, vmn_min)
