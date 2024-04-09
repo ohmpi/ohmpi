@@ -422,7 +422,7 @@ class OhmPiHardware:
             self.sp = np.mean(mean_vmn[np.ix_(polarity == 1)] + mean_vmn[np.ix_(polarity == -1)]) / 2
             # return sp
 
-    def _find_vab(self, vab, iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min):
+    def _find_vab(self, vab, iab, vmn, p_max, vab_max, vab_min, iab_max, vmn_max, vmn_req):
         """ Finds the best injection voltage
 
         Parameters
@@ -437,11 +437,13 @@ class OhmPiHardware:
 
         vab_max: float
 
+        vab_min: float
+
         iab_max: float
 
         vmn_max: float
 
-        vmn_min: float
+        vmn_req: float
 
         Returns
         -------
@@ -449,7 +451,7 @@ class OhmPiHardware:
             improved value for vab
 
         """
-        self.exec_logger.debug('Searching for the best Vab...')
+        print('Searching for the best Vab...')
         iab_mean = np.mean(iab)
         iab_std = np.std(iab)
         vmn_mean = np.mean(vmn)
@@ -469,14 +471,15 @@ class OhmPiHardware:
         r_upper_bound = np.max([0.1, np.abs(vmn_upper_bound / iab_lower_bound)])
         # conditions for vab update
         cond_vmn_max = rab_lower_bound / r_upper_bound * vmn_max
-        cond_vmn_min = rab_upper_bound / r_lower_bound * vmn_min
+        cond_vmn_req = rab_upper_bound / r_lower_bound * vmn_req
         cond_p_max = np.sqrt(p_max * rab_lower_bound)
         cond_iab_max = rab_lower_bound * iab_max
-        # print(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
+        self.exec_logger.debug(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
+        self.exec_logger.debug(f'*** [{5 * rab_lower_bound / r_upper_bound:.1f}, {5 * rab_lower_bound / r_lower_bound:.1f}] V ***')
         self.exec_logger.debug(
-            f'[vab_max: {vab_max:.1f}, vmn_max: {cond_vmn_max:.1f}, vmn_min: {cond_vmn_min:.1f}, '
-            f'p_max: {cond_p_max:.1f}, iab_max: {cond_iab_max:.1f}]')
-        new_vab = np.min([vab_max, cond_vmn_max, cond_p_max, cond_iab_max])
+            f'[vab_max: {vab_max:.1f} V, vmn_max: {cond_vmn_max:.1f} V, vmn_req: {cond_vmn_req:.1f} V, '
+            f'p_max: {cond_p_max:.1f} V, iab_max: {cond_iab_max:.1f} V]')
+        new_vab = np.max([np.min([vab_max, cond_vmn_max, cond_p_max, cond_iab_max, cond_vmn_req]), vab_min])
         if new_vab == vab_max:
             self.exec_logger.debug(f'Vab {new_vab} bounded by Vab max')
         elif new_vab == cond_p_max:
@@ -485,12 +488,19 @@ class OhmPiHardware:
             self.exec_logger.debug(f'Vab {vab} bounded by Iab max')
         elif new_vab == cond_vmn_max:
             self.exec_logger.debug(f'Vab {vab} bounded by Vmn max')
+        elif new_vab == vab_min:
+            self.exec_logger.debug(f'Vab {vab} bounded by Vab min')
         else:
             self.exec_logger.debug(f'Vab {vab} bounded by Vmn min')
-
+        r = new_vab / vab
+        self.exec_logger.debug(f'iab: [{iab_lower_bound * r:.4f}, {iab_upper_bound * r:.4f}] A,',
+              f'vmn : [{vmn_lower_bound * r:.3f}, {vmn_upper_bound * r:.3f}] V,',
+              f'p : [{vmn_lower_bound * iab_lower_bound * r ** 2:.2f}, {vmn_upper_bound * iab_upper_bound * r ** 2:.2f}] W, ',
+              f'Rab : [{rab_lower_bound}, {rab_upper_bound}] Ohms, R : [{r_lower_bound}, {r_upper_bound}] Ohms\n',
+              f'-> Selecting {new_vab:.2f} V.')
         return new_vab
 
-    def compute_vab(self, pulse_duration=0.1, strategy='vmax', vab=5., vab_max=None,
+    def compute_vab(self, pulse_duration=0.1, strategy='vmax', vab=5., vab_max=None, vab_min=None,
                     iab_max=None, vmn_max=None, vmn_min=None, polarities=(1, -1), delay=0.05,
                     p_max=None, diff_vab_lim=2.5, n_steps=4, filename=None, quad_id=0):
         """ Estimates best Vab voltage based on different strategies.
@@ -560,6 +570,8 @@ class OhmPiHardware:
                 vmn_min = self.vmn_min
             if vab_max is None:
                 vab_max = self.vab_max
+            if vab_min is None:
+                vab_min = vmn_max
             # print(f'Vmn max: {vmn_max}')
             if p_max is None:
                 p_max = vab_max * iab_max
@@ -617,7 +629,7 @@ class OhmPiHardware:
                                     self.readings[:, 1] == pulse))[0]  # NOTE : discard data acquired in the first x ms
                         iab = self.readings[v, 3] / 1000.
                         vmn = np.abs(self.readings[v, 4] / 1000. * self.readings[v, 2])
-                        new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, iab_max, vmn_max, vmn_min)
+                        new_vab = self._find_vab(vab_list[k], iab, vmn, p_max, vab_max, vab_min, iab_max, vmn_max, vmn_min)
                         diff_vab = np.abs(new_vab - vab_list[k])
                         vabs.append(new_vab)
                         # print(f'new_vab: {new_vab}, diff_vab: {diff_vab}\n')
