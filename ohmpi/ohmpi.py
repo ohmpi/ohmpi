@@ -815,7 +815,7 @@ class OhmPi(object):
         self.thread = Thread(target=func)
         self.thread.start()
 
-    def run_sequence(self, fw_in_csv=None, fw_in_zip=None, cmd_id=None, **kwargs):
+    def run_sequence(self, fw_in_csv=None, fw_in_zip=None, cmd_id=None, save_strategy_fw=False, **kwargs):
         """Runs sequence synchronously (=blocking on main thread).
            Additional arguments are passed to run_measurement().
 
@@ -868,8 +868,9 @@ class OhmPi(object):
             if self.status == 'stopping':
                 break
             # run a measurement
-            kw = {'compute_vab':{'quad_id': i, 'filename': filename}}
-            acquired_data = self.run_measurement(quad=quad, **kw, **kwargs)
+            if save_strategy_fw:
+                kwargs['compute_vab']={'quad_id': i, 'filename':filename}
+            acquired_data = self.run_measurement(quad=quad, **kwargs)
 
             # add command_id in dataset
             acquired_data.update({'cmd_id': cmd_id})
