@@ -469,7 +469,7 @@ class OhmPiHardware:
         msg = (f'Searching for Vab with Vab: <{vab_min:.1f}, {vab_req:.1f} , {vab_max:.1f}> V, '
                f'iab: <{iab_min*1000.:.1f}, {iab_req*1000.:.1f} , {iab_max*1000.:.1f}> mA',
                f'Vmn: <{vmn_min*1000.:.1f}, {vmn_req*1000.:.1f} , {vmn_max*1000.:.1f}> mV',
-               f'Pab: <{pab_min*1000.:.1f}, {pab_req.:.1f} , {pab_max:.1f}> W')
+               f'Pab: <{pab_min*1000.:.1f}, {pab_req:.1f} , {pab_max:.1f}> W')
         self.exec_logger.debug(msg)
         pulses = np.unique(self.readings[:, 1])
         n_pulses = len(pulses)
