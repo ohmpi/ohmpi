@@ -167,14 +167,15 @@ class OhmPiHardware:
         HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                        'soh_logger': self.soh_logger})
 
-        self.pab_min = 0.00005 # W TODO: Add in pwr components specs
-        self.pab_max = self.pwr.specs['power_max'] # W
 
         # if self.tx.specs['connect']:
         #     self.pwr_state = "on"
         self.pwr = kwargs.pop('pwr', pwr_module.Pwr(**HARDWARE_CONFIG['pwr']))
         # if self.tx.specs['connect']:
         #     self.pwr_state = 'off'
+
+        self.pab_min = 0.00005 # W TODO: Add in pwr components specs
+        self.pab_max = self.pwr.specs['power_max'] # W
 
         # Join tX and pwr
         self.tx.pwr = self.pwr
