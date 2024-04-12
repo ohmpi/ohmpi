@@ -580,8 +580,9 @@ class OhmPi(object):
         self._hw._plot_readings(save_fig=save_fig, filename=filename)
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
-                        autogain=True, strategy=None, tx_volt=None, vab=None, best_tx_injtime=0.1,
-                        cmd_id=None, vab_max=None, iab_max=None, vmn_max=None, vmn_min=None, **kwargs):
+                        strategy=None, tx_volt=None, vab=None, vab_init=None, vab_min=None, vab_req=None, vab_max=None,
+                        iab_min=None, iab_req=None, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
+                        pab_min=None, pab_req=None, pab_max=None, cmd_id=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value,
         #  change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used
@@ -610,18 +611,47 @@ class OhmPi(object):
             Safety check (i.e. short voltage pulses) performed prior to injection to ensure
             injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
             To bypass safety check before injection, vab should be set equal to vab_max (not recpommanded)
-        vab_max : str, optional
-            Maximum injection voltage.
+
+        vab_init : float, optional
+            Initial injection voltage [V]
             Default value set by config or boards specs
-        iab_max : str, optional
-            Maximum current applied.
+        vab_min : float, optional
+            Minimum injection voltage [V]
             Default value set by config or boards specs
-        vmn_max : str, optional
-            Maximum Vmn allowed.
+        vab_req : float, optional
+            Requested injection voltage [V]
             Default value set by config or boards specs
-        vmn_min :
-            Minimum Vmn desired (used in strategy vmin).
+        vab_max : float, optional
+            Maximum injection voltage [V]
             Default value set by config or boards specs
+        iab_min : float, optional
+            Minimum current [mA]
+            Default value set by config or boards specs
+        iab_req : float, optional
+            Requested iab [mA]
+            Default value set by config or boards specs
+        iab_max : float, optional
+            Maximum iab allowed [mA].
+            Default value set by config or boards specs
+        pab_min : float, optional
+            Minimum power [W].
+            Default value set by config or boards specs
+        pab_req : float, optional
+            Requested power [W].
+            Default value set by config or boards specs
+        pab_max : float, optional
+            Maximum power allowed [W].
+            Default value set by config or boards specs
+        vmn_min: float, optional
+            Minimum Vmn [mV] (used in strategy vmin).
+            Default value set by config or boards specs
+        vmn_req: float, optional
+            Requested Vmn [mV] (used in strategy vmin).
+            Default value set by config or boards specs
+        vmn_max: float, optional
+            Maximum Vmn [mV] (used in strategy vmin).
+            Default value set by config or boards specs
+
         tx_volt : float, optional  # deprecated
             For power adjustable only. If specified, voltage will be imposed.
         vab : float, optional
@@ -648,30 +678,116 @@ class OhmPi(object):
             injection_duration = self.settings['injection_duration']
         if duty_cycle is None and 'duty_cycle' in self.settings:
             duty_cycle = self.settings['duty_cycle']
+        if strategy is None and 'strategy' in self.settings:
+            strategy = self.settings['strategy']
         if tx_volt is None and 'tx_volt' in self.settings:
             tx_volt = self.settings['tx_volt']
         if vab is None and 'vab' in self.settings:
-            vab_requested = self.settings['vab']
+            vab = self.settings['vab']
         if vab is None and tx_volt is not None:
             warnings.warn('"tx_volt" argument is deprecated and will be removed in future version. Use "vab" instead to set the transmitter voltage in volts.', DeprecationWarning)
-            vab_requested = tx_volt
-        if strategy is None and 'strategy' in self.settings:
-            strategy = self.settings['strategy']
+            vab = tx_volt
+        if vab_init is None and 'vab_init' in self.settings:
+            vab_init = self.settings['vab_init']
+        if vab_min is None and 'vab_min' in self.settings:
+            vab_min = self.settings['vab_min']
+        if vab_req is None and 'vab_req' in self.settings:
+            vab_req = self.settings['vab_req']
         if vab_max is None and 'vab_max' in self.settings:
             vab_max = self.settings['vab_max']
+        if iab_min is None and 'iab_min' in self.settings:
+            iab_min = self.settings['iab_min']
+        if iab_req is None and 'iab_req' in self.settings:
+            iab_req = self.settings['iab_req']
         if iab_max is None and 'iab_max' in self.settings:
             iab_max = self.settings['iab_max']
-        if vmn_max is None and 'vmn_max' in self.settings:
-            vmn_max = self.settings['vmn_max']
         if vmn_min is None and 'vmn_min' in self.settings:
             vmn_min = self.settings['vmn_min']
+        if vmn_req is None and 'vmn_req' in self.settings:
+            vmn_req = self.settings['vmn_req']
+        if vmn_max is None and 'vmn_max' in self.settings:
+            vmn_max = self.settings['vmn_max']
+        if pab_min is None and 'pab_min' in self.settings:
+            pab_min = self.settings['pab_min']
+        if pab_req is None and 'pab_req' in self.settings:
+            pab_req = self.settings['pab_req']
+        if pab_max is None and 'pab_max' in self.settings:
+            pab_max = self.settings['pab_max']
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
 
-        if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
+        if vab_init is None:
+            vab_init = vab
 
-            vab = self._hw.compute_vab(vab=vab_requested, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
-                                               iab_max=iab_max, vmn_min=vmn_min, **kwargs.get('compute_vab', {}))
+        vab_req = vab
+
+        if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
+            if strategy == 'constant':
+                kwargs_compute_vab = kwargs.get('compute_vab', {})
+                kwargs_compute_vab['vab_init'] = vab_init
+                kwargs_compute_vab['vab_min'] = None
+                kwargs_compute_vab['vab_req'] = vab_req
+                kwargs_compute_vab['vab_max'] = None
+                kwargs_compute_vab['iab_min'] = None
+                kwargs_compute_vab['iab_req'] = None
+                kwargs_compute_vab['iab_max'] = None
+                kwargs_compute_vab['vmn_min'] = None
+                kwargs_compute_vab['vmn_req'] = None
+                kwargs_compute_vab['vmn_max'] = None
+                kwargs_compute_vab['pab_min'] = None
+                kwargs_compute_vab['pab_req'] = None
+                kwargs_compute_vab['pab_max'] = None
+
+            elif strategy == 'vmax':
+                kwargs_compute_vab = kwargs.get('compute_vab', {})
+                kwargs_compute_vab['vab_init'] = vab_init
+                kwargs_compute_vab['vab_min'] = None
+                kwargs_compute_vab['vab_req'] = vab_req
+                kwargs_compute_vab['vab_max'] = vab_max
+                kwargs_compute_vab['iab_min'] = None
+                kwargs_compute_vab['iab_req'] = None
+                kwargs_compute_vab['iab_max'] = None
+                kwargs_compute_vab['vmn_min'] = None
+                kwargs_compute_vab['vmn_req'] = None
+                kwargs_compute_vab['vmn_max'] = None
+                kwargs_compute_vab['pab_min'] = None
+                kwargs_compute_vab['pab_req'] = None
+                kwargs_compute_vab['pab_max'] = None
+
+            elif strategy == 'vreq':
+                kwargs_compute_vab = kwargs.get('compute_vab', {})
+                kwargs_compute_vab['vab_init'] = vab_init
+                kwargs_compute_vab['vab_min'] = None
+                kwargs_compute_vab['vab_req'] = vab_req
+                kwargs_compute_vab['vab_max'] = None
+                kwargs_compute_vab['iab_min'] = None
+                kwargs_compute_vab['iab_req'] = None
+                kwargs_compute_vab['iab_max'] = None
+                kwargs_compute_vab['vmn_min'] = None
+                kwargs_compute_vab['vmn_req'] = vmn_req
+                kwargs_compute_vab['vmn_max'] = None
+                kwargs_compute_vab['pab_min'] = None
+                kwargs_compute_vab['pab_req'] = None
+                kwargs_compute_vab['pab_max'] = None
+
+            elif strategy == 'flex':
+                kwargs_compute_vab = kwargs.get('compute_vab', {})
+                kwargs_compute_vab['vab_init'] = vab_init
+                kwargs_compute_vab['vab_min'] = vab_min
+                kwargs_compute_vab['vab_req'] = vab_req
+                kwargs_compute_vab['vab_max'] = vab_max
+                kwargs_compute_vab['iab_min'] = iab_min
+                kwargs_compute_vab['iab_req'] = iab_req
+                kwargs_compute_vab['iab_max'] = iab_max
+                kwargs_compute_vab['vmn_min'] = vmn_min
+                kwargs_compute_vab['vmn_req'] = vmn_req
+                kwargs_compute_vab['vmn_max'] = vmn_max
+                kwargs_compute_vab['pab_min'] = pab_min
+                kwargs_compute_vab['pab_req'] = pab_req
+                kwargs_compute_vab['pab_max'] = pab_max
+
+            vab = self._hw.compute_vab(**kwargs_compute_vab)
+
             # time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack,
                                      duty_cycle=duty_cycle, **kwargs.get('vab_square_wave', {}))
