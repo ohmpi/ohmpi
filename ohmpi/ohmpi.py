@@ -586,7 +586,7 @@ class OhmPi(object):
         #  change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used
         #  in function definition -> (GB) default values are in self.settings.
-        """Measures on a quadrupole and returns a dictionnary with the transfer resistance.
+        """Measures on a quadrupole and returns a dictionary with the transfer resistance.
 
         Parameters
         ----------
@@ -638,7 +638,7 @@ class OhmPi(object):
         self.exec_logger.debug('Starting measurement')
         self.exec_logger.debug('Waiting for data')
 
-        vab_requested = vab
+        vab_init = vab
         # check arguments
         if quad is None:
             quad = np.array([0, 0, 0, 0])
@@ -651,10 +651,10 @@ class OhmPi(object):
         if tx_volt is None and 'tx_volt' in self.settings:
             tx_volt = self.settings['tx_volt']
         if vab is None and 'vab' in self.settings:
-            vab_requested = self.settings['vab']
+            vab_init = self.settings['vab']
         if vab is None and tx_volt is not None:
             warnings.warn('"tx_volt" argument is deprecated and will be removed in future version. Use "vab" instead to set the transmitter voltage in volts.', DeprecationWarning)
-            vab_requested = tx_volt
+            vab_init = tx_volt
         if strategy is None and 'strategy' in self.settings:
             strategy = self.settings['strategy']
         if vab_max is None and 'vab_max' in self.settings:
@@ -670,7 +670,7 @@ class OhmPi(object):
 
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
 
-            vab = self._hw.compute_vab(vab=vab_requested, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
+            vab = self._hw.compute_vab(vab=vab_init, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
                                                iab_max=iab_max, vmn_min=vmn_min, **kwargs.get('compute_vab', {}))
             # time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack,
@@ -732,7 +732,7 @@ class OhmPi(object):
 
             # if strategy not constant, then switch dps off (button) in case following measurement within sequence
             # TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
-            if (strategy == 'vmax' or strategy == 'vmin') and vab - vab_requested > 0.:  # if starting vab was too far (> 5 V) from actual vab, then turn pwr off
+            if (strategy == 'vmax' or strategy == 'vmin') and vab - vab_init > 0.:  # if starting vab was too far (> 5 V) from actual vab, then turn pwr off
                 self._hw.tx.pwr.pwr_state = 'off'
 
                 # Discharge DPS capa
