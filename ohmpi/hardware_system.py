@@ -90,8 +90,6 @@ class OhmPiHardware:
         self.vmn_min = RX_CONFIG['voltage_min']  # mV
         self.vmn_max = RX_CONFIG['voltage_max']  # mV
 
-        self.pab_min = 0.00005 # W TODO: Add in pwr components specs
-        self.pab_max = self.pwr.specs['power_max'] # W
         # TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
         self.sampling_rate = RX_CONFIG['sampling_rate']
 
@@ -168,6 +166,9 @@ class OhmPiHardware:
 
         HARDWARE_CONFIG['pwr'].update({'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
                                        'soh_logger': self.soh_logger})
+
+        self.pab_min = 0.00005 # W TODO: Add in pwr components specs
+        self.pab_max = self.pwr.specs['power_max'] # W
 
         # if self.tx.specs['connect']:
         #     self.pwr_state = "on"
