@@ -87,8 +87,8 @@ class OhmPiHardware:
                                        (np.inf,
                                         [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
 
-        self.vmn_min = RX_CONFIG['voltage_min']  # mV
-        self.vmn_max = RX_CONFIG['voltage_max']  # mV
+        self.vmn_min = RX_CONFIG['voltage_min'] / 1000.  # V  #TODO: Should be changed to V in RX specs
+        self.vmn_max = RX_CONFIG['voltage_max'] / 1000.  # V  #TODO: Should be changed to V in RX specs
 
         # TODO: should replace voltage_max and voltage_min by vab_max and vmn_min...
         self.sampling_rate = RX_CONFIG['sampling_rate']
