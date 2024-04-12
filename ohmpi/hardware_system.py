@@ -615,7 +615,7 @@ class OhmPiHardware:
     def compute_vab(self, vab_init=5., vab_min=None, vab_req=None, vab_max=None,
                     iab_min=None, iab_req=None, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
                     pab_min=None, pab_req=None, pab_max=None, polarities=(1, -1), pulse_duration=0.1, delay=0.05,
-                    diff_vab_lim=2.5, n_steps=4, filename=None, quad_id=0):
+                    diff_vab_lim=2.5, n_steps=4, n_sigma=2., filename=None, quad_id=0):
         """ Estimates best Vab voltage based on different strategies.
         In "vmax" and "vmin" strategies, we iteratively increase/decrease the vab while
         checking vmn < vmn_max, vmn > vmn_min and iab < iab_max. We do a maximum of n_steps
@@ -714,14 +714,18 @@ class OhmPiHardware:
         while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
             self.exec_logger.event(
                 f'OhmPiHardware\t_compute_vab_sleep\tbegin\t{datetime.datetime.utcnow()}')
-            time.sleep(0.2)  # TODO: replace this by discharging DPS on resistor with relay on GPIO5
+            time.sleep(0.3)  # TODO: replace this by discharging DPS on resistor with relay on GPIO5
                              # (at least for strategy vmin,
                              # but might be useful in vmax when last vab too high...)
             self.exec_logger.event(
                 f'OhmPiHardware\t_compute_vab_sleep\tend\t{datetime.datetime.utcnow()}')
             self._vab_pulses(vab_list[k], sampling_rate=sampling_rate,
                              durations=[pulse_duration, pulse_duration], polarities=polarities)
-            new_vab = self._find_vab(vab_list[k], vab_min, vab_req, vab_max, iab_max, vmn_max, vmn_min)
+            new_vab, _, _, _, _ = self._find_vab(vab_list[k],
+                                                 vab_req=vab_req, iab_req=iab_req, vmn_req=vmn_req, pab_req=pab_req,
+                                                 vab_min=vab_min, vab_max=vab_max, iab_min=iab_min, iab_max=iab_max,
+                                                 vmn_min=vmn_min, vmn_max=vmn_max, pab_min=pab_min, pab_max=pab_max,
+                                                 n_sigma=n_sigma, delay=delay)
             diff_vab = np.abs(new_vab - vab_list[k])
             if diff_vab < diff_vab_lim:
                 self.exec_logger.debug('Compute_vab stopped on vab increase too small')
