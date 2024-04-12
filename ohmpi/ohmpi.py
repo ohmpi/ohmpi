@@ -687,14 +687,16 @@ class OhmPi(object):
         if vab_init is None and tx_volt is not None:
             warnings.warn('"tx_volt" argument is deprecated and will be removed in future version. Use "vab_init" and "vab_req" instead to set the transmitter voltage in volts.', DeprecationWarning)
             vab_init = tx_volt
-            vab_req = vab_init
+            if vab_req is None:
+                vab_req = vab_init
             if strategy == 'constant':
                 vab_init = 0.9 * vab_init
         if vab_init is None and vab is not None:
             warnings.warn(
                 '"vab" argument is deprecated and will be removed in future version. Use "vab_init" and "vab_req" instead to set the transmitter voltage in volts.', DeprecationWarning)
             vab_init = vab
-            vab_req = vab_init
+            if vab_req is None:
+                vab_req = vab_init
             if strategy == 'constant':
                 vab_init = 0.9 * vab_init
         if vab_init is None and 'vab_init' in self.settings:
