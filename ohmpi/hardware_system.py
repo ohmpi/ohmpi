@@ -721,7 +721,7 @@ class OhmPiHardware:
                 f'OhmPiHardware\t_compute_vab_sleep\tend\t{datetime.datetime.utcnow()}')
             self._vab_pulses(vab_list[k], sampling_rate=sampling_rate,
                              durations=[pulse_duration, pulse_duration], polarities=polarities)
-            new_vab = self._find_vab(vab_list[k], vab_min, vab_req, vab_max, iab_max, vmn_max, vmn_min)
+            new_vab, _, _, _, _ = self._find_vab(vab_list[k], vab_min, vab_req, vab_max, iab_max, vmn_max, vmn_min)
             diff_vab = np.abs(new_vab - vab_list[k])
             if diff_vab < diff_vab_lim:
                 self.exec_logger.debug('Compute_vab stopped on vab increase too small')
