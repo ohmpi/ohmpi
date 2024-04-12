@@ -798,13 +798,6 @@ class OhmPi(object):
             else:
                 vab = self._hw.compute_vab(**kwargs_compute_vab)
 
-            print(f'strategy: {strategy}')
-            print(f'vab: <{vab_min:.1f}, {vab_req:.1f}, {vab_max:.1f}>, ',
-                  f'iab: <{iab_min:.1f}, {iab_req:.1f}, {iab_max:.1f}>, ',
-                  f'vmn: <{vmn_min:.1f}, {vmn_req:.1f}, {vmn_max:.1f}>, ',
-                  f'pab: <{pab_min:.1f}, {pab_req:.1f}, {pab_max:.1f}>, '
-                  f'vab_init: {vab_init}, vab: {vab}')
-
             # time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack,
                                      duty_cycle=duty_cycle, **kwargs.get('vab_square_wave', {}))
