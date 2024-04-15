@@ -137,7 +137,7 @@ MQTT commands are sent in JSON format following the Python API with kwargs as il
     "cmd_id": "3fzxv121UITwGjWYgcz4xw",
     "cmd": "update_settings",
     "kwargs": {
-      "config": {
+      "settings": {
         "nb_meas": 2,
         "nb_electrodes": 10,
         "nb_stack": 2,
@@ -147,13 +147,21 @@ MQTT commands are sent in JSON format following the Python API with kwargs as il
     }
   }
 
-
 .. code-block:: json
   :caption: Check contact resistances
 
   {
     "cmd_id": "3fzxv121UITwGjWYgcz4xw",
     "cmd": "rs_check",
+  }
+
+.. code-block:: json
+  :caption: Running a single measurement
+
+  {
+    "cmd_id": "3fzxv121UITwGjWYgcz81x",
+    "cmd": "run_measurement",
+    "kwargs": {"quad":[1,2,3,4]}
   }
 
 .. code-block:: json

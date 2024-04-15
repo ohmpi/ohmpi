@@ -95,7 +95,6 @@ class Tx(Tx_mb_2024_0_2):
     def measuring(self, mode="off"):
         self._measuring = mode
 
-
     def discharge_pwr(self, latency=None):
         if self.pwr.voltage_adjustable:
             if latency is None:
@@ -114,6 +113,7 @@ class Tx(Tx_mb_2024_0_2):
             self.exec_logger.event(f'{self.model}\tpwr_discharge\tend\t{datetime.datetime.utcnow()}')
         else:
             self.exec_logger.debug(f'Pwr discharge not supported by {self.pwr.model}')
+
 
 class Rx(Rx_mb_2024_0_2):
     """RX Class"""

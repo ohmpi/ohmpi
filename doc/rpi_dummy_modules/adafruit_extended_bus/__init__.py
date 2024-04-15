@@ -1,2 +1,3 @@
 # dummy module
-ExtendedI2C = None
+from unittest.mock import Mock
+ExtendedI2C = Mock()

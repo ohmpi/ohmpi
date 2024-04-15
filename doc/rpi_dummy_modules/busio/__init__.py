@@ -1,2 +1,3 @@
 # dummy module
-I2C = None
+from unittest.mock import Mock
+I2C = Mock()

@@ -49,7 +49,7 @@ Schematics
    :alt: alternate text
    :figclass: align-center 
 
-   Schematic of the DPS (digital power source) power supply.
+   Schematic of the DPS (digital power source) power supply (e.g. DPH5005).
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0004.jpg       
    :width: 600px

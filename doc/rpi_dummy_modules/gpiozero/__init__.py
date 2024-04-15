@@ -1,2 +1,3 @@
 # dummy module
-CPUTemperature = None
+from unittest.mock import Mock
+CPUTemperature = Mock()

@@ -5,7 +5,7 @@ check_r_shunt = True
 check_jumpers_msg = False
 print('This assistant helps you configure a basic system with a measurement board and from 0 to 4 mux of the same type.'
       '\nFor more complex configurations including a combination of mux boards with different types or roles, '
-      'please have a look in the configs folder for examples and write your customized configuration file.')
+      'please read the docs and explore the configs folder for examples and write your customized configuration file.')
 
 mb = None
 while True:
@@ -15,7 +15,9 @@ while True:
         mb = input('Choose a measurement boards: [v2023/v2024]: ')
 
 if mb == 'v2024':
-    mb = 'v2024_0_2_'
+    mb = 'v2024_1_X_'  # NOTE: used to be set to mb_2024_0_2 by default
+    print(f'Using board version {mb}. If you are using another version of this board,'
+          f' make sure to update your config.py file.\n')
 
 mux = None
 while True:
@@ -42,10 +44,10 @@ while True:
 
 pwr = None
 while True:
-    if pwr in ['battery', 'dps5005']:
+    if pwr in ['battery', 'dph5005']:
         break
     else:
-        pwr = input('Tx power: [battery/dps5005]:')
+        pwr = input('Tx power: [battery/dph5005]:')
 
 config = ('config_mb_' + mb[1:] + '_' + nb_mux + '_mux_' + mux[1:])
 if roles is not None:
@@ -59,8 +61,10 @@ print('Using this configuration: ' + config)
 
 if os.path.exists('configs/' + config):
     shutil.copyfile('configs/' + config, 'ohmpi/config.py')
+    shutil.copyfile('configs/' + config, 'configs/config_backup.py')
     from ohmpi.config import HARDWARE_CONFIG, r_shunt, ohmpi_id
     print(f'Your configuration has been set. Your OhmPi id is set to {ohmpi_id}.')
+    print(f'The configuration file is stored in ohmpi/config.py, a backup copy is stored in configs/config_backup.py')
     print('You should now carefully verify that the configuration file fits your hardware setup.\n')
     k = 1
     if check_r_shunt:
@@ -74,20 +78,29 @@ if os.path.exists('configs/' + config):
         k += 1
     print(f'\n{k}. If you experience problems while starting or operation your OhmPi, analyse the logs and/or try '
           f'setting your the loggers "logging_level" to logging.DEBUG.')
-    k +=1
+    k += 1
+    print(f'\n{k}. Refer to the documentation for optional tests to conduct before using your instrument.')
 
     # print('\n' + '_'*100)
     # with open('ohmpi/config.py', mode='rt') as f:
     #     for line in f.readlines():
     #         print(line, end='')
     # print('\n'+'_'*100)
-    print('\n'+'*' * 93)
+    print('\n' + '*' * 93)
     print('*** You may customize the configuration of your OhmPi by editing the ohmpi/config.py file ***')
     print('***   The MQTT communication can be encrypted with TLS/SSL but it is not set by default   ***')
     print('***  You should then change the username and password used to connect to the mqtt broker  ***')
     print('***     Make sure you understand what you are doing to avoid damaging to your system      ***')
     print('*' * 93)
-
+    if pwr != 'battery':
+        print('\n' + '#' * 93)
+        print('###                      WARNING - INJECTION VOLTAGE LIMITATION SET!                      ###')
+        print('###                      ===========================================                      ###')
+        print('###    A limitation has been set on the injection voltage to conduct the initial tests.   ###')
+        print('###   To lift this voltage limitation, please edit your ohmpi/config.py (and backup) and  ###')
+        print("###                adapt or remove the 'voltage' specification in the 'pwr'               ###")
+        print("###                        value of the HARDWARE_CONFIG dictionary.                       ###")
+        print('\n' + '#' * 93)
 else:
     print('The configuration you have selected cannot be set by this tool.\n'
           'You probably requested a configuration that makes little sense in most cases.')

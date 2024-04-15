@@ -19,19 +19,29 @@ import pandas as pd
 from zipfile import ZipFile
 from shutil import rmtree, make_archive
 from threading import Thread
-from queue import Queue
 from inspect import getmembers, isfunction
 from datetime import datetime
 from termcolor import colored
 from logging import DEBUG
-from ohmpi.utils import get_platform
+from ohmpi.utils import get_platform, sequence_random_sampler
 from ohmpi.logging_setup import setup_loggers
+import sys
+try:
+    import ohmpi.config
+except ModuleNotFoundError:
+    print('The system configuration file is missing or broken. If you have not yet defined your system configuration, '
+          'you can create a configuration file by using the python setup_config script. '
+          'To run this script, type the following command in the terminal from the directory where you '
+          'installed ohmpi : \npython3 setup_config.py\n'
+          'If you deleted your config.py file by mistake, you should find a backup in configs/config_backup.py')
+    sys.exit(-1)
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 import ohmpi.deprecated as deprecated
 from ohmpi.hardware_system import OhmPiHardware
 from ohmpi.sequence import (dpdp1, dpdp2, wenner_alpha, wenner_beta, wenner,
                           wenner_gamma, schlum1, schlum2, multigrad)
 from tqdm.auto import tqdm
+import warnings
 
 # finish import (done only when class is instantiated as some libs are only available on arm64 platform)
 try:
@@ -50,7 +60,7 @@ VERSION = 'v2024.0.0'
 class OhmPi(object):
     """OhmPi class.
     """
-    def __init__(self, settings=None, sequence=None, mqtt=True):
+    def __init__(self, settings=None, sequence=None, mqtt=True, config=None):
         """Construct the ohmpi object.
 
         Parameters
@@ -72,13 +82,16 @@ class OhmPi(object):
         self.status = 'idle'  # either running or idle
         self.thread = None  # contains the handle for the thread taking the measurement
 
+        if config is None:
+            config = ohmpi.config
+
         # set loggers
         self.exec_logger, _, self.data_logger, _, self.soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
         print(msg)
 
         # specify loggers when instancing the hardware
         self._hw = OhmPiHardware(**{'exec_logger': self.exec_logger, 'data_logger': self.data_logger,
-                                    'soh_logger': self.soh_logger})
+                                    'soh_logger': self.soh_logger}, hardware_config=config.HARDWARE_CONFIG)
         self.exec_logger.info('Hardware configured...')
 
         # default acquisition settings
@@ -111,7 +124,8 @@ class OhmPi(object):
                     else:
                         self.exec_logger.warning(f'Failed to connect to control broker. Return code : {rc}')
 
-                client = mqtt_client.Client(f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)
+                client = mqtt_client.Client(callback_api_version=mqtt_client.CallbackAPIVersion.VERSION1,
+                                            client_id=f"ohmpi_{OHMPI_CONFIG['id']}_listener", clean_session=False)
                 client.username_pw_set(MQTT_CONTROL_CONFIG['auth'].get('username'),
                                        MQTT_CONTROL_CONFIG['auth']['password'])
                 client.on_connect = on_connect
@@ -258,7 +272,7 @@ class OhmPi(object):
         """
         # dictionnary of function to create sequence
         fdico = {
-            'dpdp': dpdp1, 
+            'dpdp': dpdp1,
             'wenner': wenner,
             'schlum': schlum1,
             'multigrad': multigrad,
@@ -307,6 +321,52 @@ class OhmPi(object):
         output = np.where(quads[:, 0] == quads[:, 1])[0]
 
         return output
+
+    def find_optimal_vab_for_sequence(self, which='mean', n_samples=10, **kwargs):
+        """
+        Find optimal Vab based on sample sequence in order to run sequence with fixed Vab.
+        Returns Vab
+        Parameters
+        ----------
+        which : str
+                Which vab to keep, either "min", "max", "mean" (or other similar numpy method e.g. median)
+                If applying strategy "full_constant" based on vab_opt, safer to chose "min"
+        n_samples: int
+                number of samples to keep within loaded sequence
+
+        kwargs : kwargs passed to Ohmpi.run_sequence
+
+        Returns
+        -------
+        Vab_opt : float [in V]
+                Optimal Vab value
+        """
+        if self.sequence is None:
+            self.sequence = np.array([[0, 0, 0, 0]])
+        self.status = 'running'
+        vabs = []
+        sequence_sample = sequence_random_sampler(self.sequence, n_samples=n_samples)
+        n = sequence_sample.shape[0]
+        if self._hw.tx.pwr.voltage_adjustable:
+            self._hw.pwr_state = 'on'
+
+        for i in tqdm(range(0, n), "Sequence progress", unit='injection', ncols=100, colour='green'):
+            quad = sequence_sample[i, :]  # quadrupole
+            if self.status == 'stopping':
+                break
+            acquired_data = self.run_measurement(quad=quad, strategy='vmax', **kwargs)
+            vabs.append(acquired_data["Tx [V]"])
+        if self._hw.tx.pwr.voltage_adjustable:
+            self._hw.pwr_state = 'off'
+        vabs = np.array(vabs)
+        # print(vabs)
+        vab_opt = getattr(np, which)(vabs)
+
+        # reset to idle if we didn't interrupt the sequence
+        if self.status != 'stopping':
+            self.status = 'idle'
+
+        return vab_opt
 
     def get_data(self, survey_names=None, cmd_id=None):
         """Get available data.
@@ -578,6 +638,7 @@ class OhmPi(object):
         self.exec_logger.debug('Starting measurement')
         self.exec_logger.debug('Waiting for data')
 
+        vab_requested = vab
         # check arguments
         if quad is None:
             quad = np.array([0, 0, 0, 0])
@@ -590,10 +651,10 @@ class OhmPi(object):
         if tx_volt is None and 'tx_volt' in self.settings:
             tx_volt = self.settings['tx_volt']
         if vab is None and 'vab' in self.settings:
-            vab = self.settings['vab']
+            vab_requested = self.settings['vab']
         if vab is None and tx_volt is not None:
             warnings.warn('"tx_volt" argument is deprecated and will be removed in future version. Use "vab" instead to set the transmitter voltage in volts.', DeprecationWarning)
-            vab = tx_volt
+            vab_requested = tx_volt
         if strategy is None and 'strategy' in self.settings:
             strategy = self.settings['strategy']
         if vab_max is None and 'vab_max' in self.settings:
@@ -607,22 +668,13 @@ class OhmPi(object):
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
 
-        def switch_mux_on(queue,quad,bypass_check,cmd_id):
-            result = self.switch_mux_on(quad, bypass_check, cmd_id)  # Function that returns the value you want to return
-            queue.put(result)
-        q = Queue()
-        switch_mux_on = Thread(target=switch_mux_on, args=(q,quad,bypass_check,cmd_id))
-        switch_pwr_on = Thread(target=setattr, args=(self._hw.tx.pwr, 'pwr_state', 'on'))
-        switch_mux_on.start()
-        switch_pwr_on.start()
-        switch_mux_on.join()
-        switch_pwr_on.join()
-        status = q.get()
-        if status:
-            vab = self._hw.compute_vab(vab=vab, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
+        if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
+
+            vab = self._hw.compute_vab(vab=vab_requested, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
                                                iab_max=iab_max, vmn_min=vmn_min)
             # time.sleep(0.5)  # to wait for pwr discharge
-            self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack, duty_cycle=duty_cycle)
+            self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack,
+                                     duty_cycle=duty_cycle, **kwargs.get('vab_square_wave', {}))
             self.switch_mux_off(quad, cmd_id)
 
             if 'delay' in kwargs.keys():
@@ -680,7 +732,7 @@ class OhmPi(object):
 
             # if strategy not constant, then switch dps off (button) in case following measurement within sequence
             # TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
-            if (strategy == 'vmax' or strategy == 'vmin') and vab - vab > 5.:  # if starting vab was too far (> 5 V) from actual vab, then turn pwr off
+            if (strategy == 'vmax' or strategy == 'vmin') and vab - vab_requested > 5.:  # if starting vab was too far (> 5 V) from actual vab, then turn pwr off
                 self._hw.tx.pwr.pwr_state = 'off'
 
                 # Discharge DPS capa
@@ -965,7 +1017,6 @@ class OhmPi(object):
             self._hw._vab_pulse(duration=0.2, vab=vab)
             current = self._hw.readings[-1, 3]
             vab = self._hw.tx.pwr.voltage
-            print(vab, current)
             time.sleep(0.2)
 
             # compute resistance measured (= contact resistance)
@@ -1161,7 +1212,7 @@ class OhmPi(object):
         if os.path.exists(outputdir) is False:
             os.mkdir(outputdir)
         ftype = ftype.lower()
-        
+
         # define parser
         def ohmpi_parser(fname):
             df = pd.read_csv(fname)
@@ -1174,7 +1225,7 @@ class OhmPi(object):
             elec = np.zeros((emax, 3))
             elec[:, 0] = np.arange(emax) * elec_spacing
             return elec, df[['a', 'b', 'm', 'n', 'vp', 'i', 'resist', 'ip']]
-        
+
         # read all files and save them in the desired format
         for fname in tqdm(fnames):
             try:

@@ -1,2 +1,3 @@
 # dummy module
-Direction = None
+from unittest.mock import Mock
+Direction = Mock()

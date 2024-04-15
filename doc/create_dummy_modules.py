@@ -9,19 +9,20 @@ if os.path.exists(dumdir) is False:
 sys.path.append(dumdir)
 sys.path.append('.')
 sys.path.append(os.path.abspath('..'))
+from unittest.mock import Mock
 
 def createModule(module_name):
     print('creating', module_name)
     dpath = os.path.join(dumdir, *module_name.split('.'))
     os.mkdir(dpath)
     with open(os.path.join(dpath, '__init__.py'), 'w') as f:
-        f.write('# dummy module\n')
+        f.write('# dummy module\nfrom unittest.mock import Mock\n')
 
 def createAttribute(attribute, module_name):
     print('adding attribute', attribute, 'to module', module_name)
     fpath = os.path.join(dumdir, *module_name.split('.'), '__init__.py')
     with open(fpath, 'a') as f:
-        f.write(attribute + ' = None\n')
+        f.write(attribute + ' = Mock()\n')
 
 error = None
 typ = 'mod'
@@ -35,7 +36,7 @@ try:
     importlib.import_module('ohmpi.hardware_components.mux_2023_0_X')
     importlib.import_module('ohmpi.hardware_components.mux_2024_0_X')
     importlib.import_module('ohmpi.hardware_components.pwr_batt')
-    importlib.import_module('ohmpi.hardware_components.pwr_dps5005')
+    importlib.import_module('ohmpi.hardware_components.pwr_dph5005')
     importlib.import_module('ohmpi.hardware_components.raspberry_pi')
     print('============= ok, no more import error detected =========')
     exit(0)
@@ -47,6 +48,7 @@ except AttributeError as e:
     typ = 'attr'
     
 if error is not None:
+    print('ERROR:', error)
     a = str(error).split("'")
     if typ == 'mod':
         if len(a) == 3:  # module not found error

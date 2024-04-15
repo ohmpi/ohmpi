@@ -114,6 +114,16 @@ def parse_log(log):
     session = np.array(session)
     return time, process_id, tag, msg, session
 
+def filter_log(filename, level=None, directory="logs", last=1):
+    time, process_id, tag, msg, session = parse_log(os.path.join(directory, filename))
+    time, process_id, tag, msg, session = time[tag == level], process_id[tag == level], \
+            tag[tag == level], msg[tag == level], session[tag == level]
+
+    time_filt, process_id_filt, tag_filt, msg_filt = time[session >= max(session)-last], process_id[session >= max(session)-last], \
+            tag[session >= max(session)-last], msg[session >= max(session)-last]
+
+    return time_filt, process_id_filt, tag_filt, msg_filt
+
 
 def mux_2024_to_mux_2023_takeouts(elec_list):
     """ Updates cabling for mux v2024 so that takeouts are similar to takeouts from mux v2023.
@@ -125,10 +135,11 @@ def mux_2024_to_mux_2023_takeouts(elec_list):
 
     """
 
-    mapper = {1: 16, 2: 1, 3: 15, 4: 2, 5: 14, 6: 3, 7: 13, 8: 4, 9: 12, 10: 5, 11: 11,
-              12: 6, 13: 10, 14: 7, 15: 9, 16: 8}
+    elec_list = np.array(elec_list)
+    elecs = elec_list % 16
+    elecs[elecs == 0] = 16
 
-    return np.vectorize(mapper.get)(elec_list)
+    return np.vectorize(mapper.get)(elecs) + 16 * (elec_list // 17)
 
 
 def mux_2023_to_mux_2024_takeouts(elec_list):
@@ -144,7 +155,11 @@ def mux_2023_to_mux_2024_takeouts(elec_list):
     mapper = {1: 2, 2: 4, 3: 6, 4: 8, 5: 10, 6: 12, 7: 14, 8: 16,
               9: 15, 10: 13, 11: 11, 12: 9, 13: 7, 14: 5, 15: 3, 16: 1, }
 
-    return np.vectorize(mapper.get)(elec_list)
+    elec_list = np.array(elec_list)
+    elecs = elec_list % 16
+    elecs[elecs == 0] = 16
+
+    return np.vectorize(mapper.get)(elecs) + 16 * (elec_list // 17)
 
 
 def generate_preset_configs(configs_to_generate=None):
@@ -161,20 +176,34 @@ def generate_preset_configs(configs_to_generate=None):
                                'config_mb_2023__1_mux_2024_4roles.py', 'config_mb_2023__2_mux_2024_4roles.py',
                                'config_mb_2023__3_mux_2024_4roles.py', 'config_mb_2023__4_mux_2024_4roles.py',
                                'config_mb_2023__2_mux_2024_2roles.py', 'config_mb_2023__4_mux_2024_2roles.py',
-                               'config_mb_2024_0_2.py', 'config_mb_2024_0_2_dps5005.py',
-                               'config_mb_2024_0_2__4_mux_2023.py', 'config_mb_2024_0_2__4_mux_2023_dps5005.py',
+                               'config_mb_2024_0_2.py', 'config_mb_2024_0_2_dph5005.py',
+                               'config_mb_2024_0_2__4_mux_2023.py', 'config_mb_2024_0_2__4_mux_2023_dph5005.py',
                                'config_mb_2024_0_2__1_mux_2024_4roles.py',
-                               'config_mb_2024_0_2__1_mux_2024_4roles_dps5005.py',
+                               'config_mb_2024_0_2__1_mux_2024_4roles_dph5005.py',
                                'config_mb_2024_0_2__2_mux_2024_4roles.py',
-                               'config_mb_2024_0_2__2_mux_2024_4roles_dps5005.py',
+                               'config_mb_2024_0_2__2_mux_2024_4roles_dph5005.py',
                                'config_mb_2024_0_2__2_mux_2024_2roles.py',
-                               'config_mb_2024_0_2__2_mux_2024_2roles_dps5005.py',
+                               'config_mb_2024_0_2__2_mux_2024_2roles_dph5005.py',
                                'config_mb_2024_0_2__3_mux_2024_4roles.py',
-                               'config_mb_2024_0_2__3_mux_2024_4roles_dps5005.py',
+                               'config_mb_2024_0_2__3_mux_2024_4roles_dph5005.py',
                                'config_mb_2024_0_2__4_mux_2024_4roles.py',
-                               'config_mb_2024_0_2__4_mux_2024_4roles_dps5005.py',
+                               'config_mb_2024_0_2__4_mux_2024_4roles_dph5005.py',
                                'config_mb_2024_0_2__4_mux_2024_2roles.py',
-                               'config_mb_2024_0_2__4_mux_2024_2roles_dps5005.py'
+                               'config_mb_2024_0_2__4_mux_2024_2roles_dph5005.py',
+                               'config_mb_2024_1_X.py', 'config_mb_2024_1_X_dph5005.py',
+                               'config_mb_2024_1_X__4_mux_2023.py', 'config_mb_2024_1_X__4_mux_2023_dph5005.py',
+                               'config_mb_2024_1_X__1_mux_2024_4roles.py',
+                               'config_mb_2024_1_X__1_mux_2024_4roles_dph5005.py',
+                               'config_mb_2024_1_X__2_mux_2024_4roles.py',
+                               'config_mb_2024_1_X__2_mux_2024_4roles_dph5005.py',
+                               'config_mb_2024_1_X__2_mux_2024_2roles.py',
+                               'config_mb_2024_1_X__2_mux_2024_2roles_dph5005.py',
+                               'config_mb_2024_1_X__3_mux_2024_4roles.py',
+                               'config_mb_2024_1_X__3_mux_2024_4roles_dph5005.py',
+                               'config_mb_2024_1_X__4_mux_2024_4roles.py',
+                               'config_mb_2024_1_X__4_mux_2024_4roles_dph5005.py',
+                               'config_mb_2024_1_X__4_mux_2024_2roles.py',
+                               'config_mb_2024_1_X__4_mux_2024_2roles_dph5005.py'
                                ]
 
     header = """import logging
@@ -192,7 +221,7 @@ logging_suffix = ''
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': ohmpi_id,  # Unique identifier of the OhmPi board (string)
-    'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
+    'settings': 'settings/default.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
 }
 
 r_shunt = 2.
@@ -208,9 +237,21 @@ HARDWARE_CONFIG = {
 
     r_shunt = 2.
     options = {'pwr': {'battery': """{'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'},""",
-                       'dps5005': """{'model': 'pwr_dps5005', 'voltage': 3., 'interface_name': 'modbus'},"""
+                       'dph5005': """{'model': 'pwr_dph5005', 'voltage': 2., 'interface_name': 'modbus'},"""
                        },
-               'mb': {'mb_2024_0_2': {'tx': """{'model': 'mb_2024_0_2',
+               'mb': {'mb_2024_1_X': {'tx': """{'model': 'mb_2024_1_X',
+                 'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
+                 'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
+                 'r_shunt': r_shunt,  # Shunt resistance in Ohms
+                 'interface_name': 'i2c',
+                 'vmn_hardware_offset': 2500.
+                }""",
+                                      'rx': """{'model': 'mb_2024_1_X',
+                 'latency': 0.010,  # latency in seconds in continuous mode
+                 'sampling_rate': 200,  # number of samples per second
+                 'interface_name': 'i2c',
+                }"""},
+                      'mb_2024_0_2': {'tx': """{'model': 'mb_2024_0_2',
                  'voltage_max': 50.,  # Maximum voltage supported by the TX board [V]
                  'current_max': 4.80/(50*r_shunt),  # Maximum voltage read by the current ADC on the TX board [A]
                  'r_shunt': r_shunt,  # Shunt resistance in Ohms
@@ -339,6 +380,11 @@ HARDWARE_CONFIG = {
             'default': {'interface_name': 'i2c_ext',
                              'voltage_max': 50.,
                              'current_max': 3.}
+                }\n}\n""",
+                  'mb_2024_1_X': """\n                 },
+            'default': {'interface_name': 'i2c_ext',
+                             'voltage_max': 50.,
+                             'current_max': 3.}
                 }\n}\n"""}
 
     footer = """# SET THE LOGGING LEVELS, MQTT BROKERS AND MQTT OPTIONS ACCORDING TO YOUR NEEDS
@@ -448,3 +494,73 @@ MQTT_CONTROL_CONFIG = {
                             config_file.write(s)
                     else:
                         print(f'### skipping {config_filename} ###')
+
+
+def sequence_random_sampler(sequence, n_samples=10, include_min_and_max_separation=True):
+    """
+    Downsample sequence randomly
+    Parameters
+    ----------
+    sequence
+    n_samples
+
+    Returns
+    -------
+
+    """
+
+    import random
+
+    spacing_ab = np.abs(sequence[:, 1] - sequence[:, 0])
+    spacing_bm = np.abs(sequence[:, 2] - sequence[:, 1])
+    spacing_mn = np.abs(sequence[:, 3] - sequence[:, 2])
+    spacing_an = np.abs(sequence[:, 0] - sequence[:, 3])
+
+    array_types = 0
+    arrays = {}
+    for ab in np.sort(np.unique(spacing_ab)):
+        for bm in np.sort(np.unique(spacing_bm)):
+            for mn in np.sort(np.unique(spacing_mn)):
+                for an in np.sort(np.unique(spacing_an)):
+                    seq = sequence[
+                        np.where((spacing_ab == ab) & (spacing_bm == bm) & (spacing_mn == mn) & (spacing_an == an))]
+                    if len(seq) > 0:
+                        arrays[array_types] = seq
+                        array_types += 1
+
+    if n_samples < array_types:
+        if include_min_and_max_separation:
+            sampled_types = [0, array_types - 1]
+            sampled_types = sampled_types + random.sample(range(1, array_types - 1), n_samples - 2)
+        else:
+            sampled_types = random.sample(range(array_types), n_samples)
+        for i, sampled_type in enumerate(sampled_types):
+            sample = random.sample(range(len(arrays[sampled_type])), 1)
+            if i == 0:
+                quads = arrays[sampled_type][sample]
+            else:
+                quads = np.vstack((quads, arrays[sampled_type][sample]))
+
+    if n_samples > array_types:
+        length_dict = np.array([len(arrays[k]) for k in range(array_types)])
+        sizes = (n_samples // array_types) * (
+                (length_dict / np.sum(length_dict)) * array_types) // 1 + (
+                        (length_dict / np.sum(length_dict)) * array_types) // 1
+        sizes = sizes.astype(int)
+
+        if n_samples - np.sum(sizes) > 0:
+            adds = np.zeros(array_types)
+            adds[np.where((length_dict - sizes) > 0)[0][
+                random.sample(range(len(np.where((length_dict - sizes) > 0)[0])), n_samples - np.sum(sizes))]] = 1
+            sizes = sizes + adds
+
+        sizes = sizes.astype(int)
+        quads = np.array([])
+        for i, (size, key) in enumerate(zip(sizes, arrays)):
+            samples = random.sample(range(len(arrays[key])), size)
+            if i == 0:
+                quads = arrays[key][samples]
+            else:
+                quads = np.vstack((quads, arrays[key][samples]))
+
+    return quads

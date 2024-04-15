@@ -2,7 +2,7 @@ import json
 
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
-from config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG
+from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG
 import time
 import uuid
 

@@ -1,7 +1,7 @@
 import matplotlib
 matplotlib.use('TkAgg')
 from ohmpi.utils import change_config
-change_config('../configs/config_mb_2024_0_2__4_mux_2023_dps5005.py', verbose=False)
+change_config('../configs/config_mb_2024_0_2__4_mux_2023_dph5005.py', verbose=False)
 import importlib
 import time
 import logging
@@ -101,7 +101,7 @@ if within_ohmpi:
     # A, B, M, N = (5, 8, 6, 7)
     # A, B, M, N = (32, 29, 31, 30)
     # k._hw.switch_mux([A, B, M, N], state='on')
-    # k._hw.vab_square_wave(5., cycle_duration=0.500, cycles=2, duty_cycle=0.5) 
+    # k._hw.vab_square_wave(5., cycle_duration=0.500, cycles=2, duty_cycle=0.5)
     # k._hw.switch_mux([A, B, M, N], state='off')
     # print(f'OhmPiHardware Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     # if k._hw.sp is None:

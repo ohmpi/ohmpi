@@ -98,7 +98,7 @@ if within_ohmpi:
     k._hw._plot_readings()
     # k.load_sequence('sequences/test_circuit_1423.txt')
     #k.load_sequence('sequences/wenner1-16.txt')
-    # k.run_sequence(vab=5, injection_duration=1., nb_stack=2, duty_cycle=0.5)
+    # k.run_sequence(tx_volt=5, injection_duration=1., nb_stack=2, duty_cycle=0.5)
     print('using OhmPi')
     #d = k.run_measurement([A, B, M, N], injection_duration=1., nb_stack=2, duty_cycle=0.5)
     #print(d)

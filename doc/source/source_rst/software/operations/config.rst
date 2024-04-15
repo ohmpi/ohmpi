@@ -58,7 +58,7 @@ The configuration is written in a python file structured in a series of dictiona
   # OhmPi configuration
   OHMPI_CONFIG = {
       'id': ohmpi_id,  # Unique identifier of the OhmPi board (string), default = '0001'
-      'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
+      'settings': 'settings/default.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
   }
 
 
@@ -76,7 +76,7 @@ The configuration is written in a python file structured in a series of dictiona
     +----------+----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
     | pwr      | model          | Type of power unit.                              | pwr_batt         | Defines an external battery as power unit.                      |
     |          |                |                                                  +------------------+-----------------------------------------------------------------+
-    |          |                |                                                  | pwr_dps5005      | Defines an external DPS 5005 as power unit                      |
+    |          |                |                                                  | pwr_dph5005      | Defines an external DPH5005 as power unit                       |
     |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+
     |          | voltage        |  Defines default output voltage in V.            |*float*, e.g. 12. | Sets 12 V as default voltage.                                   |
     |          +----------------+--------------------------------------------------+------------------+-----------------------------------------------------------------+

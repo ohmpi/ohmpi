@@ -7,7 +7,7 @@ adafruit_extended_bus
 minimalmodbus
 gpiozero
 numpy
-paho-mqtt==1.6.1
+paho-mqtt
 termcolor
 pandas
 matplotlib
