@@ -430,8 +430,8 @@ class OhmPiHardware:
             self.sp = np.mean(mean_vmn[np.ix_(polarity == 1)] + mean_vmn[np.ix_(polarity == -1)]) / 2
             # return sp
 
-    def _find_vab(self, vab, vab_req=None, iab_req=None, vmn_req=None, pab_req=None, vab_min=5., vab_max=50.,
-                  iab_min=0.00001, iab_max=0.05, vmn_min=0.0001, vmn_max=5., pab_min=0.00005, pab_max=2.5, n_sigma=2.,
+    def _find_vab(self, vab, vab_req=None, iab_req=None, vmn_req=None, pab_req=None, min_agg=False, vab_min=5.,
+                  vab_max=50., iab_min=0.00001, iab_max=0.05, vmn_min=0.0001, vmn_max=5., pab_min=0.00005, pab_max=2.5, n_sigma=2.,
                   delay=0.05):
         """ Finds the best injection voltage
             #
@@ -454,20 +454,39 @@ class OhmPiHardware:
             #     vmn_max: float
             #
             #     vmn_req: float
+            #     min_agg: bool, default: False
+            #         if set to true use min as aggregation operator on requests -> or, otherwise use max -> and
             #
             #     Returns
             #     -------
             #     float
             #         improved value for vab
         """
+        # TODO: Check that min and max values are within system specs + use None as default values and set min and max values from system)
+        if min_agg:
+            req_agg = np.min
+        else:
+            req_agg = np.max
         if vab_req is None:
-            vab_req = vab_min
+            if min_agg:
+                vab_req = vab_max
+            else:
+                vab_req = vab_min
         if iab_req is None:
-            iab_req = iab_min
+            if min_agg:
+                iab_req = iab_max
+            else:
+                iab_req = iab_min
         if vmn_req is None:
-            vmn_req = vmn_min
+            if min_agg:
+                vmn_req = vmn_max
+            else:
+                vmn_req = vmn_min
         if pab_req is None:
-            pab_req = pab_min
+            if min_agg:
+                pab_req = pab_max
+            else:
+                pab_req = pab_min
         msg = (f'Searching for Vab with Vab: <{vab_min:.1f}, {vab_req:.1f} , {vab_max:.1f}> V, '
                f'iab: <{iab_min*1000.:.1f}, {iab_req*1000.:.1f} , {iab_max*1000.:.1f}> mA',
                f'Vmn: <{vmn_min*1000.:.1f}, {vmn_req*1000.:.1f} , {vmn_max*1000.:.1f}> mV',
@@ -518,16 +537,22 @@ class OhmPiHardware:
         # _vmn_max = np.min(vmn_upper_bound)
         cond_vab_max = vab_max
         cond_vab_req = vab_req
-        conv_vab_min = vab_min
+        cond_vab_min = vab_min
         cond_vmn_max = vmn_max * rab_min / r_max
         cond_vmn_req = vmn_req * rab_max / r_min
+        cond_vmn_min = vmn_min * rab_max / r_min
         cond_iab_max = rab_min * iab_max
         cond_iab_req = rab_max * iab_req
+        cond_iab_min = rab_max * iab_min
         cond_pab_max = np.sqrt(pab_max * rab_min)
         cond_pab_req = np.sqrt(pab_req * rab_max)
+        cond_pab_min = np.sqrt(pab_min * rab_max)
         new_vab = np.min([np.min([cond_vab_max, cond_vmn_max, cond_iab_max, cond_pab_max]),
-                          np.max([cond_vab_req, cond_vmn_req, cond_iab_req, cond_pab_req])])
-        msg = f'vab_max: {cond_vab_max:.1f}, vmn_max: {cond_vmn_max:.1f} V, pab_max: {cond_pab_max:.1f} V, iab_max: {cond_iab_max:.1f} V, vab_req: {cond_vab_req:.1f} V,  vmn_req: {cond_vmn_req:.1f} V, iab_req: {cond_iab_req:.1f} V, pab_req: {cond_pab_req:.1f} V'
+                          req_agg([cond_vab_req, cond_vmn_req, cond_iab_req, cond_pab_req]),
+                          np.max([cond_vab_min, cond_vmn_min, cond_iab_min, cond_pab_min])])
+        msg = (f'vab_max: {cond_vab_max:.1f}, vmn_max: {cond_vmn_max:.1f} V, pab_max: {cond_pab_max:.1f} V, '
+               f'iab_max: {cond_iab_max:.1f} V, vab_req: {cond_vab_req:.1f} V,  '
+               f'vmn_req: {cond_vmn_req:.1f} V, iab_req: {cond_iab_req:.1f} V, pab_req: {cond_pab_req:.1f} V')
         self.exec_logger.debug(msg)
         msg = f'Rab: [{rab_min / 1000.:5.3f}, {rab_max / 1000:5.3f}] kOhm, R: [{r_min:4.1f}, {r_max:4.1f}] Ohm'
         self.exec_logger.debug(msg)
