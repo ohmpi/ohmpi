@@ -430,9 +430,9 @@ class OhmPiHardware:
             self.sp = np.mean(mean_vmn[np.ix_(polarity == 1)] + mean_vmn[np.ix_(polarity == -1)]) / 2
             # return sp
 
-    def _find_vab(self, vab, vab_req=None, iab_req=None, vmn_req=None, pab_req=None, min_agg=False, vab_min=5.,
-                  vab_max=50., iab_min=0.00001, iab_max=0.05, vmn_min=0.0001, vmn_max=5., pab_min=0.00005, pab_max=2.5, n_sigma=2.,
-                  delay=0.05):
+    def _find_vab(self, vab, vab_req=None, iab_req=None, vmn_req=None, pab_req=None, min_agg=False, vab_min=None,
+                  vab_max=None, iab_min=None, iab_max=None, vmn_min=None, vmn_max=None, pab_min=None, pab_max=None,
+                  n_sigma=2., delay=0.05):
         """ Finds the best injection voltage
             #
             #     Parameters
@@ -462,7 +462,23 @@ class OhmPiHardware:
             #     float
             #         improved value for vab
         """
-        # TODO: Check that min and max values are within system specs + use None as default values and set min and max values from system)
+        # TODO: Check that min and max values are within system specs
+        if vab_min is None:
+            vab_min = self.vab_min
+        if vab_max is None:
+            vab_max = self.vab_max
+        if iab_min is None:
+            iab_min = self.iab_min
+        if iab_max is None:
+            iab_max = self.iab_max
+        if vmn_min is None:
+            vmn_min = self.vmn_min
+        if vmn_max is None:
+            vmn_max = self.vmn_max
+        if pab_min is None:
+            pab_min = self.pab_min
+        if iab_max is None:
+            pab_max = self.pab_max
         if min_agg:
             req_agg = np.min
         else:
@@ -487,11 +503,6 @@ class OhmPiHardware:
                 pab_req = pab_max
             else:
                 pab_req = pab_min
-        msg = (f'Searching for Vab with Vab: <{vab_min:.1f}, {vab_req:.1f} , {vab_max:.1f}> V, '
-               f'iab: <{iab_min*1000.:.1f}, {iab_req*1000.:.1f} , {iab_max*1000.:.1f}> mA',
-               f'Vmn: <{vmn_min*1000.:.1f}, {vmn_req*1000.:.1f} , {vmn_max*1000.:.1f}> mV',
-               f'Pab: <{pab_min*1000.:.1f}, {pab_req:.1f} , {pab_max:.1f}> W')
-        self.exec_logger.debug(msg)
         pulses = np.unique(self.readings[:, 1])
         n_pulses = len(pulses)
         iab_mean = np.zeros(n_pulses)
@@ -518,11 +529,11 @@ class OhmPiHardware:
                 vmn_mean[p_idx] = np.mean(vmn)
                 vmn_std[p_idx] = np.std(vmn)
                 # bounds on iab
-                iab_lower_bound[p_idx] = np.max([iab_min, iab_mean[p_idx] - n_sigma * iab_std[p_idx]])
-                iab_upper_bound[p_idx] = np.max([iab_min, iab_mean[p_idx] + n_sigma * iab_std[p_idx]])
+                iab_lower_bound[p_idx] = np.max([self.iab_min, iab_mean[p_idx] - n_sigma * iab_std[p_idx]])
+                iab_upper_bound[p_idx] = np.max([self.iab_min, iab_mean[p_idx] + n_sigma * iab_std[p_idx]])
                 # bounds on vmn
-                vmn_lower_bound[p_idx] = np.max([vmn_min, vmn_mean[p_idx] - n_sigma * vmn_std[p_idx]])
-                vmn_upper_bound[p_idx] = np.max([vmn_min, vmn_mean[p_idx] + n_sigma * vmn_std[p_idx]])
+                vmn_lower_bound[p_idx] = np.max([self.vmn_min, vmn_mean[p_idx] - n_sigma * vmn_std[p_idx]])
+                vmn_upper_bound[p_idx] = np.max([self.vmn_min, vmn_mean[p_idx] + n_sigma * vmn_std[p_idx]])
                 # bounds on r
                 r_lower_bound[p_idx] = np.max([0.1, np.abs(vmn_lower_bound[p_idx] / iab_upper_bound[p_idx])])
                 r_upper_bound[p_idx] = np.max([0.1, np.abs(vmn_upper_bound[p_idx] / iab_lower_bound[p_idx])])
@@ -547,97 +558,26 @@ class OhmPiHardware:
         cond_pab_max = np.sqrt(pab_max * rab_min)
         cond_pab_req = np.sqrt(pab_req * rab_max)
         cond_pab_min = np.sqrt(pab_min * rab_max)
-        new_vab = np.min([np.min([cond_vab_max, cond_vmn_max, cond_iab_max, cond_pab_max]),
-                          req_agg([cond_vab_req, cond_vmn_req, cond_iab_req, cond_pab_req]),
-                          np.max([cond_vab_min, cond_vmn_min, cond_iab_min, cond_pab_min])])
-        msg = (f'vab_max: {cond_vab_max:.1f}, vmn_max: {cond_vmn_max:.1f} V, pab_max: {cond_pab_max:.1f} V, '
-               f'iab_max: {cond_iab_max:.1f} V, vab_req: {cond_vab_req:.1f} V,  '
-               f'vmn_req: {cond_vmn_req:.1f} V, iab_req: {cond_iab_req:.1f} V, pab_req: {cond_pab_req:.1f} V')
+        cond_mins = np.max([cond_vab_min, cond_iab_min, cond_vmn_min, cond_pab_min])
+        cond_reqs = req_agg([cond_vab_req, cond_iab_req, cond_vmn_req, cond_pab_req])
+        cond_maxs = np.min([cond_vab_max, cond_vmn_max, cond_iab_max, cond_pab_max])
+        new_vab = np.min([np.max([cond_mins, cond_reqs]), cond_maxs])
+        msg = '#' * 75
+        msg += f'###      [ min ,  req ,  max ]   | cond       : [ min ,  req ,  max ] V ###\n'
+        msg += f'### vab: [{vab_min:5.1f}, {vab_req:5.1f}, {vab_max:5.1f}] V | cond on vab: [{cond_vab_min:5.1f}, {cond_vab_req:5.1f}, {cond_vab_max:5.1f}] V ###\n'
+        msg += f'### iab: [{iab_min:5.3f}, {iab_req:5.3f}, {iab_max:5.3f}] A | cond on vab: [{cond_iab_min:5.1f}, {cond_iab_req:5.1f}, {cond_iab_max:5.1f}] V ###\n'
+        msg += f'### vmn: [{vmn_min:5.3f}, {vmn_req:5.3f}, {vmn_max:5.3f}] V | cond on vab: [{cond_vmn_min:5.1f}, {cond_vmn_req:5.1f}, {cond_vmn_max:5.1f}] V ###\n'
+        msg += f'### pab: [{pab_min:5.3f}, {pab_req:5.3f}, {pab_max:5.3f}] W | cond on vab: [{cond_pab_min:5.1f}, {cond_pab_req:5.1f}, {cond_pab_max:5.1f}] V ###\n'
+        msg += f'### agg: {req_agg.__name__}, rab: [{rab_min:7.1f}, {rab_max:7.1f}] ohm, r: [{r_min:7.1f}, {r_max:7.1f}] ohm    ###'
+        msg += '#' * 75
         self.exec_logger.debug(msg)
         msg = f'Rab: [{rab_min / 1000.:5.3f}, {rab_max / 1000:5.3f}] kOhm, R: [{r_min:4.1f}, {r_max:4.1f}] Ohm'
         self.exec_logger.debug(msg)
         self.exec_logger.debug(f'Selecting Vab : {new_vab:.2f} V.')
         return new_vab, rab_min, rab_max, r_min, r_max
 
-    # def _find_vab(self, vab, iab, vmn, p_max, vab_max, vab_min, iab_max, vmn_max, vmn_req):
-    #     """ Finds the best injection voltage
-    #
-    #     Parameters
-    #     ----------
-    #     vab: float
-    #         vab in use
-    #     iab: np.ndarray, list
-    #         series of current measured during the pulses
-    #     vmn: np.ndarray, list
-    #
-    #     p_max: float
-    #
-    #     vab_max: float
-    #
-    #     vab_min: float
-    #
-    #     iab_max: float
-    #
-    #     vmn_max: float
-    #
-    #     vmn_req: float
-    #
-    #     Returns
-    #     -------
-    #     float
-    #         improved value for vab
-    #
-    #     """
-    #     print('Searching for the best Vab...')
-    #     iab_mean = np.mean(iab)
-    #     iab_std = np.std(iab)
-    #     vmn_mean = np.mean(vmn)
-    #     vmn_std = np.std(vmn)
-    #     # print(f'iab: ({iab_mean:.5f}, {iab_std:5f}), vmn: ({vmn_mean:.4f}, {vmn_std:.4f})')
-    #     # bounds on iab
-    #     iab_upper_bound = iab_mean + 2 * iab_std  # why no absolute upper bound?
-    #     iab_lower_bound = np.max([0.00001, iab_mean - 2 * iab_std])
-    #     # bounds on vmn
-    #     vmn_upper_bound = vmn_mean + 2 * vmn_std
-    #     vmn_lower_bound = np.max([0.000001, vmn_mean - 2 * vmn_std])
-    #     # bounds on rab
-    #     rab_lower_bound = np.max([0.1, np.abs(vab / iab_upper_bound)])
-    #     rab_upper_bound = np.max([0.1, np.abs(vab / iab_lower_bound)])
-    #     # bounds on r
-    #     r_lower_bound = np.max([0.1, np.abs(vmn_lower_bound / iab_upper_bound)])
-    #     r_upper_bound = np.max([0.1, np.abs(vmn_upper_bound / iab_lower_bound)])
-    #     # conditions for vab update
-    #     cond_vmn_max = rab_lower_bound / r_upper_bound * vmn_max
-    #     cond_vmn_req = rab_upper_bound / r_lower_bound * vmn_req
-    #     cond_p_max = np.sqrt(p_max * rab_lower_bound)
-    #     cond_iab_max = rab_lower_bound * iab_max
-    #     self.exec_logger.debug(f'Rab: [{rab_lower_bound:.1f}, {rab_upper_bound:.1f}], R: [{r_lower_bound:.1f},{r_upper_bound:.1f}]')
-    #     self.exec_logger.debug(f'*** [{5 * rab_lower_bound / r_upper_bound:.1f}, {5 * rab_lower_bound / r_lower_bound:.1f}] V ***')
-    #     self.exec_logger.debug(
-    #         f'[vab_max: {vab_max:.1f} V, vmn_max: {cond_vmn_max:.1f} V, vmn_req: {cond_vmn_req:.1f} V, '
-    #         f'p_max: {cond_p_max:.1f} V, iab_max: {cond_iab_max:.1f} V]')
-    #     new_vab = np.max([np.min([vab_max, cond_vmn_max, cond_p_max, cond_iab_max, cond_vmn_req]), vab_min])
-    #     if new_vab == vab_max:
-    #         self.exec_logger.debug(f'Vab {new_vab} bounded by Vab max')
-    #     elif new_vab == cond_p_max:
-    #         self.exec_logger.debug(f'Vab {vab} bounded by P max')
-    #     elif new_vab == cond_iab_max:
-    #         self.exec_logger.debug(f'Vab {vab} bounded by Iab max')
-    #     elif new_vab == cond_vmn_max:
-    #         self.exec_logger.debug(f'Vab {vab} bounded by Vmn max')
-    #     elif new_vab == vab_min:
-    #         self.exec_logger.debug(f'Vab {vab} bounded by Vab min')
-    #     else:
-    #         self.exec_logger.debug(f'Vab {vab} bounded by Vmn min')
-    #     r = new_vab / vab
-    #     self.exec_logger.debug(f'iab: [{iab_lower_bound * r:.4f}, {iab_upper_bound * r:.4f}] A,')
-    #     self.exec_logger.debug(f'vmn : [{vmn_lower_bound * r:.3f}, {vmn_upper_bound * r:.3f}] V,')
-    #     self.exec_logger.debug(f'p : [{vmn_lower_bound * iab_lower_bound * r ** 2:.2f}, {vmn_upper_bound * iab_upper_bound * r ** 2:.2f}] W, ')
-    #     self.exec_logger.debug(f'Rab : [{rab_lower_bound}, {rab_upper_bound}] Ohms, R : [{r_lower_bound}, {r_upper_bound}] Ohms\n')
-    #     self.exec_logger.debug(f'-> Selecting {new_vab:.2f} V.')
-    #     return new_vab
 
-    def compute_vab(self, vab_init=5., vab_min=None, vab_req=None, vab_max=None,
+        def compute_vab(self, vab_init=5., vab_min=None, vab_req=None, vab_max=None,
                     iab_min=None, iab_req=None, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
                     pab_min=None, pab_req=None, pab_max=None, min_agg=False, polarities=(1, -1), pulse_duration=0.1, delay=0.05,
                     diff_vab_lim=2.5, n_steps=4, n_sigma=2., filename=None, quad_id=0):
