@@ -581,7 +581,7 @@ class OhmPi(object):
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
                         strategy=None, tx_volt=None, vab=None, vab_init=None, vab_min=None, vab_req=None, vab_max=None,
-                        iab_min=None, iab_req=None, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
+                        iab_min=None, iab_req=None, min_agg=False, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
                         pab_min=None, pab_req=None, pab_max=None, cmd_id=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value,
         #  change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)

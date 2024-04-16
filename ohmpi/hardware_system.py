@@ -639,7 +639,7 @@ class OhmPiHardware:
 
     def compute_vab(self, vab_init=5., vab_min=None, vab_req=None, vab_max=None,
                     iab_min=None, iab_req=None, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
-                    pab_min=None, pab_req=None, pab_max=None, polarities=(1, -1), pulse_duration=0.1, delay=0.05,
+                    pab_min=None, pab_req=None, pab_max=None, min_agg=False, polarities=(1, -1), pulse_duration=0.1, delay=0.05,
                     diff_vab_lim=2.5, n_steps=4, n_sigma=2., filename=None, quad_id=0):
         """ Estimates best Vab voltage based on different strategies.
         In "vmax" and "vmin" strategies, we iteratively increase/decrease the vab while
