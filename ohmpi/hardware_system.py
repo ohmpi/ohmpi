@@ -477,7 +477,7 @@ class OhmPiHardware:
             vmn_max = self.vmn_max
         if pab_min is None:
             pab_min = self.pab_min
-        if iab_max is None:
+        if pab_max is None:
             pab_max = self.pab_max
         if min_agg:
             req_agg = np.min
@@ -546,18 +546,18 @@ class OhmPiHardware:
         r_max = np.max(r_upper_bound)
         # _vmn_min = np.min(vmn_lower_bound)
         # _vmn_max = np.min(vmn_upper_bound)
-        cond_vab_max = vab_max
-        cond_vab_req = vab_req
         cond_vab_min = vab_min
-        cond_vmn_max = vmn_max * rab_min / r_max
-        cond_vmn_req = vmn_req * rab_max / r_min
-        cond_vmn_min = vmn_min * rab_max / r_min
-        cond_iab_max = rab_min * iab_max
-        cond_iab_req = rab_max * iab_req
+        cond_vab_req = vab_req
+        cond_vab_max = vab_max
         cond_iab_min = rab_max * iab_min
-        cond_pab_max = np.sqrt(pab_max * rab_min)
-        cond_pab_req = np.sqrt(pab_req * rab_max)
+        cond_iab_req = rab_max * iab_req
+        cond_iab_max = rab_min * iab_max
+        cond_vmn_min = vmn_min * rab_max / r_min
+        cond_vmn_req = vmn_req * rab_max / r_min
+        cond_vmn_max = vmn_max * rab_min / r_max
         cond_pab_min = np.sqrt(pab_min * rab_max)
+        cond_pab_req = np.sqrt(pab_req * rab_max)
+        cond_pab_max = np.sqrt(pab_max * rab_min)
         cond_mins = np.max([cond_vab_min, cond_iab_min, cond_vmn_min, cond_pab_min])
         cond_reqs = req_agg([cond_vab_req, cond_iab_req, cond_vmn_req, cond_pab_req])
         cond_maxs = np.min([cond_vab_max, cond_vmn_max, cond_iab_max, cond_pab_max])
