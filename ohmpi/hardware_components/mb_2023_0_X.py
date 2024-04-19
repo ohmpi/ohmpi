@@ -25,7 +25,7 @@ SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
                 'vmn_hardware_offset': {'default': 0.}
                 },
          'tx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
-                'adc_voltage_min': {'default': 10.},  # Minimum voltage value used in vmin strategy
+                'adc_voltage_min': {'default': 10.},  # Minimum voltage value that can be measured reliably
                 'adc_voltage_max': {'default': 4500.},  # Maximum voltage on ads1115 used to measure current
                 'voltage_max': {'min': 0., 'default': 12., 'max': 12.},  # Maximum input voltage
                 'data_rate': {'default': 860.},

@@ -174,7 +174,7 @@ class OhmPiHardware:
         # if self.tx.specs['connect']:
         #     self.pwr_state = 'off'
 
-        self.pab_min = 0.00005 # W TODO: Add in pwr components specs
+        self.pab_min = 0.00005  # W TODO: Add in pwr components specs
         self.pab_max = self.pwr.specs['power_max'] # W
 
         # Join tX and pwr
