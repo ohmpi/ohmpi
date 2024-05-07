@@ -690,7 +690,7 @@ class OhmPiHardware:
                                                  vab_req=vab_req, iab_req=iab_req, vmn_req=vmn_req, pab_req=pab_req,
                                                  vab_min=vab_min, vab_max=vab_max, iab_min=iab_min, iab_max=iab_max,
                                                  vmn_min=vmn_min, vmn_max=vmn_max, pab_min=pab_min, pab_max=pab_max,
-                                                 n_sigma=n_sigma, delay=delay)
+                                                 min_agg=min_agg, n_sigma=n_sigma, delay=delay)
             diff_vab = np.abs(new_vab - vab_list[k])
             if diff_vab < diff_vab_lim:
                 self.exec_logger.debug('Compute_vab stopped on vab increase too small')
