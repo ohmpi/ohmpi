@@ -746,6 +746,7 @@ class OhmPi(object):
                 kwargs_compute_vab['pab_min'] = pab_min
                 kwargs_compute_vab['pab_req'] = None
                 kwargs_compute_vab['pab_max'] = pab_max
+                kwargs_compute_vab['min_agg'] = False
 
             elif strategy == 'vmax':
                 kwargs_compute_vab = kwargs.get('compute_vab', {})
@@ -762,6 +763,7 @@ class OhmPi(object):
                 kwargs_compute_vab['pab_min'] = pab_min
                 kwargs_compute_vab['pab_req'] = None
                 kwargs_compute_vab['pab_max'] = pab_max
+                kwargs_compute_vab['min_agg'] = False
 
             elif strategy == 'vmin':
                 kwargs_compute_vab = kwargs.get('compute_vab', {})
@@ -778,6 +780,7 @@ class OhmPi(object):
                 kwargs_compute_vab['pab_min'] = pab_min
                 kwargs_compute_vab['pab_req'] = None
                 kwargs_compute_vab['pab_max'] = pab_max
+                kwargs_compute_vab['min_agg'] = False
 
             elif strategy == 'flex':
                 kwargs_compute_vab = kwargs.get('compute_vab', {})
@@ -794,6 +797,7 @@ class OhmPi(object):
                 kwargs_compute_vab['pab_min'] = pab_min
                 kwargs_compute_vab['pab_req'] = pab_req
                 kwargs_compute_vab['pab_max'] = pab_max
+                kwargs_compute_vab['min_agg'] = min_agg
 
             if strategy == 'full_constant':
                 vab = vab_init
