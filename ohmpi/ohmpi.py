@@ -587,7 +587,7 @@ class OhmPi(object):
         #  change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used
         #  in function definition -> (GB) default values are in self.settings.
-        """Measures on a quadrupole and returns a dictionnary with the transfer resistance.
+        """Measures on a quadrupole and returns a dictionary with the transfer resistance.
 
         Parameters
         ----------
@@ -610,7 +610,7 @@ class OhmPi(object):
             - full_constant: apply given Vab with no out-of-range checks for optimising duration at the risk of out-of-range readings
             Safety check (i.e. short voltage pulses) performed prior to injection to ensure
             injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
-            To bypass safety check before injection, vab should be set equal to vab_max (not recpommanded)
+            To bypass safety check before injection, vab should be set equal to vab_max (not recommanded)
 
         vab_init : float, optional
             Initial injection voltage [V]
@@ -651,7 +651,8 @@ class OhmPi(object):
         vmn_max: float, optional
             Maximum Vmn [mV] (used in strategy vmin).
             Default value set by config or boards specs
-
+        min_agg : bool, optional, default: False
+            when set to True, requested values are aggregated with the 'or' operator, when False with the 'and' operator
         tx_volt : float, optional  # deprecated
             For power adjustable only. If specified, voltage will be imposed.
         vab : float, optional
@@ -727,6 +728,8 @@ class OhmPi(object):
             pab_req = self.settings['pab_req']
         if pab_max is None and 'pab_max' in self.settings:
             pab_max = self.settings['pab_max']
+        if min_agg is None and 'min_agg' in self.settings:
+            pab_max = self.settings['min_agg']
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
 
@@ -954,11 +957,11 @@ class OhmPi(object):
         Parameters
         ----------
         fw_in_csv : bool, optional
-            Wether to save the full-waveform data in the .csv (one line per quadrupole).
+            Whether to save the full-waveform data in the .csv (one line per quadrupole).
             As these readings have different lengths for different quadrupole, the data are padded with NaN.
             If None, default is read from default.json.
         fw_in_zip : bool, optional
-            Wether to save the full-waveform data in a separate .csv in long format to be zipped to
+            Whether to save the full-waveform data in a separate .csv in long format to be zipped to
             spare space. If None, default is read from default.json.
         cmd_id : str, optional
             Unique command identifier.
@@ -1001,7 +1004,7 @@ class OhmPi(object):
                 break
             # run a measurement
             if save_strategy_fw:
-                kwargs['compute_vab']={'quad_id': i, 'filename':filename}
+                kwargs['compute_vab'] = {'quad_id': i, 'filename': filename}
             acquired_data = self.run_measurement(quad=quad, **kwargs)
 
             # add command_id in dataset
@@ -1053,10 +1056,10 @@ class OhmPi(object):
                     f.write(','.join(fw_padded.T.flatten()).replace('\n', '') + '\n')
 
         if fw_in_zip:
-            fwfilename = filename.replace('.csv', '_fw')
-            with ZipFile(fwfilename + '.zip', 'w') as myzip:
-                myzip.write(fwfilename + '.csv', os.path.basename(fwfilename) + '.csv')
-            os.remove(fwfilename + '.csv')
+            fw_filename = filename.replace('.csv', '_fw')
+            with ZipFile(fw_filename + '.zip', 'w') as myzip:
+                myzip.write(fw_filename + '.csv', os.path.basename(fw_filename) + '.csv')
+            os.remove(fw_filename + '.csv')
 
         # reset to idle if we didn't interrupt the sequence
         if self.status != 'stopping':
