@@ -581,7 +581,7 @@ class OhmPi(object):
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
                         strategy=None, tx_volt=None, vab=None, vab_init=None, vab_min=None, vab_req=None, vab_max=None,
-                        iab_min=None, iab_req=None, min_agg=False, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
+                        iab_min=None, iab_req=None, min_agg=None, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
                         pab_min=None, pab_req=None, pab_max=None, cmd_id=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value,
         #  change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
@@ -610,7 +610,7 @@ class OhmPi(object):
             - full_constant: apply given Vab with no out-of-range checks for optimising duration at the risk of out-of-range readings
             Safety check (i.e. short voltage pulses) performed prior to injection to ensure
             injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
-            To bypass safety check before injection, vab should be set equal to vab_max (not recommanded)
+            To bypass safety check before injection, vab should be set equal to vab_max (not recommended)
 
         vab_init : float, optional
             Initial injection voltage [V]
@@ -728,8 +728,11 @@ class OhmPi(object):
             pab_req = self.settings['pab_req']
         if pab_max is None and 'pab_max' in self.settings:
             pab_max = self.settings['pab_max']
-        if min_agg is None and 'min_agg' in self.settings:
-            pab_max = self.settings['min_agg']
+        if min_agg is None:
+            if 'min_agg' in self.settings:
+                min_agg = self.settings['min_agg']
+            else:
+                min_agg = False
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
 
