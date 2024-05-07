@@ -570,12 +570,12 @@ class OhmPiHardware:
         msg += f'### pab: [{pab_min:5.3f}, {pab_req:5.3f}, {pab_max:5.3f}] W | cond on vab: [{cond_pab_min:5.1f}, {cond_pab_req:5.1f}, {cond_pab_max:5.1f}] V ###\n'
         msg += f'### agg: {req_agg.__name__}, rab: [{rab_min:7.1f}, {rab_max:7.1f}] ohm, r: [{r_min:7.1f}, {r_max:7.1f}] ohm    ###'
         msg += '#' * 75
+        print(msg)
         self.exec_logger.debug(msg)
         msg = f'Rab: [{rab_min / 1000.:5.3f}, {rab_max / 1000:5.3f}] kOhm, R: [{r_min:4.1f}, {r_max:4.1f}] Ohm'
         self.exec_logger.debug(msg)
         self.exec_logger.debug(f'Selecting Vab : {new_vab:.2f} V.')
         return new_vab, rab_min, rab_max, r_min, r_max
-
 
     def compute_vab(self, vab_init=5., vab_min=None, vab_req=None, vab_max=None,
                     iab_min=None, iab_req=None, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
