@@ -76,12 +76,12 @@ class OhmPiHardware:
             except Exception as e:
                 print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
 
-        self.iab_min =  0.00001 # A TODO : add in config
+        self.iab_min = 0.00001  # A TODO : add in config
         self.iab_max = np.min([TX_CONFIG['current_max'], HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
                                np.min(np.hstack(
                                        (np.inf,
                                         [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))]) # A
-        self.vab_min = 5 # V TODO: add in hardware specs
+        self.vab_min = 5  # V TODO: add in hardware specs
         self.vab_max = np.min([TX_CONFIG['voltage_max'],
                                np.min(np.hstack(
                                        (np.inf,
