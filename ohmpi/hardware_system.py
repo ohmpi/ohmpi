@@ -569,12 +569,13 @@ class OhmPiHardware:
         msg += f'### vmn: [{vmn_min:5.3f}, {vmn_req:5.3f}, {vmn_max:5.3f}] V | cond on vab: [{cond_vmn_min:5.1f}, {cond_vmn_req:5.1f}, {cond_vmn_max:5.1f}] V ###\n'
         msg += f'### pab: [{pab_min:5.3f}, {pab_req:5.3f}, {pab_max:5.3f}] W | cond on vab: [{cond_pab_min:5.1f}, {cond_pab_req:5.1f}, {cond_pab_max:5.1f}] V ###\n'
         msg += f'### agg: {req_agg.__name__}, rab: [{rab_min:7.1f}, {rab_max:7.1f}] ohm, r: [{r_min:7.1f}, {r_max:7.1f}] ohm   ###'
-        print(msg)
+        # print(msg)
+        self.exec_logger.debug(msg)
         msg = f'### vab = min(max(max({[np.round(i, 2) for i in [cond_vab_min, cond_iab_min, cond_vmn_min, cond_pab_min]]}), {req_agg.__name__}({[np.round(i, 2) for i in [cond_vab_req, cond_iab_req, cond_vmn_req, cond_pab_req]]})), min({[np.round(i, 2) for i in [cond_vab_max, cond_iab_max, cond_vmn_max, cond_pab_max]]}))'
         msg += f' = min(max({cond_mins:5.3f}, {cond_reqs:5.3f}), {cond_maxs:5.3f})'
         msg += f' = min({np.max([cond_mins, cond_reqs]):5.3f}, {cond_maxs:5.3f})'
         msg += f' = {new_vab:5.3f} V ###'
-        print(msg)
+        # print(msg)
         self.exec_logger.debug(msg)
         msg = f'Rab: [{rab_min / 1000.:5.3f}, {rab_max / 1000:5.3f}] kOhm, R: [{r_min:4.1f}, {r_max:4.1f}] Ohm'
         self.exec_logger.debug(msg)
