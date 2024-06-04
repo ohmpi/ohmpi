@@ -669,7 +669,6 @@ class OhmPi(object):
         self.exec_logger.debug('Starting measurement')
         self.exec_logger.debug('Waiting for data')
 
-        vab_requested = vab
         # check arguments
         if quad is None:
             quad = np.array([0, 0, 0, 0])
@@ -691,7 +690,8 @@ class OhmPi(object):
             # if vab_req is None:
             #     vab_req = vab_init
             if strategy == 'constant':
-                vab_init = 0.9 * vab_init
+                vab_req = tx_volt
+
         if vab_init is None and vab is not None:
             warnings.warn(
                 '"vab" argument is deprecated and will be removed in future version. Use "vab_init" and "vab_req" instead to set the transmitter voltage in volts.', DeprecationWarning)
@@ -699,7 +699,7 @@ class OhmPi(object):
             # if vab_req is None:
             #     vab_req = vab_init
             if strategy == 'constant':
-                vab_init = 0.9 * vab_init
+                vab_req = vab
         if vab_init is None and 'vab_init' in self.settings:
             vab_init = self.settings['vab_init']
         if vab_min is None and 'vab_min' in self.settings:
@@ -733,6 +733,11 @@ class OhmPi(object):
                 min_agg = self.settings['min_agg']
             else:
                 min_agg = False
+
+        if strategy == 'constant':
+            if vab_req is not None:
+                vab_init = 0.9 * vab_req
+
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
 
