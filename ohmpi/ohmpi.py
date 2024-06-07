@@ -689,7 +689,7 @@ class OhmPi(object):
             vab_init = tx_volt
             # if vab_req is None:
             #     vab_req = vab_init
-            if strategy == 'constant':
+            if strategy == 'constant' and vab_req is None:
                 vab_req = tx_volt
 
         if vab_init is None and vab is not None:
@@ -698,7 +698,7 @@ class OhmPi(object):
             vab_init = vab
             # if vab_req is None:
             #     vab_req = vab_init
-            if strategy == 'constant':
+            if strategy == 'constant' and vab_req is None:
                 vab_req = vab
         if vab_init is None and 'vab_init' in self.settings:
             vab_init = self.settings['vab_init']
