@@ -4,10 +4,10 @@
     "sequence_delay": 1,
     "nb_stack": 1,
     "sampling_interval": 2,
-    "vab": 5,
+    "vab_req": 5,
     "duty_cycle": 0.5,
     "strategy": "constant",
-    "fw_in_csv": true,
+    "fw_in_csv": false,
     "fw_in_zip": true,
     "export_path": "data/measurements.csv"
 }
