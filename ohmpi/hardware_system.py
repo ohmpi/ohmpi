@@ -83,7 +83,7 @@ class OhmPiHardware:
                                        (np.inf,
                                         [MUX_CONFIG[i].pop('current_max', np.inf) for i in MUX_CONFIG.keys()])))]) # A
         self.vab_min = 0.1  # V TODO: add in hardware specs
-        self.vab_max = np.min([self.vab_min,TX_CONFIG['voltage_max'],
+        self.vab_max = np.min([TX_CONFIG['voltage_max'],
                                np.min(np.hstack(
                                        (np.inf,
                                         [MUX_CONFIG[i].pop('voltage_max', np.inf) for i in MUX_CONFIG.keys()])))])
