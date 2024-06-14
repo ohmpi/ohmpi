@@ -9,6 +9,7 @@ pages:
   - apt-get install --assume-yes pandoc latexmk texlive-latex-extra
   - pip install numpy pandas termcolor paho-mqtt zmq tqdm  # top import of Ohmpi.py
   - pip install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark linuxdoc
+  - cp configs/config_default.py ohmpi/config.py  # needed otherwise, module ohmpi cannot be instantiated (no API doc)
   - cd doc
   - make latexpdf
   - mv build/latex/ohmpi.pdf source/_static/ohmpi.pdf
