@@ -32,6 +32,6 @@ os.system(f'git commit -m "Update to v{version_new}"')
 os.system(f'git tag v{version_new}')
 
 # push and create merge request
-os.system(f'git push --set-upstream origin {branch} -o merge_request.create tag v{version_new}')
+os.system(f'git push --set-upstream origin {branch} -o merge_request.create -o merge_request.title="v{version_new}" tag v{version_new}')
 
 
