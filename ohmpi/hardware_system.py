@@ -159,9 +159,6 @@ class OhmPiHardware:
                 ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
             HARDWARE_CONFIG['pwr']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['pwr']['ctl'])
 
-        HARDWARE_CONFIG['pwr'].update({
-            'interface_name': HARDWARE_CONFIG['pwr'].pop('interface_name', 'none')})
-
         HARDWARE_CONFIG['pwr'] = enforce_specs(HARDWARE_CONFIG['pwr'], pwr_module.SPECS, 'interface_name')
         HARDWARE_CONFIG['pwr'].update({
             'connection': HARDWARE_CONFIG['pwr'].pop(
