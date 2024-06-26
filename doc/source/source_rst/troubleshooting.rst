@@ -1,7 +1,9 @@
 Troubleshooting
 ********************
 
-**TO BE REVIEWED**
+We encourage users to report any issue, or bugs as an issue in the `official repository on GitLab <https://gitlab.com/ohmpi/ohmpi/-/issues>`_.
+Please have a look at existing open and closed issues before posting a new one.
+We've compiled here below a list of common issues and and explanations on how to fix them.
 
 Issue with the pulses between A and B
 =====================================
@@ -29,4 +31,7 @@ Communication issue between components
 Most components of the OhmPi communicate via I2C protocol. This protocol works with two lines (SDA and SCL) that **must be pulled-up** at rest. The pull-up resistor consist in placing a 100k (or similar values) resistor between the line and VDD (5V in this case).
 
 Check with the multimeter the voltage between SDA/SCL and the ground to see if it reaches 5V at rest. If it's not the case, you may need stronger pull-up (smaller value of pull-up resistor).
+
+.. note::
+    On the measurement board v2024, the I2C isolator from Mikroe, already has pull-up that adds to the pull-up already on the ADS1115 board. If the ADS1115 of the Vmn part cannot be seen by i2cdetect, we recommend to remove the pull-up resistors on the Mikroe I2C isolator board.
 

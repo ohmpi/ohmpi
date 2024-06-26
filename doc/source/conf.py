@@ -15,7 +15,9 @@
 import os
 import sys
 sys.path.append(os.path.abspath('../../'))
-# import ohmpi  # import Ohmpi module to be documented in api.rst by numpydoc
+sys.path.append(os.path.abspath('../rpi_dummy_modules/'))
+#import ohmpi  # import Ohmpi module to be documented in api.rst by numpydoc
+
 import sphinx_rtd_theme
 
 
@@ -23,11 +25,11 @@ from shutil import copyfile
 # -- Project information -----------------------------------------------------
 
 project = 'OhmPi'
-copyright = '2022, the OhmPi Team.'
-author = 'Rémi CLEMENT'
+copyright = '2022-2024, the OhmPi Team.'
+author = 'OhmPi Team'
 
 # The full version, including alpha/beta/rc tags
-release = 'v2024rc'
+release = 'v2024'
 
 
 # -- General configuration ---------------------------------------------------
@@ -38,7 +40,8 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'numpydoc',
-    'recommonmark'
+    'recommonmark',
+    'linuxdoc.rstFlatTable',
 ]
 
 
@@ -56,7 +59,7 @@ exclude_patterns = []
 
 
 # -- Options for HTML output -------------------------------------------------
-
+html_logo = 'img/logo/ohmpi/LOGO_OHMPI.png'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
@@ -70,7 +73,15 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+html_context = {
+    "display_gitlab": True, # Integrate Gitlab
+    "gitlab_repo": "ohmpi/ohmpi", # Repo name
+    "gitlab_version": "master", # Version
+    "conf_py_path": "/doc/source/", # Path in the checkout to the docs root
+}
 
 
 master_doc = 'index'
+
+
 

@@ -1,17 +1,19 @@
-image: python:3.9-bullseye
+image: python:3.10-bookworm
 # This file is a template, and might need editing before it works on your project.
 # Full project: https://gitlab.com/pages/plain-html
+
 pages:
   stage: deploy
   script:
   - apt-get update
-  - apt-get install --assume-yes pandoc
-  - pip install numpy pandas termcolor paho-mqtt zmq  # top import of Ohmpi.py
-  - pip install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark
+  - apt-get install --assume-yes pandoc latexmk texlive-latex-extra
+  - pip install numpy pandas termcolor paho-mqtt zmq tqdm  # top import of Ohmpi.py
+  - pip install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark linuxdoc
+  - cp configs/config_default.py ohmpi/config.py  # needed otherwise, module ohmpi cannot be instantiated (no API doc)
   - cd doc
-  - make html
-  
-  # also make latex? pdf?
+  - sphinx-build -M latexpdf source build
+  - mv build/latex/ohmpi.pdf source/_static/ohmpi.pdf
+  - sphinx-build -M html source build
   - cd ..
   - mv doc/build/html/ public/
   - ls public/

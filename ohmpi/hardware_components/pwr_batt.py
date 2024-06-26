@@ -6,7 +6,7 @@ from ohmpi.utils import enforce_specs
 
 # hardware characteristics and limitations
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
-         'voltage': {'default': 12., 'max': 12., 'min': 12.},
+         'voltage': {'default': 12., 'max': 13., 'min': 1.},
          'current_adjustable': {'default': False},
          'voltage_adjustable': {'default': False},
          'interface': {'default': 'none'},
@@ -37,12 +37,6 @@ class Pwr(PwrAbstract):
     @current.setter
     def current(self, value, **kwargs):
         self.exec_logger.debug(f'Current cannot be set on {self.model}')
-    #
-    # def turn_off(self):
-    #     self.exec_logger.debug(f'{self.model} cannot be turned off')
-    #
-    # def turn_on(self):
-    #     self.exec_logger.debug(f'{self.model} is always on')
 
     @property
     def voltage(self):

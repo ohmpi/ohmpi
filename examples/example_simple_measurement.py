@@ -2,24 +2,20 @@ import os
 import numpy as np
 import time
 os.chdir("/home/pi/OhmPi")
-from ohmpi import OhmPi
+from ohmpi.ohmpi import OhmPi
 
-### Define object from class OhmPi
+# Define object from class OhmPi
 k = OhmPi()
 
-### Update settings if needed 
-k.update_settings({"injection_duration":0.2})
+# Update settings if needed
+k.update_settings({"injection_duration": 1.})
+k.update_settings({"strategy": "constant"})
+k.update_settings({"vab_req": 3.})
+k.update_settings({"nb_stack": 2})
 
-### Set or load sequence
-k.sequence = np.array([[1,2,3,4]])    # set numpy array of shape (n,4)
-# k.set_sequence('1 2 3 4\n2 3 4 5')    # call function set_sequence and pass a string
-# k.load_sequence('ABMN.txt')    # load sequence from a local file
+# Set or load sequence
+quad = [1,4,2,3]    # set numpy array of shape (n,4)
 
-### Run contact resistance check
-# k.rs_check()
-
-### Run sequence
-k.run_sequence()
-# k.run_sequence_async()
-# time.sleep(2)
-# k.interrupt()
+# Run sequence
+k.run_measurement(quad)
+k.plot_last_fw()

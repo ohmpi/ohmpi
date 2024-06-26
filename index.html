@@ -33,6 +33,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         <!-- <button id="removeDataBtn" type="button" class="btn btn-danger">Clear data</button> -->
         <button id="rmDataModal" type="button" class="btn btn-danger" data-toggle="modal" data-target="#rmModal">Clear data</button>
         <button id="getDataBtn" type="button" class="btn btn-info">Get data</button>
+        <div><b id='connection'>Connecting...</b></div>
         <div class="form-check">
             <input id="dataRetrievalCheck" class="form-check-input" type="checkbox" value="">
             <label class="form-check-label" for="dataRetrievalCheck">
@@ -93,12 +94,12 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="form-group row">
-                          <!-- <label for="nb_electrodes" class="col-sm-2 col-form-label">Nb electrodes</label> -->
+                        <!-- <div class="form-group row">
+                          <label for="nb_electrodes" class="col-sm-2 col-form-label">Nb electrodes</label>
                           <div class="col-sm-10">
                             <input type="number" class="form-control-number" id="nb_electrodes" value="64">
                           </div>
-                        </div>
+                        </div> -->
                         <div class="form-group row">
                             <label for="injection_duration" class="col-sm-2 col-form-label">Injection duration [s]</label>
                             <div class="col-sm-10">
@@ -167,11 +168,30 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button id="removeDataBtn" type="button" class="btn btn-danger">Clear data</button>
+                    <button id="removeDataBtn" type="button" class="btn btn-danger" data-dismiss="modal">Clear data</button>
                 </div>
             </div>
             </div>
         </div>
+
+        <!-- Modal for connection to MQTT server -->
+        <div class="modal fade" id="mqttModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="connection">Connecting...</h5>
+                <!-- in the future, we could add a username, password and connect button-->
+                </div>
+                <div class="modal-body">
+                    <p>Connecting to the MQTT server, please wait.</p>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button id="connectBtn" type="button" class="btn btn-danger" data-dismiss="modal">Connect</button>
+                </div> -->
+            </div>
+            </div>
+        </div>
+
         <footer>v0.3.0</footer>
     </div>
 
@@ -189,13 +209,16 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         let commands = {} // store commands and their id
         let callbacks = {} // store callback (might not be needed)
         let invertedData = [{
-            rho: [[10, 10.625, 12.5, 15.625, 20],
-                    [5.625, 6.25, 8.125, 11.25, 15.625],
-                    [2.5, 3.125, 5., 8.125, 12.5],
-                    [0.625, 1.25, 3.125, 6.25, 10.625],
-                    [0, 0.625, 2.5, 5.625, 10]],
-            x: [-9, -6, -5 , -3, -1],
-            y: [0, 1, 4, 5, 7],
+            // rho: [[10, 10.625, 12.5, 15.625, 20],
+            //         [5.625, 6.25, 8.125, 11.25, 15.625],
+            //         [2.5, 3.125, 5., 8.125, 12.5],
+            //         [0.625, 1.25, 3.125, 6.25, 10.625],
+            //         [0, 0.625, 2.5, 5.625, 10]],
+            // x: [-9, -6, -5 , -3, -1],
+            // y: [0, 1, 4, 5, 7],
+            rho: [],
+            x: [],
+            y: []
         }] // store inverted data
 
         // function with MQTT
@@ -227,9 +250,11 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             message = new Paho.MQTT.Message("Hello from index.html")
             message.destinationName = topic_ctrl
             client.send(message)
+            document.getElementById('connection').innerText = 'Connected'
         }
 
         function onConnectionLost(responseObject) {
+            document.getElementById('connection').innerText = 'Connecting...'
             if (responseObject.errorCode !== 0)
                 console.log("onConnectionLost:" + responseObject.errorMessage)
                 console.log("trying to reconnect...")
@@ -249,7 +274,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                     payload = payload.replace(/\bnan\b/g, "null");
 
                     // parse to json
-                    let ddic = JSON.parse(payload.split('INFO:')[1])
+                    let ddic = JSON.parse(payload.split('INFO:')[1].replace(/'/g, '"'))
 
                     // RS check data
                     if ('rsdata' in ddic) {
@@ -274,7 +299,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
                 } else if (message.topic == topic_exec) {
                     // display it in the log
-                    console.log('EXEC LOG:', payload)
+                    //console.log('EXEC LOG:', payload)
                 }
 
                 // let response = JSON.parse(message.payloadString)
@@ -660,7 +685,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             surveySelect.value = surveyNames[surveyNames.length - 1]
             
             // call the function directly
-            // (as progammatically chaging the value does not trigger the event)
+            // (as progammatically changing the value does not trigger the event)
             surveySelectFunc({'target': surveySelect})
 
             // update list of survey for inversion
@@ -677,7 +702,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             
 
             // update list of quadrupoles if any
-            if (quads.length == 0) {
+            if ((quads.length == 0) & (surveyNames.length > 0)) {
                 console.log('updating list of quadrupoles')
                 let df = data[surveyNames[0]]
                 let quadSelect = document.getElementById('quadSelect')

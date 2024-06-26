@@ -14,7 +14,7 @@ from ohmpi.utils import enforce_specs
 # hardware characteristics and limitations
 # voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
 SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
-                'sampling_rate': {'min': 2., 'default': 10., 'max': 100.},
+                'sampling_rate': {'min': 0., 'default': 100., 'max': 500.},
                 'data_rate': {'default': 860.},
                 'bias':  {'min': -5000., 'default': 0., 'max': 5000.},
                 'coef_p2': {'default': 2.50},
@@ -25,7 +25,7 @@ SPECS = {'rx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
                 'vmn_hardware_offset': {'default': 0.}
                 },
          'tx': {'model': {'default': os.path.basename(__file__).rstrip('.py')},
-                'adc_voltage_min': {'default': 10.},  # Minimum voltage value used in vmin strategy
+                'adc_voltage_min': {'default': 10.},  # Minimum voltage value that can be measured reliably
                 'adc_voltage_max': {'default': 4500.},  # Maximum voltage on ads1115 used to measure current
                 'voltage_max': {'min': 0., 'default': 12., 'max': 12.},  # Maximum input voltage
                 'data_rate': {'default': 860.},
@@ -67,6 +67,8 @@ def _ads_1115_gain_auto(channel):  # Make it a class method ?
 
 
 class Tx(TxAbstract):
+    """Tx Class
+        """
     def __init__(self, **kwargs):
         if 'model' not in kwargs.keys():
             for key in SPECS['tx'].keys():
@@ -88,25 +90,30 @@ class Tx(TxAbstract):
         self.current_adjustable = False
 
         # I2C connexion to MCP23008, for current injection
-        self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
+        self._mcp_address = kwargs['mcp_address']
+        if self.connect:
+            self.reset_mcp()
         # ADS1115 for current measurement (AB)
         self._ads_current_address = kwargs['ads_address']
         self._ads_current_data_rate = kwargs['data_rate']
         self._adc_gain = 2 / 3
-        self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
-                                        address=self._ads_current_address)
-        self._ads_current.mode = Mode.CONTINUOUS
+        if self.connect:
+            self.reset_ads()
+            self._ads_current.mode = Mode.CONTINUOUS
+
         self._r_shunt = kwargs['r_shunt']
         self.adc_voltage_min = kwargs['adc_voltage_min']
         self.adc_voltage_max = kwargs['adc_voltage_max']
 
         # Relays for pulse polarity
-        self.pin0 = self.mcp_board.get_pin(0)
-        self.pin0.direction = Direction.OUTPUT
-        self.pin1 = self.mcp_board.get_pin(1)
-        self.pin1.direction = Direction.OUTPUT
-        self.polarity = 0
-        self.gain = 2 / 3
+        if self.connect:
+            self.pin0 = self.mcp_board.get_pin(0)
+            self.pin0.direction = Direction.OUTPUT
+            self.pin1 = self.mcp_board.get_pin(1)
+            self.pin1.direction = Direction.OUTPUT
+            # self.polarity = 0
+            self.gain = 2 / 3
+
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
 
@@ -164,11 +171,13 @@ class Tx(TxAbstract):
         assert polarity in [-1, 0, 1]
         self._polarity = polarity
         if polarity == 1:
-            self.pin0.value = True
             self.pin1.value = False
+            time.sleep(self._release_delay)
+            self.pin0.value = True
             time.sleep(self._activation_delay)
         elif polarity == -1:
             self.pin0.value = False
+            time.sleep(self._release_delay)
             self.pin1.value = True
             time.sleep(self._activation_delay)
         else:
@@ -181,6 +190,14 @@ class Tx(TxAbstract):
     #
     # def turn_on(self):
     #     self.pwr.turn_on(self)
+
+    def reset_ads(self, mode=Mode.CONTINUOUS):
+        self._ads_current = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_current_data_rate,
+                                    address=self._ads_current_address)
+        self._ads_current.mode = mode
+
+    def reset_mcp(self):
+        self.mcp_board = MCP23008(self.connection, address=self._mcp_address)
 
     @property
     def tx_bat(self):
@@ -215,6 +232,7 @@ class Tx(TxAbstract):
 
 
 class Rx(RxAbstract):
+    """RX class"""
     def __init__(self, **kwargs):
         if 'model' not in kwargs.keys():
             for key in SPECS['rx'].keys():
@@ -229,11 +247,12 @@ class Rx(RxAbstract):
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = kwargs['ads_address']
+        self._ads_voltage_data_rate = kwargs['data_rate']
         self._adc_gain = 2/3
-        self._ads_voltage = ads.ADS1115(self.connection, gain=self._adc_gain,
-                                        data_rate=SPECS['rx']['data_rate']['default'],
-                                        address=self._ads_voltage_address)
-        self._ads_voltage.mode = Mode.CONTINUOUS
+
+        if self.connect:
+            self.reset_ads(mode=Mode.CONTINUOUS)
+
         self._coef_p2 = kwargs['coef_p2']
         # self._voltage_max = kwargs['voltage_max']
         self._sampling_rate = kwargs['sampling_rate']
@@ -267,6 +286,11 @@ class Rx(RxAbstract):
 
     def reset_gain(self):
         self.gain = 2/3
+
+    def reset_ads(self, mode=Mode.CONTINUOUS):
+        self._ads_voltage = ads.ADS1115(self.connection, gain=self._adc_gain, data_rate=self._ads_voltage_data_rate,
+                                    address=self._ads_voltage_address)
+        self._ads_voltage.mode = mode
 
     @property
     def voltage(self):

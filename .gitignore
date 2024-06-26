@@ -1,3 +1,5 @@
+ohmpi/config.py
+ohmpi/logs/*
 .idea/*
 data/*
 **/.ipynb_notebooks/**
@@ -9,3 +11,4 @@ logs/*
 sequence.txt
 /Proposition interface.odp
 doc/build/*
+doc/_static/*.pdf

@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "relay_card_single")(type "KiCad")(uri "${KIPRJMOD}/lib/symbols/relay_card_single.kicad_sym")(options "")(descr ""))
+)

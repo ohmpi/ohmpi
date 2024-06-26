@@ -1,35 +1,35 @@
 # OhmPi
 
-[![Build Status](https://gitlab.irstea.fr/%{project_path}/badges/%{default_branch}/pipeline.svg)](https://reversaal.gitlab.irstea.page/OhmPi)
-
 Development of a low-cost multi-electrodes resistivity meter for electrical resistivity mesaurement for lab applications, based on raspberry board
 
 ## Installation
 
-All dependencies are specified in *requirements.txt*
+1. Download a .zip of this repository (or use `git clone https://gitlab.com/ohmpi/ohmpi.git`)
+2. Enter the repository (`cd path/to/ohmpi`) and install the software needed. We made a simple script to make it simpler:
 
-**Note:** all instructions below should be typed in the terminal
+`./install.sh`
 
-It is first necessary to create an OhmPi virtual environment and install all dependancies
-`.create_ohmpi_virtual_envrinment.sh`
+The installation script will create a virtual python environement `ohmpy` (with a 'y' at the end) where all packages specified in *requirements.txt* will be installed. The script also takes care of creating a configuration for your hardware if you wish.
 
-When the installation is completed check that requirements are met using 
-`pip list`
+To activate the environment and set the necessary `$PYTHONPATH` variable, you can use:
+
+`source env.sh`
+
+More examples are provided in the **[documentation](https://ohmpi.gitlab.io/ohmpi/)**.
 
 
-We strongly recommend users to create a virtual environment to run the code and installed all required dependencies:
-*  activate it using the following command:
-   `source ohmpy/bin/activate`
-*  you should run you code within the virtual environment
-*  to leave the virtual environment simply type: `deactivate`
+## Gallery
 
-To enable to Python module, we need to add the 'ohmpi' folder to the python path. This can be done by `source .env` or manually by adding `export PYTHONPATH=$PYTHONPATH:/home/<username>/OhmPi` to /home/<username>/.bashrc.
+A few pictures of the components of the OhmPi. More in the [**DOCUMENTATION**](https://ohmpi.gitlab.io/ohmpi/)!
 
-## First run with four electrodes
+![measurment board](doc/source/img/mb.2024.x.x/32.jpg)
+*Measurement board (v2024).*
 
-In the examples folder, you will find the code "simple_measurement.py".
+![multiplexer board](doc/source/img/mux.2024.0.x/7.jpg)
+*Multiplexer board (v2024).*
 
-Running this code, in Thonny (IDE) or in the terminal, will allow you to make a simple 4 electrodes measurement A B M N.
+![software architecure](doc/source/img/software/ohmpi_2024_architecture.png)
+*Software architecture.*
 
 
 ## Citing Ohmpi
@@ -42,4 +42,4 @@ If you use Ohmpi for you work, please cite [this paper](https://www.sciencedirec
 
 ## License information
 
-You may redistribute and modify this documentation and make products using it under the terms of the CERN-OHL-P v2 (https:/cern.ch/cern-ohl). This documentation is distributed WITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF MERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A PARTICULAR PURPOSE. Please see the CERN-OHL-P v2 for applicable conditions
+You may redistribute and modify this documentation and make products using it under the terms of the CERN-OHL-P v2 (https://cern.ch/cern-ohl). This documentation is distributed WITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF MERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A PARTICULAR PURPOSE. Please see the CERN-OHL-P v2 for applicable conditions

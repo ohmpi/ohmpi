@@ -1,6 +1,5 @@
 import logging
 from ohmpi.utils import get_platform
-
 from paho.mqtt.client import MQTTv31  # noqa
 
 _, on_pi = get_platform()
@@ -14,7 +13,7 @@ logging_suffix = ''
 # OhmPi configuration
 OHMPI_CONFIG = {
     'id': ohmpi_id,  # Unique identifier of the OhmPi board (string)
-    'settings': 'ohmpi_settings.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
+    'settings': 'settings/default.json',  # INSERT YOUR FAVORITE SETTINGS FILE HERE
 }
 
 r_shunt = 2.
@@ -29,22 +28,34 @@ HARDWARE_CONFIG = {
             },
     'rx':  {'model': 'mb_2024_0_2',
              'latency': 0.010,  # latency in seconds in continuous mode
-             'sampling_rate': 50,  # number of samples per second
+             'sampling_rate': 200,  # number of samples per second
              'interface_name': 'i2c'
             },
     'mux': {'boards':
-                {'mux_00':
-                     {'model': 'mux_2024_0_X',
-                      'tca_address': None,
-                      'tca_channel': 0,
-                      'addr2': 'down',
-                      'addr1': 'down',
-                      'roles': {'A': 'X', 'B': 'Y', 'M': 'XX', 'N': 'YY'},
-                      'cabling': {(i+0, j): ('mux_00', i) for j in ['A', 'B', 'M', 'N'] for i in range(1, 9)},
-                      'voltage_max': 12.}
+                {'mux_A':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x70,
+                      'roles': 'A',
+                      'electrodes': range(1, 65)},
+                 'mux_B':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x71,
+                      'roles': 'B',
+                      'electrodes': range(1, 65)},
+                 'mux_M':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x72,
+                      'roles': 'M',
+                      'electrodes': range(1, 65)},
+                 'mux_N':
+                     {'model': 'mux_2023_0_X',
+                      'mux_tca_address': 0x73,
+                      'roles': 'N',
+                      'electrodes': range(1, 65),
+                      }
                  },
              'default': {'interface_name': 'i2c_ext',
-                         'voltage_max': 100.,
+                         'voltage_max': 50.,
                          'current_max': 3.}
             }
     }
@@ -53,7 +64,7 @@ HARDWARE_CONFIG = {
 # Execution logging configuration
 EXEC_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
-    'log_file_logging_level': logging.DEBUG,
+    'log_file_logging_level': logging.INFO,
     'logging_to_console': True,
     'file_name': f'exec{logging_suffix}.log',
     'max_bytes': 262144,
@@ -76,8 +87,8 @@ DATA_LOGGING_CONFIG = {
 # State of Health logging configuration (For a future release)
 SOH_LOGGING_CONFIG = {
     'logging_level': logging.INFO,
-    'log_file_logging_level': logging.DEBUG,
     'logging_to_console': True,
+    'log_file_logging_level': logging.DEBUG,
     'file_name': f'soh{logging_suffix}.log',
     'max_bytes': 16777216,
     'backup_count': 1024,
@@ -99,7 +110,7 @@ MQTT_LOGGING_CONFIG = {
     'transport': 'tcp',
     'client_id': f'{OHMPI_CONFIG["id"]}',
     'exec_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/exec',
-    'exec_logging_level': logging.DEBUG,
+    'exec_logging_level': EXEC_LOGGING_CONFIG['logging_level'],
     'data_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/data',
     'data_logging_level': DATA_LOGGING_CONFIG['logging_level'],
     'soh_topic': f'ohmpi_{OHMPI_CONFIG["id"]}/soh',

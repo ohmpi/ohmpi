@@ -13,35 +13,49 @@ OHMPI: Open source and open hardware resistivity-meter
     :Release: |release|
     :Date: |today|
     :Date start: July 2016	
-    :Authors: **Rémi CLEMENT, Nicolas FORQUET, Yannick FARGIER, Vivien DUBOIS, Hélène GUYARD, Olivier KAUFMANN, Guillaume Blanchy, Arnaud WATLET**
+    :Authors: **Rémi CLEMENT, Nicolas FORQUET, Yannick FARGIER, Vivien DUBOIS, Hélène GUYARD, Olivier KAUFMANN, Guillaume BLANCHY, Arnaud WATLET**
     :Target: users, researchers and developers 
-    :status: some mature, some in progress
+    :Status: some mature, some in progress
 
-.. topic:: OhmPi Document Center
+This documentation presents the development of a low-cost, open hardware
+resistivity meter to provide the scientific community with a robust
+and flexible tool for small-scale experiments. Called OhmPi, this resistivity meter
+features current injection and measurement functions associated with a multiplexer
+that allows performing automatic measurements.
 
-    * OhmPi official documents
-    * Release guidelines
-    * General tutorials
+Contents
+********
 
-.. image:: img/logo/ohmpi/logo_ohmpi.JPG
-   :width: 200px
-   :height: 150px
-   :align: left
-
-Contents: 
-
-.. toctree:: 
-   :maxdepth: 2 
+.. toctree::
+   :maxdepth: 1
+   :caption: Introduction
 
    source_rst/Ohmpi
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Building and operating OhmPi
+
    source_rst/hardware
-   source_rst/software
-   source_rst/api
+   source_rst/software/index
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Additional resources
+
    source_rst/troubleshooting
+   source_rst/developments
    source_rst/gallery
-   source_rst/developing_hardware_components
    source_rst/archived_version
-  
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: References
+
+   Link to OhmPi Repository <https://gitlab.com/ohmpi/ohmpi>
+
+`PDF version of this documentation <_static/ohmpi.pdf>`_
 
   
 
