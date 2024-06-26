@@ -6,48 +6,49 @@ from ohmpi.logging_setup import create_stdout_logger
 from ohmpi.utils import enforce_specs
 
 SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
-                'exec_logger': {'default': None},
-                'soh_logger': {'default': None},
-                'connection': {'default': None}},
+                 'exec_logger': {'default': None},
+                 'soh_logger': {'default': None},
+                 'connection': {'default': None}},
          'pwr': {'model': {'default': 'unknown PWR hardware'},
-                'exec_logger': {'default': None},
-                'soh_logger': {'default': None},
-                'current_min': {'default': 0.},
-                'current_max': {'default': 0.},
-                'voltage_min': {'default': 0.},
-                'voltage_max': {'default': 0.},
-                'power_max': {'default': 0.},
-                'voltage_adjustable': {'default': False},
-                'current_adjustable': {'default': False},
-                'connection': {'default': None}},
+                 'exec_logger': {'default': None},
+                 'soh_logger': {'default': None},
+                 'current_min': {'default': 0.},
+                 'current_max': {'default': 0.},
+                 'voltage_min': {'default': 0.},
+                 'voltage_max': {'default': 0.},
+                 'power_max': {'default': 0.},
+                 'voltage_adjustable': {'default': False},
+                 'current_adjustable': {'default': False},
+                 'connection': {'default': None},
+                 'interface_name':{'default': None}},
          'mux': {'model': {'default': 'unknown MUX hardware'},
-                'exec_logger': {'default': None},
-                'soh_logger': {'default': None},
-                'id': {'default': None},
-                'connection': {'default': None},
-                'cabling': {'default': None},
-                'addresses': {'default': None},
-                'barrier': {'default': Barrier(1)},
-                'activation_delay': {'default': 0.}, # in s
-                'release_delay': {'default': 0.}}, # in s
+                 'exec_logger': {'default': None},
+                 'soh_logger': {'default': None},
+                 'id': {'default': None},
+                 'connection': {'default': None},
+                 'cabling': {'default': None},
+                 'addresses': {'default': None},
+                 'barrier': {'default': Barrier(1)},
+                 'activation_delay': {'default': 0.}, # in s
+                 'release_delay': {'default': 0.}}, # in s
         'tx':   {'model': {'default':  'unknown TX hardware'},
-                'injection_duration': {'default': 1.},
-                'exec_logger': {'default': None},
-                'soh_logger': {'default': None},
-                'connection': {'default': None},
-                'pwr': {'default': None},
-                'latency': {'default': 0.},
-                'tx_sync': {'default': Event()}},
+                 'injection_duration': {'default': 1.},
+                 'exec_logger': {'default': None},
+                 'soh_logger': {'default': None},
+                 'connection': {'default': None},
+                 'pwr': {'default': None},
+                 'latency': {'default': 0.},
+                 'tx_sync': {'default': Event()}},
         'rx':   {'model': {'default':  'unknown RX hardware'},
-                'exec_logger': {'default': None},
-                'soh_logger': {'default': None},
-                'connection': {'default': None},
-                'sampling_rate': {'default': 1., 'max': np.inf},
-                'latency': {'default': 0.},
-                'voltage_max': {'default': 0.},
-                'bias': {'default': 0.},
-                'vmn_hardware_offset': {'default': 0.}}
-         }
+                 'exec_logger': {'default': None},
+                 'soh_logger': {'default': None},
+                 'connection': {'default': None},
+                 'sampling_rate': {'default': 1., 'max': np.inf},
+                 'latency': {'default': 0.},
+                 'voltage_max': {'default': 0.},
+                 'bias': {'default': 0.},
+                 'vmn_hardware_offset': {'default': 0.}}
+        }
 
 
 class CtlAbstract(ABC):
@@ -113,6 +114,7 @@ class PwrAbstract(ABC):
         self._voltage_min = kwargs['voltage_min']
         self._voltage_max = kwargs['voltage_max']
         self.switchable = False
+        self.interface_name = kwargs['interface_name']
         self.connection = kwargs['connection']
         self._battery_voltage = np.nan
         self._pwr_discharge_latency = np.nan
