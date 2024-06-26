@@ -20,7 +20,7 @@ connectors need to be bypassed.
 .. figure:: ../../img/mb.2024.x.x/power_cabling_batt.png
    :alt: Wiring of a TX battery used as power module (no DPH5005)
 
-    Wiring of a TX battery used as power module (no DPH5005)
+   Wiring of a TX battery used as power module (no DPH5005)
 
 The config file needs to be adapted accordingly with the relevant battery voltage (12 V by default). Since the battery voltage (V_AB) can't be measured by OhmPi,
 you should account for a potential ~10% uncertainty on R_AB, which will depend on the battery voltage level.
@@ -38,9 +38,6 @@ This digital power supply allows to inject up to 50 V and also to regulate the v
 It needs to be connected to a 12V battery and can be controlled via USB using `modbus` by the raspberrypi.
 
 .. figure:: ../../img/DPH_5005.png
-       :width: 400px
-       :align: center
-       :height: 300px
        :alt: DPH5005 image
        :figclass: align-center
 
@@ -63,14 +60,15 @@ needs to be plugged in to one USB port of the Raspberry Pi.
    :alt: Wiring of the DPH5005
    :figclass: align-center
 
-    Wiring of the DPH5005
+   Wiring of the DPH5005
 
 Then, the config file needs to be adapted accordingly, and the default output voltage can also be specified.
 
 .. code-block:: python
-   :caption: Example config pwr_dph5005 in HARDWARE_CONFIG
+  :caption: Example config pwr_dph5005 in HARDWARE_CONFIG
 
   'pwr': {'model': 'pwr_dph5005', 'voltage': 5.}
+
 
 
 .. warning::
