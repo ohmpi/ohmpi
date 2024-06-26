@@ -1,0 +1,38 @@
+﻿Name,Power,Type,Multiplexer BLACK probe,Multiplexer RED probe,Expected 4 roles,Expected 2 roles
+SC1,off,continuity,screw terminal GND,screw terminal PWR,no continuity,no continuity
+SC2,off,continuity,screw terminal role x,screw terminal role y,no continuity,no continuity
+SC3,off,continuity,screw terminal role x,screw terminal role xx,no continuity,continuity
+SC4,off,continuity,screw terminal role x,screw terminal role yy,no continuity,no continuity
+SC5,off,continuity,screw terminal role y,screw terminal role xx,no continuity,no continuity
+SC6,off,continuity,screw terminal role y,screw terminal role yy,no continuity,continuity
+SC7,off,continuity,screw terminal role xx,screw terminal role yy,no continuity,no continuity
+SC8,off,continuity,screw terminal elec 1,screw terminal elec 2,no continuity,no continuity
+SC9,off,continuity,screw terminal elec 2,screw terminal elec 3,no continuity,no continuity
+SC10,off,continuity,screw terminal elec 3,screw terminal elec 4,no continuity,no continuity
+SC11,off,continuity,screw terminal elec 4,screw terminal elec 5,no continuity,no continuity
+SC12,off,continuity,screw terminal elec 5,screw terminal elec 6,no continuity,no continuity
+SC13,off,continuity,screw terminal elec 6,screw terminal elec 7,no continuity,no continuity
+SC14,off,continuity,screw terminal elec 7,screw terminal elec 8,no continuity,no continuity
+SC15,off,continuity,screw terminal elec 8,screw terminal elec 9,no continuity,continuity
+SC16,off,continuity,screw terminal elec 9,screw terminal elec 10,no continuity,no continuity
+SC17,off,continuity,screw terminal elec 10,screw terminal elec 11,no continuity,no continuity
+SC18,off,continuity,screw terminal elec 11,screw terminal elec 12,no continuity,no continuity
+SC19,off,continuity,screw terminal elec 12,screw terminal elec 13,no continuity,no continuity
+SC20,off,continuity,screw terminal elec 13,screw terminal elec 14,no continuity,no continuity
+SC21,off,continuity,screw terminal elec 14,screw terminal elec 15,no continuity,no continuity
+SC22,off,continuity,screw terminal elec 15,screw terminal elec 16,no continuity,no continuity
+SC23,off,continuity,screw terminal elec 1,screw terminal elec 16,no continuity,continuity
+SC24,off,continuity,screw terminal elec 2,screw terminal elec 15,no continuity,continuity
+SC25,off,continuity,screw terminal elec 3,screw terminal elec 14,no continuity,continuity
+SC26,off,continuity,screw terminal elec 4,screw terminal elec 13,no continuity,continuity
+SC27,off,continuity,screw terminal elec 5,screw terminal elec 12,no continuity,continuity
+SC28,off,continuity,screw terminal elec 6,screw terminal elec 11,no continuity,continuity
+SC29,off,continuity,screw terminal elec 7,screw terminal elec 10,no continuity,continuity
+SC30,off,continuity,screw terminal elec 8,screw terminal elec 9,no continuity,continuity
+C1,off,continuity,screw terminal GND,both MCP23017 VSS,continuity,continuity
+C2,off,continuity,screw terminal GND,I2Cext GND,continuity,continuity
+C3,off,continuity,I2Cext SDA,both MCP23017 SDA,continuity,continuity
+C4,off,continuity,I2Cext SDL,both MCP23017 SDL,continuity,continuity
+V1,on,voltage,screw terminal GND,both MCP23017 SDA,5V,5V
+V2,on,voltage,screw terminal GND,both MCP23017 SDL,5V,5V
+V2,on,voltage,screw terminal GND,both MCP23017 VDD,5V,5V
