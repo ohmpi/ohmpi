@@ -51,6 +51,8 @@ class Pwr(PwrAbstract):
                 assert isinstance(self.connection, Instrument)
             elif self.interface_name == 'bluetooth':
                 raise Warning('Bluetooth communication with dph5050 is not implemented')
+            elif self.interface_name == 'none':
+                raise IOError('dph interface cannot be set to none')
         #     self.pwr_state = self._pwr_state
 
         if not subclass_init:
