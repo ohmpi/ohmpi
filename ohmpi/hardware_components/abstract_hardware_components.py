@@ -76,6 +76,7 @@ class CtlAbstract(ABC):
         self.exec_logger.debug(f'{self.model} Ctl initialization')
         self._cpu_temp_available = False
         self.max_cpu_temp = np.inf
+        self.connect = kwargs['connect']
         self.connection = kwargs['connection']
         self.specs = kwargs
 
