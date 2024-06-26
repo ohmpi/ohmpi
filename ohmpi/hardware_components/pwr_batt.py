@@ -9,7 +9,7 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage': {'default': 12., 'max': 13., 'min': 1.},
          'current_adjustable': {'default': False},
          'voltage_adjustable': {'default': False},
-         'interface': {'default': 'none'},
+         'interface_name': {'default': 'none'},
          }
 
 

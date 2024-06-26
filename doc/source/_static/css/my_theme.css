@@ -1,6 +1,5 @@
-.wy-nav-content {
-max-width: 2000px !important;
-}
+@import url("theme.css");
 
-.wy-side-nav-search, .wy-nav-top {
-      background: #00ff00;
+.wy-nav-content {
+max-width: 90%;
+}
