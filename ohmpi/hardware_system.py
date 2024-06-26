@@ -159,7 +159,7 @@ class OhmPiHardware:
             HARDWARE_CONFIG['pwr']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['pwr']['ctl'])
 
         HARDWARE_CONFIG['pwr'].update({
-            'interface_name': HARDWARE_CONFIG['pwr'].pop('interface_name', None)})
+            'interface_name': HARDWARE_CONFIG['pwr'].pop('interface_name', 'none')})
 
         HARDWARE_CONFIG['pwr'].update({
             'connection': HARDWARE_CONFIG['pwr'].pop(

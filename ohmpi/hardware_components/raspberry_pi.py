@@ -32,10 +32,6 @@ class Ctl(CtlAbstract):
             subclass_init = True
 
         super().__init__(**kwargs)
-        self.interfaces = dict()
-
-        # None interface for battery
-        self.interfaces['none'] = None
 
         # I2C
         try:
@@ -43,7 +39,7 @@ class Ctl(CtlAbstract):
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize I2C:\n{e}')
 
-       # warnings.resetwarnings()
+        # warnings.resetwarnings()
         # Extended I2C
         warnings.filterwarnings(action='ignore', category=RuntimeWarning, module='adafruit_blinka')  # to filter out adafruit warning about setting I2C frequency
         try:
@@ -51,7 +47,11 @@ class Ctl(CtlAbstract):
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize Extended I2C:\n{e}')
 
-        self.reset_modbus(**kwargs)
+        try:
+            self.reset_modbus(**kwargs)
+        except Exception as e:
+            self.exec_logger.warning(f'Could not initialize Modbus:\n{e}')
+
 
     def reset_modbus(self,**kwargs):
         # modbus

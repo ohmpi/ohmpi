@@ -49,6 +49,7 @@ SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
                 'vmn_hardware_offset': {'default': 0.}}
          }
 
+
 class CtlAbstract(ABC):
     """CTlAbstract Class
     Abstract class for controller"""
@@ -56,7 +57,8 @@ class CtlAbstract(ABC):
         for key in SPECS['ctl'].keys():
             kwargs = enforce_specs(kwargs, SPECS['ctl'], key)
         self.model = kwargs['model']
-        self.interfaces = None
+        self.interfaces = dict()
+        self.interfaces['none'] = None
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_ctl')
