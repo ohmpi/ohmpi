@@ -622,15 +622,10 @@ class OhmPiHardware:
         -------
         vab : float
             Proposed Vab according to the given strategy.
-            :param vmn_min:
-            :param vmn_max:
-            :param iab_max:
+
         """
 
-        # TODO: Optimise how to pass iab_max, vab_max, vmn_min
         # TODO: Update docstring
-        # TODO: replace vmn_min and vmn_max by vmn_requested
-
 
         if not self.tx.pwr.voltage_adjustable:
             vab_opt = self.tx.pwr.voltage
@@ -715,11 +710,6 @@ class OhmPiHardware:
 
     def discharge_pwr(self):
         if self.tx.pwr.voltage_adjustable:
-            # TODO: implement strategy to discharge pwr based on hardware version => variable in TX should tell if it can discharge the pwr or not
-            ### if discharge relay manually add on mb_2024_0_2, then should not activate AB relays but simply wait for automatic discharge
-            ### if mb_2024_1_X then TX should handle the pwr discharge
-
-            # time.sleep(1.0)
             self.tx.discharge_pwr()
 
     def _plot_readings(self, save_fig=False, filename=None):
