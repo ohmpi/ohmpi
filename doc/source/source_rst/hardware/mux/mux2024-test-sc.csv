@@ -29,10 +29,3 @@ SC27,off,continuity,screw terminal elec 5,screw terminal elec 12,no continuity,c
 SC28,off,continuity,screw terminal elec 6,screw terminal elec 11,no continuity,continuity
 SC29,off,continuity,screw terminal elec 7,screw terminal elec 10,no continuity,continuity
 SC30,off,continuity,screw terminal elec 8,screw terminal elec 9,no continuity,continuity
-C1,off,continuity,screw terminal GND,both MCP23017 VSS,continuity,continuity
-C2,off,continuity,screw terminal GND,I2Cext GND,continuity,continuity
-C3,off,continuity,I2Cext SDA,both MCP23017 SDA,continuity,continuity
-C4,off,continuity,I2Cext SDL,both MCP23017 SDL,continuity,continuity
-V1,on,voltage,screw terminal GND,both MCP23017 SDA,5V,5V
-V2,on,voltage,screw terminal GND,both MCP23017 SDL,5V,5V
-V2,on,voltage,screw terminal GND,both MCP23017 VDD,5V,5V

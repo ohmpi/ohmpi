@@ -43,6 +43,11 @@ Below we detail examples of OHMPI systems assemblies in different versions.
 OhmPi systems assembly tutorials
 ********************************
 
+.. warning::
+    We **strongly** recommend to test the assembled system in a controlled environment (in the lab, on resistor boards) before deploying
+    in the field.
+
+    
 .. toctree:: 
    :maxdepth: 1 
 

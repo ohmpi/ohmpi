@@ -1,5 +1,5 @@
-Components,Number,Cost per unit,Total cost ,Manufacturer,Manufacturer s reference,Web reference,
-Printed circuit board ,4,140,560,Asler,-,-,
+﻿Components,Number,Cost per unit,Total cost ,Manufacturer,Manufacturer s reference,Web reference
+Printed circuit board ,4,140,560,Aisler,-,https://aisler.net/
 Pin strip no ejector  16 pins,16,0.62,9.92,BLK electronic,10120550,https://www.conrad.com/p/tru-components-1580994-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-16-no-of-rows-2-1-pcs-1580994
 diode-1n4007,256,0.091,23.296,Diodes Incorporated,1N4007-T,https://www.mouser.fr/ProductDetail/Diodes-Incorporated/1N4007-T?qs=sGAEpiMZZMueQxo7L%2FBPyAkbORUUMREn
 Pin strip no ejector  6 pins,4,0.39,1.56,BLK electronic,10120550,https://www.conrad.com/p/tru-components-1580994-pin-strip-no-ejector-contact-spacing-254-mm-total-number-of-pins-16-no-of-rows-2-1-pcs-1580994
@@ -16,3 +16,4 @@ BKL Electronic 10120158/10 Ribbon cable Contact spacing: 1.27 mm 16 x 0.08 mm Mu
 spacer 5.5 HEX 25 mm M3 male/female,31,2.79,86.49,Keystone Electronics ,24300,https://www.mouser.fr/ProductDetail/Keystone-Electronics/24300?qs=UWqYQ%2F2cZWu0ejpOzmZC2A%3D%3D
 Screw,9,0.305,2.745,APM HEXSEAL,RM3X8MM-2701,https://www.mouser.fr/ProductDetail/APM-HEXSEAL/RM3X8MM-2701?qs=JJSE%2F12mKnS3VxSDrYXUHw%3D%3D
 spacer 5.5 HEX 25 mm M3 female/female,9,0.846,7.614,Keystone Electronics ,25515,https://www.mouser.fr/ProductDetail/Keystone-Electronics/25515?qs=UWqYQ%2F2cZWuxuhUmfr%252BZuQ%3D%3D
+2-way jumper,12

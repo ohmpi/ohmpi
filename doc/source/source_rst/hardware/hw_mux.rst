@@ -1,5 +1,5 @@
-MUX board
-=============================
+Multiplexer board
+=================
 
 TO DO DESCRIPTIONs
 
@@ -35,8 +35,8 @@ Specifications
    +----------------------------------+------------------------+----------------------+
 
 
-Assemble you MUX board:
-------------------------------- 
+Assemble multiplexer board (MUX)
+--------------------------------
 
 .. toctree:: 
    :maxdepth: 2 

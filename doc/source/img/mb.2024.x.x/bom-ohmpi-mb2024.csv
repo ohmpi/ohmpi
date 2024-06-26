@@ -25,18 +25,21 @@ DIP for MCP23008 (18 pins),2,1.33,575-1104731841001000,110-47-318-41-001000,Mill
 DIP for OP27E (8 pins),5,1.39,575-113308,110-13-308-41-001000,Mill-Max,IC & Component Sockets 8P GLD PIN GLD CONT,https://eu.mouser.com/ProductDetail/Mill-Max/110-13-308-41-001000?qs=WZeyYeqMOWeYjIS4tXLt7Q%3D%3D,6.95
 DIP for DG411DJ (16 pins),1,1.05,575-11044316,110-44-316-41-001000,Mill-Max,IC & Component Sockets 16P TIN PIN TIN CONT,https://eu.mouser.com/ProductDetail/Mill-Max/110-44-316-41-001000?qs=IGgAdOvCTsRH%252BXEWrwEHKg%3D%3D,1.05
 header for raspberrypi,1,1.87,474-PRT-14017,PRT-14017,SparkFun Electronics,Raspberry Pi Accessories Raspberry Pi GPIO Tall Header - 2x20,https://eu.mouser.com/ProductDetail/SparkFun/PRT-14017?qs=a4BXICGgSn%2F%252BaML822b65A%3D%3D,1.87
-IDC sockets (go on the ribon cable),2,0.43,710-61200623021,61200623021,Wurth Elektronik,Headers & Wire Housings WR-BHD 2.54mm Female 6P Strt IDC Conn,https://eu.mouser.com/ProductDetail/Wurth-Elektronik/61200623021?qs=PhR8RmCirEabk1Ywkdxzfw%3D%3D,0.86
 header socket 1 row 5 positions,2,1.97,571-5-534237-3,5-534237-3,TE Connectivity,Headers & Wire Housings REC 1X05P VRT T/H,https://eu.mouser.com/ProductDetail/TE-Connectivity/5-534237-3?qs=Eln3I3szM1klmLr%252BSZCsuQ%3D%3D,3.94
 header socket 1 row 4 positions,3,1.46,571-5-534237-2,5-534237-2,TE Connectivity,Headers & Wire Housings REC 1X04P VRT T/H,https://eu.mouser.com/ProductDetail/TE-Connectivity/5-534237-2?qs=GYgf5PdsjzkI3hK2O1eiLQ%3D%3D,4.38
 header socket 1 row 8 positions,4,1.74,571-5-535541-6,5-535541-6,TE Connectivity,Headers & Wire Housings REC 1X08P VRT T/H,https://eu.mouser.com/ProductDetail/TE-Connectivity/5-535541-6?qs=xDp7PGUNC%252BuqVwKJJvkWQw%3D%3D,6.96
 header socket 1 row 10 positions,2,2.71,200-SSW11002GS,SSW-110-02-G-S,Samtec,"Headers & Wire Housings Tiger Buy Socket Strip with PCB Tails, .100"" Pitch",https://eu.mouser.com/ProductDetail/Samtec/SSW-110-02-G-S?qs=rU5fayqh%252BE0w1ORXZiBQpw%3D%3D,5.42
 header socket 1 row 2 positions,1,1.02,200-SSW10202GS,SSW-102-02-G-S,Samtec,"Headers & Wire Housings Tiger Buy Socket Strip with PCB Tails, .100"" Pitch",https://eu.mouser.com/ProductDetail/Samtec/SSW-102-02-G-S?qs=rU5fayqh%252BE2ZEIMTlw%2FBLw%3D%3D,1.02
 header pins 1 row 10 positions,1,1.24,571-1-826629-0,1-826629-0,TE Connectivity,Headers & Wire Housings 10P SINGLE ROW,https://eu.mouser.com/ProductDetail/TE-Connectivity/1-826629-0?qs=FazuUmncXom0aPLI6ZgGxg%3D%3D,1.24
+IDC sockets (go on the ribon cable),2,0.43,710-61200623021,61200623021,Wurth Elektronik,Headers & Wire Housings WR-BHD 2.54mm Female 6P Strt IDC Conn,https://eu.mouser.com/ProductDetail/Wurth-Elektronik/61200623021?qs=PhR8RmCirEabk1Ywkdxzfw%3D%3D,0.86
 IDC pins,3,1.32,571-1761681-1,1761681-1,TE Connectivity,Headers & Wire Housings IDC LOW PRO HDR 6P VERT HT BLACK,https://eu.mouser.com/ProductDetail/TE-Connectivity/1761681-1?qs=BqFpTYCQ3dLAeZ2wzdz7aw%3D%3D,3.96
 PCB measurement board (pack of 3),1,,,,,,https://aisler.net/?lang=fr-FR,70
+Raspberryp pi 4,1,63,,,,,https://www.kiwi-electronics.com/en/raspberry-pi-4-model-b-4gb-4268?src=raspberrypi,63
+socket to cut for 3 THD,3,1.73,,,,,https://www.mouser.be/ProductDetail/Mill-Max/801-47-012-10-012000?qs=5aG0NVq1C4x40xNvDlnKzg%3D%3D,5.19
 10k potentiometer,2,optional,,,,,,0
 R array sip9,1,optional,,,,,,0
 10k potentiometer bournds 3296W_vertical,1,optional,,,,,,0
-Raspberryp pi 4,1,63,,,,,https://www.kiwi-electronics.com/en/raspberry-pi-4-model-b-4gb-4268?src=raspberrypi,63
-socket to cut for 3 THD,3,1.73,,,,,https://www.mouser.be/ProductDetail/Mill-Max/801-47-012-10-012000?qs=5aG0NVq1C4x40xNvDlnKzg%3D%3D,5.19
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
 
