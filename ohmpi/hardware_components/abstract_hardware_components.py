@@ -9,8 +9,7 @@ SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
                  'exec_logger': {'default': None},
                  'soh_logger': {'default': None},
                  'connect': {'default': True},
-                 'connection': {'default': None},
-                 },
+                 'connection': {'default': None}},
          'pwr': {'model': {'default': 'unknown PWR hardware'},
                  'exec_logger': {'default': None},
                  'soh_logger': {'default': None},
@@ -33,8 +32,8 @@ SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
                  'cabling': {'default': None},
                  'addresses': {'default': None},
                  'barrier': {'default': Barrier(1)},
-                 'activation_delay': {'default': 0.}, # in s
-                 'release_delay': {'default': 0.}}, # in s
+                 'activation_delay': {'default': 0.},  # in s
+                 'release_delay': {'default': 0.}},  # in s
         'tx':   {'model': {'default':  'unknown TX hardware'},
                  'injection_duration': {'default': 1.},
                  'exec_logger': {'default': None},
@@ -64,7 +63,6 @@ class CtlAbstract(ABC):
         for key in SPECS['ctl'].keys():
             kwargs = enforce_specs(kwargs, SPECS['ctl'], key)
         self.model = kwargs['model']
-        # kwargs.update({'connect': kwargs.pop('connect', True)})
         self.interfaces = dict()
         self.interfaces['none'] = None
         self.exec_logger = kwargs['exec_logger']
@@ -103,8 +101,6 @@ class PwrAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['pwr'].keys():
             kwargs = enforce_specs(kwargs, SPECS['pwr'], key)
-        # kwargs.update({'connect': kwargs.pop('connect', True)})
-
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
@@ -202,7 +198,6 @@ class MuxAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['mux'].keys():
             kwargs = enforce_specs(kwargs, SPECS['mux'], key)
-        # kwargs.update({'connect': kwargs.pop('connect', True)})
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
@@ -258,7 +253,7 @@ class MuxAbstract(ABC):
             Either 'on' or 'off'.
         bypass_check: bool, optional
             Bypasses checks for A==M or A==M or B==M or B==N (i.e. used for rs-check)
-        bypass_check: bool, optional
+        bypass_ab_check: bool, optional
             Bypasses checks for A==B (i.e. used for testing r_shunt). Should be used with caution.
         """
         status = True
@@ -361,7 +356,6 @@ class TxAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['tx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['tx'], key)
-        # kwargs.update({'connect': kwargs.pop('connect', True)})
 
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
@@ -565,7 +559,6 @@ class RxAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['rx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['rx'], key)
-        # kwargs.update({'connect': kwargs.pop('connect', True)})
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
