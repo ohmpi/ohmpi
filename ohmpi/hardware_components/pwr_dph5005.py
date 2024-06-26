@@ -49,7 +49,7 @@ class Pwr(PwrAbstract):
             print(f'dph connection : {self.connection}')
             if self.interface_name == 'modbus':
                 assert isinstance(self.connection, Instrument)
-            elif self.inteface_name == 'bluetooth':
+            elif self.interface_name == 'bluetooth':
                 raise Warning('Bluetooth communication with dph5050 is not implemented')
         #     self.pwr_state = self._pwr_state
 
