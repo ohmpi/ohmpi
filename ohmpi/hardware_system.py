@@ -162,7 +162,7 @@ class OhmPiHardware:
         HARDWARE_CONFIG['pwr'].update({
             'interface_name': HARDWARE_CONFIG['pwr'].pop('interface_name', 'none')})
 
-        HARDWARE_CONFIG['pwr'] = enforce_specs(HARDWARE_CONFIG['pwr'], pwr_module.SPECS)
+        HARDWARE_CONFIG['pwr'] = enforce_specs(HARDWARE_CONFIG['pwr'], pwr_module.SPECS, 'interface_name')
         HARDWARE_CONFIG['pwr'].update({
             'connection': HARDWARE_CONFIG['pwr'].pop(
                 'connection', HARDWARE_CONFIG['pwr']['ctl'].interfaces[
