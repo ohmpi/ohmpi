@@ -6,6 +6,20 @@ Please have a look at existing open and closed issues before posting a new one.
 We have compiled here below a list of common issues and and explanations on how to fix them.
 For issue with the hardware, make sure your board passes the hardware checks (:ref:`mb2024-test`, :ref:`mux2024-test`).
 
+
+Communication issue between components (I2C, pull-up)
+=====================================================
+
+If you get an I2C communication error or cannot see some I2C address with `i2cdetect`.
+
+Most components of the OhmPi communicate via I2C protocol. This protocol works with two lines (SDA and SCL) that **must be pulled-up** at rest. The pull-up resistor consist in placing a 100k (or similar values) resistor between the line and VDD (5V in this case).
+
+Check with the multimeter the voltage between SDA/SCL and the ground to see if it reaches 5V at rest. If it's not the case, you may need stronger pull-up (smaller value of pull-up resistor).
+
+.. note::
+    On the measurement board v2024, the I2C isolator from Mikroe, already has pull-up that adds to the pull-up already on the ADS1115 board. If the ADS1115 of the Vmn part cannot be seen by i2cdetect, we recommend to remove the pull-up resistors on the Mikroe I2C isolator board (see note fig29 in :ref:`mb2024-build`)
+
+
 Issue with the pulses between A and B
 =====================================
 
@@ -26,15 +40,29 @@ Another possibility is that the MN voltage you are trying to measure is **over t
 In the measurement board v2024, the current sensing part is replaced by a click board. It is possible that the shunt resistance on this click board is burned due to malfunction. In this case, erroneous value of current will be given. The click board must be replaced to solve the issue.
 
 
-Communication issue between components (I2C, pull-up)
-=====================================================
+Noise in the Vmn signal
+=======================
 
-If you get an I2C communication error or cannot see some I2C address with `i2cdetect`.
+The OhmPi system does not filter the signal for 50 or 60Hz power noise. This noise can appear in the Vmn reading if the Tx or Rx battery is connected to a charger connected to the grid.
 
-Most components of the OhmPi communicate via I2C protocol. This protocol works with two lines (SDA and SCL) that **must be pulled-up** at rest. The pull-up resistor consist in placing a 100k (or similar values) resistor between the line and VDD (5V in this case).
+To solve this, you may need to design a system that disconnect the charger (turn if off) when doing a measurement.
 
-Check with the multimeter the voltage between SDA/SCL and the ground to see if it reaches 5V at rest. If it's not the case, you may need stronger pull-up (smaller value of pull-up resistor).
 
-.. note::
-    On the measurement board v2024, the I2C isolator from Mikroe, already has pull-up that adds to the pull-up already on the ADS1115 board. If the ADS1115 of the Vmn part cannot be seen by i2cdetect, we recommend to remove the pull-up resistors on the Mikroe I2C isolator board (see note fig29 in :ref:`mb2024-build`)
+Unexpected electrode takeout
+============================
+
+The IDC socket of the mux2023 and mux2024 are not wired identically. Double check that you connected the right electrode to the right ribbon cable (see drawings in the assembling tutorials)
+
+
+Strong decay in current
+=======================
+
+A strong decay in current can be an indication that the battery cannot supply enough power to the DPH5005 to main the requested voltage.
+
+
+Modbus error
+============
+
+Modbus is the procotol used to communicated between the DPH5005 and the Raspberry Pi via a USB cable.
+If the Pi cannot detect the DPS, a modbus error can happen. Make sure the USB cable is ok and that the DPH5005 is supplied.
 

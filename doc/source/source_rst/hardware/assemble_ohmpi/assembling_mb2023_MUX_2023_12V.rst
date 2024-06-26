@@ -41,9 +41,8 @@ Assembling the OhmPi v2023
    +--------+------------------------------------------------------------+   
 
 .. warning::
-   In MUX2023, the wiring of the electrodes from the IDC connector follows the order below.
-   This means that if you want to wire the ribon cable to additional screw terminals or other types of
-   plugs, you will need to take one wire out of two.
+   In MUX2023, the wiring of the electrodes from the IDC connector follows the order below (different from MUX2024).
+   Take this into account if you wire your ribbon cable to further connectors or screw terminals.
 
    .. image:: ../../../img/mux2023-idc.jpg
 

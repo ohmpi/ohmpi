@@ -59,5 +59,3 @@ Assemble measurement board (MB)
 
    mb/mb_2023.rst
    mb/mb_2024.rst
-
-   
