@@ -18,7 +18,7 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage_adjustable': {'default': True},
          'pwr_latency': {'default': 4.},
          'pwr_discharge_latency': {'default': 1.},
-         'interface_name': {'default': 'modbus'}
+         'interface_name': {'python3default': 'modbus'}
          }
 
 
@@ -45,8 +45,9 @@ class Pwr(PwrAbstract):
         self._pwr_latency = kwargs['pwr_latency']
         self._pwr_discharge_latency = kwargs['pwr_discharge_latency']
         self._pwr_state = 'off'
-
+        print(self.)
         if self.connect:
+            print(f'dph connection : {self.connection}')
             assert isinstance(self.connection, Instrument)
         #     self.pwr_state = self._pwr_state
 
