@@ -875,7 +875,7 @@ class OhmPi(object):
 
             # if strategy not constant, then switch dps off (button) in case following measurement within sequence
             # TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
-            print(f'vab: {vab}, vab_init: {vab_init}')
+            print(f'strategy: {strategy}, settings: {self.settings}, vab_req: {vab_req}, vab: {vab}, vab_init: {vab_init}')
             if (strategy == 'vmax' or strategy == 'vmin' or strategy == 'flex') and vab > vab_init :  # if starting vab was higher actual vab, then turn pwr off
                 self._hw.tx.pwr.pwr_state = 'off'
 
@@ -1037,7 +1037,7 @@ class OhmPi(object):
                     icol = i
                     break
 
-            # get longest possible line
+            # get the longest line possible
             max_length = np.max([len(row.split(',')) for row in x]) - icol
             nreadings = max_length // 3
 
