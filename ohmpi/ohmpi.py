@@ -760,6 +760,7 @@ class OhmPi(object):
                 kwargs_compute_vab['min_agg'] = False
 
             elif strategy == 'vmax':
+                print(f'VAB: {vab}')
                 kwargs_compute_vab = kwargs.get('compute_vab', {})
                 kwargs_compute_vab['vab_init'] = vab_init
                 kwargs_compute_vab['vab_min'] = vab_min
