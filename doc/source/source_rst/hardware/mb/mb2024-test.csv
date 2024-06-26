@@ -1,0 +1,37 @@
+﻿Name,Power,Type,Multimeter BLACK probe,Multimeter RED probe,Expected
+C1,off,continuity,ADS current 0x48 GND,Current click GND,continuity
+C2,off,continuity,ADS current 0x48 GND,Raspberry Pi GND,continuity
+C3,off,continuity,ADS current 0x48 GND,MCP23008 Tx 0x21 VSS,continuity
+C4,off,continuity,ADS current 0x48 GND,I2Cext GND,continuity
+C5,off,continuity,screw terminal N,I2C isolator GND2,continuity
+C6,off,continuity,screw terminal N,ADS voltage 0x49 GND,continuity
+C7,off,continuity,screw terminal N,DG411 GND,continuity
+C8,off,continuity,screw terminal N,MCP23008 MN 0x27 VSS,continuity
+C9,off,continuity,ADS voltage 0x49 VDD,I2C isolator VDD2,continuity
+C10,off,continuity,ADS voltage 0x49 VDD,MCP23008 VSS,continuity
+C11,off,continuity,ADS voltage 0x49 SDA,I2C isolator SDA2,continuity
+C12,off,continuity,ADS voltage 0x49 SDA,MCP23008 Tx 0x21 SDA,continuity
+C13,off,continuity,ADS voltage 0x49 SCL,I2C isolator SCL2,continuity
+C14,off,continuity,ADS voltage 0x49 SCL,MCP23008 Tx 0x21 SCL,continuity
+C15,off,continuity,ADS current 0x48 SDA,Current click SDA,continuity
+C16,off,continuity,ADS current 0x48 SDA,Raspberry Pi SDA1 (p3),continuity
+C17,off,continuity,ADS current 0x48 SDA,MCP23008 Tx 0x21 SDA,continuity
+C18,off,continuity,ADS current 0x48 SDA,ADS voltage 0x49 SDA,no continuity
+C19,off,continuity,ADS current 0x48 SCL,Current click SCL,continuity
+C20,off,continuity,ADS current 0x48 SCL,Raspberry Pi SCL1 (p5),continuity
+C21,off,continuity,ADS current 0x48 SCL,MCP23008 Tx 0x21 SCL,continuity
+C22,off,continuity,ADS current 0x48 SCL,ADS voltage 0x49 SCL,no continuity
+C23,off,continuity,ADS current 0x48 VDD,Current click VDD,continuity
+C24,off,continuity,ADS current 0x48 VDD,Raspberry Pi VDD (p2),continuity
+C25,off,continuity,ADS current 0x48 VDD,MCP23008 VDD,continuity
+C26,off,continuity,ADS current 0x48 VDD,I2Cext 5V,continuity
+V1,on,voltage,screw terminal Tx in GND,screw terminal Tx in +12V,12V
+V2,on,voltage,screw terminal Rx GND,screw terminal Rx +12V,12V
+V3,on,voltage,ADS current 0x48 GND,ADS current 0x48 VDD,5V
+V4,on,voltage,ADS current 0x48 GND,ADS current 0x48 SDA,5V
+V5,on,voltage,ADS current 0x48 GND,ADS current 0x48 SCL,5V
+V6,on,voltage,ADS current 0x48 GND,I2Cext SDA,5V
+V7,on,voltage,ADS current 0x48 GND,I2Cext SCL,5V
+V8,on,voltage,screw terminal N,ADS voltage 0x49 VDD,5V
+V9,on,voltage,screw terminal N,ADS voltage 0x49 SDA,5V
+V10,on,voltage,screw terminal N,ADS voltage 0x49 SCL,5V

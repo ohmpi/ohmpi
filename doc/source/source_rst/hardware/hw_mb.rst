@@ -51,7 +51,7 @@ Specifications
 
 
 
-Assemble you measurement board:
+Assemble measurement board (MB)
 ------------------------------- 
 
 .. toctree:: 
