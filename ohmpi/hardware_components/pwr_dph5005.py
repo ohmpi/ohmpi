@@ -18,7 +18,7 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage_adjustable': {'default': True},
          'pwr_latency': {'default': 4.},
          'pwr_discharge_latency': {'default': 1.},
-         'interface_name': {'python3default': 'modbus'}
+         'interface_name': {'default': 'modbus'}
          }
 
 
