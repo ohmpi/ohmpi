@@ -634,6 +634,7 @@ class OhmPiHardware:
 
         if not self.tx.pwr.voltage_adjustable:
             vab_opt = self.tx.pwr.voltage
+            vab_init = vab_opt
             return vab_opt
 
         if vab_min is None: # TODO: Set within specs if out of specs
