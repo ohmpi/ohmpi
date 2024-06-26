@@ -181,8 +181,10 @@ assuming that the MUX boards are powered and correctly connected to the measurem
 Replace "-y 4" by "-y 1" if the MUX is plugged on the "board" IDC connector, or if plugged in to a mb.2023.0.X board.
 
 
+.. _mux2024-test:
+
 Checking of the mux board
----------------------------------
+-------------------------
 
 Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the board.
 Check your board against the correct expected column: 2-roles or 4-roles.
