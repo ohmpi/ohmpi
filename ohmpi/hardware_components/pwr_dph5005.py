@@ -46,7 +46,6 @@ class Pwr(PwrAbstract):
         self._pwr_discharge_latency = kwargs['pwr_discharge_latency']
         self._pwr_state = 'off'
         if self.connect:
-            print(f'dph connection : {self.connection}')
             if self.interface_name == 'modbus':
                 assert isinstance(self.connection, Instrument)
             elif self.interface_name == 'bluetooth':
