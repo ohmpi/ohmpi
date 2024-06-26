@@ -580,13 +580,14 @@ class OhmPi(object):
         self._hw._plot_readings(save_fig=save_fig, filename=filename)
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
-                        autogain=True, strategy=None, tx_volt=None, vab=None, best_tx_injtime=0.1,
-                        cmd_id=None, vab_max=None, iab_max=None, vmn_max=None, vmn_min=None, **kwargs):
+                        strategy=None, tx_volt=None, vab=None, vab_init=None, vab_min=None, vab_req=None, vab_max=None,
+                        iab_min=None, iab_req=None, min_agg=None, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
+                        pab_min=None, pab_req=None, pab_max=None, cmd_id=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value,
         #  change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
         # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used
         #  in function definition -> (GB) default values are in self.settings.
-        """Measures on a quadrupole and returns a dictionnary with the transfer resistance.
+        """Measures on a quadrupole and returns a dictionary with the transfer resistance.
 
         Parameters
         ----------
@@ -609,19 +610,49 @@ class OhmPi(object):
             - full_constant: apply given Vab with no out-of-range checks for optimising duration at the risk of out-of-range readings
             Safety check (i.e. short voltage pulses) performed prior to injection to ensure
             injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
-            To bypass safety check before injection, vab should be set equal to vab_max (not recpommanded)
-        vab_max : str, optional
-            Maximum injection voltage.
+            To bypass safety check before injection, vab should be set equal to vab_max (not recommended)
+
+        vab_init : float, optional
+            Initial injection voltage [V]
             Default value set by config or boards specs
-        iab_max : str, optional
-            Maximum current applied.
+        vab_min : float, optional
+            Minimum injection voltage [V]
             Default value set by config or boards specs
-        vmn_max : str, optional
-            Maximum Vmn allowed.
+        vab_req : float, optional
+            Requested injection voltage [V]
             Default value set by config or boards specs
-        vmn_min :
-            Minimum Vmn desired (used in strategy vmin).
+        vab_max : float, optional
+            Maximum injection voltage [V]
             Default value set by config or boards specs
+        iab_min : float, optional
+            Minimum current [mA]
+            Default value set by config or boards specs
+        iab_req : float, optional
+            Requested iab [mA]
+            Default value set by config or boards specs
+        iab_max : float, optional
+            Maximum iab allowed [mA].
+            Default value set by config or boards specs
+        pab_min : float, optional
+            Minimum power [W].
+            Default value set by config or boards specs
+        pab_req : float, optional
+            Requested power [W].
+            Default value set by config or boards specs
+        pab_max : float, optional
+            Maximum power allowed [W].
+            Default value set by config or boards specs
+        vmn_min: float, optional
+            Minimum Vmn [mV] (used in strategy vmin).
+            Default value set by config or boards specs
+        vmn_req: float, optional
+            Requested Vmn [mV] (used in strategy vmin).
+            Default value set by config or boards specs
+        vmn_max: float, optional
+            Maximum Vmn [mV] (used in strategy vmin).
+            Default value set by config or boards specs
+        min_agg : bool, optional, default: False
+            when set to True, requested values are aggregated with the 'or' operator, when False with the 'and' operator
         tx_volt : float, optional  # deprecated
             For power adjustable only. If specified, voltage will be imposed.
         vab : float, optional
@@ -638,7 +669,6 @@ class OhmPi(object):
         self.exec_logger.debug('Starting measurement')
         self.exec_logger.debug('Waiting for data')
 
-        vab_requested = vab
         # check arguments
         if quad is None:
             quad = np.array([0, 0, 0, 0])
@@ -648,30 +678,143 @@ class OhmPi(object):
             injection_duration = self.settings['injection_duration']
         if duty_cycle is None and 'duty_cycle' in self.settings:
             duty_cycle = self.settings['duty_cycle']
+        if strategy is None and 'strategy' in self.settings:
+            strategy = self.settings['strategy']
         if tx_volt is None and 'tx_volt' in self.settings:
             tx_volt = self.settings['tx_volt']
         if vab is None and 'vab' in self.settings:
-            vab_requested = self.settings['vab']
-        if vab is None and tx_volt is not None:
-            warnings.warn('"tx_volt" argument is deprecated and will be removed in future version. Use "vab" instead to set the transmitter voltage in volts.', DeprecationWarning)
-            vab_requested = tx_volt
-        if strategy is None and 'strategy' in self.settings:
-            strategy = self.settings['strategy']
+            vab = self.settings['vab']
+        if vab_init is None and tx_volt is not None:
+            warnings.warn('"tx_volt" argument is deprecated and will be removed in future version. Use "vab_init" and "vab_req" instead to set the transmitter voltage in volts.', DeprecationWarning)
+            vab_init = tx_volt
+            # if vab_req is None:
+            #     vab_req = vab_init
+            if strategy == 'constant' and vab_req is None:
+                vab_req = tx_volt
+
+        if vab_init is None and vab is not None:
+            warnings.warn(
+                '"vab" argument is deprecated and will be removed in future version. Use "vab_init" and "vab_req" instead to set the transmitter voltage in volts.', DeprecationWarning)
+            vab_init = vab
+            # if vab_req is None:
+            #     vab_req = vab_init
+            if strategy == 'constant' and vab_req is None:
+                vab_req = vab
+        if vab_init is None and 'vab_init' in self.settings:
+            vab_init = self.settings['vab_init']
+        if vab_min is None and 'vab_min' in self.settings:
+            vab_min = self.settings['vab_min']
+        if vab_req is None and 'vab_req' in self.settings:
+            vab_req = self.settings['vab_req']
         if vab_max is None and 'vab_max' in self.settings:
             vab_max = self.settings['vab_max']
+        if iab_min is None and 'iab_min' in self.settings:
+            iab_min = self.settings['iab_min']
+        if iab_req is None and 'iab_req' in self.settings:
+            iab_req = self.settings['iab_req']
         if iab_max is None and 'iab_max' in self.settings:
             iab_max = self.settings['iab_max']
         if vmn_max is None and 'vmn_max' in self.settings:
             vmn_max = self.settings['vmn_max']
         if vmn_min is None and 'vmn_min' in self.settings:
             vmn_min = self.settings['vmn_min']
+        if vmn_req is None and 'vmn_req' in self.settings:
+            vmn_req = self.settings['vmn_req']
+        if vmn_max is None and 'vmn_max' in self.settings:
+            vmn_max = self.settings['vmn_max']
+        if pab_min is None and 'pab_min' in self.settings:
+            pab_min = self.settings['pab_min']
+        if pab_req is None and 'pab_req' in self.settings:
+            pab_req = self.settings['pab_req']
+        if pab_max is None and 'pab_max' in self.settings:
+            pab_max = self.settings['pab_max']
+        if min_agg is None:
+            if 'min_agg' in self.settings:
+                min_agg = self.settings['min_agg']
+            else:
+                min_agg = False
+
+        if strategy == 'constant':
+            if vab_req is not None:
+                vab_init = 0.9 * vab_req
+
         bypass_check = kwargs['bypass_check'] if 'bypass_check' in kwargs.keys() else False
         d = {}
 
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
+            if strategy == 'constant':
+                kwargs_compute_vab = kwargs.get('compute_vab', {})
+                kwargs_compute_vab['vab_init'] = vab_init
+                kwargs_compute_vab['vab_min'] = vab_min
+                kwargs_compute_vab['vab_req'] = vab_req
+                kwargs_compute_vab['vab_max'] = vab_max
+                kwargs_compute_vab['iab_min'] = iab_min
+                kwargs_compute_vab['iab_req'] = None
+                kwargs_compute_vab['iab_max'] = iab_max
+                kwargs_compute_vab['vmn_min'] = vmn_min
+                kwargs_compute_vab['vmn_req'] = None
+                kwargs_compute_vab['vmn_max'] = vmn_max
+                kwargs_compute_vab['pab_min'] = pab_min
+                kwargs_compute_vab['pab_req'] = None
+                kwargs_compute_vab['pab_max'] = pab_max
+                kwargs_compute_vab['min_agg'] = False
 
-            vab = self._hw.compute_vab(vab=vab_requested, strategy=strategy, vmn_max=vmn_max, vab_max=vab_max,
-                                               iab_max=iab_max, vmn_min=vmn_min)
+            elif strategy == 'vmax':
+                kwargs_compute_vab = kwargs.get('compute_vab', {})
+                kwargs_compute_vab['vab_init'] = vab_init
+                kwargs_compute_vab['vab_min'] = vab_min
+                kwargs_compute_vab['vab_req'] = self._hw.vab_max
+                kwargs_compute_vab['vab_max'] = vab_max
+                kwargs_compute_vab['iab_min'] = iab_min
+                kwargs_compute_vab['iab_req'] = None
+                kwargs_compute_vab['iab_max'] = iab_max
+                kwargs_compute_vab['vmn_min'] = vmn_min
+                kwargs_compute_vab['vmn_req'] = None
+                kwargs_compute_vab['vmn_max'] = vmn_max
+                kwargs_compute_vab['pab_min'] = pab_min
+                kwargs_compute_vab['pab_req'] = None
+                kwargs_compute_vab['pab_max'] = pab_max
+                kwargs_compute_vab['min_agg'] = False
+
+            elif strategy == 'vmin':
+                kwargs_compute_vab = kwargs.get('compute_vab', {})
+                kwargs_compute_vab['vab_init'] = vab_init
+                kwargs_compute_vab['vab_min'] = None
+                kwargs_compute_vab['vab_req'] = None
+                kwargs_compute_vab['vab_max'] = vab_max
+                kwargs_compute_vab['iab_min'] = iab_min
+                kwargs_compute_vab['iab_req'] = None
+                kwargs_compute_vab['iab_max'] = iab_max
+                kwargs_compute_vab['vmn_min'] = vmn_min
+                kwargs_compute_vab['vmn_req'] = vmn_req
+                kwargs_compute_vab['vmn_max'] = vmn_max
+                kwargs_compute_vab['pab_min'] = pab_min
+                kwargs_compute_vab['pab_req'] = None
+                kwargs_compute_vab['pab_max'] = pab_max
+                kwargs_compute_vab['min_agg'] = False
+
+            elif strategy == 'flex':
+                kwargs_compute_vab = kwargs.get('compute_vab', {})
+                kwargs_compute_vab['vab_init'] = vab_init
+                kwargs_compute_vab['vab_min'] = vab_min
+                kwargs_compute_vab['vab_req'] = vab_req
+                kwargs_compute_vab['vab_max'] = vab_max
+                kwargs_compute_vab['iab_min'] = iab_min
+                kwargs_compute_vab['iab_req'] = iab_req
+                kwargs_compute_vab['iab_max'] = iab_max
+                kwargs_compute_vab['vmn_min'] = vmn_min
+                kwargs_compute_vab['vmn_req'] = vmn_req
+                kwargs_compute_vab['vmn_max'] = vmn_max
+                kwargs_compute_vab['pab_min'] = pab_min
+                kwargs_compute_vab['pab_req'] = pab_req
+                kwargs_compute_vab['pab_max'] = pab_max
+                kwargs_compute_vab['min_agg'] = min_agg
+
+            if strategy == 'full_constant':
+                vab = vab_init
+            else:
+                vab = self._hw.compute_vab(**kwargs_compute_vab)
+
             # time.sleep(0.5)  # to wait for pwr discharge
             self._hw.vab_square_wave(vab, cycle_duration=injection_duration*2/duty_cycle, cycles=nb_stack,
                                      duty_cycle=duty_cycle, **kwargs.get('vab_square_wave', {}))
@@ -732,7 +875,7 @@ class OhmPi(object):
 
             # if strategy not constant, then switch dps off (button) in case following measurement within sequence
             # TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
-            if (strategy == 'vmax' or strategy == 'vmin') and vab - vab_requested > 5.:  # if starting vab was too far (> 5 V) from actual vab, then turn pwr off
+            if (strategy == 'vmax' or strategy == 'vmin' or strategy == 'flex') and vab > vab_init :  # if starting vab was higher actual vab, then turn pwr off
                 self._hw.tx.pwr.pwr_state = 'off'
 
                 # Discharge DPS capa
@@ -815,18 +958,18 @@ class OhmPi(object):
         self.thread = Thread(target=func)
         self.thread.start()
 
-    def run_sequence(self, fw_in_csv=None, fw_in_zip=None, cmd_id=None, **kwargs):
+    def run_sequence(self, fw_in_csv=None, fw_in_zip=None, cmd_id=None, save_strategy_fw=False, **kwargs):
         """Runs sequence synchronously (=blocking on main thread).
            Additional arguments are passed to run_measurement().
 
         Parameters
         ----------
         fw_in_csv : bool, optional
-            Wether to save the full-waveform data in the .csv (one line per quadrupole).
+            Whether to save the full-waveform data in the .csv (one line per quadrupole).
             As these readings have different lengths for different quadrupole, the data are padded with NaN.
             If None, default is read from default.json.
         fw_in_zip : bool, optional
-            Wether to save the full-waveform data in a separate .csv in long format to be zipped to
+            Whether to save the full-waveform data in a separate .csv in long format to be zipped to
             spare space. If None, default is read from default.json.
         cmd_id : str, optional
             Unique command identifier.
@@ -868,6 +1011,8 @@ class OhmPi(object):
             if self.status == 'stopping':
                 break
             # run a measurement
+            if save_strategy_fw:
+                kwargs['compute_vab'] = {'quad_id': i, 'filename': filename}
             acquired_data = self.run_measurement(quad=quad, **kwargs)
 
             # add command_id in dataset
@@ -919,10 +1064,10 @@ class OhmPi(object):
                     f.write(','.join(fw_padded.T.flatten()).replace('\n', '') + '\n')
 
         if fw_in_zip:
-            fwfilename = filename.replace('.csv', '_fw')
-            with ZipFile(fwfilename + '.zip', 'w') as myzip:
-                myzip.write(fwfilename + '.csv', os.path.basename(fwfilename) + '.csv')
-            os.remove(fwfilename + '.csv')
+            fw_filename = filename.replace('.csv', '_fw')
+            with ZipFile(fw_filename + '.zip', 'w') as myzip:
+                myzip.write(fw_filename + '.csv', os.path.basename(fw_filename) + '.csv')
+            os.remove(fw_filename + '.csv')
 
         # reset to idle if we didn't interrupt the sequence
         if self.status != 'stopping':
