@@ -52,7 +52,6 @@ class Ctl(CtlAbstract):
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize Modbus:\n{e}')
 
-
     def reset_modbus(self,**kwargs):
         # modbus
         try:
