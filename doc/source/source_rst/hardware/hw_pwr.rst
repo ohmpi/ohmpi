@@ -7,18 +7,20 @@ Power supply
 
 Two sources of power are available now:
 
-- an external power source (e.g. a 12V battery)
+- a DC power source (e.g. a 12V battery)
 - a regulated power supply (DPH5005)
 
-External fixed power source (12V battery)
-=========================================
+External TX battery
+===================
 With the measurement board v2024, you can connect the Tx battery following the schematic below.
 In this simple configuration, a fixed power source, such as a 12V battery is used for the injection.
 The + and - battery terminals are routed to the TX-batt input + abd GND connectors. Then the DPS input and DPS out
 connectors need to be bypassed.
 
 .. figure:: ../../img/mb.2024.x.x/power_cabling_batt.png
-   :caption: Wiring of a TX battery used as power module (no DPH5005)
+   :alt: Wiring of a TX battery used as power module (no DPH5005)
+
+    Wiring of a TX battery used as power module (no DPH5005)
 
 The config file needs to be adapted accordingly with the relevant battery voltage (12 V by default). Since the battery voltage (V_AB) can't be measured by OhmPi,
 you should account for a potential ~10% uncertainty on R_AB, which will depend on the battery voltage level.
@@ -58,9 +60,10 @@ The DPS power output is wired to the DPS OUT connectors, as in the figure below.
 needs to be plugged in to one USB port of the Raspberry Pi.
 
 .. figure:: ../../img/mb.2024.x.x/power_cabling_dps.png
-   :caption: Wiring of the DPH5005
+   :alt: Wiring of the DPH5005
    :figclass: align-center
 
+    Wiring of the DPH5005
 
 Then, the config file needs to be adapted accordingly, and the default output voltage can also be specified.
 
