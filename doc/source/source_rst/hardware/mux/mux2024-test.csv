@@ -1,0 +1,8 @@
+﻿Name,Power,Type,Multiplexer BLACK probe,Multiplexer RED probe,Expected 4 roles,Expected 2 roles
+C1,off,continuity,screw terminal GND,both MCP23017 VSS,continuity,continuity
+C2,off,continuity,screw terminal GND,I2Cext GND,continuity,continuity
+C3,off,continuity,I2Cext SDA,both MCP23017 SDA,continuity,continuity
+C4,off,continuity,I2Cext SDL,both MCP23017 SDL,continuity,continuity
+V1,on,voltage,screw terminal GND,both MCP23017 SDA,5V,5V
+V2,on,voltage,screw terminal GND,both MCP23017 SDL,5V,5V
+V2,on,voltage,screw terminal GND,both MCP23017 VDD,5V,5V

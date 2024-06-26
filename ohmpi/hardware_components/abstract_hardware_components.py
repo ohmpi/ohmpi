@@ -6,48 +6,55 @@ from ohmpi.logging_setup import create_stdout_logger
 from ohmpi.utils import enforce_specs
 
 SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
-                'exec_logger': {'default': None},
-                'soh_logger': {'default': None},
-                'connection': {'default': None}},
+                 'exec_logger': {'default': None},
+                 'soh_logger': {'default': None},
+                 'connect': {'default': True},
+                 'connection': {'default': None}},
          'pwr': {'model': {'default': 'unknown PWR hardware'},
-                'exec_logger': {'default': None},
-                'soh_logger': {'default': None},
-                'current_min': {'default': 0.},
-                'current_max': {'default': 0.},
-                'voltage_min': {'default': 0.},
-                'voltage_max': {'default': 0.},
-                'power_max': {'default': 0.},
-                'voltage_adjustable': {'default': False},
-                'current_adjustable': {'default': False},
-                'connection': {'default': None}},
+                 'exec_logger': {'default': None},
+                 'soh_logger': {'default': None},
+                 'current_min': {'default': 0.},
+                 'current_max': {'default': 0.},
+                 'voltage_min': {'default': 0.},
+                 'voltage_max': {'default': 0.},
+                 'power_max': {'default': 0.},
+                 'voltage_adjustable': {'default': False},
+                 'current_adjustable': {'default': False},
+                 'connect': {'default': True},
+                 'connection': {'default': None},
+                 'interface_name':{'default': None}},
          'mux': {'model': {'default': 'unknown MUX hardware'},
-                'exec_logger': {'default': None},
-                'soh_logger': {'default': None},
-                'id': {'default': None},
-                'connection': {'default': None},
-                'cabling': {'default': None},
-                'addresses': {'default': None},
-                'barrier': {'default': Barrier(1)},
-                'activation_delay': {'default': 0.}, # in s
-                'release_delay': {'default': 0.}}, # in s
+                 'exec_logger': {'default': None},
+                 'soh_logger': {'default': None},
+                 'id': {'default': None},
+                 'connect': {'default': True},
+                 'connection': {'default': None},
+                 'cabling': {'default': None},
+                 'addresses': {'default': None},
+                 'barrier': {'default': Barrier(1)},
+                 'activation_delay': {'default': 0.},  # in s
+                 'release_delay': {'default': 0.}},  # in s
         'tx':   {'model': {'default':  'unknown TX hardware'},
-                'injection_duration': {'default': 1.},
-                'exec_logger': {'default': None},
-                'soh_logger': {'default': None},
-                'connection': {'default': None},
-                'pwr': {'default': None},
-                'latency': {'default': 0.},
-                'tx_sync': {'default': Event()}},
+                 'injection_duration': {'default': 1.},
+                 'exec_logger': {'default': None},
+                 'soh_logger': {'default': None},
+                 'connect': {'default': True},
+                 'connection': {'default': None},
+                 'pwr': {'default': None},
+                 'latency': {'default': 0.},
+                 'tx_sync': {'default': Event()}},
         'rx':   {'model': {'default':  'unknown RX hardware'},
-                'exec_logger': {'default': None},
-                'soh_logger': {'default': None},
-                'connection': {'default': None},
-                'sampling_rate': {'default': 1., 'max': np.inf},
-                'latency': {'default': 0.},
-                'voltage_max': {'default': 0.},
-                'bias': {'default': 0.},
-                'vmn_hardware_offset': {'default': 0.}}
-         }
+                 'exec_logger': {'default': None},
+                 'soh_logger': {'default': None},
+                 'connect': {'default': True},
+                 'connection': {'default': None},
+                 'sampling_rate': {'default': 1., 'max': np.inf},
+                 'latency': {'default': 0.},
+                 'voltage_max': {'default': 0.},
+                 'bias': {'default': 0.},
+                 'vmn_hardware_offset': {'default': 0.}}
+        }
+
 
 class CtlAbstract(ABC):
     """CTlAbstract Class
@@ -56,7 +63,8 @@ class CtlAbstract(ABC):
         for key in SPECS['ctl'].keys():
             kwargs = enforce_specs(kwargs, SPECS['ctl'], key)
         self.model = kwargs['model']
-        self.interfaces = None
+        self.interfaces = dict()
+        self.interfaces['none'] = None
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
             self.exec_logger = create_stdout_logger('exec_ctl')
@@ -66,6 +74,7 @@ class CtlAbstract(ABC):
         self.exec_logger.debug(f'{self.model} Ctl initialization')
         self._cpu_temp_available = False
         self.max_cpu_temp = np.inf
+        self.connect = kwargs['connect']
         self.connection = kwargs['connection']
         self.specs = kwargs
 
@@ -92,8 +101,6 @@ class PwrAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['pwr'].keys():
             kwargs = enforce_specs(kwargs, SPECS['pwr'], key)
-        kwargs.update({'connect': kwargs.pop('connect', True)})
-
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
@@ -111,6 +118,7 @@ class PwrAbstract(ABC):
         self._voltage_min = kwargs['voltage_min']
         self._voltage_max = kwargs['voltage_max']
         self.switchable = False
+        self.interface_name = kwargs['interface_name']
         self.connection = kwargs['connection']
         self._battery_voltage = np.nan
         self._pwr_discharge_latency = np.nan
@@ -190,7 +198,6 @@ class MuxAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['mux'].keys():
             kwargs = enforce_specs(kwargs, SPECS['mux'], key)
-        kwargs.update({'connect': kwargs.pop('connect', True)})
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
@@ -246,7 +253,7 @@ class MuxAbstract(ABC):
             Either 'on' or 'off'.
         bypass_check: bool, optional
             Bypasses checks for A==M or A==M or B==M or B==N (i.e. used for rs-check)
-        bypass_check: bool, optional
+        bypass_ab_check: bool, optional
             Bypasses checks for A==B (i.e. used for testing r_shunt). Should be used with caution.
         """
         status = True
@@ -349,7 +356,6 @@ class TxAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['tx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['tx'], key)
-        kwargs.update({'connect': kwargs.pop('connect', True)})
 
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
@@ -553,7 +559,6 @@ class RxAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['rx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['rx'], key)
-        kwargs.update({'connect': kwargs.pop('connect', True)})
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
