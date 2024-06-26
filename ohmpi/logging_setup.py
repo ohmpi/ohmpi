@@ -78,15 +78,9 @@ def create_stdout_logger(name):
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
     if 'EVENT' not in get_logging_levels():
-        try:
-            add_logging_level('EVENT', logging.DEBUG + 1)
-        except AttributeError:
-            print('EVENT logging level already set')
+        add_logging_level('EVENT', logging.DEBUG + 1)
     if 'TEST' not in get_logging_levels():
-        try:
-            add_logging_level('TEST', logging.DEBUG + 1)
-        except AttributeError:
-            print('TEST logging level already set')
+        add_logging_level('TEST', logging.DEBUG + 1)
     return logger
 
 
