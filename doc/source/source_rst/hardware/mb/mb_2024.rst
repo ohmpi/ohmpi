@@ -443,6 +443,23 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
    +--------+-------------------------------------------------------------------+
 
 
+Checking of the measurement board
+---------------------------------
 
+Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the measurement board.
 
+**Do not power the board if one of the SC (shortcircuit) test does not pass!**
 
+If a continuity check does not pass it's likely means there is an issue with the soldering on the board.
+If the voltage with I2C (SDA and SCL pins) is not expected, there is likely an issue with pull-up resistors.
+
+.. figure:: ../../../img/mb2024-test.jpg       
+       :width: 700px
+       :align: center
+       :height: 450px
+       :alt: alternate text
+       :figclass: align-center
+
+.. csv-table:: Hardware check
+   :file: ../../../img/mb2024-test.csv
+   :header-rows: 1
