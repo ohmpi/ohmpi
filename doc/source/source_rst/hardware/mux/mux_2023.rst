@@ -32,7 +32,8 @@ Required components
 .. csv-table:: List of components
    :file: ../mux/MUX_board_2023.csv
    :header-rows: 1 
-   
+   :class: longtable
+
    
 .. table::
    :align: center

@@ -19,10 +19,9 @@ Required components
        :figclass: align-center 
 
 
-
-
 .. csv-table:: List of components
    :file: ../../../img/v2023.x.x/step_n_2/a/measure_board_list_2_xx.csv
+   :class: longtable
    :widths: 30, 70, 70, 70, 70, 35, 35
    :header-rows: 1
    
@@ -188,17 +187,19 @@ which allows to realize precise current measurement around a shunt resistor. The
    |         | 1 MOhm resistors                                               |
    |         |                                                                |                                                                       
    +---------+----------------------------------------------------------------+  
+
    
 .. table::
    :align: center
   
-   +---------+---------------------------------------------------------------+
-   |         |   .. image::../../../img/v2023.x.x/step_n_2/a/15_mes_board.jpg|
-   |15       +---------------------------------------------------------------+
-   |         | Soldering tow 1 kOhm resistors                                |
-   |         |                                                               |                                                                       
-   +---------+---------------------------------------------------------------+
-   
+   +---------+----------------------------------------------------------------+
+   |         |   .. image:: ../../../img/v2023.x.x/step_n_2/a/14_mes_board.jpg|
+   |15       +----------------------------------------------------------------+
+   |         | 1 kOhm resistors                                               |
+   |         |                                                                |                                                                      
+   +---------+----------------------------------------------------------------+
+
+
 .. table::
    :align: center
   

@@ -41,6 +41,7 @@ Required components
    :file: ../mux/MUX_board_2024.csv
    :widths: 30, 70, 70, 70, 70, 35, 35
    :header-rows: 1
+   :class: longtable
 
 
 Mounting components on PCB board

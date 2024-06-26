@@ -86,7 +86,7 @@ Required components
    :file: ../../../img/mb.2024.x.x/bom-ohmpi-mb2024.csv
    :widths: 30, 30, 30, 30, 30, 30, 30, 30, 30
    :header-rows: 1
-
+   :class: longtable
 
 
 Interactive BOM list
