@@ -21,6 +21,7 @@ except ModuleNotFoundError:
           'installed ohmpi : \npython3 setup_config.py\n'
           'If you deleted your config.py file by mistake, you should find a backup in configs/config_backup.py')
     sys.exit(-1)
+from ohmpi.utils import enforce_specs
 from threading import Thread, Event, Barrier, BrokenBarrierError
 import warnings
 
@@ -115,6 +116,7 @@ class OhmPiHardware:
             if isinstance(ctl_mod, str):
                 ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
             HARDWARE_CONFIG['rx']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['rx']['ctl'])
+        print(HARDWARE_CONFIG['rx'])
         HARDWARE_CONFIG['rx'].update({'connection':
                                           HARDWARE_CONFIG['rx'].pop('connection',
                                                                     HARDWARE_CONFIG['rx']['ctl'].interfaces[
@@ -157,9 +159,7 @@ class OhmPiHardware:
                 ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
             HARDWARE_CONFIG['pwr']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['pwr']['ctl'])
 
-        HARDWARE_CONFIG['pwr'].update({
-            'interface_name': HARDWARE_CONFIG['pwr'].pop('interface_name', None)})
-
+        HARDWARE_CONFIG['pwr'] = enforce_specs(HARDWARE_CONFIG['pwr'], pwr_module.SPECS, 'interface_name')
         HARDWARE_CONFIG['pwr'].update({
             'connection': HARDWARE_CONFIG['pwr'].pop(
                 'connection', HARDWARE_CONFIG['pwr']['ctl'].interfaces[

@@ -43,7 +43,7 @@ In the measurement board v2024, the current sensing part is replaced by a click 
 Noise in the Vmn signal
 =======================
 
-The OhmPi system does not filter the signal for 50 or 60Hz power noise. This noise can appear in the Vmn reading if the Tx or Rx battery is connected to a charger connected to the grid.
+The OhmPi does not filter the signal for 50 or 60Hz power noise. This noise can appear in the Vmn reading if the Tx or Rx battery is connected to a charger connected to the grid.
 
 To solve this, you may need to design a system that disconnect the charger (turn if off) when doing a measurement.
 
