@@ -81,12 +81,12 @@ def create_stdout_logger(name):
         try:
             add_logging_level('EVENT', logging.DEBUG + 1)
         except AttributeError:
-            raise Warning('EVENT logging level already set')
+            print('EVENT logging level already set')
     if 'TEST' not in get_logging_levels():
         try:
             add_logging_level('TEST', logging.DEBUG + 1)
         except AttributeError:
-            raise Warning('TEST logging level already set')
+            print('TEST logging level already set')
     return logger
 
 
