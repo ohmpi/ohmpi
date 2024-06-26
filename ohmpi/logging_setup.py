@@ -30,7 +30,7 @@ def add_logging_level(level_name, level_num, method_name=None):
     raise an `AttributeError` if the level name is already an attribute of the
     `logging` module or if the method name is already present
 
-    comes from https://stackoverflow.com/questions/2183233
+    comes from https://stackoverflow.com/questions/2183233 modified
 
     Example
     -------
@@ -45,11 +45,11 @@ def add_logging_level(level_name, level_num, method_name=None):
         method_name = level_name.lower()
 
     if hasattr(logging, level_name):
-        raise AttributeError('{} already defined in logging module'.format(level_name))
+        raise AttributeError(f'{level_name} already defined in logging module')
     if hasattr(logging, method_name):
-        raise AttributeError('{} already defined in logging module'.format(method_name))
+        raise AttributeError(f'{method_name} already defined in logging module')
     if hasattr(logging.getLoggerClass(), method_name):
-        raise AttributeError('{} already defined in logger class'.format(method_name))
+        raise AttributeError(f'{method_name} already defined in logger class')
 
     # This method was inspired by the answers to Stack Overflow post
     # http://stackoverflow.com/q/2183233/2988730, especially
@@ -78,9 +78,15 @@ def create_stdout_logger(name):
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
     if 'EVENT' not in get_logging_levels():
-        add_logging_level('EVENT', logging.DEBUG + 1)
+        try:
+            add_logging_level('EVENT', logging.DEBUG + 1)
+        except AttributeError:
+            raise Warning('EVENT logging level already set')
     if 'TEST' not in get_logging_levels():
-        add_logging_level('TEST', logging.DEBUG + 1)
+        try:
+            add_logging_level('TEST', logging.DEBUG + 1)
+        except AttributeError:
+            raise Warning('TEST logging level already set')
     return logger
 
 
