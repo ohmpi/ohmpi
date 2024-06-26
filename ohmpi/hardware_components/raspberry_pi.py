@@ -32,27 +32,28 @@ class Ctl(CtlAbstract):
             subclass_init = True
 
         super().__init__(**kwargs)
+        if self.connect:
+            self._connect_i2c()
+            self._connect_i2c_ext()
+            self._reset_modbus(**kwargs)
 
+    def _connect_i2c(self):
         # I2C
         try:
             self.interfaces['i2c'] = busio.I2C(board.SCL, board.SDA)  # noqa
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize I2C:\n{e}')
 
-        # warnings.resetwarnings()
+    def _connect_i2c_ext(self):
         # Extended I2C
-        warnings.filterwarnings(action='ignore', category=RuntimeWarning, module='adafruit_blinka')  # to filter out adafruit warning about setting I2C frequency
+        warnings.filterwarnings(action='ignore', category=RuntimeWarning,
+                                module='adafruit_blinka')  # to filter out adafruit warning about setting I2C frequency
         try:
             self.interfaces['i2c_ext'] = ExtendedI2C(4)  # 4 is defined
         except Exception as e:
             self.exec_logger.warning(f'Could not initialize Extended I2C:\n{e}')
 
-        try:
-            self.reset_modbus(**kwargs)
-        except Exception as e:
-            self.exec_logger.warning(f'Could not initialize Modbus:\n{e}')
-
-    def reset_modbus(self,**kwargs):
+    def _reset_modbus(self, **kwargs):
         # modbus
         try:
             self.interfaces['modbus'] = minimalmodbus.Instrument(port=kwargs['modbus_port'],

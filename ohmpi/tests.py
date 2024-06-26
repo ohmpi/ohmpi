@@ -481,7 +481,7 @@ def test_pwr_accessibility(hw_nc, test_logger):
     if tx.pwr.voltage_adjustable:
         try:
             if pwr.specs['interface_name'] == 'modbus':
-                pwr.specs['ctl'].reset_modbus()
+                pwr.specs['ctl']._reset_modbus()
                 test_logger(colored(
                     f"PWR: {pwr.specs['model']} is accessible via modbus.",
                     "green"))

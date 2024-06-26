@@ -8,7 +8,9 @@ from ohmpi.utils import enforce_specs
 SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
                  'exec_logger': {'default': None},
                  'soh_logger': {'default': None},
-                 'connection': {'default': None}},
+                 'connect': {'default': True},
+                 'connection': {'default': None},
+                 },
          'pwr': {'model': {'default': 'unknown PWR hardware'},
                  'exec_logger': {'default': None},
                  'soh_logger': {'default': None},
@@ -19,12 +21,14 @@ SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
                  'power_max': {'default': 0.},
                  'voltage_adjustable': {'default': False},
                  'current_adjustable': {'default': False},
+                 'connect': {'default': True},
                  'connection': {'default': None},
                  'interface_name':{'default': None}},
          'mux': {'model': {'default': 'unknown MUX hardware'},
                  'exec_logger': {'default': None},
                  'soh_logger': {'default': None},
                  'id': {'default': None},
+                 'connect': {'default': True},
                  'connection': {'default': None},
                  'cabling': {'default': None},
                  'addresses': {'default': None},
@@ -35,6 +39,7 @@ SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
                  'injection_duration': {'default': 1.},
                  'exec_logger': {'default': None},
                  'soh_logger': {'default': None},
+                 'connect': {'default': True},
                  'connection': {'default': None},
                  'pwr': {'default': None},
                  'latency': {'default': 0.},
@@ -42,6 +47,7 @@ SPECS = {'ctl': {'model': {'default': 'unknown CTL hardware'},
         'rx':   {'model': {'default':  'unknown RX hardware'},
                  'exec_logger': {'default': None},
                  'soh_logger': {'default': None},
+                 'connect': {'default': True},
                  'connection': {'default': None},
                  'sampling_rate': {'default': 1., 'max': np.inf},
                  'latency': {'default': 0.},
@@ -58,6 +64,7 @@ class CtlAbstract(ABC):
         for key in SPECS['ctl'].keys():
             kwargs = enforce_specs(kwargs, SPECS['ctl'], key)
         self.model = kwargs['model']
+        # kwargs.update({'connect': kwargs.pop('connect', True)})
         self.interfaces = dict()
         self.interfaces['none'] = None
         self.exec_logger = kwargs['exec_logger']
@@ -95,7 +102,7 @@ class PwrAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['pwr'].keys():
             kwargs = enforce_specs(kwargs, SPECS['pwr'], key)
-        kwargs.update({'connect': kwargs.pop('connect', True)})
+        # kwargs.update({'connect': kwargs.pop('connect', True)})
 
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
@@ -194,7 +201,7 @@ class MuxAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['mux'].keys():
             kwargs = enforce_specs(kwargs, SPECS['mux'], key)
-        kwargs.update({'connect': kwargs.pop('connect', True)})
+        # kwargs.update({'connect': kwargs.pop('connect', True)})
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
@@ -353,7 +360,7 @@ class TxAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['tx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['tx'], key)
-        kwargs.update({'connect': kwargs.pop('connect', True)})
+        # kwargs.update({'connect': kwargs.pop('connect', True)})
 
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
@@ -557,7 +564,7 @@ class RxAbstract(ABC):
     def __init__(self, **kwargs):
         for key in SPECS['rx'].keys():
             kwargs = enforce_specs(kwargs, SPECS['rx'], key)
-        kwargs.update({'connect': kwargs.pop('connect', True)})
+        # kwargs.update({'connect': kwargs.pop('connect', True)})
         self.model = kwargs['model']
         self.exec_logger = kwargs['exec_logger']
         if self.exec_logger is None:
