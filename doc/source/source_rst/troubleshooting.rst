@@ -26,13 +26,15 @@ Another possibility is that the MN voltage you are trying to measure is **over t
 In the measurement board v2024, the current sensing part is replaced by a click board. It is possible that the shunt resistance on this click board is burned due to malfunction. In this case, erroneous value of current will be given. The click board must be replaced to solve the issue.
 
 
-Communication issue between components
-======================================
+Communication issue between components (I2C, pull-up)
+=====================================================
+
+If you get an I2C communication error or cannot see some I2C address with `i2cdetect`.
 
 Most components of the OhmPi communicate via I2C protocol. This protocol works with two lines (SDA and SCL) that **must be pulled-up** at rest. The pull-up resistor consist in placing a 100k (or similar values) resistor between the line and VDD (5V in this case).
 
 Check with the multimeter the voltage between SDA/SCL and the ground to see if it reaches 5V at rest. If it's not the case, you may need stronger pull-up (smaller value of pull-up resistor).
 
 .. note::
-    On the measurement board v2024, the I2C isolator from Mikroe, already has pull-up that adds to the pull-up already on the ADS1115 board. If the ADS1115 of the Vmn part cannot be seen by i2cdetect, we recommend to remove the pull-up resistors on the Mikroe I2C isolator board.
+    On the measurement board v2024, the I2C isolator from Mikroe, already has pull-up that adds to the pull-up already on the ADS1115 board. If the ADS1115 of the Vmn part cannot be seen by i2cdetect, we recommend to remove the pull-up resistors on the Mikroe I2C isolator board (see note fig29 in :ref:`mb2024-build`)
 
