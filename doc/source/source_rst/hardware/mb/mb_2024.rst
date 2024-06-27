@@ -448,6 +448,7 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
    |     30 +-------------------------------------------------------------------+
    |        | Place the current click add-on board                              |
    |        | **make sure you have right selections** according to the red boxes|
+   |        | and don't forget to solder the two pins below on the 'shunt' side.|
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
 
