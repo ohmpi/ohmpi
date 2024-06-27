@@ -1,0 +1,8 @@
+﻿Name,Power,Type,Multimeter BLACK probe,Multimeter RED probe,Expected
+SC1,off,continuity,screw terminal Tx in GND,screw terminal Tx in +12V,no continuity
+SC2,off,continuity,screw terminal Tx out GND,screw terminal Tx out +12V,no continuity
+SC3,off,continuity,screw terminal A,screw terminal B,no continuity
+SC4,off,continuity,screw terminal M,screw terminal N,no continuity
+SC5,off,continuity,screw terminal DPS -,screw terminal DPS +,no continuity
+SC6,off,continuity,ADS current 0x48 GND,ADS current 0x48 VDD,no continuity
+SC7,off,continuity,ADS voltage 0x49 GND,ADS voltage 0x49 VDD,no continuity
