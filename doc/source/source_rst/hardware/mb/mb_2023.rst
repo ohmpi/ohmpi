@@ -25,6 +25,9 @@ Required components
    :widths: 30, 70, 70, 70, 70, 35, 35
    :header-rows: 1
    
+To order the PCB (on Aisler or other manufacturer), you just need to drag and drop the .fzz file into their webinterface.
+The webinterface will load the PCB and walk you through different steps.
+
 Description
 ------------------  
 

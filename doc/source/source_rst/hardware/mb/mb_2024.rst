@@ -88,6 +88,8 @@ Required components
    :header-rows: 1
    :class: longtable
 
+To order the PCB (on Aisler or other manufacturer), you just need to drag and drop the .kicad_pcb (e.g. PCB_boards/measurement_boards/mb.2024.1.0/mb.2024.1.0.kicad_pcb) file into their webinterface.
+The webinterface will load the PCB and walk you through different steps.
 
 Interactive BOM list
 ~~~~~~~~~~~~~~~~~~~~~  
