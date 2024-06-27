@@ -27,7 +27,7 @@ In the measurement board v2023, this is likely due to the optical relays not ope
 
 If an optical relay is broken, you will have to replace it with a new one.
 
-In the measurement board v2024, these optical relays are replaced by mechanical relays which are more robust and shoudn't cause any issue.
+In the measurement board v2024, these optical relays are replaced by mechanical relays which are more robust and should not cause any issue.
 
 
 Values given is not the correct one
@@ -43,7 +43,7 @@ In the measurement board v2024, the current sensing part is replaced by a click 
 Noise in the Vmn signal
 =======================
 
-The OhmPi system does not filter the signal for 50 or 60Hz power noise. This noise can appear in the Vmn reading if the Tx or Rx battery is connected to a charger connected to the grid.
+The OhmPi does not filter the signal for 50 or 60Hz power noise. This noise can appear in the Vmn reading if the Tx or Rx battery is connected to a charger connected to the grid.
 
 To solve this, you may need to design a system that disconnect the charger (turn if off) when doing a measurement.
 
@@ -63,6 +63,17 @@ A strong decay in current can be an indication that the battery cannot supply en
 Modbus error
 ============
 
-Modbus is the procotol used to communicated between the DPH5005 and the Raspberry Pi via a USB cable.
+Modbus is the protocol used to communicated between the DPH5005 and the Raspberry Pi via a USB cable.
 If the Pi cannot detect the DPS, a modbus error can happen. Make sure the USB cable is ok and that the DPH5005 is supplied.
 
+
+Current max out at 48 mA
+========================
+
+By default, the measurement board (v2023 and v2024) are setup with a shunt resistor of 2 Ohms. This effectively limit the current
+we can measure to 48 mA. If the data you collected show current that seems to stays close to this value, they are probably higher but the 
+measurement board cannot measure them properly. Note that the shunt resistor **does not limit the current**. If a too large current goes though the 
+shunt resistor, it will burn and its value will not be precisely equal to 2 Ohms.
+
+To measure larger current in the field, we recommend to use another shunt resistors (e.g. 1 Ohms for max 100 mA, 0.5 Ohms for max 200 mA).
+Multiple 2 Ohms shunt resistors can also be placed in parallel to decrease the shunt resistance.
