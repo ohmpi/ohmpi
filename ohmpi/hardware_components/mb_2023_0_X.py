@@ -5,11 +5,13 @@ from adafruit_ads1x15.ads1x15 import Mode  # noqa
 from adafruit_mcp230xx.mcp23008 import MCP23008  # noqa
 from digitalio import Direction  # noqa
 from busio import I2C  # noqa
+from termcolor import colored
 import time
 import os
 import numpy as np
 from ohmpi.hardware_components import TxAbstract, RxAbstract
 from ohmpi.utils import enforce_specs
+from ohmpi.tests import test_i2c_devices_on_bus
 
 # hardware characteristics and limitations
 # voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
@@ -89,18 +91,42 @@ class Tx(TxAbstract):
         self.voltage_adjustable = False
         self.current_adjustable = False
 
-        # I2C connexion to MCP23008, for current injection
+        # I2C connection to MCP23008, for current injection
         self._mcp_address = kwargs['mcp_address']
-        if self.connect:
-            self.reset_mcp()
+        if test_i2c_devices_on_bus(self._mcp_address, self.connection):
+            if self.connect:
+                try:
+                    self.reset_mcp()
+                    self.soh_logger.info(colored(
+                        f'TX: MCP23008 ({hex(self._mcp_address)}) found on I2C bus...OK', 'green'))
+                except Exception as e:
+
+                    self.soh_logger.info(colored(
+                        f'TX: MCP23008 ({hex(self._mcp_address)}) found on I2C bus...NOT OK', 'green'))
+        else:
+            
+                    self.soh_logger.info(colored(
+                        f'TX: MCP23008 ({hex(self._mcp_address)}) NOT found on I2C bus', 'green'))
+
         # ADS1115 for current measurement (AB)
         self._ads_current_address = kwargs['ads_address']
         self._ads_current_data_rate = kwargs['data_rate']
         self._adc_gain = 2 / 3
-        if self.connect:
-            self.reset_ads()
-            self._ads_current.mode = Mode.CONTINUOUS
-
+        if test_i2c_devices_on_bus(self._ads_current_address, self.connection):
+            if self.connect:
+                try:
+                    self.reset_ads()
+                    self._ads_current.mode = Mode.CONTINUOUS
+                    self.soh_logger.info(colored(
+                        f'TX: ADS1115 current ({hex(self._ads_current_address)}) found on I2C bus...OK', 'green'))
+                except Exception as e:
+                    self.soh_logger.info(colored(
+                        f'TX: ADS1115 current ({hex(self._ads_current_address)}) found on I2C bus...NOT OK', 'red')) 
+        else:
+            self.soh_logger.info(colored(
+                f'TX: ADS1115 current ({hex(self._ads_current_address)}) NOT found on I2C bus', 'red'))
+            
+        
         self._r_shunt = kwargs['r_shunt']
         self.adc_voltage_min = kwargs['adc_voltage_min']
         self.adc_voltage_max = kwargs['adc_voltage_max']
@@ -249,9 +275,18 @@ class Rx(RxAbstract):
         self._ads_voltage_address = kwargs['ads_address']
         self._ads_voltage_data_rate = kwargs['data_rate']
         self._adc_gain = 2/3
-
-        if self.connect:
-            self.reset_ads(mode=Mode.CONTINUOUS)
+        if test_i2c_devices_on_bus(self._ads_voltage_address, self.connection):
+            if self.connect:
+                try:
+                    self.reset_ads(mode=Mode.CONTINUOUS)
+                    self.soh_logger.info(colored(
+                        f"RX: ADS1115 voltage ({hex(self._ads_voltage_address)}) found on I2C...OK", "green"))
+                except Exception as e:
+                    self.soh_logger.info(colored(
+                        f"RX: ADS1115 voltage ({hex(self._ads_voltage_address)}) found on I2C...NOT OK", "red"))
+        else:
+            self.soh_logger.info(colored(
+                f"RX: ADS1115 voltage ({hex(self._ads_voltage_address)}) NOT found on I2C", "red"))
 
         self._coef_p2 = kwargs['coef_p2']
         # self._voltage_max = kwargs['voltage_max']
