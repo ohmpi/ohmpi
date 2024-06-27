@@ -66,7 +66,7 @@ class OhmPi(object):
         Parameters
         ----------
         settings : dict, optional
-            Dictionnary of parameters. Possible parameters with their default values:
+            Dictionary of parameters. Possible parameters with their default values:
             `{'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
             'nb_stack': 1, 'sampling_interval': 2, 'vab': 5, 'duty_cycle': 0.5,
             'strategy': 'constant', 'export_path': None
@@ -671,6 +671,9 @@ class OhmPi(object):
 
         # check arguments
         if quad is None:
+            quad = np.array([0, 0, 0, 0])
+        if quad is not None and len(self.mux_boards) == 0:
+            # overwrite quad as we cannot specify electrode number without mux
             quad = np.array([0, 0, 0, 0])
         if nb_stack is None and 'nb_stack' in self.settings:
             nb_stack = self.settings['nb_stack']
