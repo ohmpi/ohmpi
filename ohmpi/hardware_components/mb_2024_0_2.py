@@ -7,9 +7,11 @@ from digitalio import Direction  # noqa
 from busio import I2C  # noqa
 import os
 import time
+from termcolor import colored
 from ohmpi.utils import enforce_specs
 from ohmpi.hardware_components.mb_2023_0_X import Tx as Tx_mb_2023
 from ohmpi.hardware_components.mb_2023_0_X import Rx as Rx_mb_2023
+from ohmpi.tests import test_i2c_devices_on_bus
 
 # hardware characteristics and limitations
 # voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
@@ -224,6 +226,12 @@ class Rx(Rx_mb_2023):
             self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
         # I2C connection to MCP23008, for voltage
         self._mcp_address = kwargs['mcp_address']
+        if test_i2c_devices_on_bus(self._mcp_address, self.connection):
+            self.soh_logger.info(colored(
+                f"RX: MCP with address {hex(self.mcp_address)} accessible on I2C bus", "green"))
+        else:
+            self.soh_logger.info(colored(
+                f"RX: MCP with address {hex(self.mcp_address)} NOT accessible on I2C bus", "red"))
         # self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
         if self.connect:
             try:

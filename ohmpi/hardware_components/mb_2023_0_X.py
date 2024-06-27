@@ -5,11 +5,13 @@ from adafruit_ads1x15.ads1x15 import Mode  # noqa
 from adafruit_mcp230xx.mcp23008 import MCP23008  # noqa
 from digitalio import Direction  # noqa
 from busio import I2C  # noqa
+from termcolor import colored
 import time
 import os
 import numpy as np
 from ohmpi.hardware_components import TxAbstract, RxAbstract
 from ohmpi.utils import enforce_specs
+from ohmpi.tests import test_i2c_devices_on_bus
 
 # hardware characteristics and limitations
 # voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
@@ -91,6 +93,12 @@ class Tx(TxAbstract):
 
         # I2C connexion to MCP23008, for current injection
         self._mcp_address = kwargs['mcp_address']
+        if test_i2c_devices_on_bus(self._mcp_address, self.connection):
+            self.soh_logger.info(colored(
+                f"TX: MCP with address {hex(self._mcp_address)} accessible on I2C bus", "green"))
+        else:
+            self.soh_logger.info(colored(
+                f"TX: MCP with address {hex(self._mcp_address)} NOT accessible on I2C bus", "red"))
         if self.connect:
             try:
                 self.reset_mcp()
@@ -100,6 +108,13 @@ class Tx(TxAbstract):
         
         # ADS1115 for current measurement (AB)
         self._ads_current_address = kwargs['ads_address']
+        if test_i2c_devices_on_bus(self._ads_current_address, self.connection):
+            self.soh_logger.info(colored(
+                f"TX: ADS with address {hex(self._ads_current_address)} accessible on I2C bus", "green"))
+        else:
+            self.soh_logger.info(colored(
+                f"TX: ADS with address {hex(self._ads_current_address)} NOT accessible on I2C bus", "red"))
+
         self._ads_current_data_rate = kwargs['data_rate']
         self._adc_gain = 2 / 3
         if self.connect:
@@ -256,6 +271,12 @@ class Rx(RxAbstract):
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = kwargs['ads_address']
+        if test_i2c_devices_on_bus(self._ads_current_address, self.connection):
+            self.soh_logger.info(colored(
+                f"RX: ADS with address {hex(self._ads_current_address)} accessible on I2C bus", "green"))
+        else:
+            self.soh_logger.info(colored(
+                f"RX: ADS with address {hex(self._ads_current_address)} NOT accessible on I2C bus", "red"))
         self._ads_voltage_data_rate = kwargs['data_rate']
         self._adc_gain = 2/3
 
