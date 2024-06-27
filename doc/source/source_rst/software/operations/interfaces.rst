@@ -100,7 +100,7 @@ Both of these can be done by executing
   k.run_sequence()
   # k.run_sequence_async()  # sequence is run in a separate thread and the prompt returns immediately
   # time.sleep(2)
-  # k.interrupt()  # kill the asynchron sequence
+  # k.interrupt()  # kill the asynchronous sequence
 
   ### Single measurement can also be taken with
   quadrupole = [1, 4, 2, 3]  # if we have a multiplexer
