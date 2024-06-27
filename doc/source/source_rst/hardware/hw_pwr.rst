@@ -18,8 +18,9 @@ The + and - battery terminals are routed to the TX-batt input + abd GND connecto
 connectors need to be bypassed.
 
 .. figure:: ../../img/mb.2024.x.x/power_cabling_batt.png
-   :width: 800px
+   :width: 1200px
    :alt: Wiring of a TX battery used as power module (no DPH5005)
+   :figclass: align-center
 
    Wiring of a TX battery used as power module (no DPH5005)
 
@@ -59,7 +60,7 @@ The DPS power output is wired to the DPS OUT connectors, as in the figure below.
 needs to be plugged in to one USB port of the Raspberry Pi.
 
 .. figure:: ../../img/mb.2024.x.x/power_cabling_dps.png
-   :width: 800px
+   :width: 1200px
    :alt: Wiring of the DPH5005
    :figclass: align-center
 
