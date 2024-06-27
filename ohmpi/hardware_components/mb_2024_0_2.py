@@ -228,10 +228,10 @@ class Rx(Rx_mb_2023):
         self._mcp_address = kwargs['mcp_address']
         if test_i2c_devices_on_bus(self._mcp_address, self.connection):
             self.soh_logger.info(colored(
-                f"RX: MCP with address {hex(self.mcp_address)} accessible on I2C bus", "green"))
+                f"RX: MCP with address {hex(self._mcp_address)} accessible on I2C bus", "green"))
         else:
             self.soh_logger.info(colored(
-                f"RX: MCP with address {hex(self.mcp_address)} NOT accessible on I2C bus", "red"))
+                f"RX: MCP with address {hex(self._mcp_address)} NOT accessible on I2C bus", "red"))
         # self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
         if self.connect:
             try:
