@@ -231,13 +231,13 @@ class Rx(Rx_mb_2023):
                 try:
                     self.reset_mcp()
                     self.soh_logger.info(colored(
-                        f"RX: MCP23008 MN({hex(self._mcp_address)})...found on I2C bus...OK", "green"))
+                        f"RX: MCP23008 ({hex(self._mcp_address)}) found on I2C bus...OK", "green"))
                 except Exception as e:
                     self.soh_logger.info(colored(
-                        f"RX: MCP23008 MN({hex(self._mcp_address)})...found on I2C bus...NOT OK", "red"))
+                        f"RX: MCP23008 ({hex(self._mcp_address)}) found on I2C bus...NOT OK", "red"))
         else:
             self.soh_logger.info(colored(
-                        f"RX: MCP23008 MN({hex(self._mcp_address)})...NOT FOUND on I2C bus", "red"))
+                        f"RX: MCP23008 ({hex(self._mcp_address)}) NOT FOUND on I2C bus", "red"))
         # self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
         
         # ADS1115 for voltage measurement (MN)
