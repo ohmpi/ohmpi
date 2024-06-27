@@ -451,6 +451,10 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
 
+.. note::
+   Don't forget to add the two header pins below the 'shunt' side of the current click
+   so it can be connected to the PCB below.
+
 
 .. _mb2024-test:
 

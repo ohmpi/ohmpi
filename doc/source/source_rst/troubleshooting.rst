@@ -14,6 +14,7 @@ If you get an I2C communication error or cannot see some I2C address with `i2cde
 
 Most components of the OhmPi communicate via I2C protocol. This protocol works with two lines (SDA and SCL) that **must be pulled-up** at rest. The pull-up resistor consist in placing a 100k (or similar values) resistor between the line and VDD (5V in this case).
 
+Make sure you have the correct configuration for your assembled system (see :ref:`config`).
 Check with the multimeter the voltage between SDA/SCL and the ground to see if it reaches 5V at rest. If it's not the case, you may need stronger pull-up (smaller value of pull-up resistor).
 
 .. note::
@@ -40,6 +41,13 @@ Another possibility is that the MN voltage you are trying to measure is **over t
 In the measurement board v2024, the current sensing part is replaced by a click board. It is possible that the shunt resistance on this click board is burned due to malfunction. In this case, erroneous value of current will be given. The click board must be replaced to solve the issue.
 
 
+Resistances values are divided by 2 (mb2024)
+=================================================
+
+This can be due to a badly soldered connection between the DG411 and the MCP23008 MN or between the output pins of the DG411.
+This means that the gain is not applied in the Vmn part. Use a multimeter in continuity mode to check connectivity and soldering of DG411 and MCP23008.
+
+
 Noise in the Vmn signal
 =======================
 
@@ -58,13 +66,16 @@ Strong decay in current
 =======================
 
 A strong decay in current can be an indication that the battery cannot supply enough power to the DPH5005 to main the requested voltage.
+I can also be that the injection time is too short to let the current reach steady-state. In this case, we recommend to increase the injection time.
+
 
 
 Modbus error
 ============
 
 Modbus is the protocol used to communicated between the DPH5005 and the Raspberry Pi via a USB cable.
-If the Pi cannot detect the DPS, a modbus error can happen. Make sure the USB cable is ok and that the DPH5005 is supplied.
+If the Pi cannot detect the DPH, a modbus error can happen. Make sure the USB cable is ok and that the DPH5005 is supplied.
+It can also be that the DPH is not given enough time to start (latency time). This can be increased in the `config.py > HARDWARE_CONFIG > rx > latency`.
 
 
 Current max out at 48 mA
