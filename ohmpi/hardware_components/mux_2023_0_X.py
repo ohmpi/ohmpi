@@ -152,31 +152,31 @@ class Mux(MuxAbstract):
         try:
             self._mcp[0] = MCP23017(self._tca[0])
             self.soh_logger.info(colored(
-                f'MUX: MCP23017 ({hex(self._mcp_addresses[0])}) 0...OK', 'green'))
+                f'MUX: MCP23017 ({self._mcp_addresses[0]}) I2C0...OK', 'green'))
         except Exception as e:
             self.soh_logger.info(colored(
-                f'MUX: MCP23017 ({hex(self._mcp_addresses[0])}) 0...NOT FOUND', 'red'))
+                f'MUX: MCP23017 ({self._mcp_addresses[0]}) I2C0...NOT FOUND', 'red'))
         try:
             self._mcp[1] = MCP23017(self._tca[1])
             self.soh_logger.info(colored(
-                f'MUX: MCP23017 ({hex(self._mcp_addresses[1])}) 1...OK', 'green'))
+                f'MUX: MCP23017 ({self._mcp_addresses[1]}) I2C1...OK', 'green'))
         except Exception as e:
             self.soh_logger.info(colored(
-                f'MUX: MCP23017 ({hex(self._mcp_addresses[1])}) 1...NOT FOUND', 'red'))
+                f'MUX: MCP23017 ({self._mcp_addresses[1]}) I2C1...NOT FOUND', 'red'))
         try:
             self._mcp[2] = MCP23017(self._tca[2])
             self.soh_logger.info(colored(
-                f'MUX: MCP23017 ({hex(self._mcp_addresses[2])}) 2...OK', 'green'))
+                f'MUX: MCP23017 ({self._mcp_addresses[2]}) I2C2...OK', 'green'))
         except Exception as e:
             self.soh_logger.info(colored(
-                f'MUX: MCP23017 ({hex(self._mcp_addresses[2])}) 2...NOT FOUND', 'red'))
+                f'MUX: MCP23017 ({self._mcp_addresses[2]}) I2C2...NOT FOUND', 'red'))
         try:
             self._mcp[3] = MCP23017(self._tca[3])
             self.soh_logger.info(colored(
-                f'MUX: MCP23017 ({hex(self._mcp_addresses[3])}) 3...OK', 'green'))
+                f'MUX: MCP23017 ({self._mcp_addresses[3]}) I2C3...OK', 'green'))
         except Exception as e:
             self.soh_logger.info(colored(
-                f'MUX: MCP23017 ({hex(self._mcp_addresses[3])}) 3...NOT FOUND', 'red'))
+                f'MUX: MCP23017 ({self._mcp_addresses[3]}) I2C3...NOT FOUND', 'red'))
 
     def reset_one(self, which=0):
         self._mcp[which] = MCP23017(self._tca[which])
