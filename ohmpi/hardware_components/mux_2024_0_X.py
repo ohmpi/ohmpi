@@ -112,7 +112,11 @@ class Mux(MuxAbstract):
         self._i2c_ext_tca_channel = int(kwargs['i2c_ext_tca_channel'])
         self._i2c_ext_tca = None
         if self.connect:
-            self.reset_i2c_ext_tca()
+            try:
+                self.reset_i2c_ext_tca()
+                self.soh_logger.info(f'TCA9548A I2C ext ({hex(self._i2c_ext_tca_address)})...OK (or not present)')
+            except Exception as e:
+                self.soh_logger.info(f'TCA9548A I2C ext ({hex(self._i2c_ext_tca_address)})...NOT FOUND')
 
         # Setup MCPs
         kwargs.update({'addr2': kwargs.pop('addr2', None)})
@@ -156,8 +160,16 @@ class Mux(MuxAbstract):
     def reset(self):
         if self.connection is None:
             self.reset_i2c_ext_tca()
-        self._mcp[0] = MCP23017(self.connection, address=int(self._mcp_addresses[0], 16))
-        self._mcp[1] = MCP23017(self.connection, address=int(self._mcp_addresses[1], 16))
+        try:
+            self._mcp[0] = MCP23017(self.connection, address=int(self._mcp_addresses[0], 16))
+            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[0])})...OK')
+        except Exception as e:
+            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[0])})...NOT FOUND')
+        try:
+            self._mcp[1] = MCP23017(self.connection, address=int(self._mcp_addresses[1], 16))
+            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[1])})...OK')
+        except Exception as e:
+            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[1])})...NOT FOUND')
 
     def reset_i2c_ext_tca(self):
         if self._i2c_ext_tca_address is None:

@@ -148,13 +148,24 @@ class Mux(MuxAbstract):
             self.reset_tca()
         try:
             self._mcp[0] = MCP23017(self._tca[0])
-            self.soh_logger.info(f'MCP23017 ')
+            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[0])}) 0...OK')
         except Exception as e:
-            pass
-
-        self._mcp[1] = MCP23017(self._tca[1])
-        self._mcp[2] = MCP23017(self._tca[2])
-        self._mcp[3] = MCP23017(self._tca[3])
+            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[0])}) 0...NOT FOUND')
+        try:
+            self._mcp[1] = MCP23017(self._tca[1])
+            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[1])}) 1...OK')
+        except Exception as e:
+            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[1])}) 1...NOT FOUND')
+        try:
+            self._mcp[2] = MCP23017(self._tca[2])
+            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[2])}) 2...OK')
+        except Exception as e:
+            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[2])}) 2...NOT FOUND')
+        try:
+            self._mcp[3] = MCP23017(self._tca[3])
+            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[3])}) 3...OK')
+        except Exception as e:
+            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[3])}) 3...NOT FOUND')
 
     def reset_one(self, which=0):
         self._mcp[which] = MCP23017(self._tca[which])
