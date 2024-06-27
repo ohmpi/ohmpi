@@ -40,6 +40,14 @@ Assembling the OhmPi v2023
    |        |perpendicular as possible to the IDC connector.             |                                                                      
    +--------+------------------------------------------------------------+   
 
+.. warning::
+   In MUX2023, the wiring of the electrodes from the IDC connector follows the order below (different from MUX2024).
+   Take this into account if you wire your ribbon cable to further connectors or screw terminals.
+
+   .. image:: ../../../img/mux2023-idc.jpg
+
+   .. image:: ../../../img/mux2023-connector.jpg
+
 .. table::
    :align: center
 

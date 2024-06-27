@@ -5,7 +5,7 @@
 
 
 
-MUX board v2023
+Build MUX board v2023
 ****************************************************
 The multiplexing of the channels is a mechanical multiplexing based on OMRON's manufacturing relays (G5LE-1-VD 12 VDC). Each relay is combined with 
 a ZVN4206A power MOFSET. The raspberry has only 30 GPIOs, which is not enough to activate all the 64 electrodes, which represent 512 GPIOs. 
@@ -31,9 +31,9 @@ Required components
 
 .. csv-table:: List of components
    :file: ../mux/MUX_board_2023.csv
-   :widths: 30, 70, 70, 70, 70, 35, 35,1
    :header-rows: 1 
-   
+   :class: longtable
+
    
 .. table::
    :align: center

@@ -49,6 +49,12 @@ Those who wish to build a 16-electrode OhmPi system can neglect steps 8-10, and 
    +--------------------------------------------------------------------------------------------------------+
 
 .. warning::
+   In MUX2024, the wiring of the electrodes from the IDC connector follows the order below (different from MUX2023).
+   Take this into account if you wire your ribbon cable to further connectors or screw terminals.
+
+   .. image:: ../../../img/mux2024-idc.jpg
+
+.. warning::
       At this point in the build, we consider that you have followed the instructions in :ref:`Getting-started` section
 
 
