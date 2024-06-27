@@ -271,12 +271,12 @@ class Rx(RxAbstract):
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = kwargs['ads_address']
-        if test_i2c_devices_on_bus(self._ads_current_address, self.connection):
+        if test_i2c_devices_on_bus(self._ads_voltage_address, self.connection):
             self.soh_logger.info(colored(
-                f"RX: ADS with address {hex(self._ads_current_address)} accessible on I2C bus", "green"))
+                f"RX: ADS with address {hex(self._ads_voltage_address)} accessible on I2C bus", "green"))
         else:
             self.soh_logger.info(colored(
-                f"RX: ADS with address {hex(self._ads_current_address)} NOT accessible on I2C bus", "red"))
+                f"RX: ADS with address {hex(self._ads_voltage_address)} NOT accessible on I2C bus", "red"))
         self._ads_voltage_data_rate = kwargs['data_rate']
         self._adc_gain = 2/3
 
