@@ -5,8 +5,8 @@
 
 
 
-MUX board v2024
-****************************************************
+Build MUX board v2024
+*********************
 
 The MUX board v2024 uses the same technology than the MUX board v2023, i.e. mechanical multiplexing. However it introduces
 a new level of flexibility by addressing multiple roles (A, B, M, N), which allows to build OhmPi system with multiple of 8 electrodes.
@@ -41,6 +41,7 @@ Required components
    :file: ../mux/MUX_board_2024.csv
    :widths: 30, 70, 70, 70, 70, 35, 35
    :header-rows: 1
+   :class: longtable
 
 
 Mounting components on PCB board
@@ -181,13 +182,27 @@ assuming that the MUX boards are powered and correctly connected to the measurem
 Replace "-y 4" by "-y 1" if the MUX is plugged on the "board" IDC connector, or if plugged in to a mb.2023.0.X board.
 
 
-Checking of the mux board
----------------------------------
+
+**PART B** Assembling MUX boards in an OhmPi system
+===================================================
+
+The cabling of several MUX boards v2024 within an OhmPi system is entirely dependent on the role configuration of each board.
+
+* 2-role MUX boards have to come in pairs. The 16 electrodes takeouts of each pair have to be cabled together. This is easily done with a ribbon cable
+  plugged on the 16-way IDC connectors of the pair of boards. This also allows to stack two boards together leaving the screw connectors of the board on the top
+  accessible to connect wires from the electrode arrays.
+* 4-role MUX boards do not have to come in pairs. The 4 roles of each board have to be connected to the other 4 roles of the system (and at least to the ABMN connector on the measurement board).
+  The electrodes connectors can only be used to address the first 8 or the last 8 positions.
+  This is critical if wanting to connect the electrodes via the IDC connectors, which whill have to be carefully cabled.
+
+
+.. _mux2024-test:
+
+Check MUX board v2024
+*********************
 
 Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the board.
 Check your board against the correct expected column: 2-roles or 4-roles.
-
-**Do not power the board if one of the SC (shortcircuit) test does not pass!**
 
 If a continuity check does not pass it's likely means there is an issue with the soldering on the board.
 If the voltage with I2C (SDA and SCL pins) is not expected, there is likely an issue with pull-up resistors.
@@ -201,20 +216,14 @@ For the test with power "on", we expect the mux board to be connected to a 12V s
        :figclass: align-center
 
 .. csv-table:: Hardware check
-   :file: ../../../img/mux2024-test.csv
+   :file: mux2024-test-sc.csv
    :header-rows: 1
 
+.. warning::
+   **Do not power the board if one of the SC (shortcircuit) test does not pass!**
 
-**PART B** Assembling MUX boards in an OhmPi system
-===================================================
-
-The cabling of several MUX boards v2024 within an OhmPi system is entirely dependent on the role configuration of each board.
-
-* 2-role MUX boards have to come in pairs. The 16 electrodes takeouts of each pair have to be cabled together. This is easily done with a ribbon cable
-  plugged on the 16-way IDC connectors of the pair of boards. This also allows to stack two boards together leaving the screw connectors of the board on the top
-  accessible to connect wires from the electrode arrays.
-* 4-role MUX boards do not have to come in pairs. The 4 roles of each board have to be connected to the other 4 roles of the system (and at least to the ABMN connector on the measurement board).
-  The electrodes connectors can only be used to address the first 8 or the last 8 positions.
-  This is critical if wanting to connect the electrodes via the IDC connectors, which whill have to be carefully cabled.
+.. csv-table:: Hardware check
+   :file: mux2024-test.csv
+   :header-rows: 1
 
 

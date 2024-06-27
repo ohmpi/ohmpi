@@ -177,7 +177,7 @@ class OhmPiHardware:
         self.pab_min = 0.00005  # W TODO: Add in pwr components specs
         self.pab_max = self.pwr.specs['power_max'] # W
 
-        # Join tX and pwr
+        # Join tx and pwr
         self.tx.pwr = self.pwr
         if not self.tx.pwr.voltage_adjustable:
             self.tx.pwr._pwr_latency = 0

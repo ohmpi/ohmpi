@@ -1,8 +1,10 @@
-MUX board
-=============================
+Multiplexer board
+=================
 
-TO DO DESCRIPTIONs
-
+Measurement board are limited to four electrodes (A, B, M and N).
+Multiplexer board are composed or electrical relay (electronic switches) that enable to route the signal
+from A, B, M or N from the measurement board towards the specified electrodes. Multiplexer boards are needed for a 
+multi-electrode system.
 
 Recognize the version of the MUX boards
 ---------------------------------------
@@ -28,15 +30,15 @@ Specifications
    +==================================+========================+======================+
    |Number of electrodes per board    |    64                  |  16 (or 8)           |
    +----------------------------------+------------------------+----------------------+
-   | |Number of roles (A, B, M or N)  |                        |  2 roles (or 4)      |
-   | |per board                       |   1                    |                      |
+   |Number of roles (A, B, M or N)    |                        |  2 roles (or 4)      |
+   |per board                         |   1                    |                      |
    +----------------------------------+------------------------+----------------------+
    |Power supply                      | 12 V                   | 12V (or 5V)          |
    +----------------------------------+------------------------+----------------------+
 
 
-Assemble you MUX board:
-------------------------------- 
+Assemble multiplexer board (MUX)
+--------------------------------
 
 .. toctree:: 
    :maxdepth: 2 

@@ -53,7 +53,7 @@ except Exception as error:
     print(colored(f'Unexpected error: {error}', 'red'))
     arm64_imports = None
 
-VERSION = 'v2024.0.0'
+VERSION = 'v2024.0.8'
 
 
 class OhmPi(object):
@@ -665,6 +665,9 @@ class OhmPi(object):
 
         # check arguments
         if quad is None:
+            quad = np.array([0, 0, 0, 0])
+        if quad is not None and len(self.mux_boards) == 0:
+            # overwrite quad as we cannot specify electrode number without mux
             quad = np.array([0, 0, 0, 0])
         if nb_stack is None and 'nb_stack' in self.settings:
             nb_stack = self.settings['nb_stack']
