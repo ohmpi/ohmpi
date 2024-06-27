@@ -46,7 +46,6 @@ class Pwr(PwrAbstract):
         self._pwr_discharge_latency = kwargs['pwr_discharge_latency']
         self._pwr_state = 'off'
         if self.connect:
-            try:
                 #print(f'dph connection : {self.connection}')
                 if self.interface_name == 'modbus':
                     assert isinstance(self.connection, Instrument)
@@ -54,9 +53,6 @@ class Pwr(PwrAbstract):
                     raise Warning('Bluetooth communication with dph5050 is not implemented')
                 elif self.interface_name == 'none':
                     raise IOError('dph interface cannot be set to none')
-                self.soh_logger.info('DPH5005 (modbus)...OK')
-            except Exception as e:
-                self.soh_logger.info('DPH5005 (modbus)...NOT FOUND')
         #     self.pwr_state = self._pwr_state
 
         if not subclass_init:

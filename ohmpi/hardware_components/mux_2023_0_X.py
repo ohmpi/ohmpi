@@ -7,6 +7,7 @@ from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
 from digitalio import Direction  # noqa
 from busio import I2C  # noqa
 from ohmpi.utils import enforce_specs
+from termcolor import colored
 
 # TODO: manage the case when a tca is added to handle more mux_2023 boards
 
@@ -122,9 +123,11 @@ class Mux(MuxAbstract):
                 self.reset_i2c_ext_tca()
                 self.reset_tca()
                 self.reset()
-                self.soh_logger.info(f'TCA9548A ({hex(self._tca_address)})...OK')
+                self.soh_logger.info(colored(
+                    f'TCA9548A ({hex(self._tca_address)})...OK', 'green'))
             except Exception as e:
-                self.soh_logger.info(f'TCA9548A ({hex(self._tca_address)})...NOT FOUND')
+                self.soh_logger.info(colored(
+                    f'TCA9548A ({hex(self._tca_address)})...NOT FOUND', 'red'))
 
         self.specs = kwargs
         if self.addresses is None:

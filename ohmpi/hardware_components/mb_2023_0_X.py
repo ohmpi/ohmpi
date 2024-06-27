@@ -91,40 +91,42 @@ class Tx(TxAbstract):
         self.voltage_adjustable = False
         self.current_adjustable = False
 
-        # I2C connexion to MCP23008, for current injection
+        # I2C connection to MCP23008, for current injection
         self._mcp_address = kwargs['mcp_address']
         if test_i2c_devices_on_bus(self._mcp_address, self.connection):
-            self.soh_logger.info(colored(
-                f"TX: MCP with address {hex(self._mcp_address)} accessible on I2C bus", "green"))
+            if self.connect:
+                try:
+                    self.reset_mcp()
+                    self.soh_logger.info(colored(
+                        f'TX: MCP23008 ({hex(self._mcp_address)}) found on I2C bus...OK', 'green'))
+                except Exception as e:
+
+                    self.soh_logger.info(colored(
+                        f'TX: MCP23008 ({hex(self._mcp_address)}) found on I2C bus...NOT OK', 'green'))
         else:
-            self.soh_logger.info(colored(
-                f"TX: MCP with address {hex(self._mcp_address)} NOT accessible on I2C bus", "red"))
-        if self.connect:
-            try:
-                self.reset_mcp()
-                self.soh_logger.info(f'MCP23008 Tx ({hex(self._mcp_address)})...OK')
-            except Exception as e:
-                self.soh_logger.info(f'MCP23008 Tx ({hex(self._mcp_address)})...NOT FOUND')
-        
+            
+                    self.soh_logger.info(colored(
+                        f'TX: MCP23008 ({hex(self._mcp_address)}) NOT found on I2C bus', 'green'))
+
         # ADS1115 for current measurement (AB)
         self._ads_current_address = kwargs['ads_address']
-        if test_i2c_devices_on_bus(self._ads_current_address, self.connection):
-            self.soh_logger.info(colored(
-                f"TX: ADS with address {hex(self._ads_current_address)} accessible on I2C bus", "green"))
-        else:
-            self.soh_logger.info(colored(
-                f"TX: ADS with address {hex(self._ads_current_address)} NOT accessible on I2C bus", "red"))
-
         self._ads_current_data_rate = kwargs['data_rate']
         self._adc_gain = 2 / 3
-        if self.connect:
-            try:
-                self.reset_ads()
-                self._ads_current.mode = Mode.CONTINUOUS
-                self.soh_logger.info(f'ADS1115 current ({hex(self._ads_current_address)})...OK')
-            except Exception as e:
-                self.soh_logger.info(f'ADS1115 current ({hex(self._ads_current_address)})...NOT FOUND')
-
+        if test_i2c_devices_on_bus(self._ads_current_address, self.connection):
+            if self.connect:
+                try:
+                    self.reset_ads()
+                    self._ads_current.mode = Mode.CONTINUOUS
+                    self.soh_logger.info(colored(
+                        f'TX: ADS1115 current ({hex(self._ads_current_address)}) found on I2C bus...OK', 'green'))
+                except Exception as e:
+                    self.soh_logger.info(colored(
+                        f'TX: ADS1115 current ({hex(self._ads_current_address)}) found on I2C bus...NOT OK', 'red')) 
+        else:
+            self.soh_logger.info(colored(
+                f'TX: ADS1115 current ({hex(self._ads_current_address)}) NOT found on I2C bus', 'red'))
+            
+        
         self._r_shunt = kwargs['r_shunt']
         self.adc_voltage_min = kwargs['adc_voltage_min']
         self.adc_voltage_max = kwargs['adc_voltage_max']
@@ -271,22 +273,20 @@ class Rx(RxAbstract):
 
         # ADS1115 for voltage measurement (MN)
         self._ads_voltage_address = kwargs['ads_address']
-        if test_i2c_devices_on_bus(self._ads_voltage_address, self.connection):
-            self.soh_logger.info(colored(
-                f"RX: ADS with address {hex(self._ads_voltage_address)} accessible on I2C bus", "green"))
-        else:
-            self.soh_logger.info(colored(
-                f"RX: ADS with address {hex(self._ads_voltage_address)} NOT accessible on I2C bus", "red"))
         self._ads_voltage_data_rate = kwargs['data_rate']
         self._adc_gain = 2/3
-
-        if self.connect:
-            try:
-                self.reset_ads(mode=Mode.CONTINUOUS)
-                self.soh_logger.info(f'ADS1115 voltage ({hex(self._ads_voltage_address)})...OK')
-            except Exception as e:
-                self.soh_logger.info(f'ADS1115 voltage ({hex(self._ads_voltage_address)})...NOT FOUND')
-
+        if test_i2c_devices_on_bus(self._ads_voltage_address, self.connection):
+            if self.connect:
+                try:
+                    self.reset_ads(mode=Mode.CONTINUOUS)
+                    self.soh_logger.info(colored(
+                        f"RX: ADS1115 voltage ({hex(self._ads_voltage_address)}) found on I2C...OK", "green"))
+                except Exception as e:
+                    self.soh_logger.info(colored(
+                        f"RX: ADS1115 voltage ({hex(self._ads_voltage_address)}) found on I2C...NOT OK", "red"))
+        else:
+            self.soh_logger.info(colored(
+                f"RX: ADS1115 voltage ({hex(self._ads_voltage_address)}) NOT found on I2C", "red"))
 
         self._coef_p2 = kwargs['coef_p2']
         # self._voltage_max = kwargs['voltage_max']
