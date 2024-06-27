@@ -92,14 +92,23 @@ class Tx(TxAbstract):
         # I2C connexion to MCP23008, for current injection
         self._mcp_address = kwargs['mcp_address']
         if self.connect:
-            self.reset_mcp()
+            try:
+                self.reset_mcp()
+                self.soh_logger.info(f'MCP23008 Tx ({hex(self._mcp_address)})...OK')
+            except Exception as e:
+                self.soh_logger.info(f'MCP23008 Tx ({hex(self._mcp_address)})...NOT FOUND')
+        
         # ADS1115 for current measurement (AB)
         self._ads_current_address = kwargs['ads_address']
         self._ads_current_data_rate = kwargs['data_rate']
         self._adc_gain = 2 / 3
         if self.connect:
-            self.reset_ads()
-            self._ads_current.mode = Mode.CONTINUOUS
+            try:
+                self.reset_ads()
+                self._ads_current.mode = Mode.CONTINUOUS
+                self.soh_logger.info(f'ADS1115 current ({hex(self._ads_current_address)})...OK')
+            except Exception as e:
+                self.soh_logger.info(f'ADS1115 current ({hex(self._ads_current_address)})...NOT FOUND')
 
         self._r_shunt = kwargs['r_shunt']
         self.adc_voltage_min = kwargs['adc_voltage_min']
@@ -251,7 +260,12 @@ class Rx(RxAbstract):
         self._adc_gain = 2/3
 
         if self.connect:
-            self.reset_ads(mode=Mode.CONTINUOUS)
+            try:
+                self.reset_ads(mode=Mode.CONTINUOUS)
+                self.soh_logger.info(f'ADS1115 voltage ({hex(self._ads_voltage_address)})...OK')
+            except Exception as e:
+                self.soh_logger.info(f'ADS1115 voltage ({hex(self._ads_voltage_address)})...NOT FOUND')
+
 
         self._coef_p2 = kwargs['coef_p2']
         # self._voltage_max = kwargs['voltage_max']

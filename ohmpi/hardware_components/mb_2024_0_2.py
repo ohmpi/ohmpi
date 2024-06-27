@@ -226,7 +226,12 @@ class Rx(Rx_mb_2023):
         self._mcp_address = kwargs['mcp_address']
         # self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
         if self.connect:
-            self.reset_mcp()
+            try:
+                self.reset_mcp()
+                self.soh_logger.info(f'MCP23008 MN ({hex(self._mcp_address)})...OK')
+            except Exception as e:
+                self.soh_logger.info(f'MCP23008 MN ({hex(self._mcp_address)})...NOT FOUND')
+
         # ADS1115 for voltage measurement (MN)
         self._coef_p2 = 1.
         # Define default DG411 gain

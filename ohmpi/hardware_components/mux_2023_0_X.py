@@ -118,9 +118,14 @@ class Mux(MuxAbstract):
         self._tca = None
         self._mcp = [None, None, None, None]
         if self.connect:
-            self.reset_i2c_ext_tca()
-            self.reset_tca()
-            self.reset()
+            try:
+                self.reset_i2c_ext_tca()
+                self.reset_tca()
+                self.reset()
+                self.soh_logger.info(f'TCA9548A ({hex(self._tca_address)})...OK')
+            except Exception as e:
+                self.soh_logger.info(f'TCA9548A ({hex(self._tca_address)})...NOT FOUND')
+
         self.specs = kwargs
         if self.addresses is None:
             self._get_addresses()
@@ -141,7 +146,12 @@ class Mux(MuxAbstract):
         if self._tca is None:
             self.reset_i2c_ext_tca()
             self.reset_tca()
-        self._mcp[0] = MCP23017(self._tca[0])
+        try:
+            self._mcp[0] = MCP23017(self._tca[0])
+            self.soh_logger.info(f'MCP23017 ')
+        except Exception as e:
+            pass
+
         self._mcp[1] = MCP23017(self._tca[1])
         self._mcp[2] = MCP23017(self._tca[2])
         self._mcp[3] = MCP23017(self._tca[3])
