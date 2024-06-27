@@ -103,7 +103,8 @@ Both of these can be done by executing
   # k.interrupt()  # kill the asynchron sequence
 
   ### Single measurement can also be taken with
-  quadrupole = [1, 4, 2, 3]
+  quadrupole = [1, 4, 2, 3]  # if we have a multiplexer
+  quadrupole = [0, 0, 0, 0]  # if we don't have a multiplexer, just from the mb board.
   k.run_measurement(quadrupole)  # use default acquisition parameters
 
   ### Custom or adaptative argument, see help(k.run_measurement)
