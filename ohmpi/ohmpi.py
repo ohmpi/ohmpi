@@ -95,7 +95,7 @@ class OhmPi(object):
 
         # default acquisition settings
         self.settings = {}
-        self.update_settings(os.path.join(os.path.split(os.path.dirname(__file__))[0], 'settings/default.json'))
+        self.update_settings(os.path.join(os.path.split(os.path.dirname(__file__))[0], OHMPI_CONFIG['settings']))
 
         # read in acquisition settings
         if settings is not None:
