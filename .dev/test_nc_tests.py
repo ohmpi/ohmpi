@@ -17,8 +17,8 @@ exec_logger, _, data_logger, _, soh_logger, _, _, msg = setup_loggers(mqtt=mqtt)
 HARDWARE_CONFIG_nc = copy.deepcopy(HARDWARE_CONFIG)
 
 # specify loggers when instancing the hardware
-hw = OhmPiHardware(**{'exec_logger': exec_logger, 'data_logger': data_logger,
-                           'soh_logger': soh_logger})
+#hw = OhmPiHardware(**{'exec_logger': exec_logger, 'data_logger': data_logger,
+#                           'soh_logger': soh_logger})
 
 # print('config', HARDWARE_CONFIG_nc)
 for k, v in HARDWARE_CONFIG_nc.items():
@@ -34,9 +34,9 @@ hw_nc = OhmPiHardware(**{'exec_logger': exec_logger, 'data_logger': data_logger,
 # test_logger.info('OhmPi tests ready to start...')
 
 
-# test_mb_connection(hw_nc, "RX", soh_logger.test)
-# test_mb_connection(hw_nc, "TX", soh_logger.test)
-# test_mux_connection(hw_nc, soh_logger.test)
+test_mb_connection(hw_nc, "RX", soh_logger.test)
+test_mb_connection(hw_nc, "TX", soh_logger.test)
+test_mux_connection(hw_nc, soh_logger.test)
 #
 #
 # test_vmn_hardware_offset(hw, soh_logger.test)
