@@ -6,7 +6,8 @@ functionalities used to interact with the OhmPi instrument via a web interface, 
 communication protocols (e.g. MQTT) and/or directly through the Python API.
 
 .. figure:: ../../img/software/ohmpi_2024_architecture.png
-   :width: 1000px
+   :width: 9000px
+   :align: center
 
      Software architecture of OhmPi v2024.
 

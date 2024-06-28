@@ -5,7 +5,8 @@ API reference
 #############
 
 .. figure:: ../../img/software/hardware_classes.png
-   :width: 1000px
+   :width: 900px
+   :align: center
 
 .. toctree::
    :maxdepth: 2

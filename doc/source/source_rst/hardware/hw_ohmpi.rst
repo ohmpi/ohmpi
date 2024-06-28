@@ -57,3 +57,4 @@ OhmPi systems assembly tutorials
 
 .. image:: ../../img/ohmpi_systems_examples.jpg
    :width: 900px
+   :align: center
