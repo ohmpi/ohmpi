@@ -14,16 +14,24 @@ It provides a working base, with room for improvement. Any idea to improve this 
 Those who wish to build a 16-electrode OhmPi system can neglect steps 8-10, and adjust cable lengths/numbers accordingly.
 
 .. warning::
-  In this set-up, the MUX 2024 boards are configured in 2-role modes (see :ref:`2_roles`), so one should make sure that the MUX board are properly configured before going any further.
-  Mounting a system with MUX 2024 boards set-up in 4-role modes imply cabling the boards differently as to what is illustrated in this tutorial.
+  In this set-up, the MUX 2024 boards are configured in 2-role mode (see :ref:`2_roles`). This means that each MUX
+  board addresses 2 roles (AB or MN) and 16 electrodes. So one needs at least two MUX boards to be able to make ABMN
+  measurements. Mounting the MUX boards in 2-role mode allows to take advantage of the electrode IDC connectors to
+  connect more easily reference circuits for lab testing. Mounting a system with MUX 2024 boards each set-up in 4-role
+  mode (see :ref:`4_roles`) is also possible but implies cabling the boards differently as to what is illustrated in
+  this tutorial. 4-role mode is mainly designed for 8-electrode systems, or for set up where users are only connecting
+  electrode wires via the screw terminals.
 
-  It is also best to having tested each MUX board individually before mounting them together.
+
+  It is also most recommended to having tested each MUX board individually (see :ref:`mux2024-test`) before mounting
+  them together.
 
 .. table::
    :align: center
    
    +--------------------------------------------------------------------------------------------------------+
    |   .. image:: ../../../img/v2024.x.x/ohmpi_lite/9.jpg                                                   |
+   |      :width: 1200px                                                                                    |
    +--------------------------------------------------------------------------------------------------------+
    |   .. image:: ../../../img/v2024.x.x/ohmpi_lite/10.jpg                                                  |
    +--------------------------------------------------------------------------------------------------------+

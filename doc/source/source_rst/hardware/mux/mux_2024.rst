@@ -34,6 +34,7 @@ Required components
 .. figure:: ../../../img/mux.2024.0.x/MUX_v2024_components.jpg
        :align: center
        :alt: alternate text
+       :width: 1200px
        :figclass: align-center
 
 
@@ -54,6 +55,7 @@ MUX board v2024 PCB (mux.2024.0.0).
 
    +--------+--------------------------------------------------------------------------------+
    |    1   |   .. image:: ../../../img/mux.2024.0.x/1.jpg                                   |
+   |        |        :width: 600px                                                           |
    +--------+--------------------------------------------------------------------------------+
 
 Mount the diodes.
@@ -63,6 +65,7 @@ Mount the diodes.
 
    +--------+--------------------------------------------------------------------------------+
    |    2   |   .. image:: ../../../img/mux.2024.0.x/2.jpg                                   |
+   |        |        :width: 600px                                                           |
    +--------+--------------------------------------------------------------------------------+
 
 Mount the 100 kOhm resistors.
@@ -225,5 +228,3 @@ For the test with power "on", we expect the mux board to be connected to a 12V s
 .. csv-table:: Hardware check
    :file: mux2024-test.csv
    :header-rows: 1
-
-
