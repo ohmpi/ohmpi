@@ -23,6 +23,9 @@ pip install -r requirements.txt
 
 echo "----------- Setting RPi parameters (I2C, GPIO, ...) --------"
 
+# enable I2C
+sudo raspi-config nonint do_i2c 0
+
 # install a second i2c bus
 sudo apt-get install -y i2c-tools
 echo "Setting up second I2C bus for old RPi OS versions... This might not work for newer RPi OS versions..."
