@@ -114,9 +114,10 @@ class Mux(MuxAbstract):
         if self.connect:
             try:
                 self.reset_i2c_ext_tca()
-                self.soh_logger.info(f'TCA9548A I2C ext ({hex(self._i2c_ext_tca_address)})...OK (or not present)')
+                print(self._i2c_ext_tca_address)
+                self.soh_logger.info(f'TCA9548A I2C ext ({self._i2c_ext_tca_address})...OK (or not present)')
             except Exception as e:
-                self.soh_logger.info(f'TCA9548A I2C ext ({hex(self._i2c_ext_tca_address)})...NOT FOUND')
+                self.soh_logger.info(f'TCA9548A I2C ext ({self._i2c_ext_tca_address})...NOT FOUND')
 
         # Setup MCPs
         kwargs.update({'addr2': kwargs.pop('addr2', None)})
