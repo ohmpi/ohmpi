@@ -113,6 +113,7 @@ class Mux(MuxAbstract):
         self._i2c_ext_tca_channel = int(kwargs['i2c_ext_tca_channel'])
         self._i2c_ext_tca = None
         if self.connect:
+            self.soh_logger.info(colored(f'{self.model} - {self.board_id}'), 'blue')
             try:
                 self.reset_i2c_ext_tca()
                 self.soh_logger.info(colored(
