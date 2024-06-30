@@ -163,14 +163,14 @@ class Mux(MuxAbstract):
             self.reset_i2c_ext_tca()
         try:
             self._mcp[0] = MCP23017(self.connection, address=int(self._mcp_addresses[0], 16))
-            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[0])})...OK')
+            self.soh_logger.info(f'MCP23017 ({self._mcp_addresses[0]})...OK')
         except Exception as e:
-            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[0])})...NOT FOUND')
+            self.soh_logger.info(f'MCP23017 ({self._mcp_addresses[0]})...NOT FOUND')
         try:
             self._mcp[1] = MCP23017(self.connection, address=int(self._mcp_addresses[1], 16))
-            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[1])})...OK')
+            self.soh_logger.info(f'MCP23017 ({self._mcp_addresses[1]})...OK')
         except Exception as e:
-            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[1])})...NOT FOUND')
+            self.soh_logger.info(f'MCP23017 ({self._mcp_addresses[1]})...NOT FOUND')
 
     def reset_i2c_ext_tca(self):
         if self._i2c_ext_tca_address is None:
