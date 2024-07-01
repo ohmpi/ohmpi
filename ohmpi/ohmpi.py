@@ -36,7 +36,6 @@ except ModuleNotFoundError:
           'If you deleted your config.py file by mistake, you should find a backup in configs/config_backup.py')
     sys.exit(-1)
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
-import ohmpi.deprecated as deprecated
 from ohmpi.hardware_system import OhmPiHardware
 from ohmpi.sequence import (dpdp1, dpdp2, wenner_alpha, wenner_beta, wenner,
                           wenner_gamma, schlum1, schlum2, multigrad)
@@ -54,7 +53,7 @@ except Exception as error:
     print(colored(f'Unexpected error: {error}', 'red'))
     arm64_imports = None
 
-VERSION = 'v2024.0.11'
+VERSION = 'v2024.0.12'
 
 
 class OhmPi(object):
@@ -66,10 +65,10 @@ class OhmPi(object):
         Parameters
         ----------
         settings : dict, optional
-            Dictionnary of parameters. Possible parameters with their default values:
-            `{'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
+            Dictionary of parameters. Possible parameters with their default values:
+            {'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
             'nb_stack': 1, 'sampling_interval': 2, 'vab': 5, 'duty_cycle': 0.5,
-            'strategy': 'constant', 'export_path': None
+            'strategy': 'constant', 'export_path': None}
         sequence : str, optional
             Path of the .csv or .txt file with A, B, M and N electrodes.
             Electrode index starts at 1. See `OhmPi.load_sequence()` for full docstring.
@@ -96,7 +95,7 @@ class OhmPi(object):
 
         # default acquisition settings
         self.settings = {}
-        self.update_settings(os.path.join(os.path.split(os.path.dirname(__file__))[0], 'settings/default.json'))
+        self.update_settings(os.path.join(os.path.split(os.path.dirname(__file__))[0], OHMPI_CONFIG['settings']))
 
         # read in acquisition settings
         if settings is not None:
@@ -164,11 +163,6 @@ class OhmPi(object):
                 self.controller = None
                 self.exec_logger.warning('No connection to control broker.'
                                          ' Use python/ipython to interact with OhmPi object...')
-
-    @classmethod
-    def get_deprecated_methods(cls):
-        for i in getmembers(deprecated, isfunction):
-            setattr(cls, i[0], i[1])
 
     def append_and_save(self, filename: str, last_measurement: dict, fw_in_csv=None, fw_in_zip=None, cmd_id=None):
         """Appends and saves the last measurement dict.
@@ -614,7 +608,7 @@ class OhmPi(object):
 
         vab_init : float, optional
             Initial injection voltage [V]
-            Default value set by config or boards specs
+            Default value set by settings or system specs
         vab_min : float, optional
             Minimum injection voltage [V]
             Default value set by config or boards specs
@@ -670,7 +664,8 @@ class OhmPi(object):
         self.exec_logger.debug('Waiting for data')
 
         # check arguments
-        if quad is None:
+        if quad is None or len(self.mux_boards) == 0:
+            # overwrite quad as we cannot specify electrode number without mux
             quad = np.array([0, 0, 0, 0])
         if nb_stack is None and 'nb_stack' in self.settings:
             nb_stack = self.settings['nb_stack']
@@ -1036,7 +1031,7 @@ class OhmPi(object):
                     icol = i
                     break
 
-            # get longest possible line
+            # get the longest line possible
             max_length = np.max([len(row.split(',')) for row in x]) - icol
             nreadings = max_length // 3
 
@@ -1546,7 +1541,6 @@ else:
 
 current_time = datetime.now()
 print(f'local date and time : {current_time.strftime("%Y-%m-%d %H:%M:%S")}')
-OhmPi.get_deprecated_methods()  # TODO: check if this could be removed...
 
 # for testing
 if __name__ == "__main__":
