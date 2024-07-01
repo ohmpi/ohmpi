@@ -48,10 +48,17 @@ This can be due to a badly soldered connection between the DG411 and the MCP2300
 This means that the gain is not applied in the Vmn part. Use a multimeter in continuity mode to check connectivity and soldering of DG411 and MCP23008.
 
 
-Noise in the Vmn signal
-=======================
+Noise in the Vmn and Iab signals
+================================
 
 The OhmPi does not filter the signal for 50 or 60Hz power noise. This noise can appear in the Vmn reading if the Tx or Rx battery is connected to a charger connected to the grid.
+It can also appear in the field if there is an AC leakage or high voltage power lines nearby.
+
+.. image:: ../img/troubleshooting/50hz_noise.png
+  :width: 600px
+  :align: center
+
+  Example of 50 Hz noise coming from a charger connected to the TX battery
 
 To solve this, you may need to design a system that disconnect the charger (turn if off) when doing a measurement.
 
@@ -67,7 +74,6 @@ Strong decay in current
 
 A strong decay in current can be an indication that the battery cannot supply enough power to the DPH5005 to main the requested voltage.
 I can also be that the injection time is too short to let the current reach steady-state. In this case, we recommend to increase the injection time.
-
 
 
 Modbus error

@@ -56,3 +56,5 @@ OhmPi systems assembly tutorials
    OhmPi v2023 + 12V battery <assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst>
 
 .. image:: ../../img/ohmpi_systems_examples.jpg
+   :width: 900px
+   :align: center

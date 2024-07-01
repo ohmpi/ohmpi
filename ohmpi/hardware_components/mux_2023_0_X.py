@@ -89,7 +89,7 @@ class Mux(MuxAbstract):
             self._roles = roles
         else:
             self._roles = {roles[0]:'X'}
-        if np.alltrue([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['1_role'].keys())])]):
+        if all([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['1_role'].keys())])]):
             self._mode = '1_role'
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.model}: {self._roles} !')

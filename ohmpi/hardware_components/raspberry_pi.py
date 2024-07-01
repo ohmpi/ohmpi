@@ -32,10 +32,10 @@ class Ctl(CtlAbstract):
             subclass_init = True
 
         super().__init__(**kwargs)
-        if self.connect:
-            self._connect_i2c()
-            self._connect_i2c_ext()
-            self._reset_modbus(**kwargs)
+
+        self._connect_i2c()
+        self._connect_i2c_ext()
+        self._reset_modbus(**kwargs)
 
     def _connect_i2c(self):
         # I2C

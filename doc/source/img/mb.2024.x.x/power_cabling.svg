@@ -570,9 +570,9 @@
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect70155"
-       width="674.92627"
+       width="865.47778"
        height="395.45529"
-       x="-128.33496"
+       x="-318.88651"
        y="-152.52271"
        inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_dps.png"
        inkscape:export-xdpi="50.001514"
@@ -5259,13 +5259,16 @@ RU5ErkJggg==
        y="496.76791"
        clip-path="url(#clipPath164714)"
        transform="matrix(-1.0550554,0,0,1.0550554,-7.6190983,-536.63829)"
-       style="stroke-width:0.947818" />
+       style="stroke-width:0.947818"
+       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_dps.png"
+       inkscape:export-xdpi="50.001514"
+       inkscape:export-ydpi="50.001514" />
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect70155-9"
-       width="584.87592"
+       width="787.75006"
        height="385.68082"
-       x="-103.30318"
+       x="-306.17737"
        y="268.73779"
        inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_batt.png"
        inkscape:export-xdpi="50.001514"
@@ -10516,7 +10519,7 @@ P+XB6sQfDbxE5A+xlc9zRRS9lEX1WB3HhH4TrDKlxrjBtvIiU9frXrNtbxWsCQ28axxoMBVGAKKK
        height="147.51859"
        x="-396.19907"
        y="3.1202295"
-       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_dps.png"
+       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_batt.png"
        inkscape:export-xdpi="50.001514"
        inkscape:export-ydpi="50.001514"
        transform="rotate(-90)" />
@@ -10526,7 +10529,7 @@ P+XB6sQfDbxE5A+xlc9zRRS9lEX1WB3HhH4TrDKlxrjBtvIiU9frXrNtbxWsCQ28axxoMBVGAKKK
        x="76.088524"
        y="346.95102"
        id="text3516-5"
-       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_dps.png"
+       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_batt.png"
        inkscape:export-xdpi="50.001514"
        inkscape:export-ydpi="50.001514"><tspan
          sodipodi:role="line"
@@ -10544,7 +10547,7 @@ P+XB6sQfDbxE5A+xlc9zRRS9lEX1WB3HhH4TrDKlxrjBtvIiU9frXrNtbxWsCQ28axxoMBVGAKKK
        d="m 115.02354,307.46494 v -12.86016 h 38.9579 41.46339 v 109.58281 h 45.60469"
        id="path23147-65"
        sodipodi:nodetypes="cccccc"
-       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_dps.png"
+       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_batt.png"
        inkscape:export-xdpi="50.001514"
        inkscape:export-ydpi="50.001514" />
     <path
@@ -10552,7 +10555,7 @@ P+XB6sQfDbxE5A+xlc9zRRS9lEX1WB3HhH4TrDKlxrjBtvIiU9frXrNtbxWsCQ28axxoMBVGAKKK
        d="M 38.891249,307.55445 V 286.02311 H 216.89398 v 105.73428 h 24.22378"
        id="path22749-6"
        sodipodi:nodetypes="ccccc"
-       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_dps.png"
+       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_batt.png"
        inkscape:export-xdpi="50.001514"
        inkscape:export-ydpi="50.001514" />
     <rect
@@ -10562,7 +10565,7 @@ P+XB6sQfDbxE5A+xlc9zRRS9lEX1WB3HhH4TrDKlxrjBtvIiU9frXrNtbxWsCQ28axxoMBVGAKKK
        height="147.51859"
        x="-517.64526"
        y="-281.31879"
-       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_dps.png"
+       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_batt.png"
        inkscape:export-xdpi="50.001514"
        inkscape:export-ydpi="50.001514"
        transform="rotate(-90)" />
@@ -10572,7 +10575,7 @@ P+XB6sQfDbxE5A+xlc9zRRS9lEX1WB3HhH4TrDKlxrjBtvIiU9frXrNtbxWsCQ28axxoMBVGAKKK
        x="-208.35048"
        y="468.39722"
        id="text3516-3"
-       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_dps.png"
+       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_batt.png"
        inkscape:export-xdpi="50.001514"
        inkscape:export-ydpi="50.001514"><tspan
          sodipodi:role="line"
@@ -10590,7 +10593,7 @@ P+XB6sQfDbxE5A+xlc9zRRS9lEX1WB3HhH4TrDKlxrjBtvIiU9frXrNtbxWsCQ28axxoMBVGAKKK
        d="m -185.11973,428.91114 v -12.86016 h 30.92182 32.91047 v 109.58281 l 109.175455,0"
        id="path23147-68"
        sodipodi:nodetypes="cccccc"
-       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_dps.png"
+       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_batt.png"
        inkscape:export-xdpi="50.001514"
        inkscape:export-ydpi="50.001514" />
     <path
@@ -10598,7 +10601,7 @@ P+XB6sQfDbxE5A+xlc9zRRS9lEX1WB3HhH4TrDKlxrjBtvIiU9frXrNtbxWsCQ28axxoMBVGAKKK
        d="m -245.54775,429.00065 v -21.53134 h 141.28502 v 105.73428 l 92.078443,0"
        id="path22749-8"
        sodipodi:nodetypes="ccccc"
-       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_dps.png"
+       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_batt.png"
        inkscape:export-xdpi="50.001514"
        inkscape:export-ydpi="50.001514" />
     <rect
@@ -10664,7 +10667,7 @@ P+XB6sQfDbxE5A+xlc9zRRS9lEX1WB3HhH4TrDKlxrjBtvIiU9frXrNtbxWsCQ28axxoMBVGAKKK
        height="66.658592"
        x="-115.47601"
        y="-83.136658"
-       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_batt.png"
+       inkscape:export-filename="/home/arnaud/codes/OhmPi/doc/source/img/mb.2024.x.x/power_cabling_dps.png"
        inkscape:export-xdpi="50.001514"
        inkscape:export-ydpi="50.001514" />
   </g>
