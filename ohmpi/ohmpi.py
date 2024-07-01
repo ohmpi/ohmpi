@@ -66,10 +66,10 @@ class OhmPi(object):
         Parameters
         ----------
         settings : dict, optional
-            Dictionnary of parameters. Possible parameters with their default values:
-            `{'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
+            Dictionary of parameters. Possible parameters with their default values:
+            {'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
             'nb_stack': 1, 'sampling_interval': 2, 'vab': 5, 'duty_cycle': 0.5,
-            'strategy': 'constant', 'export_path': None
+            'strategy': 'constant', 'export_path': None}
         sequence : str, optional
             Path of the .csv or .txt file with A, B, M and N electrodes.
             Electrode index starts at 1. See `OhmPi.load_sequence()` for full docstring.

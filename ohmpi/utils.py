@@ -5,7 +5,6 @@ import collections.abc
 import numpy as np
 from numbers import Number
 
-
 def enforce_specs(kwargs, specs, key):
 
     kwargs.update({key: kwargs.pop(key, specs[key]['default'])})
