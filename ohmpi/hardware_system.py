@@ -116,7 +116,6 @@ class OhmPiHardware:
             if isinstance(ctl_mod, str):
                 ctl_mod = importlib.import_module(f'ohmpi.hardware_components.{ctl_mod}')
             HARDWARE_CONFIG['rx']['ctl'] = ctl_mod.Ctl(**HARDWARE_CONFIG['rx']['ctl'])
-        print(HARDWARE_CONFIG['rx'])
         HARDWARE_CONFIG['rx'].update({'connection':
                                           HARDWARE_CONFIG['rx'].pop('connection',
                                                                     HARDWARE_CONFIG['rx']['ctl'].interfaces[
@@ -178,7 +177,7 @@ class OhmPiHardware:
         self.pab_min = 0.00005  # W TODO: Add in pwr components specs
         self.pab_max = self.pwr.specs['power_max'] # W
 
-        # Join tX and pwr
+        # Join tx and pwr
         self.tx.pwr = self.pwr
         if not self.tx.pwr.voltage_adjustable:
             self.tx.pwr._pwr_latency = 0
@@ -623,18 +622,14 @@ class OhmPiHardware:
         -------
         vab : float
             Proposed Vab according to the given strategy.
-            :param vmn_min:
-            :param vmn_max:
-            :param iab_max:
+
         """
 
-        # TODO: Optimise how to pass iab_max, vab_max, vmn_min
         # TODO: Update docstring
-        # TODO: replace vmn_min and vmn_max by vmn_requested
-
 
         if not self.tx.pwr.voltage_adjustable:
             vab_opt = self.tx.pwr.voltage
+            vab_init = vab_opt
             return vab_opt
 
         if vab_min is None: # TODO: Set within specs if out of specs
@@ -715,11 +710,6 @@ class OhmPiHardware:
 
     def discharge_pwr(self):
         if self.tx.pwr.voltage_adjustable:
-            # TODO: implement strategy to discharge pwr based on hardware version => variable in TX should tell if it can discharge the pwr or not
-            ### if discharge relay manually add on mb_2024_0_2, then should not activate AB relays but simply wait for automatic discharge
-            ### if mb_2024_1_X then TX should handle the pwr discharge
-
-            # time.sleep(1.0)
             self.tx.discharge_pwr()
 
     def _plot_readings(self, save_fig=False, filename=None):

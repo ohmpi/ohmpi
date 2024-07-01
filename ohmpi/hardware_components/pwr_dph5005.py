@@ -8,12 +8,12 @@ from minimalmodbus import Instrument  # noqa
 
 # hardware characteristics and limitations
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
-         'voltage': {'default': 5., 'max': 50., 'min': 0.},
-         'voltage_min': {'default': 0}, # V
-         'voltage_max': {'default': 50.99}, # V
-         'power_max': {'default': 2.5}, # W
-         'current_max': {'default': 0.050}, # A
-         'current_max_tolerance': {'default': 20}, # in %
+         'voltage': {'default': 5., 'max': 50., 'min': 0.},  # V
+         'voltage_min': {'default': 0},  # V
+         'voltage_max': {'default': 50.99},  # V
+         'power_max': {'default': 2.5},  # W
+         'current_max': {'default': 0.050},  # A
+         'current_max_tolerance': {'default': 20},  # in %
          'current_adjustable': {'default': False},
          'voltage_adjustable': {'default': True},
          'pwr_latency': {'default': 4.},
@@ -46,13 +46,18 @@ class Pwr(PwrAbstract):
         self._pwr_discharge_latency = kwargs['pwr_discharge_latency']
         self._pwr_state = 'off'
         if self.connect:
-                #print(f'dph connection : {self.connection}')
                 if self.interface_name == 'modbus':
                     assert isinstance(self.connection, Instrument)
                 elif self.interface_name == 'bluetooth':
                     raise Warning('Bluetooth communication with dph5050 is not implemented')
                 elif self.interface_name == 'none':
                     raise IOError('dph interface cannot be set to none')
+            if self.interface_name == 'modbus':
+                assert isinstance(self.connection, Instrument)
+            elif self.interface_name == 'bluetooth':
+                raise Warning('Bluetooth communication with dph5050 is not implemented')
+            elif self.interface_name == 'none':
+                raise IOError('dph interface cannot be set to none')
         #     self.pwr_state = self._pwr_state
 
         if not subclass_init:
