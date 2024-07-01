@@ -40,7 +40,7 @@ Required components
 
 .. csv-table:: List of components
    :file: ../mux/MUX_board_2024.csv
-   :widths: 30, 70, 70, 70, 70, 35, 35
+   :widths: 30, 30, 30, 30, 30, 30, 30, 30, 30, 30
    :header-rows: 1
    :class: longtable
 

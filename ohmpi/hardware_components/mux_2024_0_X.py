@@ -7,6 +7,7 @@ from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
 from digitalio import Direction  # noqa
 from busio import I2C  # noqa
 from ohmpi.utils import enforce_specs
+from termcolor import colored
 
 # hardware characteristics and limitations
 SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
@@ -112,11 +113,14 @@ class Mux(MuxAbstract):
         self._i2c_ext_tca_channel = int(kwargs['i2c_ext_tca_channel'])
         self._i2c_ext_tca = None
         if self.connect:
+            self.soh_logger.info(colored(f'{self.model} - {self.board_id}', 'blue'))
             try:
                 self.reset_i2c_ext_tca()
-                self.soh_logger.info(f'TCA9548A I2C ext ({hex(self._i2c_ext_tca_address)})...OK (or not present)')
+                self.soh_logger.info(colored(
+                    f'TCA9548A I2C ext ({hex(self._i2c_ext_tca_address)})...OK (or not present)','green'))
             except Exception as e:
-                self.soh_logger.info(f'TCA9548A I2C ext ({hex(self._i2c_ext_tca_address)})...NOT FOUND')
+                self.soh_logger.info(colored(f'TCA9548A I2C ext ({hex(self._i2c_ext_tca_address)})...NOT FOUND',
+                                             'red'))
 
         # Setup MCPs
         kwargs.update({'addr2': kwargs.pop('addr2', None)})
@@ -162,14 +166,14 @@ class Mux(MuxAbstract):
             self.reset_i2c_ext_tca()
         try:
             self._mcp[0] = MCP23017(self.connection, address=int(self._mcp_addresses[0], 16))
-            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[0])})...OK')
+            self.soh_logger.info(colored(f'MCP23017 ({self._mcp_addresses[0]})...OK', 'green'))
         except Exception as e:
-            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[0])})...NOT FOUND')
+            self.soh_logger.info(colored(f'MCP23017 ({self._mcp_addresses[0]})...NOT FOUND', 'red'))
         try:
             self._mcp[1] = MCP23017(self.connection, address=int(self._mcp_addresses[1], 16))
-            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[1])})...OK')
+            self.soh_logger.info(colored(f'MCP23017 ({self._mcp_addresses[1]})...OK', 'green'))
         except Exception as e:
-            self.soh_logger.info(f'MCP23017 ({hex(self._mcp_addresses[1])})...NOT FOUND')
+            self.soh_logger.info(colored(f'MCP23017 ({self._mcp_addresses[1]})...NOT FOUND', 'red'))
 
     def reset_i2c_ext_tca(self):
         if self._i2c_ext_tca_address is None:

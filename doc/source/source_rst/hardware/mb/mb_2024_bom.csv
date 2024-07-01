@@ -33,9 +33,8 @@ header socket 1 row 2 positions,1,1.02,200-SSW10202GS,SSW-102-02-G-S,Samtec,"Hea
 header pins 1 row 10 positions,1,1.24,571-1-826629-0,1-826629-0,TE Connectivity,Headers & Wire Housings 10P SINGLE ROW,https://eu.mouser.com/ProductDetail/TE-Connectivity/1-826629-0?qs=FazuUmncXom0aPLI6ZgGxg%3D%3D,1.24
 IDC sockets (go on the ribon cable),2,0.43,710-61200623021,61200623021,Wurth Elektronik,Headers & Wire Housings WR-BHD 2.54mm Female 6P Strt IDC Conn,https://eu.mouser.com/ProductDetail/Wurth-Elektronik/61200623021?qs=PhR8RmCirEabk1Ywkdxzfw%3D%3D,0.86
 IDC pins,3,1.32,571-1761681-1,1761681-1,TE Connectivity,Headers & Wire Housings IDC LOW PRO HDR 6P VERT HT BLACK,https://eu.mouser.com/ProductDetail/TE-Connectivity/1761681-1?qs=BqFpTYCQ3dLAeZ2wzdz7aw%3D%3D,3.96
+Raspberryp pi 4,1,55.8,358-SC1111 ,Raspberry Pi,SC1111 ,Raspberry Pi,https://www.mouser.be/ProductDetail/Raspberry-Pi/SC1111?qs=HoCaDK9Nz5fnLhlMNnKTiQ%3D%3D,55.8
+socket to cut for 3 THD,3,1.73,575-8014701210012000,Mil-Max,801-47-012-10-012000 ,,https://www.mouser.be/ProductDetail/Mill-Max/801-47-012-10-012000?qs=5aG0NVq1C4x40xNvDlnKzg%3D%3D,5.19
 PCB measurement board (pack of 3),1,,,,,,https://aisler.net/?lang=fr-FR,70
-Raspberryp pi 4,1,63,,,,,https://www.kiwi-electronics.com/en/raspberry-pi-4-model-b-4gb-4268?src=raspberrypi,63
-socket to cut for 3 THD,3,1.73,,,,,https://www.mouser.be/ProductDetail/Mill-Max/801-47-012-10-012000?qs=5aG0NVq1C4x40xNvDlnKzg%3D%3D,5.19
-10k potentiometer,2,optional,,,,,,0
-R array sip9,1,optional,,,,,,0
-10k potentiometer bournds 3296W_vertical,1,optional,,,,,,0
+TOTAL,,,,,,,,377.95
+
