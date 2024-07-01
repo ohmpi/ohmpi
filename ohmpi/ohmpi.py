@@ -53,7 +53,7 @@ except Exception as error:
     print(colored(f'Unexpected error: {error}', 'red'))
     arm64_imports = None
 
-VERSION = 'v2024.0.12'
+VERSION = 'v2024.0.13'
 
 
 class OhmPi(object):
