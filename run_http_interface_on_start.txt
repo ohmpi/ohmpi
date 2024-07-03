@@ -1,6 +1,5 @@
-# to automatically start the webserver on start, you need to place the
-# following line just before the line with 'exit 0' in the /etc/rc.local.
-
-(cd /home/pi/ohmpi; bash run_http_interface.sh > startup.log) &
-
+# to automatically start the webserver on start, run crontab -e
+# then add the following line at the end of the file
+# don't forget to replace <username> by the username you have on the pi
+@reboot cd /home/ohmpi/ohmpi;bash run_http_interface.sh > startup.log
 
