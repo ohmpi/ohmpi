@@ -953,9 +953,10 @@ class OhmPi(object):
         self.thread = Thread(target=func)
         self.thread.start()
 
-    def run_sequence(self, fw_in_csv=None, fw_in_zip=None, cmd_id=None, save_strategy_fw=False, **kwargs):
+    def run_sequence(self, fw_in_csv=None, fw_in_zip=None, cmd_id=None, save_strategy_fw=False,
+        export_path=None, **kwargs):
         """Runs sequence synchronously (=blocking on main thread).
-           Additional arguments are passed to run_measurement().
+           Additional arguments (kwargs) are passed to run_measurement().
 
         Parameters
         ----------
@@ -966,6 +967,10 @@ class OhmPi(object):
         fw_in_zip : bool, optional
             Whether to save the full-waveform data in a separate .csv in long format to be zipped to
             spare space. If None, default is read from default.json.
+        save_strategy_fw : bool, optional
+            Whether to save the strategy used.
+        export_path : str, optional
+            Path where to save the results. Default taken from settings.json.
         cmd_id : str, optional
             Unique command identifier.
         """
@@ -985,12 +990,10 @@ class OhmPi(object):
         self.reset_mux()
         
         # create filename with timestamp
-        if self.settings["export_path"] is None:
-            filename = self.settings['export_path'].replace(
-                '.csv', f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
-        else:
-            filename = self.settings["export_path"].replace('.csv',
-                                                            f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
+        if export_path is None:
+            export_path = self.settings['export_path']
+        filename = export_path.replace(
+            '.csv', f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
         self.exec_logger.debug(f'Saving to {filename}')
 
         # measure all quadrupole of the sequence
@@ -1070,7 +1073,7 @@ class OhmPi(object):
 
     def run_sequence_async(self, cmd_id=None, **kwargs):
         """Runs the sequence in a separate thread. Can be stopped by 'OhmPi.interrupt()'.
-            Additional arguments are passed to run_measurement().
+            Additional arguments are passed to run_sequence().
 
         Parameters
         ----------
