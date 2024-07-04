@@ -251,47 +251,31 @@ class OhmPi(object):
             Each tuple is the form (<array_name>, param1, param2, ...)
             Dipole spacing is specified in terms of "number of electrode spacing".
             Dipole spacing is often referred to 'a'. Number of levels is a multiplier
-            of 'a', often refere to 'n'. For multigradient array, an additional parameter
+            of 'a', often referred to 'n'. For multigradient array, an additional parameter
             's' is needed.
             Types of sequences available are :
             - ('wenner', a)
             - ('dpdp', a, n)
             - ('schlum', a, n)
             - ('multigrad', a, n, s)
-        ireciprocal : bool, optional
+            By default, if an integer is provided for a, n and s, the parameter
+            will be considered varying from 1 to this value. For instance, for
+            ('wenner', 3), the sequence will be generated for a = 1, a = 2 and a = 3.
+            If only some levels are desired, the user can use a list instead of an int.
+            For instance ('wenner', [3]) will only generate quadrupole for a = 3.
+        include_reciprocal : bool, optional
             If True, will add reciprocal quadrupoles (so MNAB) to the sequence.
+        ip_optimization: bool, optional
+            If True, will optimize for induced polarization measurement (i.e. will
+            try to put as much time possible between injection and measurement at
+            the same electrode).
         fpath : str, optional
             Path where to save the sequence (including filename and extension). By
             default, sequence is saved in ohmpi/sequences/sequence.txt.
         """
-        # dictionnary of function to create sequence
-        fdico = {
-            'dpdp': dpdp1,
-            'wenner': wenner,
-            'schlum': schlum1,
-            'multigrad': multigrad,
-        }
-        # check arguments
-        if fpath is None:
-            fpath = os.path.join(os.path.dirname(__file__), '../sequences/sequence.txt')
-        qs = []
-
-        # create sequence
-        for p in params:
-            pok = [int(p[i]) for i in np.arange(1, len(p))]  # make sure all are int
-            qs.append(fdico[p[0]](nelec, *pok).values.astype(int))
-        quad = np.vstack(qs)
-        if len(quad.shape) == 1:  # only one quadrupole
-            quad = quad[None, :]
-
-        # add reciprocal
-        if ireciprocal:
-            quad = np.r_[quad, quad[:, [2, 3, 0, 1]]]
-        self.sequence = quad
-
-        # save sequence
+        dfseq = create_sequence(nelec, params=params, include_reciprocal=include_reciprocal)
+        self.sequence = dfseq.astype(int).values
         np.savetxt(fpath, self.sequence, delimiter=' ', fmt='%d')
-        print('{:d} quadrupoles generated.'.format(self.sequence.shape[0]))
 
     @staticmethod
     def _find_identical_in_line(quads):
