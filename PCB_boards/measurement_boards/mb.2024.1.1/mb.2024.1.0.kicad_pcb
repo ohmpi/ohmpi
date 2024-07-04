@@ -49984,8 +49984,8 @@
 			)
 		)
 	)
-	(gr_text "Ohmpi version mb.2024.1.0 - https://gitlab.com/ohmpi/ohmpi"
-		(at 257.302 101.854 90)
+	(gr_text "Ohmpi version mb.2024.1.1 - https://ohmpi.org"
+		(at 254 119.888 90)
 		(layer "F.SilkS")
 		(uuid "86a3ff82-cef0-4a96-978d-424b294b4e28")
 		(effects
