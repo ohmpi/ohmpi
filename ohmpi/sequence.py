@@ -191,7 +191,7 @@ def multigrad(nelec, a, n, s):
     if isinstance(n, int):
         n = np.arange(n) + 1
     if isinstance(s, int):
-        n = np.arange(s) + 1
+        s = np.arange(s) + 1
     elec = np.arange(nelec) + 1
     abmn = []
     for aa in a:
