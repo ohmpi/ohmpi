@@ -1,4 +1,15 @@
-# to automatically start the webserver on start, run crontab -e
+# there are two ways to automatically run the webserver on start:
+# as user or as root. Only root will give you the power to shutdown/reboot
+# the pi from the dashboard
+
+# as root add this line to /etc/rc.local
+# as root, all files generated will be owned by root so if you go
+# back to user mode, you might have error like "Permission denied" when
+# tyring to delete some files or log. Just use sudo to change permission
+# sudo chown -R <username>:<username> <ohmpi folder>
+cd /home/ohmpi/ohmpi;bash run_http_interface.sh > startup.log
+
+# as user, run crontab -e
 # then add the following line at the end of the file
 # don't forget to replace <username> by the username you have on the pi
 @reboot cd /home/ohmpi/ohmpi;bash run_http_interface.sh > startup.log
