@@ -163,7 +163,7 @@ class Tx(Tx_mb_2023):
             self.exec_logger.event(f'{self.model}\ttx_pwr_state_off\tend\t{datetime.datetime.utcnow()}')
 
     def current_pulse(self, current=None, length=None, polarity=1):
-        """ Generates a square current pulse. Currenttly no DPS can handle this...
+        """ Generates a square current pulse. Currently no DPS can handle this...
 
         Parameters
         ----------
