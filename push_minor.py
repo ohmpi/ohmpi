@@ -9,7 +9,7 @@ branch = subprocess.check_output(['git', 'branch', '--show-current']).decode().s
 
 # merge master to avoid merge conflicts later
 print('===== Fetch master, then merge it ====')
-os.system('git fetch origin/master')
+os.system('git fetch origin master')
 os.system('git merge origin/master')
 
 print("=== Update version number ===")
