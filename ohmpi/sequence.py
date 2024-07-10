@@ -194,19 +194,32 @@ def multigrad(nelec, a, n, s):
         s = np.arange(s) + 1
     elec = np.arange(nelec) + 1
     abmn = []
-    for aa in a:
-        for nn in n:
-            for ss in s:
+    for ss in s:
+        for nn in n:  # sometimes n will make M or N go beyond B
+            for aa in a:
                 A = elec
-                B = A + ss + 2
+                B = A + (ss + 2) * aa
                 M = A + nn * aa
                 N = M + aa
                 abmn.append(np.vstack([A, B, M, N]).T)
     abmn = np.vstack(abmn)
     abmn = abmn[(abmn <= nelec).all(1), :]
+    abmn = abmn[(abmn[:, 2] < abmn[:, 1]) & (abmn[:, 3] < abmn[:, 1])]
     df = pd.DataFrame(abmn, columns=['a', 'b', 'm', 'n'])
     df = df.sort_values(['a', 'b', 'm', 'n']).reset_index(drop=True)
     return df 
+
+# for i in np.array(range(0,len(a))):
+#     n_ = np.array(range(0, n[i]))+1
+#     s_ = np.array(range(0, s[i]))+1
+#     for j in np.array(range(0, len(n_))):
+#         for k in np.array(range(0, len(s_))):
+#             A = elec_id
+#             B = A + s_[k] + 2
+#             M = A + n_[j] * a[i]
+#             N = M + a[i]
+#             abmn.append(np.vstack([A, B, M, N]).T)
+
 
 # test code
 # x1 = dpdp1(24, 2, 8)
