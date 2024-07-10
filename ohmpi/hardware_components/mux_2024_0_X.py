@@ -113,11 +113,14 @@ class Mux(MuxAbstract):
         self._i2c_ext_tca_channel = int(kwargs['i2c_ext_tca_channel'])
         self._i2c_ext_tca = None
         if self.connect:
-            self.soh_logger.info(colored(f'{self.model} - {self.board_id}', 'blue'))
             try:
                 self.reset_i2c_ext_tca()
-                self.soh_logger.info(colored(
-                    f'TCA9548A I2C ext ({hex(self._i2c_ext_tca_address)})...OK (or not present)','green'))
+                if self._i2c_ext_tca is None:
+                    self.soh_logger.info(colored(
+                        f'TCA9548A I2C ext ...not present','green'))
+                else:
+                    self.soh_logger.info(colored(
+                        f'TCA9548A I2C ext ({hex(self._i2c_ext_tca_address)})...OK','green'))
             except Exception as e:
                 self.soh_logger.info(colored(f'TCA9548A I2C ext ({hex(self._i2c_ext_tca_address)})...NOT FOUND',
                                              'red'))
