@@ -37,8 +37,7 @@ except ModuleNotFoundError:
     sys.exit(-1)
 from ohmpi.config import MQTT_CONTROL_CONFIG, OHMPI_CONFIG, EXEC_LOGGING_CONFIG
 from ohmpi.hardware_system import OhmPiHardware
-from ohmpi.sequence import (dpdp1, dpdp2, wenner_alpha, wenner_beta, wenner,
-                          wenner_gamma, schlum1, schlum2, multigrad)
+from ohmpi.sequence import create_sequence
 from tqdm.auto import tqdm
 import warnings
 
