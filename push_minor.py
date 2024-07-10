@@ -8,8 +8,11 @@ import os
 branch = subprocess.check_output(['git', 'branch', '--show-current']).decode().strip()
 
 # merge master to avoid merge conflicts later
-os.system('git merge master')
+print('===== Fetch master, then merge it ====')
+os.system('git fetch origin/master')
+os.system('git merge origin/master')
 
+print("=== Update version number ===")
 # increment version number
 with open('ohmpi/ohmpi.py', 'r') as f:
     x = f.read()
@@ -28,6 +31,7 @@ with open('ohmpi/ohmpi.py', 'w') as f:
 os.system('git add ohmpi/ohmpi.py')
 os.system(f'git commit -m "Update to v{version_new}"')
 
+print("=== Create tag and merge request ===")
 # create tag
 os.system(f'git tag v{version_new}')
 
