@@ -67,8 +67,14 @@
     "visible_layers": "fffffff_ffffffff",
     "zone_display_mode": 0
   },
+  "git": {
+    "repo_password": "",
+    "repo_type": "",
+    "repo_username": "",
+    "ssh_key": ""
+  },
   "meta": {
-    "filename": "mb.2024.0.3.kicad_prl",
+    "filename": "mb.2024.1.0.kicad_prl",
     "version": 3
   },
   "project": {
