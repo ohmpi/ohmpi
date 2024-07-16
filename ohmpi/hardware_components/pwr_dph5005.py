@@ -52,7 +52,6 @@ class Pwr(PwrAbstract):
                 raise Warning('Bluetooth communication with dph5050 is not implemented')
             elif self.interface_name == 'none':
                 raise IOError('dph interface cannot be set to none')
-        #     self.pwr_state = self._pwr_state
 
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')
@@ -87,7 +86,8 @@ class Pwr(PwrAbstract):
         self.exec_logger.event(f'{self.model}\tset_voltage\tbegin\t{datetime.datetime.utcnow()}')
         if value != self._voltage:
             self.connection.write_register(0x0000, np.round(value, 2), 2)
-            time.sleep(max([0,1 - (self._voltage/value)]))  # wait to enable DPS to reach new voltage as a function of difference between new and previous voltage
+            # TODO: @Watlet, could you justify this formula?
+            time.sleep(max([0,1 - (self._voltage/value)]))  # NOTE: wait to enable DPS to reach new voltage as a function of difference between new and previous voltage
         self.exec_logger.event(f'{self.model}\tset_voltage\tend\t{datetime.datetime.utcnow()}')
         self._voltage = value
 
@@ -129,6 +129,7 @@ class Pwr(PwrAbstract):
         new_value = value * (
                     1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
         self.connection.write_register(0x0051, np.round((new_value), 3), 3)
+
     def power_max(self, value):  # [W]
         self.connection.write_register(0x0054, np.round(value,1), 1)
 

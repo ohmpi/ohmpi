@@ -7,6 +7,7 @@ from adafruit_mcp230xx.mcp23017 import MCP23017  # noqa
 from digitalio import Direction  # noqa
 from busio import I2C  # noqa
 from ohmpi.utils import enforce_specs
+from termcolor import colored
 
 # TODO: manage the case when a tca is added to handle more mux_2023 boards
 
@@ -88,7 +89,7 @@ class Mux(MuxAbstract):
             self._roles = roles
         else:
             self._roles = {roles[0]:'X'}
-        if np.alltrue([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['1_role'].keys())])]):
+        if all([j in self._roles.values() for j in set([i[1] for i in list(inner_cabling['1_role'].keys())])]):
             self._mode = '1_role'
         else:
             self.exec_logger.error(f'Invalid role assignment for {self.model}: {self._roles} !')
@@ -118,9 +119,16 @@ class Mux(MuxAbstract):
         self._tca = None
         self._mcp = [None, None, None, None]
         if self.connect:
-            self.reset_i2c_ext_tca()
-            self.reset_tca()
-            self.reset()
+            try:
+                self.reset_i2c_ext_tca()
+                self.reset_tca()
+                self.reset()
+                self.soh_logger.info(colored(
+                    f'MUX: TCA9548A ({hex(self._tca_address)})...OK', 'green'))
+            except Exception as e:
+                self.soh_logger.info(colored(
+                    f'MUX: TCA9548A ({hex(self._tca_address)})...NOT FOUND', 'red'))
+
         self.specs = kwargs
         if self.addresses is None:
             self._get_addresses()
@@ -141,10 +149,34 @@ class Mux(MuxAbstract):
         if self._tca is None:
             self.reset_i2c_ext_tca()
             self.reset_tca()
-        self._mcp[0] = MCP23017(self._tca[0])
-        self._mcp[1] = MCP23017(self._tca[1])
-        self._mcp[2] = MCP23017(self._tca[2])
-        self._mcp[3] = MCP23017(self._tca[3])
+        try:
+            self._mcp[0] = MCP23017(self._tca[0])
+            self.soh_logger.info(colored(
+                f'MUX: MCP23017 ({self._mcp_addresses[0]}) I2C0...OK', 'green'))
+        except Exception as e:
+            self.soh_logger.info(colored(
+                f'MUX: MCP23017 ({self._mcp_addresses[0]}) I2C0...NOT FOUND', 'red'))
+        try:
+            self._mcp[1] = MCP23017(self._tca[1])
+            self.soh_logger.info(colored(
+                f'MUX: MCP23017 ({self._mcp_addresses[1]}) I2C1...OK', 'green'))
+        except Exception as e:
+            self.soh_logger.info(colored(
+                f'MUX: MCP23017 ({self._mcp_addresses[1]}) I2C1...NOT FOUND', 'red'))
+        try:
+            self._mcp[2] = MCP23017(self._tca[2])
+            self.soh_logger.info(colored(
+                f'MUX: MCP23017 ({self._mcp_addresses[2]}) I2C2...OK', 'green'))
+        except Exception as e:
+            self.soh_logger.info(colored(
+                f'MUX: MCP23017 ({self._mcp_addresses[2]}) I2C2...NOT FOUND', 'red'))
+        try:
+            self._mcp[3] = MCP23017(self._tca[3])
+            self.soh_logger.info(colored(
+                f'MUX: MCP23017 ({self._mcp_addresses[3]}) I2C3...OK', 'green'))
+        except Exception as e:
+            self.soh_logger.info(colored(
+                f'MUX: MCP23017 ({self._mcp_addresses[3]}) I2C3...NOT FOUND', 'red'))
 
     def reset_one(self, which=0):
         self._mcp[which] = MCP23017(self._tca[which])

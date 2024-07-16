@@ -18,6 +18,8 @@ These module exists in different versions and can be combined using a configurat
 You can then upgrade your measurement board or power supply for specific applications.
 
 .. figure:: ../img/Hardware_structure.png
+  :width: 1000px
+  :align: center
 
   OhmPi hardware flowchart.
 

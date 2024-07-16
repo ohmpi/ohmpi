@@ -53,7 +53,7 @@ except Exception as error:
     print(colored(f'Unexpected error: {error}', 'red'))
     arm64_imports = None
 
-VERSION = 'v2024.0.8'
+VERSION = 'v2024.0.22'
 
 
 class OhmPi(object):
@@ -66,8 +66,8 @@ class OhmPi(object):
         ----------
         settings : dict, optional
             Dictionary of parameters. Possible parameters with their default values:
-            `{'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
-            'nb_stack': 1, 'sampling_interval': 2, 'vab': 5., 'duty_cycle': 0.5,
+            {'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
+            'nb_stack': 1, 'sampling_interval': 2, 'vab': 5, 'duty_cycle': 0.5,
             'strategy': 'constant', 'export_path': None}
         sequence : str, optional
             Path of the .csv or .txt file with A, B, M and N electrodes.
@@ -664,9 +664,7 @@ class OhmPi(object):
         self.exec_logger.debug('Waiting for data')
 
         # check arguments
-        if quad is None:
-            quad = np.array([0, 0, 0, 0])
-        if quad is not None and len(self.mux_boards) == 0:
+        if quad is None or len(self._hw.mux_boards) == 0:
             # overwrite quad as we cannot specify electrode number without mux
             quad = np.array([0, 0, 0, 0])
         if nb_stack is None and 'nb_stack' in self.settings:
@@ -757,7 +755,6 @@ class OhmPi(object):
                 kwargs_compute_vab['min_agg'] = False
 
             elif strategy == 'vmax':
-                print(f'VAB: {vab}')
                 kwargs_compute_vab = kwargs.get('compute_vab', {})
                 kwargs_compute_vab['vab_init'] = vab_init
                 kwargs_compute_vab['vab_min'] = vab_min
@@ -864,7 +861,7 @@ class OhmPi(object):
             # round float to 2 decimal
             for key in dd.keys():  # Check why this is applied on keys and not values...
                 if isinstance(dd[key], float):
-                    dd[key] = np.round(dd[key], 3)
+                    dd[key] = float(np.round(dd[key], 3))  # convert back to python float otherwise (numpy >= 2.0.0) gives np.float64()
             dd['cmd_id'] = str(cmd_id)
 
             # log data to the data logger
@@ -873,7 +870,6 @@ class OhmPi(object):
 
             # if strategy not constant, then switch dps off (button) in case following measurement within sequence
             # TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
-            print(f'strategy: {strategy}, settings: {self.settings}, vab_req: {vab_req}, vab: {vab}, vab_init: {vab_init}')
             if (strategy == 'vmax' or strategy == 'vmin' or strategy == 'flex') and vab > vab_init :  # if starting vab was higher actual vab, then turn pwr off
                 self._hw.tx.pwr.pwr_state = 'off'
 
@@ -957,9 +953,10 @@ class OhmPi(object):
         self.thread = Thread(target=func)
         self.thread.start()
 
-    def run_sequence(self, fw_in_csv=None, fw_in_zip=None, cmd_id=None, save_strategy_fw=False, **kwargs):
+    def run_sequence(self, fw_in_csv=None, fw_in_zip=None, cmd_id=None, save_strategy_fw=False,
+        export_path=None, **kwargs):
         """Runs sequence synchronously (=blocking on main thread).
-           Additional arguments are passed to run_measurement().
+           Additional arguments (kwargs) are passed to run_measurement().
 
         Parameters
         ----------
@@ -970,6 +967,10 @@ class OhmPi(object):
         fw_in_zip : bool, optional
             Whether to save the full-waveform data in a separate .csv in long format to be zipped to
             spare space. If None, default is read from default.json.
+        save_strategy_fw : bool, optional
+            Whether to save the strategy used.
+        export_path : str, optional
+            Path where to save the results. Default taken from settings.json.
         cmd_id : str, optional
             Unique command identifier.
         """
@@ -989,12 +990,10 @@ class OhmPi(object):
         self.reset_mux()
         
         # create filename with timestamp
-        if self.settings["export_path"] is None:
-            filename = self.settings['export_path'].replace(
-                '.csv', f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
-        else:
-            filename = self.settings["export_path"].replace('.csv',
-                                                            f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
+        if export_path is None:
+            export_path = self.settings['export_path']
+        filename = export_path.replace(
+            '.csv', f'_{datetime.now().strftime("%Y%m%dT%H%M%S")}.csv')
         self.exec_logger.debug(f'Saving to {filename}')
 
         # measure all quadrupole of the sequence
@@ -1074,7 +1073,7 @@ class OhmPi(object):
 
     def run_sequence_async(self, cmd_id=None, **kwargs):
         """Runs the sequence in a separate thread. Can be stopped by 'OhmPi.interrupt()'.
-            Additional arguments are passed to run_measurement().
+            Additional arguments are passed to run_sequence().
 
         Parameters
         ----------

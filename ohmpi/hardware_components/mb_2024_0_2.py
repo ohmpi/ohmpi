@@ -7,9 +7,11 @@ from digitalio import Direction  # noqa
 from busio import I2C  # noqa
 import os
 import time
+from termcolor import colored
 from ohmpi.utils import enforce_specs
 from ohmpi.hardware_components.mb_2023_0_X import Tx as Tx_mb_2023
 from ohmpi.hardware_components.mb_2023_0_X import Rx as Rx_mb_2023
+from ohmpi.tests import test_i2c_devices_on_bus
 
 # hardware characteristics and limitations
 # voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
@@ -138,7 +140,7 @@ class Tx(Tx_mb_2023):
             self.exec_logger.event(f'{self.model}\ttx_pwr_state_on\tbegin\t{datetime.datetime.utcnow()}')
             self.pin2.value = True
             self.pin3.value = True
-            self.exec_logger.debug(f'Switching DPS on')
+            self.exec_logger.debug(f'Switching DPH on')
             self._pwr_state = 'on'
             time.sleep(self.pwr._pwr_latency) # from pwr specs
             self.pwr.pwr_state = 'off'
@@ -224,9 +226,20 @@ class Rx(Rx_mb_2023):
             self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
         # I2C connection to MCP23008, for voltage
         self._mcp_address = kwargs['mcp_address']
+        if test_i2c_devices_on_bus(self._mcp_address, self.connection):
+            if self.connect:
+                try:
+                    self.reset_mcp()
+                    self.soh_logger.info(colored(
+                        f"RX: MCP23008 ({hex(self._mcp_address)}) found on I2C bus...OK", "green"))
+                except Exception as e:
+                    self.soh_logger.info(colored(
+                        f"RX: MCP23008 ({hex(self._mcp_address)}) found on I2C bus...NOT OK", "red"))
+        else:
+            self.soh_logger.info(colored(
+                        f"RX: MCP23008 ({hex(self._mcp_address)}) NOT FOUND on I2C bus", "red"))
         # self.mcp_board = MCP23008(self.connection, address=kwargs['mcp_address'])
-        if self.connect:
-            self.reset_mcp()
+        
         # ADS1115 for voltage measurement (MN)
         self._coef_p2 = 1.
         # Define default DG411 gain
