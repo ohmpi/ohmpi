@@ -12,3 +12,4 @@ termcolor
 pandas
 matplotlib
 tqdm
+joblib

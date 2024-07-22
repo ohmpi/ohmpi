@@ -279,8 +279,11 @@ class OhmPi(object):
             Path where to save the sequence (including filename and extension). By
             default, sequence is saved in ohmpi/sequences/sequence.txt.
         """
-        dfseq = create_sequence(nelec, params=params, include_reciprocal=include_reciprocal)
+        dfseq = create_sequence(nelec, params=params, include_reciprocal=include_reciprocal,
+            opt_ip=opt_ip, opt_param=opt_param, opt_plot=opt_plot)
         self.sequence = dfseq.astype(int).values
+        if fpath is None:
+            fpath = 'sequences/sequence.txt'
         np.savetxt(fpath, self.sequence, delimiter=' ', fmt='%d')
 
     @staticmethod
