@@ -18,6 +18,7 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage_adjustable': {'default': True},
          'pwr_latency': {'default': 4.},
          'pwr_discharge_latency': {'default': 1.},
+         'pwr_accuracy': {'default': 1},  # V
          'interface_name': {'default': 'modbus'}
          }
 
@@ -44,6 +45,7 @@ class Pwr(PwrAbstract):
         self._current = np.nan
         self._pwr_latency = kwargs['pwr_latency']
         self._pwr_discharge_latency = kwargs['pwr_discharge_latency']
+        self._pwr_accuracy = kwargs['pwr_accuracy']
         self._pwr_state = 'off'
         if self.connect:
             if self.interface_name == 'modbus':
@@ -86,10 +88,10 @@ class Pwr(PwrAbstract):
         self.exec_logger.event(f'{self.model}\tset_voltage\tbegin\t{datetime.datetime.utcnow()}')
         if value != self._voltage:
             self.connection.write_register(0x0000, np.round(value, 2), 2)
-            if self._pwr_state == 'on':
+            if self._pwr_state == 'on' and self._pwr_accuracy > 0:
                 for i in range(50):
                     self._retrieve_voltage()
-                    if np.abs(self._voltage - value) < 1:  # arbitrary threshold
+                    if np.abs(self._voltage - value) < self._pwr_accuracy:  # arbitrary threshold
                         break
             # TODO: @Watlet, could you justify this formula?
 #            time.sleep(max([0,1 - (self._voltage/value)]))  # NOTE: wait to enable DPS to reach new voltage as a function of difference between new and previous voltage
