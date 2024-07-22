@@ -87,7 +87,13 @@ class Pwr(PwrAbstract):
         if value != self._voltage:
             self.connection.write_register(0x0000, np.round(value, 2), 2)
             # TODO: @Watlet, could you justify this formula?
-            time.sleep(max([0,1 - (self._voltage/value)]))  # NOTE: wait to enable DPS to reach new voltage as a function of difference between new and previous voltage
+            for i in range(50):
+                self._retrieve_voltage()
+                if np.abs(self._voltage - value) < 0.1:  # arbitrary threshold
+                    break
+                else:
+                    time.sleep(0.1)
+#            time.sleep(max([0,1 - (self._voltage/value)]))  # NOTE: wait to enable DPS to reach new voltage as a function of difference between new and previous voltage
         self.exec_logger.event(f'{self.model}\tset_voltage\tend\t{datetime.datetime.utcnow()}')
         self._voltage = value
 
