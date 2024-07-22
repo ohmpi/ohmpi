@@ -237,9 +237,9 @@ class OhmPi(object):
                 w.writeheader()
                 w.writerow(last_measurement)
 
-    def create_sequence(self, nelec, params=[('dpdp', 1, 8)], ireciprocal=False, fpath=None):
-        """Creates a sequence of quadrupole. The sequence is saved automatically
-        to sequences/mysequence.csv and used within OhmPi class. Several type of
+    def create_sequence(self, nelec, params=[('dpdp', 1, 8)], include_reciprocal=False,
+        opt_ip=False, opt_param={}, opt_plot=False, fpath=None):
+        """Creates a sequence of quadrupole.Several type of
         sequence or sequence with different parameters can be combined together.
 
         Parameters
@@ -264,10 +264,17 @@ class OhmPi(object):
             For instance ('wenner', [3]) will only generate quadrupole for a = 3.
         include_reciprocal : bool, optional
             If True, will add reciprocal quadrupoles (so MNAB) to the sequence.
-        ip_optimization: bool, optional
+        opt_ip : bool, optional
             If True, will optimize for induced polarization measurement (i.e. will
             try to put as much time possible between injection and measurement at
-            the same electrode).
+            the same electrode). Optimization can take a few seconds.
+        opt_param : dic, optional
+            Dictionary of parameters to be passed to optimize_ip(). Possible values are
+            'niter' (int): number of iterations during optimization
+            'nchains' (int): number of chain to run in parallel (each chain is run niter times)
+            'pad' (int): how far from its position move the quad with the largest cost in the sequence
+        opt_plot : bool, optional
+            Plot cost decay of ip optimization.
         fpath : str, optional
             Path where to save the sequence (including filename and extension). By
             default, sequence is saved in ohmpi/sequences/sequence.txt.
