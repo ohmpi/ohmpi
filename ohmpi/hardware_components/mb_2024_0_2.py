@@ -158,7 +158,7 @@ class Tx(Tx_mb_2023):
             self.pwr.pwr_state = 'off'
             self.pin2.value = False
             self.pin3.value = False
-            self.exec_logger.debug(f'Switching DPS off')
+            self.exec_logger.debug(f'Switching DPH off')
             self._pwr_state = 'off'
             self.exec_logger.event(f'{self.model}\ttx_pwr_state_off\tend\t{datetime.datetime.utcnow()}')
 
@@ -170,9 +170,9 @@ class Tx(Tx_mb_2023):
         voltage: float, optional
             Voltage to apply in volts, tx_v_def is applied if omitted.
         length: float, optional
-            Length of the pulse in seconds
+            Length of the pulse in seconds.
         polarity: 1,0,-1
-            Polarity of the pulse
+            Polarity of the pulse.
         """
         self.exec_logger.event(f'{self.model}\ttx_current_pulse\tbegin\t{datetime.datetime.utcnow()}')
         # self.exec_logger.info(f'injection_duration: {length}')  # TODO: delete me
