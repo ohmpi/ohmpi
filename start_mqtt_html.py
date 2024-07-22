@@ -19,6 +19,10 @@ try:
     k = OhmPi(settings=OHMPI_CONFIG['settings'])
     k.update_settings({'export_path': 'data_web/measurements.csv'})
 
+    # check if data folder exists
+    if os.path.exists('data') is False:
+        os.mkdir('data')
+
     # check if data_web exists
     if os.path.exists('data_web/'):
         print(f'data_web exist, moving {len(os.listdir("data_web"))} files from data_web/ to data/ ...', end='')

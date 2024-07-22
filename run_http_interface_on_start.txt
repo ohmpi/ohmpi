@@ -1,5 +1,32 @@
-# to automatically start the webserver on start, run crontab -e
+# there are two ways to automatically run the webserver on start:
+# as user or as root. Only root will give you the power to shutdown/reboot
+# the pi from the dashboard
+
+# as root add this line to /etc/rc.local
+# as root, all files generated will be owned by root so if you go
+# back to user mode, you might have error like "Permission denied" when
+# tyring to delete some files or log. Just use sudo to change permission
+# sudo chown -R <username>:<username> <ohmpi folder>
+cd /home/ohmpi/ohmpi;bash run_http_interface.sh >> startup.log
+
+# as user, run crontab -e
 # then add the following line at the end of the file
 # don't forget to replace <username> by the username you have on the pi
-@reboot cd /home/ohmpi/ohmpi;bash run_http_interface.sh > startup.log
+@reboot cd /home/ohmpi/ohmpi;bash run_http_interface.sh >> startup.log
+
+# if you want to run the pi as a hotspot, you can follow the instruction
+# at https://www.raspberrypi.com/tutorials/host-a-hotel-wifi-hotspot/
+# NOTE that activating the hotspot will disconnect the Pi from the Wi-Fi
+
+sudo nmcli device wifi hotspot ssid <hotspot name> password <hotspot password> ifname wlan0
+
+sudo nmcli connection modify <hotspot name> connection.autoconnect yes
+
+# if multiple wifi are configured on the RPi, you may want to either add
+# the line below to /etc/rc.local or modify the connection.priority to 100
+# such that the access point is proritized over other visible network
+sudo nmcli connection up hotspot
+
+# to connect to the Pi in AP mode, connect to the Wi-Fi <hostpot name>
+# you can then access the dashboard on http://<raspberrypi_name>.local:8000
 

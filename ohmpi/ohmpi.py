@@ -52,7 +52,7 @@ except Exception as error:
     print(colored(f'Unexpected error: {error}', 'red'))
     arm64_imports = None
 
-VERSION = 'v2024.0.15'
+VERSION = 'v2024.0.23'
 
 
 class OhmPi(object):
@@ -844,7 +844,7 @@ class OhmPi(object):
             # round float to 2 decimal
             for key in dd.keys():  # Check why this is applied on keys and not values...
                 if isinstance(dd[key], float):
-                    dd[key] = np.round(dd[key], 3)
+                    dd[key] = float(np.round(dd[key], 3))  # convert back to python float otherwise (numpy >= 2.0.0) gives np.float64()
             dd['cmd_id'] = str(cmd_id)
 
             # log data to the data logger
