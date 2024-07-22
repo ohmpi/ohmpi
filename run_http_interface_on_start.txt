@@ -7,12 +7,12 @@
 # back to user mode, you might have error like "Permission denied" when
 # tyring to delete some files or log. Just use sudo to change permission
 # sudo chown -R <username>:<username> <ohmpi folder>
-cd /home/ohmpi/ohmpi;bash run_http_interface.sh > startup.log
+cd /home/ohmpi/ohmpi;bash run_http_interface.sh >> startup.log
 
 # as user, run crontab -e
 # then add the following line at the end of the file
 # don't forget to replace <username> by the username you have on the pi
-@reboot cd /home/ohmpi/ohmpi;bash run_http_interface.sh > startup.log
+@reboot cd /home/ohmpi/ohmpi;bash run_http_interface.sh >> startup.log
 
 # if you want to run the pi as a hotspot, you can follow the instruction
 # at https://www.raspberrypi.com/tutorials/host-a-hotel-wifi-hotspot/
