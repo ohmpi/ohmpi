@@ -104,346 +104,211 @@ Description
 Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundamentals/what-is-a-resistor/#>`_ on the measurement board PCB
 
 
-.. table::
-   :align: center
-   
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/1.jpg                       |
-   |      1 +-------------------------------------------------------------------+
-   |        | Soldering thirteen 100 kOhm resistors                             |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
-
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/1.jpg 
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/2.jpg                       |
-   |        |                                                                   |
-   |      2 +-------------------------------------------------------------------+
-   |        | Soldering four 330 ohm resistors                                  |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 1: Soldering thirteen 100 kOhm resistors.
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/2.jpg 
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/3.jpg                       |
-   |      3 +-------------------------------------------------------------------+
-   |        | Soldering four 4K7 ohm resistors                                  |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 2: soldering four 330 ohm resistors.
+
+.. figure:: ../../../img/mb.2024.x.x/3.jpg 
+   :width: 100%
+   :align: center
+
+   STEP 3: Soldering four 4K7 ohm resistors.
 
  
 Soldering `DIODE <https://www.fluke.com/en-us/learn/blog/electrical/what-is-a-diode>`_ on the measurement board PCB
 
-.. table::
+
+.. figure:: ../../../img/mb.2024.x.x/4.jpg 
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/4.jpg                       |
-   |      4 +-------------------------------------------------------------------+
-   |        |  Soldering six diodes 1N4007                                      |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 4: Soldering six diodes 1N4007.
 
 Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-diode.html>`_ on the measurement board PCB
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/5.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+  
-   |        |   .. image:: ../../../img/mb.2024.x.x/5.jpg                       |
-   |      5 +-------------------------------------------------------------------+
-   |        | Soldering two Schottky diodes bat85 ou bat86                      |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
-
-.. table::
+   STEP 5: Soldering two Schottky diodes bat85 ou bat86.
+   
+.. figure:: ../../../img/mb.2024.x.x/6.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/6.jpg                       |
-   |      6 +-------------------------------------------------------------------+
-   |        | Soldering five DIP-8 sockets                                      |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 6: Soldering five DIP-8 sockets.
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/7.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/7.jpg                       |
-   |      7 +-------------------------------------------------------------------+
-   |        | Soldering two DIP-18 sockets                                      |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 7: Soldering two DIP-18 sockets.
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/8.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/8.jpg                       |
-   |      8 +-------------------------------------------------------------------+
-   |        | Soldering one DIP-16 sockets                                      |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 8: Soldering one DIP-16 sockets.
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/9.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/9.jpg                       |
-   |      9 +-------------------------------------------------------------------+
-   |        | Soldering twelve cut sockets for 3 THD                            |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
-
-.. table::
+   STEP 9: Soldering twelve cut sockets for 3 THD.
+   
+.. figure:: ../../../img/mb.2024.x.x/10.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/10.jpg                      |
-   |     10 +-------------------------------------------------------------------+
-   |        | Soldering header socket 1 row 10 positions                        |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 10: Soldering header socket 1 row 10 positions.
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/11.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/11.jpg                      |
-   |     11 +-------------------------------------------------------------------+
-   |        | Soldering two header sockets with 1 row and 8 positions           |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 11: Soldering two header sockets with 1 row and 8 positions.
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/12.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/12.jpg                      |
-   |     12 +-------------------------------------------------------------------+
-   |        | Soldering 1 header (1 row, 2 positions -> cut a bigger one),      |
-   |        | 3 * 1r4p and 2 * 1r5p.                                            |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
-
+   STEP 12: Soldering 1 header (1 row, 2 positions -> cut a bigger one), 3 * 1r4p and 2 * 1r5p.
 
 Information about `light-emitting diode <https://en.wikipedia.org/wiki/Light-emitting_diode>`_
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/13.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/13.jpg                      |
-   |     13 +-------------------------------------------------------------------+
-   |        | Installation of four light-emitting diodes                        |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
-   
+   STEP 13: Installation of four light-emitting diodes.
+
 Information about `MOSFET Metal Oxide Semiconductor Field Effect Transistor <https://fr.wikiversity.org/wiki/Transistor/Transistor_MOSFET#:~:text=Le%20MOSFET%20(Metal%20Oxide%20Semiconductor,la%20construction%20de%20portes%20logiques>`_
 
-
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/14.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+  
-   |        |   .. image:: ../../../img/mb.2024.x.x/14.jpg                      |
-   |     14 +-------------------------------------------------------------------+
-   |        | Soldering six MOSFET ZVN4206 or ZVN4306                           |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
-
+   STEP 14: Soldering six MOSFET ZVN4206 or ZVN4306.
 
 What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/15.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+   
-   |        |   .. image:: ../../../img/mb.2024.x.x/15.jpg                      |
-   |     15 +-------------------------------------------------------------------+
-   |        | Soldering eleven 100 nF 50V tantalum capacitors                   |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 15: Soldering eleven 100 nF 50V tantalum capacitors.
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/16.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/16.jpg                      |
-   |     16 +-------------------------------------------------------------------+
-   |        | Soldering ten 10 µF 50V Electrolytic capacitors, **pay attention**|
-   |        | to capacitor polarity                                             |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 16: Soldering ten 10 µF 50V Electrolytic capacitors, **pay attention** to capacitor polarity.
 
 .. warning::
      
-     In this version, we used a shunt resistor of 2 ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor. Don't forget to change the shunt value in the config.py file (value associated to key 'R_shunt' in the OHMPI_CONFIG dict).   
+     In this version, we used a shunt resistor of 2 Ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor. Don't forget to change the shunt value in the config.py file (value associated to key 'R_shunt' in the OHMPI_CONFIG dict).   
 
-
-.. table::
-   :align: center
-   
-   +--------+-------------------------------------------------------------------+ 
-   |        |   .. image:: ../../../img/mb.2024.x.x/17.jpg                      |
-   |     17 +-------------------------------------------------------------------+
-   |        | Soldering the 2 ohms shunt resistor                               |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
-
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/17.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/18.jpg                      |
-   |     18 +-------------------------------------------------------------------+
-   |        | Soldering the two IDC 6 pins connectors.                          |
-   |        | **pay attention to the connectors orientation**                   |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 17: Soldering the 2 Ohms shunt resistor.
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/18.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/19.jpg                      |
-   |     19 +-------------------------------------------------------------------+
-   |        | Soldering six screw terminals for cable connection                |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 18: Soldering the two IDC 6 pins connectors. **Pay attention to the connectors orientation!**
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/19.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/20.jpg                      |
-   |     20 +-------------------------------------------------------------------+
-   |        | Soldering six omron G5LE relays 5 VDC                             |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 19: Soldering six screw terminals for cable connection.
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/20.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/21.jpg                      |
-   |     21 +-------------------------------------------------------------------+
-   |        | Soldering the 2x20 header for connection with the raspberry GPIO  |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 20: Soldering six omron G5LE relays 5 VDC.
+
+.. figure:: ../../../img/mb.2024.x.x/21.jpg
+   :width: 100%
+   :align: center
+
+   STEP 21: Soldering the 2x20 header for connection with the raspberry GPIO.
 
 What is a `Op-Amp <https://en.wikipedia.org/wiki/Operational_amplifier>`_?
 
 In addition, the notch provides a way to visually identify the orientation of the package.
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/22.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/22.jpg                      |
-   |     22 +-------------------------------------------------------------------+
-   |        | Place the three OP27 on their DIP-8 sockets                       |
-   |        | **the notch must face upwards**                                   |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 22: Place the three OP27 on their DIP-8 sockets. **The notch must face upwards.**
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/23.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/23.jpg                      |
-   |     23 +-------------------------------------------------------------------+
-   |        | Place the REF03 reference voltage (2.5v) on its DIP-8 socket      |
-   |        | **the notch must face the right side**                            |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 23: Place the REF03 reference voltage (2.5V) on its DIP-8 socket. **The notch must face the right side.**
 
 What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/24.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+   
-   |        |   .. image:: ../../../img/mb.2024.x.x/24.jpg                      |
-   |     24 +-------------------------------------------------------------------+
-   |        | Place the DG411 **the notch must face the left side**             |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 24: Place the DG411 (**the notch must face the left side**).
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/25.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/25.jpg                      |
-   |     25 +-------------------------------------------------------------------+
-   |        | Place the MCP23008 on its DIP-16 socket                           |
-   |        | **pay attention to the notches orientation**                      |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 25: Place the MCP23008 on its DIP-16 socket (**pay attention to the notches orientation**).
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/26.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/26.jpg                      |
-   |     26 +-------------------------------------------------------------------+
-   |        | Place the Three THD, install the right reference at               |
-   |        | the right place according to the yellow boxes                     |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 26: Place the Three THD, install the right reference at the right place according to the yellow boxes.
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/27.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/27.jpg                      |
-   |     27 +-------------------------------------------------------------------+
-   |        | Place the ADS1115 board on its female header 1x10 pins            |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 27: Place the ADS1115 board on its female header 1x10 pins.
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/28.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/28.jpg                      |
-   |     28 +-------------------------------------------------------------------+
-   |        | Place the two I2C level adjusters                                 |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 28: Place the two I2C level adjusters.
 
-
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/29bis.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/29bis.jpg                   |
-   |     29 +-------------------------------------------------------------------+
-   |        | Place the I2C isolator add-on board                               |
-   |        | **make sure you have right selection**  according to the red box  |
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
-
+   STEP 29: Place the I2C isolator add-on board. **Make sure you have right selection**  according to the red box.
 
 .. note::
    If you have issues with the I2C isolator (e.g. 0x49 and 0x27 are not visible), you may need
    to remove the pull-up resistor on the I2C isolator as shown above.
 
-.. table::
+.. figure:: ../../../img/mb.2024.x.x/30.jpg
+   :width: 100%
    :align: center
 
-   +--------+-------------------------------------------------------------------+
-   |        |   .. image:: ../../../img/mb.2024.x.x/30.jpg                      |
-   |     30 +-------------------------------------------------------------------+
-   |        | Place the current click add-on board                              |
-   |        | **make sure you have right selections** according to the red boxes|
-   |        |                                                                   |
-   +--------+-------------------------------------------------------------------+
+   STEP 30: Place the current click add-on board. **Make sure you have right selections** according to the red boxes.
 
 
 .. note::
