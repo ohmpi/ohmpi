@@ -1,6 +1,7 @@
 ohmpi/config.py
 ohmpi/logs/*
 .idea/*
+*.lck
 data/*
 **/.ipynb_notebooks/**
 *.zip
