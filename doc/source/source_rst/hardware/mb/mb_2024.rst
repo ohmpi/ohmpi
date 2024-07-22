@@ -26,54 +26,48 @@ Schematics
 
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0001.jpg       
-   :width: 600px
+   :width: 100%
    :align: center
-   :height: 450px
    :alt: alternate text
    :figclass: align-center 
    
    Overview of the measurement board.
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0002.jpg       
-   :width: 600px
+   :width: 100%
    :align: center
-   :height: 450px
    :alt: alternate text
    :figclass: align-center 
 
    Schematic of the power supply.
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0003.jpg       
-   :width: 600px
+   :width: 100%
    :align: center
-   :height: 450px
    :alt: alternate text
    :figclass: align-center 
 
    Schematic of the DPS (digital power source) power supply (e.g. DPH5005).
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0004.jpg       
-   :width: 600px
+   :width: 100%
    :align: center
-   :height: 450px
    :alt: alternate text
    :figclass: align-center
 
    Schematic of the Vmn signal conditioning.
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0005.jpg       
-   :width: 600px
+   :width: 100%
    :align: center
-   :height: 450px
    :alt: alternate text
    :figclass: align-center    
 
    Schematic of the current injection and measurement.
 
 .. figure:: ../../../img/mb.2024.x.x/mb.2024.0.2_page-0006.jpg       
-   :width: 600px
+   :width: 100%
    :align: center
-   :height: 450px
    :alt: alternate text
    :figclass: align-center    
 
@@ -451,6 +445,7 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
    |        |                                                                   |
    +--------+-------------------------------------------------------------------+
 
+
 .. note::
    Don't forget to add the two header pins below the 'shunt' side of the current click
    so it can be connected to the PCB below.
@@ -468,9 +463,8 @@ If a continuity check does not pass it's likely means there is an issue with the
 If the voltage with I2C (SDA and SCL pins) is not expected, there is likely an issue with pull-up resistors.
 
 .. figure:: ../../../img/mb2024-test.jpg       
-       :width: 700px
+       :width: 100%
        :align: center
-       :height: 450px
        :alt: alternate text
        :figclass: align-center
 
