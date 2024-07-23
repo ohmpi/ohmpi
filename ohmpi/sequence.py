@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import os
-from joblib import Parallel, delayed
 import matplotlib.pyplot as plt
 
 def create_sequence(nelec, params=[('dpdp', 1, 8)], include_reciprocal=False,
@@ -78,7 +77,14 @@ def create_sequence(nelec, params=[('dpdp', 1, 8)], include_reciprocal=False,
     if opt_ip:
         dfseq = dfseq.sort_values(['m', 'n', 'a', 'b'])
         nchains = opt_param['nchains'] if 'nchains' in opt_param else 4
-        outs = Parallel(n_jobs=-1, backend='loky')(delayed(optimize_ip)(dfseq.values) for i in range(nchains))
+        try:
+            from joblib import Parallel, delayed
+            outs = Parallel(n_jobs=-1, backend='loky')(delayed(optimize_ip)(dfseq.values) for i in range(nchains))
+        except ImportError:
+            print('For parallel optimization, install joblib "pip install joblib"')
+            outs = []
+            for nchain in range(nchains):
+                outs.append(optimize_ip(dfseq.values))
 
         # best order
         cost = np.inf
