@@ -556,6 +556,19 @@ class OhmPi(object):
         self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
         os.system('poweroff')  # this may require admin rights
 
+    def set_time(self, date, cmd_id=None):
+        """Set date of the RPI remotely.
+
+        Parameters
+        ----------
+        date : str
+            ISO datetime string such as 2024-07-23T20:00:01.345Z.
+        cmd_id : str, optional
+            Unique command identifier.
+        """
+        os.system('date --set ' +  date)
+        self.exec_logger.info(f'New time set following command {cmd_id}...')
+
     def plot_last_fw(self, save_fig=False, filename=None):
         """Plots last full waveform measurement
 

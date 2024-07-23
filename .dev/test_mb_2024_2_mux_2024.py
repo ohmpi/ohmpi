@@ -1,15 +1,16 @@
 import matplotlib
 matplotlib.use('TkAgg')
 from ohmpi.utils import change_config
-change_config('../configs/config_mb_2024_0_2__2_mux_2024_dph5005.py', verbose=False)
+#change_config('../configs/config_mb_2024_0_2__2_mux_2024_dph5005.py', verbose=False)
 import importlib
 import time
 import logging
 from ohmpi.config import HARDWARE_CONFIG
+import numpy as np
 
 stand_alone = False
-part_of_hardware_system = True
-within_ohmpi = False
+part_of_hardware_system = False
+within_ohmpi = True
 
 # Stand alone
 if stand_alone:
@@ -99,18 +100,19 @@ if within_ohmpi:
     # k._hw.rx._bias = -1.38
     # print(f'Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     # k._hw._plot_readings()
-    A, B, M, N = (1, 4, 2, 3)
-    # k._hw.switch_mux([A, B, M, N], state='on')
+    abmn = np.array([1, 4, 2, 3]) + 0
+    k.switch_mux_on(abmn)
     # k._hw.vab_square_wave(12., cycle_duration=10., cycles=3)
     # k._hw.switch_mux([A, B, M, N], state='off')
     # print(f'OhmPiHardware Resistance: {k._hw.last_rho :.2f} ohm, dev. {k._hw.last_dev:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     # k._hw._plot_readings()
     print('using OhmPi')
-    d = k.run_measurement([A, B, M, N], injection_duration=1., nb_stack=2, duty_cycle=0.5)
+    d = k.run_measurement(abmn, injection_duration=0.5, nb_stack=2, duty_cycle=0.5)
+    k.switch_mux_off(abmn)
     print(d)
     # k._hw._plot_readings()
     print(f'OhmPiHardware: Resistance: {k._hw.last_resistance() :.2f} ohm, dev. {k._hw.last_dev():.2f} %, sp: {k._hw.sp:.2f} mV, rx bias: {k._hw.rx._bias:.2f} mV')
-    print(f'OhmPi: Resistance: {d["R [ohm]"] :.2f} ohm, dev. {d["R_std [%]"]:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
+    print(f'OhmPi: Resistance: {d["R [Ohm]"] :.2f} ohm, dev. {d["R_std [%]"]:.2f} %, rx bias: {k._hw.rx._bias:.2f} mV')
     k._hw._plot_readings(save_fig=False)
     # plot_exec_log('ohmpi/logs/exec.log')
-change_config('../configs/config_default.py', verbose=False)
+#change_config('../configs/config_default.py', verbose=False)
