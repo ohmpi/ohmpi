@@ -81,6 +81,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         
         <button id="restartBtn" type="button" class="btn btn-danger">Restart</button>
         <button id="shutdownBtn" type="button" class="btn btn-danger">Shutdown</button>
+        <button id="setTimeBtn" type="button", class="btn btn-secondary">Set Time</button>
 
         <!-- Modal for configuration -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -903,6 +904,17 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         }
         let restartBtn = document.getElementById('restartBtn')
         restartBtn.addEventListener('click', restartBtnFunc)
+
+        // set time
+        function setTimeBtnFunc() {
+            d = new Date()
+            sendCommand('{"cmd": "set_time", "kwargs": {"date": "' + d.toISOString() + '"}}',
+             function(x) {
+                console.log('time set')
+            })
+        }
+        let setTimeBtn = document.getElementById('setTimeBtn')
+        setTimeBtn.addEventListener('click', setTimeBtnFunc)
         
         // download data
         function downloadBtnFunc() {
