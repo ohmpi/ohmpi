@@ -145,6 +145,8 @@ You can verify that the pair of roles X - XX and Y - YY are well connected by do
 .. warning::
   Make sure that the 8 "electrodes" solder jumpers at the back of the PCB are NOT bridged to avoid risks of shortcuts !
 
+.. _4_roles:
+
 4-role configuration
 `````````````````````
 Configuring a board in 4-role mode enables to use an odd number of MUX board (for systems with 8, 24, 40, 56,... electrodes).

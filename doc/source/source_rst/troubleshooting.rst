@@ -54,10 +54,10 @@ Noise in the Vmn and Iab signals
 The OhmPi does not filter the signal for 50 or 60Hz power noise. This noise can appear in the Vmn reading if the Tx or Rx battery is connected to a charger connected to the grid.
 It can also appear in the field if there is an AC leakage or high voltage power lines nearby.
 
-.. image:: ../img/troubleshooting/50hz_noise.png
-  :width: 600px
+.. figure:: ../img/troubleshooting/50hz_noise.png
+  :width: 100%
   :align: center
-
+  
   Example of 50 Hz noise coming from a charger connected to the TX battery
 
 To solve this, you may need to design a system that disconnect the charger (turn if off) when doing a measurement.

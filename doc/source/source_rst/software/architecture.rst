@@ -8,8 +8,8 @@ communication protocols (e.g. MQTT) and/or directly through the Python API.
 .. figure:: ../../img/software/ohmpi_2024_architecture.png
    :width: 9000px
    :align: center
-
-     Software architecture of OhmPi v2024.
+   
+   Software architecture of OhmPi v2024.
 
 The software is organised in several modules describing the system in a hierarchy including three levels of description and
 operation of the OhmPi.
