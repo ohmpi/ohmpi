@@ -355,7 +355,7 @@ class OhmPi(object):
 
         return vab_opt
 
-    def get_data(self, survey_names=None, cmd_id=None):
+    def get_data(self, survey_names=None, full=False, cmd_id=None):
         """Get available data.
         
         Parameters
@@ -364,6 +364,9 @@ class OhmPi(object):
             List of filenames already available from the html interface. So
             their content won't be returned again. Only files not in the list
             will be read.
+        full : bool, optional
+            If False, will only return the quadrupole and transfer resistance (default). If
+            True, will return all columns.
         cmd_id : str, optional
             Unique command identifier.
         """
@@ -397,7 +400,7 @@ class OhmPi(object):
                     'b': data[:, 1].astype(int).tolist(),
                     'm': data[:, 2].astype(int).tolist(),
                     'n': data[:, 3].astype(int).tolist(),
-                    'rho': data[:, 4].tolist(),
+                    'r': data[:, 4].tolist(),
                 }
                 # except Exception as e:
                 #    print(fname, ':', e)
