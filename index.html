@@ -1016,15 +1016,17 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
       // full-waveform figure
       let fwdata = [{
-        't': [1, 2, 3, 4],
-        'i': [1, 4, 9, 4],
+        'x': [1, 2, 3, 4],
+        'y': [1, 4, 9, 4],
+        xaxis: 'x',
+        yaxis: 'y',
         name: 'iab',
         type: 'scatter',
       }, {
-        't': [1, 2, 3, 5],
-        'v': [1, 1, 0, 0],
+        'x': [1, 2, 3, 5],
+        'y': [1, 1, 0, 0],
         name: 'vmn',
-        xaxis: 'x2',
+        xaxis: 'x',
         yaxis: 'y2',
         type: 'scatter',
       }
@@ -1034,16 +1036,16 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         yaxis: {
           title: 'Current [mA]'
         },
-        y2axis: {
+        yaxis2: {
           title: 'Voltage [mV]'
         },
         xaxis: {
           title: 'Time [s]'
         },
-        grid: {rows: 2, columns: 1, pattern: 'independent'},
+        grid: {rows: 2, columns: 1, subplots:[['xy','xy2']]},
       }
       Plotly.newPlot('fw', fwdata, fwlayout, {responsive: true })
-
+      // https://plotly.com/javascript/subplots/#subplots-with-shared-axes
 
 
       // getData
