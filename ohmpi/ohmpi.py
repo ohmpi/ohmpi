@@ -950,10 +950,15 @@ class OhmPi(object):
                 dt = sequence_delay - (time.time() - t0)  # sleeping time between sequence
                 if dt < 0:
                     dt = 0
-                if nb_meas > 1:
-                    if self.status == 'stopping':
-                        break
-                    time.sleep(dt)  # waiting for next measurement (time-lapse)
+                if nb_meas > 1:  # (GB) not sure why we have this condition
+                    # we wait for next measurement in interval of 5s so we
+                    # can still stop the reading during the waiting time
+                    while True:
+                        time.sleep(5)
+                        if time.time() >= t0 + sequence_delay:
+                            break
+                        if self.status == 'stopping':
+                            break
             self.status = 'idle'
 
         self.thread = Thread(target=func)
