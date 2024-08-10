@@ -391,7 +391,9 @@ class OhmPi(object):
                 for i, header in enumerate(headers):
                     if header == 'R [ohm]':
                         headers[i] = 'R [Ohm]'
-                icols = list(np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'R [Ohm]']))[0])
+
+                # read basic data
+                icols = list(np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'R [Ohm]', 'I [mA]', 'Vmn [mV]', 'Vstd [%]']))[0])
                 data = np.loadtxt(os.path.join(ddir, fname), delimiter=',',
                                     skiprows=1, usecols=icols)
                 data = data[None, :] if len(data.shape) == 1 else data
@@ -400,8 +402,28 @@ class OhmPi(object):
                     'b': data[:, 1].astype(int).tolist(),
                     'm': data[:, 2].astype(int).tolist(),
                     'n': data[:, 3].astype(int).tolist(),
-                    'r': data[:, 4].tolist(),
+                    'r': data[:, 4].round(1).tolist(),
+                    'i': data[:, 5].round(1).tolist(),
+                    'v': data[:, 6].round(1).tolist(),
+                    'dev': data[:, 7].round(1).tolist()
                 }
+                
+                # if requested add full-waveform data
+                if full:
+                    with open(os.path.join(ddir, fname), 'r') as f:
+                        x = f.readlines()
+                    headers = x[0].split(',')
+                    fwdata = {}
+                    for row in x[1:]:
+                        rdata = row.split(',')
+                        key = ','.joint(rdata[0], rdata[1], rdata[2], rdata[3])
+                        rdata2 = np.array(rdata[len(headers):]).reshape((-1, 5))
+                        fwdata[key] = {
+                            't': rdata2[:, 0].round(1).tolist(),
+                            'i': rdata2[:, 3].round(1).tolist(),
+                            'v': rdata2[:, 4].round(1).tolist(),
+                        }
+                    ddic[fname.replace('.csv', '')]['fw'] = fwdata
                 # except Exception as e:
                 #    print(fname, ':', e)
         rdic = {'cmd_id': cmd_id, 'data': ddic}

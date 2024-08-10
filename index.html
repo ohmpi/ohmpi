@@ -67,18 +67,29 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             Pseudo-section
           </button>
         </h2>
+
+        <!-- pseudo-section -->
         <div id="panelPseudo" class="accordion-collapse collapse show">
           <div class="accordion-body">
             <select id="surveySelect"></select>
             <select id="attrSelect">
               <option value="app">Apparent resistivity [Ohm.m]</option>
-              <option value="res">Transfer resistance [Ohm]</option>
-              <option value="std">Standard deviation [%]</option>
-              <option value="iab">Current [mA]</option>
-              <option value="vmn">Voltage [mV]</option>
+              <option value="r">Transfer resistance [Ohm]</option>
+              <option value="dev">Standard deviation [%]</option>
+              <option value="i">Current [mA]</option>
+              <option value="v">Voltage [mV]</option>
             </select>
             <input id="cmin" type="number" class="form-control-number" value="" />
             <input id="cmax" type="number" class="form-control-number" value="" />
+            <select id="cmap">
+              <option value="Viridis">Viridis</option>
+              <option value="Electric">Electric</option>
+              <option value="Cividis">Cividis</option>
+              <option value="Jet">Jet</option>
+              <option value="Hot">Hot</option>
+              <option value="Greys">Greys</option>
+              <option value="RdBu">RdBu</option>
+            </select>
             <button id="capplyBtn" type="button" class="btn btn-info">Apply</button>
             <div id="gd"></div>
           </div>
@@ -95,7 +106,22 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           <div class="accordion-body">
             <!-- table of raw data -->
             <select id="surveyTableSelect"></select>
-            <table id="rawTable" class="table"></table>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">A</th>
+                  <th scope="col">B</th>
+                  <th scope="col">M</th>
+                  <th scope="col">N</th>
+                  <th scope="col">R [Ohm]</th>
+                  <th scope="col">Iab [mA]</th>
+                  <th scope="col">Vmn [mV]</th>
+                  <th scope="col">Vmn std [%]</th>
+                </tr>
+              </thead>
+              <tbody id="rawTable"></tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -114,6 +140,13 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
               <div class="col-sm-10">
                 <select id='quadSelect' class='custom-select'></select>
               </div>
+              <select id="attrSelectTrace">
+                <option value="app">Apparent resistivity [Ohm.m]</option>
+                <option value="r">Transfer resistance [Ohm]</option>
+                <option value="dev">Standard deviation [%]</option>
+                <option value="i">Current [mA]</option>
+                <option value="v">Voltage [mV]</option>
+              </select>  
             </div>
             <button id="addTraceBtn" type="button" class="btn btn-info">Add trace</button>
             <button id="removeTracesBtn" type="button" class="btn btn-info">Remove all traces</button>
@@ -168,6 +201,15 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             <button id="invertBtn" type="button" class="btn btn-info">Run inversion</button>
             <input id="cminInv" type="number" value="" />
             <input id="cmaxInv" type="number" value="" />
+            <select id="cmapInv">
+              <option value="Viridis">Viridis</option>
+              <option value="Electric">Electric</option>
+              <option value="Cividis">Cividis</option>
+              <option value="Jet">Jet</option>
+              <option value="Hot">Hot</option>
+              <option value="Greys">Greys</option>
+              <option value="RdBu">RdBu</option>
+            </select>
             <button id="capplyBtnInv" type="button" class="btn btn-info">Apply</button>
             <div id="inv"></div>
           </div>
@@ -194,7 +236,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
               <div class="mb-3 row">
                 <label for="mqttHostname" class="col-sm-2 col-form-label">MQTT server</label>
                 <div class="col-sm-10">
-                  <input id="mqttHostname" class="form-control" type="text" />
+                  <input id="mqttHostname" class="form-control" type="text" placeholder="localhost" />
                 </div>
               </div>
               <div class="mb-3 row">
@@ -434,7 +476,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <p>Downloading data can take a bit of time as data is first zipped on the OhmPi.</p>
+              <p>Downloading data can take up to several minutes as data is first zipped on the OhmPi.</p>
               <button id="downloadBtn" type="button" class="btn btn-primary">Download current acquisition</button>
               <hr>
               <p>Download data between these dates:</p>
@@ -484,20 +526,29 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       let commands = {} // store commands and their id
       let callbacks = {} // store callback (might not be needed)
       let invertedData = [{
-        // rho: [[10, 10.625, 12.5, 15.625, 20],
-        //         [5.625, 6.25, 8.125, 11.25, 15.625],
-        //         [2.5, 3.125, 5., 8.125, 12.5],
-        //         [0.625, 1.25, 3.125, 6.25, 10.625],
-        //         [0, 0.625, 2.5, 5.625, 10]],
-        // x: [-9, -6, -5 , -3, -1],
-        // y: [0, 1, 4, 5, 7],
-        rho: [],
-        x: [],
-        y: []
+        rho: [[10, 10.625, 12.5, 15.625, 20],
+                [5.625, 6.25, 8.125, 11.25, 15.625],
+                [2.5, 3.125, 5., 8.125, 12.5],
+                [0.625, 1.25, 3.125, 6.25, 10.625],
+                [0, 0.625, 2.5, 5.625, 10]],
+        x: [-9, -6, -5 , -3, -1],
+        y: [0, 1, 4, 5, 7],
+        // rho: [],
+        // x: [],
+        // y: []
       }] // store inverted data
 
-      // variables with MQTT
-      let topic = 'ohmpi_0001' // we could change this through a drop-down to connect to a different ohmpi
+      // possible attributes and their labels
+      let key2lab = {
+        'app': 'App. Res. [Ohm.m]',
+        'r': 'Resistance [Ohm]',
+        'i': 'Current [mA]',
+        'v': 'Voltage [mV]',
+        'dev': 'Vmn std [%]',
+      }
+
+      // variables with MQTT, can be updated via mqtt modal
+      let topic = 'ohmpi_0001'
       let topic_ctrl = topic + '/ctrl'
       let topic_exec = topic + '/exec'
       let topic_data = topic + '/data'
@@ -506,15 +557,15 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       let clientId = 'ohmpi_0001_html'
       let message = null
       let msg = ''
-      let userName = 'jkl'  // can be ask to the user
-      let password = 'jkl'
+      let userName = null  // can be ask to the user
+      let password = null
 
       // create client
       client = new Paho.MQTT.Client(hostname, port, clientId)
       client.onConnectionLost = onConnectionLost
       client.onMessageArrived = onMessageArrived
       client.connect({ onSuccess: onConnect })
-      //        client.connect({userName: username, password: password, onSuccess:onConnect})
+      //client.connect({userName: username, password: password, onSuccess:onConnect})
 
       // alternative to the above default
       function mqttConnect() {
@@ -664,6 +715,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
       // interrupt button
       function stopBtnFunc() {
+        output.innerHTML = 'Status: interrupting...'
         sendCommand('{"cmd": "interrupt"}', function (x) {
           output.innerHTML = 'Status: ' + x['status']
           clearInterval(interv)
@@ -672,26 +724,6 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       }
       let stopBtn = document.getElementById('stopBtn')
       stopBtn.addEventListener('click', stopBtnFunc)
-
-      // TODO build raw table
-      function buildRawTable(seq) {
-        let tbody = document.getElementById('rawTable')
-        tbody.innerHTML = '' // remove all content
-        let count = 1
-        for (let i = 0; i < seq.length; i++) {
-          var tr = document.createElement('tr')
-          var td2 = document.createElement('td')
-          td2.innerText = count + i
-          td2.setAttribute('scope', 'row')
-          tr.appendChild(td2)
-          for (let j = 0; j < seq[i].length; j++) {
-            var td = document.createElement('td')
-            td.innerText = seq[i][j]
-            tr.appendChild(td)
-          }
-          tbody.appendChild(tr)
-        }
-      }
 
       // get sequence from file
       function readSequence(callback) {
@@ -807,11 +839,11 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         //       }
         //       seq.push(arr)
         //     }
-            function t(seq) {
-              formVals['sequence'] = seq
-              configCallback()
-            }
-            readSequence(t)
+            // function t(seq) {
+            //   formVals['sequence'] = seq
+            //   configCallback()
+            // }
+            // readSequence(t)
           // }, false)
         // } else {
         //   console.log('no sequence uploaded')
@@ -837,18 +869,19 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
       // make pseudo plot
       var trace = {
-        x: [],
-        y: [],
+        x: [1, 2, 3],
+        y: [1, 2, 3],
         mode: 'markers',
         marker: {
           size: 40,
-          color: [],
+          color: [3, 5, 6],
           colorbar: {
             title: 'Apparent resistivity [Ohm.m]',
             titleside: 'right',
             cmin: 0,
             cmax: 100,
-          }
+          },
+          colorscale: 'Electric'
         }
       }
       let layout = {
@@ -876,6 +909,53 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       }
       Plotly.newPlot('ts', tdata, layout2, { responsive: true })
 
+      // update traces
+      function updateTraces() {
+        let surveyNames = Object.keys(data).sort()
+        let attr = document.getElementById('attrSelectTrace').value
+
+        // transform all surveyNames to datetime
+        let xt = []
+          for (surveyName of surveyNames) {
+            let a = surveyName.split('_').slice(-1)[0]
+            xt.push(a.slice(0, 4) + '-'
+              + a.slice(4, 6) + '-'
+              + a.slice(6, 8) + ' '
+              + a.slice(9, 11) + ':'
+              + a.slice(11, 13) + ':'
+              + a.slice(13, 15))
+          }
+
+          // create one new trace per selected quadrupole
+          for (let k = 0; k < squads.length; k++) {
+            squad = squads[k]
+            let x = []
+            let y = []
+            for (let i = 0; i < surveyNames.length; i++) {
+              df = data[surveyNames[i]]
+              for (let j = 0; j < df['a'].length; j++) {
+                if (df['a'][j] == squad[0]
+                  && df['b'][j] == squad[1]
+                  && df['m'][j] == squad[2]
+                  && df['n'][j] == squad[3]) {
+                  y.push(df[attr][j])
+                  x.push(xt[i])
+                  break
+                }
+              }
+            }
+
+            // update trace dictionnary
+            tdata[k]['x'] = x
+            tdata[k]['y'] = y
+            layout2['yaxis']['title'] = key2lab[attr]
+          }
+        Plotly.redraw('ts')
+      }
+      document.getElementById('attrSelectTrace').addEventListener('change',
+        updateTraces
+      )
+
       // add trace to time-serie plot
       function addTraceBtnFunc() {
         let val = document.getElementById('quadSelect').value
@@ -887,7 +967,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           type: 'scatter'
         })
         Plotly.newPlot('ts', tdata, layout2, { responsive: true })
-        getData()
+        updateTraces() // populating the traces
       }
       let addTraceBtn = document.getElementById('addTraceBtn')
       addTraceBtn.addEventListener('click', addTraceBtnFunc)
@@ -902,34 +982,39 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       removeTracesBtn.addEventListener('click', removeTracesBtnFunc)
 
       // callback function to draw the plot
-      function surveySelectFunc(el) {
+      function surveySelectFunc() {
         let elec_spacing = parseFloat(document.getElementById('elec_spacing').value)
-        let surveyName = el['target'].value
+        let surveyName = document.getElementById('surveySelect').value
+        let attr = document.getElementById('attrSelect').value
         let df = data[surveyName]
+        console.log(attr, surveyName, df)
         if (df != undefined) {
           let a = df['a']
           let b = df['b']
           let m = df['m']
           let n = df['n']
           // let's assume electrodes are 1 m distance
-          // compute pseudo-depth (assume no topo)
-          // compute app res (assumping flat, line survey)
+          // compute pseudo-depth (assuming no topo)
+          // compute app res (assuming flat, line survey)
           let xpos = []
           let ypos = []
-          let app = []
+          let values = []
           for (let i = 0; i < a.length; i++) {
-
             let emin = Math.min(...[a[i], b[i], m[i], n[i]]) * elec_spacing
             let emax = Math.max(...[a[i], b[i], m[i], n[i]]) * elec_spacing
             let dist = Math.abs(emax - emin)
             xpos.push(emin + dist / 2)
             ypos.push(- Math.sqrt(2) / 2 * dist)
-            let am = Math.abs(a[i] - m[i]) * elec_spacing
-            let bm = Math.abs(b[i] - m[i]) * elec_spacing
-            let an = Math.abs(a[i] - n[i]) * elec_spacing
-            let bn = Math.abs(a[i] - n[i]) * elec_spacing
-            let K = (2 * Math.PI) / ((1 / am) - (1 / an) - (1 / an) + (1 / bn))
-            app.push(df['r'][i] * K)
+            if (attr == 'app') {
+              let am = Math.abs(a[i] - m[i]) * elec_spacing
+              let bm = Math.abs(b[i] - m[i]) * elec_spacing
+              let an = Math.abs(a[i] - n[i]) * elec_spacing
+              let bn = Math.abs(a[i] - n[i]) * elec_spacing
+              let K = (2 * Math.PI) / ((1 / am) - (1 / an) - (1 / an) + (1 / bn))
+              values.push(df['r'][i] * K)
+            } else {
+              values = df[attr]
+            }
 
             // let a = df['a'][i]
             // let b = df['b'][i]
@@ -955,16 +1040,49 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             // xpos.push((Math.min(ab, mn) + dist/2)*elec_spacing)
             // ypos.push(- (Math.sqrt(2)/2*dist)*elec_spacing)
           }
+        
           // update the trace and redraw the figure
           trace['x'] = xpos
           trace['y'] = ypos
-          trace['marker']['color'] = app
+          trace['marker']['color'] = values
           trace['marker']['cmax'] = document.getElementById('cmax').value
           trace['marker']['cmin'] = document.getElementById('cmin').value
+          trace['marker']['colorscale'] = document.getElementById('cmap').value
+          trace['marker']['colorbar']['title'] = key2lab[attr]
           Plotly.redraw('gd')
         }
       }
       let surveySelect = document.getElementById('surveySelect')
+      document.getElementById('attrSelect').addEventListener('change',
+        surveySelectFunc
+      )
+      document.getElementById('cmap').addEventListener('change',
+        surveySelectFunc
+      )
+      
+      // raw table
+      let surveyTableSelect = document.getElementById('surveyTableSelect')
+      function surveyTableSelectFunc() {
+        let surveyName = surveyTableSelect.value
+        let df = data[surveyName]
+        let tbody = document.getElementById('rawTable')
+        tbody.innerHTML = '' // remove all content
+        let count = 1
+        for (let i = 0; i < df['a'].length; i++) {
+          var tr = document.createElement('tr')
+          var td2 = document.createElement('td')
+          td2.innerText = count + i
+          td2.setAttribute('scope', 'row')
+          tr.appendChild(td2)
+          for (col of ['a', 'b', 'm', 'n', 'r', 'i', 'v', 'dev']) {
+            var td = document.createElement('td')
+            td.innerText = df[col][i]
+            tr.appendChild(td)
+          }
+          tbody.appendChild(tr)
+        }
+      }
+      surveyTableSelect.addEventListener('change', surveyTableSelectFunc)
 
       // bar chart for contact resistance
       let rsdata = [{
@@ -1101,7 +1219,20 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
         // call the function directly
         // (as programatically changing the value does not trigger the event)
-        surveySelectFunc({ 'target': surveySelect })
+        surveySelectFunc()
+
+        // update list of survey for table
+        surveyTableSelect.removeEventListener('change', surveyTableSelectFunc)
+        surveyTableSelect.innerHTML = ''
+        for (let surveyName of surveyNames) {
+          let option = document.createElement('option')
+          option.innerText = surveyName
+          option.value = surveyName
+          surveyTableSelect.appendChild(option)
+        }
+        surveyTableSelect.addEventListener('change', surveyTableSelectFunc)
+        surveyTableSelect.value = surveyNames[surveyNames.length - 1]
+        surveyTableSelectFunc()
 
         // update list of survey for inversion
         surveySelectInv.removeEventListener('change', showInvFunc)
@@ -1135,45 +1266,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
         // update time-serie figure
         if (squads.length > 0) {
-
-          // transform all surveyNames to datetime
-          let xt = []
-          for (surveyName of surveyNames) {
-            let a = surveyName.split('_').slice(-1)[0]
-            xt.push(a.slice(0, 4) + '-'
-              + a.slice(4, 6) + '-'
-              + a.slice(6, 8) + ' '
-              + a.slice(9, 11) + ':'
-              + a.slice(11, 13) + ':'
-              + a.slice(13, 15))
-          }
-          //console.log(xt)
-
-          // create one new trace per selected quadrupole
-          for (let k = 0; k < squads.length; k++) {
-            squad = squads[k]
-            let x = []
-            let y = []
-            for (let i = 0; i < surveyNames.length; i++) {
-              df = data[surveyNames[i]]
-              for (let j = 0; j < df['a'].length; j++) {
-                if (df['a'][j] == squad[0]
-                  && df['b'][j] == squad[1]
-                  && df['m'][j] == squad[2]
-                  && df['n'][j] == squad[3]) {
-                  y.push(df['rho'][j])
-                  x.push(xt[i])
-                  break
-                }
-              }
-            }
-
-            // update trace dictionnary
-            tdata[k]['x'] = x
-            tdata[k]['y'] = y
-          }
-          //console.log(tdata)
-          Plotly.redraw('ts')
+          updateTraces()
         }
       }
 
@@ -1183,7 +1276,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       // apply new colorscale
       let capplyBtn = document.getElementById('capplyBtn')
       capplyBtn.addEventListener('click', function () {
-        surveySelectFunc({ 'target': surveySelect })
+        surveySelectFunc()
       })
 
       // plot inverted data
@@ -1211,7 +1304,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           x: invertedData[0]['x'],
           y: invertedData[0]['z'],
           type: 'contour',
-          colorscale: 'Viridis',
+          colorscale: document.getElementById('cmapInv').value,
           autocontour: autocontour,
           contours: {
             start: cmin,
@@ -1340,6 +1433,48 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       downloadBtn.addEventListener('click', downloadBtnFunc)
       document.getElementById('endDate').valueAsDate = new Date();
 
+
+      // testing
+      var ddic2 = {
+        'status': 'test_data',
+        'data': {
+          '20240405_203403': {
+            'a': [1, 2, 3, 4, 5],
+            'b': [4, 5, 6, 7, 8],
+            'm': [2, 3, 4, 5, 6],
+            'n': [3, 4, 5, 6, 7],
+            'r': [3.2, 4.3, 2.1, 3.2, -0.5],
+            'i': [12.3, 4, 2.3, 10.3, 13.2],
+            'v': [1230, 300, 400, 2313, 3400],
+            'dev': [0.01, 0.03, 0.03, 0.1, 0.2],
+            'fw': {
+              '1,4,2,3': {
+                't': [1,2,3,4,5,6,7,8,9],
+                'i': [0,2,2,0,0,2,2,0,0],
+                'v': [0,30,30,0,0,-27,-27,0,0]
+              }
+            }
+          }, 
+          '20240405_203410': {
+            'a': [1, 2, 3, 4, 5],
+            'b': [4, 5, 6, 7, 8],
+            'm': [2, 3, 4, 5, 6],
+            'n': [3, 4, 5, 6, 7],
+            'r': [3.3, 4.4, 3.1, 4.2, -0.2],
+            'i': [12.2, 4.3, 2.2, 11, 14.2],
+            'v': [1250, 400, 500, 2413, 3500],
+            'dev': [0.01, 0.03, 0.03, 0.1, 0.2],
+            'fw': {
+              '1,4,2,3': {
+                't': [1,2,3,4,5,6,7,8,9],
+                'i': [0,2,2,0,0,2,2,0,0],
+                'v': [0,30,30,0,0,-27,-27,0,0]
+              }
+            }
+          }
+        }
+      }
+      processData(ddic2)
     </script>
 
     <!-- Boostrap scripts (at the end of the page for faster loading time)-->
