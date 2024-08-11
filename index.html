@@ -627,6 +627,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       let squads = [] // selected quadrupoles for time-serie figure
       let commands = {} // store commands and their id
       let callbacks = {} // store callback (might not be needed)
+      let sequence = [] // uploaded or generated quadrupole sequence
       let invertedData = [{
         rho: [[10, 10.625, 12.5, 15.625, 20],
                 [5.625, 6.25, 8.125, 11.25, 15.625],
@@ -868,6 +869,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
               }
               seq.push(arr)
             }
+            sequence = seq
             callback(seq)
           })
         } else {
@@ -928,6 +930,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
         }
         console.log(gseq)
+        sequence = gseq
         buildSeqTable(gseq)
       }
       document.getElementById('seqGenerateBtn').addEventListener('click', seqGenerateBtnFunc)
@@ -969,20 +972,22 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           'nb_stack': parseInt(document.getElementById('nb_stack').value),
           'duty_cycle': parseFloat(document.getElementById('duty_cycle').value),
         }
+
+        // check if we have a sequence or not
+        if (sequence.length > 0) {
+          formVals['sequence'] = sequence
+        } 
         console.log(formVals)
 
-        // define callback to send settings to Pi
-        function configCallback() {
-          sendCommand(JSON.stringify({
-            'cmd': 'update_settings',
-            'kwargs': {
-              'settings': formVals
-            }
-          }), function (x) {
-            console.log('update_settings', x)
-          })
-        }
-
+        // send settings to the controller
+        sendCommand(JSON.stringify({
+          'cmd': 'update_settings',
+          'kwargs': {
+            'settings': formVals
+          }
+        }), function (x) {
+          console.log('update_settings', x)
+        })
       }
       let saveConfigBtn = document.getElementById('saveConfigBtn')
       saveConfigBtn.addEventListener('click', saveConfigBtnFunc)
