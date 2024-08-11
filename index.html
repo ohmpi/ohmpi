@@ -415,6 +415,12 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                         </div>
                       </div>
                       <div class="mb-3 row">
+                        <label for="seqNelec" class="col-sm-2 col-form-label">Nb. Elec.</label>
+                        <div class="col-sm-10">
+                          <input id="seqNelec" class="form-control-number" type="number" placeholder="Number of electrodes"/>
+                        </div>
+                      </div>
+                      <div class="mb-3 row">
                         <label for="seqParamA" class="col-sm-2 col-form-label">a:</label>
                         <div class="col-sm-10">
                           <input id="seqParamA" class="form-control-number" type="number" />
@@ -429,7 +435,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                       <div class="mb-3 row">
                         <label for="seqParamS" class="col-sm-2 col-form-label">s:</label>
                         <div class="col-sm-10">
-                          <input id="seqParamS" class="form-control-number" type="number" />
+                          <input id="seqParamS" class="form-control-number" type="number" disabled />
                         </div>
                       </div>
                     </form>
@@ -533,19 +539,19 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                         <label for="vab_req" class="col col-form-label">Vab requested [V]
                           (<code>vab_req</code>):</label>
                         <div class="col">
-                          <input type="number" class="form-control-number" id="vab_req" value="1">
+                          <input type="number" class="form-control-number" id="vab_req" value="5">
                         </div>
                       </div>
                       <div class="form-group row">
                         <label for="vab_max" class="col col-form-label">Vab max [V]:</label>
                         <div class="col">
-                          <input type="number" class="form-control-number" id="vab_max" value="1">
+                          <input type="number" class="form-control-number" id="vab_max" value="">
                         </div>
                       </div>
                       <div class="form-group row">
                         <label for="vmn_req" class="col col-form-label">Vmn requested [V]:</label>
                         <div class="col">
-                          <input type="number" class="form-control-number" id="vmn_req" value="1">
+                          <input type="number" class="form-control-number" id="vmn_req" value="">
                         </div>
                       </div>
                     </form>
@@ -871,6 +877,61 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         }
       }
 
+      let seqTypeSelect = document.getElementById('seqTypeSelect')
+      seqTypeSelect.addEventListener('change', function() {
+        if (seqTypeSelect.value == 'gradient') {
+          document.getElementById('seqParamS').removeAttribute('disabled')
+        } else {
+          document.getElementById('seqParamS').setAttribute('disabled', '')
+        }
+        if (seqTypeSelect.value == 'wenner') {
+          document.getElementById('seqParamN').removeAttribute('disabled')
+        } else {
+          document.getElementById('seqParamN').setAttribute('disabled', '')
+        }
+      })
+      function seqGenerateBtnFunc() {
+        // TODO call api ohmpi, read back output
+        // create small simple custom functions
+        let seqType = seqTypeSelect.value
+        let seqNelec = document.getElementById('seqNelec').value
+        let seqParamA = document.getElementById('seqParamA').value
+        let seqParamN = document.getElementById('seqParamN').value
+        let seqParamS = document.getElementById('seqParamS').value
+        let gseq = []
+        if (seqType == 'wenner') {
+          for (let pa = 1; pa <= seqParamA; pa++) {
+            for (let a = 1; a <= seqNelec; a++) {
+              let m = a + pa
+              let n = m + pa
+              let b = n + pa
+              if ((a <= seqNelec) & (b <= seqNelec) & (m <= seqNelec) & (n <= seqNelec)) {
+                gseq.push([a, b, m, n])
+              }
+            }
+          }
+        } else if (seqType == 'dpdp') {
+          for (let pa = 1; pa <= seqParamA; pa++) {
+            for (let a = 1; a <= seqNelec; a++) {
+              let b = a + pa
+              for (let m = b + pa; m <= b + pa * seqParamN; m += pa) {
+                let n = m + pa
+                if ((a <= seqNelec) & (b <= seqNelec) & (m <= seqNelec) & (n <= seqNelec)) {
+                  gseq.push([a, b, m, n])
+                }
+              }
+            }
+          }
+        } else if (seqType == 'schlum') {
+
+        } else if (seqType == 'gradient') {
+
+        }
+        console.log(gseq)
+        buildSeqTable(gseq)
+      }
+      document.getElementById('seqGenerateBtn').addEventListener('click', seqGenerateBtnFunc)
+
       function buildSeqTable(seq) {
         let tbody = document.getElementById('seqTable')
         tbody.innerHTML = '' // remove all content
@@ -909,51 +970,6 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           'duty_cycle': parseFloat(document.getElementById('duty_cycle').value),
         }
         console.log(formVals)
-
-
-
-        // deal with the potential file containing the sequence
-        // https://stackoverflow.com/questions/19038919/is-it-possible-to-upload-a-text-file-to-input-in-html-js
-        // if (!window.FileReader) {
-        //   alert('Your browser is not supported');
-        //   return false;
-        // }
-        // let input = document.getElementById('sequence')
-        // if (input.files.length) {
-        //   const reader = new FileReader()
-        //   reader.readAsText(input.files[0])
-        //   reader.addEventListener('load', () => {
-        //     // parse the file and make it a list of list of int
-        //     var a = reader.result.split(/\r?\n|\r|\n/g)
-        //     var seq = new Array()
-        //     var eof = false
-        //     for (var i = 0; i < a.length; i++) {
-        //       b = a[i].split(' ')
-        //       var arr = new Array(4)
-        //       for (var j = 0; j < b.length; j++) {
-        //         val = parseInt(b[j])
-        //         if (isNaN(val) == true) {
-        //           eof = true
-        //           break
-        //         }
-        //         arr[j] = val
-        //       }
-        //       if (eof == true) {
-        //         break
-        //       }
-        //       seq.push(arr)
-        //     }
-            // function t(seq) {
-            //   formVals['sequence'] = seq
-            //   configCallback()
-            // }
-            // readSequence(t)
-          // }, false)
-        // } else {
-        //   console.log('no sequence uploaded')
-        //   formVals['sequence'] = ''
-        //   configCallback()
-        // }
 
         // define callback to send settings to Pi
         function configCallback() {
@@ -1120,30 +1136,6 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             } else {
               values = [...df[attr]]  // use [...array] to make a copy
             }
-
-            // let a = df['a'][i]
-            // let b = df['b'][i]
-            // let m = df['m'][i]
-            // let n = df['n'][i]
-
-            // // compute geometric factor assuming flat 2D surface
-            // let am = Math.abs(a - m)*elec_spacing
-            // let bm = Math.abs(b - m)*elec_spacing
-            // let an = Math.abs(a - n)*elec_spacing
-            // let bn = Math.abs(b - n)*elec_spacing
-            // let K = 2*Math.PI/((1/am)-(1/bm)-(1/an)+(1/bn))
-            // app.push(df['r'][i]*K)
-            // //console.log(K) // same as resipy for the wenner case
-
-            // // computing pseudo-depth assuming 2D flat array
-            // // let's sort the electrodes AB are the two left, MN, the two right
-            // let abmn = [a, b, m, n]
-            // abmn = abmn.sort((a, b) => a - b)
-            // let ab = (abmn[0] + abmn[1])/2
-            // let mn = (abmn[2] + abmn[3])/2
-            // let dist = Math.abs(ab - mn)
-            // xpos.push((Math.min(ab, mn) + dist/2)*elec_spacing)
-            // ypos.push(- (Math.sqrt(2)/2*dist)*elec_spacing)
           }
           
           // apply log
@@ -1300,8 +1292,11 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       function getData() {
         sendCommand(JSON.stringify({
           'cmd': 'get_data',
-          'survey_names': Object.keys(data).slice(0, -1)
+          'kwargs': {
+            'survey_names': Object.keys(data).slice(0, -1),
           // last survey is often partial so we download it again
+            'full': true,
+          }
         }), console.log('processData(ddic)')
         )
       }
@@ -1674,11 +1669,6 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       }
       processData(ddic2)
 
-
-      /*
-      TODO
-      - implement downlaod data with timedates in ohmpi
-      */
     </script>
 
     <!-- Boostrap scripts (at the end of the page for faster loading time)-->
