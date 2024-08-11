@@ -562,12 +562,50 @@ class OhmPi(object):
         self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
         os.system('reboot')  # this may need admin rights
 
-    def download_data(self, cmd_id=None):
+    def download_data(self, start_date=None, end_date=None, cmd_id=None):
         """Create a zip of the data folder to then download it easily.
+
+        Parameters
+        ----------
+        start_date : str, optional
+            Start date as ISO string (e.g. "2024-12-24").
+        end_date : str, optional
+            End date as ISO string.
         """
-        datadir, _ = os.path.split(self.settings['export_path'])
-        zippath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
-        make_archive(zippath, 'zip', datadir)
+        if start_date is not None and end_date is not None:
+            import zipfile
+            start = pd.to_datetime(start_date)
+            end = pd.to_datetime(end_date)
+            fnames = []
+
+            # add files from data/ folder
+            datadir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
+            for fname in os.listdir(datadir):
+                try:
+                    date = pd.to_datetime(fname[:15], format='%Y%m%d_%H%M%S')
+                    if date >= start and date <= end:
+                        fnames.append(os.path.join(datadir, fname))
+                except Exception as e:
+                    pass
+            
+            # add files from current acquisition
+            datadir, _ = os.path.split(self.settings['export_path'])
+            for fname in os.listdir(datadir):
+                try:
+                    date = pd.to_datetime(fname[:15], format='%Y%m%d_%H%M%S')
+                    if date >= start and date <= end:
+                        fnames.append(os.path.join(datadir, fname))
+                except Exception as e:
+                    pass
+            
+            zippath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data.zip'))
+            ZipFile = zipfile.ZipFile(zippath, 'w')
+            for fname in tqdm(fnames):
+                ZipFile.write(fname, zipfile.ZIP_DEFLATED)
+        else:  # download current acquisition
+            datadir, _ = os.path.split(self.settings['export_path'])
+            zippath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
+            make_archive(zippath, 'zip', datadir)
         self.data_logger.info(json.dumps({'download': 'ready'}))
 
     def shutdown(self, cmd_id=None):
