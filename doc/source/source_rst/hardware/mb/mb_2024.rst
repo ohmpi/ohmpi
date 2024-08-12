@@ -174,7 +174,7 @@ Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-d
    :width: 100%
    :align: center
 
-   STEP 11: Soldering two header sockets with 1 row and 8 positions.
+   STEP 11: Soldering header sockets with 1 row and 8 positions.
 
 .. figure:: ../../../img/mb.2024.x.x/12.jpg
    :width: 100%
@@ -226,7 +226,7 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
    :width: 100%
    :align: center
 
-   STEP 18: Soldering the two IDC 6 pins connectors. **Pay attention to the connectors orientation!**
+   STEP 18: Soldering the three IDC 6 pins connectors. **Pay attention to the connectors orientation!**
 
 .. figure:: ../../../img/mb.2024.x.x/19.jpg
    :width: 100%
@@ -240,11 +240,14 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
 
    STEP 20: Soldering six omron G5LE relays 5 VDC.
 
+.. warning::
+   The Raspberry Pi header below need to be soldered on the **under side of the PCB**.
+
 .. figure:: ../../../img/mb.2024.x.x/21.jpg
    :width: 100%
    :align: center
 
-   STEP 21: Soldering the 2x20 header for connection with the raspberry GPIO.
+   STEP 21: Soldering the 2x20 header for connection with the raspberry GPIO on **the under side of the PCB**.
 
 What is a `Op-Amp <https://en.wikipedia.org/wiki/Operational_amplifier>`_?
 
