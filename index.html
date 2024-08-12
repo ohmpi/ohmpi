@@ -455,6 +455,16 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                       <tbody id="seqTable">
                       </tbody>
                     </table>
+                    <button id="seqDownloadBtn" type="button" class="btn btn-primary">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download"
+                        viewBox="0 0 16 16">
+                        <path
+                          d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                        <path
+                          d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                      </svg>
+                    </button>
+                    <a id="seqDownload"></a> <!-- used to create automatic download of sequence -->                
                   </div>
                 </div>
               </div>
@@ -887,9 +897,9 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           document.getElementById('seqParamS').setAttribute('disabled', '')
         }
         if (seqTypeSelect.value == 'wenner') {
-          document.getElementById('seqParamN').removeAttribute('disabled')
-        } else {
           document.getElementById('seqParamN').setAttribute('disabled', '')
+        } else {
+          document.getElementById('seqParamN').removeAttribute('disabled')
         }
       })
       function seqGenerateBtnFunc() {
@@ -925,9 +935,37 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             }
           }
         } else if (seqType == 'schlum') {
-
+          for (let a = 1; a <= seqNelec; a++) {
+            for (let nn = 1; nn <= seqParamN; nn++) {
+              for (let pa = 1; pa <= seqParamA; pa++) {
+                if (nn >= pa-1) {
+                  let m = a + nn
+                  let n = m + pa
+                  let b = n + nn
+                  if ((a <= seqNelec) & (b <= seqNelec) & (m <= seqNelec) & (n <= seqNelec)) {
+                    gseq.push([a, b, m, n])
+                  }
+                }
+              }
+            }
+          }
         } else if (seqType == 'gradient') {
-
+          for (let a = 1; a <= seqNelec; a++) {
+            for (let nn = 1; nn <= seqParamN; nn++) {
+              for (let s = 1; s <= seqParamS; s++) {
+                for (let pa = 1; pa <= seqParamA; pa++) {
+                  if (nn >= pa-1) {
+                    let m = a + pa * nn
+                    let n = m + pa
+                    let b = a + (s + 2) * pa
+                    if ((a <= seqNelec) & (b <= seqNelec) & (m <= seqNelec) & (n <= seqNelec) & (m < b) & (n < b)) {
+                      gseq.push([a, b, m, n])
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
         console.log(gseq)
         sequence = gseq
@@ -960,6 +998,19 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       }
       // document.getElementById('viewSeqBtn').addEventListener('click', viewSeqBtnFunc)
       document.getElementById('sequence').addEventListener('change', viewSeqBtnFunc)
+
+      // download sequence
+      function seqDownloadBtnFunc() {
+        let content = 'a,b,m,n\n'
+        for (let i = 0; i < sequence.length; i++) {
+          content = content + sequence[i].join(',') + '\n'
+        }
+        let dwl = document.getElementById('seqDownload')
+        dwl.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content))
+        dwl.setAttribute('download', 'sequence.csv')
+        dwl.click()
+      }
+      document.getElementById('seqDownloadBtn').addEventListener('click', seqDownloadBtnFunc)
 
       // set configuration
       function saveConfigBtnFunc() {
