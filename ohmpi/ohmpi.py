@@ -1284,6 +1284,113 @@ class OhmPi(object):
         else:
             self._hw.mux_boards[mux_id].test(activation_time=activation_time)
 
+    def _test_mux_AB(self, vab=5, injection_duration=0.2):
+        """Test shortcut and connection on mux AB.
+        This test will send small current between all possible pairs of electrodes. If they are not connected, we should measure < 0.12 mA. When we inject on the same electrode, we cause a short-circuit and should measure a current proportional to the additional contact resistance we setup.
+        
+        WARNING: for this test:
+            - disconnect all electrodes from resistor board or ground
+            - add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current.
+        No need to disconnect MN electrodes as the MN relays will not be switched on.
+            
+        Paramaters
+        ----------
+        vab : float, optional
+            vab voltage in volts.
+        injection_duration : float, optional
+            Injection duration in seconds.
+        """
+        print(colored('WARNING: use this test with caution, it can destroy your board!', 'red') + '\nBefore running the test, make sure to:\n- disconnect all electrodes from resistor board or ground\n- add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current.')
+        reply = input('Are you sure you want to continue [y/N]: ')
+        if reply.lower() == 'y':
+            # find number of electrodes
+            nelec = 0
+            for mux_id in self._hw.mux_boards.keys():
+                for c in self._hw.mux_boards[mux_id].cabling.keys():
+                    if c[0] > nelec:
+                        nelec = c[0]
+            # test if we have shortcut in the mux itself
+            baddic = {}
+            for a in range(1, nelec+1):
+                for b in range(a+1, nelec+1):
+                    self._hw.switch_mux([a, b], roles=['A', 'B'], state='on')
+                    self._hw._vab_pulse(duration=0.2, vab=vab)
+                    current = self._hw.readings[-2, 3]
+                    self._hw.switch_mux([a, b], roles=['A', 'B'], state='off')
+                    ok = 'FAILED'
+                    if a != b and current < 0.2:
+                        ok = 'OK'
+                    elif a == b and current > 0.2:
+                        ok = 'OK'
+                    print('A: {:3d} B: {:3d} Iab: {:.2f} mA -> {:s}'.format(a, b, current, ok))
+                    if ok == "FAILED":
+                        baddic['a' + str(a) + ' b' + str(b)] = current
+            if len(baddic) > 0:
+                print(baddic)
+        else:
+            print('aborted') 
+    
+    def _test_mux_ABMN(self, vab=2, injection_duration=1):
+        """Test if all AB and MN relays switch properly.
+        NOT WORKING AS WE HAVE A LOT OF FLOATING AND HARD TO BE IN THE RANGE OF ADC (-2.5/+2.5)
+        This test should be run with a max injection voltage below 5V to not harm the Vmn part.
+        It consists in doing AB==MN measurements, then switch to all other MN to see if none is connected.
+        
+        WARNING: for this test:
+            - disconnect all electrodes from resistor board or ground
+            - add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current in case of shortcut.
+            
+        Paramaters
+        ----------
+        vab : float, optional
+            vab voltage in volts.
+        injection_duration : float, optional
+            Injection duration in seconds.
+        """
+        print(colored('WARNING: use this test with caution, it can destroy your board!', 'red') + '\nBefore running the test, make sure to:\n- disconnect all electrodes from resistor board or ground\n- add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current.\n- use a Tx voltage of 5V or less. ')
+        reply = input('Are you sure you want to continue [y/N]: ')
+        if reply.lower() == 'y':
+            # find number of electrodes
+            nelec = 0
+            for mux_id in self._hw.mux_boards.keys():
+                for c in self._hw.mux_boards[mux_id].cabling.keys():
+                    if c[0] > nelec:
+                        nelec = c[0]
+            
+            # test if the AB and MN relays switch well and if there is a MN shortcut
+            baddic = {}
+            for a in range(1, nelec+1):
+                b = a + 1
+#                for b in range(a+1, nelec+1):
+                for m in range(a, nelec):
+                    n = m + 1
+                    self._hw.switch_mux([a, b, m, n], roles=['A', 'B', 'M', 'N'], state='on', bypass_check=True)
+                    self._hw._vab_pulse(duration=injection_duration, vab=vab)
+                    vmn = self._hw.readings[-2, 4]
+                    # import matplotlib.pyplot as plt
+                    # fig, ax = plt.subplots()
+                    # ax.plot(self._hw.readings[:, 0], self._hw.readings[:, 4])
+                    # plt.show(block=True)
+                    self._hw.switch_mux([a, b, m, n], roles=['A', 'B', 'M', 'N'], state='off', bypass_check=True)
+                    ok = 'FAILED'
+                    if a == m and b == n:
+                        if vmn >= 0.9*vab and vmn <= 1.1*vab:
+                            ok = 'OK (vab)'
+                        else:
+                            ok = 'FAILED'
+                    else:
+                        if vmn >= 0.9*vab and vmn <= 1.1*vab:
+                            ok = 'FAILED'
+                        else:
+                            ok = 'OK (floating)'
+                    print('A: {:3d} B: {:3d} M: {:3d} N: {:3d} Vmn: {:.1f} mV -> {:s}'.format(a, b, m, n, vmn, ok))
+                    if ok == 'FAILED':
+                        baddic['m' + str(m) + ' n' + str(n)] = vmn
+            if len(baddic) > 0:
+                print(baddic)
+        else:
+            print('aborted') 
+           
     def reset_mux(self, cmd_id=None):
         """Switches off all multiplexer relays.
 
