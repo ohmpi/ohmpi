@@ -28,7 +28,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
     <button id="runBtn" type="button" class="btn btn-primary">&#9654</button>
     <button id="stopBtn" type="button" class="btn btn-warning">&#9724</button>
     <button id="getDataBtn" type="button" class="btn btn-info">Get data</button>
-    <button id="downloadBtn" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#rmModal">
+    <button id="downloadModalBtn" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#rmModal">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download"
         viewBox="0 0 16 16">
         <path
@@ -116,9 +116,9 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                   </label>
                 </div>
               </div>
-              <div class="col-auto">
+              <!-- <div class="col-auto">
                 <button id="capplyBtn" type="button" class="btn btn-info">Apply</button>
-              </div>
+              </div> -->
             </div>
             <div id="gd"></div>
           </div>
@@ -146,7 +146,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                   <th scope="col">R [Ohm]</th>
                   <th scope="col">Iab [mA]</th>
                   <th scope="col">Vmn [mV]</th>
-                  <th scope="col">Vmn std [%]</th>
+                  <th scope="col">R std [%]</th>
                 </tr>
               </thead>
               <tbody id="rawTable"></tbody>
@@ -217,6 +217,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         <div id="panelFW" class="accordion-collapse collapse">
           <div class="accordion-body">
             <!-- full waveform-->
+            <p>By default, full-waveform data are not downloaded. Press the button below to donwload them. This can take several minutes. Look at the status (top of this dashboard).</p>
+            <button id="getDataFWBtn" type="button" class="btn btn-info">Get full-waveform data</button>
             <div class="row gx-1">
               <div class="col-auto">
                 <select id="surveyFWSelect" class='form-select'></select>
@@ -252,14 +254,18 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                   <span class="input-group-text" id="cminInvLabel">Min:</span>
                   <input type="number" id="cminInv" class="form-control" aria-label="cminInv">
                 </div>
-                <!-- <input id="cminInv" type="number" value="" /> -->
               </div>
               <div class="col-auto">
                 <div class="input-group">
                   <span class="input-group-text" id="cmaxInvLabel">Min:</span>
                   <input type="number" id="cmaxInv" class="form-control" aria-label="cmaxInv">
                 </div>
-                <!-- <input id="cmaxInv" type="number" value="" /> -->
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="logInvCheck">
+                <label class="form-check-label" for="logInvCheck">
+                  log10
+                </label>
               </div>
               <div class="col-auto">
                 <select id="cmapInv" class="form-select">
@@ -272,9 +278,9 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                   <option value="RdBu">RdBu</option>
                 </select>
               </div>
-              <div class="col-auto">
+              <!-- <div class="col-auto">
                 <button id="capplyBtnInv" type="button" class="btn btn-info">Apply</button>
-              </div>
+              </div> -->
             </div>
             <div id="inv"></div>
           </div>
@@ -292,7 +298,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             <!-- log -->
             <nav>
               <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active" id="nav-1-tab" data-bs-toggle="tab" data-bs-target="#nav-3" type="button" role="tab" aria-controls="nav-1" aria-selected="true">Exec</button>
+                <button class="nav-link active" id="nav-1-tab" data-bs-toggle="tab" data-bs-target="#nav-1" type="button" role="tab" aria-controls="nav-1" aria-selected="true">Exec</button>
                 <button class="nav-link" id="nav-2-tab" data-bs-toggle="tab" data-bs-target="#nav-2" type="button" role="tab" aria-controls="nav-2" aria-selected="false">Data</button>
                 <button class="nav-link" id="nav-3-tab" data-bs-toggle="tab" data-bs-target="#nav-3" type="button" role="tab" aria-controls="nav-3" aria-selected="false">Ctrl</button>
               </div>
@@ -429,7 +435,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                       <div class="mb-3 row">
                         <label for="seqParamN" class="col-sm-2 col-form-label">n:</label>
                         <div class="col-sm-10">
-                          <input id="seqParamN" class="form-control-number" type="number" />
+                          <input id="seqParamN" class="form-control-number" type="number" disabled/>
                         </div>
                       </div>
                       <div class="mb-3 row">
@@ -611,7 +617,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
               <div class="alert alert-danger" role="alert">
                 Remove all data of the current acquisition.
               </div>
-              <button id="removeDataBtn" type="button" class="btn btn-danger">Clear data</button>
+              <button id="removeDataBtn" type="button" class="btn btn-danger" data-bs-dismiss="modal">Clear data</button>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -639,6 +645,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       let callbacks = {} // store callback (might not be needed)
       let sequence = [] // uploaded or generated quadrupole sequence
       let invertedData = [{
+        /*
         rho: [[10, 10.625, 12.5, 15.625, 20],
                 [5.625, 6.25, 8.125, 11.25, 15.625],
                 [2.5, 3.125, 5., 8.125, 12.5],
@@ -646,9 +653,10 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 [0, 0.625, 2.5, 5.625, 10]],
         x: [-9, -6, -5 , -3, -1],
         y: [0, 1, 4, 5, 7],
-        // rho: [],
-        // x: [],
-        // y: []
+        */
+        rho: [],
+        x: [],
+        y: []
       }] // store inverted data
 
       // possible attributes and their labels
@@ -657,7 +665,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         'r': 'Resistance [Ohm]',
         'i': 'Current [mA]',
         'v': 'Voltage [mV]',
-        'dev': 'Vmn std [%]',
+        'dev': 'R std [%]',
       }
 
       // variables with MQTT, can be updated via mqtt modal
@@ -707,9 +715,9 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         client.subscribe(topic_ctrl)
 
         // send welcome message
-        message = new Paho.MQTT.Message("Hello from index.html")
-        message.destinationName = topic_ctrl
-        client.send(message)
+        // message = new Paho.MQTT.Message("Hello from index.html")
+        // message.destinationName = topic_ctrl
+        // client.send(message)
         document.getElementById('connection').innerText = 'Connected'
       }
 
@@ -727,9 +735,11 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           if (message.topic == topic_data) {
             // process data
             msg = payload // for accessing the variable from the console
-            datalog.innerText = datalog.innerText + payload + '\n'
-            console.log('DATA LOG:', payload)
 
+            // put in the log
+            datalog.value = datalog.value.split('\n').slice(0, 100).join('\n') + '\n' + payload
+            datalog.scrollTop = datalog.scrollHeight
+            
             // replace NaN values by null to make them acceptable for json parser
             payload = payload.replace(/\bNaN\b/g, "null");
             payload = payload.replace(/\bnan\b/g, "null");
@@ -760,10 +770,11 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
           } else if (message.topic == topic_exec) {
             // display it in the log
-            execlog.innerText = execlog.innerText + payload + '\n'
-            //console.log('EXEC LOG:', payload)
+            execlog.value = execlog.value.split('\n').slice(0, 100).join('\n') + '\n' + payload
+            execlog.scrollTop = execlog.scrollHeight
           } else if (message.topic == topic_ctrl) {
-            ctrllog.innerText = ctrllog.innerText + payload + '\n'
+            ctrllog.value = ctrllog.value.split('\n').slice(0, 100).join('\n') + '\n' + payload
+            ctrllog.scrollTop = ctrllog.scrollHeight
           }
 
 
@@ -1023,6 +1034,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           'sequence_delay': parseFloat(document.getElementById('sequence_delay').value),
           'nb_stack': parseInt(document.getElementById('nb_stack').value),
           'duty_cycle': parseFloat(document.getElementById('duty_cycle').value),
+        //   'fw_in_csv': document.getElementById('fw_in_csv').checked,
         }
 
         // check if we have a sequence or not
@@ -1046,12 +1058,12 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
       // make pseudo plot
       var trace = {
-        x: [1, 2, 3],
-        y: [1, 2, 3],
+        x: [],
+        y: [],
         mode: 'markers',
         marker: {
           size: 40,
-          color: [3, 5, 6],
+          color: [],
           colorbar: {
             //title: 'Apparent resistivity [Ohm.m]',
             titleside: 'right',
@@ -1165,7 +1177,6 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         let attr = document.getElementById('attrSelect').value
         let ilog = document.getElementById('logCheck').checked
         let df = data[surveyName]
-        console.log(attr, surveyName, df)
         if (df != undefined) {
           let a = df['a']
           let b = df['b']
@@ -1217,6 +1228,9 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       document.getElementById('attrSelect').addEventListener('change', surveySelectFunc)
       document.getElementById('cmap').addEventListener('change', surveySelectFunc)
       document.getElementById('logCheck').addEventListener('change', surveySelectFunc)
+      document.getElementById('cmin').addEventListener('change', surveySelectFunc)
+      document.getElementById('cmax').addEventListener('change', surveySelectFunc)
+      
       
       // raw table
       let surveyTableSelect = document.getElementById('surveyTableSelect')
@@ -1334,7 +1348,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           fwdata[1]['x'] = dic['t']
           fwdata[1]['y'] = dic['v']
         } else {
-          console.log('no fw data for ', key, 'in', surveyName)
+          // this will happen a lot when we getData(full=false) during live
+          //console.log('no fw data for ', key, 'in', surveyName)
           fwdata[0]['x'] = []
           fwdata[0]['y'] = []
           fwdata[1]['x'] = []
@@ -1347,16 +1362,31 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
       // getData
       function getData() {
+        output.innerHTML =  'Status: getting data...'
         sendCommand(JSON.stringify({
           'cmd': 'get_data',
           'kwargs': {
             'survey_names': Object.keys(data).slice(0, -1),
+          // last survey is often partial so we download it again
+            'full': false,
+          }
+        }), console.log('processData(ddic)')
+        )
+      }
+
+      function getDataFWBtnFunc() {
+        output.innerHTML =  'Status: getting full-waveform data...'
+        sendCommand(JSON.stringify({
+          'cmd': 'get_data',
+          'kwargs': {
+            'survey_names': [], // download them all again with FW data
           // last survey is often partial so we download it again
             'full': true,
           }
         }), console.log('processData(ddic)')
         )
       }
+      document.getElementById('getDataFWBtn').addEventListener('click', getDataFWBtnFunc)
 
       // processMessage
       function processMessage(ddic) {
@@ -1441,24 +1471,26 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         surveySelectInv.value = surveyNames[surveyNames.length - 1]
 
         // update list of quadrupoles if any
-        if ((quads.length == 0) & (surveyNames.length > 0)) {
-          console.log('updating list of quadrupoles')
+        if (surveyNames.length > 0) {
           let df = data[surveyNames[0]]
-          let quadSelect = document.getElementById('quadSelect')
-          quadSelect.innerHTML = ''
-          quadFWSelect.removeEventListener('change', updateFW)
-          quadFWSelect.innerHTML = ''
-          for (let i = 0; i < df['a'].length; i++) {
-            quad = [df['a'][i], df['b'][i], df['m'][i], df['n'][i]]
-            quads.push(quad)
-            let option = document.createElement('option')
-            option.value = quad.join(', ')
-            option.innerText = quad.join(', ')
-            quadSelect.appendChild(option)
-            let option2 = document.createElement('option')
-            option2.value = quad.join(',')  // no space to save bandwidth
-            option2.innerText = quad.join(', ')
-            quadFWSelect.appendChild(option2)
+          if (df['a'].length > quads.length) {
+            console.log('updating list of quadrupoles')
+            let quadSelect = document.getElementById('quadSelect')
+            quadSelect.innerHTML = ''
+            quadFWSelect.removeEventListener('change', updateFW)
+            quadFWSelect.innerHTML = ''
+            for (let i = 0; i < df['a'].length; i++) {
+                quad = [df['a'][i], df['b'][i], df['m'][i], df['n'][i]]
+                quads.push(quad)
+                let option = document.createElement('option')
+                option.value = quad.join(', ')
+                option.innerText = quad.join(', ')
+                quadSelect.appendChild(option)
+                let option2 = document.createElement('option')
+                option2.value = quad.join(',')  // no space to save bandwidth
+                option2.innerText = quad.join(', ')
+                quadFWSelect.appendChild(option2)
+            }
           }
           quadFWSelect.addEventListener('change', updateFW)
           updateFW()
@@ -1474,34 +1506,37 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       let getDataBtn = document.getElementById('getDataBtn')
       getDataBtn.addEventListener('click', getData)
 
-      // apply new colorscale
-      let capplyBtn = document.getElementById('capplyBtn')
-      capplyBtn.addEventListener('click', function () {
-        surveySelectFunc()
-      })
-
       // plot inverted data
       function showInvFunc() {
         let cmin = parseFloat(document.getElementById('cminInv').value)
         let cmax = parseFloat(document.getElementById('cmaxInv').value)
+        let logInvCheck = document.getElementById('logInvCheck').checked
         let autocontour = false
         if (isNaN(cmin) | isNaN(cmax)) {
           autocontour = true
         }
 
         // convert rho to log10(rho)
-        let log10rho = []
-        for (let i = 0; i < invertedData[0]['rho'].length; i++) {
-          let row = invertedData[0]['rho'][i]
-          var arr = []
-          for (let j = 0; j < row.length; j++) {
-            arr.push(Math.log10(row[j]))
-          }
-          log10rho.push(arr)
+        let values = []
+        let title = ''
+        if (logInvCheck) {
+            title = 'Resistivity (log10) [Ohm.m]'
+            for (let i = 0; i < invertedData[0]['rho'].length; i++) {
+                let row = invertedData[0]['rho'][i]
+                var arr = []
+                for (let j = 0; j < row.length; j++) {
+                    arr.push(Math.log10(row[j]))
+                }
+                values.push(arr)
+            }
+        }
+        else {
+            title = 'Resistivity [Ohm.m]'
+            values = invertedData[0]['rho']
         }
 
         var invData = [{
-          z: log10rho,
+          z: values,
           x: invertedData[0]['x'],
           y: invertedData[0]['z'],
           type: 'contour',
@@ -1513,7 +1548,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             size: 10,
           },
           colorbar: {
-            title: 'Resistivity (log10) [Ohm.m]',
+            title: title,
             titleside: 'right',
             titlefont: {
               size: 14,
@@ -1540,6 +1575,12 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       }
       showInvFunc()
 
+      // add listener for checkboxes or others
+      document.getElementById('cmaxInv').addEventListener('change', showInvFunc)
+      document.getElementById('cminInv').addEventListener('change', showInvFunc)
+      document.getElementById('cmapInv').addEventListener('change', showInvFunc)
+      document.getElementById('logInvCheck').addEventListener('change', showInvFunc)
+
       // invert data
       function invertBtnFunc() {
         let survey_name = document.getElementById('surveySelectInv').value
@@ -1563,16 +1604,10 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       let invertBtn = document.getElementById('invertBtn')
       invertBtn.addEventListener('click', invertBtnFunc)
 
-      // apply new colorscale for inversion
-      let capplyBtnInv = document.getElementById('capplyBtnInv')
-      capplyBtnInv.addEventListener('click', function () {
-        showInvFunc()
-      })
-
       // checkbox interaction for data download
       function dataRetrievalCheckFunc(x) {
         if (x['target'].checked == true) {
-          interv = setInterval(getData, 1000) // every 5s
+          interv = setInterval(getData, 1000) // every 1s
         } else {
           clearInterval(interv)
         }
@@ -1625,22 +1660,26 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       setTimeBtn.addEventListener('click', setTimeBtnFunc)
 
       // download data
-      function downloadBtnFunc() {
+      function downloadBtnFunc() {  // current acquisition
+        sendCommand('{"cmd": "download_data"}', function (x) {
+            console.log(x)
+          })
+        }
+      let downloadBtn = document.getElementById('downloadBtn')
+      downloadBtn.addEventListener('click', downloadBtnFunc)
+
+      function downloadSelectBtnFunc() { // between two dates
         let start_date = document.getElementById('startDate').value
         let end_date = document.getElementById('endDate').value
         if ((start_date != '') & (end_date != '')) {
-          sendCommand('{"cmd": "download_data", "kwargs": {"start_date": ' +
-            start_date  + ', "end_date": ' + end_date + '}}', function (x) {
-            console.log(x)
-          })
-        } else {
-          sendCommand('{"cmd": "download_data"}', function (x) {
+          sendCommand('{"cmd": "download_data", "kwargs": {"start_date": "' +
+            start_date  + '", "end_date": "' + end_date + '"}}', function (x) {
             console.log(x)
           })
         }
       }
-      let downloadBtn = document.getElementById('downloadBtn')
-      downloadBtn.addEventListener('click', downloadBtnFunc)
+      let downloadSelectBtn = document.getElementById('downloadSelectBtn')
+      downloadSelectBtn.addEventListener('click', downloadSelectBtnFunc)
       document.getElementById('endDate').valueAsDate = new Date();
 
 
@@ -1724,8 +1763,11 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           }
         }
       }
-      processData(ddic2)
+      //processData(ddic2)
 
+      /* TODO
+      - read from data_log instead of getData()?
+      */
     </script>
 
     <!-- Boostrap scripts (at the end of the page for faster loading time)-->

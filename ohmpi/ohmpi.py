@@ -16,11 +16,12 @@ import numpy as np
 import csv
 import time
 import pandas as pd
+import io
 from zipfile import ZipFile
 from shutil import rmtree, make_archive
 from threading import Thread
 from inspect import getmembers, isfunction
-from datetime import datetime
+from datetime import datetime, timedelta
 from termcolor import colored
 from logging import DEBUG
 from ohmpi.utils import get_platform, sequence_random_sampler
@@ -393,40 +394,58 @@ class OhmPi(object):
                         headers[i] = 'R [Ohm]'
 
                 # read basic data
-                icols = list(np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'R [Ohm]', 'I [mA]', 'Vmn [mV]', 'Vstd [%]']))[0])
+                icols = list(np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'R [Ohm]', 'I [mA]', 'Vmn [mV]', 'R_std [%]']))[0])
                 data = np.loadtxt(os.path.join(ddir, fname), delimiter=',',
                                     skiprows=1, usecols=icols)
-                data = data[None, :] if len(data.shape) == 1 else data
-                ddic[fname.replace('.csv', '')] = {
-                    'a': data[:, 0].astype(int).tolist(),
-                    'b': data[:, 1].astype(int).tolist(),
-                    'm': data[:, 2].astype(int).tolist(),
-                    'n': data[:, 3].astype(int).tolist(),
-                    'r': data[:, 4].round(1).tolist(),
-                    'i': data[:, 5].round(1).tolist(),
-                    'v': data[:, 6].round(1).tolist(),
-                    'dev': data[:, 7].round(1).tolist()
-                }
                 
-                # if requested add full-waveform data
-                if full:
-                    with open(os.path.join(ddir, fname), 'r') as f:
-                        x = f.readlines()
-                    headers = x[0].split(',')
-                    fwdata = {}
-                    for row in x[1:]:
-                        rdata = row.split(',')
-                        key = ','.joint(rdata[0], rdata[1], rdata[2], rdata[3])
-                        rdata2 = np.array(rdata[len(headers):]).reshape((-1, 5))
-                        fwdata[key] = {
-                            't': rdata2[:, 0].round(1).tolist(),
-                            'i': rdata2[:, 3].round(1).tolist(),
-                            'v': rdata2[:, 4].round(1).tolist(),
-                        }
-                    ddic[fname.replace('.csv', '')]['fw'] = fwdata
+                if data.shape[0] != 0:
+                    data = data[None, :] if len(data.shape) == 1 else data
+                    ddic[fname.replace('.csv', '')] = {
+                        'a': data[:, 0].astype(int).tolist(),
+                        'b': data[:, 1].astype(int).tolist(),
+                        'm': data[:, 2].astype(int).tolist(),
+                        'n': data[:, 3].astype(int).tolist(),
+                        'r': data[:, 4].round(1).tolist(),
+                        'i': data[:, 5].round(1).tolist(),
+                        'v': data[:, 6].round(1).tolist(),
+                        'dev': data[:, 7].round(1).tolist()
+                    }
+                    
+                    # if requested add full-waveform data
+                    if full:
+                        # from within csv (not working as there are headers for fw)
+                        # with open(os.path.join(ddir, fname), 'r') as f:
+                        #     x = f.readlines()
+                        # headers = x[0].split(',')
+                        # fwdata = {}
+                        # for row in x[1:]:
+                        #     rdata = row.split(',')
+                        #     key = ','.join([rdata[1], rdata[2], rdata[3], rdata[4]])
+                        #     rdata2 = np.array(rdata[len(headers):]).reshape((-1, 5))
+                        #     fwdata[key] = {
+                        #         't': rdata2[:, 0].round(1).tolist(),
+                        #         'i': rdata2[:, 3].round(1).tolist(),
+                        #         'v': rdata2[:, 4].round(1).tolist(),
+                        #     }
+
+                        # from the .zip
+                        fwpath = os.path.join(ddir, fname.replace('.csv', '_fw.zip'))
+                        if os.path.exists(fwpath):
+                            fwdata = {}
+                            myzip = ZipFile(fwpath)
+                            df = pd.read_csv(io.StringIO(myzip.read(fname.replace('.csv', '_fw.csv')).decode('utf-8')))
+                            df['abmn'] = df['A'].astype(str) + ',' + df['B'].astype(str) + ',' + df['M'].astype(str) + ',' + df['N'].astype(str)
+                            for abmn in df['abmn'].unique():
+                                ie = df['abmn'].eq(abmn)
+                                fwdata[abmn] = {
+                                    't': df[ie]['t'].round(3).tolist(),
+                                    'i': df[ie]['current'].round(1).tolist(),
+                                    'v': df[ie]['voltage'].round(1).tolist()
+                                }
+                            ddic[fname.replace('.csv', '')]['fw'] = fwdata
                 # except Exception as e:
                 #    print(fname, ':', e)
-        rdic = {'cmd_id': cmd_id, 'data': ddic}
+        rdic = {'cmd_id': cmd_id, 'status': 'getting data...done', 'data': ddic}
         self.data_logger.info(json.dumps(rdic))
         return ddic
 
@@ -573,35 +592,45 @@ class OhmPi(object):
             End date as ISO string.
         """
         if start_date is not None and end_date is not None:
-            import zipfile
-            start = pd.to_datetime(start_date)
-            end = pd.to_datetime(end_date)
+            start = datetime(*[int(a) for a in start_date.split('-')])
+            end = datetime(*[int(a) for a in end_date.split('-')]) + timedelta(days=1)
             fnames = []
 
             # add files from data/ folder
             datadir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
             for fname in os.listdir(datadir):
                 try:
-                    date = pd.to_datetime(fname[:15], format='%Y%m%d_%H%M%S')
-                    if date >= start and date <= end:
+                    if fname.split('.')[-1] == 'csv':
+                        part = fname[-19:-4]
+                    elif fname.split('.')[-1] == 'zip':
+                        part = fname[-22:-7]
+                    date = datetime.strptime(part, '%Y%m%dT%H%M%S')
+                    if (date >= start) and (date <= end):
                         fnames.append(os.path.join(datadir, fname))
                 except Exception as e:
                     pass
             
             # add files from current acquisition
-            datadir, _ = os.path.split(self.settings['export_path'])
-            for fname in os.listdir(datadir):
-                try:
-                    date = pd.to_datetime(fname[:15], format='%Y%m%d_%H%M%S')
-                    if date >= start and date <= end:
-                        fnames.append(os.path.join(datadir, fname))
-                except Exception as e:
-                    pass
+            if datadir != os.path.split(self.settings['export_path'])[0]:
+                datadir, _ = os.path.split(self.settings['export_path'])
+                for fname in os.listdir(datadir):
+                    try:
+                        if fname.split('.')[-1] == 'csv':
+                            part = fname[-19:-4]
+                        elif fname.split('.')[-1] == 'zip':
+                            part = fname[-22:-7]
+                        date = datetime.strptime(part, '%Y%m%dT%H%M%S')
+                        if date >= start and date <= end:
+                            fnames.append(os.path.join(datadir, fname))
+                    except Exception as e:
+                        pass
             
             zippath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data.zip'))
-            ZipFile = zipfile.ZipFile(zippath, 'w')
-            for fname in tqdm(fnames):
-                ZipFile.write(fname, zipfile.ZIP_DEFLATED)
+            if os.path.exists(zippath):
+                os.remove(zippath)
+            with ZipFile(zippath, 'w') as f:
+                for fname in tqdm(fnames):
+                    f.write(fname, arcname=os.path.basename(fname))
         else:  # download current acquisition
             datadir, _ = os.path.split(self.settings['export_path'])
             zippath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
