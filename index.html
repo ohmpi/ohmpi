@@ -704,6 +704,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         console.log("onConnect")
         client.subscribe(topic_data)
         client.subscribe(topic_exec)
+        client.subscribe(topic_ctrl)
 
         // send welcome message
         message = new Paho.MQTT.Message("Hello from index.html")
