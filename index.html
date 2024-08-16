@@ -48,8 +48,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
     </button>
 
     <!-- status indicators -->
-    <div><b id='connection'>Connecting...</b></div>
-    <div id='output'>Status: idle</div>
+    <div><b id="connection">Connecting...</b></div>
+    <div id="output">Status: idle</div>
 
     <div class="form-check">
       <input id="dataRetrievalCheck" class="form-check-input" type="checkbox" value="">
@@ -143,9 +143,9 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                   <th scope="col">B</th>
                   <th scope="col">M</th>
                   <th scope="col">N</th>
-                  <th scope="col">R [Ohm]</th>
-                  <th scope="col">Iab [mA]</th>
                   <th scope="col">Vmn [mV]</th>
+                  <th scope="col">Iab [mA]</th>
+                  <th scope="col">R [Ohm]</th>
                   <th scope="col">R std [%]</th>
                 </tr>
               </thead>
@@ -227,6 +227,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 <select id="quadFWSelect" class='form-select'></select>
               </div>
             </div>
+            <div class="row gx=1" id="fwValues">
+            </div>
             <!-- <button id="applyFWBtn" type="button" class="btn btn-info">Apply</button> -->
             <div id="fw"></div>
           </div>
@@ -278,10 +280,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                   <option value="RdBu">RdBu</option>
                 </select>
               </div>
-              <!-- <div class="col-auto">
-                <button id="capplyBtnInv" type="button" class="btn btn-info">Apply</button>
-              </div> -->
             </div>
+            <div id="invOutput"></div>
             <div id="inv"></div>
           </div>
         </div>
@@ -544,7 +544,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                       <div class="form-group row">
                         <label for="strategy" class="col col-form-label">Strategy:</label>
                         <div class="col">
-                          <select id="strategy">
+                          <select id="strategySelect" class="form-select">
                             <option value="constant">Constant</option>
                             <option value="vmin">Vmin</option>
                             <option value="vmax">Vmax</option>
@@ -561,13 +561,13 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                       <div class="form-group row">
                         <label for="vab_max" class="col col-form-label">Vab max [V]:</label>
                         <div class="col">
-                          <input type="number" class="form-control-number" id="vab_max" value="">
+                          <input type="number" class="form-control-number" id="vab_max" value="" disabled>
                         </div>
                       </div>
                       <div class="form-group row">
                         <label for="vmn_req" class="col col-form-label">Vmn requested [V]:</label>
                         <div class="col">
-                          <input type="number" class="form-control-number" id="vmn_req" value="">
+                          <input type="number" class="form-control-number" id="vmn_req" value="" disabled>
                         </div>
                       </div>
                     </form>
@@ -758,12 +758,24 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
               dwl.setAttribute('href', serverUrl + '/data.zip')
               dwl.setAttribute('download', 'data.zip')
               dwl.click()
-            } else { // data or results from inversion
+            } else if ('inversion' in ddic) {
+              document.getElementById('invOutput').value = ddic['inversion']
+              if ('SUCCESS' in ddic['inversion']) {
+                invertedData = ddic['invertedData']
+                showInvFunc()
+              }
+              var btn = document.getElementById('invertBtn')
+              btn.innerText = 'Run inversion'
+              btn.className = 'btn btn-info'  
+            } else { // data
               processMessage(ddic)
             }
 
             if ('status' in ddic) {
               document.getElementById('output').value = ddic['status']
+              if (ddic['status'].includes('full-waveform')) {
+                document.getElementById('getDataFWBtn').innerText = 'Get full-waveform data'
+              }
             }
 
             // usually these don't have a cmd_id so we are not sure when
@@ -1024,6 +1036,25 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       }
       document.getElementById('seqDownloadBtn').addEventListener('click', seqDownloadBtnFunc)
 
+      // strategies
+      let strategySelect = document.getElementById('strategySelect')
+      function strategySelectFunc() {
+        if (strategySelect.value == 'constant') {
+          document.getElementById('vab_req').removeAttribute('disabled')
+          document.getElementById('vab_max').setAttribute('disabled', '')
+          document.getElementById('vmn_req').setAttribute('disabled', '')
+        } else if (strategySelect.value == 'vmax') {
+          document.getElementById('vab_req').setAttribute('disabled', '')
+          document.getElementById('vab_max').removeAttribute('disabled')
+          document.getElementById('vmn_req').setAttribute('disabled', '')
+        } else if (strategySelect.value == 'vmin') {
+          document.getElementById('vab_req').setAttribute('disabled', '')
+          document.getElementById('vab_max').setAttribute('disabled', '')
+          document.getElementById('vmn_req').removeAttribute('disabled')
+        }
+      }
+      strategySelect.addEventListener('change', strategySelectFunc)
+
       // set configuration
       function saveConfigBtnFunc() {
         // collect values from modal
@@ -1034,7 +1065,16 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           'sequence_delay': parseFloat(document.getElementById('sequence_delay').value),
           'nb_stack': parseInt(document.getElementById('nb_stack').value),
           'duty_cycle': parseFloat(document.getElementById('duty_cycle').value),
-        //   'fw_in_csv': document.getElementById('fw_in_csv').checked,
+          'strategy': strategySelect.value,
+        }
+
+        // add strategies
+        if (strategySelect.value == 'constant') {
+          formVals['vab_req'] = parseFloat(document.getElementById('vab_req').value)
+        } else if (strategySelect.value == 'vmax') {
+          formVals['vab_max'] = parseFloat(document.getElementById('vab_max').value)
+        } else if (strategySelect.value == 'vmin') {
+          formVals['vmn_req'] = parseFloat(document.getElementById('vmn_req').value)
         }
 
         // check if we have a sequence or not
@@ -1236,22 +1276,24 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       let surveyTableSelect = document.getElementById('surveyTableSelect')
       function surveyTableSelectFunc() {
         let surveyName = surveyTableSelect.value
-        let df = data[surveyName]
-        let tbody = document.getElementById('rawTable')
-        tbody.innerHTML = '' // remove all content
-        let count = 1
-        for (let i = 0; i < df['a'].length; i++) {
-          var tr = document.createElement('tr')
-          var td2 = document.createElement('td')
-          td2.innerText = count + i
-          td2.setAttribute('scope', 'row')
-          tr.appendChild(td2)
-          for (col of ['a', 'b', 'm', 'n', 'r', 'i', 'v', 'dev']) {
-            var td = document.createElement('td')
-            td.innerText = df[col][i]
-            tr.appendChild(td)
+        if (surveyName in data) {
+          let df = data[surveyName]
+          let tbody = document.getElementById('rawTable')
+          tbody.innerHTML = '' // remove all content
+          let count = 1
+          for (let i = 0; i < df['a'].length; i++) {
+            var tr = document.createElement('tr')
+            var td2 = document.createElement('td')
+            td2.innerText = count + i
+            td2.setAttribute('scope', 'row')
+            tr.appendChild(td2)
+            for (col of ['a', 'b', 'm', 'n', 'r', 'i', 'v', 'dev']) {
+              var td = document.createElement('td')
+              td.innerText = df[col][i]
+              tr.appendChild(td)
+            }
+            tbody.appendChild(tr)
           }
-          tbody.appendChild(tr)
         }
       }
       surveyTableSelect.addEventListener('change', surveyTableSelectFunc)
@@ -1375,7 +1417,13 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       }
 
       function getDataFWBtnFunc() {
+        // disable show-live data checkbox
+        clearInterval(interv)
+        document.getElementById('dataRetrievalCheck').checked = false
+
+        // update status
         output.innerHTML =  'Status: getting full-waveform data...'
+        document.getElementById('getDataFWBtn').innerText = 'Getting FW data...'
         sendCommand(JSON.stringify({
           'cmd': 'get_data',
           'kwargs': {
@@ -1396,8 +1444,9 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           processData(ddic)
         } else {
           // inversion related
-          invertedData = ddic
-          showInvFunc()
+          // invertedData = ddic
+          // showInvFunc()
+          console.log('should not called .................')
         }
       }
 
@@ -1405,6 +1454,10 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       function processData(ddic) {
         // update status
         output.innerHTML = 'Status: ' + ddic['status']
+        console.log('-----', ddic['status'], '--------', ddic['status'].includes('full-waveform'))
+        if (ddic['status'].includes('full-waveform')) {
+          document.getElementById('getDataFWBtn').innerText = 'Get full-waveform data'
+        }
 
         // update data dic with new data
         data = { // destructuring assignment (magic! :o)
