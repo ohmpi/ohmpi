@@ -466,6 +466,7 @@ class OhmPi(object):
         else:
             self.exec_logger.debug('No sequence measurement thread to interrupt.')
         self.status = 'idle'
+        self.data_logger.info(json.dumps({'cmd_id': cmd_id, 'status': 'idle'}))
         self.exec_logger.debug(f'Status: {self.status}')
 
     def load_sequence(self, filename: str, cmd_id=None):
@@ -583,7 +584,7 @@ class OhmPi(object):
         self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
         os.system('reboot')  # this may need admin rights
 
-    def download_data(self, start_date=None, end_date=None, ftype=None, elec_spacing=1, cmd_id=None):
+    def download_data(self, start_date=None, end_date=None, ftype='ohmpi', elec_spacing=1, cmd_id=None):
         """Create a zip of the data folder to then download it easily.
 
         Parameters
@@ -594,6 +595,7 @@ class OhmPi(object):
             End date as ISO string.
         ftype : str, optional
             Format type. Default is OhmPi normal format. Can choose between:
+            - ohmpi (default)
             - bert (same as pygimli)
             - pygimli (same as bert)
             - protocol (for resipy/r2 codes)
@@ -638,7 +640,7 @@ class OhmPi(object):
             fnames = [os.path.join(datadir, f) for f in os.listdir(datadir)]
 
         # convert to specified format
-        if ftype is not None:
+        if ftype != 'ohmpi':
             # only saving .csv, not .zip or .log
             fnames = [f for f in fnames if f[-4:] == '.csv']
             tempdir = tempfile.TemporaryDirectory()
@@ -654,7 +656,7 @@ class OhmPi(object):
                 f.write(fname, arcname=os.path.basename(fname))
         
         # clean temporary directory
-        if ftype is not None:
+        if ftype != 'ohmpi':
             tempdir.cleanup()
 
         self.data_logger.info(json.dumps({'download': 'ready'}))
@@ -1073,6 +1075,7 @@ class OhmPi(object):
                             break
                         if self.status == 'stopping':
                             break
+            self.data_logger.info(json.dumps({'status': 'idle'}))
             self.status = 'idle'
 
         self.thread = Thread(target=func)
@@ -1607,7 +1610,10 @@ class OhmPi(object):
         elif len(survey_names) > 0 and reg_mode > 0:
             k.createTimeLapseSurvey(fnames, parser=ohmpi_parser)
         self.exec_logger.info('ResIPy: generating mesh')
-        k.createMesh('trian', cl=elec_spacing/5)
+        try:
+            k.createMesh('trian', cl=elec_spacing/5)
+        except Exception as e:
+            self.data_logger.info(json.dumps({'inversion': 'ERROR when generating mesh: ' + str(e).replace("'","")}))
         self.exec_logger.info('ResIPy: inverting survey')
         k.invert(param=kwargs)
 
@@ -1615,8 +1621,8 @@ class OhmPi(object):
         self.exec_logger.info('ResIPy: reading inverted surveys')
         try:
             k.getResults()
-            xzv = []
-            for m in k.meshResults:
+            xzv = {}
+            for i, m in enumerate(k.meshResults):
                 df = m.df
                 x = np.linspace(df['X'].min(), df['X'].max(), 20)
                 z = np.linspace(df['Z'].min(), df['Z'].max(), 20)
@@ -1628,12 +1634,12 @@ class OhmPi(object):
                 inan = np.isnan(grid_v)
                 grid_v[inan] = -1
 
-                xzv.append({
+                xzv[survey_names[i].replace('.csv', '')] = {
                     'x': x.tolist(),
                     'z': z.tolist(),
                     'rho': grid_v.tolist(),
-                })
-            self.data_logger.info(json.dumps({'inversion': 'SUCCESS', 'invertedData': xyz}))
+                }
+            self.data_logger.info(json.dumps({'inversion': 'SUCCESS', 'invertedData': xzv}))
             return xzv
         except Exception as e:
             self.data_logger.info(json.dumps({'inversion': 'ERROR, inversion did not converged. ' + str(e)}))
