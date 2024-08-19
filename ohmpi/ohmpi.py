@@ -18,6 +18,7 @@ import time
 import pandas as pd
 import io
 from zipfile import ZipFile
+import tempfile
 from shutil import rmtree, make_archive
 from threading import Thread
 from inspect import getmembers, isfunction
@@ -445,7 +446,8 @@ class OhmPi(object):
                             ddic[fname.replace('.csv', '')]['fw'] = fwdata
                 # except Exception as e:
                 #    print(fname, ':', e)
-        rdic = {'cmd_id': cmd_id, 'status': 'getting data...done', 'data': ddic}
+        status_msg = 'getting data...done' if full is False else 'getting full-waveform data...done'
+        rdic = {'cmd_id': cmd_id, 'status': status_msg, 'data': ddic}
         self.data_logger.info(json.dumps(rdic))
         return ddic
 
@@ -581,7 +583,7 @@ class OhmPi(object):
         self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
         os.system('reboot')  # this may need admin rights
 
-    def download_data(self, start_date=None, end_date=None, cmd_id=None):
+    def download_data(self, start_date=None, end_date=None, ftype=None, elec_spacing=1, cmd_id=None):
         """Create a zip of the data folder to then download it easily.
 
         Parameters
@@ -590,6 +592,13 @@ class OhmPi(object):
             Start date as ISO string (e.g. "2024-12-24").
         end_date : str, optional
             End date as ISO string.
+        ftype : str, optional
+            Format type. Default is OhmPi normal format. Can choose between:
+            - bert (same as pygimli)
+            - pygimli (same as bert)
+            - protocol (for resipy/r2 codes)
+        elec_spacing : float, optional
+            For some format (e.g. bert, pygimli), electrode position is required.
         """
         if start_date is not None and end_date is not None:
             start = datetime(*[int(a) for a in start_date.split('-')])
@@ -624,17 +633,30 @@ class OhmPi(object):
                             fnames.append(os.path.join(datadir, fname))
                     except Exception as e:
                         pass
-            
-            zippath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data.zip'))
-            if os.path.exists(zippath):
-                os.remove(zippath)
-            with ZipFile(zippath, 'w') as f:
-                for fname in tqdm(fnames):
-                    f.write(fname, arcname=os.path.basename(fname))
         else:  # download current acquisition
             datadir, _ = os.path.split(self.settings['export_path'])
-            zippath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
-            make_archive(zippath, 'zip', datadir)
+            fnames = [os.path.join(datadir, f) for f in os.listdir(datadir)]
+
+        # convert to specified format
+        if ftype is not None:
+            # only saving .csv, not .zip or .log
+            fnames = [f for f in fnames if f[-4:] == '.csv']
+            tempdir = tempfile.TemporaryDirectory()
+            self.export(fnames=fnames, outputdir=tempdir.name, ftype=ftype, elec_spacing=elec_spacing)
+            fnames = [os.path.join(tempdir.name, f) for f in os.listdir(tempdir.name)]
+
+        # zip for download
+        zippath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data.zip'))
+        if os.path.exists(zippath):
+            os.remove(zippath)
+        with ZipFile(zippath, 'w') as f:
+            for fname in tqdm(fnames):
+                f.write(fname, arcname=os.path.basename(fname))
+        
+        # clean temporary directory
+        if ftype is not None:
+            tempdir.cleanup()
+
         self.data_logger.info(json.dumps({'download': 'ready'}))
 
     def shutdown(self, cmd_id=None):
