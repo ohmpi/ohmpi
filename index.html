@@ -695,7 +695,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       let topic_exec = topic + '/exec'
       let topic_data = topic + '/data'
       let client = null  // mqtt client instance
-      let clientId = document.getElementById('mqttClientId').value
+      let clientId = generateUniqSerial()
+      document.getElementById('mqttClientId').value = clientId
       let message = null
       let msg = ''
       let execlog = document.getElementById('execlog')
@@ -776,8 +777,9 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
             // RS check data
             if ('rsdata' in ddic) {
-              rsdata[0]['x'].push(ddic['rsdata']['A']), //, + '-' + ddic['rsdata']['B'],
-                rsdata[0]['y'].push(ddic['rsdata']['rs']),
+                // add data to the latest serie
+                rsdata[rsdata.length - 1]['x'].push(ddic['rsdata']['A']), //, + '-' + ddic['rsdata']['B'],
+                rsdata[rsdata.length - 1]['y'].push(ddic['rsdata']['rs']),
                 Plotly.redraw('rs')
 
             } else if ('download' in ddic) {
@@ -843,7 +845,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       }
 
       // sending commands to the OhmPi
-      function sendCommand(query, callback = null) {
+      function sendCommand(query, callback=null) {
         // dic in the form: {'cmd': X, ...} as JSON
         if (callback == null) {
           function callback(x) {
@@ -1348,14 +1350,9 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       surveyTableSelect.addEventListener('change', surveyTableSelectFunc)
 
       // bar chart for contact resistance
-      let rsdata = [{
-        'x': [],
-        'y': [],
-        name: 'RS',
-        type: 'bar',
-      }
-      ]
+      let rsdata = []
       let rslayout = {
+        barmode: 'group',
         title: 'Contact resistances',
         yaxis: {
           title: 'Resistance [kOhm]'
@@ -1368,16 +1365,14 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
       // run RS check
       function rsBtnFunc() {
-        sendCommand('{"cmd": "rs_check"}', function (res) {
-          // update the bar plot
-          rsdata.push({
-            x: res['data']['AB'],
-            y: res['data']['res'],
-            name: 'RS',
+        // create new serie to be populated when reading the flux
+        rsdata.push({
+            x: [],
+            y: [],
+            name: 'RS' + rsdata.length,
             type: 'bar'
-          })
-          Plotly.redraw('rs')
         })
+        sendCommand('{"cmd": "rs_check"}')
       }
       let rsBtn = document.getElementById('rsBtn')
       rsBtn.addEventListener('click', rsBtnFunc)
