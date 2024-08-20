@@ -340,31 +340,37 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
               <div class="mb-3 row">
                 <label for="mqttHostname" class="col-sm-2 col-form-label">MQTT server</label>
                 <div class="col-sm-10">
-                  <input id="mqttHostname" class="form-control" type="text" placeholder="localhost" />
+                  <input id="mqttHostname" class="form-control" type="text" value="" />
                 </div>
               </div>
               <div class="mb-3 row">
                 <label for="mqttPort" class="col-sm-2 col-form-label">MQTT port</label>
                 <div class="col-sm-10">
-                  <input id="mqttPort" class="form-control-number" type="number" placeholder="9001" />
+                  <input id="mqttPort" class="form-control-number" type="number" value=9001 />
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="mqttClientId" class="col-sm-2 col-form-label">Client ID:</label>
+                <div class="col-sm-10">
+                  <input id="mqttClientId" class="form-control" type="text" value="ohmpi_0001_html"/>
                 </div>
               </div>
               <div class="mb-3 row">
                 <label for="mqttTopic" class="col-sm-2 col-form-label">Topic: </label>
                 <div class="col-sm-10">
-                  <input id="mqttTopic" class="form-control" type="text" placeholder="ohmpi_0001" />
+                  <input id="mqttTopic" class="form-control" type="text" value="ohmpi_0001" />
                 </div>
               </div>
               <div class="mb-3 row">
                 <label for="mqttUser" class="col-sm-2 col-form-label">Username:</label>
                 <div class="col-sm-10">
-                  <input id="mqttUser" class="form-control" type="text" />
+                  <input id="mqttUser" class="form-control" type="text" value="mqtt_user"/>
                 </div>
               </div>
               <div class="mb-3 row">
                 <label for="mqttPwd" class="col-sm-2 col-form-label">Password:</label>
                 <div class="col-sm-10">
-                  <input id="mqttPwd" class="form-control" type="password" />
+                  <input id="mqttPwd" class="form-control" type="password" value="mqtt_password"/>
                 </div>
               </div>
             </form>
@@ -684,36 +690,35 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       }
 
       // variables with MQTT, can be updated via mqtt modal
-      let topic = 'ohmpi_0001'
+      let topic = document.getElementById('mqttTopic').value
       let topic_ctrl = topic + '/ctrl'
       let topic_exec = topic + '/exec'
       let topic_data = topic + '/data'
-      let hostname = location.hostname
-      let port = 9001  // corresponding listener for the broker
-      let clientId = 'ohmpi_0001_html'
+      let client = null  // mqtt client instance
+      let clientId = document.getElementById('mqttClientId').value
       let message = null
       let msg = ''
-      let userName = null  // can be ask to the user
-      let password = null
       let execlog = document.getElementById('execlog')
       let datalog = document.getElementById('datalog')
       let ctrllog = document.getElementById('ctrllog')
 
-      // create client
-      client = new Paho.MQTT.Client(hostname, port, clientId)
-      client.onConnectionLost = onConnectionLost
-      client.onMessageArrived = onMessageArrived
-      client.connect({ onSuccess: onConnect })
-      //client.connect({userName: username, password: password, onSuccess:onConnect})
+      // try connection directly
+      document.getElementById('mqttHostname').value = location.hostname
+      mqttConnect()
 
       // alternative to the above default
       function mqttConnect() {
         // get variables
-        hostname = document.getElementById('mqttHostname').value
-        port = document.getElementById('mqttPort').value
-        userName = document.getElementById('mqttUser').value
-        password = document.getElementById('mqttPwd').value
-        console.log(hostname, port, userName, password)
+        let hostname = document.getElementById('mqttHostname').value
+        let port = parseInt(document.getElementById('mqttPort').value)
+        let username = document.getElementById('mqttUser').value
+        let password = document.getElementById('mqttPwd').value
+        topic = document.getElementById('mqttTopic').value
+        topic_ctrl = topic + '/ctrl'
+        topic_exec = topic + '/exec'
+        topic_data = topic + '/data'
+      
+        console.log(hostname, port, username, password, topic)
 
         // create client
         client = new Paho.MQTT.Client(hostname, port, clientId)
@@ -741,7 +746,11 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         if (responseObject.errorCode !== 0)
           console.log("onConnectionLost:" + responseObject.errorMessage)
         console.log("trying to reconnect...")
-        client.connect({ onSuccess: onConnect })
+        let hostname = document.getElementById('mqttHostname').value
+        let port = parseInt(document.getElementById('mqttPort').value)
+        let username = document.getElementById('mqttUser').value
+        let password = document.getElementById('mqttPwd').value
+        client.connect({ userName: username, password: password, onSuccess: onConnect })
       }
 
       function onMessageArrived(message) {
