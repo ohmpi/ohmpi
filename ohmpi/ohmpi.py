@@ -1338,6 +1338,8 @@ class OhmPi(object):
             # print bad electrodes
             if len(baddic) > 0:
                 print(baddic)
+            else:
+                print(colored('Everything OK'))
         else:
             print('aborted') 
     
@@ -1385,6 +1387,9 @@ class OhmPi(object):
             
             if len(baddic) > 0:
                 print(baddic)
+            else:
+                print(colored('Everything OK'))
+
         else:
             print('aborted') 
 
@@ -1450,6 +1455,8 @@ class OhmPi(object):
                 self._hw.pwr_state = 'off'
             if len(baddic) > 0:
                 print(baddic)
+            else:
+                print(colored('Everything OK'))
         else:
             print('aborted') 
            
