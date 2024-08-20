@@ -1339,7 +1339,7 @@ class OhmPi(object):
             if len(baddic) > 0:
                 print(baddic)
             else:
-                print(colored('Everything OK'))
+                print(colored('Everything OK', 'green'))
         else:
             print('aborted') 
     
@@ -1373,7 +1373,7 @@ class OhmPi(object):
                 n = m
                 self._hw.switch_mux([m, n], roles=['M', 'N'], state='on', bypass_check=True)
                 self._hw._vab_pulse(duration=0.2, vab=5)
-                vmn = self._hw.readings[-2, 4]
+                vmn = np.median(np.abs(self._hw.readings[:, 4]))
                 self._hw.switch_mux([m, n], roles=['M', 'N'], state='off', bypass_check=True)
                 ok = 'FAILED'
                 if vmn <= vmn_threshold:
@@ -1388,7 +1388,7 @@ class OhmPi(object):
             if len(baddic) > 0:
                 print(baddic)
             else:
-                print(colored('Everything OK'))
+                print(colored('Everything OK', 'green'))
 
         else:
             print('aborted') 
@@ -1438,7 +1438,7 @@ class OhmPi(object):
                 n = b
                 self._hw.switch_mux([a, b, m, n], roles=['A', 'B', 'M', 'N'], state='on', bypass_check=True)
                 self._hw._vab_pulse(duration=injection_duration, vab=vab)
-                vmn = self._hw.readings[-2, 4]
+                vmn = np.median(self._hw.readings[:, 4])
                 # import matplotlib.pyplot as plt
                 # fig, ax = plt.subplots()
                 # ax.plot(self._hw.readings[:, 0], self._hw.readings[:, 4])
@@ -1456,7 +1456,7 @@ class OhmPi(object):
             if len(baddic) > 0:
                 print(baddic)
             else:
-                print(colored('Everything OK'))
+                print(colored('Everything OK', 'green'))
         else:
             print('aborted') 
            
