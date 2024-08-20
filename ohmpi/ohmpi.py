@@ -18,6 +18,7 @@ import time
 import pandas as pd
 import io
 from zipfile import ZipFile
+import tempfile
 from shutil import rmtree, make_archive
 from threading import Thread
 from inspect import getmembers, isfunction
@@ -445,7 +446,8 @@ class OhmPi(object):
                             ddic[fname.replace('.csv', '')]['fw'] = fwdata
                 # except Exception as e:
                 #    print(fname, ':', e)
-        rdic = {'cmd_id': cmd_id, 'status': 'getting data...done', 'data': ddic}
+        status_msg = 'getting data...done' if full is False else 'getting full-waveform data...done'
+        rdic = {'cmd_id': cmd_id, 'status': status_msg, 'data': ddic}
         self.data_logger.info(json.dumps(rdic))
         return ddic
 
@@ -464,6 +466,7 @@ class OhmPi(object):
         else:
             self.exec_logger.debug('No sequence measurement thread to interrupt.')
         self.status = 'idle'
+        self.data_logger.info(json.dumps({'cmd_id': cmd_id, 'status': 'idle'}))
         self.exec_logger.debug(f'Status: {self.status}')
 
     def load_sequence(self, filename: str, cmd_id=None):
@@ -581,7 +584,7 @@ class OhmPi(object):
         self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
         os.system('reboot')  # this may need admin rights
 
-    def download_data(self, start_date=None, end_date=None, cmd_id=None):
+    def download_data(self, start_date=None, end_date=None, ftype='ohmpi', elec_spacing=1, cmd_id=None):
         """Create a zip of the data folder to then download it easily.
 
         Parameters
@@ -590,6 +593,14 @@ class OhmPi(object):
             Start date as ISO string (e.g. "2024-12-24").
         end_date : str, optional
             End date as ISO string.
+        ftype : str, optional
+            Format type. Default is OhmPi normal format. Can choose between:
+            - ohmpi (default)
+            - bert (same as pygimli)
+            - pygimli (same as bert)
+            - protocol (for resipy/r2 codes)
+        elec_spacing : float, optional
+            For some format (e.g. bert, pygimli), electrode position is required.
         """
         if start_date is not None and end_date is not None:
             start = datetime(*[int(a) for a in start_date.split('-')])
@@ -624,17 +635,30 @@ class OhmPi(object):
                             fnames.append(os.path.join(datadir, fname))
                     except Exception as e:
                         pass
-            
-            zippath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data.zip'))
-            if os.path.exists(zippath):
-                os.remove(zippath)
-            with ZipFile(zippath, 'w') as f:
-                for fname in tqdm(fnames):
-                    f.write(fname, arcname=os.path.basename(fname))
         else:  # download current acquisition
             datadir, _ = os.path.split(self.settings['export_path'])
-            zippath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
-            make_archive(zippath, 'zip', datadir)
+            fnames = [os.path.join(datadir, f) for f in os.listdir(datadir)]
+
+        # convert to specified format
+        if ftype != 'ohmpi':
+            # only saving .csv, not .zip or .log
+            fnames = [f for f in fnames if f[-4:] == '.csv']
+            tempdir = tempfile.TemporaryDirectory()
+            self.export(fnames=fnames, outputdir=tempdir.name, ftype=ftype, elec_spacing=elec_spacing)
+            fnames = [os.path.join(tempdir.name, f) for f in os.listdir(tempdir.name)]
+
+        # zip for download
+        zippath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data.zip'))
+        if os.path.exists(zippath):
+            os.remove(zippath)
+        with ZipFile(zippath, 'w') as f:
+            for fname in tqdm(fnames):
+                f.write(fname, arcname=os.path.basename(fname))
+        
+        # clean temporary directory
+        if ftype != 'ohmpi':
+            tempdir.cleanup()
+
         self.data_logger.info(json.dumps({'download': 'ready'}))
 
     def shutdown(self, cmd_id=None):
@@ -1051,6 +1075,7 @@ class OhmPi(object):
                             break
                         if self.status == 'stopping':
                             break
+            self.data_logger.info(json.dumps({'status': 'idle'}))
             self.status = 'idle'
 
         self.thread = Thread(target=func)
@@ -1547,6 +1572,7 @@ class OhmPi(object):
             from resipy import Project  # noqa
         except Exception as e:
             self.exec_logger.error('Cannot import ResIPy, scipy or Pandas, error: ' + str(e))
+            self.data_logger.info(json.dumps({'inversion': 'ERROR, cannot import ResIPy, scipy or Pandas' + str(e)}))
             return []
 
         # get absolule filename
@@ -1557,7 +1583,10 @@ class OhmPi(object):
                 fnames.append(fname)
             else:
                 self.exec_logger.warning(fname + ' not found')
-        
+        if len(fnames) == 0:
+            self.data_logger.info(json.dumps({'inversion': 'ERROR, no surveys provided'}))
+            return
+
         # define a parser for the "ohmpi" format
         def ohmpi_parser(fname):
             df = pd.read_csv(fname)
@@ -1572,7 +1601,7 @@ class OhmPi(object):
             return elec, df[['a', 'b', 'm', 'n', 'vp', 'i', 'resist', 'ip']]
                 
         # run inversion
-        self.exec_logger.info('ResIPy: import surveys')
+        self.exec_logger.info('ResIPy: importing surveys')
         k = Project(typ='R2')  # invert in a temporary directory that will be erased afterwards
         if len(survey_names) == 1:
             k.createSurvey(fnames[0], parser=ohmpi_parser)
@@ -1580,35 +1609,41 @@ class OhmPi(object):
             k.createBatchSurvey(fnames, parser=ohmpi_parser)
         elif len(survey_names) > 0 and reg_mode > 0:
             k.createTimeLapseSurvey(fnames, parser=ohmpi_parser)
-        self.exec_logger.info('ResIPy: generate mesh')
-        k.createMesh('trian', cl=elec_spacing/5)
-        self.exec_logger.info('ResIPy: invert survey')
+        self.exec_logger.info('ResIPy: generating mesh')
+        try:
+            k.createMesh('trian', cl=elec_spacing/5)
+        except Exception as e:
+            self.data_logger.info(json.dumps({'inversion': 'ERROR when generating mesh: ' + str(e).replace("'","")}))
+        self.exec_logger.info('ResIPy: inverting survey')
         k.invert(param=kwargs)
 
         # read data and regrid on a regular grid for a plotly contour plot
-        self.exec_logger.info('Reading inverted surveys')
-        k.getResults()
-        xzv = []
-        for m in k.meshResults:
-            df = m.df
-            x = np.linspace(df['X'].min(), df['X'].max(), 20)
-            z = np.linspace(df['Z'].min(), df['Z'].max(), 20)
-            grid_x, grid_z = np.meshgrid(x, z)
-            grid_v = griddata(df[['X', 'Z']].values, df['Resistivity(ohm.m)'].values,
-                              (grid_x, grid_z), method='nearest')
-            
-            # set nan to -1 (hard to parse NaN in JSON)
-            inan = np.isnan(grid_v)
-            grid_v[inan] = -1
+        self.exec_logger.info('ResIPy: reading inverted surveys')
+        try:
+            k.getResults()
+            xzv = {}
+            for i, m in enumerate(k.meshResults):
+                df = m.df
+                x = np.linspace(df['X'].min(), df['X'].max(), 20)
+                z = np.linspace(df['Z'].min(), df['Z'].max(), 20)
+                grid_x, grid_z = np.meshgrid(x, z)
+                grid_v = griddata(df[['X', 'Z']].values, df['Resistivity(ohm.m)'].values,
+                                (grid_x, grid_z), method='nearest')
+                
+                # set nan to -1 (hard to parse NaN in JSON)
+                inan = np.isnan(grid_v)
+                grid_v[inan] = -1
 
-            xzv.append({
-                'x': x.tolist(),
-                'z': z.tolist(),
-                'rho': grid_v.tolist(),
-            })
-        
-        self.data_logger.info(json.dumps(xzv))
-        return xzv
+                xzv[survey_names[i].replace('.csv', '')] = {
+                    'x': x.tolist(),
+                    'z': z.tolist(),
+                    'rho': grid_v.tolist(),
+                }
+            self.data_logger.info(json.dumps({'inversion': 'SUCCESS', 'invertedData': xzv}))
+            return xzv
+        except Exception as e:
+            self.data_logger.info(json.dumps({'inversion': 'ERROR, inversion did not converged. ' + str(e)}))
+            return    
 
     # Properties
     @property
