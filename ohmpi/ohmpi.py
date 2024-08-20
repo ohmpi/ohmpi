@@ -395,7 +395,8 @@ class OhmPi(object):
                         headers[i] = 'R [Ohm]'
 
                 # read basic data
-                icols = list(np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'R [Ohm]', 'I [mA]', 'Vmn [mV]', 'R_std [%]']))[0])
+                # NOTE: order of the columns matters
+                icols = list(np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'Vmn [mV]', 'I [mA]', 'R [Ohm]', 'R_std [%]']))[0])
                 data = np.loadtxt(os.path.join(ddir, fname), delimiter=',',
                                     skiprows=1, usecols=icols)
                 
@@ -406,9 +407,9 @@ class OhmPi(object):
                         'b': data[:, 1].astype(int).tolist(),
                         'm': data[:, 2].astype(int).tolist(),
                         'n': data[:, 3].astype(int).tolist(),
-                        'r': data[:, 4].round(1).tolist(),
+                        'v': data[:, 4].round(1).tolist(),
                         'i': data[:, 5].round(1).tolist(),
-                        'v': data[:, 6].round(1).tolist(),
+                        'r': data[:, 6].round(1).tolist(),
                         'dev': data[:, 7].round(1).tolist()
                     }
                     
