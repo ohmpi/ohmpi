@@ -719,8 +719,6 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         topic_exec = topic + '/exec'
         topic_data = topic + '/data'
       
-        console.log(hostname, port, username, password, topic)
-
         // create client
         client = new Paho.MQTT.Client(hostname, port, clientId)
         client.onConnectionLost = onConnectionLost
@@ -1594,10 +1592,12 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           // find longest survey
           let df = data[surveyNames[0]]
           for (let i = 0; i < surveyNames.length; i++) {
+            //console.log(i, df['a'].length, data[surveyNames[i]]['a'].length)
             if (data[surveyNames[i]]['a'].length > df['a'].length) {
               df = data[surveyNames[i]]
             }
           }
+          //console.log('======', df['a'].length)
           if (df['a'].length > quads.length) {
             let quadSelect = document.getElementById('quadSelect')
             quadSelect.innerHTML = ''
