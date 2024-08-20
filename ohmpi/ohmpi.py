@@ -1432,7 +1432,7 @@ class OhmPi(object):
             
             # test if the AB and MN relays switch well
             baddic = {}
-            for a in range(1, nelec+1):
+            for a in range(1, nelec):
                 b = a + 1
                 m = a
                 n = b
