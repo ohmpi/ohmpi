@@ -1336,7 +1336,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             td2.innerText = count + i
             td2.setAttribute('scope', 'row')
             tr.appendChild(td2)
-            for (col of ['a', 'b', 'm', 'n', 'r', 'i', 'v', 'dev', 'app']) {
+            for (col of ['a', 'b', 'm', 'n', 'v', 'i', 'r', 'dev', 'app']) {
               var td = document.createElement('td')
               td.innerText = df[col][i]
               tr.appendChild(td)
@@ -1592,7 +1592,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
         // update list of quadrupoles if any
         if (surveyNames.length > 0) {
-          let df = data[surveyNames[0]]
+          let df = data[surveyNames[surveyNames.length - 1]]
+          console.log(df, quads.length)
           if (df['a'].length > quads.length) {
             console.log('updating list of quadrupoles')
             let quadSelect = document.getElementById('quadSelect')
