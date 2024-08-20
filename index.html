@@ -602,7 +602,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <p>Downloading data can take up to several minutes as data is first zipped on the OhmPi. By default all data are download (.csv and .zip with full-waveform data). It is also possible to choose a specific format for data export.</p>
+              <p>Downloading data can take up to several minutes as data is first zipped on the OhmPi. When it is ready, it will <b>automatically download</b> onto your device. By default all data are download (.csv and .zip with full-waveform data). It is also possible to choose a specific format for data export.</p>
               <div class="form-group row">
                 <label for="ftypeSelect" class="col col-form-label">File format:</label>
                 <div class="col">
@@ -614,7 +614,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 </div>
               </div>
               <hr>
-              <button id="downloadBtn" type="button" class="btn btn-primary">Download current acquisition</button>
+              <button id="downloadBtn" type="button" class="btn btn-primary" data-bs-dismiss="modal">Download current acquisition</button>
               <hr>
               <p>Download data between these dates:</p>
               <form>
@@ -631,7 +631,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                   </div>
                 </div>
               </form>
-              <button id="downloadSelectBtn" type="button" class="btn btn-primary">Download selected</button>
+              <button id="downloadSelectBtn" type="button" class="btn btn-primary" data-bs-dismiss="modal">Download selected</button>
               <hr>
               <div class="alert alert-danger" role="alert">
                 Remove all data of the current acquisition.
@@ -777,7 +777,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
             // RS check data
             if ('rsdata' in ddic) {
-                // add data to the latest serie
+                // append data to the latest serie
                 rsdata[rsdata.length - 1]['x'].push(ddic['rsdata']['A']), //, + '-' + ddic['rsdata']['B'],
                 rsdata[rsdata.length - 1]['y'].push(ddic['rsdata']['rs']),
                 Plotly.redraw('rs')
@@ -1365,13 +1365,13 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
       // run RS check
       function rsBtnFunc() {
-        // create new serie to be populated when reading the flux
+        // add a new serie
         rsdata.push({
             x: [],
             y: [],
             name: 'RS' + rsdata.length,
             type: 'bar'
-        })
+          })
         sendCommand('{"cmd": "rs_check"}')
       }
       let rsBtn = document.getElementById('rsBtn')
@@ -1428,19 +1428,18 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       function updateFW() {
         let surveyName = surveyFWSelect.value
         let key = quadFWSelect.value
+        fwdata[0]['x'] = []
+        fwdata[0]['y'] = []
+        fwdata[1]['x'] = []
+        fwdata[1]['y'] = []
         if ('fw' in data[surveyName]) {
-          let dic = data[surveyName]['fw'][key]
-          fwdata[0]['x'] = dic['t']
-          fwdata[0]['y'] = dic['i']
-          fwdata[1]['x'] = dic['t']
-          fwdata[1]['y'] = dic['v']
-        } else {
-          // this will happen a lot when we getData(full=false) during live
-          //console.log('no fw data for ', key, 'in', surveyName)
-          fwdata[0]['x'] = []
-          fwdata[0]['y'] = []
-          fwdata[1]['x'] = []
-          fwdata[1]['y'] = []  
+          if (key in data[surveyName]['fw']) {
+            let dic = data[surveyName]['fw'][key]
+            fwdata[0]['x'] = dic['t']
+            fwdata[0]['y'] = dic['i']
+            fwdata[1]['x'] = dic['t']
+            fwdata[1]['y'] = dic['v']
+          }
         }
         Plotly.redraw('fw')
 
@@ -1451,13 +1450,18 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         let m = parseInt(q[2])
         let n = parseInt(q[3])
         let df = data[surveyName]
+        let found = false
         for (let i = 0; i < df['a'].length; i++) {
           if ((a == df['a'][i]) & (b == df['b'][i]) & (m == df['m'][i]) & (n == df['n'][i])) {
             let iab = df['i'][i]
             let vmn = df['v'][i]
             let r = df['r'][i]
             fwValues.innerText = ' Iab: ' + iab + ' mA     Vmn: ' + vmn + ' mV    R: ' + r + ' Ohm'
+            found = true
           }
+        }
+        if (found == false) {
+          fwValues.innerText = ''
         }
       }
       surveyFWSelect.addEventListener('change', updateFW)
@@ -1587,10 +1591,14 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
         // update list of quadrupoles if any
         if (surveyNames.length > 0) {
-          let df = data[surveyNames[surveyNames.length - 1]]
-          console.log(df, quads.length)
+          // find longest survey
+          let df = data[surveyNames[0]]
+          for (let i = 0; i < surveyNames.length; i++) {
+            if (data[surveyNames[i]]['a'].length > df['a'].length) {
+              df = data[surveyNames[i]]
+            }
+          }
           if (df['a'].length > quads.length) {
-            console.log('updating list of quadrupoles')
             let quadSelect = document.getElementById('quadSelect')
             quadSelect.innerHTML = ''
             quadFWSelect.removeEventListener('change', updateFW)
@@ -1761,6 +1769,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
       // shutdown Pi
       function shutdownBtnFunc() {
+
         sendCommand('{"cmd": "shutdown"}', function (x) {
           console.log('shuting down...')
         })
