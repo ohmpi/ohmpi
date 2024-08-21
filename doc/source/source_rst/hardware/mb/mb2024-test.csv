@@ -35,3 +35,4 @@ V7,on,voltage,ADS current 0x48 GND,I2Cext SCL,5V
 V8,on,voltage,screw terminal N,ADS voltage 0x49 VDD,5V
 V9,on,voltage,screw terminal N,ADS voltage 0x49 SDA,5V
 V10,on,voltage,screw terminal N,ADS voltage 0x49 SCL,5V
+V11,on,voltage,screw terminal N,ADS voltage 0x49 A0,2.5V
