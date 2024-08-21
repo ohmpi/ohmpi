@@ -964,7 +964,7 @@ class OhmPiHardware:
             #     time.sleep(activation_time)
             #     self.switch_mux(electrodes=[c[0]], roles=[c[1]], state='off')
         self.exec_logger.info('Test finished.')
-
+        
     def reset_mux(self):
         """Switches off all multiplexer relays.
         """
