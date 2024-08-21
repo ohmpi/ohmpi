@@ -48,12 +48,18 @@ sudo systemctl enable mosquitto.service
 echo -e "\n${txtgrn}>>> Broker is installed. Starting now...${txtdef}"
 mosquitto -v 
 
+# create default password for mqtt user
+echo -e "\n${txtgrn}>>> Creating default MQTT user and password...${txtdef}"
+echo "mqtt_user:mqtt_password" | sudo tee -a "/etc/mosquitto/pwfile.txt"
+sudo mosquitto_passwd -U /etc/mosquitto/pwfile.txt
+
 echo -e "\n${txtgrn}>>> Updating configuration to allow anonymous remote connections and websockets...${txtdef}"
 echo "listener 1883" | sudo tee -a /etc/mosquitto/mosquitto.conf
 echo "listener 9001" | sudo tee -a /etc/mosquitto/mosquitto.conf
 echo "protocol websockets" | sudo tee -a /etc/mosquitto/mosquitto.conf
 echo "socket_domain ipv4" | sudo tee -a /etc/mosquitto/mosquitto.conf
-echo "allow_anonymous true" | sudo tee -a /etc/mosquitto/mosquitto.conf
+echo "allow_anonymous false" | sudo tee -a /etc/mosquitto/mosquitto.conf
+echo "password_file /etc/mosquitto/pwfile.txt" | sudo tee -a /etc/mosquitto/mosquitto.conf
 echo -e "\n${txtgrn}>>> Current configuration stored in /etc/mosquitto/mosquitto.conf is displayed below${txtdef}" 
 
 echo "adding a symbolic link to data" | ln -s ./ohmpi/data data
