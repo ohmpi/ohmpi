@@ -13,6 +13,7 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage_max': {'default': 50.99},  # V
          'power_max': {'default': 2.5},  # W
          'current_max': {'default': 0.050},  # A
+         'current_overload': {'default': 0.060},  # A
          'current_max_tolerance': {'default': 20},  # in %
          'current_adjustable': {'default': False},
          'voltage_adjustable': {'default': True},
@@ -37,6 +38,7 @@ class Pwr(PwrAbstract):
 
         self._voltage = kwargs['voltage']
         self._current_max = kwargs['current_max']
+        self._current_overload = kwargs['current_overload']
         self._voltage_max = kwargs['voltage_max']
         self._power_max = kwargs['power_max']
         self._current_max_tolerance = kwargs['current_max_tolerance']
@@ -127,10 +129,14 @@ class Pwr(PwrAbstract):
         self.connection.write_register(0x0001, np.round(new_value, 3), 3)
         self._current_max = value
 
-    def current_overload(self, value):  # [A]
-        new_value = value * (1 + self._current_max_tolerance / 100)  # To set DPS max current slightly above (20% by default) the limit to avoid regulation artefacts
-        self.connection.write_register(0x0053, np.round(new_value, 3), 3)
-        self._current_max = value
+    @property
+    def current_overload(self):
+        return self._current_overload
+
+    @current_max.setter
+    def current_overload(self, value):
+        self.connection.write_register(0x0001, np.round(value, 3), 3)
+        self._current_overload = value
 
     def current_max_default(self, value):  # [A]
         new_value = value * (
@@ -178,5 +184,5 @@ class Pwr(PwrAbstract):
         self.voltage_max = self._voltage_max
         self.current_max_default(self._current_max)
         self.current_max = self._current_max
-        self.current_overload(self._current_max)
+        self.current_overload = self._current_overload
         self.power_max(self._power_max)
