@@ -184,5 +184,5 @@ class Pwr(PwrAbstract):
         self.voltage_max = self._voltage_max
         self.current_max_default(self._current_max)
         self.current_max = self._current_max
-        self.current_overload = self._current_overload #np.max([self._current_max,self._current_overload]) # TODO: np.max could be placed in current_overload setter
+        self.current_overload = np.max([self._current_max,self._current_overload]) # TODO: np.max could be placed in current_overload setter
         self.power_max(self._power_max)
