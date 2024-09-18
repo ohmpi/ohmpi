@@ -135,7 +135,7 @@ class Pwr(PwrAbstract):
 
     @current_max.setter
     def current_overload(self, value):
-        self.connection.write_register(0x0001, np.round(value, 3), 3)
+        self.connection.write_register(0x0053, np.round(value, 3), 3)
         self._current_overload = value
 
     def current_max_default(self, value):  # [A]
@@ -184,5 +184,5 @@ class Pwr(PwrAbstract):
         self.voltage_max = self._voltage_max
         self.current_max_default(self._current_max)
         self.current_max = self._current_max
-        self.current_overload = self._current_overload
+        self.current_overload = self._current_overload #np.max([self._current_max,self._current_overload]) # TODO: np.max could be placed in current_overload setter
         self.power_max(self._power_max)
