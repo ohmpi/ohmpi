@@ -30,14 +30,32 @@ Contents
    :maxdepth: 1
    :caption: Introduction
 
-   source_rst/Ohmpi
+   source_rst/Intro/Overview
+   source_rst/Intro/About
 
 .. toctree::
    :maxdepth: 2
-   :caption: Building and operating OhmPi
+   :caption: Build OhmPi boards
 
-   source_rst/hardware
-   source_rst/software/index
+   source_rst/Hardware
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Build OhmPi systems
+
+   source_rst/Hardware_systems
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Deploy OhmPi
+
+   source_rst/Deploy
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Operate OhmPi
+
+   source_rst/Software
 
 .. toctree::
    :maxdepth: 1
