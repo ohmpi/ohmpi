@@ -80,9 +80,10 @@ class Tx(Tx_mb_2024_0_2):
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
 
-        self.pin5 = self.mcp_board.get_pin(5)  # power_discharge_relay
-        self.pin5.direction = Direction.OUTPUT
-        self.pin5.value = False
+        if self.connect:
+            self.pin5 = self.mcp_board.get_pin(5)  # power_discharge_relay
+            self.pin5.direction = Direction.OUTPUT
+            self.pin5.value = False
 
         if not subclass_init:
             self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
