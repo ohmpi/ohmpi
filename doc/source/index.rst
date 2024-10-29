@@ -37,21 +37,21 @@ Contents
    :maxdepth: 2
    :caption: Build OhmPi boards
 
-   hardware/hw_info
-   hardware/hw_mb
-   hardware/hw_mux
-   hardware/hw_pwr
-   hardware/hw_rpi
-   hardware/hw_ohmpi
+   source_rst/hardware/hw_info
+   source_rst/hardware/hw_mb
+   source_rst/hardware/hw_mux
+   source_rst/hardware/hw_pwr
+   source_rst/hardware/hw_rpi
+   source_rst/hardware/hw_ohmpi
 
 
 .. toctree::
    :maxdepth: 2
    :caption: Build OhmPi systems
 
-   OhmPi v2024 64 electrodes + DPH5005 <hardware/assemble_ohmpi/assembling_mb2024_MUX_2023_dph5005.rst>
-   OhmPi Lite v2024 (32 electrodes) + DPH5005 <hardware/assemble_ohmpi/assembling_mb2024_MUX_2024_dph5005.rst>
-   OhmPi v2023 + 12V battery <hardware/assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst>
+   OhmPi v2024 64 electrodes + DPH5005 <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2023_dph5005.rst>
+   OhmPi Lite v2024 (32 electrodes) + DPH5005 <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2024_dph5005.rst>
+   OhmPi v2023 + 12V battery <source_rst/hardware/assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst>
 
 
 .. toctree::
