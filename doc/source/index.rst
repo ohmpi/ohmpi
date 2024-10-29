@@ -30,8 +30,8 @@ Contents
    :maxdepth: 1
    :caption: Introduction
 
-   source_rst/introduction/Overview
-   source_rst/introduction/About
+   source_rst/introduction/overview
+   source_rst/introduction/about
 
 .. toctree::
    :maxdepth: 2
