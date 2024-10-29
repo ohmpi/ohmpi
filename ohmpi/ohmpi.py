@@ -951,6 +951,12 @@ class OhmPi(object):
             I_std = self._hw.last_iab_dev(delay=delay)
             R = self._hw.last_resistance(delay=delay)
             R_std = self._hw.last_dev(delay=delay)
+
+            # multiply current by polarity
+            full_waveform = np.copy(self._hw.readings[:, [0, -2, -1]])
+            ie = self._hw.readings[:, 2] != 0
+            full_waveform[ie, 1] = full_waveform[ie, 1] * self._hw.readings[ie, 2]
+
             d = {
                 "time": datetime.now().isoformat(),
                 "A": quad[0],
@@ -967,7 +973,7 @@ class OhmPi(object):
                 "Tx [V]": vab,
                 "CPU temp [degC]": self._hw.ctl.cpu_temperature,
                 "Nb samples [-]": len(self._hw.readings[x, 2]),  # TODO: use only samples after a delay in each pulse
-                "full_waveform": self._hw.readings[:, [0, -2, -1]],
+                "full_waveform": full_waveform,
                 "I_std [%]": I_std,
                 "Vmn_std [%]": Vmn_std,
                 "R_ab [kOhm]": vab / I
