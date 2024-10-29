@@ -10,5 +10,6 @@ numpy
 paho-mqtt
 termcolor
 pandas
+countourpy==1.0.1
 matplotlib
 tqdm
