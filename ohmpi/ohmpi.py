@@ -1632,7 +1632,7 @@ class OhmPi(object):
             export_dir = os.path.split(os.path.dirname(__file__))[0]
             self.settings['export_path'] = os.path.join(export_dir, self.settings['export_path'])
 
-    def export(self, fnames=None, outputdir=None, ftype='bert', elec_spacing=1):
+    def export(self, fnames=None, outputdir=None, ftype='bert', elec_spacing=1, fname_coord=None):
         """Export surveys stored in the 'data/' folder into an output
         folder.
 
@@ -1670,8 +1670,12 @@ class OhmPi(object):
             df['resist'] = df['vp']/df['i']
             df['ip'] = np.nan
             emax = np.max(df[['a', 'b', 'm', 'n']].values)
-            elec = np.zeros((emax, 3))
-            elec[:, 0] = np.arange(emax) * elec_spacing
+            if fname_coord is None:
+                elec = np.zeros((emax, 3))
+                elec[:, 0] = np.arange(emax) * elec_spacing
+            else:
+                elec = np.genfromtxt(fname_coord, comments='#', delimiter=';')
+                                
             return elec, df[['a', 'b', 'm', 'n', 'vp', 'i', 'resist', 'ip']]
 
         # read all files and save them in the desired format
