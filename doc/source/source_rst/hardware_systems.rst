@@ -55,6 +55,6 @@ ________________________________
    OhmPi Lite v2024 (32 electrodes) + DPH5005 <hardware/assemble_ohmpi/assembling_mb2024_MUX_2024_dph5005.rst>
    OhmPi v2023 + 12V battery <hardware/assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst>
 
-.. image:: ../../img/ohmpi_systems_examples.jpg
+.. image:: ../img/ohmpi_systems_examples.jpg
    :width: 900px
    :align: center

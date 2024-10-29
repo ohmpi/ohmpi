@@ -1,4 +1,4 @@
-    .. image:: ../img/logo/ohmpi/LOGO_OHMPI.png
+    .. image:: ../../img/logo/ohmpi/LOGO_OHMPI.png
         :align: center
         :width: 336px
         :height: 188px
