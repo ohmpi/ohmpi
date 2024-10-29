@@ -55,7 +55,7 @@ Contents
    :maxdepth: 1
    :caption: Operate OhmPi
 
-   source_rst/software
+   source_rst/software/index
 
 .. toctree::
    :maxdepth: 1
