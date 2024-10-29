@@ -40,7 +40,7 @@ This could be handful if ones is looking to build e.g. a 96 electrode system, wh
 
 Below we detail examples of OHMPI systems assemblies in different versions.
 
-OhmPi systems assembly tutorials
+OhmPi systems assconfigembly tutorials
 ________________________________
 
 .. warning::

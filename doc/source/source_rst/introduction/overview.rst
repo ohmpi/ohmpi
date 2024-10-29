@@ -1,5 +1,5 @@
 ***************
-OhmPi project
+System Overview
 ***************
 
     .. image:: ../../img/logo/ohmpi/LOGO_OHMPI.png
