@@ -12,7 +12,7 @@ SPECS = {'model': {'default': os.path.basename(__file__).rstrip('.py')},
          'voltage_min': {'default': 0},  # V
          'voltage_max': {'default': 50.99},  # V
          'power_max': {'default': 2.5},  # W
-         'current_max': {'default': 0.050},  # A
+         'current_max': {'default': 5.000},  # A
          'current_overload': {'default': 0.060},  # A
          'current_max_tolerance': {'default': 20},  # in %
          'current_adjustable': {'default': False},
