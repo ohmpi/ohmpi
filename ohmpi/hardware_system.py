@@ -175,7 +175,7 @@ class OhmPiHardware:
         #     self.pwr_state = 'off'
 
         self.pab_min = 0.00005  # W TODO: Add in pwr components specs
-        self.pab_max = self.pwr.specs['power_max'] # W
+        self.pab_max = np.min([self.iab_max*self.vab_max, self.pwr.specs['power_max']]) # W
 
         # Join tx and pwr
         self.tx.pwr = self.pwr
