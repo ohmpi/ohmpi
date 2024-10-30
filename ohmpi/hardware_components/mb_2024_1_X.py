@@ -126,3 +126,8 @@ class Rx(Rx_mb_2024_0_2):
         else:
             subclass_init = True
         super().__init__(**kwargs)
+        if not subclass_init:
+            self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
+
+        if not subclass_init:
+            self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.utcnow()}')
