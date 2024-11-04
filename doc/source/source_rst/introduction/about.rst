@@ -1,6 +1,6 @@
-*****
-About
-*****
+*****************
+About the project
+*****************
 
 .. image:: ../../img/logo/ohmpi/LOGO_OHMPI.png
         :align: center
@@ -16,6 +16,10 @@ Authors
 | Yannick FARGIER, GERS-RRO, Univ Gustave Eiffel, IFSTTAR, Lyon, France
 | Hélène GUYARD, IGE Grenoble, Université Grenoble Alpes, Grenoble, France
 | Guillaume BLANCHY, ULiège, Liège Belgium
+
+
+Contributors
+************
 
 
 Partners
