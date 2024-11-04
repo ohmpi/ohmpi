@@ -6,9 +6,10 @@ adafruit-circuitpython-mcp230xx
 adafruit_extended_bus
 minimalmodbus
 gpiozero
-numpy
+numpy<2.0.0
 paho-mqtt
 termcolor
 pandas
+countourpy==1.0.1
 matplotlib
 tqdm

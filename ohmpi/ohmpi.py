@@ -54,7 +54,7 @@ except Exception as error:
     print(colored(f'Unexpected error: {error}', 'red'))
     arm64_imports = None
 
-VERSION = 'v2024.0.27'
+VERSION = 'v2024.0.30'
 
 
 class OhmPi(object):
@@ -951,6 +951,12 @@ class OhmPi(object):
             I_std = self._hw.last_iab_dev(delay=delay)
             R = self._hw.last_resistance(delay=delay)
             R_std = self._hw.last_dev(delay=delay)
+
+            # multiply current by polarity
+            full_waveform = np.copy(self._hw.readings[:, [0, -2, -1]])
+            ie = self._hw.readings[:, 2] != 0
+            full_waveform[ie, 1] = full_waveform[ie, 1] * self._hw.readings[ie, 2]
+
             d = {
                 "time": datetime.now().isoformat(),
                 "A": quad[0],
@@ -967,7 +973,7 @@ class OhmPi(object):
                 "Tx [V]": vab,
                 "CPU temp [degC]": self._hw.ctl.cpu_temperature,
                 "Nb samples [-]": len(self._hw.readings[x, 2]),  # TODO: use only samples after a delay in each pulse
-                "full_waveform": self._hw.readings[:, [0, -2, -1]],
+                "full_waveform": full_waveform,
                 "I_std [%]": I_std,
                 "Vmn_std [%]": Vmn_std,
                 "R_ab [kOhm]": vab / I
@@ -1632,7 +1638,7 @@ class OhmPi(object):
             export_dir = os.path.split(os.path.dirname(__file__))[0]
             self.settings['export_path'] = os.path.join(export_dir, self.settings['export_path'])
 
-    def export(self, fnames=None, outputdir=None, ftype='bert', elec_spacing=1):
+    def export(self, fnames=None, outputdir=None, ftype='bert', elec_spacing=1, fname_coord=None):
         """Export surveys stored in the 'data/' folder into an output
         folder.
 
@@ -1670,8 +1676,12 @@ class OhmPi(object):
             df['resist'] = df['vp']/df['i']
             df['ip'] = np.nan
             emax = np.max(df[['a', 'b', 'm', 'n']].values)
-            elec = np.zeros((emax, 3))
-            elec[:, 0] = np.arange(emax) * elec_spacing
+            if fname_coord is None:
+                elec = np.zeros((emax, 3))
+                elec[:, 0] = np.arange(emax) * elec_spacing
+            else:
+                elec = np.genfromtxt(fname_coord, comments='#', delimiter=';')
+                                
             return elec, df[['a', 'b', 'm', 'n', 'vp', 'i', 'resist', 'ip']]
 
         # read all files and save them in the desired format
