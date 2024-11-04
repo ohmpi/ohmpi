@@ -52,9 +52,9 @@ Contents
    :caption: Build OhmPi systems
 
    source_rst/hardware/hw_ohmpi
-   OhmPi v2024 64 electrodes + DPH5005 <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2023_dph5005.rst>
-   OhmPi Lite v2024 (32 electrodes) + DPH5005 <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2024_dph5005.rst>
-   OhmPi v2023 + 12V battery <source_rst/hardware/assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst>
+   OhmPi v2024 (64 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2023_dph5005.rst>
+   OhmPi Lite v2024 (32 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2024_dph5005.rst>
+   OhmPi v2023 (64 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst>
 
 
 .. toctree::
@@ -68,7 +68,7 @@ Contents
    :caption: Operate OhmPi
 
    Software architecture <source_rst/software/architecture>
-   Getting started <source_rst/software/installation>
+   Software installation <source_rst/software/installation>
    Operating the system <source_rst/software/operations/index>
    API reference <source_rst/software/api>
 
@@ -77,8 +77,8 @@ Contents
    :caption: Additional resources
 
    source_rst/troubleshooting
-   source_rst/developments
    source_rst/gallery
+   source_rst/developments
    source_rst/archived_version
 
 .. toctree::
