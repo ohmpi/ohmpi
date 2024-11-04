@@ -67,7 +67,10 @@ Contents
    :maxdepth: 1
    :caption: Operate OhmPi
 
-   source_rst/software/index
+   Software architecture <source_rst/software/architecture>
+   Getting started <source_rst/software/installation>
+   Operating the system <source_rst/software/operations/index>
+   API reference <source_rst/software/api>
 
 .. toctree::
    :maxdepth: 1
