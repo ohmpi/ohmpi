@@ -1,7 +1,5 @@
-import os
 import numpy as np
 import time
-os.chdir("/home/pi/OhmPi")
 from ohmpi.ohmpi import OhmPi
 
 # Define object from class OhmPi
