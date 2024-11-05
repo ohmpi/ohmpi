@@ -599,8 +599,8 @@ class OhmPiHardware:
 
     def compute_vab(self, vab_init=5., vab_min=None, vab_req=None, vab_max=None,
                     iab_min=None, iab_req=None, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
-                    pab_min=None, pab_req=None, pab_max=None, min_agg=False, polarities=(1, -1), pulse_duration=0.1, delay=0.0,
-                    diff_vab_lim=2.5, n_steps=4, n_sigma=2., filename=None, quad_id=0):
+                    pab_min=None, pab_req=None, pab_max=None, min_agg=False, polarities=(1, -1), pulse_duration=0.1,
+                    delay=0.0, diff_vab_lim=2.5, n_steps=4, n_sigma=2., filename=None, quad_id=0):
         """ Estimates best Vab voltage based on different strategies.
         In "vmax" and "vmin" strategies, we iteratively increase/decrease the vab while
         checking vmn < vmn_max, vmn > vmn_min and iab < iab_max. We do a maximum of n_steps
@@ -668,6 +668,8 @@ class OhmPiHardware:
         vab_init = np.min([vab_init, vab_max])
         vab_opt = np.abs(vab_init)
         polarities = list(polarities)
+        polarities.insert(0, 0)  # This could be removed depending on solution of issue #246
+
 
         # Set gain at min
         self.tx.reset_gain()
@@ -703,7 +705,7 @@ class OhmPiHardware:
                 f'OhmPiHardware\t_compute_vab_sleep\tend\t{datetime.datetime.utcnow()}')
             # self._gain_auto(vab=vab_list[k])
             self._vab_pulses(vab_list[k], sampling_rate=sampling_rate,
-                             durations=[pulse_duration, pulse_duration], polarities=polarities)
+                             durations=[0.1, pulse_duration, pulse_duration], polarities=polarities)  # 0.1 step at polarity 0 could be removed given the solution to issue #246
             new_vab, _, _, _, _ = self._find_vab(vab_list[k],
                                                  vab_req=vab_req, iab_req=iab_req, vmn_req=vmn_req, pab_req=pab_req,
                                                  vab_min=vab_min, vab_max=vab_max, iab_min=iab_min, iab_max=iab_max,
