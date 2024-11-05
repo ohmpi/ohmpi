@@ -6,7 +6,6 @@ Date de la Mission: 29, 30, 31 janvier et 1 février 2024.
 Lieu: Pollionnay
 
 Participants:
-
 Hanifa Bader, Remi Clement, Jean Marcais, Nadia Carluer, Laurent Lassabatere, Fanny Courapied, Arnold Imig, Arnaud Watlet, Claire Lauvernet, Adrien Bonnefoy
 
 
@@ -33,13 +32,7 @@ Le bassin de l’Yzeron, situé dans l’ouest lyonnais, est suivi depuis de nom
    :width: 100%
    :align: center
 
-   Caption
-     
- .. figure:: ../../img/images_hedges/fig2.png
-   :width: 50%
-   :align: center
-
-     
+      
  .. figure:: ../../img/images_hedges/fig3.png
    :width: 50%
    :align: center
@@ -62,13 +55,7 @@ La sélection des électrodes est intéressante pour obtenir des résultats fiab
    :width: 50%
    :align: center
 
-   Caption
-     
- .. figure:: ../../img/images_hedges/fig5.jpg
-   :width: 50%
-   :align: center
-
-   Caption
+    
      
  .. figure:: ../../img/images_hedges/fig6.jpg
    :width: 100%
