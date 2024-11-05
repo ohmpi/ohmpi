@@ -97,11 +97,21 @@ Figure 3: Photos illustrant la préparation des électrodes en laboratoire.
 - •	Le choix des câbles : 
 
 - •	Le choix des batteries :
- 
+   
+ .. figure:: ../../../img/images_hedges/fig7.png
+   :width: 100%
+   :align: center
+
+   Caption
 Figure 4 : Les batteries
 - •	Le choix du résistivimètre :
 Un résistivimètre installe sur site est le résistivimètre OhmPi (Figure 2) qui est un appareil à faible coût, présentant du matériel ouvert (hardware), pour mesurer la résistivité électrique. Il intègre un multiplexeur permettant des mesures sur 32 électrodes. Les capacités de l'appareil comprennent une large plage de mesure pour les valeurs de courant, s'étendant de 0,1 mA à 80 mA, et une plage de mesure de la différence de potentiel de 0,001 V à 12,00 V. Ce choix offre des avantages tels qu'une taille compacte et une utilisation répandue dans les applications matérielles ouvertes, contribuant à un ratio coût/efficacité attractif. (Clement et al. 2020)
-  
+   
+ .. figure:: ../../../img/images_hedges/fig8.png
+   :width: 100%
+   :align: center
+
+   Caption 
 Figure 5: Disposition de résistivimètre OhmPi de laboratoire
 Pour effectuer des mesures, le OhmPi doit être associé à un système chargé d'injecter du courant et de mesurer simultanément la différence de potentiel et le courant. Cette configuration garantit une acquisition complète et efficace des données de résistivité électrique. (Clement et al. 2020)
 2.	Planification de disposition des électrodes:
@@ -123,7 +133,18 @@ La cabine qui abrite le résistivimètre doit être préparée soigneusement pou
 -	Installation des batteries dans un endroit sécurisé à l'intérieur de la cabine en s’assurant qu'elles sont correctement connectées au résistivimètre et aux panneaux solaires.
 -	Vérifiant les connexions électriques pour assurer qu'elles sont sécurisées et qu'il n'y a pas de câbles endommagés.
    
-   
+     
+ .. figure:: ../../../img/images_hedges/fig9.png
+   :width: 100%
+   :align: center
+
+   Caption
+     
+ .. figure:: ../../../img/images_hedges/fig10.png
+   :width: 100%
+   :align: center
+
+   Caption
 Figure 6 : Les étapes de préparation de la cabine  
 •	Enlèvement des tranchées
 L'enlèvement des tranchées pour les deux lignes d'électrodes perpendiculaires à la haie a été une étape méthodique et précise de la préparation du site. Tout d'abord, un tracé précis a été établi en fonction du plan d'installation, déterminant les positions exactes des électrodes. Ensuite, les tranchées ont été excavées avec soin en utilisant des outils appropriés, en veillant à maintenir une profondeur de 10 cm et une largeur de 20 cm. Une fois les tranchées réalisées, des précautions ont été prises pour minimiser les perturbations du sol environnant, préservant ainsi la stabilité de la structure et évitant toute interférence indésirable avec les mesures de résistivité électrique. Enfin, les tranchées ont été soigneusement refermées après l'installation des électrodes, restaurant ainsi le site à son état initial autant que possible. Cette démarche méticuleuse garantit l'intégrité du site tout en facilitant la prise de mesures précises pour une interprétation fiable des données de la Tomographie de Résistivité Électrique.
