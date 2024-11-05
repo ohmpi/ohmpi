@@ -240,6 +240,8 @@ class OhmPiHardware:
     def _gain_auto(self, polarities=(1, -1), vab=5., switch_pwr_off=False):  # TODO: improve _gain_auto
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
         current, voltage = 0., 0.
+        self.rx.reset_gain()
+        self.tx.reset_gain()
         if self.tx.pwr.voltage_adjustable:
             self.tx.voltage = vab
         if self.tx.pwr.pwr_state == 'off':
@@ -668,6 +670,7 @@ class OhmPiHardware:
         polarities = list(polarities)
 
         # Set gain at min
+        self.tx.reset_gain()
         self.rx.reset_gain()  # NOTE : is it the minimum because we are not measuring ?
 
         k = 0
@@ -698,7 +701,7 @@ class OhmPiHardware:
                              # but might be useful in vmax when last vab too high...)
             self.exec_logger.event(
                 f'OhmPiHardware\t_compute_vab_sleep\tend\t{datetime.datetime.utcnow()}')
-            self._gain_auto(vab=vab_list[k])
+            # self._gain_auto(vab=vab_list[k])
             self._vab_pulses(vab_list[k], sampling_rate=sampling_rate,
                              durations=[pulse_duration, pulse_duration], polarities=polarities)
             new_vab, _, _, _, _ = self._find_vab(vab_list[k],
