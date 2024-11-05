@@ -687,10 +687,11 @@ class OhmPiHardware:
 
         # Switches on measuring LED
         self.tx.measuring = 'on'
-
-        self.tx.voltage = vab_init
+        # first switch power on before setting a voltage to let it
+        # "decay" if needed (for dph5005)
         if self.tx.pwr.pwr_state == 'off':
             self.tx.pwr.pwr_state = 'on'
+        self.tx.voltage = vab_init
 
         if 10. / self.rx.sampling_rate > pulse_duration:
             sampling_rate = 10. / pulse_duration  # TODO: check this...

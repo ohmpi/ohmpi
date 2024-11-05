@@ -956,7 +956,9 @@ class OhmPi(object):
             full_waveform = np.copy(self._hw.readings[:, [0, -2, -1]])
             ie = self._hw.readings[:, 2] != 0
             full_waveform[ie, 1] = full_waveform[ie, 1] * self._hw.readings[ie, 2]
-
+            #print('\nTX: {:.3f}, V at Iab: {:.3f}'.format(self._hw.tx.gain, I*2*50))
+            #print('Rx: {:.3f}, V at Vmn: {:.3f}'.format(self._hw.rx.gain, Vmn*self._hw.rx._dg411_gain))
+            
             d = {
                 "time": datetime.now().isoformat(),
                 "A": quad[0],
