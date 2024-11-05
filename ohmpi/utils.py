@@ -113,6 +113,7 @@ def parse_log(log):
     session = np.array(session)
     return time, process_id, tag, msg, session
 
+
 def filter_log(filename, level=None, directory="logs", last=1):
     time, process_id, tag, msg, session = parse_log(os.path.join(directory, filename))
     time, process_id, tag, msg, session = time[tag == level], process_id[tag == level], \
@@ -134,7 +135,7 @@ def mux_2024_to_mux_2023_takeouts(elec_list):
 
     """
     mapper = {2: 1, 4: 2, 6: 3, 8: 4, 10: 5, 12: 6, 14: 7, 16: 8,
-              15: 9, 13: 10, 11: 11, 9: 12, 7: 12, 5: 14, 3: 15, 1: 16, }
+              15: 9, 13: 10, 11: 11, 9: 12, 7: 13, 5: 14, 3: 15, 1: 16, }
 
     elec_list = np.array(elec_list)
     elecs = elec_list % 16
