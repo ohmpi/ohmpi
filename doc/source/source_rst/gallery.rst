@@ -7,5 +7,5 @@ TODO (e.g. OhmPi in Inrae, OhmPi in Rocherfort, )
    :maxdepth: 2
    :caption: Contents
 
-   Hedges <hedges>
+   Hedges <applications/hedges>
    
