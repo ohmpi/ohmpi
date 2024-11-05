@@ -250,7 +250,7 @@ class OhmPiHardware:
         for pol in polarities:
             # self.tx.polarity = pol
             time.sleep(1 / self.rx.sampling_rate)  # To make sure we don't read values from a previous pulse
-            injection_duration =  np.max([1./self.rx.sampling_rate, 0.1]) # Inject at least for 0.1 s or sampling rate
+            injection_duration =  np.max([1./self.rx.sampling_rate, 0.2]) # Inject at least for 0.1 s or sampling rate
             injection = Thread(target=self._inject, kwargs={'injection_duration': injection_duration, 'polarity': pol})
             # set gains automatically
             get_tx_gain = Thread(target=self.tx.gain_auto)
