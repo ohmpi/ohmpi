@@ -223,6 +223,7 @@ class Tx(TxAbstract):
         self._ads_current.mode = mode
 
     def reset_gain(self):
+        self.exec_logger.debug('resetting tx gain to 2/3')
         self.gain = 2/3
 
     def reset_mcp(self):
@@ -323,6 +324,7 @@ class Rx(RxAbstract):
         self._adc_gain_auto()
 
     def reset_gain(self):
+        self.exec_logger.debug('resetting rx gain to 2/3')
         self.gain = 2/3
 
     def reset_ads(self, mode=Mode.CONTINUOUS):
