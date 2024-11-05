@@ -77,6 +77,8 @@ class OhmPiHardware:
                 RX_CONFIG.update({k: RX_CONFIG.pop(k, v['default'])})
             except Exception as e:
                 print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
+
+        self.iab_min = 0.001  # A TODO : add in config ?
         self.iab_max = np.min([TX_CONFIG['current_max'], HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
                                np.min(np.hstack(
                                        (np.inf,
