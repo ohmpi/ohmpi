@@ -75,19 +75,19 @@ Cela inclut :
 La sélection des électrodes est intéressante pour obtenir des résultats fiables. Considérez la résistivité du sol et choisissez des électrodes appropriées, en tenant compte de la taille, et du matériau.
   
    
- .. figure:: ../../../img/images_hedges/fig4.png
+ .. figure:: ../../img/images_hedges/fig4.jpg
    :width: 100%
    :align: center
 
    Caption
      
- .. figure:: ../../../img/images_hedges/fig5.png
+ .. figure:: ../../img/images_hedges/fig5.jpg
    :width: 100%
    :align: center
 
    Caption
      
- .. figure:: ../../../img/images_hedges/fig6.png
+ .. figure:: ../../img/images_hedges/fig6.jpg
    :width: 100%
    :align: center
 
@@ -98,7 +98,7 @@ Figure 3: Photos illustrant la préparation des électrodes en laboratoire.
 
 - •	Le choix des batteries :
    
- .. figure:: ../../../img/images_hedges/fig7.png
+ .. figure:: ../../img/images_hedges/fig7.jpg
    :width: 100%
    :align: center
 
@@ -107,7 +107,7 @@ Figure 4 : Les batteries
 - •	Le choix du résistivimètre :
 Un résistivimètre installe sur site est le résistivimètre OhmPi (Figure 2) qui est un appareil à faible coût, présentant du matériel ouvert (hardware), pour mesurer la résistivité électrique. Il intègre un multiplexeur permettant des mesures sur 32 électrodes. Les capacités de l'appareil comprennent une large plage de mesure pour les valeurs de courant, s'étendant de 0,1 mA à 80 mA, et une plage de mesure de la différence de potentiel de 0,001 V à 12,00 V. Ce choix offre des avantages tels qu'une taille compacte et une utilisation répandue dans les applications matérielles ouvertes, contribuant à un ratio coût/efficacité attractif. (Clement et al. 2020)
    
- .. figure:: ../../../img/images_hedges/fig8.png
+ .. figure:: ../../img/images_hedges/fig8.png
    :width: 100%
    :align: center
 
@@ -134,13 +134,13 @@ La cabine qui abrite le résistivimètre doit être préparée soigneusement pou
 -	Vérifiant les connexions électriques pour assurer qu'elles sont sécurisées et qu'il n'y a pas de câbles endommagés.
    
      
- .. figure:: ../../../img/images_hedges/fig9.png
+ .. figure:: ../../img/images_hedges/fig9.png
    :width: 100%
    :align: center
 
    Caption
      
- .. figure:: ../../../img/images_hedges/fig10.png
+ .. figure:: ../../img/images_hedges/fig10.png
    :width: 100%
    :align: center
 
@@ -149,7 +149,7 @@ Figure 6 : Les étapes de préparation de la cabine
 •	Enlèvement des tranchées
 L'enlèvement des tranchées pour les deux lignes d'électrodes perpendiculaires à la haie a été une étape méthodique et précise de la préparation du site. Tout d'abord, un tracé précis a été établi en fonction du plan d'installation, déterminant les positions exactes des électrodes. Ensuite, les tranchées ont été excavées avec soin en utilisant des outils appropriés, en veillant à maintenir une profondeur de 10 cm et une largeur de 20 cm. Une fois les tranchées réalisées, des précautions ont été prises pour minimiser les perturbations du sol environnant, préservant ainsi la stabilité de la structure et évitant toute interférence indésirable avec les mesures de résistivité électrique. Enfin, les tranchées ont été soigneusement refermées après l'installation des électrodes, restaurant ainsi le site à son état initial autant que possible. Cette démarche méticuleuse garantit l'intégrité du site tout en facilitant la prise de mesures précises pour une interprétation fiable des données de la Tomographie de Résistivité Électrique.
    
- .. figure:: ../../../img/images_hedges/fig11.png
+ .. figure:: ../../img/images_hedges/fig11.png
    :width: 100%
    :align: center
 
@@ -161,20 +161,47 @@ Figure 7 : Enlèvement des tranchées sur les deux lignes de électrodes.
 2.	Mise en Place des Électrodes:
 --------------------------------
 L'étape de l'emplacement des électrodes est une procédure critique qui nécessite une exécution précise pour assurer la qualité des mesures. Initialement, des tranchées ont été creusées aux emplacements préalablement marqués, assurant une profondeur adéquate pour la disposition des électrodes. Une fois les tranchées préparées, les électrodes ont été positionnées horizontalement selon le schéma défini, garantissant une distribution uniforme. Une attention particulière a été accordée à la mise en place de matière conductrice ?? autour des électrodes pour assurer une connexion efficace avec le sol. Cette matière, soigneusement sélectionnée pour ses propriétés conductrices, a été déployée de manière à minimiser toute interférence qui pourrait compromettre la qualité des mesures. En combinant le creusement précis des tranchées, la disposition précise des électrodes, l'application adéquate de matière conductrice, et la fermeture de toutes les connexions entre les électrodes et les fils électriques par le silicone, nous avons établi des conditions optimales pour la collecte de données fiables et précises lors de l'application de la Tomographie de Résistivité Électrique.
+  
+ .. figure:: ../../img/images_hedges/fig12.png
+   :width: 100%
+   :align: center
 
+   Caption
 3.	Mise en Place du Câblage:
 ----------------------------
 Schéma de Câblage ???
 Le processus de câblage entre les électrodes et le résistivimètre implique plusieurs étapes méthodiques, visant à assurer une connexion stable et fiable pour la collecte précise des données. Tout d'abord, les câbles sont déployés depuis le résistivimètre vers les emplacements préalablement marqués des électrodes. La connexion de ces câbles au niveau de l'OhmPi et entre les câbles eux-mêmes (Figure 9) est choisie en fonction d'un catalogue de couleurs prédéfini, simplifiant ainsi l'identification des connexions. À ce stade, une résine spéciale est méticuleusement ajoutée dans les boîtes de connexion pour assurer une isolation efficace et une protection contre les conditions environnementales adverses. Cette résine garantit également la stabilité électrique des connexions. Les câbles sont ensuite connectés à l’OhmPi en suivant le schéma de câblage prédéfini. Une vérification minutieuse est effectuée à chaque étape pour s'assurer que toutes les connexions sont sécurisées et que le système est prêt à collecter des données précises lors de l'application ultérieure de la Tomographie de Résistivité Électrique (ERT). Cela est atteint en lançant une séquence qui cherche les résistances de contact entre les électrodes et le sol qui donne des valeurs acceptables entre 1 et 4 kOhm.
     
+  
+ .. figure:: ../../img/images_hedges/fig13.png
+   :width: 100%
+   :align: center
 
+   Caption
+     
+ .. figure:: ../../img/images_hedges/fig14.png
+   :width: 100%
+   :align: center
+
+   Caption
    
 Figure 9 : Photo de câblage au niveau des boites de connections entre les câbles  et au niveau de l'Armoire
 4.	Fermeture des tranchées 
 --------------------------
 Une fois que le câblage a été soigneusement fixé et que la résine a eu le temps de sécher, la première étape consiste à replacer délicatement le sol excavé dans la tranchée (Figure 7). Une attention particulière est accordée pour éviter tout mouvement ou déplacement des câbles et des électrodes. La compaction du sol se fait progressivement, en couches fines, pour minimiser les vibrations susceptibles d'affecter la disposition des éléments du système. Pour garantir une fermeture adéquate, une répétition du test des résistances de contact est effectuée à cette étape, où toutes les valeurs se situent entre 1 et 4 kOhm, confirmant une connexion correcte.
 Il est impératif de noter que cette étape de fermeture de tranchée est particulièrement sensible, et tout changement de position des électrodes pourrait compromettre la précision des mesures ultérieures. Une fois les tranchées correctement refermées et les électrodes stabilisées, le site est prêt pour la collecte de données de Tomographie de Résistivité Électrique, assurant ainsi des résultats fiables et précis.
+  
+ .. figure:: ../../img/images_hedges/fig15.png
+   :width: 100%
+   :align: center
 
+   Caption
+     
+ .. figure:: ../../img/images_hedges/fig16.png
+   :width: 100%
+   :align: center
+
+   Caption
      
  
 Figure 10 ; Fermeture des tranchées
