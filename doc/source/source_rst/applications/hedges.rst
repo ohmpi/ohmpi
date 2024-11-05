@@ -10,7 +10,7 @@ Participants: Hanifa Bader, Remi Clement, Jean Marcais, Nadia Carluer, Laurent L
 
 Abstract
 ======
-The primary goal of this mission was to install an Electrical Resistivity Tomography (ERT) system on a hedge in Pollionnay. This system aims to provide detailed images of the soil’s electrical resistivity distribution and enable remote control of these geoelectric monitoring devices. Ultimately, the objective is to observe significant temporal variations caused by environmental, hydraulic, and meteorological phenomena affecting the structure. This report details the ERT instrumentation activities conducted both in the laboratory and on-site from January 29 to February 1, 2024, to establish a progress report.
+The primary goal of this mission was to install an Electrical Resistivity Tomography (ERT) system on a hedge in Pollionnay. This system aims to provide detailed images of the soils electrical resistivity distribution and enable remote control of these geoelectric monitoring devices. Ultimately, the objective is to observe significant temporal variations caused by environmental, hydraulic, and meteorological phenomena affecting the structure. This report details the ERT instrumentation activities conducted both in the laboratory and on-site from January 29 to February 1, 2024, to establish a progress report.
 
 I.	Introduction
 ================
@@ -25,7 +25,7 @@ The Yzeron watershed, situated west of Lyon, has been monitored for many years b
  .. figure:: ../../img/images_hedges/fig1.png
    :width: 100%
    :align: center
-   Figure 1: a) Full view of the hedge b) View of the dense part of the hedge
+   Figure 1: a) Full view of the hedge                b) View of the dense part of the hedge
       
  .. figure:: ../../img/images_hedges/fig3.png
    :width: 100%
@@ -79,18 +79,18 @@ To perform measurements, the OhmPi must be paired with a system that injects cur
 
 2. Electrode positions Planning
 -----------------------------------------------
-A detailed analysis of the hedge was conducted to determine the optimal placement of the electrodes based on the site’s geometry. This planning was crucial to ensure uniform data collection and optimal resolution.
+A detailed analysis of the hedge was conducted to determine the optimal placement of the electrodes based on the sites geometry. This planning was crucial to ensure uniform data collection and optimal resolution.
 
-A map showing the electrode positions
+todo    A map showing the electrode positions
 
 IV.	Site installation:
 ==================================
 1.	Preparation of site:
 -----------------------
-Before beginning the installation, we conducted thorough site preparation, starting with the setup of the cabin, trench removal, and marking the electrode locations.
+Before beginning the installation, we conducted thorough site preparation, starting with the setup of the cabinet, trench removal, and marking the electrode locations.
 
-• Cabin Preparation
-The cabin preparation for the resistivimeter began with the trench removal, followed by leveling the ground and laying a layer of gravel as a base. A layer of sand was added to enhance stability, then the base was concreted according to specifications. The wooden cabin structure was then built, with a sturdy frame anchored to the concrete base, wooden panels for the walls, and a waterproof roof (Figure 3). Final checks were performed to ensure structural stability, equipment security, and the waterproofing of the concrete base, providing an optimal setup for the resistivimeter and easy access to cables and connections.
+• Cabinet Preparation
+The cabinet preparation for the resistivimeter began with the trench removal, followed by leveling the ground and laying a layer of gravel as a base. A layer of sand was added to enhance stability, then the base was concreted according to specifications. The wooden cabin structure was then built, with a sturdy frame anchored to the concrete base, wooden panels for the walls, and a waterproof roof (Figure 3). Final checks were performed to ensure structural stability, equipment security, and the waterproofing of the concrete base, providing an optimal setup for the resistivimeter and easy access to cables and connections.
 
 The cabin housing the resistivimeter must be carefully prepared to ensure the equipment functions correctly. Follow these steps:
 
@@ -102,13 +102,12 @@ The cabin housing the resistivimeter must be carefully prepared to ensure the eq
    :width: 100%
    :align: center
 
-   Caption
      
  .. figure:: ../../img/images_hedges/fig10.png
    :width: 100%
    :align: center
 
-   Figure 6 : The preparation steps for the cabin.
+   Figure 6 : The preparation steps for the cabinet.
 
 • Trench Removal
 
@@ -134,7 +133,7 @@ The electrode placement stage is a critical procedure requiring precise executio
    Figure 8 : The steps for setting up the electrodes.
 3. Wiring Setup:
 
-Wiring Diagram ???
+todo     Wiring Diagram ???
 
 
 The wiring process between the electrodes and the resistivimeter involves several methodical steps to ensure a stable and reliable connection for accurate data collection. First, cables are laid out from the resistivimeter to the pre-marked electrode locations. Connections between these cables at the OhmPi and between the cables themselves (Figure 9) are selected based on a predefined color-coding system, making it easier to identify connections. At this stage, a special resin is meticulously added to the connection boxes to ensure effective insulation and protection against adverse environmental conditions. This resin also guarantees electrical stability of the connections. The cables are then connected to the OhmPi following the predefined wiring diagram. A thorough check is performed at each step to ensure that all connections are secure and that the system is ready for accurate data collection during the subsequent application of Electrical Resistivity Tomography (ERT). This is achieved by running a sequence to check the contact resistances between the electrodes and the soil, aiming for acceptable values between 1 and 4 kOhms.
@@ -143,8 +142,6 @@ The wiring process between the electrodes and the resistivimeter involves severa
  .. figure:: ../../img/images_hedges/fig13.png
    :width: 100%
    :align: center
-
-   Caption
      
  .. figure:: ../../img/images_hedges/fig14.png
    :width: 100%
