@@ -543,11 +543,11 @@ class OhmPiHardware:
                 rab_upper_bound[p_idx] = np.max([r_upper_bound[p_idx], np.abs(vab / iab_lower_bound[p_idx])])
             else:
                 self.exec_logger.warning(f'Not enough values to estimate R and Rab in pulse {p_idx}!')
+        self.exec_logger.debug(f'[self.iab_min: {self.iab_min}, iab_mean[p_idx] - n_sigma * iab_std[p_idx]: {iab_mean[p_idx] - n_sigma * iab_std[p_idx]}]')
         rab_min = np.min(rab_lower_bound)
         rab_max = np.max(rab_upper_bound)
         r_min = np.min(r_lower_bound)
         r_max = np.max(r_upper_bound)
-        self.exec_logger.debug(f'rab_min: {rab_min}, rab_max: {rab_max}, rmin: {r_min}, rmax: {r_max}, ')
         # _vmn_min = np.min(vmn_lower_bound)
         # _vmn_max = np.min(vmn_upper_bound)
         cond_vab_min = vab_min
@@ -562,19 +562,29 @@ class OhmPiHardware:
         cond_pab_min = np.sqrt(pab_min * rab_max)
         cond_pab_req = np.sqrt(pab_req * rab_max)
         cond_pab_max = np.sqrt(pab_max * rab_min)
-        cond_mins = np.max([cond_vab_min, cond_iab_min, cond_vmn_min, cond_pab_min])
-        cond_reqs = req_agg([cond_vab_req, cond_iab_req, cond_vmn_req, cond_pab_req])
-        cond_maxs = np.min([cond_vab_max, cond_vmn_max, cond_iab_max, cond_pab_max])
+        vab_min_conds = [cond_vab_min, cond_iab_min, cond_vmn_min, cond_pab_min]
+        vab_req_conds = [cond_vab_req, cond_iab_req, cond_vmn_req, cond_pab_req]
+        vab_max_conds = [cond_vab_max, cond_iab_max, cond_vmn_max, cond_pab_max]
+        cond_mins = np.max(vab_min_conds)
+        cond_reqs = req_agg(vab_req_conds)
+        cond_maxs = np.min(vab_max_conds)
         new_vab = np.min([np.max([cond_mins, cond_reqs]), cond_maxs])
         msg  = f'###      [ min ,  req ,  max ]   | cond       : [ min ,  req ,  max ] V ###\n'
-        msg += f'### vab: [{vab_min:5.1f}, {vab_req:5.1f}, {vab_max:5.1f}] V | cond on vab: [{cond_vab_min:5.1f}, {cond_vab_req:5.1f}, {cond_vab_max:5.1f}] V ###\n'
-        msg += f'### iab: [{iab_min:5.3f}, {iab_req:5.3f}, {iab_max:5.3f}] A | cond on vab: [{cond_iab_min:5.1f}, {cond_iab_req:5.1f}, {cond_iab_max:5.1f}] V ###\n'
-        msg += f'### vmn: [{vmn_min:5.3f}, {vmn_req:5.3f}, {vmn_max:5.3f}] V | cond on vab: [{cond_vmn_min:5.1f}, {cond_vmn_req:5.1f}, {cond_vmn_max:5.1f}] V ###\n'
-        msg += f'### pab: [{pab_min:5.3f}, {pab_req:5.3f}, {pab_max:5.3f}] W | cond on vab: [{cond_pab_min:5.1f}, {cond_pab_req:5.1f}, {cond_pab_max:5.1f}] V ###\n'
-        msg += f'### agg: {req_agg.__name__}, rab: [{rab_min:7.1f}, {rab_max:7.1f}] ohm, r: [{r_min:7.1f}, {r_max:7.1f}] ohm   ###'
+        msg += f'### vab: [{vab_min:5.1f}, {vab_req:5.1f}, {vab_max:5.1f}] V |'
+        msg += f'cond on vab: [{cond_vab_min:5.1f}, {cond_vab_req:5.1f}, {cond_vab_max:5.1f}] V ###\n'
+        msg += f'### iab: [{iab_min:5.3f}, {iab_req:5.3f}, {iab_max:5.3f}] A |'
+        msg += f'cond on vab: [{cond_iab_min:5.1f}, {cond_iab_req:5.1f}, {cond_iab_max:5.1f}] V ###\n'
+        msg += f'### vmn: [{vmn_min:5.3f}, {vmn_req:5.3f}, {vmn_max:5.3f}] V |'
+        msg += f'cond on vab: [{cond_vmn_min:5.1f}, {cond_vmn_req:5.1f}, {cond_vmn_max:5.1f}] V ###\n'
+        msg += f'### pab: [{pab_min:5.3f}, {pab_req:5.3f}, {pab_max:5.3f}] W |'
+        msg += f'cond on vab: [{cond_pab_min:5.1f}, {cond_pab_req:5.1f}, {cond_pab_max:5.1f}] V ###\n'
+        msg += f'### agg: {req_agg.__name__}, rab: [{rab_min:7.1f}, {rab_max:7.1f}] ohm,'
+        msg += f' r: [{r_min:7.1f}, {r_max:7.1f}] ohm   ###'
         # print(msg)
         self.exec_logger.debug(msg)
-        msg = f'### vab = min(max(max({[np.round(i, 2) for i in [cond_vab_min, cond_iab_min, cond_vmn_min, cond_pab_min]]}), {req_agg.__name__}({[np.round(i, 2) for i in [cond_vab_req, cond_iab_req, cond_vmn_req, cond_pab_req]]})), min({[np.round(i, 2) for i in [cond_vab_max, cond_iab_max, cond_vmn_max, cond_pab_max]]}))'
+        msg = f'### vab = min(max(max({[np.round(i, 2) for i in vab_min_conds]}),'
+        msg += f'{req_agg.__name__}({[np.round(i, 2) for i in vab_reqs]})),'
+        msg += f'min({[np.round(i, 2) for i in vab_max_conds]}))'
         msg += f' = min(max({cond_mins:5.3f}, {cond_reqs:5.3f}), {cond_maxs:5.3f})'
         msg += f' = min({np.max([cond_mins, cond_reqs]):5.3f}, {cond_maxs:5.3f})'
         msg += f' = {new_vab:5.3f} V ###'
