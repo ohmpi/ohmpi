@@ -162,9 +162,8 @@ It is important to note that this trench closure stage is particularly sensitive
    :width: 100%
    :align: center
 
-   Caption
-     
- .. figure:: ../../img/images_hedges/fig16.png
+        
+ .. figure:: ../../img/images_hedges/fig16.jpg
    :width: 100%
    :align: center
 
@@ -177,7 +176,7 @@ Tests are planned to be conducted on-site by initiating sequences remotely, once
 
 VI.	Conclusion and perspective
 ===============================
-In conclusion, the successful implementation of Electrical Resistivity Tomography (ERT) on the hedgerow in Pollionnay has yielded valuable data on soil electrical resistivity distribution. Instrumentation actions carried out in the laboratory and on-site demonstrated the system’s reliability in automated data collection, thus strengthening continuous geoelectrical environmental monitoring.
+In conclusion, the successful implementation of Electrical Resistivity Tomography (ERT) on the hedgerow in Pollionnay has yielded valuable data on soil electrical resistivity distribution. Instrumentation actions carried out in the laboratory and on-site demonstrated the systems reliability in automated data collection, thus strengthening continuous geoelectrical environmental monitoring.
 
 Looking ahead, we plan to implement a measurement triggering strategy based on regular intervals, particularly during critical periods. This approach will combine continuous measurements with spot observations, aiming to capture soil changes at different temporal scales. Additionally, the goal is to minimize acquisition time while ensuring adequate temporal coverage. To further optimize measurement efficiency, an optimization sequence is under consideration. Acquiring rapid profiles becomes imperative, especially to track hydrological events such as heavy rainfall, soil infiltration, or groundwater level variations. This will allow measurements to be repeated following a "time-lapse" principle, providing an evolving temporal representation. This proactive approach will enable more precise management of environmental events impacting the Pollionnay hedgerow, while optimizing the collection of geoelectrical data.
 
