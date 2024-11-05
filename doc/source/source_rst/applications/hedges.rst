@@ -125,7 +125,6 @@ The removal of trenches for the two electrode lines perpendicular to the hedge w
 
 The electrode placement stage is a critical procedure requiring precise execution to ensure measurement quality. Initially, trenches were dug at the previously marked locations, ensuring adequate depth for electrode installation. Once the trenches were prepared, the electrodes were positioned horizontally according to the defined layout, ensuring uniform distribution. Special attention was given to the placement of a conductive material ?? around the electrodes to ensure effective soil contact. This material, carefully selected for its conductive properties, was applied in a manner that minimizes any interference that could compromise measurement quality. By combining precise trench digging, accurate electrode positioning, proper application of the conductive material, and sealing all connections between electrodes and electrical wires with silicone, we established optimal conditions for reliable and accurate data collection during the application of Electrical Resistivity Tomography.
 
-  
  .. figure:: ../../img/images_hedges/fig12.png
    :width: 100%
    :align: center
@@ -142,7 +141,7 @@ The wiring process between the electrodes and the resistivimeter involves severa
  .. figure:: ../../img/images_hedges/fig13.png
    :width: 100%
    :align: center
-     
+
  .. figure:: ../../img/images_hedges/fig14.png
    :width: 100%
    :align: center
@@ -159,7 +158,6 @@ It is important to note that this trench closure stage is particularly sensitive
    :width: 100%
    :align: center
 
-        
  .. figure:: ../../img/images_hedges/fig16.jpg
    :width: 100%
    :align: center
