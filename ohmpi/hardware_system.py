@@ -249,14 +249,15 @@ class OhmPiHardware:
         rx_gains = []
         for pol in polarities:
             # self.tx.polarity = pol
+            time.sleep(1 / self.rx.sampling_rate)  # To make sure we don't read values from a previous pulse
+            injection_duration =  np.max([1./self.rx.sampling_rate, 0.1]) # Inject at least for 0.1 s or sampling rate
+            injection = Thread(target=self._inject, kwargs={'injection_duration': injection_duration, 'polarity': pol})
             # set gains automatically
-            injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
-            # readings = Thread(target=self._read_values)
             get_tx_gain = Thread(target=self.tx.gain_auto)
             get_rx_gain = Thread(target=self.rx.gain_auto)
             injection.start()
             self.tx_sync.wait()
-            get_tx_gain.start()  # TODO: add a barrier to synchronize?
+            get_tx_gain.start()
             get_rx_gain.start()
             get_tx_gain.join()
             get_rx_gain.join()
@@ -684,6 +685,7 @@ class OhmPiHardware:
                              # but might be useful in vmax when last vab too high...)
             self.exec_logger.event(
                 f'OhmPiHardware\t_compute_vab_sleep\tend\t{datetime.datetime.utcnow()}')
+            self._gain_auto(vab=vab_list[k])
             self._vab_pulses(vab_list[k], sampling_rate=sampling_rate,
                              durations=[pulse_duration, pulse_duration], polarities=polarities)
             new_vab, _, _, _, _ = self._find_vab(vab_list[k],
