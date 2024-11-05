@@ -54,7 +54,7 @@ except Exception as error:
     print(colored(f'Unexpected error: {error}', 'red'))
     arm64_imports = None
 
-VERSION = 'v2024.0.31'
+VERSION = 'v2024.0.32'
 
 
 class OhmPi(object):
@@ -66,9 +66,9 @@ class OhmPi(object):
         Parameters
         ----------
         settings : dict, optional
-            Dictionary of parameters. Possible parameters with their default values:
+            Dictionary of parameters. Possible parameters with some suggested values:
             {'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
-            'nb_stack': 1, 'sampling_interval': 2, 'vab': 5, 'duty_cycle': 0.5,
+            'nb_stack': 1, 'sampling_interval': 2, 'vab_init': 5.0, 'vab_req': 5.0, 'duty_cycle': 0.5,
             'strategy': 'constant', 'export_path': None}
         sequence : str, optional
             Path of the .csv or .txt file with A, B, M and N electrodes.
@@ -956,7 +956,9 @@ class OhmPi(object):
             full_waveform = np.copy(self._hw.readings[:, [0, -2, -1]])
             ie = self._hw.readings[:, 2] != 0
             full_waveform[ie, 1] = full_waveform[ie, 1] * self._hw.readings[ie, 2]
-
+            #print('\nTX: {:.3f}, V at Iab: {:.3f}'.format(self._hw.tx.gain, I*2*50))
+            #print('Rx: {:.3f}, V at Vmn: {:.3f}'.format(self._hw.rx.gain, Vmn*self._hw.rx._dg411_gain))
+            
             d = {
                 "time": datetime.now().isoformat(),
                 "A": quad[0],
@@ -1037,11 +1039,11 @@ class OhmPi(object):
         nb_meas : int, optional
             Number of time the sequence must be repeated.
         fw_in_csv : bool, optional
-            Wether to save the full-waveform data in the .csv (one line per quadrupole).
+            Whether to save the full-waveform data in the .csv (one line per quadrupole).
             As these readings have different lengths for different quadrupole, the data are padded with NaN.
             If None, default is read from default.json.
         fw_in_zip : bool, optional
-            Wether to save the full-waveform data in a separate .csv in long format to be zipped to
+            Whether to save the full-waveform data in a separate .csv in long format to be zipped to
             spare space. If None, default is read from default.json.
         cmd_id : str, optional
             Unique command identifier.

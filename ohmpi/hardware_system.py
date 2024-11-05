@@ -78,7 +78,7 @@ class OhmPiHardware:
             except Exception as e:
                 print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
 
-        self.iab_min = 0.00001  # A TODO : add in config
+        self.iab_min = 0.001  # A TODO : add in config ?
         self.iab_max = np.min([TX_CONFIG['current_max'], HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
                                np.min(np.hstack(
                                        (np.inf,
@@ -240,6 +240,8 @@ class OhmPiHardware:
     def _gain_auto(self, polarities=(1, -1), vab=5., switch_pwr_off=False):  # TODO: improve _gain_auto
         self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
         current, voltage = 0., 0.
+        self.rx.reset_gain()
+        self.tx.reset_gain()
         if self.tx.pwr.voltage_adjustable:
             self.tx.voltage = vab
         if self.tx.pwr.pwr_state == 'off':
@@ -249,14 +251,15 @@ class OhmPiHardware:
         rx_gains = []
         for pol in polarities:
             # self.tx.polarity = pol
+            time.sleep(1 / self.rx.sampling_rate)  # To make sure we don't read values from a previous pulse
+            injection_duration =  np.max([20./self.rx.sampling_rate, 0.2]) # Inject at least for 0.1 s or sampling rate
+            injection = Thread(target=self._inject, kwargs={'injection_duration': injection_duration, 'polarity': pol})
             # set gains automatically
-            injection = Thread(target=self._inject, kwargs={'injection_duration': 0.2, 'polarity': pol})
-            # readings = Thread(target=self._read_values)
             get_tx_gain = Thread(target=self.tx.gain_auto)
             get_rx_gain = Thread(target=self.rx.gain_auto)
             injection.start()
             self.tx_sync.wait()
-            get_tx_gain.start()  # TODO: add a barrier to synchronize?
+            get_tx_gain.start()
             get_rx_gain.start()
             get_tx_gain.join()
             get_rx_gain.join()
@@ -521,29 +524,35 @@ class OhmPiHardware:
             yy = self.select_samples(delay)
             zz = np.where(self.readings[yy, 1] == p)[0]
             xx = yy[zz]
-            if len(xx) > 1:
-                iab = self.readings[xx, 3] / 1000.
-                vmn = self.readings[xx, 4] / 1000. * self.readings[xx, 2]
-                iab_mean[p_idx] = np.mean(iab)
-                iab_std[p_idx] = np.std(iab)
-                vmn_mean[p_idx] = np.mean(vmn)
-                vmn_std[p_idx] = np.std(vmn)
-                # bounds on iab
-                iab_lower_bound[p_idx] = np.max([self.iab_min, iab_mean[p_idx] - n_sigma * iab_std[p_idx]])
-                iab_upper_bound[p_idx] = np.max([self.iab_min, iab_mean[p_idx] + n_sigma * iab_std[p_idx]])
-                # bounds on vmn
-                vmn_lower_bound[p_idx] = np.max([self.vmn_min, vmn_mean[p_idx] - n_sigma * vmn_std[p_idx]])
-                vmn_upper_bound[p_idx] = np.max([self.vmn_min, vmn_mean[p_idx] + n_sigma * vmn_std[p_idx]])
-                # bounds on r
-                r_lower_bound[p_idx] = np.max([0.1, np.abs(vmn_lower_bound[p_idx] / iab_upper_bound[p_idx])])
-                r_upper_bound[p_idx] = np.max([0.1, np.abs(vmn_upper_bound[p_idx] / iab_lower_bound[p_idx])])
-                # bounds on rab
-                rab_lower_bound[p_idx] = np.max([r_lower_bound[p_idx], np.abs(vab / iab_upper_bound[p_idx])])
-                rab_upper_bound[p_idx] = np.max([r_upper_bound[p_idx], np.abs(vab / iab_lower_bound[p_idx])])
-        rab_min = np.min(rab_lower_bound)
-        rab_max = np.max(rab_upper_bound)
-        r_min = np.min(r_lower_bound)
-        r_max = np.max(r_upper_bound)
+            if p_idx > 0:
+                if len(xx) > 1:  # NOTE : remove condition on pulse 0 depending on the solution givent to issue#246
+                    iab = self.readings[xx, 3] / 1000.
+                    vmn = self.readings[xx, 4] / 1000. * self.readings[xx, 2]
+                    iab_mean[p_idx] = np.mean(iab)
+                    iab_std[p_idx] = np.std(iab)
+                    vmn_mean[p_idx] = np.mean(vmn)
+                    vmn_std[p_idx] = np.std(vmn)
+                    # bounds on iab
+                    iab_lower_bound[p_idx] = np.max([self.iab_min, iab_mean[p_idx] - n_sigma * iab_std[p_idx]])
+                    iab_upper_bound[p_idx] = np.max([self.iab_min, iab_mean[p_idx] + n_sigma * iab_std[p_idx]])
+                    # bounds on vmn
+                    vmn_lower_bound[p_idx] = np.max([self.vmn_min, vmn_mean[p_idx] - n_sigma * vmn_std[p_idx]])
+                    vmn_upper_bound[p_idx] = np.max([self.vmn_min, vmn_mean[p_idx] + n_sigma * vmn_std[p_idx]])
+                    # bounds on r
+                    r_lower_bound[p_idx] = np.max([0.1, np.abs(vmn_lower_bound[p_idx] / iab_upper_bound[p_idx])])
+                    r_upper_bound[p_idx] = np.max([0.1, np.abs(vmn_upper_bound[p_idx] / iab_lower_bound[p_idx])])
+                    # bounds on rab
+                    rab_lower_bound[p_idx] = np.max([r_lower_bound[p_idx], np.abs(vab / iab_upper_bound[p_idx])])
+                    rab_upper_bound[p_idx] = np.max([r_upper_bound[p_idx], np.abs(vab / iab_lower_bound[p_idx])])
+                else:
+                    self.exec_logger.warning(f'Not enough values to estimate R and Rab in pulse {p_idx}!')
+
+        self.exec_logger.debug(f'r_lower_bound: {r_lower_bound}')
+        self.exec_logger.debug(f'r_upper_bound: {r_upper_bound}')
+        rab_min = np.min(rab_lower_bound[1:])  #
+        rab_max = np.max(rab_upper_bound[1:])  #
+        r_min = np.min(r_lower_bound[1:])
+        r_max = np.max(r_upper_bound[1:])
         # _vmn_min = np.min(vmn_lower_bound)
         # _vmn_max = np.min(vmn_upper_bound)
         cond_vab_min = vab_min
@@ -558,19 +567,29 @@ class OhmPiHardware:
         cond_pab_min = np.sqrt(pab_min * rab_max)
         cond_pab_req = np.sqrt(pab_req * rab_max)
         cond_pab_max = np.sqrt(pab_max * rab_min)
-        cond_mins = np.max([cond_vab_min, cond_iab_min, cond_vmn_min, cond_pab_min])
-        cond_reqs = req_agg([cond_vab_req, cond_iab_req, cond_vmn_req, cond_pab_req])
-        cond_maxs = np.min([cond_vab_max, cond_vmn_max, cond_iab_max, cond_pab_max])
+        vab_min_conds = [cond_vab_min, cond_iab_min, cond_vmn_min, cond_pab_min]
+        vab_req_conds = [cond_vab_req, cond_iab_req, cond_vmn_req, cond_pab_req]
+        vab_max_conds = [cond_vab_max, cond_iab_max, cond_vmn_max, cond_pab_max]
+        cond_mins = np.max(vab_min_conds)
+        cond_reqs = req_agg(vab_req_conds)
+        cond_maxs = np.min(vab_max_conds)
         new_vab = np.min([np.max([cond_mins, cond_reqs]), cond_maxs])
         msg  = f'###      [ min ,  req ,  max ]   | cond       : [ min ,  req ,  max ] V ###\n'
-        msg += f'### vab: [{vab_min:5.1f}, {vab_req:5.1f}, {vab_max:5.1f}] V | cond on vab: [{cond_vab_min:5.1f}, {cond_vab_req:5.1f}, {cond_vab_max:5.1f}] V ###\n'
-        msg += f'### iab: [{iab_min:5.3f}, {iab_req:5.3f}, {iab_max:5.3f}] A | cond on vab: [{cond_iab_min:5.1f}, {cond_iab_req:5.1f}, {cond_iab_max:5.1f}] V ###\n'
-        msg += f'### vmn: [{vmn_min:5.3f}, {vmn_req:5.3f}, {vmn_max:5.3f}] V | cond on vab: [{cond_vmn_min:5.1f}, {cond_vmn_req:5.1f}, {cond_vmn_max:5.1f}] V ###\n'
-        msg += f'### pab: [{pab_min:5.3f}, {pab_req:5.3f}, {pab_max:5.3f}] W | cond on vab: [{cond_pab_min:5.1f}, {cond_pab_req:5.1f}, {cond_pab_max:5.1f}] V ###\n'
-        msg += f'### agg: {req_agg.__name__}, rab: [{rab_min:7.1f}, {rab_max:7.1f}] ohm, r: [{r_min:7.1f}, {r_max:7.1f}] ohm   ###'
+        msg += f'### vab: [{vab_min:5.1f}, {vab_req:5.1f}, {vab_max:5.1f}] V |'
+        msg += f'cond on vab: [{cond_vab_min:5.1f}, {cond_vab_req:5.1f}, {cond_vab_max:5.1f}] V ###\n'
+        msg += f'### iab: [{iab_min:5.3f}, {iab_req:5.3f}, {iab_max:5.3f}] A |'
+        msg += f'cond on vab: [{cond_iab_min:5.1f}, {cond_iab_req:5.1f}, {cond_iab_max:5.1f}] V ###\n'
+        msg += f'### vmn: [{vmn_min:5.3f}, {vmn_req:5.3f}, {vmn_max:5.3f}] V |'
+        msg += f'cond on vab: [{cond_vmn_min:5.1f}, {cond_vmn_req:5.1f}, {cond_vmn_max:5.1f}] V ###\n'
+        msg += f'### pab: [{pab_min:5.3f}, {pab_req:5.3f}, {pab_max:5.3f}] W |'
+        msg += f'cond on vab: [{cond_pab_min:5.1f}, {cond_pab_req:5.1f}, {cond_pab_max:5.1f}] V ###\n'
+        msg += f'### agg: {req_agg.__name__}, rab: [{rab_min:7.1f}, {rab_max:7.1f}] ohm,'
+        msg += f' r: [{r_min:7.1f}, {r_max:7.1f}] ohm   ###'
         # print(msg)
         self.exec_logger.debug(msg)
-        msg = f'### vab = min(max(max({[np.round(i, 2) for i in [cond_vab_min, cond_iab_min, cond_vmn_min, cond_pab_min]]}), {req_agg.__name__}({[np.round(i, 2) for i in [cond_vab_req, cond_iab_req, cond_vmn_req, cond_pab_req]]})), min({[np.round(i, 2) for i in [cond_vab_max, cond_iab_max, cond_vmn_max, cond_pab_max]]}))'
+        msg = f'### vab = min(max(max({[np.round(i, 2) for i in vab_min_conds]}),'
+        msg += f'{req_agg.__name__}({[np.round(i, 2) for i in vab_req_conds]})),'
+        msg += f'min({[np.round(i, 2) for i in vab_max_conds]}))'
         msg += f' = min(max({cond_mins:5.3f}, {cond_reqs:5.3f}), {cond_maxs:5.3f})'
         msg += f' = min({np.max([cond_mins, cond_reqs]):5.3f}, {cond_maxs:5.3f})'
         msg += f' = {new_vab:5.3f} V ###'
@@ -583,8 +602,8 @@ class OhmPiHardware:
 
     def compute_vab(self, vab_init=5., vab_min=None, vab_req=None, vab_max=None,
                     iab_min=None, iab_req=None, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
-                    pab_min=None, pab_req=None, pab_max=None, min_agg=False, polarities=(1, -1), pulse_duration=0.1, delay=0.05,
-                    diff_vab_lim=2.5, n_steps=4, n_sigma=2., filename=None, quad_id=0):
+                    pab_min=None, pab_req=None, pab_max=None, min_agg=False, polarities=(1, -1), pulse_duration=0.1,
+                    delay=0.0, diff_vab_lim=2.5, n_steps=4, n_sigma=2., filename=None, quad_id=0):
         """ Estimates best Vab voltage based on different strategies.
         In "vmax" and "vmin" strategies, we iteratively increase/decrease the vab while
         checking vmn < vmn_max, vmn > vmn_min and iab < iab_max. We do a maximum of n_steps
@@ -652,8 +671,11 @@ class OhmPiHardware:
         vab_init = np.min([vab_init, vab_max])
         vab_opt = np.abs(vab_init)
         polarities = list(polarities)
+        polarities.insert(0, 0)  # This could be removed depending on solution of issue #246
+
 
         # Set gain at min
+        self.tx.reset_gain()
         self.rx.reset_gain()  # NOTE : is it the minimum because we are not measuring ?
 
         k = 0
@@ -665,10 +687,11 @@ class OhmPiHardware:
 
         # Switches on measuring LED
         self.tx.measuring = 'on'
-
-        self.tx.voltage = vab_init
+        # first switch power on before setting a voltage to let it
+        # "decay" if needed (for dph5005)
         if self.tx.pwr.pwr_state == 'off':
             self.tx.pwr.pwr_state = 'on'
+        self.tx.voltage = vab_init
 
         if 10. / self.rx.sampling_rate > pulse_duration:
             sampling_rate = 10. / pulse_duration  # TODO: check this...
@@ -684,8 +707,9 @@ class OhmPiHardware:
                              # but might be useful in vmax when last vab too high...)
             self.exec_logger.event(
                 f'OhmPiHardware\t_compute_vab_sleep\tend\t{datetime.datetime.utcnow()}')
+            # self._gain_auto(vab=vab_list[k])
             self._vab_pulses(vab_list[k], sampling_rate=sampling_rate,
-                             durations=[pulse_duration, pulse_duration], polarities=polarities)
+                             durations=[0.1, pulse_duration, pulse_duration], polarities=polarities)  # 0.1 step at polarity 0 could be removed given the solution to issue #246
             new_vab, _, _, _, _ = self._find_vab(vab_list[k],
                                                  vab_req=vab_req, iab_req=iab_req, vmn_req=vmn_req, pab_req=pab_req,
                                                  vab_min=vab_min, vab_max=vab_max, iab_min=iab_min, iab_max=iab_max,
@@ -796,6 +820,8 @@ class OhmPiHardware:
         else:
             durations = [cycle_duration / 2] * 2 * cycles
             polarities = [-int(polarity * np.heaviside(i % 2, -1.)) for i in range(2 * cycles)]
+        durations.insert(0, 0.2)
+        polarities.insert(0, 0)
         self._vab_pulses(vab, durations, sampling_rate, polarities=polarities, append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
         if switch_pwr_off:

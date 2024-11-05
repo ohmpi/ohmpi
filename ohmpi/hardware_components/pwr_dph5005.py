@@ -95,8 +95,6 @@ class Pwr(PwrAbstract):
                     self._retrieve_voltage()
                     if np.abs(self._voltage - value) < self._pwr_accuracy:  # arbitrary threshold
                         break
-            # TODO: @Watlet, could you justify this formula?
-#            time.sleep(max([0,1 - (self._voltage/value)]))  # NOTE: wait to enable DPS to reach new voltage as a function of difference between new and previous voltage
         self.exec_logger.event(f'{self.model}\tset_voltage\tend\t{datetime.datetime.utcnow()}')
         self._voltage = value
 
