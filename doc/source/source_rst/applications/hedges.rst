@@ -83,9 +83,9 @@ A detailed analysis of the hedge was conducted to determine the optimal placemen
 
 A map showing the electrode positions
 
-IV.	Installation sur le Terrain:
+IV.	Site installation:
 ==================================
-1.	Préparation du Site:
+1.	Preparation of site:
 -----------------------
 Before beginning the installation, we conducted thorough site preparation, starting with the setup of the cabin, trench removal, and marking the electrode locations.
 
@@ -108,7 +108,7 @@ The cabin housing the resistivimeter must be carefully prepared to ensure the eq
    :width: 100%
    :align: center
 
-   Figure 6 : Les étapes de préparation de la cabine  
+   Figure 6 : The preparation steps for the cabin.
 
 • Trench Removal
 
@@ -118,7 +118,7 @@ The removal of trenches for the two electrode lines perpendicular to the hedge w
    :width: 100%
    :align: center
 
-   Figure 7 : Enlèvement des tranchées sur les deux lignes de électrodes.
+   Figure 7 : Removal of trenches on the two lines of electrodes.
    
 • Marking Electrode Locations
 
@@ -131,10 +131,12 @@ The electrode placement stage is a critical procedure requiring precise executio
    :width: 100%
    :align: center
 
-   Figure 8 : Les étapes de la mise en place des électrodes
+   Figure 8 : The steps for setting up the electrodes.
 3. Wiring Setup:
 
 Wiring Diagram ???
+
+
 The wiring process between the electrodes and the resistivimeter involves several methodical steps to ensure a stable and reliable connection for accurate data collection. First, cables are laid out from the resistivimeter to the pre-marked electrode locations. Connections between these cables at the OhmPi and between the cables themselves (Figure 9) are selected based on a predefined color-coding system, making it easier to identify connections. At this stage, a special resin is meticulously added to the connection boxes to ensure effective insulation and protection against adverse environmental conditions. This resin also guarantees electrical stability of the connections. The cables are then connected to the OhmPi following the predefined wiring diagram. A thorough check is performed at each step to ensure that all connections are secure and that the system is ready for accurate data collection during the subsequent application of Electrical Resistivity Tomography (ERT). This is achieved by running a sequence to check the contact resistances between the electrodes and the soil, aiming for acceptable values between 1 and 4 kOhms.
     
   
@@ -148,7 +150,7 @@ The wiring process between the electrodes and the resistivimeter involves severa
    :width: 100%
    :align: center
 
-   Figure 9 : Photo de câblage au niveau des boites de connections entre les câbles  et au niveau de l'Armoire
+   Figure 9 : Wiring photo at the connection boxes between the cables and at the level of the cabinet.
    
 4. Trench Closure
 
@@ -166,7 +168,7 @@ It is important to note that this trench closure stage is particularly sensitive
    :width: 100%
    :align: center
 
-   Figure 10 ; Fermeture des tranchées
+   Figure 10 : Trench Closure
      
  
 V.	Tests 
