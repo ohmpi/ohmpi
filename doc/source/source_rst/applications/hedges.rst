@@ -76,7 +76,7 @@ The resistivity meter installed on-site is the OhmPi resistivity meter (Figure 5
 
 To perform measurements, the OhmPi must be paired with a system that injects current and simultaneously measures both the potential difference and the current. This configuration ensures a comprehensive and efficient acquisition of electrical resistivity data (Clement et al., 2020).
 
-2. Electrode positions Planning:
+2. Electrode positions Planning
 -----------------------------------------------
 A detailed analysis of the hedge was conducted to determine the optimal placement of the electrodes based on the site’s geometry. This planning was crucial to ensure uniform data collection and optimal resolution.
 
