@@ -550,7 +550,7 @@ class TxAbstract(ABC):
             self.exec_logger.debug(f'{self.model} cannot switch off power source')
 
     def reset_gain(self):
-        self.gain = 2/3
+        self.gain = 1.
 
 
 class RxAbstract(ABC):

@@ -222,6 +222,9 @@ class Tx(TxAbstract):
                                     address=self._ads_current_address)
         self._ads_current.mode = mode
 
+    def reset_gain(self):
+        self.gain = 2/3
+
     def reset_mcp(self):
         self.mcp_board = MCP23008(self.connection, address=self._mcp_address)
 
