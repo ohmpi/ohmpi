@@ -86,14 +86,16 @@ IV.	Installation sur le Terrain:
 ==================================
 1.	Préparation du Site:
 -----------------------
-Avant de commencer l'installation, nous avons procédé à une préparation minutieuse du site en commençant par la préparation de la cabine, l'enlèvement des tranchées et le marquage des emplacements des électrodes.
-•	Préparation de la Cabine
-La préparation de la cabine pour le résistivimètre a débuté par l'enlèvement de tranchées, suivies de l'aplanissement du sol et de la pose d'une couche de cailloux comme base. Une couche de sable a été ajoutée pour améliorer la stabilité, puis la base a été bétonnée conformément aux spécifications. La construction de la maison de cabine en bois a suivi, avec un cadre robuste fixé à la base en béton, des panneaux en bois pour les parois, et un toit étanche (Figure 3). Des vérifications finales ont été effectuées pour garantir la stabilité de la structure, la sécurité du matériel, et l'étanchéité de la base en béton, assurant ainsi une installation optimale pour le résistivimètre et un accès pratique aux câbles et aux connexions.
-La cabine qui abrite le résistivimètre doit être préparée soigneusement pour assurer le bon fonctionnement de l'équipement. Suivez ces étapes :
--	Placement des panneaux solaires au-dessus de la cabine de manière à maximiser l'exposition au soleil. 
--	Installation des batteries dans un endroit sécurisé à l'intérieur de la cabine en s’assurant qu'elles sont correctement connectées au résistivimètre et aux panneaux solaires.
--	Vérifiant les connexions électriques pour assurer qu'elles sont sécurisées et qu'il n'y a pas de câbles endommagés.
-   
+Before beginning the installation, we conducted thorough site preparation, starting with the setup of the cabin, trench removal, and marking the electrode locations.
+
+• Cabin Preparation
+The cabin preparation for the resistivimeter began with the trench removal, followed by leveling the ground and laying a layer of gravel as a base. A layer of sand was added to enhance stability, then the base was concreted according to specifications. The wooden cabin structure was then built, with a sturdy frame anchored to the concrete base, wooden panels for the walls, and a waterproof roof (Figure 3). Final checks were performed to ensure structural stability, equipment security, and the waterproofing of the concrete base, providing an optimal setup for the resistivimeter and easy access to cables and connections.
+
+The cabin housing the resistivimeter must be carefully prepared to ensure the equipment functions correctly. Follow these steps:
+
+    Position the solar panels above the cabin to maximize sunlight exposure.
+    Install the batteries in a secure location inside the cabin, ensuring they are properly connected to both the resistivimeter and solar panels.
+    Check the electrical connections to confirm they are secure and that no cables are damaged.
      
  .. figure:: ../../img/images_hedges/fig9.png
    :width: 100%
