@@ -109,8 +109,9 @@ The cabin housing the resistivimeter must be carefully prepared to ensure the eq
 
    Figure 6 : Les étapes de préparation de la cabine  
 
-•	Enlèvement des tranchées
-L'enlèvement des tranchées pour les deux lignes d'électrodes perpendiculaires à la haie a été une étape méthodique et précise de la préparation du site. Tout d'abord, un tracé précis a été établi en fonction du plan d'installation, déterminant les positions exactes des électrodes. Ensuite, les tranchées ont été excavées avec soin en utilisant des outils appropriés, en veillant à maintenir une profondeur de 10 cm et une largeur de 20 cm. Une fois les tranchées réalisées, des précautions ont été prises pour minimiser les perturbations du sol environnant, préservant ainsi la stabilité de la structure et évitant toute interférence indésirable avec les mesures de résistivité électrique. Enfin, les tranchées ont été soigneusement refermées après l'installation des électrodes, restaurant ainsi le site à son état initial autant que possible. Cette démarche méticuleuse garantit l'intégrité du site tout en facilitant la prise de mesures précises pour une interprétation fiable des données de la Tomographie de Résistivité Électrique.
+• Trench Removal
+
+The removal of trenches for the two electrode lines perpendicular to the hedge was a methodical and precise step in site preparation. First, an accurate layout was established based on the installation plan, determining the exact positions of the electrodes. Then, the trenches were carefully excavated using appropriate tools, maintaining a depth of 10 cm and a width of 20 cm. Once the trenches were completed, precautions were taken to minimize disturbance to the surrounding soil, preserving the stability of the structure and avoiding any unwanted interference with the electrical resistivity measurements. Finally, after the electrodes were installed, the trenches were carefully refilled, restoring the site to its original condition as much as possible. This meticulous approach ensures the site’s integrity while facilitating precise measurements for reliable interpretation of Electrical Resistivity Tomography data.
    
  .. figure:: ../../img/images_hedges/fig11.png
    :width: 100%
@@ -118,21 +119,22 @@ L'enlèvement des tranchées pour les deux lignes d'électrodes perpendiculaires
 
    Figure 7 : Enlèvement des tranchées sur les deux lignes de électrodes.
    
-•	Marquage des emplacements des électrodes
+• Marking Electrode Locations
 
-2.	Mise en Place des Électrodes:
---------------------------------
-L'étape de l'emplacement des électrodes est une procédure critique qui nécessite une exécution précise pour assurer la qualité des mesures. Initialement, des tranchées ont été creusées aux emplacements préalablement marqués, assurant une profondeur adéquate pour la disposition des électrodes. Une fois les tranchées préparées, les électrodes ont été positionnées horizontalement selon le schéma défini, garantissant une distribution uniforme. Une attention particulière a été accordée à la mise en place de matière conductrice ?? autour des électrodes pour assurer une connexion efficace avec le sol. Cette matière, soigneusement sélectionnée pour ses propriétés conductrices, a été déployée de manière à minimiser toute interférence qui pourrait compromettre la qualité des mesures. En combinant le creusement précis des tranchées, la disposition précise des électrodes, l'application adéquate de matière conductrice, et la fermeture de toutes les connexions entre les électrodes et les fils électriques par le silicone, nous avons établi des conditions optimales pour la collecte de données fiables et précises lors de l'application de la Tomographie de Résistivité Électrique.
+    Electrode Placement:
+
+The electrode placement stage is a critical procedure requiring precise execution to ensure measurement quality. Initially, trenches were dug at the previously marked locations, ensuring adequate depth for electrode installation. Once the trenches were prepared, the electrodes were positioned horizontally according to the defined layout, ensuring uniform distribution. Special attention was given to the placement of a conductive material ?? around the electrodes to ensure effective soil contact. This material, carefully selected for its conductive properties, was applied in a manner that minimizes any interference that could compromise measurement quality. By combining precise trench digging, accurate electrode positioning, proper application of the conductive material, and sealing all connections between electrodes and electrical wires with silicone, we established optimal conditions for reliable and accurate data collection during the application of Electrical Resistivity Tomography.
+
   
  .. figure:: ../../img/images_hedges/fig12.png
    :width: 100%
    :align: center
 
    Figure 8 : Les étapes de la mise en place des électrodes
-3.	Mise en Place du Câblage:
-----------------------------
-Schéma de Câblage ???
-Le processus de câblage entre les électrodes et le résistivimètre implique plusieurs étapes méthodiques, visant à assurer une connexion stable et fiable pour la collecte précise des données. Tout d'abord, les câbles sont déployés depuis le résistivimètre vers les emplacements préalablement marqués des électrodes. La connexion de ces câbles au niveau de l'OhmPi et entre les câbles eux-mêmes (Figure 9) est choisie en fonction d'un catalogue de couleurs prédéfini, simplifiant ainsi l'identification des connexions. À ce stade, une résine spéciale est méticuleusement ajoutée dans les boîtes de connexion pour assurer une isolation efficace et une protection contre les conditions environnementales adverses. Cette résine garantit également la stabilité électrique des connexions. Les câbles sont ensuite connectés à l’OhmPi en suivant le schéma de câblage prédéfini. Une vérification minutieuse est effectuée à chaque étape pour s'assurer que toutes les connexions sont sécurisées et que le système est prêt à collecter des données précises lors de l'application ultérieure de la Tomographie de Résistivité Électrique (ERT). Cela est atteint en lançant une séquence qui cherche les résistances de contact entre les électrodes et le sol qui donne des valeurs acceptables entre 1 et 4 kOhm.
+3. Wiring Setup:
+
+Wiring Diagram ???
+The wiring process between the electrodes and the resistivimeter involves several methodical steps to ensure a stable and reliable connection for accurate data collection. First, cables are laid out from the resistivimeter to the pre-marked electrode locations. Connections between these cables at the OhmPi and between the cables themselves (Figure 9) are selected based on a predefined color-coding system, making it easier to identify connections. At this stage, a special resin is meticulously added to the connection boxes to ensure effective insulation and protection against adverse environmental conditions. This resin also guarantees electrical stability of the connections. The cables are then connected to the OhmPi following the predefined wiring diagram. A thorough check is performed at each step to ensure that all connections are secure and that the system is ready for accurate data collection during the subsequent application of Electrical Resistivity Tomography (ERT). This is achieved by running a sequence to check the contact resistances between the electrodes and the soil, aiming for acceptable values between 1 and 4 kOhms.
     
   
  .. figure:: ../../img/images_hedges/fig13.png
