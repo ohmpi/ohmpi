@@ -1,32 +1,26 @@
 Infiltration below hedges
 ***************************************
 
-Date de la Mission: 29, 30, 31 janvier et 1 février 2024.
+Fieldwork Date: January 29, 30, 31 and February 1, 2024. 
 
-Lieu: Pollionnay
+Location: Pollionnay 
 
-Participants:
-Hanifa Bader, Remi Clement, Jean Marcais, Nadia Carluer, Laurent Lassabatere, Fanny Courapied, Arnold Imig, Arnaud Watlet, Claire Lauvernet, Adrien Bonnefoy
-
+Participants: Hanifa Bader, Remi Clement, Jean Marcais, Nadia Carluer, Laurent Lassabatere, Fanny Courapied, Arnold Imig, Arnaud Watlet, Claire Lauvernet, Adrien Bonnefoy
 
 
-
-RÉSUMÉ
+Abstract
 ======
-L’objectif principal de cette mission était d'installer un système de Tomographie de Résistivité Électrique (ERT) sur une haie à Pollionnay, dans le but d'obtenir des images détaillées de la distribution des résistivités électriques du sol, tout en permettant le pilotage à distance de ces dispositifs de monitoring géoélectrique. L'objectif ultime était d'observer les variations temporelles significatives générées par les phénomènes environnementaux, hydrauliques et météorologiques auxquels l’ouvrage est exposé. Ce rapport présente les actions d’instrumentation ERT menées au laboratoire et sur le site (29, 30, 31 janvier et 1 février 2024), visant à établir un bilan d’étape.
-MOTS-CLEFS
-Monitoring géoélectrique, tomographie de résistivité électrique, Ohmpi, instrumentation, haies.
-
-
+The primary goal of this mission was to install an Electrical Resistivity Tomography (ERT) system on a hedge in Pollionnay. This system aims to provide detailed images of the soil’s electrical resistivity distribution and enable remote control of these geoelectric monitoring devices. Ultimately, the objective is to observe significant temporal variations caused by environmental, hydraulic, and meteorological phenomena affecting the structure. This report details the ERT instrumentation activities conducted both in the laboratory and on-site from January 29 to February 1, 2024, to establish a progress report.
 
 I.	Introduction
-===============
-La tomographie de résistivité électrique (ERT) représente une méthode géophysique puissante qui permet la caractérisation des propriétés électriques des sous-sols. Elle est appliquée sur le terrain pour caractériser la structure électrique du sous-sol à un instant t donné. Dans le but de caractériser les mouvements d'eau et les variations rapides des transferts hydriques à des échelles temporelles fines en réponse aux conditions environnementales changeantes, la méthode électrique « Tomographie de Résistivité Électrique (ERT) en suivi temporel parait adaptée. Utilisée en mode de suivi temporel, elle facilite l'étude des processus d'infiltration sous une haie située dans un bassin d'observation à long terme près de Lyon, France (Lagouy et al., 2015). Dans notre contexte, en considérant que le développement des résistivimètre en source ouverte, tels qu'Ohmpi (Clement et al., 2020), offre la possibilité de surveiller de manière intensive les processus hydrologiques.
-Cette documentation vise à fournir une vue détaillée du processus d'installation d'un système ERT faite le 29, 30, 31 janvier et 1 février 2024. Elle englobe la conception du système intégrant un résistivimètre Ohmpi, le schéma de câblage, la disposition des électrodes, une illustration de l'armoire de contrôle, ainsi que les tests mensuels recommandés.
+================
+Electrical Resistivity Tomography (ERT) is a effective geophysical method used to characterize the electrical properties of subsurfaces. It is applied in the field to map the electrical structure of the subsurface at a given time. To understand flow movements and rapid variations in water transfers at fine time scales due to changing environmental conditions, the method of “Electrical Resistivity Tomography (ERT) in time-based monitoring” is particularly suitable. When used in time-based monitoring mode, it facilitates the study of infiltration processes under a hedge located in a long-term observation basin near Lyon, France (Lagouy et al., 2015).
+In our context, the development of open-source resistivity meters, such as Ohmpi (Clement et al., 2020), enables intensive monitoring of hydrological processess.
+This documentation aims to provide a detailed view of the installation process of an ERT system made on January 29, 30, 31 and February 1, 2024. It includes the design of the system integrating an Ohmpi resistivity meter, the wiring diagram, the electrode layout, an illustration of the control cabinet, as well as the recommended monthly tests. 
 
-II.	Présentation du site
-==========================
-Le bassin de l’Yzeron, situé dans l’ouest lyonnais, est suivi depuis de nombreuses années par INRAE, dans le cadre de l’OTHU, site atelier de la Zone Atelier Bassin du Rhone.  Il comporte des haies, et celle que nous souhaitons étudier se trouve à Pollionnay sur un terrain incliné selon trois pentes différentes, variant entre 4 et 5 %. Sa longueur totale est d'environ 25 mètres, avec 8 mètres de densité plus forte au milieu, comme illustré dans la Figure 1.b. 
+II.	Presentation of the site
+============================
+The Yzeron watershed, situated west of Lyon, has been monitored for many years by INRAE, as part of the OTHU and serves as a workshop site for the Rhone Watershed Workshop Zone. This area includes several hedges, with the specific hedge we aim to study located in Pollionnay. The terrain here is inclined with three different slopes, ranging between 4% and 5%. The hedge spans approximately 25 meters in total length, with a denser section of about 8 meters in the middle, as shown in Figure 1.b. 
   
  .. figure:: ../../img/images_hedges/fig1.png
    :width: 100%
@@ -40,16 +34,15 @@ Le bassin de l’Yzeron, situé dans l’ouest lyonnais, est suivi depuis de nom
    Figure 2 : Carte électromagnétique de localisation de la zone d’étude
 
 
-III.	Conception du Système
+III.	System Design
 ===========================
 
-1.	Choix de l'Équipement:
--------------------------
-Avant l'installation, une étude approfondie est faite par sélectionner le matériel approprié pour la mission, en prenant en compte les spécificités de la haie et des conditions du sol, ainsi leur compatibilité et de leur adéquation aux besoins spécifiques du projet. 
-Cela inclut : 
-•	Le choix des électrodes :  
-La sélection des électrodes est intéressante pour obtenir des résultats fiables. Considérez la résistivité du sol et choisissez des électrodes appropriées, en tenant compte de la taille, et du matériau.
-  
+1.	Equipmemnt Selection:
+--------------------------
+
+Before installation, a thorough study is conducted to select the appropriate equipment for the study, considering the specifics of the hedge and soil conditions, as well as their compatibility and suitability for the project's specific needs. This includes:
+
+- Electrode Selection:Choosing the right electrodes is crucial for obtaining reliable results. Factors such as soil resistivity, electrode size, and material must be considered to ensure optimal performance.
    
  .. figure:: ../../img/images_hedges/fig4.jpg
    :width: 50%
@@ -63,17 +56,17 @@ La sélection des électrodes est intéressante pour obtenir des résultats fiab
 
    Figure 3: Photos illustrant la préparation des électrodes en laboratoire.
 
-- •	Le choix des câbles : 
+- •	Selection of cables : 
 
-- •	Le choix des batteries :
+- •	Selection of batteries :
    
  .. figure:: ../../img/images_hedges/fig7.jpg
    :width: 100%
    :align: center
 
    Figure 4 : Les batteries
-- •	Le choix du résistivimètre :
-Un résistivimètre installe sur site est le résistivimètre OhmPi (Figure 2) qui est un appareil à faible coût, présentant du matériel ouvert (hardware), pour mesurer la résistivité électrique. Il intègre un multiplexeur permettant des mesures sur 32 électrodes. Les capacités de l'appareil comprennent une large plage de mesure pour les valeurs de courant, s'étendant de 0,1 mA à 80 mA, et une plage de mesure de la différence de potentiel de 0,001 V à 12,00 V. Ce choix offre des avantages tels qu'une taille compacte et une utilisation répandue dans les applications matérielles ouvertes, contribuant à un ratio coût/efficacité attractif. (Clement et al. 2020)
+- •	Selection of the resistivity meter :
+The resistivity meter installed on-site is the OhmPi resistivity meter (Figure 5), a low-cost, open-hardware device designed for measuring electrical resistivity. It features a multiplexer capable of handling measurements from 32 electrodes. The device offers a wide measurement range for current values, from 0.1 mA to 80 mA, and a potential difference measurement range from 0.001 V to 12.00 V. This choice provides several advantages, including its compact size and widespread use in open hardware applications, making it a cost-effective solution (Clement et al., 2020).
    
  .. figure:: ../../img/images_hedges/fig8.png
    :width: 100%
@@ -81,13 +74,13 @@ Un résistivimètre installe sur site est le résistivimètre OhmPi (Figure 2) q
 
    Figure 5: Disposition de résistivimètre OhmPi de laboratoire
 
-Pour effectuer des mesures, le OhmPi doit être associé à un système chargé d'injecter du courant et de mesurer simultanément la différence de potentiel et le courant. Cette configuration garantit une acquisition complète et efficace des données de résistivité électrique. (Clement et al. 2020)
+To perform measurements, the OhmPi must be paired with a system that injects current and simultaneously measures both the potential difference and the current. This configuration ensures a comprehensive and efficient acquisition of electrical resistivity data (Clement et al., 2020).
+
 2.	Planification de disposition des électrodes:
 -----------------------------------------------
-Une analyse détaillée de la haie a été effectuée pour déterminer la disposition optimale des électrodes en fonction de la géométrie du site. Cette planification a été cruciale pour garantir une collecte de données homogène et une résolution optimale.
+A detailed analysis of the hedge was conducted to determine the optimal placement of the electrodes based on the site’s geometry. This planning was crucial to ensure uniform data collection and optimal resolution.
 
-Une carte avec la position des électrodes
-
+A map showing the electrode positions
 
 IV.	Installation sur le Terrain:
 ==================================
