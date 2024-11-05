@@ -50,13 +50,13 @@ Le bassin de l’Yzeron, situé dans l’ouest lyonnais, est suivi depuis de nom
 
    Caption
      
- .. figure:: ../../../img/images_hedges/fig2.png
+ .. figure:: ../../img/images_hedges/fig2.png
    :width: 100%
    :align: center
 
    Caption
      
- .. figure:: ../../../img/images_hedges/fig3.png
+ .. figure:: ../../img/images_hedges/fig3.png
    :width: 100%
    :align: center
 
