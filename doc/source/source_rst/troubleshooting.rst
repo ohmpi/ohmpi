@@ -94,3 +94,10 @@ shunt resistor, it will burn and its value will not be precisely equal to 2 Ohms
 
 To measure larger current in the field, we recommend to use another shunt resistors (e.g. 1 Ohms for max 100 mA, 0.5 Ohms for max 200 mA).
 Multiple 2 Ohms shunt resistors can also be placed in parallel to decrease the shunt resistance.
+
+
+OhmPi is slow
+=============
+
+One of the reason why the OhmPi can be very slow (up to 5s between print in the command line) can be due to the MQTT broker not being found. Make sure you have set a correct hostname ('localhost' by default) in the `config.py` file.
+
