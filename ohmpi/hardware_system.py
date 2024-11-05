@@ -77,8 +77,6 @@ class OhmPiHardware:
                 RX_CONFIG.update({k: RX_CONFIG.pop(k, v['default'])})
             except Exception as e:
                 print(f'Cannot set value {v} in RX_CONFIG[{k}]:\n{e}')
-
-        self.iab_min = 0.00001  # A TODO : add in config
         self.iab_max = np.min([TX_CONFIG['current_max'], HARDWARE_CONFIG['pwr'].pop('current_max', np.inf),
                                np.min(np.hstack(
                                        (np.inf,
@@ -541,11 +539,13 @@ class OhmPiHardware:
                 # bounds on rab
                 rab_lower_bound[p_idx] = np.max([r_lower_bound[p_idx], np.abs(vab / iab_upper_bound[p_idx])])
                 rab_upper_bound[p_idx] = np.max([r_upper_bound[p_idx], np.abs(vab / iab_lower_bound[p_idx])])
+            else:
+                self.exec_logger.warning(f'Not enough values to estimate R and Rab in pulse {p_idx}!')
         rab_min = np.min(rab_lower_bound)
         rab_max = np.max(rab_upper_bound)
         r_min = np.min(r_lower_bound)
         r_max = np.max(r_upper_bound)
-        self.exec_logger.debug(f'rab_min: {rab_min}, rab_max: {rab_max}, rmin: {r_min}, rmax: {r_max}')
+        self.exec_logger.debug(f'rab_min: {rab_min}, rab_max: {rab_max}, rmin: {r_min}, rmax: {r_max}, ')
         # _vmn_min = np.min(vmn_lower_bound)
         # _vmn_max = np.min(vmn_upper_bound)
         cond_vab_min = vab_min
