@@ -544,19 +544,11 @@ class OhmPiHardware:
                     # bounds on rab
                     rab_lower_bound[p_idx] = np.max([r_lower_bound[p_idx], np.abs(vab / iab_upper_bound[p_idx])])
                     rab_upper_bound[p_idx] = np.max([r_upper_bound[p_idx], np.abs(vab / iab_lower_bound[p_idx])])
-
-                    self.exec_logger.debug(f'iab_lower_bound([self.iab_min: {self.iab_min}, iab_mean[{p_idx}] - n_sigma * iab_std[{p_idx}]: {iab_mean[p_idx] - n_sigma * iab_std[p_idx]}')
-                    self.exec_logger.debug(f'iab_upper_bound([self.iab_min: {self.iab_min}, iab_mean[{p_idx}] + n_sigma * iab_std[{p_idx}]: {iab_mean[p_idx] + n_sigma * iab_std[p_idx]}')
-                    self.exec_logger.debug(f'vmn_lower_bound([self.vmn_min: {self.vmn_min}, vmn_mean[{p_idx}] - n_sigma * vmn_std[{p_idx}]: {vmn_mean[p_idx] - n_sigma * vmn_std[p_idx]}')
-                    self.exec_logger.debug(f'vmn_upper_bound([self.vmn_min: {self.vmn_min}, vmn_mean[{p_idx}] + n_sigma * vmn_std[{p_idx}]: {vmn_mean[p_idx] + n_sigma * vmn_std[p_idx]}')
-                    self.exec_logger.debug(f'r_lower_bound([0.1, np.abs(vmn_lower_bound[{p_idx}] / iab_upper_bound[{p_idx}])]: {np.abs(vmn_lower_bound[p_idx] / iab_upper_bound[p_idx])}')
-                    self.exec_logger.debug(f'r_upper_bound([0.1, np.abs(vmn_upper_bound[{p_idx}] / iab_lower_bound[{p_idx}])]: {np.abs(vmn_upper_bound[p_idx] / iab_lower_bound[p_idx])}')
-                    self.exec_logger.debug(f'rab_lower_bound[{p_idx}] = np.max([r_lower_bound[{p_idx}]: {[r_lower_bound[p_idx]]}, np.abs(vab / iab_upper_bound[{p_idx}]): {np.abs(vab / iab_upper_bound[p_idx])}])')
-                    self.exec_logger.debug(f'rab_upper_bound[{p_idx}] = np.max([r_upper_bound[{p_idx}]: {[r_upper_bound[p_idx]]}, np.abs(vab / iab_lower_bound[{p_idx}]): {np.abs(vab / iab_lower_bound[p_idx])}])')
                 else:
                     self.exec_logger.warning(f'Not enough values to estimate R and Rab in pulse {p_idx}!')
 
-
+        self.exec_logger.debug(f'r_lower_bound: {r_lower_bound}')
+        self.exec_logger.debug(f'r_upper_bound: {r_upper_bound}')
         rab_min = np.min(rab_lower_bound)
         rab_max = np.max(rab_upper_bound)
         r_min = np.min(r_lower_bound)
