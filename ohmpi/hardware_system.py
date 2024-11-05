@@ -583,7 +583,7 @@ class OhmPiHardware:
         # print(msg)
         self.exec_logger.debug(msg)
         msg = f'### vab = min(max(max({[np.round(i, 2) for i in vab_min_conds]}),'
-        msg += f'{req_agg.__name__}({[np.round(i, 2) for i in vab_reqs]})),'
+        msg += f'{req_agg.__name__}({[np.round(i, 2) for i in vab_req_conds]})),'
         msg += f'min({[np.round(i, 2) for i in vab_max_conds]}))'
         msg += f' = min(max({cond_mins:5.3f}, {cond_reqs:5.3f}), {cond_maxs:5.3f})'
         msg += f' = min({np.max([cond_mins, cond_reqs]):5.3f}, {cond_maxs:5.3f})'
