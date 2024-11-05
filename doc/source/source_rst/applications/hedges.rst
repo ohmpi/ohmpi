@@ -148,7 +148,12 @@ La cabine qui abrite le résistivimètre doit être préparée soigneusement pou
 Figure 6 : Les étapes de préparation de la cabine  
 •	Enlèvement des tranchées
 L'enlèvement des tranchées pour les deux lignes d'électrodes perpendiculaires à la haie a été une étape méthodique et précise de la préparation du site. Tout d'abord, un tracé précis a été établi en fonction du plan d'installation, déterminant les positions exactes des électrodes. Ensuite, les tranchées ont été excavées avec soin en utilisant des outils appropriés, en veillant à maintenir une profondeur de 10 cm et une largeur de 20 cm. Une fois les tranchées réalisées, des précautions ont été prises pour minimiser les perturbations du sol environnant, préservant ainsi la stabilité de la structure et évitant toute interférence indésirable avec les mesures de résistivité électrique. Enfin, les tranchées ont été soigneusement refermées après l'installation des électrodes, restaurant ainsi le site à son état initial autant que possible. Cette démarche méticuleuse garantit l'intégrité du site tout en facilitant la prise de mesures précises pour une interprétation fiable des données de la Tomographie de Résistivité Électrique.
- 
+   
+ .. figure:: ../../../img/images_hedges/fig11.png
+   :width: 100%
+   :align: center
+
+   Caption
    
 Figure 7 : Enlèvement des tranchées sur les deux lignes de électrodes.
 •	Marquage des emplacements des électrodes
@@ -156,7 +161,6 @@ Figure 7 : Enlèvement des tranchées sur les deux lignes de électrodes.
 2.	Mise en Place des Électrodes:
 --------------------------------
 L'étape de l'emplacement des électrodes est une procédure critique qui nécessite une exécution précise pour assurer la qualité des mesures. Initialement, des tranchées ont été creusées aux emplacements préalablement marqués, assurant une profondeur adéquate pour la disposition des électrodes. Une fois les tranchées préparées, les électrodes ont été positionnées horizontalement selon le schéma défini, garantissant une distribution uniforme. Une attention particulière a été accordée à la mise en place de matière conductrice ?? autour des électrodes pour assurer une connexion efficace avec le sol. Cette matière, soigneusement sélectionnée pour ses propriétés conductrices, a été déployée de manière à minimiser toute interférence qui pourrait compromettre la qualité des mesures. En combinant le creusement précis des tranchées, la disposition précise des électrodes, l'application adéquate de matière conductrice, et la fermeture de toutes les connexions entre les électrodes et les fils électriques par le silicone, nous avons établi des conditions optimales pour la collecte de données fiables et précises lors de l'application de la Tomographie de Résistivité Électrique.
-      
 
 3.	Mise en Place du Câblage:
 ----------------------------
