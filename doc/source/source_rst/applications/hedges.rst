@@ -19,21 +19,6 @@ MOTS-CLEFS
 Monitoring géoélectrique, tomographie de résistivité électrique, Ohmpi, instrumentation, haies.
 
 
-Table des matières
-==================
-I.	Introduction	3
-II.	Présentation du site	3
-III.	Conception du Système	4
-1.	Choix de l'Équipement:	4
-2.	Planification de disposition des électrodes:	6
-IV.	Installation sur le Terrain:	7
-1.	Préparation du Site:	7
-2.	Mise en Place des Électrodes:	10
-3.	Mise en Place du Câblage:	11
-4.	Fermeture des tranchées	13
-V.	Tests	15
-VI.	Conclusion	15
-
 
 I.	Introduction
 ===============
@@ -51,13 +36,12 @@ Le bassin de l’Yzeron, situé dans l’ouest lyonnais, est suivi depuis de nom
    Caption
      
  .. figure:: ../../img/images_hedges/fig2.png
-   :width: 100%
+   :width: 50%
    :align: center
 
-   Caption
      
  .. figure:: ../../img/images_hedges/fig3.png
-   :width: 100%
+   :width: 50%
    :align: center
 
    Figure 2 : Carte électromagnétique de localisation de la zone d’étude
@@ -75,13 +59,13 @@ La sélection des électrodes est intéressante pour obtenir des résultats fiab
   
    
  .. figure:: ../../img/images_hedges/fig4.jpg
-   :width: 100%
+   :width: 50%
    :align: center
 
    Caption
      
  .. figure:: ../../img/images_hedges/fig5.jpg
-   :width: 100%
+   :width: 50%
    :align: center
 
    Caption
