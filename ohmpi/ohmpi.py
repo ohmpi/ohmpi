@@ -66,9 +66,9 @@ class OhmPi(object):
         Parameters
         ----------
         settings : dict, optional
-            Dictionary of parameters. Possible parameters with their default values:
+            Dictionary of parameters. Possible parameters with some suggested values:
             {'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
-            'nb_stack': 1, 'sampling_interval': 2, 'vab': 5, 'duty_cycle': 0.5,
+            'nb_stack': 1, 'sampling_interval': 2, 'vab_init': 5.0, 'vab_req': 5.0, 'duty_cycle': 0.5,
             'strategy': 'constant', 'export_path': None}
         sequence : str, optional
             Path of the .csv or .txt file with A, B, M and N electrodes.
@@ -1039,11 +1039,11 @@ class OhmPi(object):
         nb_meas : int, optional
             Number of time the sequence must be repeated.
         fw_in_csv : bool, optional
-            Wether to save the full-waveform data in the .csv (one line per quadrupole).
+            Whether to save the full-waveform data in the .csv (one line per quadrupole).
             As these readings have different lengths for different quadrupole, the data are padded with NaN.
             If None, default is read from default.json.
         fw_in_zip : bool, optional
-            Wether to save the full-waveform data in a separate .csv in long format to be zipped to
+            Whether to save the full-waveform data in a separate .csv in long format to be zipped to
             spare space. If None, default is read from default.json.
         cmd_id : str, optional
             Unique command identifier.
