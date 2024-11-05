@@ -1,12 +1,12 @@
-OhmPi to explore infiltration on hedges
+Infiltration below hedges
 ***************************************
 
-Compte Rendu de Mission: Installation de la Tomographie de Résistivité Électrique avec Ohmpi sur la Haie
-========================================================================================================
-
 Date de la Mission: 29, 30, 31 janvier et 1 février 2024.
+
 Lieu: Pollionnay
+
 Participants:
+
 Hanifa Bader, Remi Clement, Jean Marcais, Nadia Carluer, Laurent Lassabatere, Fanny Courapied, Arnold Imig, Arnaud Watlet, Claire Lauvernet, Adrien Bonnefoy
 
 
