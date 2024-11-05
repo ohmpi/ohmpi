@@ -34,7 +34,7 @@ Le bassin de l’Yzeron, situé dans l’ouest lyonnais, est suivi depuis de nom
 
       
  .. figure:: ../../img/images_hedges/fig3.png
-   :width: 50%
+   :width: 100%
    :align: center
 
    Figure 2 : Carte électromagnétique de localisation de la zone d’étude
