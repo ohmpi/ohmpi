@@ -113,6 +113,7 @@ def parse_log(log):
     session = np.array(session)
     return time, process_id, tag, msg, session
 
+
 def filter_log(filename, level=None, directory="logs", last=1):
     time, process_id, tag, msg, session = parse_log(os.path.join(directory, filename))
     time, process_id, tag, msg, session = time[tag == level], process_id[tag == level], \
