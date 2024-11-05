@@ -55,6 +55,12 @@ Le bassin de l’Yzeron, situé dans l’ouest lyonnais, est suivi depuis de nom
    :align: center
 
    Caption
+     
+ .. figure:: ../../../img/images_hedges/fig3.png
+   :width: 100%
+   :align: center
+
+   Caption
 Figure 2 : Carte électromagnétique de localisation de la zone d’étude
 
 
@@ -69,7 +75,19 @@ Cela inclut :
 La sélection des électrodes est intéressante pour obtenir des résultats fiables. Considérez la résistivité du sol et choisissez des électrodes appropriées, en tenant compte de la taille, et du matériau.
   
    
- .. figure:: ../../../img/images_hedges/fig3.png
+ .. figure:: ../../../img/images_hedges/fig4.png
+   :width: 100%
+   :align: center
+
+   Caption
+     
+ .. figure:: ../../../img/images_hedges/fig5.png
+   :width: 100%
+   :align: center
+
+   Caption
+     
+ .. figure:: ../../../img/images_hedges/fig6.png
    :width: 100%
    :align: center
 
