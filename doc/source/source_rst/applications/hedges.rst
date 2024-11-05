@@ -9,11 +9,17 @@ Lieu: Pollionnay
 Participants:
 Hanifa Bader, Remi Clement, Jean Marcais, Nadia Carluer, Laurent Lassabatere, Fanny Courapied, Arnold Imig, Arnaud Watlet, Claire Lauvernet, Adrien Bonnefoy
 
+Title
+=====
+
+subtitle
+--------
+
 
 
 
 RÉSUMÉ
-L’objectif principal de cette mission était d'installer un système de Tomographie de Résistivité Électrique (ERT) sur une haie à Pollionnay, dans le but d'obtenir des images détaillées de la distribution des résistivités électriques du sol, tout en permettant le pilotage à distance de ces dispositifs de monitoring géoélectrique. L'objectif ultime était d'observer les variations temporelles significatives générées par les phénomènes environnementaux, hydrauliques et météorologiques auxquels l’ouvrage est exposé. Ce rapport présente les actions d’instrumentation ERT menées au laboratoire et sur le site (29, 30, 31 janvier et 1 février 2024), visant à établir un bilan d’étape.
+L'objectif principal de cette mission était d'installer un système de Tomographie de Résistivité Électrique (ERT) sur une haie à Pollionnay, dans le but d'obtenir des images détaillées de la distribution des résistivités électriques du sol, tout en permettant le pilotage à distance de ces dispositifs de monitoring géoélectrique. L'objectif ultime était d'observer les variations temporelles significatives générées par les phénomènes environnementaux, hydrauliques et météorologiques auxquels l’ouvrage est exposé. Ce rapport présente les actions d’instrumentation ERT menées au laboratoire et sur le site (29, 30, 31 janvier et 1 février 2024), visant à établir un bilan d’étape.
 MOTS-CLEFS
 Monitoring géoélectrique, tomographie de résistivité électrique, Ohmpi, instrumentation, haies.
 
@@ -144,7 +150,7 @@ En perspective, nous envisageons d'implémenter une stratégie de déclenchement
 some test
 
 
-.. figure:: ../../../img/mb.2024.x.x/10.jpg
+.. figure:: ../../../img/images_hedges/fig1.jpg
    :width: 100%
    :align: center
 
