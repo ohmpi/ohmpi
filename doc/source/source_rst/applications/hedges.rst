@@ -46,7 +46,7 @@ Before installation, a thorough study is conducted to select the appropriate equ
 - Electrode Selection:Choosing the right electrodes is crucial for obtaining reliable results. Factors such as soil resistivity, electrode size, and material must be considered to ensure optimal performance.
    
  .. figure:: ../../img/images_hedges/fig4.jpg
-   :width: 50%
+   :width: 100%
    :align: center
 
     
