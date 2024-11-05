@@ -545,6 +545,7 @@ class OhmPiHardware:
         rab_max = np.max(rab_upper_bound)
         r_min = np.min(r_lower_bound)
         r_max = np.max(r_upper_bound)
+        self.exec_logger.debug(f'rab_min: {rab_min}, rab_max: {rab_max}, rmin: {r_min}, rmax: {r_max}')
         # _vmn_min = np.min(vmn_lower_bound)
         # _vmn_max = np.min(vmn_upper_bound)
         cond_vab_min = vab_min
