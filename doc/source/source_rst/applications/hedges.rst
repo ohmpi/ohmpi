@@ -25,13 +25,14 @@ The Yzeron watershed, situated west of Lyon, has been monitored for many years b
  .. figure:: ../../img/images_hedges/fig1.png
    :width: 100%
    :align: center
-
+   Figure 1: a) Full view of the hedge b) View of the dense part of the hedge
       
  .. figure:: ../../img/images_hedges/fig3.png
    :width: 100%
    :align: center
+   Figure 2: Electromagnetic map showing the location of the study area
 
-   Figure 2 : Carte électromagnétique de localisation de la zone d’étude
+   
 
 
 III.	System Design
@@ -64,7 +65,7 @@ Before installation, a thorough study is conducted to select the appropriate equ
    :width: 100%
    :align: center
 
-   Figure 4 : Les batteries
+   Figure 4 : the batteries
 - •	Selection of the resistivity meter :
 The resistivity meter installed on-site is the OhmPi resistivity meter (Figure 5), a low-cost, open-hardware device designed for measuring electrical resistivity. It features a multiplexer capable of handling measurements from 32 electrodes. The device offers a wide measurement range for current values, from 0.1 mA to 80 mA, and a potential difference measurement range from 0.001 V to 12.00 V. This choice provides several advantages, including its compact size and widespread use in open hardware applications, making it a cost-effective solution (Clement et al., 2020).
    
@@ -72,7 +73,7 @@ The resistivity meter installed on-site is the OhmPi resistivity meter (Figure 5
    :width: 100%
    :align: center
 
-   Figure 5: Disposition de résistivimètre OhmPi de laboratoire
+   Figure 5: Laboratory OhmPi resistivity meter setup.
 
 To perform measurements, the OhmPi must be paired with a system that injects current and simultaneously measures both the potential difference and the current. This configuration ensures a comprehensive and efficient acquisition of electrical resistivity data (Clement et al., 2020).
 
