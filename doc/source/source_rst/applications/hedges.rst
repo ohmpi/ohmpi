@@ -1,4 +1,4 @@
-Infiltration below hedges</wrap>
+Infiltration below hedges
 ***************************************
 
 Fieldwork Date: January 29, 30, 31 and February 1, 2024. 
