@@ -44,7 +44,7 @@ II.	Présentation du site
 ==========================
 Le bassin de l’Yzeron, situé dans l’ouest lyonnais, est suivi depuis de nombreuses années par INRAE, dans le cadre de l’OTHU, site atelier de la Zone Atelier Bassin du Rhone.  Il comporte des haies, et celle que nous souhaitons étudier se trouve à Pollionnay sur un terrain incliné selon trois pentes différentes, variant entre 4 et 5 %. Sa longueur totale est d'environ 25 mètres, avec 8 mètres de densité plus forte au milieu, comme illustré dans la Figure 1.b. 
   
- .. figure:: ../../../img/images_hedges/fig1.png
+ .. figure:: ../../img/images_hedges/fig1.png
    :width: 100%
    :align: center
 
