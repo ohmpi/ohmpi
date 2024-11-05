@@ -814,6 +814,8 @@ class OhmPiHardware:
         else:
             durations = [cycle_duration / 2] * 2 * cycles
             polarities = [-int(polarity * np.heaviside(i % 2, -1.)) for i in range(2 * cycles)]
+        durations.insert(0, 0.2)
+        polarities.insert(0, 0)
         self._vab_pulses(vab, durations, sampling_rate, polarities=polarities, append=append)
         self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
         if switch_pwr_off:
