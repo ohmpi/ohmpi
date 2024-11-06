@@ -50,7 +50,8 @@ You can then upgrade your measurement board or power supply for specific applica
 
   OhmPi hardware flowchart.
 
-In :doc:`../hardware` we detail how to build each single module of an OHMPI system.
+In "BUILD OHMPI BOARDS" section we detail how to build each single module of an OHMPI system.
+
 
 
 How does it look like?
@@ -92,7 +93,7 @@ __________________________
 Another possible combination is to use MUX v2023 with MUX v2024 together, which allows to add series of 8 electrodes to a 64-electrode system.
 This could be handful if ones is looking to build e.g. a 96 electrode system, which would therefore feature 4 MUX 2023 (64 electrodes) + 4 MUX 2024 (32 electrodes).
 
-In :doc:`../hardware_systems` we detail examples of OHMPI systems assemblies in different versions.
+In "BUILD OHMPI SYSTEMS" section we detail examples of OHMPI systems assemblies in different versions.
 
 Today, version 1.0x is no longer maintained, but all boards from v2023 upwards are compatible with each other. This is the major innovation of 2024.
 Depending on your needs and applications, you can choose the board you are going to use.

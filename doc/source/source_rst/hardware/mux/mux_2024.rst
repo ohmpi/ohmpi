@@ -91,6 +91,7 @@ Mount the mosfets. You can chose between ZVN4206A or STP16NF06L.
    |    4   |   .. image:: ../../../img/mux.2024.0.x/4.jpg                                   |
    |        |        :width: 600px                                                           |
    +--------+--------------------------------------------------------------------------------+
+
 Mount the MCP23017 sockets and the capacitors.
 
 .. table::
