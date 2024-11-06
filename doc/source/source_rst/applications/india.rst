@@ -12,7 +12,7 @@ Sadhana Forest India
 ~~~~~~~~~~~~~~~~~~~~
 Sadhana Forest is a non-for-profit organisation that focuses on water conservation, reforestation and community building practises. In India, near the town of Auroville, Sadhana Forest has been active since 2003 and has managed to reforest 46 hectares of severely eroded land with indigenous tree species, as well as exponentially increasing the water that is kept on the land from precipitation. Tp accomplish this they construct low-cost, small-scale methods such as check dams, gabions, and on-contour swales.
 
-.. figure:: ../../img/images_india/site/overview.png
+.. figure:: ../../img/images_india/site/overview.jpg
    :width: 50%
    :align: center
    
@@ -43,7 +43,7 @@ Electrode and cable preparation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-.. figure:: ../../img/images_india/ohmpi/equipment.png
+.. figure:: ../../img/images_india/ohmpi/equipment.jpg
    :width: 75%
    :align: center
    
@@ -57,7 +57,7 @@ Deployment
 
 Talk about installation on the swale site and control.
 
-.. figure:: ../../img/images_india/ohmpi/site_sketch.png
+.. figure:: ../../img/images_india/site/site_sketch.png
    :width: 75%
    :align: center
    
@@ -65,7 +65,7 @@ Talk about installation on the swale site and control.
 
 
 
-.. figure:: ../../img/images_india/ohmpi/ohmpi_figure.png
+.. figure:: ../../img/images_india/ohmpi/ohmpi_figure.jpg
    :width: 75%
    :align: center
    
