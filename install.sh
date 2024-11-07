@@ -5,7 +5,7 @@ echo "=========== OhmPi installation script v1.0.0 =========="
 echo "--------- Installing additional libraries via apt --------"
 
 # ensure that the libatlas-base-dev library is installed
-sudo apt-get install -y libatlas-base-dev libopenblas-dev
+sudo apt-get install -y libatlas-base-dev libopenblas-dev python-dev libjpeg-dev zlib1g-dev libpng-dev
 
 echo "----------- Creating virtual python environment ----------"
 

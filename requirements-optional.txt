@@ -6,10 +6,11 @@ adafruit-circuitpython-mcp230xx
 adafruit_extended_bus
 minimalmodbus
 gpiozero
-numpy<2.0.0
+numpy
 paho-mqtt==1.6.1
 termcolor
 pandas
+urllib3
 matplotlib
 scipy
 requests
