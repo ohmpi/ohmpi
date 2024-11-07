@@ -312,18 +312,18 @@ class OhmPi(object):
         return output
 
     def find_optimal_vab_for_sequence(self, which='mean', n_samples=10, **kwargs):
-        """
-        Find optimal Vab based on sample sequence in order to run sequence with fixed Vab.
-        Returns Vab
+        """Find optimal Vab based on sample sequence in order to run
+         sequence with fixed Vab. Returns Vab
+        
         Parameters
         ----------
         which : str
                 Which vab to keep, either "min", "max", "mean" (or other similar numpy method e.g. median)
                 If applying strategy "full_constant" based on vab_opt, safer to chose "min"
         n_samples: int
-                number of samples to keep within loaded sequence
-
-        kwargs : kwargs passed to Ohmpi.run_sequence
+                Number of samples to keep within loaded sequence.
+        kwargs : dict, optional
+            kwargs passed to Ohmpi.run_sequence.
 
         Returns
         -------

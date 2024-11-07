@@ -5,8 +5,8 @@
 
 
 
-Build MUX board v2024
-*********************
+MUX board v2024
+***************
 
 The MUX board v2024 uses the same technology than the MUX board v2023, i.e. mechanical multiplexing. However it introduces
 a new level of flexibility by addressing multiple roles (A, B, M, N), which allows to build OhmPi system with multiple of 8 electrodes.
@@ -24,8 +24,8 @@ with the possibility to mount two types of components depending on market availa
 
 Here, we will present how to assemble and configure a 32-electrode system, based on 4 MUX-board v2024 set up to address 2 roles / 16 electrodes each.
 
-**PART A** Assembly of MUX board 2024
-======================================================
+Assemble
+========
 
 
 Required components
@@ -91,6 +91,7 @@ Mount the mosfets. You can chose between ZVN4206A or STP16NF06L.
    |    4   |   .. image:: ../../../img/mux.2024.0.x/4.jpg                                   |
    |        |        :width: 600px                                                           |
    +--------+--------------------------------------------------------------------------------+
+
 Mount the MCP23017 sockets and the capacitors.
 
 .. table::
@@ -192,8 +193,8 @@ Replace "-y 4" by "-y 1" if the MUX is plugged on the "board" IDC connector, or 
 
 
 
-**PART B** Assembling MUX boards in an OhmPi system
-===================================================
+Assemble MUX boards in an OhmPi system
+========================================
 
 The cabling of several MUX boards v2024 within an OhmPi system is entirely dependent on the role configuration of each board.
 
@@ -207,8 +208,8 @@ The cabling of several MUX boards v2024 within an OhmPi system is entirely depen
 
 .. _mux2024-test:
 
-Check MUX board v2024
-*********************
+Check
+=====
 
 Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the board.
 Check your board against the correct expected column: 2-roles or 4-roles.

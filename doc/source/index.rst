@@ -30,22 +30,55 @@ Contents
    :maxdepth: 1
    :caption: Introduction
 
-   source_rst/Ohmpi
+   source_rst/introduction/overview
+   source_rst/introduction/about
 
 .. toctree::
    :maxdepth: 2
-   :caption: Building and operating OhmPi
+   :caption: Build OhmPi boards
 
-   source_rst/hardware
-   source_rst/software/index
+   source_rst/hardware/hw_info
+   source_rst/hardware/mb/mb_2023
+   source_rst/hardware/mb/mb_2024
+   source_rst/hardware/mux/mux_2023
+   source_rst/hardware/mux/mux_2024
+   source_rst/hardware/hw_pwr
+   source_rst/hardware/hw_rpi
+
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Build OhmPi systems
+
+   source_rst/hardware/hw_ohmpi
+   OhmPi v2024 (64 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2023_dph5005.rst>
+   OhmPi Lite v2024 (32 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2024_dph5005.rst>
+   OhmPi v2023 (64 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst>
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Deploy OhmPi
+
+   source_rst/deploy
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Operate OhmPi
+
+   Software architecture <source_rst/software/architecture>
+   Software installation <source_rst/software/installation>
+   Operating the system <source_rst/software/operations/index>
+   API reference <source_rst/software/api>
 
 .. toctree::
    :maxdepth: 1
    :caption: Additional resources
 
    source_rst/troubleshooting
-   source_rst/developments
    source_rst/gallery
+   source_rst/developments
    source_rst/archived_version
 
 .. toctree::

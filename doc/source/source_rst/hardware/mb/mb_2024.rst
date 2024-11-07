@@ -3,8 +3,8 @@
 
 .. _mb2024-build:
 
-Build measurement board v2024
-=============================
+Measurement board v2024
+***********************
 
 The 2024.0.2 measurement board has been developed to replace the 2023.0.1 measurement board. It offers superior performance compared to its predecessor. 
 The current measurement component has not evolved and presents no major differences. However, the major upgrade is the Mikroe-2C Isolator Click module ('https://www.mikroe.com/i2c-isolator-click') . Specifically, 
@@ -17,8 +17,8 @@ it provides electrical isolation for the Vmn measurement set. This isolation all
        :alt: alternate text
        :figclass: align-center
 
-Assembly of the measurement board
----------------------------------
+Assemble
+========
 
 Schematics
 ~~~~~~~~~~
@@ -322,8 +322,8 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 .. _mb2024-test:
 
 
-Check measurement board v2024
-=============================
+Check
+=====
 
 Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the measurement board.
 

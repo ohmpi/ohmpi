@@ -5,8 +5,9 @@
 
 
 
-Build MUX board v2023
-****************************************************
+MUX board v2023
+***************
+
 The multiplexing of the channels is a mechanical multiplexing based on OMRON's manufacturing relays (G5LE-1-VD 12 VDC). Each relay is combined with 
 a ZVN4206A power MOFSET. The raspberry has only 30 GPIOs, which is not enough to activate all the 64 electrodes, which represent 512 GPIOs. 
 We used gpio expander I2C (MCP23017). We have associated these components with an I2C multiplexer of type type TCA9548A from adafruit.
@@ -14,12 +15,12 @@ This combination allows to go up to 512 GPIOs and up to 128 electrodes. Each car
 In the following presentation for an OhmPi 64 electrodes, we will use the addresses 0X70 for channel A, 0X71 for channel B, 0X72 for channel M and 0X73 for channel N.
 0X73 for the N channel. 4 MUX board will be needed to multiplex an OhmPi 64 electrodes.
 
-**PART A** Assembly of MUX board
-======================================================
+Assemble
+========
 
 
 Required components 
-----------------------------------------------------
+-------------------
 
 .. figure:: ../../../img/v2023.x.x/step_n_3/a/MUX_board_components.jpg
        :width: 600px
@@ -150,8 +151,8 @@ Required components
      This step must be duplicated 4 times for every Mux card.
 
 
-**PART B** MUX board address
-====================================================== 
+MUX board address
+================= 
 To build an ohmpi it is necessary to have 4 MUX boards, with 4 different addresses. It is therefore necessary to identify each board, by assigning an address, which will be allocated in the OhmPi code.
 We present here the addresses selected by default.
 
