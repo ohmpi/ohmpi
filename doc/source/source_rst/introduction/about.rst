@@ -21,7 +21,7 @@ Authors
 Current contributors
 ********************
 Hanifa BADER, Saheed Opeyemi ADEBUNMI, Alexis SHAKAS, Neomi WIDMER, Jacques DEPARIS,
-Florent GUILLEMET, Zoé VARRAZ
+Florent GUILLEMET, Zoé VARRAZ, Marc DUMONT
 
 Past contributors
 *****************
