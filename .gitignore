@@ -14,3 +14,4 @@ sequence.txt
 doc/build/*
 doc/_static/*.pdf
 startup.log
+doc/source/*
