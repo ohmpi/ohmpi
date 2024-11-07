@@ -4,8 +4,6 @@ image: python:3.10-bookworm
 
 pages:
   stage: deploy
-  rules:
-  -  if: '$CI_COMMIT_BRANCH == "docs"'
   script:
   - apt-get update
   - apt-get install --assume-yes pandoc latexmk texlive-latex-extra
@@ -23,4 +21,4 @@ pages:
     paths:
     - public/
   only:
-  - master
+  - docs
