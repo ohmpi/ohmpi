@@ -98,8 +98,8 @@ In "BUILD OHMPI SYSTEMS" section we detail examples of OHMPI systems assemblies 
 Today, version 1.0x is no longer maintained, but all boards from v2023 upwards are compatible with each other. This is the major innovation of 2024.
 Depending on your needs and applications, you can choose the board you are going to use.
 
-Map of OhmPi
-************
+Where are the OhmPi?
+********************
 
 .. raw:: html
 
@@ -108,7 +108,7 @@ Map of OhmPi
            <script src="https://cdn.tutorialjinni.com/jquery-csv/1.0.21/jquery.csv.min.js"></script>
            <div id="map" >      
            </div>
-           <p>The location on the map are not precise location</p>
+           <p>The locations on the map are not precise locations.</p>
 
       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
