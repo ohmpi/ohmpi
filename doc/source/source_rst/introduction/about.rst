@@ -11,16 +11,21 @@ About the project
 
 Authors
 ********
-| Rémi CLEMENT, Vivien DUBOIS, Nicolas Forquet, INRAE, REVERSAAL, Villeurbanne, France
+| Rémi CLEMENT, Arnold IMIG, Nicolas FORQUET, INRAE, REVERSAAL, Villeurbanne, France
 | Olivier KAUFMANN, Arnaud WATLET, Université de Mons, Mons, Belgium
 | Yannick FARGIER, GERS-RRO, Univ Gustave Eiffel, IFSTTAR, Lyon, France
 | Hélène GUYARD, IGE Grenoble, Université Grenoble Alpes, Grenoble, France
 | Guillaume BLANCHY, ULiège, Liège Belgium
 
 
-Contributors
-************
+Current contributors
+********************
+Hanifa BADER, Saheed Opeyemi ADEBUNMI, Alexis SHAKAS, Neomi WIDMER, Jacques DEPARIS,
+Florent GUILLEMET, Zoé VARRAZ
 
+Past contributors
+*****************
+Vivien DUBOIS, Emile GROS, François CAMUS, Anthony MAHIEU
 
 Partners
 ********
