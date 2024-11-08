@@ -32,9 +32,21 @@ A few pictures of the components of the OhmPi. More in the [**DOCUMENTATION**](h
 *Software architecture.*
 
 
+## How to contribute
+
+You can contribute to the code of OhmPi directly in this repository by raising issue or making merge request. We use different branches to manage different readiness level of the code:
+- `XXX_fix_issue` (e.g. `240_fix_issue`) is a branch linked to an issue number to develop a new feature or fix a bug
+- `alpha`: experimental version of the code to be tested by core developer, this branch contains the latest changes but is **unstable**.
+- `beta`: **testing** version, more stable than `alpha` that can be tried out by contributors
+- `rc`: **release candidate** branch, version to be extensively tested before being released and merged into the `master` branch
+- `master`: more **stable** version of the code. Bug fixes can be merged directly to master.
+
+You can also contribute to the documentation (on the `docs` branch) by improving the documetation or showcasing your OhmPi application.
+
+
 ## Citing Ohmpi
 
-If you use Ohmpi for you work, please cite [this paper](https://www.sciencedirect.com/science/article/pii/S2468067220300316) as:
+If you use OhmPi for you work, please cite [this paper](https://www.sciencedirect.com/science/article/pii/S2468067220300316) as:
 
     Rémi Clement, Yannick Fargier, Vivien Dubois, Julien Gance, Emile Gros, Nicolas Forquet, OhmPi: An open source data logger for 
     dedicated applications of electrical resistivity imaging at the small and laboratory scale, HardwareX, Volume 8, 2020, e00122, ISSN 2468-0672, https://doi.org/10.1016/j.ohx.2020.e00122..
