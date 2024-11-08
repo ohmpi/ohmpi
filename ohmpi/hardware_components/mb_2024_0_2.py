@@ -212,7 +212,7 @@ class Tx(Tx_mb_2023):
             self.pin1.value = False
             time.sleep(self._release_delay)
 
-    def test_r_shunt(self, voltage=None, deviation_threshold=20.):
+    def test_r_shunt(self, voltage=None, deviation_threshold=50.):
         """Test R shunt by comparing current measured by TX and current given by PWR module. Given the low resolution of the
         power module compared to the ADS resolution, the test is performed while shortcutting A and B at low voltage
         to ensure a higher current.
@@ -270,7 +270,7 @@ class Tx(Tx_mb_2023):
             r_shunt_computed = np.mean(r_shunt_computeds)
             #print(r_shunt_computed/self._r_shunt*100, deviation_threshold)
             res['value'] = r_shunt_computed
-            res['passed'] = r_shunt_computed/self._r_shunt*100 < deviation_threshold
+            res['passed'] = (r_shunt_computed-self._r_shunt)/self._r_shunt*100 < deviation_threshold
             msg = 'OK' if res['passed'] else 'FAILED'
             if res['passed']:
                 msg = 'OK'
