@@ -1,10 +1,18 @@
 Troubleshooting
-********************
+***************
 
 We encourage users to report any issue, or bugs as an issue in the `official repository on GitLab <https://gitlab.com/ohmpi/ohmpi/-/issues>`_.
 Please have a look at existing open and closed issues before posting a new one.
 We have compiled here below a list of common issues and and explanations on how to fix them.
 For issue with the hardware, make sure your board passes the hardware checks (:ref:`mb2024-test`, :ref:`mux2024-test`).
+
+You can also run test in the software using:
+
+.. code-block:: python
+
+  from ohmpi.ohmpi import OhmPi
+  k = OhmPi()
+  k.test()
 
 
 Communication issue between components (I2C, pull-up)
