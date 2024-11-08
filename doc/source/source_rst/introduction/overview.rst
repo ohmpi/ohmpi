@@ -98,8 +98,26 @@ In "BUILD OHMPI SYSTEMS" section we detail examples of OHMPI systems assemblies 
 Today, version 1.0x is no longer maintained, but all boards from v2023 upwards are compatible with each other. This is the major innovation of 2024.
 Depending on your needs and applications, you can choose the board you are going to use.
 
-Where are the OhmPi?
-********************
+
+How to be build an OhmPi successfully?
+**************************************
+
+and become and OhmPier!
+
+Here are few tips:
+
+- make **good soldering**: a lot of issues arise from bad soldering or soldering on the wrong side of PCB. Take your time, check your soldering with the multimeter, this will save you a lot of time afterwards.
+- go **step by step**: follow the documentation, start by building a measurement board, then build multiplexers, then assemble the system.
+- **hardware check**: for each board, check your electronics with the multimeter (there are checklists at the end of the "build your board" section)
+- **software test**: use the software tests once the system is assembled. Always check with a resistor board before going on the field.
+- if needed, **seek help**: consult the troubleshooting section or ask help on `Discord <https://discord.gg/5gwpHGyu>`_. Look at the open or closed gitlab issues.
+- provide **feedback** and **share your experience**: OhmPi is an open-source open-hardware project, if you found a bug or have an idea to improve the hardware or the code, please use the `GitLab repository <https://gitlab.com/ohmpi/ohmpi>`_ and raise issues. You can also share your experience with the community.
+
+
+
+Where are the OhmPi's?
+**********************
+
 
 .. raw:: html
 
