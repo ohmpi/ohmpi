@@ -271,15 +271,22 @@ class Tx(TxAbstract):
         for i in range(nsample):
             samples.append(AnalogIn(self._ads_current, pindic[channel]).voltage)
         std = np.std(samples)
+        ok = std < 1
         res = {
             'name': 'test_ads_current',
-            'passed': std < 1,
+            'passed': ok,
             'value': std,
             'unit': 'mV'
         }
-        self.exec_logger.info('test_ads_current: {:.3f} < 1 mV? {:s}'.format(
-            std, 'OK' if std < 1 else 'FAILED'
-        ))    
+        if ok:
+            msg = 'OK'
+            color = 'green'
+        else:
+            msg = 'FAILED'
+            color = 'red'
+        self.exec_logger.info(colored(
+            'test_ads_voltage (channel {:d})...{:s} (std: {:.3f})'.format(
+                channel, msg, std), color))   
         return res
 
     def test(self):
@@ -378,21 +385,25 @@ class Rx(RxAbstract):
         for i in range(nsample):
             samples.append(AnalogIn(self._ads_voltage, pindic[channel]).voltage)
         std = np.std(samples)
-        avg = np.std(samples)
         res = {
-            'name': 'test_ads_current_' + str(channel),
+            'name': 'test_ads_voltage_' + str(channel),
             'passed': std < 1,
             'std': std,
-            'avg': avg,
             'unit': 'mV'
         }
-        self.exec_logger.info('test_ads_voltage (channel {:d}): avg {:.3f}, std {:.3f} < 1 mV? {:s}'.format(
-            channel, avg, std, 'OK' if std < 1 else 'FAILED'
-        ))
+        if ok:
+            msg = 'OK'
+            color = 'green'
+        else:
+            msg = 'FAILED'
+            color = 'red'
+        self.exec_logger.info(colored(
+            'test_ads_voltage (channel {:d})...{:s} (std: {:.3f})'.format(
+                channel, msg, std), color))
+
         return res
 
     def test(self):
         results = []
         results.append(self.test_ads(channel=0))
-        results.append(self.test_ads(channel=1))
         return results

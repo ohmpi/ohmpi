@@ -861,7 +861,7 @@ class OhmPiHardware:
         if switch_pwr_off:
             self.tx.pwr.pwr_state = 'off'
 
-    def _vab_pulses(self, vab, durations, sampling_rate, polarities=None, append=False):
+    def _vab_pulses(self, vab, durations, sampling_rate=None, polarities=None, append=False):
         switch_pwr_off, switch_tx_pwr_off = False, False
 
         # switches tx pwr on if needed (relays switching dps on and off)
