@@ -1407,6 +1407,7 @@ class OhmPi(object):
         """
         test_dic = {
             'rx': self._hw.rx.test,
+            'test_pwr': self._test_pwr,
             'tx': self._hw.tx.test,
             #'ads_current': self._hw.tx.test_ads_current,
             #'ads_voltage': self._hw.rx.test_ads_voltage,
@@ -1663,7 +1664,59 @@ class OhmPi(object):
             'value': baddic,
         }
         return res
-           
+    
+    def _test_pwr(self, vab=3., injection_duration=0.2, deviation_threshold=10.):
+        """Check voltage of source by putting A == M and B == N.
+        Can only be used with adjustable power source.
+
+        Parameters
+        ----------
+        vab : float, optional
+            Target voltage, between -4.8 and +4.8 V. Default 3 V.
+        injection_duration : float, optional
+            Injection duration in seconds.
+        deviation_threshold : float, optional
+            Deviation in percent from requested value for the test to pass.
+        """
+        if np.abs(vab) > 5.:
+            print("WARNING: large VAB can affect the Vmn line")
+            return
+        ok = 'FAILED'
+        vmn = np.nan
+        
+        # turn power on
+        if self._hw.tx.pwr.voltage_adjustable:
+            self._hw.pwr_state = 'on'
+            a = 1
+            b = 2
+            m = 1
+            n = 2
+            self._hw.switch_mux([a, b, m, n], roles=['A', 'B', 'M', 'N'], state='on', bypass_check=True)
+            self._hw._vab_pulses(vab=vab, durations=[injection_duration], polarities=[1])
+            vmn = np.median(self._hw.readings[:, 4])
+            self._hw.switch_mux([a, b, m, n], roles=['A', 'B', 'M', 'N'], state='off', bypass_check=True)
+            if (vmn >= (1 - deviation_threshold/100)*vab*1000) and (vmn <= (1 + deviation_threshold)*vab*1000):
+                ok = 'OK'
+            
+            # turn power off
+            if self._hw.tx.pwr.voltage_adjustable:
+                self._hw.pwr_state = 'off'
+            
+            color = 'green' if ok == 'OK' else 'red'
+            self.exec_logger.info(colored(
+                'test_pwr...{:s} ({:.3f} V instead of {:.3f} V)'.format(
+                    ok, vmn/1000, vab), color))
+        else:
+            print('aborted')
+        res = {
+            'name': 'test_pwr',
+            'passed': ok == 'OK',
+            'value': vmn,
+            'unit': 'V',
+        }
+
+        return res
+
     def reset_mux(self, cmd_id=None):
         """Switches off all multiplexer relays.
 
