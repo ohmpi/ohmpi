@@ -260,6 +260,32 @@ class Tx(TxAbstract):
         self.inject(polarity=polarity, injection_duration=length)
         self.exec_logger.event(f'{self.model}\ttx_voltage_pulse\tend\t{datetime.datetime.utcnow()}')
 
+    def test_ads(self, nsample=100, channel=0):
+        samples = []
+        pindic = {
+            0: ads.P0,
+            1: ads.P1,
+            2: ads.P2,
+            3: ads.P3
+        }
+        for i in range(nsample):
+            samples.append(AnalogIn(self._ads_current, pindic[channel]).voltage)
+        std = np.std(samples)
+        res = {
+            'name': 'test_ads_current',
+            'passed': std < 1,
+            'value': std,
+            'unit': 'mV'
+        }
+        self.exec_logger.info('test_ads_current: {:.3f} < 1 mV? {:s}'.format(
+            std, 'OK' if std < 1 else 'FAILED'
+        ))    
+        return res
+
+    def test(self):
+        results = []
+        results.append(self.test_ads())
+        return results
 
 class Rx(RxAbstract):
     """RX class"""
@@ -340,3 +366,33 @@ class Rx(RxAbstract):
         u = AnalogIn(self._ads_voltage, ads.P0, ads.P1).voltage * self._coef_p2 * 1000. - self.bias  # TODO: check if it should be negated
         self.exec_logger.event(f'{self.model}\trx_voltage\tend\t{datetime.datetime.utcnow()}')
         return u
+
+    def test_ads(self, nsample=100, channel=0):
+        samples = []
+        pindic = {
+            0: ads.P0,
+            1: ads.P1,
+            2: ads.P2,
+            3: ads.P3
+        }
+        for i in range(nsample):
+            samples.append(AnalogIn(self._ads_voltage, pindic[channel]).voltage)
+        std = np.std(samples)
+        avg = np.std(samples)
+        res = {
+            'name': 'test_ads_current_' + str(channel),
+            'passed': std < 1,
+            'std': std,
+            'avg': avg,
+            'unit': 'mV'
+        }
+        self.exec_logger.info('test_ads_voltage (channel {:d}): avg {:.3f}, std {:.3f} < 1 mV? {:s}'.format(
+            channel, avg, std, 'OK' if std < 1 else 'FAILED'
+        ))
+        return res
+
+    def test(self):
+        results = []
+        results.append(self.test_ads(channel=0))
+        results.append(self.test_ads(channel=1))
+        return results

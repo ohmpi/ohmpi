@@ -211,6 +211,80 @@ class Tx(Tx_mb_2023):
             self.pin1.value = False
             time.sleep(self._release_delay)
 
+    def test_r_shunt(self, voltage=3., deviation_threshold=5.):
+        """Test R shunt by comparing current measured by TX and current given by PWR module. Given the low resolution of the
+        power module compared to the ADS resolution, the test is performed while shortcutting A and B at low voltage
+        to ensure a higher current.
+        Test can only be performed with power source having pwr_voltage_adjustable set to True (i.e. currently pwr_dps5005 only) and
+        Test will also ensure both polarity relays are working as expected.
+        
+        Parameters
+        ----------
+        deviation_threshold: float, optional (default: 10)
+            Threshold in percent below which test is successful.
+        voltage: float, optional
+            Test voltage to be injected. Make sure it's not too high to not burn the shunt.
+            voltage * r_shunt_ohm < r_shunt_power
+        """
+        res = {
+            'name': 'r_shunt',
+            'passed': False,
+            'value': -1.,
+            'unit': 'Ohm'
+        }
+        if self.pwr.voltage_adjustable:
+            # check pwr is on (relays before dph)
+            switch_tx_pwr_off = False
+            if self.pwr_state == 'off':
+                self.pwr_state = 'on'
+                switch_tx_pwr_off = True
+
+            # set voltage
+            self.voltage = 3
+            
+            # turn dps_pwr_on if needed (device on/off)
+            switch_pwr_off = False
+            if self.pwr.pwr_state == 'off':
+                self.pwr.pwr_state = 'on'
+                switch_pwr_off = True
+
+            # create shortcut
+            self.pin0.value = True
+            self.pin1.value = True
+            time.sleep(.5)
+
+            # measure
+            vab = self.pwr.voltage
+            current_expected = self.pwr.current
+            current_observed = self.current
+            r_shunt_computed = vab/current_observed
+            res['value'] = r_shunt_computed
+            res['passed'] = r_shunt_computed/self._r_shunt*100 < deviation_threshold
+            msg = 'OK' if res['passed'] else 'FAILED'
+            self.exec_logger.warning('test_r_shunt: {:.2f} Ohm within {:.1f}% of {:.2f} Ohm: {:s}'.format(
+                r_shunt_computed, deviation_threshold, self._r_shunt, msg))
+
+            # stop shortcut
+            self.pin0.value = False
+            self.pin1.value = False
+
+            # if relay were off, put them back
+            if switch_pwr_off:
+                self.pwr.pwr_state = 'off'
+
+            # if power was off before measurement, let's turn if off
+            if switch_tx_pwr_off:
+                self.pwr_state = 'off'
+        else:
+            self.exec_logger.warning('R shunt cannot be tested without adjustable power (like DPH5005).')
+
+        return res
+
+    def test(self):
+        results = []
+        results.append(self.test_ads())
+        results.append(self.test_r_shunt())
+        return results
 
 class Rx(Rx_mb_2023):
     """RX Class"""
