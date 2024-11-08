@@ -237,3 +237,5 @@ Where are the OhmPi's?
            }
       </style>
     </embed>
+
+If you want your system to appear on the map, `register your OhmPi <https://framaforms.org/ohmpi-registration-form-1731060017>`_.

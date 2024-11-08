@@ -55,13 +55,7 @@ Contents
    OhmPi v2024 (64 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2023_dph5005.rst>
    OhmPi Lite v2024 (32 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2024_dph5005.rst>
    OhmPi v2023 (64 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst>
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Deploy OhmPi
-
-   source_rst/deploy
+   Deploy OhmPi <source_rst/deploy>
 
 .. toctree::
    :maxdepth: 1
