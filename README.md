@@ -35,13 +35,13 @@ A few pictures of the components of the OhmPi. More in the [**DOCUMENTATION**](h
 ## How to contribute
 
 You can contribute to the code of OhmPi directly in this repository by raising issue or making merge request. We use different branches to manage different readiness level of the code:
-- `XXX_fix_issue` (e.g. `240_fix_issue`) is a branch linked to an issue number to develop a new feature or fix a bug
-- `alpha`: experimental version of the code to be tested by core developer, this branch contains the latest changes but is **unstable**.
-- `beta`: **testing** version, more stable than `alpha` that can be tried out by contributors
-- `rc`: **release candidate** branch, version to be extensively tested before being released and merged into the `master` branch
+- `XXX_issue` (e.g. `240_issue`) is a branch linked to an issue number to develop a new feature or fix a bug.
+- `alpha`: experimental version of the code to be tested by core developers, this branch contains the latest changes but is **unstable**.
+- `beta`: **testing** version, more stable than `alpha` that can be tried out by contributors to provide feedback to core developpers (released in winter). 
+- `rc`: **release candidate** branch, version to be extensively tested before being released and merged into the `master` branch (released in spring).
 - `master`: more **stable** version of the code. Bug fixes can be merged directly to master.
 
-You can also contribute to the documentation (on the `docs` branch) by improving the documetation or showcasing your OhmPi application.
+You can also contribute to the **documentation** (on the `docs` branch) by improving the documentation or showcasing your OhmPi application.
 
 
 ## Citing Ohmpi
