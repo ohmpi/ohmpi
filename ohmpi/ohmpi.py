@@ -1445,14 +1445,6 @@ class OhmPi(object):
         else:
             self._hw.mux_boards[mux_id].test(activation_time=activation_time)
 
-    def _test_pwr(self, vab=3):
-        """Test Vab voltage by putting A and B to M and N.
-        WARNING: choose a voltage low enough to not damage the MN.
-        """
-        self.reset_mux()
-        self.switch_mux_on([1, 2, 1, 2], bypass_check=True)
-
-
     def _test_mux_AB(self, vab=5, injection_duration=0.1, current_threshold=0.5, yes=False):
         """Test shortcut and connection on mux AB.
         This test will send small current between all possible pairs of electrodes. If they are not connected, we should measure < 0.12 mA. When we inject on the same electrode, we cause a short-circuit and should measure a current proportional to the additional contact resistance we setup.
