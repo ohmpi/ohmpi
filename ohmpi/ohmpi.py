@@ -571,9 +571,12 @@ class OhmPi(object):
         """
         self.exec_logger.debug(f'Removing all data following command {cmd_id}')
         datadir = os.path.dirname(self.settings['export_path'])
-        rmtree(datadir)
-        os.mkdir(datadir)
-
+        for f in os.listdir(datadir):
+            try:
+                os.remove(os.path.join(datadir, f))
+            except Exception as e:
+                self.exec_logger.debug('remote_data: could not remove: ' + str(e))
+        
     def restart(self, cmd_id=None):
         """Restarts the Raspberry Pi.
 
