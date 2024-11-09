@@ -615,9 +615,7 @@ class OhmPiHardware:
         pulse_duration : float, optional
             Time in seconds for the pulse used to compute optimal Vab.
         vab_init : float, optional
-            Voltage to apply for guessing the best voltage. 5 V applied
-            by default. If strategy "constant" is chosen, constant voltage
-            to applied is "vab".
+            Initial voltage to search for best vab.
         vab_max : float, optional
             Maximum injection voltage to apply to tx (used by all strategies).
         vmn_max : float, optional
