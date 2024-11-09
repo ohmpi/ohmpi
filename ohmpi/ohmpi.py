@@ -15,14 +15,13 @@ from copy import deepcopy
 import numpy as np
 import csv
 import time
-import pandas as pd
 import io
 from zipfile import ZipFile
 import tempfile
 from shutil import rmtree, make_archive
 from threading import Thread
 from inspect import getmembers, isfunction
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from termcolor import colored
 from logging import DEBUG
 from ohmpi.utils import get_platform, sequence_random_sampler
@@ -1397,7 +1396,7 @@ class OhmPi(object):
         assert len(quadrupole) == 4
         return self._hw.switch_mux(electrodes=quadrupole, state='off')
 
-    def test(self, test_names=[], remote=False):
+    def test(self, test_names=[], remote=False, filename=None):
         """Run test on the ohmpi system.
         
         Parameters
@@ -1407,14 +1406,14 @@ class OhmPi(object):
         remote : bool, optional
             If set to True, no input prompt will be presented to the user. It
             is assumed that the system can run this test remotely safely.
+        filename : str, optional
+            Filepath with extension .json included. If specified, the results
+             of the tests will be saved there.
         """
         test_dic = {
             'rx': self._hw.rx.test,
             'test_pwr': self._test_pwr,
             'tx': self._hw.tx.test,
-            #'ads_current': self._hw.tx.test_ads_current,
-            #'ads_voltage': self._hw.rx.test_ads_voltage,
-            #'r_shunt': self._hw.tx.r_shunt,
             'muxABMN': self._test_mux_ABMN,
         }
         test_names = list(test_dic.keys()) if len(test_names) == 0 else test_names
@@ -1424,7 +1423,19 @@ class OhmPi(object):
                 t = test_dic[test_name](yes=remote)
             else:
                 t = test_dic[test_name]()
-            out += t
+            if isinstance(t, list):
+                out += t
+            else:
+                out.append(t)
+        from ohmpi.config import HARDWARE_CONFIG
+        dic = {
+            'date': datetime.now(timezone.utc).isoformat(),
+            'test': out,
+            'config': HARDWARE_CONFIG
+        }
+        if filename is not None:
+            with open(filename, 'w') as f:
+                f.write(json.dumps(dic, default=lambda o: '<not serializable>'))
         return out
 
     def test_mux(self, activation_time=0.2, mux_id=None, cmd_id=None):
@@ -1582,7 +1593,7 @@ class OhmPi(object):
         
         WARNING: for this test:
             - disconnect all electrodes from resistor board or ground
-            - add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current in case of shortcut.
+            - if tx is a battery: add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current in case of shortcut.
             
         Paramaters
         ----------
@@ -1604,7 +1615,7 @@ class OhmPi(object):
                 return
             if self._hw.tx.pwr.voltage_adjustable is False:
                 print(colored('WARNING: The OhmPi cannot adjust the voltage itself, make sure that the Tx input voltage is below 4V before proceeding', 'red'))
-            print(colored('WARNING: use this test with caution, it can destroy your board!', 'red') + '\nBefore running the test, make sure to:\n- disconnect all electrodes from resistor board or ground\n- add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current.\n- use a Tx voltage of 4V or less. ')
+            print(colored('WARNING: use this test with caution, it can destroy your board!', 'red') + '\nBefore running the test, make sure to:\n- disconnect all electrodes from resistor board or ground\n- (if tx is a battery (=no adjustable), add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current.\n- use a Tx voltage of 4V or less. ')
             reply = input('Are you sure you want to continue [y/N]: ')
             if reply.lower() == 'y':
                 yes = True
@@ -1705,8 +1716,8 @@ class OhmPi(object):
             print('aborted')
         res = {
             'name': 'test_pwr',
-            'passed': ok == 'OK',
-            'value': vmn,
+            'passed': bool(ok == 'OK'),
+            'value': vmn/1000,
             'unit': 'V',
         }
 

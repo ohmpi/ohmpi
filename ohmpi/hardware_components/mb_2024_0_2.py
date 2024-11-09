@@ -270,7 +270,8 @@ class Tx(Tx_mb_2023):
             r_shunt_computed = np.mean(r_shunt_computeds)
             #print(r_shunt_computed/self._r_shunt*100, deviation_threshold)
             res['value'] = r_shunt_computed
-            res['passed'] = (r_shunt_computed-self._r_shunt)/self._r_shunt*100 < deviation_threshold
+            passed = bool((r_shunt_computed-self._r_shunt)/self._r_shunt*100 < deviation_threshold)
+            res['passed'] = passed
             msg = 'OK' if res['passed'] else 'FAILED'
             if res['passed']:
                 msg = 'OK'

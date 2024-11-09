@@ -271,7 +271,7 @@ class Tx(TxAbstract):
         for i in range(nsample):
             samples.append(AnalogIn(self._ads_current, pindic[channel]).voltage)
         std = np.std(samples)
-        ok = std < 1
+        ok = bool(std < 1)
         res = {
             'name': 'test_ads_current',
             'passed': ok,
