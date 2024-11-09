@@ -1,0 +1,6 @@
+v2024.1.0
+- Add OhmPi.test() (#261)
+- Add checklist for field installation (doc/_static/ohmpi-checklist.pdf)
+- Add coverage.sh that runs .dev/test_all.py integration test (#263)
+
+
