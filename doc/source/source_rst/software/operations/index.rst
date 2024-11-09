@@ -13,5 +13,6 @@ Contents:
    settings
    loggers
    monitoring
+   strategies
 
 
