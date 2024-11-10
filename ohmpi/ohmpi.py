@@ -929,7 +929,15 @@ class OhmPi(object):
             #print('\nTX: {:.3f}, V at Iab: {:.3f}'.format(self._hw.tx.gain, I*2*50))
             #print('Rx: {:.3f}, V at Vmn: {:.3f}'.format(self._hw.rx.gain, Vmn*self._hw.rx._dg411_gain)
 
+            # battery voltage
+            if self._hw.tx.pwr.voltage_adjustable:
+                # read stored value as requesting it each time takes time
+                battv = self._hw.tx.pwr._battery_voltage
+            else:
+                battv = np.nan
+
             # increment injection_id
+            self.injection_id += 1
 
             d = {
                 "time": datetime.now().isoformat(),
@@ -950,7 +958,7 @@ class OhmPi(object):
                 "vab_[V]": vab,
                 "channel_mn": 0,
                 "injection_id": self.injection_id,
-                "battery_voltage_tx_[V]": 0,
+                "battery_voltage_tx_[V]": battv, 
                 #"CPU temp [degC]": self._hw.ctl.cpu_temperature,
                 "s_samples": len(self._hw.readings[x, 2]),  # TODO: use only samples after a delay in each pulse
                 "strategy": strategy,
@@ -1104,6 +1112,7 @@ class OhmPi(object):
             n = 1
         else:
             n = self.sequence.shape[0]
+        self.injection_id = 0  # reset injection_id
         for i in tqdm(range(0, n), "Sequence progress", unit='injection', ncols=100, colour='green'):
             if self.sequence is None:
                 quad = np.array([0, 0, 0, 0])

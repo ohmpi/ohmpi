@@ -5,3 +5,4 @@ v2024.1.0
 - Rename headers (#239)
 - Rename strategies: "constant" -> "safe", "full_constant" -> "fixed" (#216)
 - Remove tx_volt and vab from run_measurement()
+- Add 'battery_voltage_tx' column for adjustable voltage.
