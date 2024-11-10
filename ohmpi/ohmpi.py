@@ -16,6 +16,7 @@ import numpy as np
 import csv
 import time
 import io
+import pandas as pd  # use for export() and run_inversion()
 from zipfile import ZipFile
 import tempfile
 from shutil import rmtree, make_archive
@@ -80,6 +81,7 @@ class OhmPi(object):
         self.nb_samples = 0
         self.status = 'idle'  # either running or idle
         self.thread = None  # contains the handle for the thread taking the measurement
+        self.injection_id = 0
 
         if config is None:
             config = ohmpi.config
@@ -164,7 +166,7 @@ class OhmPi(object):
                 self.exec_logger.warning('No connection to control broker.'
                                          ' Use python/ipython to interact with OhmPi object...')
 
-    def append_and_save(self, filename: str, last_measurement: dict, fw_in_csv=None, fw_in_zip=None, cmd_id=None):
+    def append_and_save(self, filename: str, last_measurement: dict, fw_in_zip=None, cmd_id=None):
         """Appends and saves the last measurement dict.
 
         Parameters
@@ -173,10 +175,6 @@ class OhmPi(object):
             Filename of the .csv.
         last_measurement : dict
             Last measurement taken in the form of a python dictionary.
-        fw_in_csv : bool, optional
-            Wether to save the full-waveform data in the .csv (one line per quadrupole).
-            As these readings have different lengths for different quadrupole, the data are padded with NaN.
-            If None, default is read from default.json.
         fw_in_zip : bool, optional
             Wether to save the full-waveform data in a separate .csv in long format to be zipped to
             spare space. If None, default is read from default.json.
@@ -184,8 +182,6 @@ class OhmPi(object):
             Unique command identifier.
         """
         # check arguments
-        if fw_in_csv is None:
-            fw_in_csv = self.settings['fw_in_csv']
         if fw_in_zip is None:
             fw_in_zip = self.settings['fw_in_zip']
 
@@ -202,27 +198,18 @@ class OhmPi(object):
                 fw_filename = filename.replace('.csv', '_fw.csv')
                 if not os.path.exists(fw_filename):  # new file, write headers first
                     with open(fw_filename, 'w') as f:
-                        f.write('A,B,M,N,t,current,voltage\n')
+                        f.write('a,b,m,n,injection_id,channel_mn,time,current,voltage,polarity\n')
                 # write full data
                 with open(fw_filename, 'a') as f:
                     dd = last_measurement['full_waveform']
-                    aa = np.repeat(last_measurement['A'], dd.shape[0])
-                    bb = np.repeat(last_measurement['B'], dd.shape[0])
-                    mm = np.repeat(last_measurement['M'], dd.shape[0])
-                    nn = np.repeat(last_measurement['N'], dd.shape[0])
-                    fwdata = np.c_[aa, bb, mm, nn, dd]
-                    np.savetxt(f, fwdata, delimiter=',', fmt=['%d', '%d', '%d', '%d', '%.3f', '%.3f', '%.3f'])
-
-            if fw_in_csv:
-                d = last_measurement['full_waveform']
-                n = d.shape[0]
-                if n > 1:
-                    idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
-                    udic = dict(zip(['u' + str(i) for i in range(n)], d[:, 1]))
-                    tdic = dict(zip(['t' + str(i) for i in range(n)], d[:, 2]))
-                    last_measurement.update(idic)
-                    last_measurement.update(udic)
-                    last_measurement.update(tdic)
+                    aa = np.repeat(last_measurement['a'], dd.shape[0])
+                    bb = np.repeat(last_measurement['b'], dd.shape[0])
+                    mm = np.repeat(last_measurement['m'], dd.shape[0])
+                    nn = np.repeat(last_measurement['n'], dd.shape[0])
+                    injection_id = np.repeat(last_measurement['injection_id'], dd.shape[0])
+                    channel_mn = np.repeat(last_measurement['channel_mn'], dd.shape[0])
+                    fwdata = np.c_[aa, bb, mm, nn, injection_id, channel_mn, dd]
+                    np.savetxt(f, fwdata, delimiter=',', fmt=['%d', '%d', '%d', '%d', '%d', '%d', '%.3f', '%.3f', '%.3f', '%.0f'])
 
             last_measurement.pop('full_waveform')
         
@@ -343,7 +330,7 @@ class OhmPi(object):
             if self.status == 'stopping':
                 break
             acquired_data = self.run_measurement(quad=quad, strategy='vmax', **kwargs)
-            vabs.append(acquired_data["Tx [V]"])
+            vabs.append(acquired_data["vab_[V]"])
         if self._hw.tx.pwr.voltage_adjustable:
             self._hw.pwr_state = 'off'
         vabs = np.array(vabs)
@@ -391,11 +378,11 @@ class OhmPi(object):
                 # fixing possible incompatibilities with code version
                 for i, header in enumerate(headers):
                     if header == 'R [ohm]':
-                        headers[i] = 'R [Ohm]'
+                        headers[i] = 'r_[Ohm]'
 
                 # read basic data
                 # NOTE: order of the columns matters
-                icols = list(np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'Vmn [mV]', 'I [mA]', 'R [Ohm]', 'R_std [%]']))[0])
+                icols = list(np.where(np.in1d(headers, ['a', 'b', 'm', 'n', 'vmn_[mV]', 'iab_[mA]', 'r_[Ohm]', 'r_std_[%]']))[0])
                 data = np.loadtxt(os.path.join(ddir, fname), delimiter=',',
                                     skiprows=1, usecols=icols)
                 
@@ -435,11 +422,11 @@ class OhmPi(object):
                             fwdata = {}
                             myzip = ZipFile(fwpath)
                             df = pd.read_csv(io.StringIO(myzip.read(fname.replace('.csv', '_fw.csv')).decode('utf-8')))
-                            df['abmn'] = df['A'].astype(str) + ',' + df['B'].astype(str) + ',' + df['M'].astype(str) + ',' + df['N'].astype(str)
+                            df['abmn'] = df['a'].astype(str) + ',' + df['b'].astype(str) + ',' + df['m'].astype(str) + ',' + df['n'].astype(str)
                             for abmn in df['abmn'].unique():
                                 ie = df['abmn'].eq(abmn)
                                 fwdata[abmn] = {
-                                    't': df[ie]['t'].round(3).tolist(),
+                                    't': df[ie]['time'].round(3).tolist(),
                                     'i': df[ie]['current'].round(1).tolist(),
                                     'v': df[ie]['voltage'].round(1).tolist()
                                 }
@@ -957,41 +944,47 @@ class OhmPi(object):
             R_std = self._hw.last_dev(delay=delay)
 
             # multiply current by polarity
-            full_waveform = np.copy(self._hw.readings[:, [0, -2, -1]])
+            full_waveform = np.copy(self._hw.readings[:, [0, -2, -1, 2]])
             ie = self._hw.readings[:, 2] != 0
             full_waveform[ie, 1] = full_waveform[ie, 1] * self._hw.readings[ie, 2]
             #print('\nTX: {:.3f}, V at Iab: {:.3f}'.format(self._hw.tx.gain, I*2*50))
-            #print('Rx: {:.3f}, V at Vmn: {:.3f}'.format(self._hw.rx.gain, Vmn*self._hw.rx._dg411_gain))
-            
+            #print('Rx: {:.3f}, V at Vmn: {:.3f}'.format(self._hw.rx.gain, Vmn*self._hw.rx._dg411_gain)
+
+            # increment injection_id
+
             d = {
                 "time": datetime.now().isoformat(),
-                "A": quad[0],
-                "B": quad[1],
-                "M": quad[2],
-                "N": quad[3],
-                "inj time [ms]": injection_duration * 1000.,  # NOTE: check this
-                "Vmn [mV]": Vmn,
-                "I [mA]": I,
-                "R [Ohm]": R,
-                "R_std [%]": R_std,
-                "Ps [mV]": self._hw.sp,
-                "nbStack": nb_stack,
-                "Tx [V]": vab,
-                "CPU temp [degC]": self._hw.ctl.cpu_temperature,
-                "Nb samples [-]": len(self._hw.readings[x, 2]),  # TODO: use only samples after a delay in each pulse
+                "a": quad[0],
+                "b": quad[1],
+                "m": quad[2],
+                "n": quad[3],
+                "injection_duration_[ms]": injection_duration * 1000.,  # NOTE: check this
+                "vmn_[mV]": Vmn,
+                "vmn_std_[%]": Vmn_std,
+                "iab_[mA]": I,
+                "iab_std_[%]": I_std,
+                "r_[Ohm]": R,
+                "r_std_[%]": R_std,
+                "rab_[kOhm]": vab / I,
+                "sp_[mV]": self._hw.sp,
+                "n_stacks": nb_stack,
+                "vab_[V]": vab,
+                "channel_mn": 0,
+                "injection_id": self.injection_id,
+                "battery_voltage_tx_[V]": 0,
+                #"CPU temp [degC]": self._hw.ctl.cpu_temperature,
+                "s_samples": len(self._hw.readings[x, 2]),  # TODO: use only samples after a delay in each pulse
+                "strategy": strategy,
                 "full_waveform": full_waveform,
-                "I_std [%]": I_std,
-                "Vmn_std [%]": Vmn_std,
-                "R_ab [kOhm]": vab / I
-            }
+             }
 
             # to the data logger
             dd = d.copy()
             dd.pop('full_waveform')  # too much for logger
-            dd.update({'A': str(dd['A'])})
-            dd.update({'B': str(dd['B'])})
-            dd.update({'M': str(dd['M'])})
-            dd.update({'N': str(dd['N'])})
+            dd.update({'a': str(dd['a'])})
+            dd.update({'b': str(dd['b'])})
+            dd.update({'m': str(dd['m'])})
+            dd.update({'n': str(dd['n'])})
 
             # round float to 2 decimal
             for key in dd.keys():  # Check why this is applied on keys and not values...
@@ -1030,7 +1023,7 @@ class OhmPi(object):
         """
         self.run_multiple_sequences(**kwargs)
 
-    def run_multiple_sequences(self, sequence_delay=None, nb_meas=None, fw_in_csv=None,
+    def run_multiple_sequences(self, sequence_delay=None, nb_meas=None,
                                fw_in_zip=None, cmd_id=None, **kwargs):
         """Runs multiple sequences in a separate thread for monitoring mode.
            Can be stopped by 'OhmPi.interrupt()'.
@@ -1042,10 +1035,6 @@ class OhmPi(object):
             Number of seconds at which the sequence must be started from each others.
         nb_meas : int, optional
             Number of time the sequence must be repeated.
-        fw_in_csv : bool, optional
-            Whether to save the full-waveform data in the .csv (one line per quadrupole).
-            As these readings have different lengths for different quadrupole, the data are padded with NaN.
-            If None, default is read from default.json.
         fw_in_zip : bool, optional
             Whether to save the full-waveform data in a separate .csv in long format to be zipped to
             spare space. If None, default is read from default.json.
@@ -1075,7 +1064,7 @@ class OhmPi(object):
                     self.exec_logger.warning('Data acquisition interrupted')
                     break
                 t0 = time.time()
-                self.run_sequence(fw_in_csv=fw_in_csv, fw_in_zip=fw_in_zip, **kwargs)
+                self.run_sequence(fw_in_zip=fw_in_zip, **kwargs)
                 dt = sequence_delay - (time.time() - t0)  # sleeping time between sequence
                 if dt < 0:
                     dt = 0
@@ -1094,17 +1083,13 @@ class OhmPi(object):
         self.thread = Thread(target=func)
         self.thread.start()
 
-    def run_sequence(self, fw_in_csv=None, fw_in_zip=None, cmd_id=None, save_strategy_fw=False,
+    def run_sequence(self, fw_in_zip=None, cmd_id=None, save_strategy_fw=False,
         export_path=None, **kwargs):
         """Runs sequence synchronously (=blocking on main thread).
            Additional arguments (kwargs) are passed to run_measurement().
 
         Parameters
         ----------
-        fw_in_csv : bool, optional
-            Whether to save the full-waveform data in the .csv (one line per quadrupole).
-            As these readings have different lengths for different quadrupole, the data are padded with NaN.
-            If None, default is read from default.json.
         fw_in_zip : bool, optional
             Whether to save the full-waveform data in a separate .csv in long format to be zipped to
             spare space. If None, default is read from default.json.
@@ -1116,8 +1101,6 @@ class OhmPi(object):
             Unique command identifier.
         """
         # check arguments
-        if fw_in_csv is None:
-            fw_in_csv = self.settings['fw_in_csv']
         if fw_in_zip is None:
             fw_in_zip = self.settings['fw_in_zip']
 
@@ -1159,49 +1142,11 @@ class OhmPi(object):
             # log data to the data logger
             # self.data_logger.info(f'{acquired_data}')  # NOTE: It could be useful to keep the cmd_id in the
             # save data and print in a text file
-            self.append_and_save(filename, acquired_data, fw_in_csv=fw_in_csv, fw_in_zip=fw_in_zip)
+            self.append_and_save(filename, acquired_data, fw_in_zip=fw_in_zip)
             self.exec_logger.debug(f'quadrupole {i + 1:d}/{n:d}')
         self._hw.pwr_state = 'off'
 
         # file management
-        if fw_in_csv:  # make sure we have the same number of columns
-            with open(filename, 'r') as f:
-                x = f.readlines()
-
-            # get column of start of full-waveform
-            icol = 0
-            for i, col in enumerate(x[0].split(',')):
-                if col == 'i0':
-                    icol = i
-                    break
-
-            # get the longest line possible
-            max_length = np.max([len(row.split(',')) for row in x]) - icol
-            nreadings = max_length // 3
-
-            # create padding array for full-waveform  # TODO test this!
-            with open(filename, 'w') as f:
-                # write back headers
-                xs = x[0].split(',')
-                f.write(','.join(xs[:icol]))
-                f.write(',')
-                for i, col in enumerate(['t', 'i', 'v']):
-                    f.write(','.join([col + str(j) for j in range(nreadings)]))
-                    if col == 'v':
-                        f.write('\n')
-                    else:
-                        f.write(',')
-                # write back rows
-                for i, row in enumerate(x[1:]):
-                    xs = row.split(',')
-                    f.write(','.join(xs[:icol]))
-                    f.write(',')
-                    fw = np.array(xs[icol:])
-                    fw_pad = fw.reshape((3, -1)).T
-                    fw_padded = np.zeros((nreadings, 3), dtype=fw_pad.dtype)
-                    fw_padded[:fw_pad.shape[0], :] = fw_pad
-                    f.write(','.join(fw_padded.T.flatten()).replace('\n', '') + '\n')
-
         if fw_in_zip:
             fw_filename = filename.replace('.csv', '_fw')
             with ZipFile(fw_filename + '.zip', 'w') as myzip:
@@ -1809,9 +1754,8 @@ class OhmPi(object):
         # define parser
         def ohmpi_parser(fname):
             df = pd.read_csv(fname)
-            df = df.rename(columns={'A': 'a', 'B': 'b', 'M': 'm', 'N': 'n'})
-            df['vp'] = df['Vmn [mV]']
-            df['i'] = df['I [mA]']
+            df['vp'] = df['vmn_[mV]']
+            df['i'] = df['iab_[mA]']
             df['resist'] = df['vp']/df['i']
             df['ip'] = np.nan
             emax = np.max(df[['a', 'b', 'm', 'n']].values)
@@ -1916,9 +1860,8 @@ class OhmPi(object):
         # define a parser for the "ohmpi" format
         def ohmpi_parser(fname):
             df = pd.read_csv(fname)
-            df = df.rename(columns={'A': 'a', 'B': 'b', 'M': 'm', 'N': 'n'})
-            df['vp'] = df['Vmn [mV]']
-            df['i'] = df['I [mA]']
+            df['vp'] = df['vmn_[mV]']
+            df['i'] = df['iab_[mA]']
             df['resist'] = df['vp']/df['i']
             df['ip'] = np.nan
             emax = np.max(df[['a', 'b', 'm', 'n']].values)
