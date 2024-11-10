@@ -5,7 +5,11 @@ Acquisition strategies
 
 Different acquisition strategies are available to choose the Vab to inject. These strategies operate within the instrument specifications and their results will depend on the resistance of the ground and the contact resistances. The figure below show the space bounded by the limitations of the instruments and the environemnt in which the strategies operate.
 
-TODO add figure with strategies.
+.. figure:: ../../../img/strategy.png
+    :width: 100%
+
+    This figure shows how the Vab can be selected considering the contact resistances (`Rab`) and the ground resistance (`R`) and with constrains from the current (`Iab`), the injection voltage (`Vab`) and the measured voltage at MN (`Vmn`). Shaded red area shows the limitations of the system (Kaufmann et al., 2024).
+
 
 - **vmax**:
     - Parameters: -
@@ -22,4 +26,5 @@ TODO add figure with strategies.
 - **flex**:
     - Parameters: `vab_init`, `vab_req`, `vab_min`, `vab_max`, `iab_req`, `iab_min`, `iab_max`, `vmn_req`, `vmn_min`, `vmn_max`, `pab_req`, `pab_min`, `pab_max` (all parameters are optional)
     - Description: will try to meet the requested parameter by the user.
+
 

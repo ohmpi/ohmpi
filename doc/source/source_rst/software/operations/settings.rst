@@ -3,6 +3,21 @@
 Acquisition settings
 ********************
 
+The acquisition settings can be changed or constrained at different levels of the system.
+
+.. figure:: ../../../img/pyramids.png
+  :width: 100%
+  :align: center
+
+  **kwargs** (keyword arguments) passed to Python functions superseed **OhmPi.settings** attribute. All settings must fall within the **system specifications**. All the previous are defined when we instantiate the OhmPi class. Further down, the **config.py** and **default.json** files provide default values values and constrained. That are further enforced in the **component specifications**.
+
+
+Different parts of the system can be changed. We distinguish two roles: maintainers that will build, set the configuration and provide default settings. And the users who will operate the system using the different interfaces and change acquisition settings.
+
+.. figure:: ../../../img/users-maintainers.png
+  :width: 100%
+  :align: center
+
 This section details the acquisition settings that can be specified for measurement on a quadrupole.
 
 .. code-block:: python
@@ -21,7 +36,7 @@ This section details the acquisition settings that can be specified for measurem
     "sequence_delay": 1, # sleeping time between repeated sequences when calling run_multiple_sequences()
     }
 
-For more information on these settings, see the API doc for :func:`ohmpi.ohmpi.OhmPi.run_measurement`, :func:`ohmpi.ohmpi.OhmPi.run_measurement` and :func:`ohmpi.ohmpi.OhmPi.run_measurement`
+For more information on these settings, see the API doc for :func:`ohmpi.ohmpi.OhmPi.run_measurement`.
 
 Also have a look at the different :ref:`strategies`;
 

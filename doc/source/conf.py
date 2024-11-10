@@ -25,7 +25,7 @@ from shutil import copyfile
 # -- Project information -----------------------------------------------------
 
 project = 'OhmPi'
-copyright = '2022-2024, the OhmPi Team.'
+copyright = '2022-2024, the OhmPi Team. Documentation licensed under CC BY-SA v4.0'
 author = 'OhmPi Team'
 
 # The full version, including alpha/beta/rc tags
@@ -47,7 +47,6 @@ extensions = [
 
 
 numpydoc_show_class_members = True
-
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
