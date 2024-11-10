@@ -748,13 +748,13 @@ class OhmPi(object):
             Maximum power allowed [W].
             Default value set by config or boards specs
         vmn_min: float, optional
-            Minimum Vmn [mV] (used in strategy vmin).
+            Minimum Vmn [V] (used in strategy vmin).
             Default value set by config or boards specs
         vmn_req: float, optional
-            Requested Vmn [mV] (used in strategy vmin).
+            Requested Vmn [V] (used in strategy vmin).
             Default value set by config or boards specs
         vmn_max: float, optional
-            Maximum Vmn [mV] (used in strategy vmin).
+            Maximum Vmn [V] (used in strategy vmin).
             Default value set by config or boards specs
         min_agg : bool, optional, default: False
             when set to True, requested values are aggregated with the 'or' operator, when False with the 'and' operator
