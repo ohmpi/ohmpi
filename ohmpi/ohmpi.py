@@ -69,7 +69,7 @@ class OhmPi(object):
             Dictionary of parameters. Possible parameters with some suggested values:
             {'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
             'nb_stack': 1, 'sampling_interval': 2, 'vab_init': 5.0, 'vab_req': 5.0, 'duty_cycle': 0.5,
-            'strategy': 'constant', 'export_path': None}
+            'strategy': 'safe', 'export_path': None}
         sequence : str, optional
             Path of the .csv or .txt file with A, B, M and N electrodes.
             Electrode index starts at 1. See `OhmPi.load_sequence()` for full docstring.
@@ -305,7 +305,7 @@ class OhmPi(object):
         ----------
         which : str
                 Which vab to keep, either "min", "max", "mean" (or other similar numpy method e.g. median)
-                If applying strategy "full_constant" based on vab_opt, safer to chose "min"
+                If applying strategy "fixed" based on vab_opt, safer to chose "min"
         n_samples: int
                 Number of samples to keep within loaded sequence.
         kwargs : dict, optional
@@ -709,13 +709,13 @@ class OhmPi(object):
             Injection time in seconds.
         duty_cycle : float, optional
             Duty cycle (default=0.5) of injection square wave.
-        strategy : str, optional, default: constant
-            Define injection strategy (if power is adjustable, otherwise constant vab, generally 12V battery is used).
+        strategy : str, optional, default: safe
+            Define injection strategy (if power is adjustable, otherwise safe vab, generally 12V battery is used).
             Either:
             - vmax : compute Vab to reach a maximum Vmn_max and Iab without exceeding vab_max
             - vmin : compute Vab to reach at least Vmn_min
-            - constant : apply given Vab but checks if expected readings not out-of-range
-            - full_constant: apply given Vab with no out-of-range checks for optimising duration at the risk of out-of-range readings
+            - safe : apply given Vab but checks if expected readings not out-of-range
+            - fixed: apply given Vab with no out-of-range checks for optimising duration at the risk of out-of-range readings
             Safety check (i.e. short voltage pulses) performed prior to injection to ensure
             injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
             To bypass safety check before injection, vab should be set equal to vab_max (not recommended)
@@ -798,7 +798,7 @@ class OhmPi(object):
             vab_init = tx_volt
             # if vab_req is None:
             #     vab_req = vab_init
-            if strategy == 'constant' and vab_req is None:
+            if strategy == 'safe' and vab_req is None:
                 vab_req = tx_volt
 
         if vab_init is None and vab is not None:
@@ -807,7 +807,7 @@ class OhmPi(object):
             vab_init = vab
             # if vab_req is None:
             #     vab_req = vab_init
-            if strategy == 'constant' and vab_req is None:
+            if strategy == 'safe' and vab_req is None:
                 vab_req = vab
         if vab_init is None and 'vab_init' in self.settings:
             vab_init = self.settings['vab_init']
@@ -843,7 +843,7 @@ class OhmPi(object):
             else:
                 min_agg = False
 
-        if strategy == 'constant':
+        if strategy == 'safe':
             if vab_req is not None:
                 vab_init = 0.9 * vab_req
 
@@ -851,7 +851,7 @@ class OhmPi(object):
         d = {}
 
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
-            if strategy == 'constant':
+            if strategy == 'safe':
                 kwargs_compute_vab = kwargs.get('compute_vab', {})
                 kwargs_compute_vab['vab_init'] = vab_init
                 kwargs_compute_vab['vab_min'] = vab_min
@@ -919,7 +919,7 @@ class OhmPi(object):
                 kwargs_compute_vab['pab_max'] = pab_max
                 kwargs_compute_vab['min_agg'] = min_agg
 
-            if strategy == 'full_constant':
+            if strategy == 'fixed':
                 vab = vab_init
             else:
                 vab = self._hw.compute_vab(**kwargs_compute_vab)
@@ -996,7 +996,7 @@ class OhmPi(object):
             print('\r')
             self.data_logger.info(dd)
 
-            # if strategy not constant, then switch dps off (button) in case following measurement within sequence
+            # if strategy not safe, then switch dps off (button) in case following measurement within sequence
             # TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
             if (strategy == 'vmax' or strategy == 'vmin' or strategy == 'flex') and vab > vab_init :  # if starting vab was higher actual vab, then turn pwr off
                 self._hw.tx.pwr.pwr_state = 'off'
@@ -1686,7 +1686,7 @@ class OhmPi(object):
         - nb_meas (total number of times the sequence will be run)
         - sequence_delay (delay in second between each sequence run)
         - nb_stack (number of stack for each quadrupole measurement)
-        - strategy (injection strategy: constant, vmax, vmin)
+        - strategy (injection strategy: safe, vmax, vmin)
         - duty_cycle (injection duty cycle comprised between 0.5 - 1)
         - export_path (path where to export the data, timestamp will be added to filename)
 
