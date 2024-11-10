@@ -4,4 +4,4 @@ v2024.1.0
 - Add coverage.sh that runs .dev/test_all.py integration test (#263)
 - Rename headers (#239)
 - Rename strategies: "constant" -> "safe", "full_constant" -> "fixed" (#216)
-
+- Remove tx_volt and vab from run_measurement()

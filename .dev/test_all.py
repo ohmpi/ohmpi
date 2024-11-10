@@ -11,7 +11,7 @@ t0 = time.time()
 from ohmpi.ohmpi import OhmPi
 k = OhmPi()
 print('---------- test ----------')
-#k.test(remote=True)
+k.test(remote=True)
 #k.test_mux(activation_time=0.1)) # already tested in k.test() > k._test_mux_ABMN()
 print('---------- sequence generation ----------')
 k.create_sequence(16, params=[('dpdp', 1, 8)])
@@ -30,15 +30,26 @@ k._process_commands('{"cmd_id": "102392038", "cmd": "rs_check", "kwargs": {}}')
 #k.interrupt()
 #print('interrupting!!')
 print('---------- vmax ----------')
-k.run_measurement([1, 4, 2, 3], nb_stack=2, injection_duration=0.2, duty_cycle=0.5, strategy='vmax')
+vmax = k.run_measurement([1, 4, 2, 3], nb_stack=2, injection_duration=0.2, duty_cycle=0.5, strategy='vmax')
 print('---------- vmin ----------')
-k.run_measurement([1, 4, 2, 3], nb_stack=1, injection_duration=0.2, duty_cycle=0.3, strategy='vmin', vmn_req=0.02)
+vmin = k.run_measurement([1, 4, 2, 3], nb_stack=1, injection_duration=0.2, duty_cycle=0.3, strategy='vmin', vmn_req=0.02)
 print('---------- safe ----------')
-k.run_measurement([1, 4, 2, 3], nb_stack=1, injection_duration=0.2, duty_cycle=0.7, strategy='safe', vab_req=40)
+safe = k.run_measurement([1, 4, 2, 3], nb_stack=1, injection_duration=0.2, duty_cycle=0.7, strategy='safe', vab_req=40)
 print('---------- fixed ----------')
-k.run_measurement([1, 4, 2, 3], nb_stack=2, injection_duration=0.2, duty_cycle=1, strategy='fixed', vab_req=7.3)
+fixed = k.run_measurement([1, 4, 2, 3], nb_stack=2, injection_duration=0.2, duty_cycle=1, strategy='fixed', vab_req=7.3)
 print('---------- flex ----------')
-k.run_measurement([1, 4, 2, 3], nb_stack=2, injection_duration=0.2, duty_cycle=1, strategy='flex', pab_req=0.3)
+flex = k.run_measurement([1, 4, 2, 3], nb_stack=2, injection_duration=0.2, duty_cycle=1, strategy='flex', pab_req=0.3)
+dic = {
+    'vmin': vmin,
+    'vmax': vmax,
+    'safe': safe,
+    'fixed': fixed,
+    'flex': flex
+}
+for key in dic:
+    q = dic[key]
+    print('{:8s} >>> vab: {:10.2f} V, vmn: {:10.2f} mV, r: {:10.2f} Ohm'.format(
+        key, q['vab_[V]'], q['vmn_[mV]'], q['r_[Ohm]']))
 #k.plot_last_fw()
 print('---------- multiple sequences ----------')
 k.run_multiple_sequences(sequence_delay=60, nb_meas=2)
@@ -47,7 +58,7 @@ k.interrupt()
 print('---------- inversion ----------')
 k.remove_data()
 k.create_sequence(8, params=[('wenner', 3)])
-k.run_sequence(vab_req=5., duty_cycle=1, injection_duration=0.1, strategy='full_constant', fw_in_zip=True)
+k.run_sequence(vab_req=5., duty_cycle=1, injection_duration=0.1, strategy='fixed', fw_in_zip=True)
 datadir = os.path.join(os.path.dirname(__file__), '../data/')
 fnames = sorted([f for f in os.listdir(datadir) if f[-4:] == '.csv'])
 survey_names = [os.path.join(datadir, fnames[-1])]

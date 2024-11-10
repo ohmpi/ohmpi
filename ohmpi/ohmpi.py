@@ -688,13 +688,11 @@ class OhmPi(object):
         self._hw._plot_readings(save_fig=save_fig, filename=filename)
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
-                        strategy=None, tx_volt=None, vab=None, vab_init=None, vab_min=None, vab_req=None, vab_max=None,
+                        strategy=None, vab_init=None, vab_min=None, vab_req=None, vab_max=None,
                         iab_min=None, iab_req=None, min_agg=None, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
                         pab_min=None, pab_req=None, pab_max=None, cmd_id=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value,
         #  change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
-        # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used
-        #  in function definition -> (GB) default values are in self.settings.
         """Measures on a quadrupole and returns a dictionary with the transfer resistance.
 
         Parameters
@@ -719,7 +717,6 @@ class OhmPi(object):
             Safety check (i.e. short voltage pulses) performed prior to injection to ensure
             injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
             To bypass safety check before injection, vab should be set equal to vab_max (not recommended)
-
         vab_init : float, optional
             Initial injection voltage [V]
             Default value set by settings or system specs
@@ -761,10 +758,6 @@ class OhmPi(object):
             Default value set by config or boards specs
         min_agg : bool, optional, default: False
             when set to True, requested values are aggregated with the 'or' operator, when False with the 'and' operator
-        tx_volt : float, optional  # deprecated
-            For power adjustable only. If specified, voltage will be imposed.
-        vab : float, optional
-            For power adjustable only. If specified, voltage will be imposed.
         cmd_id : str, optional
             Unique command identifier.
         """
@@ -789,26 +782,6 @@ class OhmPi(object):
             duty_cycle = self.settings['duty_cycle']
         if strategy is None and 'strategy' in self.settings:
             strategy = self.settings['strategy']
-        if tx_volt is None and 'tx_volt' in self.settings:
-            tx_volt = self.settings['tx_volt']
-        if vab is None and 'vab' in self.settings:
-            vab = self.settings['vab']
-        if vab_init is None and tx_volt is not None:
-            warnings.warn('"tx_volt" argument is deprecated and will be removed in future version. Use "vab_init" and "vab_req" instead to set the transmitter voltage in volts.', DeprecationWarning)
-            vab_init = tx_volt
-            # if vab_req is None:
-            #     vab_req = vab_init
-            if strategy == 'safe' and vab_req is None:
-                vab_req = tx_volt
-
-        if vab_init is None and vab is not None:
-            warnings.warn(
-                '"vab" argument is deprecated and will be removed in future version. Use "vab_init" and "vab_req" instead to set the transmitter voltage in volts.', DeprecationWarning)
-            vab_init = vab
-            # if vab_req is None:
-            #     vab_req = vab_init
-            if strategy == 'safe' and vab_req is None:
-                vab_req = vab
         if vab_init is None and 'vab_init' in self.settings:
             vab_init = self.settings['vab_init']
         if vab_min is None and 'vab_min' in self.settings:
@@ -842,6 +815,12 @@ class OhmPi(object):
                 min_agg = self.settings['min_agg']
             else:
                 min_agg = False
+        
+        if self._hw.tx.pwr.voltage_adjustable is False:
+            if strategy != 'fixed':
+                strategy = 'fixed'
+                vab_req = 12.0
+                self.exec_logger.warning('Power is not adjustable, using the "fixed" strategy')
 
         if strategy == 'safe':
             if vab_req is not None:
@@ -920,7 +899,7 @@ class OhmPi(object):
                 kwargs_compute_vab['min_agg'] = min_agg
 
             if strategy == 'fixed':
-                vab = vab_init
+                vab = vab_req
             else:
                 vab = self._hw.compute_vab(**kwargs_compute_vab)
 
