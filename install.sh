@@ -70,3 +70,5 @@ cat /etc/mosquitto/mosquitto.conf
 echo "------------- Create config.py file -----------"
 
 python setup_config.py
+
+echo "---------- RESTARTING is recommended to use the web interface ----------"
