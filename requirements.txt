@@ -11,4 +11,5 @@ paho-mqtt
 termcolor
 urllib3
 matplotlib
+pandas
 tqdm
