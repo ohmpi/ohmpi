@@ -1346,6 +1346,7 @@ class OhmPi(object):
         test_dic = {
             'rx': self._hw.rx.test,
             'test_pwr': self._test_pwr,
+            'dg411_gain_ratio': self._test_dg411_gain_ratio,
             'tx': self._hw.tx.test,
             'muxABMN': self._test_mux_ABMN,
         }
@@ -1618,7 +1619,7 @@ class OhmPi(object):
             Deviation in percent from requested value for the test to pass.
         """
         if np.abs(vab) > 5.:
-            print("WARNING: large VAB can affect the Vmn line")
+            print("WARNING: large Vab can damage the Vmn line")
             return
         ok = 'FAILED'
         vmn = np.nan
@@ -1654,6 +1655,59 @@ class OhmPi(object):
             'unit': 'V',
         }
 
+        return res
+
+    def _test_dg411_gain_ratio(self, deviation_threshold=5):
+        """Test DG411 gain ratio.
+        By comparing voltage measured by ADS from RX at
+        at rest when DG411 gain is set to 1 or to value
+        of DG411_gain_ratio from config (0.5 by default).
+        NO ELECTRODE ATTACHED.
+
+        Parameters
+        ----------
+        deviation_threshold: float, optional
+            Threshold in percent below which test is successful.
+        """
+        res = {
+            'name': 'test_dg411_gain_ratio',
+            'passed': False,
+            'value': 0,
+            'unit': '-'
+        }
+        #if self._hw.tx.pwr.voltage_adjustable:
+            # power on dph set mux to A==M and B==N
+            #self._hw.pwr_state = 'on'
+            #self._hw.tx.pwr.voltage = 3
+            #self._hw.tx.pwr.pwr_state = 'on'
+        a = 1
+        b = 2
+        m = 1
+        n = 2
+        self._hw.switch_mux([a, b, m, n], roles=['A', 'B', 'M', 'N'], state='on', bypass_check=True)
+        time.sleep(0.5)
+
+        # try the two rx gain
+        self._hw.rx._dg411_gain = 1
+        voltage1 = self._hw.rx.voltage
+        self._hw.rx._dg411_gain = 0.5
+        voltage2 = self._hw.rx.voltage
+        voltage_gain_ratio = voltage1 / voltage2
+        voltage_gain_ratio_deviation = abs(1 - self._hw.rx._dg411_gain_ratio / voltage_gain_ratio) * 100
+        res['value'] = voltage_gain_ratio
+
+        if voltage_gain_ratio_deviation <= deviation_threshold:
+            res['passed'] = True
+            self.exec_logger.info(colored(
+                f"test_dg411_gain_ratio...OK ({voltage_gain_ratio: .2f})", "green"))
+        else:
+            self.exec_logger.info(colored(
+                f"test_dg411_gain_ratio...FAILED ({voltage_gain_ratio: .2f})", "red"))
+
+        # close mux, power off dph
+        self._hw.switch_mux([a, b, m, n], roles=['A', 'B', 'M', 'N'], state='off', bypass_check=True)
+        #self._hw.pwr_state = 'off'
+        
         return res
 
     def reset_mux(self, cmd_id=None):
