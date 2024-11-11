@@ -38,6 +38,7 @@ Contents
    :caption: Build OhmPi boards
 
    source_rst/hardware/hw_info
+   source_rst/hardware/hw_specs
    source_rst/hardware/mb/mb_2023
    source_rst/hardware/mb/mb_2024
    source_rst/hardware/mux/mux_2023

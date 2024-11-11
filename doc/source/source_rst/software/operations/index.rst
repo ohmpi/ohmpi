@@ -9,10 +9,10 @@ Contents:
    :maxdepth: 2
 
    config
-   interfaces
    settings
+   strategies
+   interfaces
    loggers
    monitoring
-   strategies
 
 
