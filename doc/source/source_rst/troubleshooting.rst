@@ -109,3 +109,4 @@ OhmPi is slow
 
 One of the reason why the OhmPi can be very slow (up to 5s between print in the command line) can be due to the MQTT broker not being found. Make sure you have set a correct hostname ('localhost' by default) in the `config.py` file.
 
+Another reason could be because you use a 64 bit version of Raspbian. We noticed that the 32 bit version was faster. You can select the version when you install Raspbian on the SD card (see installation section).
