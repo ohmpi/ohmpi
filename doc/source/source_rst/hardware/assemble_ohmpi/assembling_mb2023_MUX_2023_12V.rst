@@ -6,7 +6,8 @@
 Assembling the OhmPi v2023
 **************************
 
-**1 mb2023 + 4 mux2023 + 12V battery**
+**1 :ref:`mb2023-build` + 4 :ref:`mux2023-build` + 1 :ref:`power-batt`)**
+
 
 .. table::
    :align: center

@@ -99,8 +99,8 @@ Today, version 1.0x is no longer maintained, but all boards from v2023 upwards a
 Depending on your needs and applications, you can choose the board you are going to use.
 
 
-How to be build an OhmPi successfully?
-**************************************
+How to build an OhmPi successfully?
+***********************************
 
 and become and OhmPier!
 
