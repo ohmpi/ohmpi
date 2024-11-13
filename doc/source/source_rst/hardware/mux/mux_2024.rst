@@ -193,8 +193,8 @@ Replace "-y 4" by "-y 1" if the MUX is plugged on the "board" IDC connector, or 
 
 
 
-Assemble MUX boards in an OhmPi system
-========================================
+2-role vs 4 role
+================
 
 The cabling of several MUX boards v2024 within an OhmPi system is entirely dependent on the role configuration of each board.
 
@@ -219,9 +219,8 @@ If the voltage with I2C (SDA and SCL pins) is not expected, there is likely an i
 For the test with power "on", we expect the mux board to be connected to a 12V supply via the screw terminals and to the measurement board via the IDC ribbon cable.
 
 .. figure:: ../../../img/mux2024-test.jpg       
-       :width: 700px
+       :width: 100%
        :align: center
-       :height: 450px
        :alt: alternate text
        :figclass: align-center
 

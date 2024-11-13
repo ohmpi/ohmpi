@@ -1,5 +1,5 @@
-Operating the system
-####################
+System operation
+################
 
 This section details describes how to operate an OhmPi instrument.
 
@@ -9,8 +9,9 @@ Contents:
    :maxdepth: 2
 
    config
-   interfaces
    settings
+   strategies
+   interfaces
    loggers
    monitoring
 

@@ -59,24 +59,22 @@ VERSION = 'v2024.0.33'
 
 class OhmPi(object):
     """OhmPi class.
+
+    Parameters
+    ----------
+    settings : dict, optional
+        Dictionary of parameters. Possible parameters with some suggested values:
+        {'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
+        'nb_stack': 1, 'sampling_interval': 2, 'vab_init': 5.0, 'vab_req': 5.0, 'duty_cycle': 0.5,
+        'strategy': 'constant', 'export_path': None}
+    sequence : str, optional
+        Path of the .csv or .txt file with A, B, M and N electrodes.
+        Electrode index starts at 1. See `OhmPi.load_sequence()` for full docstring.
+    mqtt : bool, optional
+        If True (default), publish on mqtt topics while logging,
+        otherwise use other loggers only (print).   
     """
     def __init__(self, settings=None, sequence=None, mqtt=True, config=None):
-        """Construct the ohmpi object.
-
-        Parameters
-        ----------
-        settings : dict, optional
-            Dictionary of parameters. Possible parameters with some suggested values:
-            {'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
-            'nb_stack': 1, 'sampling_interval': 2, 'vab_init': 5.0, 'vab_req': 5.0, 'duty_cycle': 0.5,
-            'strategy': 'constant', 'export_path': None}
-        sequence : str, optional
-            Path of the .csv or .txt file with A, B, M and N electrodes.
-            Electrode index starts at 1. See `OhmPi.load_sequence()` for full docstring.
-        mqtt : bool, optional
-            If True (default), publish on mqtt topics while logging,
-            otherwise use other loggers only (print).
-        """
         self._sequence = sequence
         self.nb_samples = 0
         self.status = 'idle'  # either running or idle
@@ -313,15 +311,15 @@ class OhmPi(object):
 
     def find_optimal_vab_for_sequence(self, which='mean', n_samples=10, **kwargs):
         """Find optimal Vab based on sample sequence in order to run
-         sequence with fixed Vab. Returns Vab
+        sequence with fixed Vab. Returns Vab.
         
         Parameters
         ----------
         which : str
-                Which vab to keep, either "min", "max", "mean" (or other similar numpy method e.g. median)
-                If applying strategy "full_constant" based on vab_opt, safer to chose "min"
+            Which vab to keep, either "min", "max", "mean" (or other similar numpy method e.g. median)
+            If applying strategy "full_constant" based on vab_opt, safer to chose "min"
         n_samples: int
-                Number of samples to keep within loaded sequence.
+            Number of samples to keep within loaded sequence.
         kwargs : dict, optional
             kwargs passed to Ohmpi.run_sequence.
 

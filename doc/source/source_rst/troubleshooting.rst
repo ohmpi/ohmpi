@@ -1,10 +1,18 @@
 Troubleshooting
-********************
+***************
 
 We encourage users to report any issue, or bugs as an issue in the `official repository on GitLab <https://gitlab.com/ohmpi/ohmpi/-/issues>`_.
 Please have a look at existing open and closed issues before posting a new one.
 We have compiled here below a list of common issues and and explanations on how to fix them.
 For issue with the hardware, make sure your board passes the hardware checks (:ref:`mb2024-test`, :ref:`mux2024-test`).
+
+You can also run test in the software using:
+
+.. code-block:: python
+
+  from ohmpi.ohmpi import OhmPi
+  k = OhmPi()
+  k.test()
 
 
 Communication issue between components (I2C, pull-up)
@@ -101,3 +109,4 @@ OhmPi is slow
 
 One of the reason why the OhmPi can be very slow (up to 5s between print in the command line) can be due to the MQTT broker not being found. Make sure you have set a correct hostname ('localhost' by default) in the `config.py` file.
 
+Another reason could be because you use a 64 bit version of Raspbian. We noticed that the 32 bit version was faster. You can select the version when you install Raspbian on the SD card (see installation section).
