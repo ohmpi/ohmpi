@@ -39,8 +39,8 @@ If an optical relay is broken, you will have to replace it with a new one.
 In the measurement board v2024, these optical relays are replaced by mechanical relays which are more robust and should not cause any issue.
 
 
-Values given is not the correct one
-===================================
+Values given are not correct
+============================
 
 One possible cause is that the **shunt resistor was burned**. Once burned, the value of the resistor is not correct anymore and we advise to change it. To see if the shunt is burned, you can measure the value of the shunt resistor to see if it still has the expected value.
 
