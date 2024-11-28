@@ -57,11 +57,8 @@ Specifications
 Assemble measurement board (MB)
 ------------------------------- 
 
-.. toctree:: 
-   :maxdepth: 2 
-
-   mb/mb_2023.rst
-   mb/mb_2024.rst
+- :ref:`mb2023-build`
+- :ref:`mb2024-build`
 
 
 Multiplexer board
@@ -108,10 +105,6 @@ Specifications
 Assemble multiplexer board (MUX)
 --------------------------------
 
-.. toctree:: 
-   :maxdepth: 2 
-
-   mux/mux_2023.rst
-   mux/mux_2024.rst
-
+- :ref:`mux2023-build`
+- :ref:`mux2024-build`
    
