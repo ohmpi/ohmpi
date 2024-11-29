@@ -8,11 +8,11 @@ C6,off,continuity,screw terminal N,ADS voltage 0x49 GND,continuity
 C7,off,continuity,screw terminal N,DG411 GND,continuity
 C8,off,continuity,screw terminal N,MCP23008 MN 0x27 VSS,continuity
 C9,off,continuity,ADS voltage 0x49 VDD,I2C isolator VDD2,continuity
-C10,off,continuity,ADS voltage 0x49 VDD,MCP23008 VSS,continuity
+C10,off,continuity,ADS voltage 0x49 VDD,MCP23008 MN 0x27 VSS,continuity
 C11,off,continuity,ADS voltage 0x49 SDA,I2C isolator SDA2,continuity
-C12,off,continuity,ADS voltage 0x49 SDA,MCP23008 Tx 0x21 SDA,continuity
+C12,off,continuity,ADS voltage 0x49 SDA,MCP23008 MN 0x27 SDA,continuity
 C13,off,continuity,ADS voltage 0x49 SCL,I2C isolator SCL2,continuity
-C14,off,continuity,ADS voltage 0x49 SCL,MCP23008 Tx 0x21 SCL,continuity
+C14,off,continuity,ADS voltage 0x49 SCL,MCP23008 MN 0x27 SCL,continuity
 C15,off,continuity,ADS current 0x48 SDA,Current click SDA,continuity
 C16,off,continuity,ADS current 0x48 SDA,Raspberry Pi SDA1 (p3),continuity
 C17,off,continuity,ADS current 0x48 SDA,MCP23008 Tx 0x21 SDA,continuity
@@ -23,7 +23,7 @@ C21,off,continuity,ADS current 0x48 SCL,MCP23008 Tx 0x21 SCL,continuity
 C22,off,continuity,ADS current 0x48 SCL,ADS voltage 0x49 SCL,no continuity
 C23,off,continuity,ADS current 0x48 VDD,Current click VDD,continuity
 C24,off,continuity,ADS current 0x48 VDD,Raspberry Pi VDD (p2),continuity
-C25,off,continuity,ADS current 0x48 VDD,MCP23008 VDD,continuity
+C25,off,continuity,ADS current 0x48 VDD,MCP23008 Tx 0x21 VDD,continuity
 C26,off,continuity,ADS current 0x48 VDD,I2Cext 5V,continuity
 V1,on,voltage,screw terminal Tx in GND,screw terminal Tx in +12V,12V
 V2,on,voltage,screw terminal Rx GND,screw terminal Rx +12V,12V
