@@ -4,8 +4,8 @@
 
 .. _Getting-started:
 
-Getting started
-***************
+Software installation
+*********************
 
 Step 1: Set up the Raspberry Pi
 ===============================

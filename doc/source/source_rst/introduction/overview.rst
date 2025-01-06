@@ -97,3 +97,145 @@ In "BUILD OHMPI SYSTEMS" section we detail examples of OHMPI systems assemblies 
 
 Today, version 1.0x is no longer maintained, but all boards from v2023 upwards are compatible with each other. This is the major innovation of 2024.
 Depending on your needs and applications, you can choose the board you are going to use.
+
+
+How to build an OhmPi successfully?
+***********************************
+
+and become and OhmPier!
+
+Here are few tips:
+
+- make **good soldering**: a lot of issues arise from bad soldering or soldering on the wrong side of PCB. Take your time, check your soldering with the multimeter, this will save you a lot of time afterwards.
+- go **step by step**: follow the documentation, start by building a measurement board, then build multiplexers, then assemble the system.
+- **hardware check**: for each board, check your electronics with the multimeter (there are checklists at the end of the "build your board" section)
+- **software test**: use the software tests once the system is assembled. Always check with a resistor board before going on the field.
+- if needed, **seek help**: consult the troubleshooting section or ask help on `Discord <https://discord.gg/5gwpHGyu>`_. Look at the open or closed gitlab issues.
+- provide **feedback** and **share your experience**: OhmPi is an open-source open-hardware project, if you found a bug or have an idea to improve the hardware or the code, please use the `GitLab repository <https://gitlab.com/ohmpi/ohmpi>`_ and raise issues. You can also share your experience with the community.
+
+
+
+Where are the OhmPi's?
+**********************
+
+
+.. raw:: html
+
+    <embed>
+           <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+           <script src="https://cdn.tutorialjinni.com/jquery-csv/1.0.21/jquery.csv.min.js"></script>
+           <div id="map" >      
+           </div>
+           <p>The locations on the map are not precise locations.</p>
+
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+           crossorigin=""/>
+           <!-- Make sure you put this AFTER Leaflet's CSS -->
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+           crossorigin=""></script>
+
+
+
+
+      <script type="text/csv" id="unparsed" src="../../_static/map.csv"></script>
+
+
+      <script type="text/javascript">
+
+           var ohmpiIcon = L.icon({
+               iconUrl: '../../_static/images_map/LOGO_OHMPI.png',
+               //shadowUrl: '',
+
+               iconSize:     [102, 57], // size of the icon
+               //shadowSize:   [50, 64], // size of the shadow
+               iconAnchor:   [21, 48], // point of the icon which will correspond to marker's location
+               //shadowAnchor: [4, 62],  // the same for the shadow
+               popupAnchor:  [25, -50] // point from which the popup should open relative to the iconAnchor
+           });
+
+
+
+
+           function addPinsToMap(locations) {
+                for (let i=0; i<locations.length; i++ ) {
+                     ohmpi = locations[i];
+
+                     popup_content = "<b>Hi! I'm " + ohmpi.name + "</b>" + 
+                          "<br>I've been setup by the " + ohmpi.institution + " in " + ohmpi.location + ".";
+
+                     if (ohmpi.description.length > 0) {
+                          popup_content += "<br><br><b>Description:</b> <br>" + ohmpi.description;
+                     }
+                     if (ohmpi.image.length > 0) {
+                          popup_content += "<br><br><img width='90%' height='90%' src='" + ohmpi.image + "' />"
+                     }
+                     if (ohmpi.link.length > 0) {
+                          popup_content += "<br><br><a href='" + ohmpi.link + "'>Link</a></b> <br>";
+                     }
+
+                     marker = L.marker([ ohmpi.latitude , ohmpi.longitude ], {icon: ohmpiIcon}).addTo(map);
+
+
+
+                     marker.bindPopup(popup_content);
+                }
+           }
+
+
+           var map = L.map('map').setView([50.52791,5.53022],7);
+
+           L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+               maxZoom: 19,
+               attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+           }).addTo(map);
+
+
+
+           fetch("../../_static/map.csv")
+             // fetch() returns a promise. When we have received a response from the server,
+             // the promise's `then()` handler is called with the response.
+             .then((response) => {
+               // Our handler throws an error if the request did not succeed.
+               if (!response.ok) {
+                 throw new Error(`HTTP error: ${response.status}`);
+               }
+               // Otherwise (if the response succeeded), our handler fetches the response
+               // as text by calling response.text(), and immediately returns the promise
+               // returned by `response.text()`.
+               return response.text();
+             })
+             // When response.text() has succeeded, the `then()` handler is called with
+             // the text
+             .then((text) => {
+                var locations_json = $.csv.toObjects(text);
+                addPinsToMap(locations_json)
+             })
+             .catch((error) => {
+                console.log(error);
+             });
+
+
+
+
+           // This allows the map to render properly (Must be at the end of the code)
+           setTimeout(
+                function () {
+                     window.dispatchEvent(new Event("resize"));
+                }, 500);
+
+
+      </script>
+
+
+      <style>
+           #map {
+                height: 800px;
+                width: 100%;
+                margin: auto;
+           }
+      </style>
+    </embed>
+
+If you want your system to appear on the map, `register your OhmPi <https://framaforms.org/ohmpi-registration-form-1731060017>`_.

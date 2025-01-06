@@ -13,6 +13,8 @@ Three interfaces can be used to interact with the OhmPi:
 Web interface
 =============
 
+`See the WebGUI in action! <https://youtu.be/bY9xKfqTJUc">`_
+
 This is a user friendly graphical interface for new users as well as running quick and easy acquisitions.
 The webinterface enables to upload sequences, change parameters, run a sequence and download data.
 To start the interface, open the terminal in the OhmPi folder and type:
@@ -25,29 +27,28 @@ The Raspberry Pi of the OhmPi is runs
 a small webserver to serve the 'index.html' interface. This interface can be accessed
 locally by opening a browser on the Raspberry Pi and going to `http://localhost:8000`.
 
-.. figure:: ../../../img/software/http-interface-pseudo-section.png
+.. figure:: ../../../img/software/webgui-pseudo.png
 
     Web interface with its interactive pseudo-section.
 
 
-.. figure:: ../../../img/software/http-interface-evolution.png
+.. figure:: ../../../img/software/webgui-evol.png
 
      Evolution of quadrupole apparent resistivity with time.
 
 
-.. figure:: ../../../img/software/http-interface-rs.png
+.. figure:: ../../../img/software/webgui-rs.png
 
      Contact resistance check.
+
+.. figure:: ../../../img/software/webgui-fw.png
+     
+     Full-wave form.
 
 
 Alternatively to a local webserver, the Raspberry Pi can be configured as a used as a Wi-Fi Access Point (AP).
 Then other laptop or mobile devices can connect to the WiFi of the Raspberry Pi and
-interact with the webinterface. To configure the Raspberry Pi to act as an access point and run
-the webserver automatically on start, see instructions on `raspap.com <https://raspap.com/>`_ and in 'run_http_interface_on_start.txt'.
-
-Once configured, the webserver should start by itself on start and once
-connected to the Pi, the user can go to `10.3.141.1:8080 <http://10.3.141.1:8080>`_
-to access the interface.
+interact with the webinterface. See instructions in the "run_http_interface_on_start.txt" file in the repository.
 
 
 Python interface
@@ -82,7 +83,7 @@ Both of these can be done by executing
   ### Default parameters can also be edited manually
   k.settings['injection_duration'] = 0.5  # injection time in seconds
   k.settings['nb_stack'] = 1  # one stack is two half-cycles
-  k.settings['nbr_meas'] = 1  # number of time the sequence is repeated
+  k.settings['nb_meas'] = 1  # number of time the sequence is repeated
 
   ### Update settings if needed
   k.update_settings({"injection_duration":0.2})

@@ -10,6 +10,8 @@ Two sources of power are available now:
 - a DC power source (e.g. a 12V battery)
 - a regulated power supply (DPH5005)
 
+.. _power-batt:
+
 External TX battery
 ===================
 With the measurement board v2024, you can connect the Tx battery following the schematic below.
@@ -32,7 +34,7 @@ you should account for a potential ~10% uncertainty on R_AB, which will depend o
 
   'pwr': {'model': 'pwr_batt', 'voltage': 12., 'interface_name': 'none'}
 
-
+.. _power-DPH5005:
 
 Digital power supply (DPH5005)
 ========================================

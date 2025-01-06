@@ -38,6 +38,7 @@ Contents
    :caption: Build OhmPi boards
 
    source_rst/hardware/hw_info
+   source_rst/hardware/hw_specs
    source_rst/hardware/mb/mb_2023
    source_rst/hardware/mb/mb_2024
    source_rst/hardware/mux/mux_2023
@@ -55,13 +56,7 @@ Contents
    OhmPi v2024 (64 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2023_dph5005.rst>
    OhmPi Lite v2024 (32 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2024_dph5005.rst>
    OhmPi v2023 (64 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst>
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Deploy OhmPi
-
-   source_rst/deploy
+   Deploy OhmPi <source_rst/deploy>
 
 .. toctree::
    :maxdepth: 1
