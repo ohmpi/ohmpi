@@ -4,7 +4,6 @@ ohmpi/logs/*
 *.lck
 data/*
 **/.ipynb_notebooks/**
-*.zip
 __pycache__
 Ohmpi_4elec_mqtt.py
 ohmpy/*
