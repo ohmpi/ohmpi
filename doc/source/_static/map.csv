@@ -1,0 +1,10 @@
+﻿name,location,institution,latitude,longitude,description,image,link
+ohmpi01,Middelkerke (BE),ULiège,51.1844,2.8204,Fresh-saline water monitoring,./img/ohmpi_img.jpeg,
+ohmpi02,Rochefort (BE),UMons,50.1584,5.2229,Measurement of the root system of 2 trees,,
+ohmpi03,Pollionnay (FR),INRAE,45.7675,4.6598,Infiltration onder hedges,,../applications/hedges.html
+ohmpi04,Boissy-le-Châtel (FR),INRAE,48.8198,3.1372,Watershed monitoring,,
+ohmpi05,Villeurbanne,INRAE,45.7696,4.8893,Laboratory study,,
+ohmpi06,Ghent (BE),UGent,51.0536,3.7194,Lab and field hydrogeophysics,,
+ohmpi07,Melle (BE),ILVO,50.9938,3.7838,Soil moisture monitoring,,
+ohmpi08,Sadhana Forest (IN),ETH,11.9809,79.7766,Effect of swale,,../applications/india.html
+

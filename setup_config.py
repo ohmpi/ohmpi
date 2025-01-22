@@ -72,6 +72,8 @@ else:
 
 if pwr != 'battery':
     config = config.replace('.py', '_' + pwr + '.py')
+    if use_mux is False:
+        config = config.replace('__', '_')
 print('Using this configuration: ' + config)
 
 if os.path.exists('configs/' + config):

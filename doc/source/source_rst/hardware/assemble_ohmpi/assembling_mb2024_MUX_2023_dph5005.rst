@@ -6,7 +6,8 @@
 
 Assembling the 64-electrode OhmPi
 *********************************
-**1 mb2024 + 4 mux2023 + 1 DPH5005)**
+
+1 :ref:`mb2024-build` + 4 :ref:`mux2023-build` + 1 :ref:`power-DPH5005`
 
 TODO :list on tools and components
 

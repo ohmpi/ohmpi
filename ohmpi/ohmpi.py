@@ -54,14 +54,11 @@ except Exception as error:
     print(colored(f'Unexpected error: {error}', 'red'))
     arm64_imports = None
 
-VERSION = 'v2024.0.33'
+VERSION = 'v2024.0.34'
 
 
 class OhmPi(object):
     """OhmPi class.
-    """
-    def __init__(self, settings=None, sequence=None, mqtt=True, config=None):
-        """Construct the ohmpi object.
 
         Parameters
         ----------
@@ -299,15 +296,15 @@ class OhmPi(object):
 
     def find_optimal_vab_for_sequence(self, which='mean', n_samples=10, **kwargs):
         """Find optimal Vab based on sample sequence in order to run
-         sequence with fixed Vab. Returns Vab
+        sequence with fixed Vab. Returns Vab.
         
         Parameters
         ----------
         which : str
-                Which vab to keep, either "min", "max", "mean" (or other similar numpy method e.g. median)
-                If applying strategy "fixed" based on vab_opt, safer to chose "min"
+            Which vab to keep, either "min", "max", "mean" (or other similar numpy method e.g. median)
+            If applying strategy "fixed" based on vab_opt, safer to chose "min"
         n_samples: int
-                Number of samples to keep within loaded sequence.
+            Number of samples to keep within loaded sequence.
         kwargs : dict, optional
             kwargs passed to Ohmpi.run_sequence.
 
