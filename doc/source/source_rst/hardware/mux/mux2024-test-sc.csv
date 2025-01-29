@@ -1,4 +1,4 @@
-﻿Name,Power,Type,Multiplexer BLACK probe,Multiplexer RED probe,Expected 4 roles,Expected 2 roles
+﻿Name,Power,Type,Multiplexer BLACK probe,Multiplexer RED probe,Expected 2 roles,Expected 4 roles
 SC1,off,continuity,screw terminal GND,screw terminal PWR,no continuity,no continuity
 SC2,off,continuity,screw terminal role x,screw terminal role y,no continuity,no continuity
 SC3,off,continuity,screw terminal role x,screw terminal role xx,no continuity,continuity

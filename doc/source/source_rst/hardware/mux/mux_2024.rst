@@ -9,7 +9,7 @@ MUX board v2024
 ***************
 
 The MUX board v2024 uses the same technology than the MUX board v2023, i.e. mechanical multiplexing. However it introduces
-a new level of flexibility by addressing multiple roles (A, B, M, N), which allows to build OhmPi system with multiple of 8 electrodes.
+a new level of flexibility by addressing multiple roles (A, B, M, N), which allows to build OhmPi system with multiples of 8 electrodes.
 Users can physically configure the MUX board to address 2 roles (A, B or M, N) or 4 roles (A, B, M, N). With only 32 relays,
 it can address 16 or 8 electrodes, for the 2- and 4-role configuration respectively.
 Given the reduced number of relays, the MUX board v2024 is interfaced with only two MCP23017 I/O expanders.
@@ -27,6 +27,8 @@ Here, we will present how to assemble and configure a 32-electrode system, based
 Assemble
 ========
 
+.. hint::
+    **Depending on your organisation and soldering skills, assembling a MUX board v2024 should take between 2 and 4 hours. Some extra time is needed for performing checks and tests.**
 
 Required components
 -------------------
@@ -93,6 +95,9 @@ Mount the mosfets. You can chose between ZVN4206A or STP16NF06L.
    +--------+--------------------------------------------------------------------------------+
 
 Mount the MCP23017 sockets and the capacitors.
+
+.. warning::
+    Electrolytic capacitors (C3 and C4) are polarized. Make sure that the short lead (-) of these capacitors is soldered on the white side of the footprint.
 
 .. table::
    :align: center
@@ -230,6 +235,9 @@ For the test with power "on", we expect the mux board to be connected to a 12V s
 
 .. warning::
    **Do not power the board if one of the SC (shortcircuit) test does not pass!**
+
+.. hint::
+   **For the tests in the following table where power on is required, power the board through the I2C input connector via the ribbon cable. Do not power the board through the screw connector GND +12V.**
 
 .. csv-table:: Hardware check
    :file: mux2024-test.csv
