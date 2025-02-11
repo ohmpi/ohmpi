@@ -48,6 +48,34 @@ Another possibility is that the MN voltage you are trying to measure is **over t
 
 In the measurement board v2024, the current sensing part is replaced by a click board. It is possible that the shunt resistance on this click board is burned due to malfunction. In this case, an erroneous value of current will be given. The click board must be replaced to solve the issue.
 
+See also the step by step guides below.
+
+Incorrect current value
+=======================
+
+Debugging guide:
+
+- inject for 2 seconds and measure with the voltmeter that the given injected voltage (e.g. 12 V from Tx battery) is well found at the A-B screw terminals
+  
+  - OK: no problem with the relays, proceed to next step
+  
+  - NOT OK: possible issue with the polarity relays, the voltage source or the shunt (if shunt not soldered or burned, the current cannot pass through it)
+
+- using a test circuit board (4 contact resistances and a target resistance directly connected to the measurement board - no multiplexer), inject a given voltage and see if you get the expected voltage drop around the shunt resistor. For instance, for a test circuit with 100 Ohm target resistor and 1000 Ohm contact resistance, the total resistance will be 1000 + 100 + 1000 + 2 (shunt resistor) = 2102 Ohms. This will mean that if we have a 12V injection voltage, we will measure: 12*2/2102 = 0.011 V around the shunt. Test that with a multimeter.
+  
+  - OK: you can proceed to next step
+  
+  - NOT OK: you possibly have extra resistance in your circuit, check soldering, make sure the relays close well (you hear them clicking)
+
+- check the current click output voltage (AN pin). It should give 50 times the voltage around the shunt. If we measure 0.011 V around the shunt, we should see 0.055 V at the AN pin (between AN and the GND pin of the current click)
+  
+  - OK: the current click works as expected, proceed to next step
+  
+  - NOT OK: there is likely an issue with the current click, double check all soldering and modifications were done according to the documentation, without injecting, measure the voltage between AN and the GND pin, it should only show a few mV. In any other case, it means the current click is damaged and should be replaced.
+
+- lastly, you can check that the ADS1115 (0x48) is not broken. Switch it with another working ADS and see if the problem persists or not. The voltage of the AN pin goes on the A0 pin of the ADS.
+
+
 
 Resistances values are divided by 2 (mb2024)
 =================================================
