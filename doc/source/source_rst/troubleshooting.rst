@@ -76,6 +76,39 @@ Debugging guide:
 - lastly, you can check that the ADS1115 (0x48) is not broken. Switch it with another working ADS and see if the problem persists or not. The voltage of the AN pin goes on the A0 pin of the ADS.
 
 
+Voltage incorrect value
+=======================
+
+Vmn debugging:
+
+- with the measurement board powered up but the MN terminal disconnected from any electrode and no injection taking place, measure the voltage between screw terminal N and ADS 0x49 (voltage ADC) A0 pin. It should be 2.5V
+
+  - OK: you can proceed to next step
+
+  - NOT OK: there is an issue with the chip REF03 generating the 2.5V, check its power supply. Also check the polarity of the schottky diodes in front of the ADS 0x49.
+
+.. figure:: ../img/troubleshooting/ref.png
+  :width: 50%
+  :align: center
+ 
+  Pinout of the REF03.
+
+- connect a test resistor circuit to the measurement board (no mux) and run a long injection (2s) so you can measure the voltage at the MN terminal and compare it to what is expected. For instance, for a circuit with 1000 Ohm contact resistance, 100 Ohm target resistance and 2 Ohm shunt resistor. If we inject 12 V (=Vab), we should measure: Vmn = 12*100/(2*1000+100+2) = 0.57 V
+
+  - OK: proceed to next step
+ 
+  - NOT OK: check your test circuit resistance values, check if any current is actually injected in your circuit (see current debugging guide)
+
+- still with the test resistor connected and running a long injection, measure the output voltage (with reference to terminal N) after each op-amp output (pin 6, third pin on the right from the top). If we have 0.57 V at the MN screw terminal, we expect 0.57 V at pin 6 of the first op-amp, 0.57/2 = 0.285 V at pin 6 of second op-amp and 0.285+2.5 = 2.785 V at pin 6 of third op-amp and on A0 of ADS 0x49.
+
+  - NOT OK: check the power supply of each op-amp, it should be -12 (pin 4) and +12 (pin 7). Check all soldering and if the chips are well inserted in the sockets.
+
+.. figure:: ../img/troubleshooting/opamp.png
+  :width: 50%
+  :align: center
+ 
+  Pinout of op-amp.
+
 
 Resistances values are divided by 2 (mb2024)
 =================================================
@@ -138,3 +171,9 @@ OhmPi is slow
 One of the reasons why the OhmPi can be very slow (up to 5s between print in the command line) can be due to the MQTT broker not being found. Make sure you have set a correct hostname ('localhost' by default) in the `config.py` file.
 
 Another reason could be because you use a 64 bit version of Raspbian. We noticed that the 32 bit version was faster. You can select the version when you install Raspbian on the SD card (see installation section).
+
+
+Raspberry Pi low voltage warning
+================================
+
+The Raspberry Pi 5 needs more power than the Raspberry Pi 4 and will give a low voltage warning when used in the OhmPi as the THD-1211N does not provide enough current. It is recommended either to switch to a Raspberry Pi 4 or add an additional DC/DC converter (12V -> 5V).
