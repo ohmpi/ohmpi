@@ -14,6 +14,13 @@ You can also run test in the software using:
   k = OhmPi()
   k.test()
 
+Also make sure to check your soldering and don't hesitate to melt them again if you have a doubt, it doesn't hurt.
+
+.. figure:: ../img/troubleshooting/soldering.png
+  :width: 80%
+  :align: center
+
+  source: https://www.sudomod.com/wiki/index.php/File:Bad_joints.jpg
 
 Communication issue between components (I2C, pull-up)
 =====================================================
@@ -53,7 +60,7 @@ See also the step by step guides below.
 Incorrect current value
 =======================
 
-Debugging guide:
+Current debugging:
 
 - inject for 2 seconds and measure with the voltmeter that the given injected voltage (e.g. 12 V from Tx battery) is well found at the A-B screw terminals
   
