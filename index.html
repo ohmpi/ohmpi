@@ -1281,7 +1281,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             let emax = Math.max(...[a[i], b[i], m[i], n[i]]) * elec_spacing
             let dist = Math.abs(emax - emin)
             xpos.push(emin + dist / 2)
-            ypos.push(- Math.sqrt(2) / 2 * dist)
+            yy = - Math.sqrt(2) / 2 * dist
+            ypos.push(Math.round(yy*1000)/1000)
             values = [...df[attr]]  // use [...array] to make a copy
           }
           
