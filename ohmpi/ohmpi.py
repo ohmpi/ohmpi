@@ -59,7 +59,9 @@ VERSION = 'v2024.0.34'
 
 class OhmPi(object):
     """OhmPi class.
-
+    """
+    def __init__(self, settings=None, sequence=None, mqtt=True, config=None):
+        """
         Parameters
         ----------
         settings : dict, optional
