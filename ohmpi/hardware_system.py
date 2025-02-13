@@ -4,6 +4,7 @@ import time
 import numpy as np
 import sys
 import os
+from termcolor import colored
 
 try:
     import matplotlib.pyplot as plt
@@ -184,6 +185,23 @@ class OhmPiHardware:
         if self.tx.specs['connect']:
             self.tx.polarity = 0
         self.tx.pwr._current_max = self.iab_max
+        
+        # test we can address power if adjustable
+        # we can only do it here because we need both tx and pwr instance joined
+        if self.tx.pwr.voltage_adjustable:
+            if self.tx.pwr.interface_name == 'modbus':
+                try:
+                    self.tx.pwr_state = 'on'
+                    self.tx.pwr.voltage_default(5.0)
+                    self.tx.pwr_state = 'off'
+                    self.soh_logger.info(colored(
+                    f'PWR: DPH5005 writable via modbus...OK', 'green'))
+                except Exception as e:
+                    self.soh_logger.info(colored(
+                        f'PWR: DPH5005 not writable via modbus... NOT OK... Please check USB connection or baudrate (see doc), if you do not have a DPH5005 but a battery, change the config.py', 'red'))
+                    self.soh_logger.info('error: ' + str(e))
+                    self.soh_logger.debug(AssertionError(f'Modbus connection error: {e}'))
+
 
         # Initialize Muxes
         self._cabling = kwargs.pop('cabling', {})
