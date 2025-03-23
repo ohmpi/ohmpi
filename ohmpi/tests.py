@@ -713,7 +713,7 @@ def test_r_shunt(hw, test_logger, deviation_threshold=10., return_deviation=Fals
         else:
             quad = [1, 1]  #TODO: change to first electrode in cabling
         roles = ['A','B']
-        tx_volt = .5
+        tx_volt = .05
         injection_duration = 2.
 
         if hw.tx.voltage != tx_volt:

@@ -2,6 +2,7 @@ from ohmpi.hardware_components.abstract_hardware_components import PwrAbstract
 import numpy as np
 import datetime
 import os
+from termcolor import colored
 import time
 from ohmpi.utils import enforce_specs
 from minimalmodbus import Instrument  # noqa
@@ -51,7 +52,15 @@ class Pwr(PwrAbstract):
         self._pwr_state = 'off'
         if self.connect:
             if self.interface_name == 'modbus':
-                assert isinstance(self.connection, Instrument)
+                try:
+                    assert isinstance(self.connection, Instrument)
+                    self.soh_logger.info(colored(
+                        f'PWR: DPH5005 accessible via modbus...OK', 'green'))
+                except AssertionError as e:
+                    self.soh_logger.info(colored(
+                        f'PWR: DPH5005 not accessible via modbus... NOT OK... Please check USB connection', 'red'))
+                    self.soh_logger.debug(AssertionError(f'Modbus connection error: {e}'))
+
             elif self.interface_name == 'bluetooth':
                 raise Warning('Bluetooth communication with dph5050 is not implemented')
             elif self.interface_name == 'none':

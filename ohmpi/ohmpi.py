@@ -15,14 +15,14 @@ from copy import deepcopy
 import numpy as np
 import csv
 import time
-import pandas as pd
 import io
+import pandas as pd  # use for export() and run_inversion()
 from zipfile import ZipFile
 import tempfile
 from shutil import rmtree, make_archive
 from threading import Thread
 from inspect import getmembers, isfunction
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from termcolor import colored
 from logging import DEBUG
 from ohmpi.utils import get_platform, sequence_random_sampler
@@ -59,26 +59,28 @@ VERSION = 'v2024.0.34'
 
 class OhmPi(object):
     """OhmPi class.
-
-    Parameters
-    ----------
-    settings : dict, optional
-        Dictionary of parameters. Possible parameters with some suggested values:
-        {'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
-        'nb_stack': 1, 'sampling_interval': 2, 'vab_init': 5.0, 'vab_req': 5.0, 'duty_cycle': 0.5,
-        'strategy': 'constant', 'export_path': None}
-    sequence : str, optional
-        Path of the .csv or .txt file with A, B, M and N electrodes.
-        Electrode index starts at 1. See `OhmPi.load_sequence()` for full docstring.
-    mqtt : bool, optional
-        If True (default), publish on mqtt topics while logging,
-        otherwise use other loggers only (print).   
     """
     def __init__(self, settings=None, sequence=None, mqtt=True, config=None):
+        """
+        Parameters
+        ----------
+        settings : dict, optional
+            Dictionary of parameters. Possible parameters with some suggested values:
+            {'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
+            'nb_stack': 1, 'sampling_interval': 2, 'vab_init': 5.0, 'vab_req': 5.0, 'duty_cycle': 0.5,
+            'strategy': 'safe', 'export_path': None}
+        sequence : str, optional
+            Path of the .csv or .txt file with A, B, M and N electrodes.
+            Electrode index starts at 1. See `OhmPi.load_sequence()` for full docstring.
+        mqtt : bool, optional
+            If True (default), publish on mqtt topics while logging,
+            otherwise use other loggers only (print).
+        """
         self._sequence = sequence
         self.nb_samples = 0
         self.status = 'idle'  # either running or idle
         self.thread = None  # contains the handle for the thread taking the measurement
+        self.injection_id = 0
 
         if config is None:
             config = ohmpi.config
@@ -163,7 +165,7 @@ class OhmPi(object):
                 self.exec_logger.warning('No connection to control broker.'
                                          ' Use python/ipython to interact with OhmPi object...')
 
-    def append_and_save(self, filename: str, last_measurement: dict, fw_in_csv=None, fw_in_zip=None, cmd_id=None):
+    def append_and_save(self, filename: str, last_measurement: dict, fw_in_zip=None, cmd_id=None):
         """Appends and saves the last measurement dict.
 
         Parameters
@@ -172,10 +174,6 @@ class OhmPi(object):
             Filename of the .csv.
         last_measurement : dict
             Last measurement taken in the form of a python dictionary.
-        fw_in_csv : bool, optional
-            Wether to save the full-waveform data in the .csv (one line per quadrupole).
-            As these readings have different lengths for different quadrupole, the data are padded with NaN.
-            If None, default is read from default.json.
         fw_in_zip : bool, optional
             Wether to save the full-waveform data in a separate .csv in long format to be zipped to
             spare space. If None, default is read from default.json.
@@ -183,8 +181,6 @@ class OhmPi(object):
             Unique command identifier.
         """
         # check arguments
-        if fw_in_csv is None:
-            fw_in_csv = self.settings['fw_in_csv']
         if fw_in_zip is None:
             fw_in_zip = self.settings['fw_in_zip']
 
@@ -201,27 +197,18 @@ class OhmPi(object):
                 fw_filename = filename.replace('.csv', '_fw.csv')
                 if not os.path.exists(fw_filename):  # new file, write headers first
                     with open(fw_filename, 'w') as f:
-                        f.write('A,B,M,N,t,current,voltage\n')
+                        f.write('a,b,m,n,injection_id,channel_mn,time,current,voltage,polarity\n')
                 # write full data
                 with open(fw_filename, 'a') as f:
                     dd = last_measurement['full_waveform']
-                    aa = np.repeat(last_measurement['A'], dd.shape[0])
-                    bb = np.repeat(last_measurement['B'], dd.shape[0])
-                    mm = np.repeat(last_measurement['M'], dd.shape[0])
-                    nn = np.repeat(last_measurement['N'], dd.shape[0])
-                    fwdata = np.c_[aa, bb, mm, nn, dd]
-                    np.savetxt(f, fwdata, delimiter=',', fmt=['%d', '%d', '%d', '%d', '%.3f', '%.3f', '%.3f'])
-
-            if fw_in_csv:
-                d = last_measurement['full_waveform']
-                n = d.shape[0]
-                if n > 1:
-                    idic = dict(zip(['i' + str(i) for i in range(n)], d[:, 0]))
-                    udic = dict(zip(['u' + str(i) for i in range(n)], d[:, 1]))
-                    tdic = dict(zip(['t' + str(i) for i in range(n)], d[:, 2]))
-                    last_measurement.update(idic)
-                    last_measurement.update(udic)
-                    last_measurement.update(tdic)
+                    aa = np.repeat(last_measurement['a'], dd.shape[0])
+                    bb = np.repeat(last_measurement['b'], dd.shape[0])
+                    mm = np.repeat(last_measurement['m'], dd.shape[0])
+                    nn = np.repeat(last_measurement['n'], dd.shape[0])
+                    injection_id = np.repeat(last_measurement['injection_id'], dd.shape[0])
+                    channel_mn = np.repeat(last_measurement['channel_mn'], dd.shape[0])
+                    fwdata = np.c_[aa, bb, mm, nn, injection_id, channel_mn, dd]
+                    np.savetxt(f, fwdata, delimiter=',', fmt=['%d', '%d', '%d', '%d', '%d', '%d', '%.3f', '%.3f', '%.3f', '%.0f'])
 
             last_measurement.pop('full_waveform')
         
@@ -317,7 +304,7 @@ class OhmPi(object):
         ----------
         which : str
             Which vab to keep, either "min", "max", "mean" (or other similar numpy method e.g. median)
-            If applying strategy "full_constant" based on vab_opt, safer to chose "min"
+            If applying strategy "fixed" based on vab_opt, safer to chose "min"
         n_samples: int
             Number of samples to keep within loaded sequence.
         kwargs : dict, optional
@@ -342,7 +329,7 @@ class OhmPi(object):
             if self.status == 'stopping':
                 break
             acquired_data = self.run_measurement(quad=quad, strategy='vmax', **kwargs)
-            vabs.append(acquired_data["Tx [V]"])
+            vabs.append(acquired_data["vab_[V]"])
         if self._hw.tx.pwr.voltage_adjustable:
             self._hw.pwr_state = 'off'
         vabs = np.array(vabs)
@@ -390,11 +377,11 @@ class OhmPi(object):
                 # fixing possible incompatibilities with code version
                 for i, header in enumerate(headers):
                     if header == 'R [ohm]':
-                        headers[i] = 'R [Ohm]'
+                        headers[i] = 'r_[Ohm]'
 
                 # read basic data
                 # NOTE: order of the columns matters
-                icols = list(np.where(np.in1d(headers, ['A', 'B', 'M', 'N', 'Vmn [mV]', 'I [mA]', 'R [Ohm]', 'R_std [%]']))[0])
+                icols = list(np.where(np.in1d(headers, ['a', 'b', 'm', 'n', 'vmn_[mV]', 'iab_[mA]', 'r_[Ohm]', 'r_std_[%]']))[0])
                 data = np.loadtxt(os.path.join(ddir, fname), delimiter=',',
                                     skiprows=1, usecols=icols)
                 
@@ -434,11 +421,11 @@ class OhmPi(object):
                             fwdata = {}
                             myzip = ZipFile(fwpath)
                             df = pd.read_csv(io.StringIO(myzip.read(fname.replace('.csv', '_fw.csv')).decode('utf-8')))
-                            df['abmn'] = df['A'].astype(str) + ',' + df['B'].astype(str) + ',' + df['M'].astype(str) + ',' + df['N'].astype(str)
+                            df['abmn'] = df['a'].astype(str) + ',' + df['b'].astype(str) + ',' + df['m'].astype(str) + ',' + df['n'].astype(str)
                             for abmn in df['abmn'].unique():
                                 ie = df['abmn'].eq(abmn)
                                 fwdata[abmn] = {
-                                    't': df[ie]['t'].round(3).tolist(),
+                                    't': df[ie]['time'].round(3).tolist(),
                                     'i': df[ie]['current'].round(1).tolist(),
                                     'v': df[ie]['voltage'].round(1).tolist()
                                 }
@@ -569,9 +556,12 @@ class OhmPi(object):
         """
         self.exec_logger.debug(f'Removing all data following command {cmd_id}')
         datadir = os.path.dirname(self.settings['export_path'])
-        rmtree(datadir)
-        os.mkdir(datadir)
-
+        for f in os.listdir(datadir):
+            try:
+                os.remove(os.path.join(datadir, f))
+            except Exception as e:
+                self.exec_logger.debug('remote_data: could not remove: ' + str(e))
+        
     def restart(self, cmd_id=None):
         """Restarts the Raspberry Pi.
 
@@ -690,18 +680,18 @@ class OhmPi(object):
         Parameters
         ----------
         save_fig: boolean, optional - default (False)
-        filename: str, optional. Path to save plot. By default figures/test.png"""
-
+            Whether to save the figure
+        filename: str, optional
+            Path to save plot. By default figures/test.png
+        """
         self._hw._plot_readings(save_fig=save_fig, filename=filename)
 
     def run_measurement(self, quad=None, nb_stack=None, injection_duration=None, duty_cycle=None,
-                        strategy=None, tx_volt=None, vab=None, vab_init=None, vab_min=None, vab_req=None, vab_max=None,
+                        strategy=None, vab_init=None, vab_min=None, vab_req=None, vab_max=None,
                         iab_min=None, iab_req=None, min_agg=None, iab_max=None, vmn_min=None, vmn_req=None, vmn_max=None,
                         pab_min=None, pab_req=None, pab_max=None, cmd_id=None, **kwargs):
         # TODO: add sampling_interval -> impact on _hw.rx.sampling_rate (store the current value,
         #  change the _hw.rx.sampling_rate, do the measurement, reset the sampling_rate to the previous value)
-        # TODO: default value of tx_volt and other parameters set to None should be given in config.py and used
-        #  in function definition -> (GB) default values are in self.settings.
         """Measures on a quadrupole and returns a dictionary with the transfer resistance.
 
         Parameters
@@ -716,17 +706,16 @@ class OhmPi(object):
             Injection time in seconds.
         duty_cycle : float, optional
             Duty cycle (default=0.5) of injection square wave.
-        strategy : str, optional, default: constant
-            Define injection strategy (if power is adjustable, otherwise constant vab, generally 12V battery is used).
+        strategy : str, optional, default: safe
+            Define injection strategy (if power is adjustable, otherwise safe vab, generally 12V battery is used).
             Either:
             - vmax : compute Vab to reach a maximum Vmn_max and Iab without exceeding vab_max
             - vmin : compute Vab to reach at least Vmn_min
-            - constant : apply given Vab but checks if expected readings not out-of-range
-            - full_constant: apply given Vab with no out-of-range checks for optimising duration at the risk of out-of-range readings
+            - safe : apply given Vab but checks if expected readings not out-of-range
+            - fixed: apply given Vab with no out-of-range checks for optimising duration at the risk of out-of-range readings
             Safety check (i.e. short voltage pulses) performed prior to injection to ensure
             injection within bounds defined in vab_max, iab_max, vmn_max or vmn_min. This can adapt Vab.
             To bypass safety check before injection, vab should be set equal to vab_max (not recommended)
-
         vab_init : float, optional
             Initial injection voltage [V]
             Default value set by settings or system specs
@@ -758,20 +747,16 @@ class OhmPi(object):
             Maximum power allowed [W].
             Default value set by config or boards specs
         vmn_min: float, optional
-            Minimum Vmn [mV] (used in strategy vmin).
+            Minimum Vmn [V] (used in strategy vmin).
             Default value set by config or boards specs
         vmn_req: float, optional
-            Requested Vmn [mV] (used in strategy vmin).
+            Requested Vmn [V] (used in strategy vmin).
             Default value set by config or boards specs
         vmn_max: float, optional
-            Maximum Vmn [mV] (used in strategy vmin).
+            Maximum Vmn [V] (used in strategy vmin).
             Default value set by config or boards specs
         min_agg : bool, optional, default: False
             when set to True, requested values are aggregated with the 'or' operator, when False with the 'and' operator
-        tx_volt : float, optional  # deprecated
-            For power adjustable only. If specified, voltage will be imposed.
-        vab : float, optional
-            For power adjustable only. If specified, voltage will be imposed.
         cmd_id : str, optional
             Unique command identifier.
         """
@@ -796,26 +781,6 @@ class OhmPi(object):
             duty_cycle = self.settings['duty_cycle']
         if strategy is None and 'strategy' in self.settings:
             strategy = self.settings['strategy']
-        if tx_volt is None and 'tx_volt' in self.settings:
-            tx_volt = self.settings['tx_volt']
-        if vab is None and 'vab' in self.settings:
-            vab = self.settings['vab']
-        if vab_init is None and tx_volt is not None:
-            warnings.warn('"tx_volt" argument is deprecated and will be removed in future version. Use "vab_init" and "vab_req" instead to set the transmitter voltage in volts.', DeprecationWarning)
-            vab_init = tx_volt
-            # if vab_req is None:
-            #     vab_req = vab_init
-            if strategy == 'constant' and vab_req is None:
-                vab_req = tx_volt
-
-        if vab_init is None and vab is not None:
-            warnings.warn(
-                '"vab" argument is deprecated and will be removed in future version. Use "vab_init" and "vab_req" instead to set the transmitter voltage in volts.', DeprecationWarning)
-            vab_init = vab
-            # if vab_req is None:
-            #     vab_req = vab_init
-            if strategy == 'constant' and vab_req is None:
-                vab_req = vab
         if vab_init is None and 'vab_init' in self.settings:
             vab_init = self.settings['vab_init']
         if vab_min is None and 'vab_min' in self.settings:
@@ -849,8 +814,14 @@ class OhmPi(object):
                 min_agg = self.settings['min_agg']
             else:
                 min_agg = False
+        
+        if self._hw.tx.pwr.voltage_adjustable is False:
+            if strategy != 'fixed':
+                strategy = 'fixed'
+                vab_req = 12.0
+                self.exec_logger.warning('Power is not adjustable, using the "fixed" strategy')
 
-        if strategy == 'constant':
+        if strategy == 'safe':
             if vab_req is not None:
                 vab_init = 0.9 * vab_req
 
@@ -858,7 +829,7 @@ class OhmPi(object):
         d = {}
 
         if self.switch_mux_on(quad, bypass_check=bypass_check, cmd_id=cmd_id):
-            if strategy == 'constant':
+            if strategy == 'safe':
                 kwargs_compute_vab = kwargs.get('compute_vab', {})
                 kwargs_compute_vab['vab_init'] = vab_init
                 kwargs_compute_vab['vab_min'] = vab_min
@@ -926,8 +897,8 @@ class OhmPi(object):
                 kwargs_compute_vab['pab_max'] = pab_max
                 kwargs_compute_vab['min_agg'] = min_agg
 
-            if strategy == 'full_constant':
-                vab = vab_init
+            if strategy == 'fixed':
+                vab = vab_req
             else:
                 vab = self._hw.compute_vab(**kwargs_compute_vab)
 
@@ -951,41 +922,55 @@ class OhmPi(object):
             R_std = self._hw.last_dev(delay=delay)
 
             # multiply current by polarity
-            full_waveform = np.copy(self._hw.readings[:, [0, -2, -1]])
+            full_waveform = np.copy(self._hw.readings[:, [0, -2, -1, 2]])
             ie = self._hw.readings[:, 2] != 0
             full_waveform[ie, 1] = full_waveform[ie, 1] * self._hw.readings[ie, 2]
             #print('\nTX: {:.3f}, V at Iab: {:.3f}'.format(self._hw.tx.gain, I*2*50))
-            #print('Rx: {:.3f}, V at Vmn: {:.3f}'.format(self._hw.rx.gain, Vmn*self._hw.rx._dg411_gain))
-            
+            #print('Rx: {:.3f}, V at Vmn: {:.3f}'.format(self._hw.rx.gain, Vmn*self._hw.rx._dg411_gain)
+
+            # battery voltage
+            if self._hw.tx.pwr.voltage_adjustable:
+                # read stored value as requesting it each time takes time
+                battv = self._hw.tx.pwr._battery_voltage
+            else:
+                battv = np.nan
+
+            # increment injection_id
+            self.injection_id += 1
+
             d = {
                 "time": datetime.now().isoformat(),
-                "A": quad[0],
-                "B": quad[1],
-                "M": quad[2],
-                "N": quad[3],
-                "inj time [ms]": injection_duration * 1000.,  # NOTE: check this
-                "Vmn [mV]": Vmn,
-                "I [mA]": I,
-                "R [Ohm]": R,
-                "R_std [%]": R_std,
-                "Ps [mV]": self._hw.sp,
-                "nbStack": nb_stack,
-                "Tx [V]": vab,
-                "CPU temp [degC]": self._hw.ctl.cpu_temperature,
-                "Nb samples [-]": len(self._hw.readings[x, 2]),  # TODO: use only samples after a delay in each pulse
+                "a": quad[0],
+                "b": quad[1],
+                "m": quad[2],
+                "n": quad[3],
+                "injection_duration_[ms]": injection_duration * 1000.,  # NOTE: check this
+                "vmn_[mV]": Vmn,
+                "vmn_std_[%]": Vmn_std,
+                "iab_[mA]": I,
+                "iab_std_[%]": I_std,
+                "r_[Ohm]": R,
+                "r_std_[%]": R_std,
+                "rab_[kOhm]": vab / I,
+                "sp_[mV]": self._hw.sp,
+                "n_stacks": nb_stack,
+                "vab_[V]": vab,
+                "channel_mn": 0,
+                "injection_id": self.injection_id,
+                "battery_voltage_tx_[V]": battv, 
+                #"CPU temp [degC]": self._hw.ctl.cpu_temperature,
+                "s_samples": len(self._hw.readings[x, 2]),  # TODO: use only samples after a delay in each pulse
+                "strategy": strategy,
                 "full_waveform": full_waveform,
-                "I_std [%]": I_std,
-                "Vmn_std [%]": Vmn_std,
-                "R_ab [kOhm]": vab / I
-            }
+             }
 
             # to the data logger
             dd = d.copy()
             dd.pop('full_waveform')  # too much for logger
-            dd.update({'A': str(dd['A'])})
-            dd.update({'B': str(dd['B'])})
-            dd.update({'M': str(dd['M'])})
-            dd.update({'N': str(dd['N'])})
+            dd.update({'a': str(dd['a'])})
+            dd.update({'b': str(dd['b'])})
+            dd.update({'m': str(dd['m'])})
+            dd.update({'n': str(dd['n'])})
 
             # round float to 2 decimal
             for key in dd.keys():  # Check why this is applied on keys and not values...
@@ -997,7 +982,7 @@ class OhmPi(object):
             print('\r')
             self.data_logger.info(dd)
 
-            # if strategy not constant, then switch dps off (button) in case following measurement within sequence
+            # if strategy not safe, then switch dps off (button) in case following measurement within sequence
             # TODO: check if this is the right strategy to handle DPS pwr state on/off after measurement
             if (strategy == 'vmax' or strategy == 'vmin' or strategy == 'flex') and vab > vab_init :  # if starting vab was higher actual vab, then turn pwr off
                 self._hw.tx.pwr.pwr_state = 'off'
@@ -1024,7 +1009,7 @@ class OhmPi(object):
         """
         self.run_multiple_sequences(**kwargs)
 
-    def run_multiple_sequences(self, sequence_delay=None, nb_meas=None, fw_in_csv=None,
+    def run_multiple_sequences(self, sequence_delay=None, nb_meas=None,
                                fw_in_zip=None, cmd_id=None, **kwargs):
         """Runs multiple sequences in a separate thread for monitoring mode.
            Can be stopped by 'OhmPi.interrupt()'.
@@ -1036,10 +1021,6 @@ class OhmPi(object):
             Number of seconds at which the sequence must be started from each others.
         nb_meas : int, optional
             Number of time the sequence must be repeated.
-        fw_in_csv : bool, optional
-            Whether to save the full-waveform data in the .csv (one line per quadrupole).
-            As these readings have different lengths for different quadrupole, the data are padded with NaN.
-            If None, default is read from default.json.
         fw_in_zip : bool, optional
             Whether to save the full-waveform data in a separate .csv in long format to be zipped to
             spare space. If None, default is read from default.json.
@@ -1069,7 +1050,7 @@ class OhmPi(object):
                     self.exec_logger.warning('Data acquisition interrupted')
                     break
                 t0 = time.time()
-                self.run_sequence(fw_in_csv=fw_in_csv, fw_in_zip=fw_in_zip, **kwargs)
+                self.run_sequence(fw_in_zip=fw_in_zip, **kwargs)
                 dt = sequence_delay - (time.time() - t0)  # sleeping time between sequence
                 if dt < 0:
                     dt = 0
@@ -1088,17 +1069,13 @@ class OhmPi(object):
         self.thread = Thread(target=func)
         self.thread.start()
 
-    def run_sequence(self, fw_in_csv=None, fw_in_zip=None, cmd_id=None, save_strategy_fw=False,
+    def run_sequence(self, fw_in_zip=None, cmd_id=None, save_strategy_fw=False,
         export_path=None, **kwargs):
         """Runs sequence synchronously (=blocking on main thread).
            Additional arguments (kwargs) are passed to run_measurement().
 
         Parameters
         ----------
-        fw_in_csv : bool, optional
-            Whether to save the full-waveform data in the .csv (one line per quadrupole).
-            As these readings have different lengths for different quadrupole, the data are padded with NaN.
-            If None, default is read from default.json.
         fw_in_zip : bool, optional
             Whether to save the full-waveform data in a separate .csv in long format to be zipped to
             spare space. If None, default is read from default.json.
@@ -1110,8 +1087,6 @@ class OhmPi(object):
             Unique command identifier.
         """
         # check arguments
-        if fw_in_csv is None:
-            fw_in_csv = self.settings['fw_in_csv']
         if fw_in_zip is None:
             fw_in_zip = self.settings['fw_in_zip']
 
@@ -1136,6 +1111,7 @@ class OhmPi(object):
             n = 1
         else:
             n = self.sequence.shape[0]
+        self.injection_id = 0  # reset injection_id
         for i in tqdm(range(0, n), "Sequence progress", unit='injection', ncols=100, colour='green'):
             if self.sequence is None:
                 quad = np.array([0, 0, 0, 0])
@@ -1153,49 +1129,11 @@ class OhmPi(object):
             # log data to the data logger
             # self.data_logger.info(f'{acquired_data}')  # NOTE: It could be useful to keep the cmd_id in the
             # save data and print in a text file
-            self.append_and_save(filename, acquired_data, fw_in_csv=fw_in_csv, fw_in_zip=fw_in_zip)
+            self.append_and_save(filename, acquired_data, fw_in_zip=fw_in_zip)
             self.exec_logger.debug(f'quadrupole {i + 1:d}/{n:d}')
         self._hw.pwr_state = 'off'
 
         # file management
-        if fw_in_csv:  # make sure we have the same number of columns
-            with open(filename, 'r') as f:
-                x = f.readlines()
-
-            # get column of start of full-waveform
-            icol = 0
-            for i, col in enumerate(x[0].split(',')):
-                if col == 'i0':
-                    icol = i
-                    break
-
-            # get the longest line possible
-            max_length = np.max([len(row.split(',')) for row in x]) - icol
-            nreadings = max_length // 3
-
-            # create padding array for full-waveform  # TODO test this!
-            with open(filename, 'w') as f:
-                # write back headers
-                xs = x[0].split(',')
-                f.write(','.join(xs[:icol]))
-                f.write(',')
-                for i, col in enumerate(['t', 'i', 'v']):
-                    f.write(','.join([col + str(j) for j in range(nreadings)]))
-                    if col == 'v':
-                        f.write('\n')
-                    else:
-                        f.write(',')
-                # write back rows
-                for i, row in enumerate(x[1:]):
-                    xs = row.split(',')
-                    f.write(','.join(xs[:icol]))
-                    f.write(',')
-                    fw = np.array(xs[icol:])
-                    fw_pad = fw.reshape((3, -1)).T
-                    fw_padded = np.zeros((nreadings, 3), dtype=fw_pad.dtype)
-                    fw_padded[:fw_pad.shape[0], :] = fw_pad
-                    f.write(','.join(fw_padded.T.flatten()).replace('\n', '') + '\n')
-
         if fw_in_zip:
             fw_filename = filename.replace('.csv', '_fw')
             with ZipFile(fw_filename + '.zip', 'w') as myzip:
@@ -1390,6 +1328,49 @@ class OhmPi(object):
         assert len(quadrupole) == 4
         return self._hw.switch_mux(electrodes=quadrupole, state='off')
 
+    def test(self, test_names=[], remote=False, filename=None):
+        """Run test on the ohmpi system.
+        
+        Parameters
+        ----------
+        test_names : list, optional
+            Name of test to run. By default, all available test are run.
+        remote : bool, optional
+            If set to True, no input prompt will be presented to the user. It
+            is assumed that the system can run this test remotely safely.
+        filename : str, optional
+            Filepath with extension .json included. If specified, the results
+             of the tests will be saved there.
+        """
+        test_dic = {
+            'rx': self._hw.rx.test,
+            'test_pwr': self._test_pwr,
+            'dg411_gain_ratio': self._test_dg411_gain_ratio,
+            'tx': self._hw.tx.test,
+            'muxABMN': self._test_mux_ABMN,
+        }
+        test_names = list(test_dic.keys()) if len(test_names) == 0 else test_names
+        out = []
+        for test_name in test_names:
+            if test_name == 'muxABMN':
+                t = test_dic[test_name](yes=remote)
+            else:
+                t = test_dic[test_name]()
+            if isinstance(t, list):
+                out += t
+            else:
+                out.append(t)
+        from ohmpi.config import HARDWARE_CONFIG
+        dic = {
+            'date': datetime.now(timezone.utc).isoformat(),
+            'test': out,
+            'config': HARDWARE_CONFIG
+        }
+        if filename is not None:
+            with open(filename, 'w') as f:
+                f.write(json.dumps(dic, default=lambda o: '<not serializable>'))
+        return out
+
     def test_mux(self, activation_time=0.2, mux_id=None, cmd_id=None):
         """Interactive method to test the multiplexer boards.
 
@@ -1408,7 +1389,7 @@ class OhmPi(object):
         else:
             self._hw.mux_boards[mux_id].test(activation_time=activation_time)
 
-    def _test_mux_AB(self, vab=5, injection_duration=0.2, current_threshold=0.5):
+    def _test_mux_AB(self, vab=5, injection_duration=0.1, current_threshold=0.5, yes=False):
         """Test shortcut and connection on mux AB.
         This test will send small current between all possible pairs of electrodes. If they are not connected, we should measure < 0.12 mA. When we inject on the same electrode, we cause a short-circuit and should measure a current proportional to the additional contact resistance we setup.
         
@@ -1425,10 +1406,18 @@ class OhmPi(object):
             Injection duration in seconds.
         current_threshold : float, optional
             Current (in mA) below which the test is ok.
+        yes : bool, optional
+            If True, the test will directly proceed, without input warning (useful
+            for remote situation to run the test in monitoring).
         """
-        print(colored('WARNING: use this test with caution, it can destroy your board!', 'red') + '\nBefore running the test, make sure to:\n- disconnect all electrodes from resistor board or ground\n- add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current.')
-        reply = input('Are you sure you want to continue [y/N]: ')
-        if reply.lower() == 'y':
+        ok = False
+        baddic = {}
+        if yes is False:
+            print(colored('WARNING: use this test with caution, it can destroy your board!', 'red') + '\nBefore running the test, make sure to:\n- disconnect all electrodes from resistor board or ground\n- add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current.')
+            reply = input('Are you sure you want to continue [y/N]: ')
+            if reply.lower() == 'y':
+                yes = True
+        if yes:
             # turn power on
             if self._hw.tx.pwr.voltage_adjustable:
                 self._hw.pwr_state = 'on'
@@ -1440,11 +1429,10 @@ class OhmPi(object):
                     if c[0] > nelec:
                         nelec = c[0]
             # test if we have shortcut in the mux itself
-            baddic = {}
             for a in range(1, nelec+1):
                 for b in range(a+1, nelec+1):
                     self._hw.switch_mux([a, b], roles=['A', 'B'], state='on')
-                    self._hw._vab_pulse(duration=0.2, vab=vab)
+                    self._hw._vab_pulses(vab=vab, durations=[injection_duration], polarities=[1])
                     current = self._hw.readings[-2, 3]
                     self._hw.switch_mux([a, b], roles=['A', 'B'], state='off')
                     ok = 'FAILED'
@@ -1461,13 +1449,23 @@ class OhmPi(object):
             
             # print bad electrodes
             if len(baddic) > 0:
-                print(baddic)
+                self.exec_logger.info(colored(
+                    'test_mux_AB...FAILED ({:s})'.format(str(baddic)), 'red'))
             else:
-                print(colored('Everything OK', 'green'))
+                self.exec_logger.info(colored(
+                    'test_mux_AB...OK', 'green'))
+                ok = True
         else:
-            print('aborted') 
+            print('aborted')
+        
+        res = {
+            'name': 'test_mux_AB',
+            'passed': ok,
+            'value': baddic,
+        }
+        return res
     
-    def _test_mux_MN(self, vmn_threshold=10):
+    def _test_mux_MN(self, vmn_threshold=20):
         """Test if we measure well less than X mV when M == N.  
         WARNING: for this test:
             - disconnect all electrodes from resistor board or ground
@@ -1477,54 +1475,58 @@ class OhmPi(object):
         vmn_threshold : float, optional
             Voltage threshold (in mV) under which the test is successful.
         """
-        print(colored('WARNING: use this test with caution', 'red') + '\nBefore running the test, make sure to:\n- disconnect all electrodes from resistor board or ground')
-        reply = input('Are you sure you want to continue [y/N]: ')
-        if reply.lower() == 'y':
-            # turn power on
-            if self._hw.tx.pwr.voltage_adjustable:
-                self._hw.pwr_state = 'on'
-            
-            # find number of electrodes
-            nelec = 0
-            for mux_id in self._hw.mux_boards.keys():
-                for c in self._hw.mux_boards[mux_id].cabling.keys():
-                    if c[0] > nelec:
-                        nelec = c[0]
-            
-            # test if the MN relays show well below X volts
-            baddic = {}
-            for m in range(1, nelec+1):
-                n = m
-                self._hw.switch_mux([m, n], roles=['M', 'N'], state='on', bypass_check=True)
-                self._hw._vab_pulse(duration=0.2, vab=5)
-                vmn = np.median(np.abs(self._hw.readings[:, 4]))
-                self._hw.switch_mux([m, n], roles=['M', 'N'], state='off', bypass_check=True)
-                ok = 'FAILED'
-                if vmn <= vmn_threshold:
-                    ok = "OK"
-                print('M: {:3d} N: {:3d} Vmn: {:.1f} mV -> {:s}'.format(m, n, vmn, ok))
-                if ok == 'FAILED':
-                    baddic['m' + str(m) + ' n' + str(n)] = vmn
-            # turn power off
-            if self._hw.tx.pwr.voltage_adjustable:
-                self._hw.pwr_state = 'off'
-            
-            if len(baddic) > 0:
-                print(baddic)
-            else:
-                print(colored('Everything OK', 'green'))
-
+        # turn power on
+        if self._hw.tx.pwr.voltage_adjustable:
+            self._hw.pwr_state = 'on'
+        
+        # find number of electrodes
+        nelec = 0
+        for mux_id in self._hw.mux_boards.keys():
+            for c in self._hw.mux_boards[mux_id].cabling.keys():
+                if c[0] > nelec:
+                    nelec = c[0]
+        
+        # test if the MN relays show well below X volts
+        baddic = {}
+        for m in range(1, nelec+1):
+            n = m
+            self._hw.switch_mux([m, n], roles=['M', 'N'], state='on', bypass_check=True)
+            self._hw._vab_pulse(duration=0.2, vab=5)
+            vmn = np.median(np.abs(self._hw.readings[:, 4]))
+            self._hw.switch_mux([m, n], roles=['M', 'N'], state='off', bypass_check=True)
+            ok = 'FAILED'
+            if vmn <= vmn_threshold:
+                ok = "OK"
+            print('M: {:3d} N: {:3d} Vmn: {:.1f} mV -> {:s}'.format(m, n, vmn, ok))
+            if ok == 'FAILED':
+                baddic['m' + str(m) + ' n' + str(n)] = vmn
+        # turn power off
+        if self._hw.tx.pwr.voltage_adjustable:
+            self._hw.pwr_state = 'off'
+        
+        if len(baddic) > 0:
+            self.exec_logger.info(colored(
+                'test_mux_MN...FAILED ({:s})'.format(str(baddic)), 'red'))
         else:
-            print('aborted') 
+            self.exec_logger.info(colored(
+                'test_mux_MN...OK', 'green'))
+            ok = True
 
-    def _test_mux_ABMN(self, vab=3, injection_duration=0.3, allowed_deviation=0.1):
+        res = {
+            'name': 'test_mux_MN',
+            'passed': len(baddic) == 0,
+            'value': baddic,
+        }
+        return res
+
+    def _test_mux_ABMN(self, vab=3, injection_duration=0.3, allowed_deviation=0.1, yes=False):
         """Test if all AB and MN relays switch properly.
         This test should be run with a max injection voltage below 4V to not harm the Vmn part.
         It consists in doing AB==MN measurements.
         
         WARNING: for this test:
             - disconnect all electrodes from resistor board or ground
-            - add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current in case of shortcut.
+            - if tx is a battery: add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current in case of shortcut.
             
         Paramaters
         ----------
@@ -1534,15 +1536,23 @@ class OhmPi(object):
             Injection duration in seconds.
         allowed_deviation : float, optional
             Test passed if vmn is between (1 - allowed_deviation)*vab and (1 + allowed_deviation)*vab
+        yes : bool, optional
+            If True, the test will directly proceed, without input warning (useful
+            for remote situation to run the test in monitoring).
         """
-        if vab > 4:
-            print('Please use a Vab less then 4V to not damage the Vmn part.')
-            return
-        if self._hw.tx.pwr.voltage_adjustable is False:
-            print(colored('WARNING: The OhmPi cannot adjust the voltage itself, make sure that the Tx input voltage is below 4V before proceeding', 'red'))
-        print(colored('WARNING: use this test with caution, it can destroy your board!', 'red') + '\nBefore running the test, make sure to:\n- disconnect all electrodes from resistor board or ground\n- add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current.\n- use a Tx voltage of 4V or less. ')
-        reply = input('Are you sure you want to continue [y/N]: ')
-        if reply.lower() == 'y':
+        ok = False
+        baddic = {}
+        if yes is False:
+            if vab > 4:
+                print('Please use a Vab less then 4V to not damage the Vmn part.')
+                return
+            if self._hw.tx.pwr.voltage_adjustable is False:
+                print(colored('WARNING: The OhmPi cannot adjust the voltage itself, make sure that the Tx input voltage is below 4V before proceeding', 'red'))
+            print(colored('WARNING: use this test with caution, it can destroy your board!', 'red') + '\nBefore running the test, make sure to:\n- disconnect all electrodes from resistor board or ground\n- (if tx is a battery (=no adjustable), add 1k-2k resistor between the measurement board A and the mux, and between measurement board B and the mux. These additional contact resistance will limit the current.\n- use a Tx voltage of 4V or less. ')
+            reply = input('Are you sure you want to continue [y/N]: ')
+            if reply.lower() == 'y':
+                yes = True
+        if yes:
             # turn power on
             if self._hw.tx.pwr.voltage_adjustable:
                 self._hw.pwr_state = 'on'
@@ -1561,7 +1571,7 @@ class OhmPi(object):
                 m = a
                 n = b
                 self._hw.switch_mux([a, b, m, n], roles=['A', 'B', 'M', 'N'], state='on', bypass_check=True)
-                self._hw._vab_pulse(duration=injection_duration, vab=vab)
+                self._hw._vab_pulses(vab=vab, durations=[injection_duration], polarities=[1])
                 vmn = np.median(self._hw.readings[:, 4])
                 # import matplotlib.pyplot as plt
                 # fig, ax = plt.subplots()
@@ -1578,12 +1588,127 @@ class OhmPi(object):
             if self._hw.tx.pwr.voltage_adjustable:
                 self._hw.pwr_state = 'off'
             if len(baddic) > 0:
-                print(baddic)
+                self.exec_logger.info(colored(
+                    'test_mux_ABMN...FAILED ({:s})'.format(str(baddic)), 'red'))
             else:
-                print(colored('Everything OK', 'green'))
+                self.exec_logger.info(colored(
+                    'test_mux_ABMN...OK', 'green'))
+                ok = True
         else:
-            print('aborted') 
-           
+            print('aborted')
+        
+        res = {
+            'name': 'test_mux_ABMN',
+            'passed': ok,
+            'value': baddic,
+        }
+        return res
+    
+    def _test_pwr(self, vab=3., injection_duration=0.2, deviation_threshold=10.):
+        """Check voltage of source by putting A == M and B == N.
+        Can only be used with adjustable power source.
+
+        Parameters
+        ----------
+        vab : float, optional
+            Target voltage, between -4.8 and +4.8 V. Default 3 V.
+        injection_duration : float, optional
+            Injection duration in seconds.
+        deviation_threshold : float, optional
+            Deviation in percent from requested value for the test to pass.
+        """
+        if np.abs(vab) > 5.:
+            print("WARNING: large Vab can damage the Vmn line")
+            return
+        ok = 'FAILED'
+        vmn = np.nan
+        
+        # turn power on
+        if self._hw.tx.pwr.voltage_adjustable:
+            self._hw.pwr_state = 'on'
+            a = 1
+            b = 2
+            m = 1
+            n = 2
+            self._hw.switch_mux([a, b, m, n], roles=['A', 'B', 'M', 'N'], state='on', bypass_check=True)
+            self._hw._vab_pulses(vab=vab, durations=[injection_duration], polarities=[1])
+            vmn = np.median(self._hw.readings[:, 4])
+            self._hw.switch_mux([a, b, m, n], roles=['A', 'B', 'M', 'N'], state='off', bypass_check=True)
+            if (vmn >= (1 - deviation_threshold/100)*vab*1000) and (vmn <= (1 + deviation_threshold)*vab*1000):
+                ok = 'OK'
+            
+            # turn power off
+            if self._hw.tx.pwr.voltage_adjustable:
+                self._hw.pwr_state = 'off'
+            
+            color = 'green' if ok == 'OK' else 'red'
+            self.exec_logger.info(colored(
+                'test_pwr...{:s} ({:.3f} V instead of {:.3f} V)'.format(
+                    ok, vmn/1000, vab), color))
+        else:
+            print('aborted')
+        res = {
+            'name': 'test_pwr',
+            'passed': bool(ok == 'OK'),
+            'value': vmn/1000,
+            'unit': 'V',
+        }
+
+        return res
+
+    def _test_dg411_gain_ratio(self, deviation_threshold=5):
+        """Test DG411 gain ratio.
+        By comparing voltage measured by ADS from RX at
+        at rest when DG411 gain is set to 1 or to value
+        of DG411_gain_ratio from config (0.5 by default).
+        NO ELECTRODE ATTACHED.
+
+        Parameters
+        ----------
+        deviation_threshold: float, optional
+            Threshold in percent below which test is successful.
+        """
+        res = {
+            'name': 'test_dg411_gain_ratio',
+            'passed': False,
+            'value': 0,
+            'unit': '-'
+        }
+        #if self._hw.tx.pwr.voltage_adjustable:
+            # power on dph set mux to A==M and B==N
+            #self._hw.pwr_state = 'on'
+            #self._hw.tx.pwr.voltage = 3
+            #self._hw.tx.pwr.pwr_state = 'on'
+        a = 1
+        b = 2
+        m = 1
+        n = 2
+        self._hw.switch_mux([a, b, m, n], roles=['A', 'B', 'M', 'N'], state='on', bypass_check=True)
+        time.sleep(0.5)
+
+        # try the two rx gain
+        self._hw.rx._dg411_gain = 1
+        voltage1 = self._hw.rx.voltage
+        self._hw.rx._dg411_gain = 0.5
+        voltage2 = self._hw.rx.voltage
+        voltage_gain_ratio = voltage1 / voltage2
+        voltage_gain_ratio_deviation = abs(1 - self._hw.rx._dg411_gain_ratio / voltage_gain_ratio) * 100
+        res['value'] = voltage_gain_ratio
+
+        if voltage_gain_ratio_deviation <= deviation_threshold:
+            res['passed'] = True
+            self.exec_logger.info(colored(
+                f"test_dg411_gain_ratio...OK ({voltage_gain_ratio: .2f})", "green"))
+        else:
+            self.exec_logger.info(colored(
+                f"test_dg411_gain_ratio...FAILED ({voltage_gain_ratio: .2f})", "red"))
+
+        # close mux, power off dph
+        self._hw.switch_mux([a, b, m, n], roles=['A', 'B', 'M', 'N'], state='off', bypass_check=True)
+        #self._hw.pwr_state = 'off'
+        
+        return res
+
     def reset_mux(self, cmd_id=None):
         """Switches off all multiplexer relays.
 
@@ -1602,7 +1727,7 @@ class OhmPi(object):
         - nb_meas (total number of times the sequence will be run)
         - sequence_delay (delay in second between each sequence run)
         - nb_stack (number of stack for each quadrupole measurement)
-        - strategy (injection strategy: constant, vmax, vmin)
+        - strategy (injection strategy: safe, vmax, vmin)
         - duty_cycle (injection duty cycle comprised between 0.5 - 1)
         - export_path (path where to export the data, timestamp will be added to filename)
 
@@ -1670,9 +1795,8 @@ class OhmPi(object):
         # define parser
         def ohmpi_parser(fname):
             df = pd.read_csv(fname)
-            df = df.rename(columns={'A': 'a', 'B': 'b', 'M': 'm', 'N': 'n'})
-            df['vp'] = df['Vmn [mV]']
-            df['i'] = df['I [mA]']
+            df['vp'] = df['vmn_[mV]']
+            df['i'] = df['iab_[mA]']
             df['resist'] = df['vp']/df['i']
             df['ip'] = np.nan
             emax = np.max(df[['a', 'b', 'm', 'n']].values)
@@ -1777,9 +1901,8 @@ class OhmPi(object):
         # define a parser for the "ohmpi" format
         def ohmpi_parser(fname):
             df = pd.read_csv(fname)
-            df = df.rename(columns={'A': 'a', 'B': 'b', 'M': 'm', 'N': 'n'})
-            df['vp'] = df['Vmn [mV]']
-            df['i'] = df['I [mA]']
+            df['vp'] = df['vmn_[mV]']
+            df['i'] = df['iab_[mA]']
             df['resist'] = df['vp']/df['i']
             df['ip'] = np.nan
             emax = np.max(df[['a', 'b', 'm', 'n']].values)
