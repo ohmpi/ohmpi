@@ -543,19 +543,20 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
                   data-bs-parent="#accordionExample">
                   <div class="accordion-body">
-                    <p>The <code>constant</code> strategy will inject the requested Vab voltage if it does not go over
+                    <p>The <code>safe</code> strategy will try inject the requested Vab voltage and decrease it if it goes over
                       the hardware limitations.</p>
                     <p>The <code>vmax</code> strategy will try to inject the maximum Vab voltage.</p>
                     <p>The <code>vmin</code> strategy will inject the Vab voltage that reach the Vmn requested.</p>
-                    </p>
+                    <p>The <code>fixed</code> strategy will inject the requested Vab voltage without checking for hardware limitations.</p>
                     <form>
                       <div class="form-group row">
                         <label for="strategy" class="col col-form-label">Strategy:</label>
                         <div class="col">
                           <select id="strategySelect" class="form-select">
-                            <option value="constant">Constant</option>
+                            <option value="safe">Safe</option>
                             <option value="vmin">Vmin</option>
                             <option value="vmax">Vmax</option>
+                            <option value="fixed">Fixed</option>
                           </select>
                         </div>
                       </div>
@@ -567,15 +568,9 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="vab_max" class="col col-form-label">Vab max [V]:</label>
+                        <label for="vmn_req" class="col col-form-label">Vmn requested [V] (<code>vmn_req</code>):</label>
                         <div class="col">
-                          <input type="number" class="form-control-number" id="vab_max" value="" disabled>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="vmn_req" class="col col-form-label">Vmn requested [V]:</label>
-                        <div class="col">
-                          <input type="number" class="form-control-number" id="vmn_req" value="" disabled>
+                          <input type="number" class="form-control-number" id="vmn_req" value="20" disabled>
                         </div>
                       </div>
                     </form>
@@ -1069,17 +1064,14 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       // strategies
       let strategySelect = document.getElementById('strategySelect')
       function strategySelectFunc() {
-        if (strategySelect.value == 'constant') {
+        if ((strategySelect.value == 'safe') || (strategySelect.value == 'fixed')) {
           document.getElementById('vab_req').removeAttribute('disabled')
-          document.getElementById('vab_max').setAttribute('disabled', '')
           document.getElementById('vmn_req').setAttribute('disabled', '')
         } else if (strategySelect.value == 'vmax') {
           document.getElementById('vab_req').setAttribute('disabled', '')
-          document.getElementById('vab_max').removeAttribute('disabled')
           document.getElementById('vmn_req').setAttribute('disabled', '')
         } else if (strategySelect.value == 'vmin') {
           document.getElementById('vab_req').setAttribute('disabled', '')
-          document.getElementById('vab_max').setAttribute('disabled', '')
           document.getElementById('vmn_req').removeAttribute('disabled')
         }
       }
@@ -1093,16 +1085,14 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
           'injection_duration': parseFloat(document.getElementById('injection_duration').value),
           'nb_meas': parseInt(document.getElementById('nb_meas').value),
           'sequence_delay': parseFloat(document.getElementById('sequence_delay').value),
-          'nb_stack': parseInt(document.getElementById('nb_stack').value),
+          'n_stacks': parseInt(document.getElementById('nb_stack').value),
           'duty_cycle': parseFloat(document.getElementById('duty_cycle').value),
           'strategy': strategySelect.value,
         }
 
         // add strategies
-        if (strategySelect.value == 'constant') {
+        if ((strategySelect.value == 'safe') | (strategySelect.value == 'fixed')) {
           formVals['vab_req'] = parseFloat(document.getElementById('vab_req').value)
-        } else if (strategySelect.value == 'vmax') {
-          formVals['vab_max'] = parseFloat(document.getElementById('vab_max').value)
         } else if (strategySelect.value == 'vmin') {
           formVals['vmn_req'] = parseFloat(document.getElementById('vmn_req').value)
         }
@@ -1291,7 +1281,8 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             let emax = Math.max(...[a[i], b[i], m[i], n[i]]) * elec_spacing
             let dist = Math.abs(emax - emin)
             xpos.push(emin + dist / 2)
-            ypos.push(- Math.sqrt(2) / 2 * dist)
+            yy = - Math.sqrt(2) / 2 * dist
+            ypos.push(Math.round(yy*1000)/1000)
             values = [...df[attr]]  // use [...array] to make a copy
           }
           

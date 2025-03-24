@@ -12,6 +12,7 @@ from ohmpi.utils import enforce_specs
 from ohmpi.hardware_components.mb_2023_0_X import Tx as Tx_mb_2023
 from ohmpi.hardware_components.mb_2023_0_X import Rx as Rx_mb_2023
 from ohmpi.tests import test_i2c_devices_on_bus
+import numpy as np
 
 # hardware characteristics and limitations
 # voltages are given in mV, currents in mA, sampling rates in Hz and data_rate in S/s
@@ -211,6 +212,98 @@ class Tx(Tx_mb_2023):
             self.pin1.value = False
             time.sleep(self._release_delay)
 
+    def test_r_shunt(self, voltage=None, deviation_threshold=50.):
+        """Test R shunt by comparing current measured by TX and current given by PWR module. Given the low resolution of the
+        power module compared to the ADS resolution, the test is performed while shortcutting A and B at low voltage
+        to ensure a higher current.
+        Test can only be performed with power source having pwr_voltage_adjustable set to True (i.e. currently pwr_dps5005 only) and
+        Test will also ensure both polarity relays are working as expected.
+        
+        Parameters
+        ----------
+        deviation_threshold: float, optional (default: 10)
+            Threshold in percent below which test is successful.
+        voltage: float, optional
+            Test voltage to be injected. Make sure it's not too high to not burn the shunt.
+            voltage * r_shunt_ohm < r_shunt_power. Default is round(r_shunt*0.02, 3)
+        """
+        if voltage is None:
+            voltage = np.round(self._r_shunt * 0.02, 2)  # we tried to target 20 mA injection
+        res = {
+            'name': 'r_shunt',
+            'passed': False,
+            'value': -1.,
+            'unit': 'Ohm'
+        }
+        if self.pwr.voltage_adjustable:
+            # check pwr is on (relays before dph)
+            switch_tx_pwr_off = False
+            if self.pwr_state == 'off':
+                self.pwr_state = 'on'
+                switch_tx_pwr_off = True
+
+            # set voltage
+            self.voltage = voltage
+            
+            # turn dps_pwr_on if needed (device on/off)
+            switch_pwr_off = False
+            if self.pwr.pwr_state == 'off':
+                self.pwr.pwr_state = 'on'
+                switch_pwr_off = True
+
+            # create shortcut
+            self.pin0.value = True
+            self.pin1.value = True
+            time.sleep(0.5)
+
+            # measure
+            r_shunt_computeds = []
+            for i in range(10):
+                self.pwr._retrieve_current()  # needed otherwise it's set value
+                self.pwr._retrieve_voltage()
+                vab = self.pwr.voltage
+                current_expected = self.pwr.current/1000
+                current_observed = self.current/1000
+                r_shunt_computed = vab/current_observed
+                r_shunt_computeds.append(r_shunt_computed)
+                #print(vab, current_expected, current_observed)
+            r_shunt_computed = np.mean(r_shunt_computeds)
+            #print(r_shunt_computed/self._r_shunt*100, deviation_threshold)
+            res['value'] = r_shunt_computed
+            passed = bool((r_shunt_computed-self._r_shunt)/self._r_shunt*100 < deviation_threshold)
+            res['passed'] = passed
+            msg = 'OK' if res['passed'] else 'FAILED'
+            if res['passed']:
+                msg = 'OK'
+                color = 'green'
+            else:
+                msg = 'FAILED'
+                color = 'red'
+            self.exec_logger.info(colored(
+                'test_r_shunt... {:s} ({:.2f} Ohm instead of {:.2f} Ohm)'.format(
+                 msg, r_shunt_computed, self._r_shunt), color))
+
+            # stop shortcut
+            self.pin0.value = False
+            self.pin1.value = False
+
+            # if relay were off, put them back
+            if switch_pwr_off:
+                self.pwr.pwr_state = 'off'
+
+            # if power was off before measurement, let's turn if off
+            if switch_tx_pwr_off:
+                self.pwr_state = 'off'
+        else:
+            self.exec_logger.warning('R shunt cannot be tested without adjustable power (like DPH5005).')
+
+        return res
+
+    def test(self):
+        results = []
+        results.append(self.test_ads())
+        results.append(self.test_r_shunt())
+        return results
 
 class Rx(Rx_mb_2023):
     """RX Class"""
@@ -309,3 +402,46 @@ class Rx(Rx_mb_2023):
         u = (AnalogIn(self._ads_voltage, ads.P0).voltage * self._coef_p2 * 1000. - self._vmn_hardware_offset) / self._dg411_gain - self.bias  # TODO: check how to handle bias and _vmn_hardware_offset
         self.exec_logger.event(f'{self.model}\trx_voltage\tend\t{datetime.datetime.utcnow()}')
         return u
+
+    def test_ads(self, nsample=100, channel=0):
+        dg0 = self.pin_DG0.value
+        self.pin_DG0.value = False
+        samples = []
+        pindic = {
+            0: ads.P0,
+            1: ads.P1,
+            2: ads.P2,
+            3: ads.P3
+        }
+        for i in range(nsample):
+            samples.append(AnalogIn(self._ads_voltage, pindic[channel]).voltage)
+        std = np.std(samples)
+        avg = np.mean(samples)
+        ok = False
+        if (std < 1) and ((avg - 2.5) <= 0.1):
+            ok = True
+        res = {
+            'name': 'test_ads_voltage_' + str(channel),
+            'passed': ok,
+            'std': std,
+            'avg': avg,
+            'unit': 'mV'
+        }
+        if ok:
+            msg = 'OK'
+            color = 'green'
+        else:
+            msg = 'FAILED'
+            color = 'red'
+        self.exec_logger.info(colored(
+            'test_ads_voltage (channel {:d})...{:s} (avg: {:.3f}, std: {:.3f})'.format(
+                channel, msg, avg, std), color))
+
+        self.pin_DG0.value = dg0
+        return res
+
+    def test(self):
+        results = []
+        results.append(self.test_ads(channel=0))
+        return results
+

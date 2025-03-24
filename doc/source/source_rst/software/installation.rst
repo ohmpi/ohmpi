@@ -50,23 +50,18 @@ The install script:
 - installs a **local MQTT broker** which will be used to centralize all the communication between the hardware, the software and the interfaces;
 - configures the **I2C buses** on the Raspberry Pi.
 
-When the installation is performed, we need to add the OhmPi folder to the PYTHONPATH by editing the .bashrc file as follows:
-
-.. code-block:: bash
-
-   nano ~/.bashrc
-
-And add the following line:
-
-.. code-block:: bash
-
-   export PYTHONPATH=$PYTHONPATH:/home/<username>/OhmPi
-
-Replace *<username>* by your username on the Raspberry Pi (e.g.: /home/pi/OhmPi).
 
 Step 4: Activate the *ohmpy* virtual environment
 ================================================
 Before operating the instrument, we need to activate the *ohmpy* virtual environment with the following command:
+
+.. code-block:: bash
+
+   source env.sh
+
+The script env.sh will automatically activate the environment and set the PYTHONPATH variable to be able to find the OhmPi Python package.
+
+You can also do these steps manually to activate the environment:
 
 .. code-block:: bash
 
@@ -78,5 +73,19 @@ If you need to leave the virtual environment, simply type:
 .. code-block:: bash
    
    deactivate
+
+To automatically set the PYTHONPATH variable for each new terminal windows, you can edit the .bashrc file as follows:
+
+.. code-block:: bash
+
+   nano ~/.bashrc
+
+And add the following line corresponding:
+
+.. code-block:: bash
+
+   export PYTHONPATH=$PYTHONPATH:/home/<username>/ohmpi
+
+Replace *<username>* by your username on the Raspberry Pi (e.g.: /home/pi/ohmpi).
 
 Following these steps, you are now ready to operate the OhmPi.

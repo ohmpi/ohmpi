@@ -4,7 +4,6 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 warnings.filterwarnings('ignore')
-os.chdir("/home/pi/OhmPi")
 from ohmpi.ohmpi import OhmPi
 
 ### Define object from class OhmPi

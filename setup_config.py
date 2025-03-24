@@ -17,30 +17,43 @@ while True:
 if mb == 'v2024':
     mb = 'v2024_1_X_'  # NOTE: used to be set to mb_2024_0_2 by default
     print(f'Using board version {mb}. If you are using another version of this board,'
-          f' make sure to update your config.py file.\n')
+          f' make sure to update your config.py file using this tool.\n')
 
-mux = None
+use_mux = '?'
 while True:
-    if mux in ['v2023', 'v2024']:
+    if use_mux in ('yes', 'Yes'):
+        use_mux = True
+        break
+    elif use_mux in ('no, No'):
+        use_mux = False
         break
     else:
-        mux = input('Choose a mux boards: [v2023/v2024]: ')
+        use_mux = input('Would you like to use mux boards? [yes/no]: ')
 
-roles = None
-if mux == 'v2024':
+if use_mux:
+    mux = None
     while True:
-        if roles in ['2roles', '4roles']:
+        mux_types = ['v2023', 'v2024']
+        if mux in mux_types:
             break
         else:
-            roles = input('How are your mux boards configured: [2roles/4roles]: ')
-    check_jumpers_msg = True
+            mux = input('Choose a mux board type: [v2023/v2024]: ')
 
-nb_mux = None
-while True:
-    if nb_mux in ['0', '1', '2', '3', '4']:
-        break
-    else:
-        nb_mux = input('Number of multiplexers: [0/1/2/3/4]: ')
+    roles = None
+    if mux == 'v2024':
+        while True:
+            if roles in ['2roles', '4roles']:
+                break
+            else:
+                roles = input('How are your mux boards configured: [2roles/4roles]: ')
+        check_jumpers_msg = True
+
+    nb_mux = None
+    while True:
+        if nb_mux in ['1', '2', '3', '4']:
+            break
+        else:
+            nb_mux = input('Number of multiplexers: [1/2/3/4]: ')
 
 pwr = None
 while True:
@@ -48,15 +61,19 @@ while True:
         break
     else:
         pwr = input('Tx power: [battery/dph5005]:')
-
-config = ('config_mb_' + mb[1:] + '_' + nb_mux + '_mux_' + mux[1:])
-if roles is not None:
-    config = (config + '_' + roles + '.py')
+if use_mux:
+    config = ('config_mb_' + mb[1:] + '_' + nb_mux + '_mux_' + mux[1:])
+    if roles is not None:
+        config = (config + '_' + roles + '.py')
+    else:
+        config = (config + '.py')
 else:
-    config = (config + '.py')
+    config = ('config_mb_' + mb[1:] + '.py')
 
 if pwr != 'battery':
     config = config.replace('.py', '_' + pwr + '.py')
+    if use_mux is False:
+        config = config.replace('__', '_')
 print('Using this configuration: ' + config)
 
 if os.path.exists('configs/' + config):
@@ -91,6 +108,7 @@ if os.path.exists('configs/' + config):
     print('***   The MQTT communication can be encrypted with TLS/SSL but it is not set by default   ***')
     print('***  You should then change the username and password used to connect to the mqtt broker  ***')
     print('***     Make sure you understand what you are doing to avoid damaging to your system      ***')
+    print('***  If you successfully updated your ohmpi/config.py file, update your backup copy too   ***')
     print('*' * 93)
     if pwr != 'battery':
         print('\n' + '#' * 93)

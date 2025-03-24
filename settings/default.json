@@ -7,7 +7,7 @@
     "vab_init": 5.0,
     "vab_req": 5.0,
     "duty_cycle": 0.5,
-    "strategy": "constant",
+    "strategy": "safe",
     "fw_in_csv": false,
     "fw_in_zip": true,
     "export_path": "data/measurements.csv"

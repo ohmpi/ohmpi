@@ -8,9 +8,9 @@ minimalmodbus
 gpiozero
 numpy
 paho-mqtt==1.6.1
+urllib3
 termcolor
 pandas
-urllib3
 matplotlib
 scipy
 requests
