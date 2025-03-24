@@ -22,6 +22,19 @@ Also make sure to check your soldering and don't hesitate to melt them again if 
 
   source: https://www.sudomod.com/wiki/index.php/File:Bad_joints.jpg
 
+
+You can always have a look at a full-waveform of a reading by doing:
+
+.. code-block:: python
+
+  from ohmpi.ohmpi import OhmPi
+  k = OhmPi()
+  k.run_measurements([1, 4, 2, 3])
+  k.plot_last_fw()
+
+This will produce a figure that will show the evolution of the voltage, current and resistance during the measure. It is helpful for diagnosing issues.
+
+
 Communication issue between components (I2C, pull-up)
 =====================================================
 
