@@ -571,7 +571,7 @@ class OhmPi(object):
             Unique command identifier.
         """
         self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
-        os.system('reboot')  # this may need admin rights
+        os.system('sudo reboot')  # this may need admin rights
 
     def download_data(self, start_date=None, end_date=None, ftype='ohmpi', elec_spacing=1, cmd_id=None):
         """Create a zip of the data folder to then download it easily.
