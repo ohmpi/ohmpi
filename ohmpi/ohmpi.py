@@ -659,7 +659,7 @@ class OhmPi(object):
             Unique command identifier
         """
         self.exec_logger.info(f'Restarting pi following command {cmd_id}...')
-        os.system('poweroff')  # this may require admin rights
+        os.system('sudo shutdown now')
 
     def set_time(self, date, cmd_id=None):
         """Set date of the RPI remotely.
@@ -671,7 +671,7 @@ class OhmPi(object):
         cmd_id : str, optional
             Unique command identifier.
         """
-        os.system('date --set ' +  date)
+        os.system('sudo date --set ' +  date)
         self.exec_logger.info(f'New time set following command {cmd_id}...')
 
     def plot_last_fw(self, save_fig=False, filename=None):
