@@ -10,7 +10,9 @@ Assembling an OhmPi Lite (16 electrodes)
 
 Here, we present how to build a 16-electrode OhmPi system using 1 mb.2024, 2 MUX.2024 and 1 DPH5005.
 This tutorial aims to illustrate one way of assembling a system using the MUX 2024 boards.
-It provides a working base, with room for improvement.
+
+The assembling is done thanks to two plexiglass plates (DXF files: `base <../../../_static/base.dxf>`_, `top <../../../_static/top.dxf>`_) and different spacers.
+
 
 .. warning::
   In this set-up, the MUX 2024 boards are configured in 2-role mode (see :ref:`2_roles`). This means that each MUX
