@@ -53,8 +53,9 @@ Contents
    :caption: Build OhmPi systems
 
    source_rst/hardware/hw_ohmpi
-   OhmPi v2024 (64 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2023_dph5005.rst>
+   OhmPi Lite v2024 (16 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2024_dph5005_16.rst>
    OhmPi Lite v2024 (32 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2024_dph5005.rst>
+   OhmPi v2024 (64 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2024_MUX_2023_dph5005.rst>
    OhmPi v2023 (64 elec) <source_rst/hardware/assemble_ohmpi/assembling_mb2023_MUX_2023_12V.rst>
    Deploy OhmPi <source_rst/deploy>
 
