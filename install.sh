@@ -5,7 +5,7 @@ echo "=========== OhmPi installation script v1.0.0 =========="
 echo "--------- Installing additional libraries via apt --------"
 
 # ensure that the libatlas-base-dev library is installed
-sudo apt-get install -y libatlas-base-dev libopenblas-dev python-dev libjpeg-dev zlib1g-dev libpng-dev
+sudo apt-get install -y libatlas-base-dev libopenblas-dev python3-dev libjpeg-dev zlib1g-dev libpng-dev
 
 echo "----------- Creating virtual python environment ----------"
 
@@ -70,3 +70,5 @@ cat /etc/mosquitto/mosquitto.conf
 echo "------------- Create config.py file -----------"
 
 python setup_config.py
+
+echo "---------- RESTARTING is recommended to use the web interface ----------"

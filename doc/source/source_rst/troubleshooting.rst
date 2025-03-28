@@ -22,6 +22,19 @@ Also make sure to check your soldering and don't hesitate to melt them again if 
 
   source: https://www.sudomod.com/wiki/index.php/File:Bad_joints.jpg
 
+
+You can always have a look at a full-waveform of a reading by doing:
+
+.. code-block:: python
+
+  from ohmpi.ohmpi import OhmPi
+  k = OhmPi()
+  k.run_measurements([1, 4, 2, 3])
+  k.plot_last_fw()
+
+This will produce a figure that will show the evolution of the voltage, current and resistance during the measure. It is helpful for diagnosing issues.
+
+
 Communication issue between components (I2C, pull-up)
 =====================================================
 
@@ -74,7 +87,7 @@ Current debugging:
   
   - NOT OK: you possibly have extra resistance in your circuit, check soldering, make sure the relays close well (you hear them clicking)
 
-- check the current click output voltage (AN pin). It should give 50 times the voltage around the shunt. If we measure 0.011 V around the shunt, we should see 0.055 V at the AN pin (between AN and the GND pin of the current click)
+- check the current click output voltage (AN pin). It should give 50 times the voltage around the shunt. If we measure 0.011 V around the shunt, we should see 0.55 V at the AN pin (between AN and the GND pin of the current click)
   
   - OK: the current click works as expected, proceed to next step
   
