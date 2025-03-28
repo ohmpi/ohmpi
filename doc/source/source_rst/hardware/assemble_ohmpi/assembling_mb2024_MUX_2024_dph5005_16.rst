@@ -6,7 +6,7 @@
 Assembling an OhmPi Lite (16 electrodes)
 ****************************************
 
-1 :ref:`mb2024-build` + 4 :ref:`mux2024-build` + 1 :ref:`power-DPH5005`
+1 :ref:`mb2024-build` + 2 :ref:`mux2024-build` + 1 :ref:`power-DPH5005`
 
 Here, we present how to build a 16-electrode OhmPi system using 1 mb.2024, 2 MUX.2024 and 1 DPH5005.
 This tutorial aims to illustrate one way of assembling a system using the MUX 2024 boards.
