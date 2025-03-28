@@ -8,7 +8,7 @@ k = OhmPi()
 
 # Update settings if needed
 k.update_settings({"injection_duration": 1.})
-k.update_settings({"strategy": "constant"})
+k.update_settings({"strategy": "safe"})
 k.update_settings({"vab_req": 3.})
 k.update_settings({"nb_stack": 2})
 
