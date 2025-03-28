@@ -23,6 +23,9 @@ Also make sure to check your soldering and don't hesitate to melt them again if 
   source: https://www.sudomod.com/wiki/index.php/File:Bad_joints.jpg
 
 
+Diagnostic with full-waveform analysis
+======================================
+
 You can always have a look at a full-waveform of a reading by doing:
 
 .. code-block:: python
@@ -34,6 +37,43 @@ You can always have a look at a full-waveform of a reading by doing:
 
 This will produce a figure that will show the evolution of the voltage, current and resistance during the measure. It is helpful for diagnosing issues.
 
+Examples of diagnostic (on a test resistor circuit).
+
+.. figure:: ../img/troubleshooting/fw-no-injection.png
+  :width: 80%
+  :align: center
+
+  No current injection (relays don't open, DPH now powered or connected to screw terminal, issue with MUX, ...). Note there is always a small current (< 0.21 mA) due to the voltage bias of the current click.
+
+.. figure:: ../img/troubleshooting/fw-overcurrent.png
+  :width: 80%
+  :align: center
+
+  Overcurrent (max current = 4.8 (ADC range) / (2 (shunt) * 50 (current click gain)) = 48 mA). Check for shorts, decrease Vab or change strategy (use "safe" for instance).
+
+.. figure:: ../img/troubleshooting/fw-overvoltage.png
+  :width: 80%
+  :align: center
+
+  Overvoltage (max voltage = 5 (ADC positive range) / 2 (REF03 offset) * 2 (resistor divider) = +/- 5V). Decrease Vab or change strategy (use "safe" for instance).
+
+.. figure:: ../img/troubleshooting/fw-vmn-not-powered.png
+  :width: 80%
+  :align: center
+
+  Vmn does not react to pulses. Check THD of Vmn, cable connection to electrodes.
+
+.. figure:: ../img/troubleshooting/fw-no-ref03.png
+  :width: 80%
+  :align: center
+
+  Vmn is not at 0 when not injecting. Check REF03 chip that provides 2.5V offset.
+
+.. figure:: ../img/troubleshooting/fw-good.png
+  :width: 80%
+  :align: center
+
+  Good measurement. Current is > 0.21 mA and < 48 mA. Vmn voltage reacts to pulse, is at 0 when not injecting, has a positive and negative voltage. Resistance is stable.
 
 Communication issue between components (I2C, pull-up)
 =====================================================
