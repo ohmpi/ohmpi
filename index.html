@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- 
     Open a browser debugging instruction to see the messages passing on the RPi
-mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
+mosquitto_sub -h raspberrypi.local -t ohmpi_0001/soh
 -->
 <html>
 
@@ -20,7 +20,15 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
 
 <body>
   <div class='container-fluid'>
-    <h1>OhmPi Acquisition Board</h1>
+    <h1>OhmPi Web Acquisition</h1>
+
+    <div id="hwErrorAlert" class="alert alert-danger" style="display: none;" role="alert">
+      An hardware error was encountered, the OhmPi cannot start.
+      Power off the OhmPi, fix the error and power it on again.
+      <div id="hwErrorLog">
+
+      </div>
+    </div>
 
     <!-- first set of buttons -->
     <button id="update_settingsBtn" type="button" class="btn btn-secondary" data-bs-toggle="modal"
@@ -302,7 +310,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
               <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <button class="nav-link active" id="nav-1-tab" data-bs-toggle="tab" data-bs-target="#nav-1" type="button" role="tab" aria-controls="nav-1" aria-selected="true">Exec</button>
                 <button class="nav-link" id="nav-2-tab" data-bs-toggle="tab" data-bs-target="#nav-2" type="button" role="tab" aria-controls="nav-2" aria-selected="false">Data</button>
-                <button class="nav-link" id="nav-3-tab" data-bs-toggle="tab" data-bs-target="#nav-3" type="button" role="tab" aria-controls="nav-3" aria-selected="false">Ctrl</button>
+                <button class="nav-link" id="nav-3-tab" data-bs-toggle="tab" data-bs-target="#nav-3" type="button" role="tab" aria-controls="nav-3" aria-selected="false">SOH</button>
               </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
@@ -313,7 +321,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
                 <textarea class="form-control" id="datalog" rows="10" readonly></textarea>
               </div>
               <div class="tab-pane fade" id="nav-3" role="tabpanel" aria-labelledby="nav-3-tab">
-                <textarea class="form-control" id="ctrllog" rows="10" readonly></textarea>
+                <textarea class="form-control" id="sohlog" rows="10" readonly></textarea>
               </div>
             </div>            
           </div>
@@ -640,6 +648,27 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         </div>
       </div>
 
+      <!-- modal for hardware error-->
+      <!-- <div class="modal fade" id="hwError" tabindex="-1" role="dialog" aria-labelledby="hwErrorLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="hwErrorLabel">Hardware Error</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="alert alert-danger" role="alert">
+                An hardware error was encountered, the OhmPi cannot start.
+                Power off the OhmPi, fix the error and power it on again.
+              </div>
+              Error log from SOH
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div> -->
 
       <footer>v0.4.0</footer>
     </div>
@@ -684,9 +713,33 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         'dev': 'R std [%]',
       }
 
+      // check for SOH log file to see if any hardware error
+      var soherror = ''
+      fetch("ohmpi/logs/soh.log")
+        .then((res) => res.text())
+        .then((text) => {
+          soherror = text.split('***').at(-1)
+          console.log('log=', soherror)
+          soherror.split('\n').forEach(line => {
+            console.log('line', line)
+            if (line.toLowerCase().includes('not found')) {
+              document.getElementById('hwErrorAlert').setAttribute('style', 'display:block;')
+              document.getElementById('hwErrorLog').innerText = line.replace('[31m','').replace('[0m', '')
+            }
+          })
+
+          // if (soherror.toLowerCase().includes('not found')) {
+          //   document.getElementById('hwErrorAlert').setAttribute('style', 'display:block;')
+          //   document.getElementById('hwErrorLog').innerText = soherror
+          // }
+        })
+        .catch((e) => console.error(e));
+      // also monitor the current log maybe?
+
+
       // variables with MQTT, can be updated via mqtt modal
       let topic = document.getElementById('mqttTopic').value
-      let topic_ctrl = topic + '/ctrl'
+      let topic_soh = topic + '/soh'
       let topic_exec = topic + '/exec'
       let topic_data = topic + '/data'
       let client = null  // mqtt client instance
@@ -696,7 +749,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
       let msg = ''
       let execlog = document.getElementById('execlog')
       let datalog = document.getElementById('datalog')
-      let ctrllog = document.getElementById('ctrllog')
+      let sohlog = document.getElementById('sohlog')
 
       // try connection directly
       document.getElementById('mqttHostname').value = location.hostname
@@ -710,7 +763,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         let username = document.getElementById('mqttUser').value
         let password = document.getElementById('mqttPwd').value
         topic = document.getElementById('mqttTopic').value
-        topic_ctrl = topic + '/ctrl'
+        topic_soh = topic + '/soh'
         topic_exec = topic + '/exec'
         topic_data = topic + '/data'
       
@@ -726,11 +779,11 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         console.log("onConnect")
         client.subscribe(topic_data)
         client.subscribe(topic_exec)
-        client.subscribe(topic_ctrl)
+        client.subscribe(topic_soh)
 
         // send welcome message
         // message = new Paho.MQTT.Message("Hello from index.html")
-        // message.destinationName = topic_ctrl
+        // message.destinationName = topic_soh
         // client.send(message)
         document.getElementById('connection').innerText = 'Connected'
       }
@@ -809,9 +862,9 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
             // display it in the log
             execlog.value = execlog.value.split('\n').slice(0, 100).join('\n') + '\n' + payload
             execlog.scrollTop = execlog.scrollHeight
-          } else if (message.topic == topic_ctrl) {
-            ctrllog.value = ctrllog.value.split('\n').slice(0, 100).join('\n') + '\n' + payload
-            ctrllog.scrollTop = ctrllog.scrollHeight
+          } else if (message.topic == topic_soh) {
+            sohlog.value = sohlog.value.split('\n').slice(0, 100).join('\n') + '\n' + payload
+            sohlog.scrollTop = sohlog.scrollHeight
           }
 
 
@@ -867,7 +920,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/ctrl
         let payload = '{"cmd_id": "' + uuid + '",' + query.slice(1)
         console.log('sendCommand()', payload)
         message = new Paho.MQTT.Message(payload)
-        message.destinationName = topic_ctrl
+        message.destinationName = topic_soh
         client.send(message)
       }
 
