@@ -17,7 +17,7 @@ settings = {
             'injection_duration': 0.2,
             'nbr_meas': 1,
             'sequence_delay': 1,
-            'nb_stack': 1,
+            'n_stacks': 1,
             'export_path': 'data/measurement.csv'
         }
 

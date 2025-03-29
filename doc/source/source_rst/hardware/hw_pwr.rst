@@ -54,7 +54,7 @@ To assemble DPH5005, please follow the links:
 We recommend to purchase a DPH5005 together with a casing and a microUSB adapter.
 
 .. Note::
-    **Change the Baudrate from 9600 to 19200**, press and maintain **SET**, and start DPH5005, you acces to a new menu change **BAUD**
+    **Change the Baudrate from 9600 to 19200**, press and maintain **V/<up arrow>** button while powering on the DPH with the button in the back, you acces to a new menu. Using the V/<up arrow> and A/<down arrow> + pressing and turning the button, change **BAUD** to 19200. When done, double press 'SET' to reboot normally.
 
 Make sure to follow the setup as below (also to be seen in the assembly guide).
 The DPH5005 needs to be powered from the DPS input connectors, so that the measurement board can switch it on and off as required.

@@ -4,9 +4,10 @@ Deployment
 Checklist
 =========
 
-The list below contains all steps for a successfull installation.
+The list below contains all steps for a successfull installation (mostly applicable to monitoring installation).
+We strongly encourage users to print it and check all the points during preparation in the lab and field deployment.
 
-`Check list for new installation <../_static/ohmpi-checklist.pdf>`_ 
+`Check list for new installation <../_static/checklists/ohmpi-checklist.pdf>`_
 
 Register your OhmPi
 ===================

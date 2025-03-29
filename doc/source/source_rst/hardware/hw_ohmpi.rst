@@ -37,7 +37,7 @@ Depending on your needs and applications, you can choose the board you are going
 Another possible combination is to use MUX v2023 with MUX v2024 together, which allows to add series of 8 electrodes to a 64-electrode system.
 This could be handful if ones is looking to build e.g. a 96 electrode system, which would therefore feature 4 MUX 2023 (64 electrodes) + 4 MUX 2024 (32 electrodes).
 
-Below we detail examples of OHMPI systems assemblies in different versions.
+Below we detail examples of OhmPi systems assemblies in different versions.
 
 .. warning::
     We **strongly** recommend to test the assembled system in a controlled environment (in the lab, on resistor boards) before deploying

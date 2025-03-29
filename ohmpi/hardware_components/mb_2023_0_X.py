@@ -260,6 +260,39 @@ class Tx(TxAbstract):
         self.inject(polarity=polarity, injection_duration=length)
         self.exec_logger.event(f'{self.model}\ttx_voltage_pulse\tend\t{datetime.datetime.utcnow()}')
 
+    def test_ads(self, nsample=100, channel=0):
+        samples = []
+        pindic = {
+            0: ads.P0,
+            1: ads.P1,
+            2: ads.P2,
+            3: ads.P3
+        }
+        for i in range(nsample):
+            samples.append(AnalogIn(self._ads_current, pindic[channel]).voltage)
+        std = np.std(samples)
+        ok = bool(std < 1)
+        res = {
+            'name': 'test_ads_current',
+            'passed': ok,
+            'value': std,
+            'unit': 'mV'
+        }
+        if ok:
+            msg = 'OK'
+            color = 'green'
+        else:
+            msg = 'FAILED'
+            color = 'red'
+        self.exec_logger.info(colored(
+            'test_ads_voltage (channel {:d})...{:s} (std: {:.3f})'.format(
+                channel, msg, std), color))   
+        return res
+
+    def test(self):
+        results = []
+        results.append(self.test_ads())
+        return results
 
 class Rx(RxAbstract):
     """RX class"""
@@ -340,3 +373,37 @@ class Rx(RxAbstract):
         u = AnalogIn(self._ads_voltage, ads.P0, ads.P1).voltage * self._coef_p2 * 1000. - self.bias  # TODO: check if it should be negated
         self.exec_logger.event(f'{self.model}\trx_voltage\tend\t{datetime.datetime.utcnow()}')
         return u
+
+    def test_ads(self, nsample=100, channel=0):
+        samples = []
+        pindic = {
+            0: ads.P0,
+            1: ads.P1,
+            2: ads.P2,
+            3: ads.P3
+        }
+        for i in range(nsample):
+            samples.append(AnalogIn(self._ads_voltage, pindic[channel]).voltage)
+        std = np.std(samples)
+        res = {
+            'name': 'test_ads_voltage_' + str(channel),
+            'passed': std < 1,
+            'std': std,
+            'unit': 'mV'
+        }
+        if ok:
+            msg = 'OK'
+            color = 'green'
+        else:
+            msg = 'FAILED'
+            color = 'red'
+        self.exec_logger.info(colored(
+            'test_ads_voltage (channel {:d})...{:s} (std: {:.3f})'.format(
+                channel, msg, std), color))
+
+        return res
+
+    def test(self):
+        results = []
+        results.append(self.test_ads(channel=0))
+        return results

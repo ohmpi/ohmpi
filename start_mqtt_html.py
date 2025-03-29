@@ -41,7 +41,7 @@ try:
     if k.controller is not None:
         k.controller.loop_forever()
 except Exception as e:
-    proc.terminate()
+    # proc.terminate()
     print('ERROR', e)
     
 

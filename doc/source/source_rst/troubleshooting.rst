@@ -14,6 +14,66 @@ You can also run test in the software using:
   k = OhmPi()
   k.test()
 
+Also make sure to check your soldering and don't hesitate to melt them again if you have a doubt, it doesn't hurt.
+
+.. figure:: ../img/troubleshooting/soldering.png
+  :width: 80%
+  :align: center
+
+  source: https://www.sudomod.com/wiki/index.php/File:Bad_joints.jpg
+
+
+Diagnostic with full-waveform analysis
+======================================
+
+You can always have a look at a full-waveform of a reading by doing:
+
+.. code-block:: python
+
+  from ohmpi.ohmpi import OhmPi
+  k = OhmPi()
+  k.run_measurements([1, 4, 2, 3])
+  k.plot_last_fw()
+
+This will produce a figure that will show the evolution of the voltage, current and resistance during the measure. It is helpful for diagnosing issues.
+
+Examples of diagnostic (on a test resistor circuit).
+
+.. figure:: ../img/troubleshooting/fw-no-injection.png
+  :width: 80%
+  :align: center
+
+  No current injection (relays don't open, DPH now powered or connected to screw terminal, issue with MUX, ...). Note there is always a small current (< 0.21 mA) due to the voltage bias of the current click.
+
+.. figure:: ../img/troubleshooting/fw-overcurrent.png
+  :width: 80%
+  :align: center
+
+  Overcurrent (max current = 4.8 (ADC range) / (2 (shunt) * 50 (current click gain)) = 48 mA). Check for shorts, decrease Vab or change strategy (use "safe" for instance).
+
+.. figure:: ../img/troubleshooting/fw-overvoltage.png
+  :width: 80%
+  :align: center
+
+  Overvoltage (max voltage = 5 (ADC positive range) / 2 (REF03 offset) * 2 (resistor divider) = +/- 5V). Decrease Vab or change strategy (use "safe" for instance).
+
+.. figure:: ../img/troubleshooting/fw-vmn-not-powered.png
+  :width: 80%
+  :align: center
+
+  Vmn does not react to pulses. Check THD of Vmn, cable connection to electrodes.
+
+.. figure:: ../img/troubleshooting/fw-no-ref03.png
+  :width: 80%
+  :align: center
+
+  Vmn is not at 0 when not injecting. Check REF03 chip that provides 2.5V offset.
+
+.. figure:: ../img/troubleshooting/fw-good.png
+  :width: 80%
+  :align: center
+
+  Good measurement. Current is > 0.21 mA and < 48 mA. Vmn voltage reacts to pulse, is at 0 when not injecting, has a positive and negative voltage. Resistance is stable.
 
 Communication issue between components (I2C, pull-up)
 =====================================================
@@ -47,6 +107,67 @@ One possible cause is that the **shunt resistor was burned**. Once burned, the v
 Another possibility is that the MN voltage you are trying to measure is **over the range of the ADC** (+/- 4.5 V effective range for ADS1115). You can easily check that by measuring the voltage at MN with a voltmeter.
 
 In the measurement board v2024, the current sensing part is replaced by a click board. It is possible that the shunt resistance on this click board is burned due to malfunction. In this case, an erroneous value of current will be given. The click board must be replaced to solve the issue.
+
+See also the step by step guides below.
+
+Incorrect current value
+=======================
+
+Current debugging:
+
+- inject for 2 seconds and measure with the voltmeter that the given injected voltage (e.g. 12 V from Tx battery) is well found at the A-B screw terminals
+  
+  - OK: no problem with the relays, proceed to next step
+  
+  - NOT OK: possible issue with the polarity relays, the voltage source or the shunt (if shunt not soldered or burned, the current cannot pass through it)
+
+- using a test circuit board (4 contact resistances and a target resistance directly connected to the measurement board - no multiplexer), inject a given voltage and see if you get the expected voltage drop around the shunt resistor. For instance, for a test circuit with 100 Ohm target resistor and 1000 Ohm contact resistance, the total resistance will be 1000 + 100 + 1000 + 2 (shunt resistor) = 2102 Ohms. This will mean that if we have a 12V injection voltage, we will measure: 12*2/2102 = 0.011 V around the shunt. Test that with a multimeter.
+  
+  - OK: you can proceed to next step
+  
+  - NOT OK: you possibly have extra resistance in your circuit, check soldering, make sure the relays close well (you hear them clicking)
+
+- check the current click output voltage (AN pin). It should give 50 times the voltage around the shunt. If we measure 0.011 V around the shunt, we should see 0.55 V at the AN pin (between AN and the GND pin of the current click)
+  
+  - OK: the current click works as expected, proceed to next step
+  
+  - NOT OK: there is likely an issue with the current click, double check all soldering and modifications were done according to the documentation, without injecting, measure the voltage between AN and the GND pin, it should only show a few mV. In any other case, it means the current click is damaged and should be replaced.
+
+- lastly, you can check that the ADS1115 (0x48) is not broken. Switch it with another working ADS and see if the problem persists or not. The voltage of the AN pin goes on the A0 pin of the ADS.
+
+
+Voltage incorrect value
+=======================
+
+Vmn debugging:
+
+- with the measurement board powered up but the MN terminal disconnected from any electrode and no injection taking place, measure the voltage between screw terminal N and ADS 0x49 (voltage ADC) A0 pin. It should be 2.5V
+
+  - OK: you can proceed to next step
+
+  - NOT OK: there is an issue with the chip REF03 generating the 2.5V, check its power supply. Also check the polarity of the schottky diodes in front of the ADS 0x49.
+
+.. figure:: ../img/troubleshooting/ref.png
+  :width: 50%
+  :align: center
+ 
+  Pinout of the REF03.
+
+- connect a test resistor circuit to the measurement board (no mux) and run a long injection (2s) so you can measure the voltage at the MN terminal and compare it to what is expected. For instance, for a circuit with 1000 Ohm contact resistance, 100 Ohm target resistance and 2 Ohm shunt resistor. If we inject 12 V (=Vab), we should measure: Vmn = 12*100/(2*1000+100+2) = 0.57 V
+
+  - OK: proceed to next step
+ 
+  - NOT OK: check your test circuit resistance values, check if any current is actually injected in your circuit (see current debugging guide)
+
+- still with the test resistor connected and running a long injection, measure the output voltage (with reference to terminal N) after each op-amp output (pin 6, third pin on the right from the top). If we have 0.57 V at the MN screw terminal, we expect 0.57 V at pin 6 of the first op-amp, 0.57/2 = 0.285 V at pin 6 of second op-amp and 0.285+2.5 = 2.785 V at pin 6 of third op-amp and on A0 of ADS 0x49.
+
+  - NOT OK: check the power supply of each op-amp, it should be -12 (pin 4) and +12 (pin 7). Check all soldering and if the chips are well inserted in the sockets.
+
+.. figure:: ../img/troubleshooting/opamp.png
+  :width: 50%
+  :align: center
+ 
+  Pinout of op-amp.
 
 
 Resistances values are divided by 2 (mb2024)
@@ -110,3 +231,9 @@ OhmPi is slow
 One of the reasons why the OhmPi can be very slow (up to 5s between print in the command line) can be due to the MQTT broker not being found. Make sure you have set a correct hostname ('localhost' by default) in the `config.py` file.
 
 Another reason could be because you use a 64 bit version of Raspbian. We noticed that the 32 bit version was faster. You can select the version when you install Raspbian on the SD card (see installation section).
+
+
+Raspberry Pi low voltage warning
+================================
+
+The Raspberry Pi 5 needs more power than the Raspberry Pi 4 and will give a low voltage warning when used in the OhmPi as the THD-1211N does not provide enough current. It is recommended either to switch to a Raspberry Pi 4 or add an additional DC/DC converter (12V -> 5V).
