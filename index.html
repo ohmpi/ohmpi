@@ -722,7 +722,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/soh
           console.log('log=', soherror)
           soherror.split('\n').forEach(line => {
             console.log('line', line)
-            if (line.toLowerCase().includes('not found')) {
+            if (line.toLowerCase().includes('not')) {
               document.getElementById('hwErrorAlert').setAttribute('style', 'display:block;')
               document.getElementById('hwErrorLog').innerText = line.replace('[31m','').replace('[0m', '')
             }
