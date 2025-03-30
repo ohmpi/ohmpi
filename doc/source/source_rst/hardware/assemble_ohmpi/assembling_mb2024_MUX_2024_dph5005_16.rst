@@ -11,7 +11,7 @@ Assembling an OhmPi Lite (16 electrodes)
 Here, we present the schematics of a 16-electrode OhmPi system made of 1 mb.2024, 2 MUX.2024 and 1 DPH5005.
 This tutorial aims to illustrate one way of assembling a system using the MUX 2024 boards.
 For a detailed photo description of the cabling and assembling processes, please have a look at steps 2 to 7 and 14 to 17
-of the 1 :ref:`ohmpi-lite-32` tutorial.
+of :ref:`ohmpi-lite-32` tutorial.
 
 This particular assembling is done thanks to two plexiglass plates (DXF files: `base <../../../_static/base.dxf>`_, `top <../../../_static/top.dxf>`_) and different spacers.
 
