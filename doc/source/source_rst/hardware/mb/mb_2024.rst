@@ -114,13 +114,13 @@ Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundame
    :width: 100%
    :align: center
 
-   STEP 2: soldering four 330 ohm resistors.
+   STEP 2: soldering four (or three) 330 ohm resistors.
 
 .. figure:: ../../../img/mb.2024.x.x/3.jpg 
    :width: 100%
    :align: center
 
-   STEP 3: Soldering four 4K7 ohm resistors.
+   STEP 3: Soldering four (or two) 4K7 ohm resistors.
 
  
 Soldering `DIODE <https://www.fluke.com/en-us/learn/blog/electrical/what-is-a-diode>`_ on the measurement board PCB
@@ -138,13 +138,13 @@ Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-d
    :width: 100%
    :align: center
 
-   STEP 5: Soldering two Schottky diodes bat85 ou bat86.
+   STEP 5: Soldering two Schottky diodes bat85 or bat86.
    
 .. figure:: ../../../img/mb.2024.x.x/6.jpg
    :width: 100%
    :align: center
 
-   STEP 6: Soldering five DIP-8 sockets.
+   STEP 6: Soldering five DIP-8 sockets. Pay attention to the direction of the notch.
 
 .. figure:: ../../../img/mb.2024.x.x/7.jpg
    :width: 100%
@@ -188,7 +188,7 @@ Information about `light-emitting diode <https://en.wikipedia.org/wiki/Light-emi
    :width: 100%
    :align: center
 
-   STEP 13: Installation of four light-emitting diodes.
+   STEP 13: Installation of four light-emitting diodes. Pay attention to the polarity. Flat side towards the bottom.
 
 Information about `MOSFET Metal Oxide Semiconductor Field Effect Transistor <https://fr.wikiversity.org/wiki/Transistor/Transistor_MOSFET#:~:text=Le%20MOSFET%20(Metal%20Oxide%20Semiconductor,la%20construction%20de%20portes%20logiques>`_
 
@@ -204,7 +204,7 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
    :width: 100%
    :align: center
 
-   STEP 15: Soldering eleven 100 nF 50V tantalum capacitors.
+   STEP 15: Soldering twelve 100 nF 50V tantalum capacitors. Watchout for the polarity.
 
 .. figure:: ../../../img/mb.2024.x.x/16.jpg
    :width: 100%
@@ -257,13 +257,13 @@ In addition, the notch provides a way to visually identify the orientation of th
    :width: 100%
    :align: center
 
-   STEP 22: Place the three OP27 on their DIP-8 sockets. **The notch must face upwards.**
+   STEP 22: Place the three OP27 on their DIP-8 sockets. **The notch must face upwards.** Make sure not to confuse OP27 with REF03.
 
 .. figure:: ../../../img/mb.2024.x.x/23.jpg
    :width: 100%
    :align: center
 
-   STEP 23: Place the REF03 reference voltage (2.5V) on its DIP-8 socket. **The notch must face the right side.**
+   STEP 23: Place the REF03 reference voltage (2.5V) on its DIP-8 socket. **The notch must face the right side.**  Make sure not to confuse REF03 with OP27.
 
 What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 
@@ -277,7 +277,7 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
    :width: 100%
    :align: center
 
-   STEP 25: Place the MCP23008 on its DIP-16 socket (**pay attention to the notches orientation**).
+   STEP 25: Place the two MCP23008 on their DIP-16 socket (**pay attention to the notches orientation**).
 
 .. figure:: ../../../img/mb.2024.x.x/26.jpg
    :width: 100%
@@ -342,6 +342,8 @@ If the voltage with I2C (SDA and SCL pins) is not expected, there is likely an i
 
 .. warning::
    **Do not power the board if one of the SC (shortcircuit) test does not pass!**
+
+To power the board, you need to connect a 12 V source (e.g. battery) on Rx-Batt.
 
 .. csv-table:: Hardware check
    :file: mb2024-test.csv
