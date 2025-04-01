@@ -204,7 +204,7 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
    :width: 100%
    :align: center
 
-   STEP 15: Soldering twelve 100 nF 50V tantalum capacitors. Watchout for the polarity.
+   STEP 15: Soldering twelve 100 nF 50V tantalum capacitors. These have no polarity.
 
 .. figure:: ../../../img/mb.2024.x.x/16.jpg
    :width: 100%
