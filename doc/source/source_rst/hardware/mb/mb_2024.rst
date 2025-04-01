@@ -200,7 +200,7 @@ Information about `MOSFET Metal Oxide Semiconductor Field Effect Transistor <htt
 
 What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
 
-.. figure:: ../../../img/mb.2024.x.x/15.jpg
+.. figure:: ../../../img/mb.2024.x.x/15.png
    :width: 100%
    :align: center
 
