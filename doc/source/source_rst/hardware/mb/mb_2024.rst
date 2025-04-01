@@ -283,7 +283,7 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
    :width: 100%
    :align: center
 
-   STEP 26: Place the Three THD, install the right reference at the right place according to the yellow boxes.
+   STEP 26: Place the three THD, install the right reference at the right place according to the yellow boxes.
 
 .. figure:: ../../../img/mb.2024.x.x/27.jpg
    :width: 100%
@@ -297,7 +297,7 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 
    STEP 28: Place the two I2C level adjusters.
 
-.. figure:: ../../../img/mb.2024.x.x/29bis.jpg
+.. figure:: ../../../img/mb.2024.x.x/29.jpg
    :width: 100%
    :align: center
 
@@ -306,6 +306,10 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 .. note::
    If you have issues with the I2C isolator (e.g. 0x49 and 0x27 are not visible), you may need
    to remove the pull-up resistor on the I2C isolator as shown above.
+
+   .. figure:: ../../../img/mb.2024.x.x/29-i2c-isolator.png
+      :width: 30%
+      :align: center
 
 .. figure:: ../../../img/mb.2024.x.x/30.jpg
    :width: 100%
