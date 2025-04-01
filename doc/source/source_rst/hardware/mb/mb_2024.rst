@@ -325,10 +325,18 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 Check
 =====
 
-**Without powering the board**, Use the table below to manually check with a multimeter for continuity.
+Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the measurement board.
+
+Without power off
+-----------------
 
 If a continuity check does not pass it's likely means there is an issue with the soldering on the board.
 
+.. figure:: ../../../img/mb2024-test.jpg       
+       :width: 100%
+       :align: center
+       :alt: alternate text
+       :figclass: align-center
 
 .. csv-table:: Hardware check
    :file: mb2024-test-sc.csv
@@ -337,16 +345,13 @@ If a continuity check does not pass it's likely means there is an issue with the
 .. warning::
    **Do not power the board if one of the SC (shortcircuit) test does not pass!**
 
-**You can now power the board** by connecting to a 12 V source (e.g. battery) on Rx-Batt and check for expected voltages.
+With power on
+-------------
+
+To power the board, you need to connect a 12 V source (e.g. battery) on Rx-Batt.
 If the voltage with I2C (SDA and SCL pins) is not expected, there is likely an issue with pull-up resistors.
-
-.. figure:: ../../../img/mb2024-test.jpg       
-       :width: 100%
-       :align: center
-       :alt: alternate text
-       :figclass: align-center
-
 
 .. csv-table:: Hardware check
    :file: mb2024-test.csv
    :header-rows: 1
+
