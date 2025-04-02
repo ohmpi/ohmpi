@@ -219,10 +219,12 @@ Check
 Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the board.
 Check your board against the correct expected column: 2-roles or 4-roles.
 
-If a continuity check does not pass it's likely means there is an issue with the soldering on the board.
-For the test with power "on", we expect the mux board to be connected to the measurement board via the IDC ribbon cable.
+With power off
+--------------
 
-.. figure:: ../../../img/mux2024-test.jpg       
+If a continuity check does not pass it's likely means there is an issue with the soldering on the board.
+
+.. figure:: ../../../img/mux2024-test.png       
        :width: 100%
        :align: center
        :alt: alternate text
@@ -237,6 +239,9 @@ For the test with power "on", we expect the mux board to be connected to the mea
 
 .. hint::
    **For the tests in the following table where power on is required, power the board through the I2C input (IDC connector) via the ribbon cable. Do not power the board through the screw connector GND +12V.**
+
+With power on
+-------------
 
 .. csv-table:: Hardware check
    :file: mux2024-test.csv

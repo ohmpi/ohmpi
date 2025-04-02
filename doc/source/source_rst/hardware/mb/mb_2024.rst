@@ -200,11 +200,11 @@ Information about `MOSFET Metal Oxide Semiconductor Field Effect Transistor <htt
 
 What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
 
-.. figure:: ../../../img/mb.2024.x.x/15.jpg
+.. figure:: ../../../img/mb.2024.x.x/15.png
    :width: 100%
    :align: center
 
-   STEP 15: Soldering twelve 100 nF 50V tantalum capacitors. Watchout for the polarity.
+   STEP 15: Soldering twelve 100 nF 50V tantalum capacitors. These have no polarity.
 
 .. figure:: ../../../img/mb.2024.x.x/16.jpg
    :width: 100%
@@ -283,7 +283,7 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
    :width: 100%
    :align: center
 
-   STEP 26: Place the Three THD, install the right reference at the right place according to the yellow boxes.
+   STEP 26: Place the three THD, install the right reference at the right place according to the yellow boxes.
 
 .. figure:: ../../../img/mb.2024.x.x/27.jpg
    :width: 100%
@@ -297,7 +297,7 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 
    STEP 28: Place the two I2C level adjusters.
 
-.. figure:: ../../../img/mb.2024.x.x/29bis.jpg
+.. figure:: ../../../img/mb.2024.x.x/29.jpg
    :width: 100%
    :align: center
 
@@ -306,6 +306,10 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 .. note::
    If you have issues with the I2C isolator (e.g. 0x49 and 0x27 are not visible), you may need
    to remove the pull-up resistor on the I2C isolator as shown above.
+
+   .. figure:: ../../../img/mb.2024.x.x/29-i2c-isolator.png
+      :width: 30%
+      :align: center
 
 .. figure:: ../../../img/mb.2024.x.x/30.jpg
    :width: 100%
@@ -325,10 +329,18 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 Check
 =====
 
-**Without powering the board**, Use the table below to manually check with a multimeter for continuity.
+Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the measurement board.
+
+Without power off
+-----------------
 
 If a continuity check does not pass it's likely means there is an issue with the soldering on the board.
 
+.. figure:: ../../../img/mb2024-test.jpg       
+       :width: 100%
+       :align: center
+       :alt: alternate text
+       :figclass: align-center
 
 .. csv-table:: Hardware check
    :file: mb2024-test-sc.csv
@@ -337,16 +349,13 @@ If a continuity check does not pass it's likely means there is an issue with the
 .. warning::
    **Do not power the board if one of the SC (shortcircuit) test does not pass!**
 
-**You can now power the board** by connecting to a 12 V source (e.g. battery) on Rx-Batt and check for expected voltages.
+With power on
+-------------
+
+To power the board, you need to connect a 12 V source (e.g. battery) on Rx-Batt.
 If the voltage with I2C (SDA and SCL pins) is not expected, there is likely an issue with pull-up resistors.
-
-.. figure:: ../../../img/mb2024-test.jpg       
-       :width: 100%
-       :align: center
-       :alt: alternate text
-       :figclass: align-center
-
 
 .. csv-table:: Hardware check
    :file: mb2024-test.csv
    :header-rows: 1
+
