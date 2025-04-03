@@ -562,7 +562,7 @@ You should hear each of the 256 MUX board relays activate and deactivate 1 at a 
 
 .. code-block:: python
    
-   k.run_measurement(quad=[1,4,2,3], tx_volt = 5., strategy = 'constant', dutycycle=0.5)
+   k.run_measurement(quad=[1,4,2,3], tx_volt = 5., strategy = 'safe', dutycycle=0.5)
 
 A measurement will start, and you should obtain your first measurement, with a value of R = 100 ohm (R1 on the equivalent circuit).
 
