@@ -43,7 +43,7 @@ Examples of diagnostic (on a test resistor circuit).
   :width: 80%
   :align: center
 
-  No current injection (relays don't open, DPH now powered or connected to screw terminal, issue with MUX, ...). Note there is always a small current (< 0.21 mA) due to the voltage bias of the current click.
+  No current injection (relays don't open, DPH not powered or connected to screw terminal, issue with MUX, ...). Note there is always a small current (< 0.21 mA) due to the voltage bias of the current click.
 
 .. figure:: ../img/troubleshooting/fw-overcurrent.png
   :width: 80%
