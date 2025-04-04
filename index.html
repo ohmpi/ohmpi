@@ -1316,7 +1316,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/soh
             let am = Math.abs(a[i] - m[i]) * elec_spacing
             let bm = Math.abs(b[i] - m[i]) * elec_spacing
             let an = Math.abs(a[i] - n[i]) * elec_spacing
-            let bn = Math.abs(a[i] - n[i]) * elec_spacing
+            let bn = Math.abs(b[i] - n[i]) * elec_spacing
             let K = (2 * Math.PI) / ((1 / am) - (1 / an) - (1 / an) + (1 / bn))
             values.push(Math.round(df['r'][i] * K))
           data[surveyName]['app'] = values
