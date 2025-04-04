@@ -7,6 +7,11 @@ print('This assistant helps you configure a basic system with a measurement boar
       '\nFor more complex configurations including a combination of mux boards with different types or roles, '
       'please read the docs and explore the configs folder for examples and write your customized configuration file.')
 
+ohmpi_id = input('What is the id of your ohmpi [default: 0001]:')
+if ohmpi_id == '':
+    ohmpi_id = '0001'
+print('Your ohmpi will publish on the MQTT server with topic "ohmpi_' + ohmpi_id + '"')
+
 mb = None
 while True:
     if mb in ['v2023', 'v2024']:
@@ -80,8 +85,12 @@ else:
 print('Using this configuration: ' + config)
 
 if os.path.exists('configs/' + config):
-    shutil.copyfile('configs/' + config, 'ohmpi/config.py')
-    shutil.copyfile('configs/' + config, 'configs/config_backup.py')
+    # copy the config and set the ohmpi_id
+    with open('configs/' + config, 'ohmpi/config.py', 'r') as f:
+        x = f.read().replace('0001', ohmpi_id)
+        with open('configs/' + config, 'configs/config_backup.py', 'w') as f2:
+            f2.write(x)
+    
     from ohmpi.config import HARDWARE_CONFIG, r_shunt, ohmpi_id
     print(f'Your configuration has been set. Your OhmPi id is set to {ohmpi_id}.')
     print(f'The configuration file is stored in ohmpi/config.py, a backup copy is stored in configs/config_backup.py')
