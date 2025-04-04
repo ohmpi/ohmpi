@@ -740,6 +740,22 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/soh
         .catch((e) => console.error(e));
       // also monitor the current log maybe?
 
+      var ohmpi_id = ''
+      fetch('ohmpi/config.py')
+        .then((res) => res.text())
+        .then((text) => {
+          ohmpi_id = text
+          let lines = text.split('\n')
+          for (line of lines) {
+            if (line.split('=').at(0).includes('ohmpi_id')) {
+              ohmpi_id = line.split("'").at(1)
+              console.log(ohmpi_id)
+              document.getElementById('mqttTopic').value = 'ohmpi_' + ohmpi_id
+              break
+            }
+          }
+        })
+        .catch((e) => console.log('parse config.py error:', e))
 
       // variables with MQTT, can be updated via mqtt modal
       let topic = document.getElementById('mqttTopic').value
