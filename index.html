@@ -741,6 +741,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/soh
       // also monitor the current log maybe?
 
       var ohmpi_id = ''
+      // TODO parse mqtt_user and password
       fetch('ohmpi/config.py')
         .then((res) => res.text())
         .then((text) => {
@@ -794,7 +795,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/soh
         client = new Paho.MQTT.Client(hostname, port, clientId)
         client.onConnectionLost = onConnectionLost
         client.onMessageArrived = onMessageArrived
-        client.connect({ userName: username, password: password, onSuccess: onConnect })
+        client.connect({userName: username, password: password, onSuccess: onConnect })
       }
       document.getElementById('mqttConnectBtn').addEventListener('click', mqttConnect)
 

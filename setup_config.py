@@ -86,9 +86,11 @@ print('Using this configuration: ' + config)
 
 if os.path.exists('configs/' + config):
     # copy the config and set the ohmpi_id
-    with open('configs/' + config, 'ohmpi/config.py', 'r') as f:
+    with open('configs/' + config, 'r') as f:
         x = f.read().replace('0001', ohmpi_id)
-        with open('configs/' + config, 'configs/config_backup.py', 'w') as f2:
+        with open('ohmpi/config.py', 'w') as f2:
+            f2.write(x)
+        with open('configs/config_backup.py', 'w') as f2:
             f2.write(x)
     
     from ohmpi.config import HARDWARE_CONFIG, r_shunt, ohmpi_id

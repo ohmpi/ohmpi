@@ -46,16 +46,15 @@ sudo apt install -y mosquitto mosquitto-clients
 sudo systemctl enable mosquitto.service
 
 echo -e "\n${txtgrn}>>> Broker is installed. Starting now...${txtdef}"
-mosquitto -v 
+mosquitto -v  &
 
 # create default password for mqtt user
 if [ -e "/etc/mosquitto/pwfile.txt" ]; then
-  rm "/etc/mosquitto/pwfile.txt"
-else
-    echo -e "\n${txtgrn}>>> Creating default MQTT user and password...${txtdef}"
-    echo "mqtt_user:mqtt_password" | sudo tee -a "/etc/mosquitto/pwfile.txt"
-    sudo mosquitto_passwd -U /etc/mosquitto/pwfile.txt
+  sudo rm "/etc/mosquitto/pwfile.txt"
 fi
+echo -e "\n${txtgrn}>>> Creating default MQTT user and password...${txtdef}"
+echo "mqtt_user:mqtt_password" | sudo tee -a "/etc/mosquitto/pwfile.txt"
+sudo mosquitto_passwd -U /etc/mosquitto/pwfile.txt
 
 if grep -q "listener 9001" "/etc/mosquitto/mosquitto.conf"; then
   echo "mosquitto.conf already updated, skipping."
