@@ -184,7 +184,7 @@ Where are the OhmPi's?
            }
 
 
-           var map = L.map('map').setView([50.52791,5.53022],5);
+           var map = L.map('map').setView([50.52791,5.53022],3);
 
            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                maxZoom: 19,
