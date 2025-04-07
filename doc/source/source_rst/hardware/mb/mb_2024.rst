@@ -188,7 +188,7 @@ Information about `light-emitting diode <https://en.wikipedia.org/wiki/Light-emi
    :width: 100%
    :align: center
 
-   STEP 13: Installation of four light-emitting diodes. Pay attention to the polarity. Flat side towards the bottom.
+   STEP 13: Installation of four light-emitting diodes. Pay attention to the polarity. Short leg side towards the bottom.
 
 Information about `MOSFET Metal Oxide Semiconductor Field Effect Transistor <https://fr.wikiversity.org/wiki/Transistor/Transistor_MOSFET#:~:text=Le%20MOSFET%20(Metal%20Oxide%20Semiconductor,la%20construction%20de%20portes%20logiques>`_
 
@@ -214,7 +214,7 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
 
 .. warning::
      
-     In this version, we used a shunt resistor of 2 Ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor. Don't forget to change the shunt value in the config.py file (value associated to key 'R_shunt' in the OHMPI_CONFIG dict).   
+     In this version, we used a shunt resistor of 2 Ohms, which limits the current measurement to 48 mA. If the current is expected higher than this value, you can replace the shunt resistor to a lower resistance value (e.g. for configuration with DPH5005: 1 Ohm for currents up to 100 mA or 0.5 Ohm for currents up to 200 mA). Don't forget to change the shunt value in the config.py file (value associated to key 'R_shunt' in the OHMPI_CONFIG dict).
 
 .. figure:: ../../../img/mb.2024.x.x/17.jpg
    :width: 100%
