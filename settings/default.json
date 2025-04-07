@@ -3,7 +3,6 @@
     "nb_meas": 1,
     "sequence_delay": 1,
     "nb_stack": 1,
-    "sampling_interval": 2,
     "vab_init": 5.0,
     "vab_req": 5.0,
     "duty_cycle": 0.5,

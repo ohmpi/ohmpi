@@ -67,7 +67,7 @@ class OhmPi(object):
         settings : dict, optional
             Dictionary of parameters. Possible parameters with some suggested values:
             {'injection_duration': 0.2, 'nb_meas': 1, 'sequence_delay': 1,
-            'nb_stack': 1, 'sampling_interval': 2, 'vab_init': 5.0, 'vab_req': 5.0, 'duty_cycle': 0.5,
+            'nb_stack': 1, 'vab_init': 5.0, 'vab_req': 5.0, 'duty_cycle': 0.5,
             'strategy': 'safe', 'export_path': None}
         sequence : str, optional
             Path of the .csv or .txt file with A, B, M and N electrodes.
