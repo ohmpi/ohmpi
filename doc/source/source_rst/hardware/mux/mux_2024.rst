@@ -131,8 +131,8 @@ Mount the relays.
 
 Defining role configuration
 ---------------------------
-The MUX board v2024 can be configured in 2- or 4-role mode. This means that one board can either address
-16 electrodes on 2 roles (X,Y for A,B or M,N), or 8 electrodes on 4 roles (labelled X,Y,XX,YY for A,B,M,N).
+The MUX board v2024 can be configured in 2- or 4-role mode, i.e managing either current injection (2 roles AB) or voltage reading (2 roles MN), or a combination of both (4 roles ABMN).
+This means that one board can either address 16 electrodes on 2 roles (X,Y for A,B or M,N), or 8 electrodes on 4 roles (labelled X,Y,XX,YY for A,B,M,N).
 An OhmPi system can manage a combination of 2-role and 4-role MUX boards as long as the 2-role boards come in pairs
 (e.g. 2 2-role MUX and 1 4-role MUX for 24 electrodes).
 
@@ -140,11 +140,13 @@ An OhmPi system can manage a combination of 2-role and 4-role MUX boards as long
 
 2-role configuration
 `````````````````````
-This configuration is the prefered way to build systems with an even number of MUX boards (for 16, 32, 48 electrodes).
+Configuring a board in 2-role mode enables each board to manage either the injection (AB) or the voltage reading (MN) roles.
+This configuration is the preferred way to build systems with an even number of MUX boards (for 16, 32, 48 electrodes).
+In this configuration, each pair of MUX boards will feature a board for injection (AB) and a board for voltage reading (MN)
 However, when assembling an OhmPi, keep in mind that 2-role mode MUX boards have to come in pairs.
 
 To enable the 2-role mode, 2 "roles" solder jumpers have to be bridged in the front side of the PCB next to the roles connector.
-To do so, the two jumper pads of each bridge have to be soldered together. This will connect roles X and roles XX together,
+To do so, the two jumper pads of each bridge have to be soldered (making a nice pillow shape). This will connect roles X and roles XX together,
 as well as roles Y and YY together. In this way, the board is configure in 2-role mode.
 You can verify that the pair of roles X - XX and Y - YY are well connected by doing continuity checks with a digital voltmeter.
 
@@ -155,8 +157,9 @@ You can verify that the pair of roles X - XX and Y - YY are well connected by do
 
 4-role configuration
 `````````````````````
-Configuring a board in 4-role mode enables to use an odd number of MUX board (for systems with 8, 24, 40, 56,... electrodes).
-To do so, the 8 "electrodes" solder jumpers at the back of the PCB have to be bridged. In this way relays of electrodes
+Configuring a board in 4-role mode enables each board to manage both injection and voltage reading roles.
+In this configuration, systems with an odd number of MUX board can be assembled (for systems with 8, 24, 40, 56,... electrodes).
+To do so, the 8 "electrodes" solder jumpers at the back of the PCB have to be bridged (making nice pillow shapes). In this way
 relays of the following electrodes are paired together (albeit on different roles A, B, M and N): 1-16, 2-15, 3-14, 4-13, 5-12, 6-11, 7-10, 8-9.
 You can verify that these combinations are connected together by continuity checks with a digital voltmeter.
 It is best practice to only mount 8 screw connectors on the electrodes takeouts (and potentially only a 8 position IDC connector)
