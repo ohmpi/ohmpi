@@ -88,6 +88,15 @@ Check with the multimeter the voltage between SDA/SCL and the ground to see if i
 .. note::
 	On the measurement board v2024, the I2C isolator from Mikroe, already has pull-up resistors that add to the pull-up already on the ADS1115 board. If the ADS1115 of the Vmn part cannot be seen by i2cdetect, we recommend to remove the pull-up resistors on the Mikroe I2C isolator board (see note fig29 in :ref:`mb2024-build`)
 
+Modbus error
+============
+
+Modbus is the protocol used to communicate between the DPH5005 and the Raspberry Pi via a USB cable.
+If the Pi cannot detect the DPH, a modbus error can be reported. This can have several origins:
+#. Make sure that you properly modified the baud rate of the DPH to 19200 (as explained in :ref:`_power-DPH5005`)
+#. Make sure the USB cable is not damaged, correctly feeding the Raspberry Pi USB port to the DPH5005
+#. Make sure that the DPH can be properly powered from the TX power connectors
+#. If all the above are okay, than it can also be that the DPH is not given enough time to start (latency time). This can be increased in the `config.py > HARDWARE_CONFIG > rx > latency`.
 
 Issue with the pulses between A and B
 =====================================
@@ -203,14 +212,6 @@ Strong decay in current
 
 A strong decay in current can be an indication that the battery cannot supply enough power to the DPH5005 to maintain the requested voltage.
 It can also be that the injection time is too short to let the current reach steady-state. In this case, we recommend increasing the injection time.
-
-
-Modbus error
-============
-
-Modbus is the protocol used to communicate between the DPH5005 and the Raspberry Pi via a USB cable.
-If the Pi cannot detect the DPH, a modbus error can happen. Make sure the USB cable is ok and that the DPH5005 is supplied.
-It can also be that the DPH is not given enough time to start (latency time). This can be increased in the `config.py > HARDWARE_CONFIG > rx > latency`.
 
 
 Current max out at 48 mA
