@@ -953,7 +953,7 @@ class OhmPi(object):
                 "r_std_[%]": R_std,
                 "rab_[kOhm]": vab / I,
                 "sp_[mV]": self._hw.sp,
-                "n_stacks": nb_stack,
+                "nb_stack": nb_stack,
                 "vab_[V]": vab,
                 "channel_mn": 0,
                 "injection_id": self.injection_id,
@@ -1727,8 +1727,8 @@ class OhmPi(object):
         - nb_meas (total number of times the sequence will be run)
         - sequence_delay (delay in second between each sequence run)
         - nb_stack (number of stack for each quadrupole measurement)
-        - strategy (injection strategy: safe, vmax, vmin)
-        - duty_cycle (injection duty cycle comprised between 0.5 - 1)
+        - strategy (injection strategy: safe, vmax, vmin, fixed, flex)
+        - duty_cycle (injection duty cycle comprised between 0.5 up to 1)
         - export_path (path where to export the data, timestamp will be added to filename)
 
         Parameters

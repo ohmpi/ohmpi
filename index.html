@@ -1166,7 +1166,7 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/soh
           'injection_duration': parseFloat(document.getElementById('injection_duration').value),
           'nb_meas': parseInt(document.getElementById('nb_meas').value),
           'sequence_delay': parseFloat(document.getElementById('sequence_delay').value),
-          'n_stacks': parseInt(document.getElementById('nb_stack').value),
+          'nb_stack': parseInt(document.getElementById('nb_stack').value),
           'duty_cycle': parseFloat(document.getElementById('duty_cycle').value),
           'strategy': strategySelect.value,
         }
@@ -1330,10 +1330,10 @@ mosquitto_sub -h raspberrypi.local -t ohmpi_0001/soh
             let dist = Math.abs(emax - emin)
             xpos.push(emin + dist / 2)
             ypos.push(- Math.sqrt(2) / 2 * dist)
-            let am = Math.abs(a[i] - m[i]) * elec_spacing
-            let bm = Math.abs(b[i] - m[i]) * elec_spacing
-            let an = Math.abs(a[i] - n[i]) * elec_spacing
-            let bn = Math.abs(b[i] - n[i]) * elec_spacing
+            let am = (a[i] - m[i]) * elec_spacing
+            let bm = (b[i] - m[i]) * elec_spacing
+            let an = (a[i] - n[i]) * elec_spacing
+            let bn = (b[i] - n[i]) * elec_spacing
             let K = (2 * Math.PI) / ((1 / am) - (1 / an) - (1 / an) + (1 / bn))
             values.push(Math.round(df['r'][i] * K))
           data[surveyName]['app'] = values
