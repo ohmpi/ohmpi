@@ -4,9 +4,9 @@ Troubleshooting
 We encourage users to report any issue, or bugs as an issue in the `official repository on GitLab <https://gitlab.com/ohmpi/ohmpi/-/issues>`_.
 Please have a look at existing open and closed issues before posting a new one.
 We have compiled here below a list of common issues and explanations on how to fix them.
-For issues with the hardware, make sure your board passes the hardware checks (:ref:`mb2024-test`, :ref:`mux2024-test`).
+For issues with the hardware, make sure your board passes the hardware checks (see MB2024 :ref:`mb2024-test`, MUX2024 :ref:`mux2024-test`).
 
-You can also run test in the software using:
+You can also run a series of predefined tests in the software using:
 
 .. code-block:: python
 
@@ -177,7 +177,6 @@ Vmn debugging:
   :align: center
  
   Pinout of op-amp.
-
 
 Resistances values are divided by 2 (mb2024)
 =================================================

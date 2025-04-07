@@ -326,8 +326,8 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 .. _mb2024-test:
 
 
-Check
-=====
+Checks
+======
 
 Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the measurement board.
 

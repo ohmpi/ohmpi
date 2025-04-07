@@ -216,8 +216,8 @@ The cabling of several MUX boards v2024 within an OhmPi system is entirely depen
 
 .. _mux2024-test:
 
-Check
-=====
+Checks
+======
 
 Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the board.
 Check your board against the correct expected column: 2-roles or 4-roles.
