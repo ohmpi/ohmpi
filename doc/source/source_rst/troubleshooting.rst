@@ -1,6 +1,9 @@
 Troubleshooting
 ***************
 
+Best practices
+==============
+
 We encourage users to report any issue, or bugs as an issue in the `official repository on GitLab <https://gitlab.com/ohmpi/ohmpi/-/issues>`_.
 Please have a look at existing open and closed issues before posting a new one.
 We have compiled here below a list of common issues and explanations on how to fix them.
@@ -75,21 +78,27 @@ Examples of diagnostic (on a test resistor circuit).
 
   Good measurement. Current is > 0.21 mA and < 48 mA. Vmn voltage reacts to pulse, is at 0 when not injecting, has a positive and negative voltage. Resistance is stable.
 
-Communication issue between components (I2C, pull-up)
-=====================================================
+Communication issue between components
+======================================
 
-If you get an I2C communication error or cannot see some I2C address with `i2cdetect`.
+I2C errors
+----------
+
+These issues are related to I2C communication errors or to missing I2C addresses on the I2C bus (devices not visible with `i2cdetect`.
+In most cases, the automatic communication tests performed during the OhmPi init (k = OhmPi()) will warn you that a device is not accessible.
+In such cases, follow these basic debug steps:
+
+#. Make sure the specific components (MCP23008, MCP23017, ADS, Mikroe modules etc.) are correctly inserted in their socket (and not upside down).
+#. Make sure you have the correct configuration for your assembled system (see :ref:`config`).
+#. Check with the multimeter the voltage between SDA/SCL and the ground to see if it reaches 5V at rest. If it's not the case, you may need stronger pull-up (smaller value of pull-up resistor).
 
 Most components of the OhmPi communicate via I2C protocol. This protocol works with two lines (SDA and SCL) that **must be pulled-up** at rest. The pull-up resistor consists in placing a 100k (or similar values) resistor between the line and VDD (5V in this case).
-
-Make sure you have the correct configuration for your assembled system (see :ref:`config`).
-Check with the multimeter the voltage between SDA/SCL and the ground to see if it reaches 5V at rest. If it's not the case, you may need stronger pull-up (smaller value of pull-up resistor).
 
 .. note::
 	On the measurement board v2024, the I2C isolator from Mikroe, already has pull-up resistors that add to the pull-up already on the ADS1115 board. If the ADS1115 of the Vmn part cannot be seen by i2cdetect, we recommend to remove the pull-up resistors on the Mikroe I2C isolator board (see note fig29 in :ref:`mb2024-build`)
 
 Modbus error
-============
+------------
 
 Modbus is the protocol used to communicate between the DPH5005 and the Raspberry Pi via a USB cable.
 If the Pi cannot detect the DPH, a modbus error can be reported. This can have several origins:
@@ -99,17 +108,8 @@ If the Pi cannot detect the DPH, a modbus error can be reported. This can have s
 #. Make sure that the DPH can be properly powered from the TX power connectors
 #. If all the above are okay, than it can also be that the DPH is not given enough time to start (power latency time). This can be increased in the `config.py > HARDWARE_CONFIG > pwr > pwr_latency` (default value = 6).
 
-Issue with the pulses between A and B
-=====================================
 
-In the measurement board v2023, this is likely due to the optical relays not opening or closing properly. These relays are quite fragile and, from experience, are easily damaged. Check if the optical relays are still working by measuring if they are conductors when turned on using a multimeter without connecting any electrodes to A and B.
-
-If an optical relay is broken, you will have to replace it with a new one.
-
-In the measurement board v2024, these optical relays are replaced by mechanical relays which are more robust and should not cause any issue.
-
-
-Values given are not correct
+Incorrect or suspicious data
 ============================
 
 One possible cause is that the **shunt resistor was burned**. Once burned, the value of the resistor is not correct anymore and we advise to change it. To see if the shunt is burned, you can measure the value of the shunt resistor to see if it still has the expected value.
@@ -120,8 +120,8 @@ In the measurement board v2024, the current sensing part is replaced by a click 
 
 See also the step by step guides below.
 
-Incorrect current value
-=======================
+Debugging incorrect current value
+---------------------------------
 
 Current debugging:
 
@@ -146,8 +146,8 @@ Current debugging:
 - lastly, you can check that the ADS1115 (0x48) is not broken. Switch it with another working ADS and see if the problem persists or not. The voltage of the AN pin goes on the A0 pin of the ADS.
 
 
-Voltage incorrect value
-=======================
+Debugging incorrect voltage value
+---------------------------------
 
 Vmn debugging:
 
@@ -179,15 +179,32 @@ Vmn debugging:
  
   Pinout of op-amp.
 
-Resistances values are divided by 2 (mb2024)
-=================================================
+Resistances values divided by 2 (mb2024)
+----------------------------------------
 
 This can be due to a badly soldered connection between the DG411 and the MCP23008 MN or between the output pins of the DG411.
 This means that the gain is not applied in the Vmn part. Use a multimeter in continuity mode to check connectivity and soldering of DG411 and MCP23008.
 
+Strong decay in current
+-----------------------
+
+A strong decay in current can be an indication that the battery cannot supply enough power to the DPH5005 to maintain the requested voltage.
+It can also be that the injection time is too short to let the current reach steady-state. In this case, we recommend increasing the injection time.
+
+
+Current max out at 48 mA
+------------------------
+
+By default, the measurement board (v2023 and v2024) are set up with a shunt resistor of 2 Ohms. This effectively limit the current
+we can measure to 48 mA. If the data you collected show current that seems to stays close to this value, they are probably higher but the
+the measurement board cannot measure them properly. Note that the shunt resistor **does not limit the current**. If a too large current goes through the
+shunt resistor, it will burn and its value will not be precisely equal to 2 Ohms.
+
+To measure larger current in the field, we recommend using other shunt resistors (e.g. 1 Ohms for max 100 mA, 0.5 Ohms for max 200 mA).
+Multiple 2 Ohms shunt resistors can also be placed in parallel to decrease the shunt resistance.
 
 Noise in the Vmn and Iab signals
-================================
+--------------------------------
 
 The OhmPi does not filter the signal for 50 or 60Hz power noise. This noise can appear in the Vmn reading if the Tx or Rx battery is connected to a charger connected to the grid.
 It can also appear in the field if there is an AC leakage or high voltage power lines nearby.
@@ -200,34 +217,27 @@ It can also appear in the field if there is an AC leakage or high voltage power 
 
 To solve this, you may need to design a system that disconnects the charger (turn it off) when doing a measurement.
 
+Miscellaneous
+=============
+
+Issue with the pulses between A and B
+-------------------------------------
+
+In the measurement board v2023, this is likely due to the optical relays not opening or closing properly. These relays are quite fragile and, from experience, are easily damaged. Check if the optical relays are still working by measuring if they are conductors when turned on using a multimeter without connecting any electrodes to A and B.
+
+If an optical relay is broken, you will have to replace it with a new one.
+
+In the measurement board v2024, these optical relays are replaced by mechanical relays which are more robust and should not cause any issue.
+
 
 Unexpected electrode takeout
-============================
+----------------------------
 
 The IDC sockets of the mux2023 and mux2024 are not wired identically. Double check that you connected the right electrode to the right ribbon cable (see drawings in the assembling tutorials)
 
 
-Strong decay in current
-=======================
-
-A strong decay in current can be an indication that the battery cannot supply enough power to the DPH5005 to maintain the requested voltage.
-It can also be that the injection time is too short to let the current reach steady-state. In this case, we recommend increasing the injection time.
-
-
-Current max out at 48 mA
-========================
-
-By default, the measurement board (v2023 and v2024) are set up with a shunt resistor of 2 Ohms. This effectively limit the current
-we can measure to 48 mA. If the data you collected show current that seems to stays close to this value, they are probably higher but the
-the measurement board cannot measure them properly. Note that the shunt resistor **does not limit the current**. If a too large current goes through the
-shunt resistor, it will burn and its value will not be precisely equal to 2 Ohms.
-
-To measure larger current in the field, we recommend using other shunt resistors (e.g. 1 Ohms for max 100 mA, 0.5 Ohms for max 200 mA).
-Multiple 2 Ohms shunt resistors can also be placed in parallel to decrease the shunt resistance.
-
-
 OhmPi is slow
-=============
+-------------
 
 One of the reasons why the OhmPi can be very slow (up to 5s between print in the command line) can be due to the MQTT broker not being found. Make sure you have set a correct hostname ('localhost' by default) in the `config.py` file.
 
@@ -235,6 +245,6 @@ Another reason could be because you use a 64 bit version of Raspbian. We noticed
 
 
 Raspberry Pi low voltage warning
-================================
+--------------------------------
 
 The Raspberry Pi 5 needs more power than the Raspberry Pi 4 and will give a low voltage warning when used in the OhmPi as the THD-1211N does not provide enough current. It is recommended either to switch to a Raspberry Pi 4 or add an additional DC/DC converter (12V -> 5V).
