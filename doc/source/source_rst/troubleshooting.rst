@@ -94,10 +94,10 @@ Modbus error
 Modbus is the protocol used to communicate between the DPH5005 and the Raspberry Pi via a USB cable.
 If the Pi cannot detect the DPH, a modbus error can be reported. This can have several origins:
 
-#. Make sure that you properly modified the baud rate of the DPH to 19200 (as explained in :ref:`_power-DPH5005`)
+#. Make sure that you properly modified the baud rate of the DPH to 19200 (as explained in :ref:`power-DPH5005`)
 #. Make sure the USB cable is not damaged, correctly feeding the Raspberry Pi USB port to the DPH5005
 #. Make sure that the DPH can be properly powered from the TX power connectors
-#. If all the above are okay, than it can also be that the DPH is not given enough time to start (latency time). This can be increased in the `config.py > HARDWARE_CONFIG > rx > latency`.
+#. If all the above are okay, than it can also be that the DPH is not given enough time to start (power latency time). This can be increased in the `config.py > HARDWARE_CONFIG > pwr > pwr_latency` (default value = 6).
 
 Issue with the pulses between A and B
 =====================================
