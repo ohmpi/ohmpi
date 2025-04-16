@@ -1,5 +1,5 @@
 ﻿name,location,institution,latitude,longitude,description,image,link
-ohmpi01,Middelkerke (BE),ULiège,51.1844,2.8204,Fresh-saline water monitoring,./img/ohmpi_img.jpeg,
+ohmpi01,Middelkerke (BE),ULiège,51.1844,2.8204,Fresh-saline water monitoring,,
 ohmpi02,Rochefort (BE),UMons,50.1584,5.2229,Measurement of the root system of 2 trees,,
 ohmpi03,Pollionnay (FR),INRAE,45.7675,4.6598,Infiltration onder hedges,,../applications/hedges.html
 ohmpi04,Boissy-le-Châtel (FR),INRAE,48.8198,3.1372,Watershed monitoring,,
@@ -7,6 +7,10 @@ ohmpi05,Villeurbanne,INRAE,45.7696,4.8893,Laboratory study,,
 ohmpi06,Ghent (BE),UGent,51.0536,3.7194,Lab and field hydrogeophysics,,
 ohmpi07,Melle (BE),ILVO,50.9938,3.7838,Soil moisture monitoring,,
 ohmpi08,Sadhana Forest (IN),ETH,11.9809,79.7766,Effect of swale,,../applications/india.html
-ohmpi09,Mons (BE),UMons,50.4513, 3.9528,Laboratory development,,
-ohmpi10,Belvaux (LU),LIST,49.5064, 5.9436,Laboratory development,,
-
+ohmpi09,Mons (BE),UMons,50.4513,3.9528,Laboratory development,,
+ohmpi10,Belvaux (LU),LIST,49.5064,5.9436,Laboratory development,,
+Ecotron_01,Nemours (FR),Ecotron,48.281664,2.671445,Laboratory column monitoring,,
+Ohmpi La Poveda,Madrid,ICA/CSIC,40.316236000000004,-3.4859200000000001,Soil moisture monitoring in a barley field,,
+OhmPi Inrae Aix,Aix en Provence,INRAE Aix,50.483333,3.283333,,,
+OhmPi,Texas (US),Anonymous,32.212899999999998,-99.170100000000005,Recreational ERI to detect underground voids.,,
+UniBonnGeophysicsOhmPi0006,Bonn (DE),UniBonn,50.724770999999997,7.0902190000000003,"teaching + outreach, laboratory measurements on soil and biogene samples, small and short term field applications, development + contribution",,

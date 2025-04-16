@@ -163,7 +163,7 @@ Where are the OhmPi's?
                      ohmpi = locations[i];
 
                      popup_content = "<b>Hi! I'm " + ohmpi.name + "</b>" + 
-                          "<br>I've been setup by the " + ohmpi.institution + " in " + ohmpi.location + ".";
+                          "<br>I've been setup by " + ohmpi.institution + " in " + ohmpi.location + ".";
 
                      if (ohmpi.description.length > 0) {
                           popup_content += "<br><br><b>Description:</b> <br>" + ohmpi.description;
@@ -210,6 +210,7 @@ Where are the OhmPi's?
              // the text
              .then((text) => {
                 var locations_json = $.csv.toObjects(text);
+                console.log(locations_json)
                 addPinsToMap(locations_json)
              })
              .catch((error) => {
