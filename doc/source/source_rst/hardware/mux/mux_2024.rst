@@ -227,7 +227,7 @@ With power off
 
 If a continuity check does not pass it likely means there is an issue with the soldering on the board.
 
-.. figure:: ../../../img/mux2024-test.png       
+.. figure:: ../../../img/mux2024-test.jpg     
        :width: 100%
        :align: center
        :alt: alternate text

@@ -21,7 +21,7 @@ Assemble
 ========
 
 Schematics
-~~~~~~~~~~
+----------
 
 
 
@@ -74,7 +74,7 @@ Schematics
    Schematic of the human-machine interface.
 
 Required components 
-~~~~~~~~~~~~~~~~~~~~
+-------------------
 
 .. csv-table:: List of components
    :file: mb_2024_bom.csv
@@ -86,20 +86,20 @@ To order the PCB (on Aisler or other manufacturers), you just need to drag and d
 The web interface will load the PCB and walk you through different steps.
 
 Interactive BOM list
-~~~~~~~~~~~~~~~~~~~~~  
+--------------------
 
 
 `Interactive BOM list <../../../_static/ibom.html>`_   
 
 
 Before starting: how to soldering 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------
 
 How to Solder Electronic Components <https://www.sciencebuddies.org/science-fair-projects/references/how-to-solder>
 
 
 Description
-~~~~~~~~~~~
+-----------
 
 .. note::
    Since measurement board v2024.1.0, a discharge relay has been added next to the current click. This relay is equipped with similar electronics to the other relays of the board (i.e. 100 kOhm resistor, ZVN transistor, Omron relay). It enables to quickly discharge the current of the DPH5005 when switching between Vab voltages. To control this relay, we had to remove one LED (so there are only 3 LEDs). Note that your board will still work even if you do not install the relay. The mounting of the discharge relay is not included in the pictures below but mount it at the same time you mount the other relays.
@@ -335,7 +335,7 @@ Checks
 Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the measurement board.
 
 Without power off
-~~~~~~~~~~~~~~~~~
+-----------------
 
 If a continuity check does not pass it likely means there is an issue with the soldering on the board.
 
@@ -353,7 +353,7 @@ If a continuity check does not pass it likely means there is an issue with the s
    **Do not power the board if one of the SC (short circuit) tests does not pass!**
 
 With power on
-~~~~~~~~~~~~~
+-------------
 
 To power the board, you need to connect a 12 V source (e.g. battery) on Rx-Batt.
 If the voltage with I2C (SDA and SCL pins) is not expected, there is likely an issue with pull-up resistors.
