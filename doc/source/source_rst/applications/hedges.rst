@@ -23,9 +23,9 @@ The primary goal of this mission was to install an Electrical Resistivity Tomogr
 
 I. Introduction
 ===============
-Electrical Resistivity Tomography (ERT) is a effective geophysical method used to characterize the electrical properties of subsurfaces. It is applied in the field to map the electrical structure of the subsurface at a given time. To understand flow movements and rapid variations in water transfers at fine time scales due to changing environmental conditions, the method of “Electrical Resistivity Tomography (ERT) in time-based monitoring” is particularly suitable. When used in time-based monitoring mode, it facilitates the study of infiltration processes under a hedge located in a long-term observation basin near Lyon, France (Lagouy et al., 2015).
-In our context, the development of open-source resistivity meters, such as Ohmpi (Clement et al., 2020), enables intensive monitoring of hydrological processess.
-This documentation aims to provide a detailed view of the installation process of an ERT system made on January 29, 30, 31 and February 1, 2024. It includes the design of the system integrating an Ohmpi resistivity meter, the wiring diagram, the electrode layout, an illustration of the control cabinet, as well as the recommended monthly tests. 
+Electrical Resistivity Tomography (ERT) is an effective geophysical method used to characterize the electrical properties of subsurfaces. It is applied in the field to map the electrical structure of the subsurface at a given time. To understand flow movements and rapid variations in water transfers at fine time scales due to changing environmental conditions, the method of “Electrical Resistivity Tomography (ERT) in time-based monitoring” is particularly suitable. When used in time-based monitoring mode, it facilitates the study of infiltration processes under a hedge located in a long-term observation basin near Lyon, France (Lagouy et al., 2015).
+In our context, the development of open-source resistivity meters, such as Ohmpi (Clement et al., 2020), enables intensive monitoring of hydrological processes.
+This documentation aims to provide a detailed view of the installation process of an ERT system made on January 29, 30, 31 and February 1, 2024. It includes the design of the system integrating an OhmPi resistivity meter, the wiring diagram, the electrode layout, an illustration of the control cabinet, as well as the recommended monthly tests. 
 
 II. Presentation of the site
 ============================
@@ -51,7 +51,7 @@ The Yzeron watershed, situated west of Lyon, has been monitored for many years b
 III. System Design
 ==================
 
-1. Equipmemnt Selection
+1. Equipment Selection
 ------------------------
 
 Before installation, a thorough study is conducted to select the appropriate equipment for the study, considering the specifics of the hedge and soil conditions, as well as their compatibility and suitability for the project's specific needs. This includes:
@@ -97,9 +97,8 @@ To perform measurements, the OhmPi must be paired with a system that injects cur
 2. Electrode positions Planning
 -------------------------------
 
-A detailed analysis of the hedge was conducted to determine the optimal placement of the electrodes based on the sites geometry. This planning was crucial to ensure uniform data collection and optimal resolution.
+A detailed analysis of the hedge was conducted to determine the optimal placement of the electrodes based on the site geometry. This planning was crucial to ensure uniform data collection and optimal resolution.
 
-TODO    A map showing the electrode positions
 
 IV. Site installation
 =====================
@@ -132,7 +131,7 @@ The cabinet housing the resistivimeter must be carefully prepared to ensure the 
 
 • Trench Removal
 
-The removal of trenches for the two electrode lines perpendicular to the hedge was a methodical and precise step in site preparation. First, an accurate layout was established based on the installation plan, determining the exact positions of the electrodes. Then, the trenches were carefully excavated using appropriate tools, maintaining a depth of 10 cm and a width of 20 cm. Once the trenches were completed, precautions were taken to minimize disturbance to the surrounding soil, preserving the stability of the structure and avoiding any unwanted interference with the electrical resistivity measurements. Finally, after the electrodes were installed, the trenches were carefully refilled, restoring the site to its original condition as much as possible. This meticulous approach ensures the site’s integrity while facilitating precise measurements for reliable interpretation of Electrical Resistivity Tomography data.
+The removal of trenches for the two electrode lines perpendicular to the hedge was a methodical and precise step in site preparation. First, an accurate layout was established based on the installation plan, determining the exact positions of the electrodes. Then, the trenches were carefully excavated using appropriate tools, maintaining a depth of 10 cm and a width of 20 cm. Once the trenches were completed, precautions were taken to minimize disturbance to the surrounding soil, preserving the stability of the structure and avoiding any unwanted interference with the electrical resistivity measurements. Finally, after the electrodes were installed, the trenches were carefully refilled, restoring the site to its original condition as much as possible. This meticulous approach ensures the site integrity while facilitating precise measurements for reliable interpretation of Electrical Resistivity Tomography data.
    
  .. figure:: ../../img/images_hedges/fig11.png
    :width: 100%
@@ -140,7 +139,6 @@ The removal of trenches for the two electrode lines perpendicular to the hedge w
 
    Figure 7 : Removal of trenches on the two lines of electrodes.
    
-• TODO Marking Electrode Locations
 
 2. Electrode Placement
 ----------------------
@@ -154,8 +152,6 @@ The electrode placement stage is a critical procedure requiring precise executio
 
 3. Wiring Setup
 ---------------
-TODO     Wiring Diagram ???
-
 
 The wiring process between the electrodes and the resistivimeter involves several methodical steps to ensure a stable and reliable connection for accurate data collection. First, cables are laid out from the resistivimeter to the pre-marked electrode locations. Connections between these cables at the OhmPi and between the cables themselves (Figure 9) are selected based on a predefined color-coding system, making it easier to identify connections. At this stage, a special resin is meticulously added to the connection boxes to ensure effective insulation and protection against adverse environmental conditions. This resin also guarantees electrical stability of the connections. The cables are then connected to the OhmPi following the predefined wiring diagram. A thorough check is performed at each step to ensure that all connections are secure and that the system is ready for accurate data collection during the subsequent application of Electrical Resistivity Tomography (ERT). This is achieved by running a sequence to check the contact resistances between the electrodes and the soil, aiming for acceptable values between 1 and 4 kOhms.
     

@@ -1,10 +1,10 @@
 ﻿Name,Power,Type,Multiplexer BLACK probe,Multiplexer RED probe,Expected 2 roles,Expected 4 roles
 SC1,off,continuity,screw terminal GND,screw terminal PWR,no continuity,no continuity
 SC2,off,continuity,screw terminal role x,screw terminal role y,no continuity,no continuity
-SC3,off,continuity,screw terminal role x,screw terminal role xx,no continuity,continuity
+SC3,off,continuity,screw terminal role x,screw terminal role xx,continuity,no continuity
 SC4,off,continuity,screw terminal role x,screw terminal role yy,no continuity,no continuity
 SC5,off,continuity,screw terminal role y,screw terminal role xx,no continuity,no continuity
-SC6,off,continuity,screw terminal role y,screw terminal role yy,no continuity,continuity
+SC6,off,continuity,screw terminal role y,screw terminal role yy,continuity,no continuity
 SC7,off,continuity,screw terminal role xx,screw terminal role yy,no continuity,no continuity
 SC8,off,continuity,screw terminal elec 1,screw terminal elec 2,no continuity,no continuity
 SC9,off,continuity,screw terminal elec 2,screw terminal elec 3,no continuity,no continuity
@@ -29,3 +29,19 @@ SC27,off,continuity,screw terminal elec 5,screw terminal elec 12,no continuity,c
 SC28,off,continuity,screw terminal elec 6,screw terminal elec 11,no continuity,continuity
 SC29,off,continuity,screw terminal elec 7,screw terminal elec 10,no continuity,continuity
 SC30,off,continuity,screw terminal elec 8,screw terminal elec 9,no continuity,continuity
+SC31,off,continuity,screw terminal elec 1,IDC connector elec 1,continuity,continuity
+SC32,off,continuity,screw terminal elec 2,IDC connector elec 2,continuity,continuity
+SC33,off,continuity,screw terminal elec 3,IDC connector elec 3,continuity,continuity
+SC34,off,continuity,screw terminal elec 4,IDC connector elec 4,continuity,continuity
+SC35,off,continuity,screw terminal elec 5,IDC connector elec 5,continuity,continuity
+SC36,off,continuity,screw terminal elec 6,IDC connector elec 6,continuity,continuity
+SC37,off,continuity,screw terminal elec 7,IDC connector elec 7,continuity,continuity
+SC38,off,continuity,screw terminal elec 8,IDC connector elec 8,continuity,continuity
+SC39,off,continuity,screw terminal elec 9,IDC connector elec 9,continuity,continuity
+SC40,off,continuity,screw terminal elec 10,IDC connector elec 10,continuity,continuity
+SC41,off,continuity,screw terminal elec 11,IDC connector elec 11,continuity,continuity
+SC42,off,continuity,screw terminal elec 12,IDC connector elec 12,continuity,continuity
+SC43,off,continuity,screw terminal elec 13,IDC connector elec 13,continuity,continuity
+SC44,off,continuity,screw terminal elec 14,IDC connector elec 14,continuity,continuity
+SC45,off,continuity,screw terminal elec 15,IDC connector elec 15,continuity,continuity
+SC46,off,continuity,screw terminal elec 16,IDC connector elec 16,continuity,continuity

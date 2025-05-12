@@ -21,7 +21,7 @@ Assemble
 ========
 
 Schematics
-~~~~~~~~~~
+----------
 
 
 
@@ -74,7 +74,7 @@ Schematics
    Schematic of the human-machine interface.
 
 Required components 
-~~~~~~~~~~~~~~~~~~~~
+-------------------
 
 .. csv-table:: List of components
    :file: mb_2024_bom.csv
@@ -82,24 +82,27 @@ Required components
    :header-rows: 1
    :class: longtable
 
-To order the PCB (on Aisler or other manufacturer), you just need to drag and drop the .kicad_pcb (e.g. PCB_boards/measurement_boards/mb.2024.1.0/mb.2024.1.0.kicad_pcb) file into their webinterface.
-The webinterface will load the PCB and walk you through different steps.
+To order the PCB (on Aisler or other manufacturers), you just need to drag and drop the .kicad_pcb (e.g. PCB_boards/measurement_boards/mb.2024.1.0/mb.2024.1.0.kicad_pcb) file into their web interface.
+The web interface will load the PCB and walk you through different steps.
 
 Interactive BOM list
-~~~~~~~~~~~~~~~~~~~~~  
+--------------------
 
 
 `Interactive BOM list <../../../_static/ibom.html>`_   
 
 
 Before starting: how to soldering 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------
 
 How to Solder Electronic Components <https://www.sciencebuddies.org/science-fair-projects/references/how-to-solder>
 
 
 Description
-~~~~~~~~~~~
+-----------
+
+.. note::
+   Since measurement board v2024.1.0, a discharge relay has been added next to the current click. This relay is equipped with similar electronics to the other relays of the board (i.e. 100 kOhm resistor, ZVN transistor, Omron relay). It enables to quickly discharge the current of the DPH5005 when switching between Vab voltages. To control this relay, we had to remove one LED (so there are only 3 LEDs). Note that your board will still work even if you do not install the relay. The mounting of the discharge relay is not included in the pictures below but mount it at the same time you mount the other relays.
 
 Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundamentals/what-is-a-resistor/#>`_ on the measurement board PCB
 
@@ -114,13 +117,13 @@ Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundame
    :width: 100%
    :align: center
 
-   STEP 2: soldering four 330 ohm resistors.
+   STEP 2: soldering four (or three) 330 ohm resistors.
 
 .. figure:: ../../../img/mb.2024.x.x/3.jpg 
    :width: 100%
    :align: center
 
-   STEP 3: Soldering four 4K7 ohm resistors.
+   STEP 3: Soldering four (or two) 4K7 ohm resistors.
 
  
 Soldering `DIODE <https://www.fluke.com/en-us/learn/blog/electrical/what-is-a-diode>`_ on the measurement board PCB
@@ -138,13 +141,13 @@ Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-d
    :width: 100%
    :align: center
 
-   STEP 5: Soldering two Schottky diodes bat85 ou bat86.
+   STEP 5: Soldering two Schottky diodes bat85 or bat86.
    
 .. figure:: ../../../img/mb.2024.x.x/6.jpg
    :width: 100%
    :align: center
 
-   STEP 6: Soldering five DIP-8 sockets.
+   STEP 6: Soldering five DIP-8 sockets. Pay attention to the direction of the notch.
 
 .. figure:: ../../../img/mb.2024.x.x/7.jpg
    :width: 100%
@@ -156,7 +159,7 @@ Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-d
    :width: 100%
    :align: center
 
-   STEP 8: Soldering one DIP-16 sockets.
+   STEP 8: Soldering one DIP-16 socket.
 
 .. figure:: ../../../img/mb.2024.x.x/9.jpg
    :width: 100%
@@ -188,7 +191,7 @@ Information about `light-emitting diode <https://en.wikipedia.org/wiki/Light-emi
    :width: 100%
    :align: center
 
-   STEP 13: Installation of four light-emitting diodes.
+   STEP 13: Installation of four light-emitting diodes. Pay attention to the polarity. Short leg side towards the bottom.
 
 Information about `MOSFET Metal Oxide Semiconductor Field Effect Transistor <https://fr.wikiversity.org/wiki/Transistor/Transistor_MOSFET#:~:text=Le%20MOSFET%20(Metal%20Oxide%20Semiconductor,la%20construction%20de%20portes%20logiques>`_
 
@@ -200,11 +203,11 @@ Information about `MOSFET Metal Oxide Semiconductor Field Effect Transistor <htt
 
 What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
 
-.. figure:: ../../../img/mb.2024.x.x/15.jpg
+.. figure:: ../../../img/mb.2024.x.x/15.png
    :width: 100%
    :align: center
 
-   STEP 15: Soldering eleven 100 nF 50V tantalum capacitors.
+   STEP 15: Soldering twelve 100 nF 50V tantalum capacitors. These have no polarity.
 
 .. figure:: ../../../img/mb.2024.x.x/16.jpg
    :width: 100%
@@ -214,7 +217,7 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
 
 .. warning::
      
-     In this version, we used a shunt resistor of 2 Ohms, which limits the current measurement to 48 mA. If the current is higher than this value, you just have to decrease the value of the shunt resistor. Don't forget to change the shunt value in the config.py file (value associated to key 'R_shunt' in the OHMPI_CONFIG dict).   
+     In this version, we used a shunt resistor of 2 Ohms, which limits the current measurement to 48 mA. If the current is expected higher than this value, you can replace the shunt resistor to a lower resistance value (e.g. for configuration with DPH5005: 1 Ohm for currents up to 100 mA or 0.5 Ohm for currents up to 200 mA). Don't forget to change the shunt value in the config.py file (value associated to key 'R_shunt' in the OHMPI_CONFIG dict).
 
 .. figure:: ../../../img/mb.2024.x.x/17.jpg
    :width: 100%
@@ -226,7 +229,7 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
    :width: 100%
    :align: center
 
-   STEP 18: Soldering the three IDC 6 pins connectors. **Pay attention to the connectors orientation!**
+   STEP 18: Soldering the three IDC 6 pins connectors. **Pay attention to the orientation of the connector!**
 
 .. figure:: ../../../img/mb.2024.x.x/19.jpg
    :width: 100%
@@ -238,10 +241,10 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
    :width: 100%
    :align: center
 
-   STEP 20: Soldering six omron G5LE relays 5 VDC.
+   STEP 20: Soldering six Omron G5LE relays 5 VDC. (If your PCB has a discharge relay, mount it too).
 
 .. warning::
-   The Raspberry Pi header below need to be soldered on the **under side of the PCB**.
+   The Raspberry Pi header below need to be soldered on the **underside of the PCB**.
 
 .. figure:: ../../../img/mb.2024.x.x/21.jpg
    :width: 100%
@@ -257,13 +260,13 @@ In addition, the notch provides a way to visually identify the orientation of th
    :width: 100%
    :align: center
 
-   STEP 22: Place the three OP27 on their DIP-8 sockets. **The notch must face upwards.**
+   STEP 22: Place the three OP27 on their DIP-8 sockets. **The notch must face upwards.** Make sure not to confuse OP27 with REF03.
 
 .. figure:: ../../../img/mb.2024.x.x/23.jpg
    :width: 100%
    :align: center
 
-   STEP 23: Place the REF03 reference voltage (2.5V) on its DIP-8 socket. **The notch must face the right side.**
+   STEP 23: Place the REF03 reference voltage (2.5V) on its DIP-8 socket. **The notch must face the right side.**  Make sure not to confuse REF03 with OP27.
 
 What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 
@@ -277,13 +280,13 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
    :width: 100%
    :align: center
 
-   STEP 25: Place the MCP23008 on its DIP-16 socket (**pay attention to the notches orientation**).
+   STEP 25: Place the two MCP23008 on their DIP-16 socket (**pay attention to the notches orientation**).
 
 .. figure:: ../../../img/mb.2024.x.x/26.jpg
    :width: 100%
    :align: center
 
-   STEP 26: Place the Three THD, install the right reference at the right place according to the yellow boxes.
+   STEP 26: Place the three THD, install the right reference at the right place according to the yellow boxes.
 
 .. figure:: ../../../img/mb.2024.x.x/27.jpg
    :width: 100%
@@ -297,7 +300,7 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 
    STEP 28: Place the two I2C level adjusters.
 
-.. figure:: ../../../img/mb.2024.x.x/29bis.jpg
+.. figure:: ../../../img/mb.2024.x.x/29.jpg
    :width: 100%
    :align: center
 
@@ -306,6 +309,10 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 .. note::
    If you have issues with the I2C isolator (e.g. 0x49 and 0x27 are not visible), you may need
    to remove the pull-up resistor on the I2C isolator as shown above.
+
+   .. figure:: ../../../img/mb.2024.x.x/29-i2c-isolator.png
+      :width: 30%
+      :align: center
 
 .. figure:: ../../../img/mb.2024.x.x/30.jpg
    :width: 100%
@@ -322,13 +329,15 @@ What is an `analogue switch <https://en.wikipedia.org/wiki/Analogue_switch>`_?
 .. _mb2024-test:
 
 
-Check
-=====
+Checks
+======
 
 Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the measurement board.
 
-If a continuity check does not pass it's likely means there is an issue with the soldering on the board.
-If the voltage with I2C (SDA and SCL pins) is not expected, there is likely an issue with pull-up resistors.
+Without power off
+-----------------
+
+If a continuity check does not pass it likely means there is an issue with the soldering on the board.
 
 .. figure:: ../../../img/mb2024-test.jpg       
        :width: 100%
@@ -341,8 +350,15 @@ If the voltage with I2C (SDA and SCL pins) is not expected, there is likely an i
    :header-rows: 1
 
 .. warning::
-   **Do not power the board if one of the SC (shortcircuit) test does not pass!**
+   **Do not power the board if one of the SC (short circuit) tests does not pass!**
+
+With power on
+-------------
+
+To power the board, you need to connect a 12 V source (e.g. battery) on Rx-Batt.
+If the voltage with I2C (SDA and SCL pins) is not expected, there is likely an issue with pull-up resistors.
 
 .. csv-table:: Hardware check
    :file: mb2024-test.csv
    :header-rows: 1
+

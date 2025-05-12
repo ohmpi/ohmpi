@@ -16,7 +16,7 @@ External TX battery
 ===================
 With the measurement board v2024, you can connect the Tx battery following the schematic below.
 In this simple configuration, a fixed power source, such as a 12V battery is used for the injection.
-The + and - battery terminals are routed to the TX-batt input + abd GND connectors. Then the DPS input and DPS out
+The + and - battery terminals are routed to the TX-batt input + and GND connectors. Then the DPS input and DPS out
 connectors need to be bypassed.
 
 .. figure:: ../../img/mb.2024.x.x/power_cabling_batt.png
@@ -53,8 +53,11 @@ To assemble DPH5005, please follow the links:
 
 We recommend to purchase a DPH5005 together with a casing and a microUSB adapter.
 
+The default OhmPi config uses a modbus baud rate of 19200, which optimises the communication time with the DPH5005.
+Since the baud rate is set to 9600 by default on the DPH5005, you will have to manually change it to 19200.
+
 .. Note::
-    **Change the Baudrate from 9600 to 19200**, press and maintain **V/<up arrow>** button while powering on the DPH with the button in the back, you acces to a new menu. Using the V/<up arrow> and A/<down arrow> + pressing and turning the button, change **BAUD** to 19200. When done, double press 'SET' to reboot normally.
+    **Change the Baud rate from 9600 to 19200**, press and maintain **V/<up arrow>** button while powering on the DPH with the button in the back, you acces to a new menu. Using the V/<up arrow> and A/<down arrow> + pressing and turning the button, change **BAUD** to 19200. When done, double press 'SET' to reboot normally.
 
 Make sure to follow the setup as below (also to be seen in the assembly guide).
 The DPH5005 needs to be powered from the DPS input connectors, so that the measurement board can switch it on and off as required.

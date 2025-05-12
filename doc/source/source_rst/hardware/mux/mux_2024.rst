@@ -8,17 +8,17 @@
 MUX board v2024
 ***************
 
-The MUX board v2024 uses the same technology than the MUX board v2023, i.e. mechanical multiplexing. However it introduces
-a new level of flexibility by addressing multiple roles (A, B, M, N), which allows to build OhmPi system with multiples of 8 electrodes.
+The MUX board v2024 uses the same technology as the MUX board v2023, i.e. mechanical multiplexing. However it introduces
+a new level of flexibility by addressing multiple roles (A, B, M, N), which enables the construction of an OhmPi system with multiples of 8 electrodes.
 Users can physically configure the MUX board to address 2 roles (A, B or M, N) or 4 roles (A, B, M, N). With only 32 relays,
 it can address 16 or 8 electrodes, for the 2- and 4-role configuration respectively.
 Given the reduced number of relays, the MUX board v2024 is interfaced with only two MCP23017 I/O expanders.
 This means that up to 4 MUX boards v2024 (i.e. 32-electrode system) can be directly connected to a measurement board v2024.
 A newly introduced I2C extension board (featuring a TCA9548A multiplexer) allows to connect up to 32 MUX board v2024, equating to a 256-electrode system.
-In theory, up to 8 I2C extension boards can be connected to the measurement board, which would allow to pilot 2048 electrodes.
-For obvious practical reasons, such a configuration couldn't be tested and is likely to be limited by the I2C bus being phisically too long,
-which would prevent to reach so many GPIOs.
-The MUX board v2024 also comes with both IDC connectors and screw connectors for the electrode takeouts, which allows to directly connect the electrode arrays to the board.
+In theory, up to 8 I2C extension boards can be connected to the measurement board, which would allow it to pilot 2048 electrodes.
+For obvious practical reasons, such a configuration couldn't be tested and is likely to be limited by the I2C bus being physically too long,
+which would prevent us from reaching so many GPIOs.
+The MUX board v2024 also comes with both IDC connectors and screw connectors for the electrode takeouts, which allows it to directly connect the electrode arrays to the board.
 In an effort to mitigate supply shortages, a last addition concerns the power mosfet associated with the relays,
 with the possibility to mount two types of components depending on market availability: either ZVN4206A or STP16NF06L.
 
@@ -80,10 +80,10 @@ Mount the 100 kOhm resistors.
    |        |        :width: 600px                                                           |
    +--------+--------------------------------------------------------------------------------+
 
-Mount the mosfets. You can chose between ZVN4206A or STP16NF06L.
+Mount the mosfets. You can choose between ZVN4206A or STP16NF06L.
 
 .. warning::
-    In the PCB v2024.0.1, the white footprint of the ZVN4206A is upside-down. Please double check that the "drain" pint of the ZVN goes to the relay and the "source" pin goes to the ground. In doubt, refer to the ZVN datasheet. The white footprint on the PCB is corrected in v2024.0.2.
+    In the PCB v2024.0.1, the white footprint of the ZVN4206A is upside-down. Please double check that the "drain" pin of the ZVN goes to the relay and the "source" pin goes to the ground. In doubt, refer to the ZVN datasheet. The white footprint on the PCB is corrected in v2024.0.2.
 
 
 .. table::
@@ -131,8 +131,8 @@ Mount the relays.
 
 Defining role configuration
 ---------------------------
-The MUX board v2024 can be configured in 2- or 4-role mode. This means that one board can either address
-16 electrodes on 2 roles (X,Y for A,B or M,N), or 8 electrodes on 4 roles (labelled X,Y,XX,YY for A,B,M,N).
+The MUX board v2024 can be configured in 2- or 4-role mode, i.e managing either current injection (2 roles AB) or voltage reading (2 roles MN), or a combination of both (4 roles ABMN).
+This means that one board can either address 16 electrodes on 2 roles (X,Y for A,B or M,N), or 8 electrodes on 4 roles (labelled X,Y,XX,YY for A,B,M,N).
 An OhmPi system can manage a combination of 2-role and 4-role MUX boards as long as the 2-role boards come in pairs
 (e.g. 2 2-role MUX and 1 4-role MUX for 24 electrodes).
 
@@ -140,12 +140,14 @@ An OhmPi system can manage a combination of 2-role and 4-role MUX boards as long
 
 2-role configuration
 `````````````````````
-This configuration is the prefered way to build systems with an even number of MUX boards (for 16, 32, 48 electrodes).
+Configuring a board in 2-role mode enables each board to manage either the injection (AB) or the voltage reading (MN) roles.
+This configuration is the preferred way to build systems with an even number of MUX boards (for 16, 32, 48 electrodes).
+In this configuration, each pair of MUX boards will feature a board for injection (AB) and a board for voltage reading (MN)
 However, when assembling an OhmPi, keep in mind that 2-role mode MUX boards have to come in pairs.
 
 To enable the 2-role mode, 2 "roles" solder jumpers have to be bridged in the front side of the PCB next to the roles connector.
-To do so, the two jumper pads of each bridge have to be soldered together. This will connect roles X and roles XX together,
-as well as roles Y and YY together. In this way, the board is configure in 2-role mode.
+To do so, the two jumper pads of each bridge have to be soldered (making a nice pillow shape). This will connect roles X and roles XX together,
+as well as roles Y and YY together. In this way, the board is configured in 2-role mode.
 You can verify that the pair of roles X - XX and Y - YY are well connected by doing continuity checks with a digital voltmeter.
 
 .. warning::
@@ -155,8 +157,9 @@ You can verify that the pair of roles X - XX and Y - YY are well connected by do
 
 4-role configuration
 `````````````````````
-Configuring a board in 4-role mode enables to use an odd number of MUX board (for systems with 8, 24, 40, 56,... electrodes).
-To do so, the 8 "electrodes" solder jumpers at the back of the PCB have to be bridged. In this way relays of electrodes
+Configuring a board in 4-role mode enables each board to manage both injection and voltage reading roles.
+In this configuration, systems with an odd number of MUX boards can be assembled (for systems with 8, 24, 40, 56,... electrodes).
+To do so, the 8 "electrodes" solder jumpers at the back of the PCB have to be bridged (making nice pillow shapes). In this way
 relays of the following electrodes are paired together (albeit on different roles A, B, M and N): 1-16, 2-15, 3-14, 4-13, 5-12, 6-11, 7-10, 8-9.
 You can verify that these combinations are connected together by continuity checks with a digital voltmeter.
 It is best practice to only mount 8 screw connectors on the electrodes takeouts (and potentially only a 8 position IDC connector)
@@ -170,7 +173,7 @@ to avoid confusion when cabling the system.
 MUX board addresses
 -------------------
 Each MUX board v2024 comes with 2 I/O expanders MCP23017, addressing 16 relays each. They expose a pair of two I2C addresses on the I2C bus in the range 0x20 - 0x27.
-Two 2-way jumpers placed on the 3-pin headers next to the IDC connector at the bottom of the board allow to shift the addesses two by two.
+Two 2-way jumpers placed on the 3-pin headers next to the IDC connector at the bottom of the board allow to shift the addresses two by two.
 There is 4 possible combinations for the jumpers which give the following addresses:
 
 +-------------------+-------------------+-------------+
@@ -208,21 +211,23 @@ The cabling of several MUX boards v2024 within an OhmPi system is entirely depen
   accessible to connect wires from the electrode arrays.
 * 4-role MUX boards do not have to come in pairs. The 4 roles of each board have to be connected to the other 4 roles of the system (and at least to the ABMN connector on the measurement board).
   The electrodes connectors can only be used to address the first 8 or the last 8 positions.
-  This is critical if wanting to connect the electrodes via the IDC connectors, which whill have to be carefully cabled.
+  This is critical if wanting to connect the electrodes via the IDC connectors, which will have to be carefully cabled.
 
 
 .. _mux2024-test:
 
-Check
-=====
+Checks
+======
 
 Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the board.
 Check your board against the correct expected column: 2-roles or 4-roles.
 
-If a continuity check does not pass it's likely means there is an issue with the soldering on the board.
-For the test with power "on", we expect the mux board to be connected to the measurement board via the IDC ribbon cable.
+With power off
+--------------
 
-.. figure:: ../../../img/mux2024-test.jpg       
+If a continuity check does not pass it likely means there is an issue with the soldering on the board.
+
+.. figure:: ../../../img/mux2024-test.jpg     
        :width: 100%
        :align: center
        :alt: alternate text
@@ -233,10 +238,13 @@ For the test with power "on", we expect the mux board to be connected to the mea
    :header-rows: 1
 
 .. warning::
-   **Do not power the board if one of the SC (shortcircuit) test does not pass!**
+   **Do not power the board if one of the SC (short circuit) tests does not pass!**
 
 .. hint::
    **For the tests in the following table where power on is required, power the board through the I2C input (IDC connector) via the ribbon cable. Do not power the board through the screw connector GND +12V.**
+
+With power on
+-------------
 
 .. csv-table:: Hardware check
    :file: mux2024-test.csv

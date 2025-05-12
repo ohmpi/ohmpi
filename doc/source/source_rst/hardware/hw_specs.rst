@@ -42,7 +42,7 @@ Specifications
    +----------------------------------+-----------------------+-----------------------+-----------+
    |Power supply                      |12                     |12                     |vdc        |
    +----------------------------------+-----------------------+-----------------------+-----------+
-   |Current with 2 ohms shunt resistor|0.11 to 40             |0.11 to 500            |mA         |
+   |Current with 2 ohms shunt resistor|0.11 to 40             |0.11 to 50             |mA         |
    +----------------------------------+-----------------------+-----------------------+-----------+
    |Min pulse duration                |50                     |50                     |ms         |
    +----------------------------------+-----------------------+-----------------------+-----------+
@@ -64,8 +64,8 @@ Assemble measurement board (MB)
 Multiplexer board
 =================
 
-Measurement board are limited to four electrodes (A, B, M and N).
-Multiplexer board are composed or electrical relay (electronic switches) that enable to route the signal
+Measurement boards are limited to four electrodes (A, B, M and N).
+Multiplexer boards are composed or electrical relay (electronic switches) that enable to route the signal
 from A, B, M or N from the measurement board towards the specified electrodes. Multiplexer boards are needed for a 
 multi-electrode system.
 

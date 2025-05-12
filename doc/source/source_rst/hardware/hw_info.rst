@@ -72,8 +72,8 @@ pulled high using pull-up resistors (meaning at rest, there should be 5V between
 Multiplexer
 ===========
 
-Multiplexer are used to address multiple electrodes. For this they use **relays**
+Multiplexers are used to address multiple electrodes. For this they use **relays**
 to create an electronic path between the electrode and the entry (A, B, M, or N) on the
 measurement board. The relays are usually controlled by a **GPIO expander** (MCP23017).
 Because too many GPIO expander cannot be addressed on the same I2C bus, we use a
-**I2C expander** (TCA9548A) which is itself connected via I2C to the controller (Rapsberry Pi).
+**I2C expander** (TCA9548A) which is itself connected via I2C to the controller (Raspberry Pi).

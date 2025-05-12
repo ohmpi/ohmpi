@@ -14,7 +14,7 @@ Contributors are welcomed to  join forces to make this list come true, or propos
 Developing software features
 ****************************
 If the new developments purely concern the software (e.g. bug fix, new acquisition strategy, etc.), then please follow the
-git best practices by first creating an new issue and then create a local branch linked to this issue. Once the new feature is implemented, a pull request can be initiated.
+git best practices by first creating a new issue and then create a local branch linked to this issue. Once the new feature is implemented, a pull request can be initiated.
 
 Software interface to new hardware components
 *********************************************
@@ -53,7 +53,7 @@ In this newly created config file, describe your system including the new compon
 Name it config_XXX.py where XXX should be replaced by an expression describing the system.
 Make sure to place your new config file in the ohmpi/configs directory.
 
-3- Create a new script or make a copy and modify of an existing script for testing the component.
+3- Create a new script or make a copy and modify an existing script for testing the component.
 In this script, write python code where you will conduct the tests of the required functionalities of the new component.
 
 Hardware components API

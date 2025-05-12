@@ -9,7 +9,7 @@ The acquisition settings can be changed or constrained at different levels of th
   :width: 100%
   :align: center
 
-  **kwargs** (keyword arguments) passed to Python functions superseed **OhmPi.settings** attribute. All settings must fall within the **system specifications**. All the previous are defined when we instantiate the OhmPi class. Further down, the **config.py** and **default.json** files provide default values values and constrained. That are further enforced in the **component specifications**.
+  **kwargs** (keyword arguments) passed to Python functions superseed **OhmPi.settings** attribute. All settings must fall within the **system specifications**. All the previous are defined when we instantiate the OhmPi class. Further down, the **config.py** and **default.json** files provide default values and constraints. That are further enforced in the **component specifications**.
 
 
 Different parts of the system can be changed. We distinguish two roles: maintainers that will build, set the configuration and provide default settings. And the users who will operate the system using the different interfaces and change acquisition settings.
@@ -24,7 +24,7 @@ This section details the acquisition settings that can be specified for measurem
   :caption: json dictionary containing the default settings contained in ``settings/default.json``
 
     {
-    "injection_duration": 0.2, # injection duration of one pulse within an injection cycl
+    "injection_duration": 0.2, # injection duration of one pulse within an injection cycles
     "n_stacks": 1, # number of injection cycles (e.g. 'nb_stack'=1 means one positive and one negative pulse)
     "sampling_interval": 2, # sampling interval in ms
     "vab_req": 5, # injection voltage in V for strategy 'safe' or starting V_AB for strategy 'vmax' or 'vmin'
@@ -43,7 +43,7 @@ Also have a look at the different :ref:`strategies`;
 In addition to these default settings, and for advanced users, additional settings related to the injection strategy "vmax" and "vmin" can also be specified in the json settings file as follows:
 
 .. code-block:: python
-  :caption: Dictionnary containing the advanced settings that can be added to ``settings/default.json``
+  :caption: Dictionary containing the advanced settings that can be added to ``settings/default.json``
 
     {
     "vab_max": null, # maximum V_AB (in V) bounding the vmax injection strategy. Value is capped by vab_max from hardware config. Default is None, which means vmax strategy bounded by hardware vab_max from hardware config.
@@ -52,4 +52,4 @@ In addition to these default settings, and for advanced users, additional settin
     "vmn_min": null, # minimum V_mn (in mV) bounding the vmax injection strategy. Value is capped by vmn_min from hardware config. Default is None, which means vmax strategy bounded by hardware vmn_min from hardware config.
     }
 
-For more information on these settings, see the API donc for :func:`OhmPi.run_measurement` and the :
+For more information on these settings, see the API for :func:`OhmPi.run_measurement`.
