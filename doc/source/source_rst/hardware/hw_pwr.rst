@@ -16,7 +16,7 @@ External TX battery
 ===================
 With the measurement board v2024, you can connect the Tx battery following the schematic below.
 In this simple configuration, a fixed power source, such as a 12V battery is used for the injection.
-The + and - battery terminals are routed to the TX-batt input + abd GND connectors. Then the DPS input and DPS out
+The + and - battery terminals are routed to the TX-batt input + and GND connectors. Then the DPS input and DPS out
 connectors need to be bypassed.
 
 .. figure:: ../../img/mb.2024.x.x/power_cabling_batt.png

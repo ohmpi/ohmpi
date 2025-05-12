@@ -4,13 +4,13 @@ Groundwater recharge and sustainable extraction through resilient forest communi
 Introduction
 ------------
 
-In the following we describe our experience with instrumenting an OhmPi in Tamil Nadu, India. The OhmPi was installed to monitor an on-contour swale, a water retention structure used for rainwater retention and to enhance infiltration in Sadhana Forest, India (`SFI <https://sadhanaforest.org/>`_). This deployment made possible through the project "Groundwater recharge and sustainable extraction through resilient forest communities", awarded by Geoscientists Without Borders (`GWB <https://seg.org/programs/geoscientists-without-borders/>`_) through the support of the Society of Exploration Geophysics (SEG). The deployment took place in May of 2024 during a period of 3 week,s and with the help of many volunteers and remote help from the OhmPi team (in particular Guillaume Blanchy and Arnaud Watlet). Much of the work presented here results from the Master thesis of Neomi Widmer (ETH Zurich). We describe the site, methodology and challenges in more detail below.
+In the following we describe our experience with instrumenting an OhmPi in Tamil Nadu, India. The OhmPi was installed to monitor an on-contour swale, a water retention structure used for rainwater retention and to enhance infiltration in Sadhana Forest, India (`SFI <https://sadhanaforest.org/>`_). This deployment made possible through the project "Groundwater recharge and sustainable extraction through resilient forest communities", awarded by Geoscientists Without Borders (`GWB <https://seg.org/programs/geoscientists-without-borders/>`_) through the support of the Society of Exploration Geophysics (SEG). The deployment took place in May of 2024 during a period of 3 weeks with the help of many volunteers and remote help from the OhmPi team (in particular Guillaume Blanchy and Arnaud Watlet). Much of the work presented here results from the Master thesis of Neomi Widmer (ETH Zurich). We describe the site, methodology and challenges in more detail below.
 
 
 
 Sadhana Forest India
 ~~~~~~~~~~~~~~~~~~~~
-Sadhana Forest is a non-for-profit organisation that focuses on water conservation, reforestation and community building practises. In India, near the town of Auroville, Sadhana Forest has been active since 2003 and has managed to reforest 46 hectares of severely eroded land with indigenous tree species, as well as exponentially increasing the water that is kept on the land from precipitation. Tp accomplish this they construct low-cost, small-scale methods such as check dams, gabions, and on-contour swales.
+Sadhana Forest is a non-for-profit organisation that focuses on water conservation, reforestation and community building practices. In India, near the town of Auroville, Sadhana Forest has been active since 2003 and has managed to reforest 46 hectares of severely eroded land with indigenous tree species, as well as exponentially increasing the water that is kept on the land from precipitation. To accomplish this they construct low-cost, small-scale methods such as check dams, gabions, and on-contour swales.
 
 .. figure:: ../../img/images_india/site/overview.jpg
    :width: 50%
@@ -61,7 +61,7 @@ Talk about installation on the swale site and control.
    :width: 75%
    :align: center
    
-   Topview figure of the site, taken from Google maps, showing the location of the electrical resistivity lines on the swale and control sites, the location of the soil moisture sensors and weather station, as well as the location of the OhmPi.
+   Top view figure of the site, taken from Google maps, showing the location of the electrical resistivity lines on the swale and control sites, the location of the soil moisture sensors and weather station, as well as the location of the OhmPi.
 
 
 
@@ -105,7 +105,7 @@ Two possibilities used in this project:
 Time-Lapse Measurements
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Running reccurent measurements was possible through cron. 
+Running repeated measurements was possible through cron. 
 Explain and give example bash script
 
 
@@ -164,6 +164,6 @@ Project participants
 Acknowledgments
 ---------------
 
-A big thank you to Neomi Widmer for carrying out the fieldwork and relentlessly struggling to get things working during her thesis, to Aviram Rozin for all his support and encouragement during the whole phase of the project, to Mike Rowley for all his help during the field campaign and for digging out the soil pits like a beast, to Pavan and Mani, and all the Sadhana Forest volunteers for all ther support from 6 am to often 11 pm, day in and day out. This project was made possible through the GWB-SEG grant #202301041.
+A big thank you to Neomi Widmer for carrying out the fieldwork and relentlessly struggling to get things working during her thesis, to Aviram Rozin for all his support and encouragement during the whole phase of the project, to Mike Rowley for all his help during the field campaign and for digging out the soil pits like a beast, to Pavan and Mani, and all the Sadhana Forest volunteers for all their support from 6 am to often 11 pm, day in and day out. This project was made possible through the GWB-SEG grant #202301041.
 
 

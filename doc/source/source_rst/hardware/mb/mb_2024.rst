@@ -82,8 +82,8 @@ Required components
    :header-rows: 1
    :class: longtable
 
-To order the PCB (on Aisler or other manufacturer), you just need to drag and drop the .kicad_pcb (e.g. PCB_boards/measurement_boards/mb.2024.1.0/mb.2024.1.0.kicad_pcb) file into their webinterface.
-The webinterface will load the PCB and walk you through different steps.
+To order the PCB (on Aisler or other manufacturers), you just need to drag and drop the .kicad_pcb (e.g. PCB_boards/measurement_boards/mb.2024.1.0/mb.2024.1.0.kicad_pcb) file into their web interface.
+The web interface will load the PCB and walk you through different steps.
 
 Interactive BOM list
 ~~~~~~~~~~~~~~~~~~~~~  
@@ -100,6 +100,9 @@ How to Solder Electronic Components <https://www.sciencebuddies.org/science-fair
 
 Description
 ~~~~~~~~~~~
+
+.. note::
+   Since measurement board v2024.1.0, a discharge relay has been added next to the current click. This relay is equipped with similar electronics to the other relays of the board (i.e. 100 kOhm resistor, ZVN transistor, Omron relay). It enables to quickly discharge the current of the DPH5005 when switching between Vab voltages. To control this relay, we had to remove one LED (so there are only 3 LEDs). Note that your board will still work even if you do not install the relay. The mounting of the discharge relay is not included in the pictures below but mount it at the same time you mount the other relays.
 
 Soldering various `RESISTOR <https://eepower.com/resistor-guide/resistor-fundamentals/what-is-a-resistor/#>`_ on the measurement board PCB
 
@@ -156,7 +159,7 @@ Soldering `SCHOTTKY DIODE <https://www.electronics-tutorials.ws/diode/schottky-d
    :width: 100%
    :align: center
 
-   STEP 8: Soldering one DIP-16 sockets.
+   STEP 8: Soldering one DIP-16 socket.
 
 .. figure:: ../../../img/mb.2024.x.x/9.jpg
    :width: 100%
@@ -226,7 +229,7 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
    :width: 100%
    :align: center
 
-   STEP 18: Soldering the three IDC 6 pins connectors. **Pay attention to the connectors orientation!**
+   STEP 18: Soldering the three IDC 6 pins connectors. **Pay attention to the orientation of the connector!**
 
 .. figure:: ../../../img/mb.2024.x.x/19.jpg
    :width: 100%
@@ -238,10 +241,10 @@ What is a `CAPACITOR <https://en.wikipedia.org/wiki/Capacitor>`_?
    :width: 100%
    :align: center
 
-   STEP 20: Soldering six omron G5LE relays 5 VDC.
+   STEP 20: Soldering six Omron G5LE relays 5 VDC. (If your PCB has a discharge relay, mount it too).
 
 .. warning::
-   The Raspberry Pi header below need to be soldered on the **under side of the PCB**.
+   The Raspberry Pi header below need to be soldered on the **underside of the PCB**.
 
 .. figure:: ../../../img/mb.2024.x.x/21.jpg
    :width: 100%
@@ -332,9 +335,9 @@ Checks
 Use the picture and table below to manually check with a multimeter for continuity and expected voltage in the measurement board.
 
 Without power off
------------------
+~~~~~~~~~~~~~~~~~
 
-If a continuity check does not pass it's likely means there is an issue with the soldering on the board.
+If a continuity check does not pass it likely means there is an issue with the soldering on the board.
 
 .. figure:: ../../../img/mb2024-test.jpg       
        :width: 100%
@@ -347,10 +350,10 @@ If a continuity check does not pass it's likely means there is an issue with the
    :header-rows: 1
 
 .. warning::
-   **Do not power the board if one of the SC (shortcircuit) test does not pass!**
+   **Do not power the board if one of the SC (short circuit) tests does not pass!**
 
 With power on
--------------
+~~~~~~~~~~~~~
 
 To power the board, you need to connect a 12 V source (e.g. battery) on Rx-Batt.
 If the voltage with I2C (SDA and SCL pins) is not expected, there is likely an issue with pull-up resistors.

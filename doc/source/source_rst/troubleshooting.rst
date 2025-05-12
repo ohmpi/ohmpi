@@ -53,7 +53,7 @@ If the Pi cannot detect the DPH, a modbus error can be reported. This can have s
 #. Make sure that you properly modified the baud rate of the DPH to 19200 (as explained in :ref:`power-DPH5005`)
 #. Make sure the USB cable is not damaged, correctly feeding the Raspberry Pi USB port to the DPH5005
 #. Make sure that the DPH can be properly powered from the TX power connectors
-#. If all the above are okay, than it can also be that the DPH is not given enough time to start (power latency time). This can be increased in the `config.py > HARDWARE_CONFIG > pwr > pwr_latency` (default value = 6).
+#. If all the above are okay, then it can also be that the DPH is not given enough time to start (power latency time). This can be increased in the `config.py > HARDWARE_CONFIG > pwr > pwr_latency` (default value = 6).
 
 
 Incorrect or suspicious data
@@ -177,7 +177,7 @@ You can always have a look at a full-waveform of a reading by doing:
 
 This will produce a figure that will show the evolution of the voltage, current and resistance during the measure. It is helpful for diagnosing issues.
 
-Examples of diagnostic (on a test resistor circuit).
+Examples of diagnostics (on a test resistor circuit).
 
 .. figure:: ../img/troubleshooting/fw-no-injection.png
   :width: 80%

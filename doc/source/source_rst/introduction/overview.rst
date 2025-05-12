@@ -41,7 +41,7 @@ The OhmPi is composed of different modules:
 - a power supply (``pwr``): either a 12V battery or a more advanced power supply where we can control the voltage/current
 - a general controller (``ctrl``): to control the measurement board, multiplexer boards and power supply (=raspberrypi)
 
-These module exists in different versions and can be combined using a configuration file.
+These modules exist in different versions and can be combined using a configuration file.
 You can then upgrade your measurement board or power supply for specific applications.
 
 .. figure:: ../../img/Hardware_structure.png
@@ -90,8 +90,8 @@ __________________________
 | | laboratory (only Rhoa)      |                                |                    |                          |                          |                                                  |
 +-------------------------------+--------------------------------+--------------------+--------------------------+--------------------------+--------------------------------------------------+
 
-Another possible combination is to use MUX v2023 with MUX v2024 together, which allows to add series of 8 electrodes to a 64-electrode system.
-This could be handful if ones is looking to build e.g. a 96 electrode system, which would therefore feature 4 MUX 2023 (64 electrodes) + 4 MUX 2024 (32 electrodes).
+Another possible combination is to use MUX v2023 with MUX v2024 together, which allows the addition of a series of 8 electrodes to a 64-electrode system.
+This could be useful if one is looking to build e.g. a 96 electrode system, which would therefore feature 4 MUX 2023 (64 electrodes) + 4 MUX 2024 (32 electrodes).
 
 In "BUILD OHMPI SYSTEMS" section we detail examples of OHMPI systems assemblies in different versions.
 
@@ -102,7 +102,7 @@ Depending on your needs and applications, you can choose the board you are going
 How to build an OhmPi successfully?
 ***********************************
 
-and become and OhmPier!
+and become an OhmPier!
 
 Here are few tips:
 
@@ -115,7 +115,7 @@ Here are few tips:
 
 
 
-Where are the OhmPi's?
+Where are the OhmPi?
 **********************
 
 

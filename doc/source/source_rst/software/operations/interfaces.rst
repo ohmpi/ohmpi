@@ -15,8 +15,8 @@ Web interface
 
 `See the WebGUI in action! <https://youtu.be/bY9xKfqTJUc">`_
 
-This is a user friendly graphical interface for new users as well as running quick and easy acquisitions.
-The webinterface enables to upload sequences, change parameters, run a sequence and download data.
+This is a user-friendly graphical interface for new users as well as running quick and easy acquisitions.
+The web interface enables users to upload sequences, change parameters, run a sequence and download data.
 To start the interface, open the terminal in the OhmPi folder and type:
 
 .. code-block:: bash
@@ -48,7 +48,7 @@ locally by opening a browser on the Raspberry Pi and going to `http://localhost:
 
 Alternatively to a local webserver, the Raspberry Pi can be configured as a used as a Wi-Fi Access Point (AP).
 Then other laptop or mobile devices can connect to the WiFi of the Raspberry Pi and
-interact with the webinterface. See instructions in the "run_http_interface_on_start.txt" file in the repository.
+interact with the web interface. See instructions in the "run_http_interface_on_start.txt" file in the repository.
 
 
 Python interface
@@ -62,7 +62,7 @@ SSH (see PuTTY on Windows or ssh command on macOS/Linux).
 
 To access the Python API, make sure that:
 - the PYTHONPATH has been correctly configured to export the location of the ohmpi module;
-- you are in the Python environment created earlier (*souce ohmpy/bin/activate*)
+- you are in the Python environment created earlier (*source ohmpy/bin/activate*)
 
 Both of these can be done by executing
 

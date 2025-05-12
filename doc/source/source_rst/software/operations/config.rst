@@ -15,7 +15,7 @@ Default configuration
 
 A default version of `config.py` is provided in the repository.
 This file should be edited to customize the configuration following the user's needs and preferences.
-A series of default configuration files are available in the configs folder. A simple helper command can help you select the appropriate configuration file depending on your version of the meausurement board and type of MUX boards.
+A series of default configuration files are available in the configs folder. A simple helper command can help you select the appropriate configuration file depending on your version of the measurement board and type of MUX boards.
 The helper will ask you a few questions and will select the right configuration for your case. It can be called in via the terminal as
 
 .. code-block:: bash
@@ -53,7 +53,7 @@ The configuration is written in a python file structured in a series of dictiona
 #. OHMPI_CONFIG: the OhmPi instrument information (id of the instrument and default settings).
 
 .. code-block:: python
-  :caption: OHMPI_CONFIG: Dictionary containing basic informations about the OhmPi instrument
+  :caption: OHMPI_CONFIG: Dictionary containing basic information about the OhmPi instrument
 
   # OhmPi configuration
   OHMPI_CONFIG = {

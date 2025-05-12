@@ -1,7 +1,7 @@
 System operation
 ################
 
-This section details describes how to operate an OhmPi instrument.
+This section describes how to operate an OhmPi instrument.
 
 Contents:
 
