@@ -1827,7 +1827,7 @@ class OhmPi(object):
                         f.write('{:d} # positions electrodes\n'.format(elec.shape[0]))
                         f.write('#\tx\ty\tz\n')
                         for j in range(elec.shape[0]):
-                            f.write('{:.2f}\t{:.2f}\t{:.2f}\n'.format(*elec[j, :]))
+                            f.write('{:.3f}\t{:.3f}\t{:.3f}\n'.format(*elec[j, :]))
                         f.write('{:d} # number of data\n'.format(df.shape[0]))
                         f.write('#\ta\tb\tm\tn\tR\n')
                     with open(fout, 'a') as f:
