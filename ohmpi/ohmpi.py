@@ -1781,6 +1781,9 @@ class OhmPi(object):
             - protocol (for resipy, R2 codes)
         elec_spacing : float, optional
             Electrode spacing in meters. Same electrode spacing is assumed.
+        fname_coord: str, optional
+            Path to the file containing the coordinates of the electrodes in csv format
+            (comma separated, with decimal point) with header: "x,y,z".
         """
         # handle parameters default values
         if fnames is None:
@@ -1804,7 +1807,7 @@ class OhmPi(object):
                 elec = np.zeros((emax, 3))
                 elec[:, 0] = np.arange(emax) * elec_spacing
             else:
-                elec = np.genfromtxt(fname_coord, comments='#', delimiter=';')
+                elec = np.genfromtxt(fname_coord, comments='#', delimiter=',', skip_header=1)
                                 
             return elec, df[['a', 'b', 'm', 'n', 'vp', 'i', 'resist', 'ip']]
 
