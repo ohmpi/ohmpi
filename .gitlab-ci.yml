@@ -10,15 +10,16 @@ pages:
   - pip install numpy pandas termcolor paho-mqtt zmq matplotlib tqdm  # top import of Ohmpi.py
   - pip install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark linuxdoc
   - cp configs/config_default.py ohmpi/config.py  # needed otherwise, module ohmpi cannot be instantiated (no API doc)
-  - cd doc
+  - cd docs
+  - git pull
   - sphinx-build -M latexpdf source build
   - mv build/latex/ohmpi.pdf source/_static/ohmpi.pdf
   - sphinx-build -M html source build
   - cd ..
-  - mv doc/build/html/ public/
+  - mv docs/build/html/ public/
   - ls public/
   artifacts:
     paths:
     - public/
   only:
-  - docs
+  - master
