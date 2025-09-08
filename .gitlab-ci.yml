@@ -11,7 +11,7 @@ pages:
   - pip install sphinx numpydoc sphinx_rtd_theme pandoc recommonmark linuxdoc
   - cp configs/config_default.py ohmpi/config.py  # needed otherwise, module ohmpi cannot be instantiated (no API doc)
   - cd docs
-  - git pull
+  - git submodule update --recursive --remote
   - sphinx-build -M latexpdf source build
   - mv build/latex/ohmpi.pdf source/_static/ohmpi.pdf
   - sphinx-build -M html source build
