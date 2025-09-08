@@ -3,7 +3,7 @@ ohmpi/logs/*
 .idea/*
 *.lck
 data/*
-**/.ipynb_notebooks/**
+**/.ipynb_checkpoints/**
 __pycache__
 Ohmpi_4elec_mqtt.py
 ohmpy/*
@@ -12,5 +12,6 @@ sequence.txt
 /Proposition interface.odp
 doc/build/*
 doc/_static/*.pdf
+**/*-backups/**
 startup.log
 doc/source/index.pdf
