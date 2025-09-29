@@ -705,9 +705,10 @@ class OhmPiHardware:
         self.tx.measuring = 'on'
         # first switch power on before setting a voltage to let it
         # "decay" if needed (for dph5005)
+        self.tx.voltage = vab_init  # set the voltage (dph is off)
         if self.tx.pwr.pwr_state == 'off':
             self.tx.pwr.pwr_state = 'on'
-        self.tx.voltage = vab_init
+        self.tx.voltage = vab_init  # check voltage is well set (dph is on)
 
         if 10. / self.rx.sampling_rate > pulse_duration:
             sampling_rate = 10. / pulse_duration  # TODO: check this...
