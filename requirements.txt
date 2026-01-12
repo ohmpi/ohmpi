@@ -1,6 +1,6 @@
 RPi.GPIO
 adafruit-blinka
-adafruit-circuitpython-ads1x15
+adafruit-circuitpython-ads1x15==2.4.4
 adafruit-circuitpython-tca9548a
 adafruit-circuitpython-mcp230xx
 adafruit_extended_bus
