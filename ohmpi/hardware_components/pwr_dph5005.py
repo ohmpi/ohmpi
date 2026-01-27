@@ -35,7 +35,7 @@ class Pwr(PwrAbstract):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\tpwr_init\tbegin\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\tpwr_init\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
 
         self._voltage = kwargs['voltage']
         self._current_max = kwargs['current_max']
@@ -67,7 +67,7 @@ class Pwr(PwrAbstract):
                 raise IOError('dph interface cannot be set to none')
 
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     def _retrieve_current(self):
         self._current = self.connection.read_register(0x0003, 2) * 100  # in mA (not sure why but value from DPS comes in [A*10]
@@ -96,7 +96,7 @@ class Pwr(PwrAbstract):
         if value <= self._voltage_min:
             value = self._voltage_min
         assert self._voltage_min <= value <= self._voltage_max
-        self.exec_logger.event(f'{self.model}\tset_voltage\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\tset_voltage\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         if value != self._voltage:
             self.connection.write_register(0x0000, np.round(value, 2), 2)
             if self._pwr_state == 'on' and self._pwr_accuracy > 0:
@@ -104,7 +104,7 @@ class Pwr(PwrAbstract):
                     self._retrieve_voltage()
                     if np.abs(self._voltage - value) < self._pwr_accuracy:  # arbitrary threshold
                         break
-        self.exec_logger.event(f'{self.model}\tset_voltage\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\tset_voltage\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
         self._voltage = value
 
     def voltage_default(self, value):  # [A]
@@ -168,22 +168,22 @@ class Pwr(PwrAbstract):
             """
         if state == 'on':
             if self._pwr_state != 'on':
-                self.exec_logger.event(f'{self.model}\tpwr_state_on\tbegin\t{datetime.datetime.utcnow()}')
+                self.exec_logger.event(f'{self.model}\tpwr_state_on\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
                 self.connection.write_register(0x09, 1)
-                self.exec_logger.event(f'{self.model}\tpwr_state_on\tend\t{datetime.datetime.utcnow()}')
+                self.exec_logger.event(f'{self.model}\tpwr_state_on\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
                 # self.current_max(self._current_max)
                 self._pwr_state = 'on'
-                # self.exec_logger.event(f'{self.model}\tpwr_latency\tbegin\t{datetime.datetime.utcnow()}')
+                # self.exec_logger.event(f'{self.model}\tpwr_latency\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
                 # time.sleep(self._pwr_latency)
-                # self.exec_logger.event(f'{self.model}\tpwr_latency\tend\t{datetime.datetime.utcnow()}')
+                # self.exec_logger.event(f'{self.model}\tpwr_latency\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
             self.exec_logger.debug(f'{self.model} is on')
 
         elif state == 'off':
             if self._pwr_state != 'off':
-                self.exec_logger.event(f'{self.model}\tpwr_state_off\tbegin\t{datetime.datetime.utcnow()}')
+                self.exec_logger.event(f'{self.model}\tpwr_state_off\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
                 self.connection.write_register(0x09, 0)
                 self._pwr_state = 'off'
-                self.exec_logger.event(f'{self.model}\tpwr_state_off\tend\t{datetime.datetime.utcnow()}')
+                self.exec_logger.event(f'{self.model}\tpwr_state_off\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
             self.exec_logger.debug(f'{self.model} is off')
 
     def reload_settings(self):

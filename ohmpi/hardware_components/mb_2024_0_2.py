@@ -81,7 +81,7 @@ class Tx(Tx_mb_2023):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
 
         # Initialize LEDs
         if self.connect:
@@ -104,7 +104,7 @@ class Tx(Tx_mb_2023):
             self.pin3.value = False
 
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     @property
     def measuring(self):
@@ -138,7 +138,7 @@ class Tx(Tx_mb_2023):
                 'on', 'off'
             """
         if state == 'on':
-            self.exec_logger.event(f'{self.model}\ttx_pwr_state_on\tbegin\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\ttx_pwr_state_on\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
             self.pin2.value = True
             self.pin3.value = True
             self.exec_logger.debug(f'Switching DPH on')
@@ -146,7 +146,7 @@ class Tx(Tx_mb_2023):
             time.sleep(self.pwr._pwr_latency) # from pwr specs
             self.pwr.pwr_state = 'off'
             self.pwr.reload_settings()
-            self.exec_logger.event(f'{self.model}\ttx_pwr_state_on\tend\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\ttx_pwr_state_on\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
             self.pwr.battery_voltage()
             if self.pwr.voltage_adjustable:
                 if self.pwr._battery_voltage < 11.8:
@@ -155,13 +155,13 @@ class Tx(Tx_mb_2023):
                     self.exec_logger.info(f'TX Battery voltage from {self.pwr.model} = {self.pwr._battery_voltage} V')
 
         elif state == 'off':
-            self.exec_logger.event(f'{self.model}\ttx_pwr_state_off\tbegin\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\ttx_pwr_state_off\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
             self.pwr.pwr_state = 'off'
             self.pin2.value = False
             self.pin3.value = False
             self.exec_logger.debug(f'Switching DPH off')
             self._pwr_state = 'off'
-            self.exec_logger.event(f'{self.model}\ttx_pwr_state_off\tend\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\ttx_pwr_state_off\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     def current_pulse(self, current=None, length=None, polarity=1):
         """ Generates a square current pulse. Currently no DPS can handle this...
@@ -175,7 +175,7 @@ class Tx(Tx_mb_2023):
         polarity: 1,0,-1
             Polarity of the pulse.
         """
-        self.exec_logger.event(f'{self.model}\ttx_current_pulse\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\ttx_current_pulse\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         # self.exec_logger.info(f'injection_duration: {length}')  # TODO: delete me
         if length is None:
             length = self.injection_duration
@@ -183,7 +183,7 @@ class Tx(Tx_mb_2023):
             self.pwr.current = current
         self.exec_logger.debug(f'Current pulse of {polarity*self.pwr.current:.3f} V for {length:.3f} s')
         self.inject(polarity=polarity, injection_duration=length)
-        self.exec_logger.event(f'{self.model}\ttx_current_pulse\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\ttx_current_pulse\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     @property
     def polarity(self):
@@ -316,7 +316,7 @@ class Rx(Rx_mb_2023):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         # I2C connection to MCP23008, for voltage
         self._mcp_address = kwargs['mcp_address']
         if test_i2c_devices_on_bus(self._mcp_address, self.connection):
@@ -353,14 +353,14 @@ class Rx(Rx_mb_2023):
             self.gain = self._adc_gain * self._dg411_gain_ratio  # 1/3 by default since self._adc_gain is equal to 2/3 and self._dg411_gain_ratio to 1/2 by default
 
         if not subclass_init:  # TODO: try to only log this event and not the one created by super()
-            self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     def _adc_gain_auto(self):
-        self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         gain = _ads_1115_gain_auto(AnalogIn(self._ads_voltage, ads.P0))
         self.exec_logger.debug(f'Setting RX ADC gain automatically to {gain}')
         self._adc_gain = gain
-        self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     def _dg411_gain_auto(self):
         if -0.8 * self._vmn_hardware_offset < self.voltage + self.bias < 0.8 * self._vmn_hardware_offset:
@@ -398,9 +398,9 @@ class Rx(Rx_mb_2023):
     def voltage(self):
         """ Gets the voltage VMN in Volts
         """
-        self.exec_logger.event(f'{self.model}\trx_voltage\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_voltage\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         u = (AnalogIn(self._ads_voltage, ads.P0).voltage * self._coef_p2 * 1000. - self._vmn_hardware_offset) / self._dg411_gain - self.bias  # TODO: check how to handle bias and _vmn_hardware_offset
-        self.exec_logger.event(f'{self.model}\trx_voltage\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_voltage\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
         return u
 
     def test_ads(self, nsample=100, channel=0):

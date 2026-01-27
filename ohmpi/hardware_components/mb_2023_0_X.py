@@ -80,7 +80,7 @@ class Tx(TxAbstract):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         assert isinstance(self.connection, I2C)
         kwargs.update({'pwr': kwargs.pop('pwr', SPECS['tx']['compatible_power_sources']['default'][0])})
         if kwargs['pwr'] not in SPECS['tx']['compatible_power_sources']['default']:
@@ -141,7 +141,7 @@ class Tx(TxAbstract):
             self.gain = 2 / 3
 
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     @property
     def gain(self):
@@ -158,11 +158,11 @@ class Tx(TxAbstract):
         self.exec_logger.debug(f'Setting TX ADC gain to {value}')
 
     def _adc_gain_auto(self):
-        self.exec_logger.event(f'{self.model}\ttx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\ttx_adc_auto_gain\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         gain = _ads_1115_gain_auto(AnalogIn(self._ads_current, ads.P0))
         self.exec_logger.debug(f'Setting TX ADC gain automatically to {gain}')
         self.gain = gain
-        self.exec_logger.event(f'{self.model}\ttx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\ttx_adc_auto_gain\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     def current_pulse(self, **kwargs):
         TxAbstract.current_pulse(self, **kwargs)
@@ -250,7 +250,7 @@ class Tx(TxAbstract):
         polarity: 1,0,-1
             Polarity of the pulse
         """
-        self.exec_logger.event(f'{self.model}\ttx_voltage_pulse\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\ttx_voltage_pulse\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         # self.exec_logger.info(f'injection_duration: {length}')  # TODO: delete me
         if length is None:
             length = self.injection_duration
@@ -258,7 +258,7 @@ class Tx(TxAbstract):
             self.pwr.voltage = voltage
         self.exec_logger.debug(f'Voltage pulse of {polarity*self.pwr.voltage:.3f} V for {length:.3f} s')
         self.inject(polarity=polarity, injection_duration=length)
-        self.exec_logger.event(f'{self.model}\ttx_voltage_pulse\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\ttx_voltage_pulse\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     def test_ads(self, nsample=100, channel=0):
         samples = []
@@ -305,7 +305,7 @@ class Rx(RxAbstract):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         assert isinstance(self.connection, I2C)
 
         # ADS1115 for voltage measurement (MN)
@@ -330,7 +330,7 @@ class Rx(RxAbstract):
         self._sampling_rate = kwargs['sampling_rate']
         self._bias = kwargs['bias']
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     @property
     def gain(self):  # TODO: should be in abstract_hardware_components
@@ -347,11 +347,11 @@ class Rx(RxAbstract):
         self.exec_logger.debug(f'Setting RX ADC gain to {value}')
 
     def _adc_gain_auto(self):
-        self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         gain = _ads_1115_gain_auto(AnalogIn(self._ads_voltage, ads.P0, ads.P1))
         self.exec_logger.debug(f'Setting RX ADC gain automatically to {gain}')
         self._adc_gain = gain
-        self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_adc_auto_gain\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     def gain_auto(self):
         self._adc_gain_auto()
@@ -369,9 +369,9 @@ class Rx(RxAbstract):
     def voltage(self):
         """ Gets the voltage VMN in Volts
         """
-        self.exec_logger.event(f'{self.model}\trx_voltage\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_voltage\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         u = AnalogIn(self._ads_voltage, ads.P0, ads.P1).voltage * self._coef_p2 * 1000. - self.bias  # TODO: check if it should be negated
-        self.exec_logger.event(f'{self.model}\trx_voltage\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'{self.model}\trx_voltage\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
         return u
 
     def test_ads(self, nsample=100, channel=0):

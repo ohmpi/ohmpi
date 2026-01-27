@@ -31,7 +31,7 @@ import warnings
 
 
 def elapsed_seconds(start_time):
-    lap = datetime.datetime.utcnow() - start_time
+    lap = datetime.datetime.now(datetime.timezone.utc) - start_time
     return lap.total_seconds()
 
 
@@ -43,7 +43,7 @@ class OhmPiHardware:
     def __init__(self, **kwargs):
         # OhmPiHardware initialization
         self.exec_logger = kwargs.pop('exec_logger', create_stdout_logger('exec_hw'))
-        self.exec_logger.event(f'OhmPiHardware\tinit\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tinit\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         self.data_logger = kwargs.pop('exec_logger', create_stdout_logger('data_hw'))
         self.soh_logger = kwargs.pop('soh_logger', create_stdout_logger('soh_hw'))
         self.tx_sync = Event()
@@ -234,7 +234,7 @@ class OhmPiHardware:
         self.sp = None  # init SP
         self._start_time = None  # time of the beginning of a readings acquisition
         self._pulse = 0  # pulse number
-        self.exec_logger.event(f'OhmPiHardware\tinit\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tinit\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
         self._pwr_state = 'off'
 
     @property
@@ -256,7 +256,7 @@ class OhmPiHardware:
         self._pulse = 0
 
     def _gain_auto(self, polarities=(1, -1), vab=5., switch_pwr_off=False):  # TODO: improve _gain_auto
-        self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         current, voltage = 0., 0.
         self.rx.reset_gain()
         self.tx.reset_gain()
@@ -294,12 +294,12 @@ class OhmPiHardware:
         # self.rx.gain_auto(voltage)
         if switch_pwr_off:
             self.tx.pwr.pwr_state = 'off'
-        self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\ttx_rx_gain_auto\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     def _inject(self, polarity=1, injection_duration=None):  # TODO: deal with voltage or current pulse
-        self.exec_logger.event(f'OhmPiHardware\tinject\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tinject\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         self.tx.voltage_pulse(length=injection_duration, polarity=polarity)
-        self.exec_logger.event(f'OhmPiHardware\tinject\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tinject\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     def _set_mux_barrier(self):
         self.mux_barrier = Barrier(len(self.mux_boards) + 1)
@@ -325,7 +325,7 @@ class OhmPiHardware:
         sampling_rate: float,None , optional
         append: bool Default: False
         """
-        self.exec_logger.event(f'OhmPiHardware\tread_values\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tread_values\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         if not append:
             self._clear_values()
             _readings = []
@@ -336,16 +336,16 @@ class OhmPiHardware:
         if sampling_rate is None:  # TODO: handle sampling rate out of range make sure the sampling rates of tx and Rx are consistent
             sampling_rate = self.rx.sampling_rate
         sample = 0
-        lap = datetime.datetime.utcnow()  # just in case tx_sync is not set immediately after passing wait
+        lap = datetime.datetime.now(datetime.timezone.utc)  # just in case tx_sync is not set immediately after passing wait
         self.tx_sync.wait()  #
         if not append or self._start_time is None:
-            self._start_time = datetime.datetime.utcnow()
+            self._start_time = datetime.datetime.now(datetime.timezone.utc)
             # TODO: Check if replacing the following two options by a reset_buffer method of TX would be OK
             time.sleep(np.max([self.rx.latency, self.tx.latency]))  # if continuous mode
             # _ = self.rx.voltage # if not continuous mode
 
         while self.tx_sync.is_set():
-            lap = datetime.datetime.utcnow()
+            lap = datetime.datetime.now(datetime.timezone.utc)
             r = [elapsed_seconds(self._start_time), self._pulse, self.tx.polarity, self.tx.current, self.rx.voltage]
             if self.tx_sync.is_set():
                 sample += 1
@@ -366,7 +366,7 @@ class OhmPiHardware:
         if test_r_shunt:
             self._current = np.array(_current)
         self._pulse += 1
-        self.exec_logger.event(f'OhmPiHardware\tread_values\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tread_values\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     def select_samples(self, delay=0.):
         x = []
@@ -483,6 +483,7 @@ class OhmPiHardware:
             #     float
             #         improved value for vab
         """
+        self.exec_logger.event(f'OhmPiHardware\tfind_vab\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         # TODO: Check that min and max values are within system specs
         if vab_min is None:
             vab_min = self.vab_min
@@ -616,6 +617,7 @@ class OhmPiHardware:
         msg = f'Rab: [{rab_min / 1000.:5.3f}, {rab_max / 1000:5.3f}] kOhm, R: [{r_min:4.1f}, {r_max:4.1f}] Ohm'
         self.exec_logger.debug(msg)
         self.exec_logger.debug(f'Selecting Vab : {new_vab:.2f} V.')
+        self.exec_logger.event(f'OhmPiHardware\tfind_vab\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
         return new_vab, rab_min, rab_max, r_min, r_max
 
     def compute_vab(self, vab_init=5., vab_min=None, vab_req=None, vab_max=None,
@@ -718,12 +720,12 @@ class OhmPiHardware:
         diff_vab = np.inf
         while (k < n_steps) and (diff_vab > diff_vab_lim) and (vab_list[k] < vab_max):
             self.exec_logger.event(
-                f'OhmPiHardware\t_compute_vab_sleep\tbegin\t{datetime.datetime.utcnow()}')
+                f'OhmPiHardware\t_compute_vab_sleep\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
             time.sleep(0.3)  # TODO: replace this by discharging DPS on resistor with relay on GPIO5
                              # (at least for strategy vmin,
                              # but might be useful in vmax when last vab too high...)
             self.exec_logger.event(
-                f'OhmPiHardware\t_compute_vab_sleep\tend\t{datetime.datetime.utcnow()}')
+                f'OhmPiHardware\t_compute_vab_sleep\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
             # self._gain_auto(vab=vab_list[k])
             self._vab_pulses(vab_list[k], sampling_rate=sampling_rate,
                              durations=[0.1, pulse_duration, pulse_duration], polarities=polarities)  # 0.1 step at polarity 0 could be removed given the solution to issue #246
@@ -811,7 +813,7 @@ class OhmPiHardware:
         append: bool, optional
             Default: False
         """
-        self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         switch_pwr_off, switch_tx_pwr_off = False, False
         # switches tx pwr on if needed (relays switching dps on and off)
         if self.pwr_state == 'off':
@@ -840,7 +842,7 @@ class OhmPiHardware:
         durations.insert(0, 0.2)
         polarities.insert(0, 0)
         self._vab_pulses(vab, durations, sampling_rate, polarities=polarities, append=append)
-        self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tvab_square_wave\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
         if switch_pwr_off:
             self.tx.pwr.pwr_state = 'off'
         if switch_tx_pwr_off:
@@ -927,7 +929,7 @@ class OhmPiHardware:
         state : str, optional
             Either 'on' or 'off'.
         """
-        self.exec_logger.event(f'OhmPiHardware\tswitch_mux\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tswitch_mux\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         status = True
         if roles is None:
             roles = ['A', 'B', 'M', 'N']
@@ -967,7 +969,7 @@ class OhmPiHardware:
             self.exec_logger.error(
                 f'Unable to switch {state} electrodes: number of electrodes and number of roles do not match!')
             status = False
-        self.exec_logger.event(f'OhmPiHardware\tswitch_mux\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\tswitch_mux\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
         return status
 
     def test_mux(self, channel=None, activation_time=1.0):  # TODO: add test in reverse order on each mux board
@@ -1013,8 +1015,8 @@ class OhmPiHardware:
         """
 
         self.exec_logger.debug('Resetting all mux boards ...')
-        self.exec_logger.event(f'OhmPiHardware\treset_mux\tbegin\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\treset_mux\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         for mux_id, mux in self.mux_boards.items():  # noqa
             self.exec_logger.debug(f'Resetting {mux_id}.')
             mux.reset()
-        self.exec_logger.event(f'OhmPiHardware\treset_mux\tend\t{datetime.datetime.utcnow()}')
+        self.exec_logger.event(f'OhmPiHardware\treset_mux\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
