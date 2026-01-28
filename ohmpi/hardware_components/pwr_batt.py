@@ -26,12 +26,12 @@ class Pwr(PwrAbstract):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\tpwr_init\tbegin\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\tpwr_init\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
         self._voltage = kwargs['voltage']
         self._current = np.nan
         # self._state = 'on'
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\tpwr_init\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     @property
     def current(self):

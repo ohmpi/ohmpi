@@ -78,7 +78,7 @@ class Tx(Tx_mb_2024_0_2):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\ttx_init\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
 
         if self.connect:
             self.pin5 = self.mcp_board.get_pin(5)  # power_discharge_relay
@@ -86,7 +86,7 @@ class Tx(Tx_mb_2024_0_2):
             self.pin5.value = False
 
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\ttx_init\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
 
     @property
     def measuring(self):
@@ -102,7 +102,7 @@ class Tx(Tx_mb_2024_0_2):
                 latency = self.pwr._pwr_discharge_latency
             self.exec_logger.debug(f'Pwr discharge initiated for {latency} s')
 
-            self.exec_logger.event(f'{self.model}\tpwr_discharge\tend\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\tpwr_discharge\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
             self.pin5.value = True
             time.sleep(self._activation_delay)
 
@@ -111,7 +111,7 @@ class Tx(Tx_mb_2024_0_2):
             if self.pwr.voltage_adjustable:
                 self.pin5.value = False
                 time.sleep(self._release_delay)
-            self.exec_logger.event(f'{self.model}\tpwr_discharge\tend\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\tpwr_discharge\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
         else:
             self.exec_logger.debug(f'Pwr discharge not supported by {self.pwr.model}')
 
@@ -127,7 +127,7 @@ class Rx(Rx_mb_2024_0_2):
             subclass_init = True
         super().__init__(**kwargs)
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\trx_init\tbegin\t{datetime.datetime.now(datetime.timezone.utc)}')
 
         if not subclass_init:
-            self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.utcnow()}')
+            self.exec_logger.event(f'{self.model}\trx_init\tend\t{datetime.datetime.now(datetime.timezone.utc)}')
