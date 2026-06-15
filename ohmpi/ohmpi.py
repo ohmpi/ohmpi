@@ -17,7 +17,7 @@ import csv
 import time
 import io
 import pandas as pd  # use for export() and run_inversion()
-from zipfile import ZipFile
+import zipfile
 import tempfile
 from shutil import rmtree, make_archive
 from threading import Thread
@@ -419,7 +419,7 @@ class OhmPi(object):
                         fwpath = os.path.join(ddir, fname.replace('.csv', '_fw.zip'))
                         if os.path.exists(fwpath):
                             fwdata = {}
-                            myzip = ZipFile(fwpath)
+                            myzip = zipfile.ZipFile(fwpath)
                             df = pd.read_csv(io.StringIO(myzip.read(fname.replace('.csv', '_fw.csv')).decode('utf-8')))
                             df['abmn'] = df['a'].astype(str) + ',' + df['b'].astype(str) + ',' + df['m'].astype(str) + ',' + df['n'].astype(str)
                             for abmn in df['abmn'].unique():
@@ -640,7 +640,7 @@ class OhmPi(object):
         zippath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data.zip'))
         if os.path.exists(zippath):
             os.remove(zippath)
-        with ZipFile(zippath, 'w') as f:
+        with zipfile.ZipFile(zippath, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=6) as f:
             for fname in tqdm(fnames):
                 f.write(fname, arcname=os.path.basename(fname))
         
@@ -1136,7 +1136,7 @@ class OhmPi(object):
         # file management
         if fw_in_zip:
             fw_filename = filename.replace('.csv', '_fw')
-            with ZipFile(fw_filename + '.zip', 'w') as myzip:
+            with zipfile.ZipFile(fw_filename + '.zip', 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=6) as myzip:
                 myzip.write(fw_filename + '.csv', os.path.basename(fw_filename) + '.csv')
             os.remove(fw_filename + '.csv')
 
