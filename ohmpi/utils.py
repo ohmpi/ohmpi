@@ -141,7 +141,7 @@ def mux_2024_to_mux_2023_takeouts(elec_list):
     elecs = elec_list % 16
     elecs[elecs == 0] = 16
 
-    return np.vectorize(mapper.get)(elecs) + 16 * (elec_list // 17)
+    return np.vectorize(mapper.get)(elecs) + 16 * ((elec_list-1) // 16)
 
 
 def mux_2023_to_mux_2024_takeouts(elec_list):
@@ -161,7 +161,7 @@ def mux_2023_to_mux_2024_takeouts(elec_list):
     elecs = elec_list % 16
     elecs[elecs == 0] = 16
 
-    return np.vectorize(mapper.get)(elecs) + 16 * (elec_list // 17)
+    return np.vectorize(mapper.get)(elecs) + 16 * ((elec_list-1) // 17)
 
 
 def generate_preset_configs(configs_to_generate=None):
